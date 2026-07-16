@@ -1,0 +1,5 @@
+package org.mulearn.app
+
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity : FlutterActivity()

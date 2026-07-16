@@ -1,0 +1,38 @@
+# Strict lints (rules.md §1). very_good_analysis catches footguns pre-review;
+# `flutter analyze` must pass with zero warnings before a PR (rules.md §7).
+include: package:very_good_analysis/analysis_options.yaml
+
+analyzer:
+  plugins:
+    - custom_lint          # riverpod_lint
+  exclude:
+    # Generated artifacts — committed (rules.md §7) but not linted.
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    - "lib/core/config/env.g.dart"
+  errors:
+    # False positive: `@JsonKey(fromJson: ...)` on a freezed factory
+    # constructor parameter (rather than a plain field) is valid and
+    # correctly picked up by the generator — confirmed by inspecting the
+    # generated `.g.dart` output — but the analyzer doesn't know freezed
+    # constructor params count as "fields" for this check.
+    invalid_annotation_target: ignore
+
+linter:
+  rules:
+    # Deliberate multi-line TODO blocks in doc comments flag against Flutter's
+    # single-line `// TODO(user):` form; the detail is intentional here.
+    flutter_style_todos: false
+    # Doc comments reference types across layers without importing them.
+    comment_references: false
+    # Named params assigned to private fields (`: _x = x`) read better than
+    # requiring callers to pass `_x:` via `this._x`.
+    prefer_initializing_formals: false
+    # FlavorConfig.initialize is a deliberate factory-with-side-effect.
+    prefer_constructors_over_static_methods: false
+    # Repository contracts are intentionally single-method abstractions.
+    one_member_abstracts: false
+    # pubspec is grouped by purpose with comments, not alphabetized.
+    sort_pub_dependencies: false
+    public_member_api_docs: false
+    lines_longer_than_80_chars: false

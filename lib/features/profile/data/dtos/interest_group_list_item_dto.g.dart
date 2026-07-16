@@ -1,0 +1,23 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'interest_group_list_item_dto.dart';
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+_InterestGroupListItemDto _$InterestGroupListItemDtoFromJson(
+  Map<String, dynamic> json,
+) => _InterestGroupListItemDto(
+  id: json['id'] as String,
+  name: json['name'] as String,
+  category: json['category'] as String?,
+);
+
+Map<String, dynamic> _$InterestGroupListItemDtoToJson(
+  _InterestGroupListItemDto instance,
+) => <String, dynamic>{
+  'id': instance.id,
+  'name': instance.name,
+  'category': instance.category,
+};

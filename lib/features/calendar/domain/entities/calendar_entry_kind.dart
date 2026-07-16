@@ -1,0 +1,1 @@
+enum CalendarEntryKind { event, session }
