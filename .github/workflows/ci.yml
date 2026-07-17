@@ -1,0 +1,49 @@
+# Continuous integration — static analysis + tests.
+#
+# Runs on pull requests and on pushes to feature branches. Release branches
+# are excluded here because they have their own workflows:
+#   - dev      -> release-dev.yml  (builds + publishes the dev pre-release)
+#   - v* tags  -> release-prod.yml (builds + publishes the production release)
+#     (tags are cut from the `production` branch — see docs/releases.md)
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches-ignore:
+      - production
+      - dev
+
+# Cancel superseded runs on the same branch/PR.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  analyze-and-test:
+    name: Analyze & test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Dart SDK ^3.12.2 (pubspec.yaml) — latest stable Flutter satisfies it.
+      # `cache: true` caches the Flutter SDK and pub artifacts between runs.
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      # rules.md §7: `flutter analyze` and `flutter test` must pass before merge.
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Run tests
+        run: flutter test

@@ -1,0 +1,109 @@
+# Production release channel — official, versioned releases.
+#
+# Triggered ONLY by pushing a version tag (e.g. `git tag v1.5.0 && git push
+# origin v1.5.0`). Builds the *prod* flavor APK + AAB and publishes a stable
+# GitHub Release with auto-generated release notes.
+#
+# Full release procedure: docs/releases.md
+name: Release (Production)
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+# Needed to create the GitHub Release and upload artifacts.
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    name: Build prod APK + AAB & publish release
+    runs-on: ubuntu-latest
+    environment: Production
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # JDK 21 runs Gradle 9.1 / AGP 9.0.1; the app itself still targets
+      # Java 17 bytecode (android/app/build.gradle.kts compileOptions).
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: gradle
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      # Guard against releasing a version that doesn't match pubspec.yaml —
+      # the tag vX.Y.Z must equal the pubspec `version:` (build number aside).
+      - name: Verify tag matches pubspec version
+        run: |
+          PUBSPEC_VERSION=$(grep -m1 '^version:' pubspec.yaml | awk '{print $2}' | cut -d+ -f1)
+          if [ "v${PUBSPEC_VERSION}" != "${GITHUB_REF_NAME}" ]; then
+            echo "::error::Tag ${GITHUB_REF_NAME} does not match pubspec.yaml version v${PUBSPEC_VERSION}. Update pubspec.yaml (version: X.Y.Z+N), commit, then re-tag."
+            exit 1
+          fi
+
+      # Quality gate before shipping (rules.md §7).
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Run tests
+        run: flutter test
+
+      # Writes android/key.properties + the keystore from GitHub Secrets.
+      # If the secrets are not configured yet, the build falls back to debug
+      # signing (see android/app/build.gradle.kts) and we just warn. Note that
+      # a debug-signed AAB cannot be uploaded to Google Play.
+      - name: Configure release signing
+        env:
+          ANDROID_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          if [ -z "$ANDROID_KEYSTORE" ]; then
+            echo "::warning::ANDROID_KEYSTORE secret not set — artifacts will be signed with debug keys and are NOT Play-Store uploadable."
+            exit 0
+          fi
+          echo "$ANDROID_KEYSTORE" | base64 --decode > android/app/upload-keystore.jks
+          {
+            echo "storeFile=upload-keystore.jks"
+            echo "storePassword=$ANDROID_KEYSTORE_PASSWORD"
+            echo "keyAlias=$ANDROID_KEY_ALIAS"
+            echo "keyPassword=$ANDROID_KEY_PASSWORD"
+          } > android/key.properties
+
+      - name: Build production APK
+        run: flutter build apk --release --flavor prod -t lib/main_prod.dart
+
+      - name: Build production AAB
+        run: flutter build appbundle --release --flavor prod -t lib/main_prod.dart
+
+      - name: Rename artifacts
+        run: |
+          cp build/app/outputs/flutter-apk/app-prod-release.apk "mulearn-${GITHUB_REF_NAME}.apk"
+          cp build/app/outputs/bundle/prodRelease/app-prod-release.aab "mulearn-${GITHUB_REF_NAME}.aab"
+
+      # Stable release named after the tag, with GitHub's auto-generated
+      # release notes (--generate-notes). --verify-tag ensures the tag exists
+      # on the remote rather than silently creating a new one.
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" \
+            --title "$GITHUB_REF_NAME" \
+            --generate-notes \
+            --verify-tag \
+            "mulearn-${GITHUB_REF_NAME}.apk" \
+            "mulearn-${GITHUB_REF_NAME}.aab"

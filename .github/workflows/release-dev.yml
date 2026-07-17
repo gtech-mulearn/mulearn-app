@@ -1,0 +1,123 @@
+# Development release channel — internal QA / testers.
+#
+# Every push (or merged PR) to `dev` builds a release APK of the *dev*
+# flavor (μLearn Dev, .dev application-id suffix, dev API host) and refreshes
+# a single rolling GitHub Pre-release tagged `dev-latest`. Testers always
+# download the same URL:
+#   https://github.com/<owner>/<repo>/releases/tag/dev-latest
+name: Release (Development)
+
+on:
+  push:
+    branches:
+      - dev
+
+# Only the newest develop build matters — cancel superseded runs so two
+# pushes can't race each other while refreshing the dev-latest release.
+concurrency:
+  group: release-dev
+  cancel-in-progress: true
+
+# Needed to create/delete the dev-latest release and its tag.
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    name: Build dev APK & publish pre-release
+    runs-on: ubuntu-latest
+    environment: Development
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # JDK 21 runs Gradle 9.1 / AGP 9.0.1; the app itself still targets
+      # Java 17 bytecode (android/app/build.gradle.kts compileOptions).
+      # `cache: gradle` caches Gradle wrapper + dependency caches.
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: gradle
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      # Writes android/key.properties + the keystore from GitHub Secrets.
+      # If the secrets are not configured yet, the build falls back to debug
+      # signing (see android/app/build.gradle.kts) and we just warn.
+      - name: Configure release signing
+        env:
+          ANDROID_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          if [ -z "$ANDROID_KEYSTORE" ]; then
+            echo "::warning::ANDROID_KEYSTORE secret not set — APK will be signed with debug keys."
+            exit 0
+          fi
+          echo "$ANDROID_KEYSTORE" | base64 --decode > android/app/upload-keystore.jks
+          {
+            echo "storeFile=upload-keystore.jks"
+            echo "storePassword=$ANDROID_KEYSTORE_PASSWORD"
+            echo "keyAlias=$ANDROID_KEY_ALIAS"
+            echo "keyPassword=$ANDROID_KEY_PASSWORD"
+          } > android/key.properties
+
+      # Dev version = pubspec version + run number, e.g. v1.0.0-dev.42.
+      # The run number is also used as the versionCode so testers can install
+      # each new dev build over the previous one.
+      - name: Compute dev version
+        id: version
+        run: |
+          BASE=$(grep -m1 '^version:' pubspec.yaml | awk '{print $2}' | cut -d+ -f1)
+          echo "build_name=${BASE}-dev.${GITHUB_RUN_NUMBER}" >> "$GITHUB_OUTPUT"
+          echo "dev_version=v${BASE}-dev.${GITHUB_RUN_NUMBER}" >> "$GITHUB_OUTPUT"
+
+      - name: Build dev APK
+        run: |
+          flutter build apk --release \
+            --flavor dev \
+            -t lib/main_dev.dart \
+            --build-name "${{ steps.version.outputs.build_name }}" \
+            --build-number "${{ github.run_number }}"
+
+      - name: Rename artifact
+        run: cp build/app/outputs/flutter-apk/app-dev-release.apk "mulearn-${{ steps.version.outputs.dev_version }}.apk"
+
+      # Keep exactly one rolling pre-release: delete the previous dev-latest
+      # release + tag, then recreate it on the current commit. This avoids
+      # piling up a release per push while keeping the download URL stable.
+      - name: Publish dev-latest pre-release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEV_VERSION: ${{ steps.version.outputs.dev_version }}
+        run: |
+          gh release delete dev-latest --yes --cleanup-tag || true
+          gh release create dev-latest \
+            --prerelease \
+            --target "$GITHUB_SHA" \
+            --title "Development build ${DEV_VERSION}" \
+            --notes "$(cat <<EOF
+          Automated development build for internal QA — **not for production use**.
+
+          | | |
+          |---|---|
+          | Version | \`${DEV_VERSION}\` |
+          | Commit | ${GITHUB_SHA} |
+          | Branch | \`dev\` |
+          | Flavor | \`dev\` (μLearn Dev, \`org.mulearn.app.dev\`, dev API host) |
+          | Workflow run | ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} |
+
+          This release is refreshed on every push to \`dev\` — this URL always serves the latest dev APK.
+          EOF
+          )" \
+            mulearn-*.apk
