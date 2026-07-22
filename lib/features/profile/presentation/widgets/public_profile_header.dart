@@ -1,6 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:mulearn_app/core/theme/mulearn_gradients.dart';
+import 'package:mulearn_app/core/theme/mu_radius.dart';
+import 'package:mulearn_app/core/theme/mu_space.dart';
+import 'package:mulearn_app/core/theme/mulearn_colors.dart';
+import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 import 'package:mulearn_app/core/widgets/profile_avatar.dart';
 import 'package:mulearn_app/features/profile/domain/entities/user_profile.dart';
 
@@ -14,7 +17,6 @@ class PublicProfileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final level = (profile.level != null && profile.level!.length > 3)
         ? profile.level!.substring(3, 4)
         : '1';
@@ -22,7 +24,7 @@ class PublicProfileHeader extends StatelessWidget {
         profile.joined.length >= 4 ? profile.joined.substring(0, 4) : null;
 
     return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(MuRadius.card),
       child: SizedBox(
         height: 220,
         child: Stack(
@@ -33,12 +35,12 @@ class PublicProfileHeader extends StatelessWidget {
                 imageUrl: profile.coverPicUrl!,
                 fit: BoxFit.cover,
                 errorWidget: (_, __, ___) => const DecoratedBox(
-                  decoration: BoxDecoration(gradient: MulearnGradients.trusty),
+                  decoration: BoxDecoration(gradient: MuColors.heroGradient),
                 ),
               )
             else
               const DecoratedBox(
-                decoration: BoxDecoration(gradient: MulearnGradients.trusty),
+                decoration: BoxDecoration(gradient: MuColors.heroGradient),
               ),
             DecoratedBox(
               decoration: BoxDecoration(
@@ -53,9 +55,9 @@ class PublicProfileHeader extends StatelessWidget {
               ),
             ),
             Positioned(
-              left: 16,
-              right: 16,
-              bottom: 16,
+              left: MuSpace.l,
+              right: MuSpace.l,
+              bottom: MuSpace.l,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
@@ -79,24 +81,20 @@ class PublicProfileHeader extends StatelessWidget {
                           height: 24,
                           width: 24,
                           decoration: BoxDecoration(
-                            color: MulearnGradients.trusty.colors.last,
+                            color: MuColors.lime,
                             shape: BoxShape.circle,
                             border: Border.all(color: Colors.white, width: 2),
                           ),
                           alignment: Alignment.center,
                           child: Text(
                             level,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 11,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: MuType.statSmall.copyWith(color: MuColors.limeInk, fontSize: 11),
                           ),
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: MuSpace.m),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,23 +102,18 @@ class PublicProfileHeader extends StatelessWidget {
                       children: [
                         Text(
                           profile.fullName,
-                          style: theme.textTheme.titleLarge?.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: MuType.title.copyWith(color: Colors.white),
                           overflow: TextOverflow.ellipsis,
                         ),
                         Text(
                           profile.muid,
-                          style: theme.textTheme.bodySmall
-                              ?.copyWith(color: Colors.white70),
+                          style: MuType.caption.copyWith(color: Colors.white70),
                           overflow: TextOverflow.ellipsis,
                         ),
                         if (memberSince != null)
                           Text(
                             'Member since $memberSince',
-                            style: theme.textTheme.labelSmall
-                                ?.copyWith(color: Colors.white70),
+                            style: MuType.caption.copyWith(color: Colors.white70),
                           ),
                       ],
                     ),

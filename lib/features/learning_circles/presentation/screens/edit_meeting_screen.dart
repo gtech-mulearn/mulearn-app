@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
+import 'package:mulearn_app/core/theme/mulearn_colors.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/meeting_detail.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/meeting_form.dart';
@@ -32,6 +33,7 @@ class EditMeetingScreen extends ConsumerWidget {
     final actionState = ref.watch(meetingActionsControllerProvider);
 
     return Scaffold(
+      backgroundColor: MuColors.canvas,
       appBar: AppBar(title: const Text('Edit Meeting')),
       body: detailState.when(
         loading: () => const Center(child: CircularProgressIndicator()),

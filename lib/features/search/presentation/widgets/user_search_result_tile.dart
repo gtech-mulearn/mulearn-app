@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
+import 'package:mulearn_app/core/theme/mulearn_typography.dart';
+import 'package:mulearn_app/core/widgets/mu_card.dart';
 import 'package:mulearn_app/core/widgets/profile_avatar.dart';
 import 'package:mulearn_app/features/search/domain/entities/user_search_result.dart';
 
@@ -16,29 +19,38 @@ class UserSearchResultTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      onTap: onTap,
-      leading: ProfileAvatar(
-        url: result.profilePicUrl,
-        name: result.fullName,
-        size: 40,
-      ),
-      title: Text(result.fullName),
-      subtitle: Text(
-        [result.muid, if (result.organization != null) result.organization]
-            .join(' · '),
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-      ),
-      trailing: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Text('${result.karma}',
-              style: const TextStyle(fontWeight: FontWeight.bold)),
-          const Text('karma',
-              style: TextStyle(fontSize: 10, color: MulearnColors.gray600)),
-        ],
+    return Padding(
+      padding: const EdgeInsets.only(bottom: MuSpace.m),
+      child: MuCard(
+        onTap: onTap,
+        child: Row(
+          children: [
+            ProfileAvatar(url: result.profilePicUrl, name: result.fullName, size: 44),
+            const SizedBox(width: MuSpace.m),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(result.fullName, style: MuType.bodyMed, maxLines: 1, overflow: TextOverflow.ellipsis),
+                  Text(
+                    [result.muid, if (result.organization != null) result.organization].join(' · '),
+                    style: MuType.caption,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: MuSpace.s),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text('${result.karma}', style: MuType.statSmall.copyWith(fontSize: 15)),
+                Text('karma', style: MuType.caption.copyWith(color: MuColors.inkTertiary)),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

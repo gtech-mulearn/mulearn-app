@@ -13,7 +13,7 @@ class FeaturedEventsList extends StatelessWidget {
   Widget build(BuildContext context) {
     if (events.isEmpty) return const SizedBox.shrink();
     return SizedBox(
-      height: 168,
+      height: 196,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 4),

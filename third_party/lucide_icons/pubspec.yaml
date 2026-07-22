@@ -1,0 +1,23 @@
+name: lucide_icons
+description: >
+  Locally vendored, patched fork of lucide_icons 0.257.0 — the upstream
+  package's LucideIconData subclasses Flutter's IconData, which is now a
+  final class in current Flutter/Dart SDKs, making the upstream package
+  fail to compile. This fork drops the subclass and constructs plain
+  IconData instances inline instead, keeping the exact same
+  `LucideIcons.xyz` public API used throughout the app.
+version: 0.257.0
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+flutter:
+  fonts:
+    - family: Lucide
+      fonts:
+        - asset: assets/lucide.ttf

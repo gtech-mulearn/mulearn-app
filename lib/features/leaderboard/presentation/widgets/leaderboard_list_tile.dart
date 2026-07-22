@@ -1,10 +1,12 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
-import 'package:mulearn_app/core/theme/mulearn_gradients.dart';
+import 'package:mulearn_app/core/theme/mulearn_typography.dart';
+import 'package:mulearn_app/core/widgets/profile_avatar.dart';
 
 /// A single ranked row shared by the student and college leaderboard lists —
-/// rank badge, optional avatar, title/subtitle, and a trailing karma value.
+/// rank in Space Grotesk, avatar, name, karma right-aligned in `primary`
+/// (rules.md §8).
 class LeaderboardListTile extends StatelessWidget {
   const LeaderboardListTile({
     required this.rank,
@@ -22,66 +24,39 @@ class LeaderboardListTile extends StatelessWidget {
   final String? avatarUrl;
 
   Color get _rankColor => switch (rank) {
-        1 => MulearnColors.rankGold,
-        2 => MulearnColors.rankSilver,
-        3 => MulearnColors.rankBronze,
-        _ => MulearnColors.gray600,
+        1 => MuColors.rankGold,
+        2 => MuColors.rankSilver,
+        3 => MuColors.rankBronze,
+        _ => MuColors.inkTertiary,
       };
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return ListTile(
-      leading: Stack(
-        alignment: Alignment.center,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: MuSpace.screenH, vertical: MuSpace.s),
+      child: Row(
         children: [
-          if (avatarUrl != null)
-            ClipOval(
-              child: CachedNetworkImage(
-                imageUrl: avatarUrl!,
-                height: 40,
-                width: 40,
-                fit: BoxFit.cover,
-                errorWidget: (_, __, ___) => const DecoratedBox(
-                  decoration: BoxDecoration(gradient: MulearnGradients.trusty),
-                ),
-              ),
-            )
-          else
-            Container(
-              height: 40,
-              width: 40,
-              decoration: const BoxDecoration(
-                gradient: MulearnGradients.trusty,
-                shape: BoxShape.circle,
-              ),
-            ),
-        ],
-      ),
-      title: Text(title, maxLines: 1, overflow: TextOverflow.ellipsis),
-      subtitle: Text(subtitle, maxLines: 1, overflow: TextOverflow.ellipsis),
-      leadingAndTrailingTextStyle: theme.textTheme.bodyMedium,
-      trailing: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-            decoration: BoxDecoration(
-              color: _rankColor.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(12),
-            ),
+          SizedBox(
+            width: 32,
             child: Text(
-              '#$rank',
-              style: TextStyle(
-                color: _rankColor,
-                fontWeight: FontWeight.bold,
-                fontSize: 12,
-              ),
+              '$rank',
+              style: MuType.statSmall.copyWith(color: _rankColor),
             ),
           ),
-          const SizedBox(height: 2),
-          Text('$karma karma', style: theme.textTheme.bodySmall),
+          const SizedBox(width: MuSpace.s),
+          ProfileAvatar(url: avatarUrl, name: title, size: 40),
+          const SizedBox(width: MuSpace.m),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(title, style: MuType.bodyMed, maxLines: 1, overflow: TextOverflow.ellipsis),
+                Text(subtitle, style: MuType.caption, maxLines: 1, overflow: TextOverflow.ellipsis),
+              ],
+            ),
+          ),
+          Text('$karma', style: MuType.statSmall.copyWith(color: MuColors.primary)),
         ],
       ),
     );

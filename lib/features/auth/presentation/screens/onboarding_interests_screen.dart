@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
+import 'package:mulearn_app/core/theme/mu_radius.dart';
+import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
+import 'package:mulearn_app/core/theme/mulearn_typography.dart';
+import 'package:mulearn_app/core/widgets/mu_buttons.dart';
+import 'package:mulearn_app/core/widgets/mu_chip.dart';
+import 'package:mulearn_app/core/widgets/mu_toast.dart';
 import 'package:mulearn_app/features/auth/data/interests_quiz_data.dart';
 import 'package:mulearn_app/features/auth/domain/entities/endgoal.dart';
 import 'package:mulearn_app/features/auth/domain/entities/pathway.dart';
@@ -42,16 +49,15 @@ class _OnboardingInterestsScreenState
       if (next.hasError && !next.isLoading) {
         final error = next.error;
         final message = ApiException.messageFor(error!);
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(SnackBar(content: Text(message)));
+        MuToast.show(context, message: message, type: MuToastType.error);
       }
     });
 
     return Scaffold(
+      backgroundColor: MuColors.canvas,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
+          padding: const EdgeInsets.symmetric(horizontal: MuSpace.screenH),
           child: switch (_mode) {
             _InterestsMode.choice => _ChoiceView(
                 onQuiz: () => setState(() => _mode = _InterestsMode.quiz),
@@ -74,25 +80,24 @@ class _ChoiceView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text('Welcome to μLearn!', style: theme.textTheme.headlineMedium),
-        const SizedBox(height: 8),
+        Text('Welcome to μLearn!', style: MuType.headline),
+        const SizedBox(height: MuSpace.s),
         Text(
           "Let's find the right pathways for you.",
-          style: theme.textTheme.bodyMedium?.copyWith(color: MulearnColors.gray600),
+          style: MuType.body.copyWith(color: MuColors.inkSecondary),
         ),
-        const SizedBox(height: 32),
+        const SizedBox(height: MuSpace.xxl),
         _ChoiceCard(
           emoji: '✨',
           title: 'Take the PathFinder Quiz',
           description: '5 quick questions to discover your pathways.',
           onTap: onQuiz,
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: MuSpace.m),
         _ChoiceCard(
           emoji: '📋',
           title: 'I know what I want',
@@ -119,35 +124,31 @@ class _ChoiceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(10),
+      borderRadius: BorderRadius.circular(MuRadius.inner),
       child: Container(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(MuSpace.l),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: MulearnColors.greyish),
+          borderRadius: BorderRadius.circular(MuRadius.inner),
+          color: MuColors.surface,
+          border: Border.all(color: MuColors.divider),
         ),
         child: Row(
           children: [
             Text(emoji, style: const TextStyle(fontSize: 28)),
-            const SizedBox(width: 14),
+            const SizedBox(width: MuSpace.m),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title, style: theme.textTheme.titleMedium),
-                  const SizedBox(height: 4),
-                  Text(
-                    description,
-                    style: theme.textTheme.bodySmall
-                        ?.copyWith(color: MulearnColors.gray600),
-                  ),
+                  Text(title, style: MuType.bodyMed),
+                  const SizedBox(height: MuSpace.xs),
+                  Text(description, style: MuType.caption),
                 ],
               ),
             ),
-            const Icon(Icons.chevron_right),
+            const Icon(LucideIcons.chevronRight, color: MuColors.inkSecondary),
           ],
         ),
       ),
@@ -198,36 +199,38 @@ class _QuizViewState extends ConsumerState<_QuizView> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final question = _questions[_index];
     final isLoading = ref.watch(interestsControllerProvider).isLoading;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const SizedBox(height: 16),
-        LinearProgressIndicator(value: (_index + 1) / _questions.length),
-        const SizedBox(height: 24),
+        const SizedBox(height: MuSpace.l),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(MuRadius.chip),
+          child: LinearProgressIndicator(
+            value: (_index + 1) / _questions.length,
+            backgroundColor: MuColors.divider,
+            valueColor: const AlwaysStoppedAnimation(MuColors.primary),
+          ),
+        ),
+        const SizedBox(height: MuSpace.xl),
         Text(
           'Question ${_index + 1} of ${_questions.length}',
-          style: theme.textTheme.bodySmall?.copyWith(color: MulearnColors.gray600),
+          style: MuType.caption,
         ),
-        const SizedBox(height: 8),
-        Text(question.question, style: theme.textTheme.headlineSmall),
-        const SizedBox(height: 24),
+        const SizedBox(height: MuSpace.s),
+        Text(question.question, style: MuType.headline),
+        const SizedBox(height: MuSpace.xl),
         for (final option in question.options) ...[
-          OutlinedButton(
+          MuGhostButton(
+            label: option.text,
             onPressed: isLoading ? null : () => _answer(option.pathway),
-            style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-              alignment: Alignment.centerLeft,
-            ),
-            child: Text(option.text),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: MuSpace.m),
         ],
         if (isLoading) ...[
-          const SizedBox(height: 12),
+          const SizedBox(height: MuSpace.m),
           const Center(child: CircularProgressIndicator()),
         ],
       ],
@@ -263,45 +266,44 @@ class _DirectViewState extends ConsumerState<_DirectView> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final isLoading = ref.watch(interestsControllerProvider).isLoading;
 
     if (!_onEndgoalsStep) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const SizedBox(height: 16),
-          Text('Pick your pathways', style: theme.textTheme.headlineMedium),
-          const SizedBox(height: 8),
+          const SizedBox(height: MuSpace.l),
+          Text('Pick your pathways', style: MuType.headline),
+          const SizedBox(height: MuSpace.s),
           Text(
             'Select at least one — you can pick more than one.',
-            style: theme.textTheme.bodyMedium?.copyWith(color: MulearnColors.gray600),
+            style: MuType.body.copyWith(color: MuColors.inkSecondary),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: MuSpace.xl),
           Wrap(
-            spacing: 12,
-            runSpacing: 12,
+            spacing: MuSpace.m,
+            runSpacing: MuSpace.m,
             children: [
               for (final pathway in Pathway.values)
-                FilterChip(
-                  label: Text(_pathwayLabel(pathway)),
+                MuFilterChip(
+                  label: _pathwayLabel(pathway),
                   selected: _selectedPathways.contains(pathway),
-                  onSelected: (selected) => setState(() {
-                    if (selected) {
-                      _selectedPathways.add(pathway);
-                    } else {
+                  onTap: () => setState(() {
+                    if (_selectedPathways.contains(pathway)) {
                       _selectedPathways.remove(pathway);
+                    } else {
+                      _selectedPathways.add(pathway);
                     }
                   }),
                 ),
             ],
           ),
-          const SizedBox(height: 28),
-          FilledButton(
+          const SizedBox(height: MuSpace.xl),
+          MuPrimaryButton(
+            label: 'Continue',
             onPressed: _selectedPathways.isEmpty
                 ? null
                 : () => setState(() => _onEndgoalsStep = true),
-            child: const Text('Continue'),
           ),
         ],
       );
@@ -310,52 +312,46 @@ class _DirectViewState extends ConsumerState<_DirectView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const SizedBox(height: 16),
+        const SizedBox(height: MuSpace.l),
         TextButton.icon(
           onPressed: () => setState(() => _onEndgoalsStep = false),
-          icon: const Icon(Icons.arrow_back, size: 18),
+          icon: const Icon(LucideIcons.arrowLeft, size: 18),
           label: const Text('Back'),
           style: TextButton.styleFrom(
             padding: EdgeInsets.zero,
             alignment: Alignment.centerLeft,
           ),
         ),
-        const SizedBox(height: 8),
-        Text('What are your end goals?', style: theme.textTheme.headlineMedium),
-        const SizedBox(height: 8),
+        const SizedBox(height: MuSpace.s),
+        Text('What are your end goals?', style: MuType.headline),
+        const SizedBox(height: MuSpace.s),
         Text(
           'Select at least one.',
-          style: theme.textTheme.bodyMedium?.copyWith(color: MulearnColors.gray600),
+          style: MuType.body.copyWith(color: MuColors.inkSecondary),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: MuSpace.xl),
         Wrap(
-          spacing: 12,
-          runSpacing: 12,
+          spacing: MuSpace.m,
+          runSpacing: MuSpace.m,
           children: [
             for (final endgoal in Endgoal.values)
-              FilterChip(
-                label: Text(_endgoalLabel(endgoal)),
+              MuFilterChip(
+                label: _endgoalLabel(endgoal),
                 selected: _selectedEndgoals.contains(endgoal),
-                onSelected: (selected) => setState(() {
-                  if (selected) {
-                    _selectedEndgoals.add(endgoal);
-                  } else {
+                onTap: () => setState(() {
+                  if (_selectedEndgoals.contains(endgoal)) {
                     _selectedEndgoals.remove(endgoal);
+                  } else {
+                    _selectedEndgoals.add(endgoal);
                   }
                 }),
               ),
           ],
         ),
-        const SizedBox(height: 28),
-        FilledButton(
+        const SizedBox(height: MuSpace.xl),
+        MuPrimaryButton(
+          label: isLoading ? 'Submitting…' : "Let's go!",
           onPressed: isLoading || _selectedEndgoals.isEmpty ? null : _submit,
-          child: isLoading
-              ? const SizedBox(
-                  height: 22,
-                  width: 22,
-                  child: CircularProgressIndicator(strokeWidth: 2.5),
-                )
-              : const Text("Let's go!"),
         ),
       ],
     );

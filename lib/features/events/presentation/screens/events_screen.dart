@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
+import 'package:mulearn_app/core/theme/mu_space.dart';
+import 'package:mulearn_app/core/theme/mulearn_colors.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
+import 'package:mulearn_app/core/widgets/mu_empty_state.dart';
+import 'package:mulearn_app/core/widgets/mu_icon_button.dart';
 import 'package:mulearn_app/features/events/presentation/providers/events_controller.dart';
 import 'package:mulearn_app/features/events/presentation/widgets/event_list_tile.dart';
 
@@ -42,14 +47,15 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
     final eventsState = ref.watch(eventsListControllerProvider);
 
     return Scaffold(
+      backgroundColor: MuColors.canvas,
       appBar: AppBar(
         title: const Text('Events'),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.calendar_month_outlined),
-            tooltip: 'Calendar',
+          MuIconButton(
+            icon: LucideIcons.calendarDays,
             onPressed: () => context.push(RoutePaths.calendar),
           ),
+          const SizedBox(width: MuSpace.s),
         ],
       ),
       body: eventsState.when(
@@ -60,18 +66,28 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
         ),
         data: (events) {
           if (events.isEmpty) {
-            return const Center(child: Text('No events yet.'));
+            return const MuEmptyState(
+              icon: LucideIcons.calendarDays,
+              title: 'No events yet',
+              message: 'Check back soon for upcoming events.',
+            );
           }
           final hasMore = ref.read(eventsListControllerProvider.notifier).hasMore;
           return RefreshIndicator(
             onRefresh: () async => ref.invalidate(eventsListControllerProvider),
             child: ListView.builder(
               controller: _scrollController,
+              padding: const EdgeInsets.fromLTRB(
+                MuSpace.screenH,
+                MuSpace.l,
+                MuSpace.screenH,
+                MuSpace.l,
+              ),
               itemCount: events.length + (hasMore ? 1 : 0),
               itemBuilder: (context, index) {
                 if (index >= events.length) {
                   return const Padding(
-                    padding: EdgeInsets.all(16),
+                    padding: EdgeInsets.all(MuSpace.l),
                     child: Center(child: CircularProgressIndicator()),
                   );
                 }

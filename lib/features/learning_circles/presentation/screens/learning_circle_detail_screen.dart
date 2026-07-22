@@ -1,10 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/auth/current_user_claims.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
+import 'package:mulearn_app/core/theme/mu_space.dart';
+import 'package:mulearn_app/core/theme/mulearn_colors.dart';
+import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
+import 'package:mulearn_app/core/widgets/mu_buttons.dart';
+import 'package:mulearn_app/core/widgets/mu_card.dart';
+import 'package:mulearn_app/core/widgets/mu_chip.dart';
+import 'package:mulearn_app/core/widgets/mu_icon_button.dart';
+import 'package:mulearn_app/core/widgets/mu_section_header.dart';
+import 'package:mulearn_app/core/widgets/mu_stat_block.dart';
+import 'package:mulearn_app/core/widgets/mu_task_tile.dart';
+import 'package:mulearn_app/core/widgets/mu_toast.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/circle_member.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/join_request.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/learning_circle_detail.dart';
@@ -21,6 +33,7 @@ class LearningCircleDetailScreen extends ConsumerWidget {
     final detailState = ref.watch(circleDetailProvider(circleId));
 
     return Scaffold(
+      backgroundColor: MuColors.canvas,
       appBar: AppBar(title: const Text('Learning Circle')),
       body: detailState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -59,78 +72,82 @@ class _CircleDetailBody extends ConsumerWidget {
           ..invalidate(circleMembersProvider(circleId));
       },
       child: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(MuSpace.screenH),
         children: [
-          Text(detail.title, style: Theme.of(context).textTheme.headlineSmall),
-          const SizedBox(height: 4),
+          Text(detail.title, style: MuType.headline),
+          const SizedBox(height: MuSpace.xs),
           Text(
             [detail.ig, if (detail.org != null) detail.org].join(' · '),
-            style: Theme.of(context).textTheme.bodyMedium,
+            style: MuType.body.copyWith(color: MuColors.inkSecondary),
           ),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 16,
-            children: [
-              _Stat(label: 'Members', value: '${detail.totalMembers ?? 0}'),
-              _Stat(label: 'Karma', value: '${detail.totalKarma ?? 0}'),
-              if (detail.rank != null)
-                _Stat(label: 'Rank', value: '#${detail.rank}'),
-            ],
+          const SizedBox(height: MuSpace.l),
+          MuCard(
+            child: Row(
+              children: [
+                Expanded(
+                  child: MuStatBlock(label: 'Members', value: '${detail.totalMembers ?? 0}'),
+                ),
+                Expanded(
+                  child: MuStatBlock(label: 'Karma', value: '${detail.totalKarma ?? 0}'),
+                ),
+                if (detail.rank != null)
+                  Expanded(child: MuStatBlock(label: 'Rank', value: '#${detail.rank}')),
+              ],
+            ),
           ),
           if (detail.description.isNotEmpty) ...[
-            const SizedBox(height: 16),
-            Text(detail.description),
+            const SizedBox(height: MuSpace.l),
+            Text(detail.description, style: MuType.body),
           ],
-          const SizedBox(height: 16),
+          const SizedBox(height: MuSpace.l),
           if (!isMember)
-            FilledButton.icon(
-              onPressed: actionState.isLoading
-                  ? null
-                  : () => _requestToJoin(context, ref),
-              icon: const Icon(Icons.group_add),
-              label: Text(
-                  actionState.isLoading ? 'Sending…' : 'Request to join'),
+            MuPrimaryButton(
+              label: actionState.isLoading ? 'Sending…' : 'Request to join',
+              icon: LucideIcons.userPlus,
+              onPressed: actionState.isLoading ? null : () => _requestToJoin(context, ref),
             ),
           if (isLead) ...[
-            const SizedBox(height: 8),
+            const SizedBox(height: MuSpace.s),
             Row(
               children: [
                 Expanded(
-                  child: OutlinedButton.icon(
+                  child: MuGhostButton(
+                    label: 'Edit',
+                    icon: LucideIcons.pencil,
                     onPressed: () => _showEditDialog(context, ref, detail),
-                    icon: const Icon(Icons.edit_outlined),
-                    label: const Text('Edit'),
                   ),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: MuSpace.s),
                 Expanded(
-                  child: OutlinedButton.icon(
+                  child: MuGhostButton(
+                    label: 'Delete',
+                    icon: LucideIcons.trash2,
                     onPressed: () => _confirmDelete(context, ref),
-                    icon: Icon(Icons.delete_outline,
-                        color: Theme.of(context).colorScheme.error),
-                    label: Text('Delete',
-                        style:
-                            TextStyle(color: Theme.of(context).colorScheme.error)),
                   ),
                 ),
               ],
             ),
           ],
-          const Divider(height: 32),
-          Text('Members', style: Theme.of(context).textTheme.titleMedium),
-          const SizedBox(height: 8),
-          ...members.map((m) => _MemberTile(
-                member: m,
-                isLead: isLead,
-                circleId: circleId,
-              )),
+          const SizedBox(height: MuSpace.xxl),
+          const MuSectionHeader(title: 'Members'),
+          const SizedBox(height: MuSpace.m),
+          MuCard(
+            child: Column(
+              children: [
+                for (var i = 0; i < members.length; i++) ...[
+                  if (i > 0) const Divider(height: MuSpace.l),
+                  _MemberTile(member: members[i], isLead: isLead, circleId: circleId),
+                ],
+              ],
+            ),
+          ),
           if (isLead) ...[
-            const Divider(height: 32),
+            const SizedBox(height: MuSpace.xxl),
             _JoinRequestsSection(circleId: circleId),
-            const Divider(height: 32),
+            const SizedBox(height: MuSpace.xxl),
             _InvitesSection(circleId: circleId),
           ],
-          const Divider(height: 32),
+          const SizedBox(height: MuSpace.xxl),
           _MeetingsSection(circleId: circleId, isLead: isLead),
         ],
       ),
@@ -143,14 +160,12 @@ class _CircleDetailBody extends ConsumerWidget {
         .requestToJoin(circleId);
     if (!context.mounted) return;
     final state = ref.read(circleActionsControllerProvider);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          state.hasError
-              ? ApiException.messageFor(state.error!)
-              : 'Request to join sent.',
-        ),
-      ),
+    MuToast.show(
+      context,
+      message: state.hasError
+          ? ApiException.messageFor(state.error!)
+          : 'Request to join sent.',
+      type: state.hasError ? MuToastType.error : MuToastType.success,
     );
   }
 
@@ -228,23 +243,6 @@ class _CircleDetailBody extends ConsumerWidget {
   }
 }
 
-class _Stat extends StatelessWidget {
-  const _Stat({required this.label, required this.value});
-
-  final String label;
-  final String value;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(value, style: Theme.of(context).textTheme.titleMedium),
-        Text(label, style: Theme.of(context).textTheme.labelSmall),
-      ],
-    );
-  }
-}
-
 class _MemberTile extends ConsumerWidget {
   const _MemberTile({
     required this.member,
@@ -258,21 +256,37 @@ class _MemberTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ListTile(
-      contentPadding: EdgeInsets.zero,
-      leading: CircleAvatar(
-        child: Text(member.fullName.isNotEmpty ? member.fullName[0] : '?'),
-      ),
-      title: Text(member.fullName),
-      subtitle: Text(member.muid),
-      trailing: member.isLeader
-          ? const Chip(label: Text('Lead'), visualDensity: VisualDensity.compact)
-          : (isLead
-              ? TextButton(
-                  onPressed: () => _confirmTransfer(context, ref),
-                  child: const Text('Make lead'),
-                )
-              : null),
+    return Row(
+      children: [
+        Container(
+          height: 36,
+          width: 36,
+          decoration: const BoxDecoration(color: MuColors.primaryTint, shape: BoxShape.circle),
+          alignment: Alignment.center,
+          child: Text(
+            member.fullName.isNotEmpty ? member.fullName[0].toUpperCase() : '?',
+            style: MuType.bodyMed.copyWith(color: MuColors.primary),
+          ),
+        ),
+        const SizedBox(width: MuSpace.m),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(member.fullName, style: MuType.bodyMed),
+              Text(member.muid, style: MuType.caption),
+            ],
+          ),
+        ),
+        if (member.isLeader)
+          const MuTagChip(label: 'Lead', style: MuTagStyle.success)
+        else if (isLead)
+          MuGhostButton(
+            label: 'Make lead',
+            expand: false,
+            onPressed: () => _confirmTransfer(context, ref),
+          ),
+      ],
     );
   }
 
@@ -312,19 +326,24 @@ class _JoinRequestsSection extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Pending join requests',
-            style: Theme.of(context).textTheme.titleMedium),
-        const SizedBox(height: 8),
+        const MuSectionHeader(title: 'Pending join requests'),
+        const SizedBox(height: MuSpace.m),
         requestsState.when(
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (error, _) => Text(ApiException.messageFor(error)),
           data: (requests) {
-            if (requests.isEmpty) return const Text('No pending requests.');
-            return Column(
-              children: requests.map((r) => _JoinRequestTile(
-                    request: r,
-                    circleId: circleId,
-                  )).toList(),
+            if (requests.isEmpty) {
+              return Text('No pending requests.', style: MuType.body.copyWith(color: MuColors.inkSecondary));
+            }
+            return MuCard(
+              child: Column(
+                children: [
+                  for (var i = 0; i < requests.length; i++) ...[
+                    if (i > 0) const Divider(height: MuSpace.l),
+                    _JoinRequestTile(request: requests[i], circleId: circleId),
+                  ],
+                ],
+              ),
             );
           },
         ),
@@ -341,29 +360,31 @@ class _JoinRequestTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ListTile(
-      contentPadding: EdgeInsets.zero,
-      title: Text(request.fullName),
-      subtitle: Text(request.muid),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          IconButton(
-            icon: const Icon(Icons.check, color: Colors.green),
-            onPressed: () => ref
-                .read(circleActionsControllerProvider.notifier)
-                .respondToJoinRequest(circleId,
-                    linkId: request.linkId, accept: true),
+    return Row(
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(request.fullName, style: MuType.bodyMed),
+              Text(request.muid, style: MuType.caption),
+            ],
           ),
-          IconButton(
-            icon: const Icon(Icons.close, color: Colors.red),
-            onPressed: () => ref
-                .read(circleActionsControllerProvider.notifier)
-                .respondToJoinRequest(circleId,
-                    linkId: request.linkId, accept: false),
-          ),
-        ],
-      ),
+        ),
+        MuIconButton(
+          icon: LucideIcons.check,
+          onPressed: () => ref
+              .read(circleActionsControllerProvider.notifier)
+              .respondToJoinRequest(circleId, linkId: request.linkId, accept: true),
+        ),
+        const SizedBox(width: MuSpace.s),
+        MuIconButton(
+          icon: LucideIcons.x,
+          onPressed: () => ref
+              .read(circleActionsControllerProvider.notifier)
+              .respondToJoinRequest(circleId, linkId: request.linkId, accept: false),
+        ),
+      ],
     );
   }
 }
@@ -381,33 +402,43 @@ class _InvitesSection extends ConsumerWidget {
       children: [
         Row(
           children: [
-            Expanded(
-              child: Text('Invites', style: Theme.of(context).textTheme.titleMedium),
-            ),
-            TextButton.icon(
+            const Expanded(child: MuSectionHeader(title: 'Invites')),
+            MuIconButton(
+              icon: LucideIcons.userPlus,
               onPressed: () => _showInviteDialog(context, ref),
-              icon: const Icon(Icons.person_add_alt),
-              label: const Text('Invite'),
             ),
           ],
         ),
+        const SizedBox(height: MuSpace.m),
         invitesState.when(
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (error, _) => Text(ApiException.messageFor(error)),
           data: (invites) {
-            if (invites.isEmpty) return const Text('No invites sent yet.');
-            return Column(
-              children: invites
-                  .map((i) => ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        title: Text(i.fullName),
-                        subtitle: Text(i.muid),
-                        trailing: Chip(
-                          label: Text(i.status),
-                          visualDensity: VisualDensity.compact,
+            if (invites.isEmpty) {
+              return Text('No invites sent yet.', style: MuType.body.copyWith(color: MuColors.inkSecondary));
+            }
+            return MuCard(
+              child: Column(
+                children: [
+                  for (var i = 0; i < invites.length; i++) ...[
+                    if (i > 0) const Divider(height: MuSpace.l),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(invites[i].fullName, style: MuType.bodyMed),
+                              Text(invites[i].muid, style: MuType.caption),
+                            ],
+                          ),
                         ),
-                      ))
-                  .toList(),
+                        MuTagChip(label: invites[i].status),
+                      ],
+                    ),
+                  ],
+                ],
+              ),
             );
           },
         ),
@@ -459,36 +490,47 @@ class _MeetingsSection extends ConsumerWidget {
       children: [
         Row(
           children: [
-            Expanded(
-              child: Text('Meetings', style: Theme.of(context).textTheme.titleMedium),
-            ),
+            const Expanded(child: MuSectionHeader(title: 'Meetings')),
             if (isLead)
-              TextButton.icon(
-                onPressed: () => context
-                    .push(RoutePaths.createMeetingPath(circleId)),
-                icon: const Icon(Icons.add),
-                label: const Text('New'),
+              MuIconButton(
+                icon: LucideIcons.plus,
+                onPressed: () => context.push(RoutePaths.createMeetingPath(circleId)),
               ),
           ],
         ),
+        const SizedBox(height: MuSpace.m),
         meetingsState.when(
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (error, _) => Text(ApiException.messageFor(error)),
           data: (meetings) {
-            if (meetings.isEmpty) return const Text('No meetings scheduled.');
+            if (meetings.isEmpty) {
+              return Text('No meetings scheduled.', style: MuType.body.copyWith(color: MuColors.inkSecondary));
+            }
             return Column(
-              children: meetings
-                  .map((m) => ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        leading: const Icon(Icons.video_call_outlined),
-                        title: Text(m.title),
-                        subtitle: Text(m.meetTime),
-                        onTap: () => context.push(
-                          RoutePaths.meetingDetailPath(m.id),
-                          extra: circleId,
+              children: [
+                for (final m in meetings)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: MuSpace.m),
+                    child: MuTaskTile(
+                      title: m.title,
+                      subtitle: m.meetTime,
+                      tags: [
+                        MuTagChip(
+                          label: m.isEnded ? 'Ended' : (m.isStarted ? 'Live now' : 'Upcoming'),
+                          style: m.isEnded
+                              ? MuTagStyle.neutral
+                              : (m.isStarted ? MuTagStyle.deadline : MuTagStyle.success),
                         ),
-                      ))
-                  .toList(),
+                        MuTagChip(label: m.mode),
+                      ],
+                      trailingLabel: '${m.attendeesCount} joined',
+                      onTap: () => context.push(
+                        RoutePaths.meetingDetailPath(m.id),
+                        extra: circleId,
+                      ),
+                    ),
+                  ),
+              ],
             );
           },
         ),

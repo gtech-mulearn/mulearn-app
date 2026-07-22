@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
+import 'package:mulearn_app/core/widgets/mu_toast.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/interest_groups_controller.dart';
 
 /// Multi-select checklist over the full interest-group catalog, pre-checked
@@ -28,8 +29,7 @@ class _EditInterestGroupsDialogState
       if (mounted) Navigator.of(context).pop();
     } on Object catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(ApiException.messageFor(e))));
+        MuToast.show(context, message: ApiException.messageFor(e), type: MuToastType.error);
       }
     }
   }

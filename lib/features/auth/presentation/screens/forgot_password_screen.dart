@@ -3,7 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
+import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
+import 'package:mulearn_app/core/theme/mulearn_typography.dart';
+import 'package:mulearn_app/core/widgets/mu_buttons.dart';
+import 'package:mulearn_app/core/widgets/mu_toast.dart';
 import 'package:mulearn_app/features/auth/presentation/providers/auth_controller.dart';
 
 /// Requests a password-reset email, matching the reference dashboard's
@@ -45,40 +49,37 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(authControllerProvider);
-    final theme = Theme.of(context);
 
     ref.listen(authControllerProvider, (_, next) {
       if (next.hasError && !next.isLoading) {
         final error = next.error;
         final message = ApiException.messageFor(error!);
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(SnackBar(content: Text(message)));
+        MuToast.show(context, message: message, type: MuToastType.error);
       }
     });
 
     final isLoading = state.isLoading;
 
     return Scaffold(
+      backgroundColor: MuColors.canvas,
       appBar: AppBar(),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
+          padding: const EdgeInsets.symmetric(horizontal: MuSpace.screenH),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const SizedBox(height: 16),
-              Text('Forgot password?', style: theme.textTheme.headlineMedium),
-              const SizedBox(height: 8),
+              const SizedBox(height: MuSpace.m),
+              Text('Forgot password?', style: MuType.headline),
+              const SizedBox(height: MuSpace.s),
               Text(
                 _sent
                     ? 'Check your email for a link to reset your password.'
                     : "Enter your email or MuID and we'll send you a link to "
                         'reset your password.',
-                style: theme.textTheme.bodyMedium
-                    ?.copyWith(color: MulearnColors.gray600),
+                style: MuType.body.copyWith(color: MuColors.inkSecondary),
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: MuSpace.xxl),
               if (!_sent)
                 Form(
                   key: _formKey,
@@ -98,27 +99,16 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                             ? 'Email or MuID is required.'
                             : null,
                       ),
-                      const SizedBox(height: 24),
-                      FilledButton(
+                      const SizedBox(height: MuSpace.xl),
+                      MuPrimaryButton(
+                        label: isLoading ? 'Sending…' : 'Send reset link',
                         onPressed: isLoading ? null : _submit,
-                        child: isLoading
-                            ? const SizedBox(
-                                height: 22,
-                                width: 22,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2.5,
-                                  valueColor: AlwaysStoppedAnimation(
-                                    MulearnColors.whitish,
-                                  ),
-                                ),
-                              )
-                            : const Text('Send reset link'),
                       ),
                     ],
                   ),
                 ),
               if (_sent) ...[
-                const SizedBox(height: 8),
+                const SizedBox(height: MuSpace.s),
                 Center(
                   child: TextButton(
                     onPressed: () => context.push(RoutePaths.resetPassword),

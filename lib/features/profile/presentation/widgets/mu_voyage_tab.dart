@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
+import 'package:mulearn_app/core/theme/mu_radius.dart';
+import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
+import 'package:mulearn_app/core/theme/mulearn_typography.dart';
+import 'package:mulearn_app/core/widgets/mu_card.dart';
 import 'package:mulearn_app/features/profile/domain/entities/level_task.dart';
 import 'package:mulearn_app/features/profile/domain/entities/user_level.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/public_profile_controller.dart';
@@ -26,9 +31,13 @@ class MuVoyageTab extends ConsumerWidget {
       error: (error, _) =>
           Center(child: Text(ApiException.messageFor(error))),
       data: (levels) => ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.fromLTRB(MuSpace.screenH, MuSpace.screenH, MuSpace.screenH, MuSpace.navClearance),
         children: [
-          for (final level in levels) _LevelSection(level: level),
+          for (final level in levels)
+            Padding(
+              padding: const EdgeInsets.only(bottom: MuSpace.m),
+              child: _LevelSection(level: level),
+            ),
         ],
       ),
     );
@@ -42,18 +51,28 @@ class _LevelSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final completed = level.tasks.where((t) => t.completed).length;
 
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      child: ExpansionTile(
-        title: Text(level.name, style: theme.textTheme.titleSmall),
-        subtitle: Text('$completed / ${level.tasks.length} tasks completed'),
-        trailing: Text('${level.karma} karma'),
-        children: [
-          for (final task in level.tasks) _TaskTile(task: task),
-        ],
+    return MuCard(
+      padding: EdgeInsets.zero,
+      child: Theme(
+        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+        child: ExpansionTile(
+          tilePadding: const EdgeInsets.symmetric(horizontal: MuSpace.l),
+          childrenPadding: const EdgeInsets.only(bottom: MuSpace.s),
+          title: Text(level.name, style: MuType.bodyMed),
+          subtitle: Text(
+            '$completed / ${level.tasks.length} tasks completed',
+            style: MuType.caption,
+          ),
+          trailing: Text(
+            '${level.karma}',
+            style: MuType.statSmall.copyWith(color: MuColors.primary, fontSize: 15),
+          ),
+          children: [
+            for (final task in level.tasks) _TaskTile(task: task),
+          ],
+        ),
       ),
     );
   }
@@ -66,16 +85,50 @@ class _TaskTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading: Icon(
-        task.completed ? Icons.check_circle : Icons.radio_button_unchecked,
-        color: task.completed ? Colors.green : MulearnColors.gray600,
+    return Opacity(
+      opacity: task.active ? 1 : 0.5,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: MuSpace.l, vertical: MuSpace.s),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(
+              task.completed ? LucideIcons.checkCircle2 : LucideIcons.circle,
+              size: 20,
+              color: task.completed ? MuColors.limeBright : MuColors.inkTertiary,
+            ),
+            const SizedBox(width: MuSpace.m),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    task.taskName,
+                    style: MuType.body.copyWith(
+                      color: task.completed ? MuColors.inkTertiary : MuColors.ink,
+                      decoration: task.completed ? TextDecoration.lineThrough : null,
+                    ),
+                  ),
+                  if (task.taskDescription != null)
+                    Text(task.taskDescription!, style: MuType.caption),
+                ],
+              ),
+            ),
+            const SizedBox(width: MuSpace.s),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: MuSpace.s, vertical: 2),
+              decoration: BoxDecoration(
+                color: MuColors.primaryTint,
+                borderRadius: BorderRadius.circular(MuRadius.chip),
+              ),
+              child: Text(
+                '+${task.karma}',
+                style: MuType.chip.copyWith(color: MuColors.primary),
+              ),
+            ),
+          ],
+        ),
       ),
-      title: Text(task.taskName),
-      subtitle:
-          task.taskDescription != null ? Text(task.taskDescription!) : null,
-      trailing: Text('+${task.karma}'),
-      enabled: task.active,
     );
   }
 }

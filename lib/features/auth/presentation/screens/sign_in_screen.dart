@@ -1,11 +1,17 @@
+import 'package:flutter/foundation.dart' show defaultTargetPlatform;
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
+import 'package:mulearn_app/core/theme/mu_radius.dart';
+import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
-import 'package:mulearn_app/core/theme/mulearn_gradients.dart';
+import 'package:mulearn_app/core/theme/mulearn_typography.dart';
+import 'package:mulearn_app/core/widgets/mu_buttons.dart';
+import 'package:mulearn_app/core/widgets/mu_toast.dart';
 import 'package:mulearn_app/features/auth/presentation/providers/auth_controller.dart';
 
 /// Email/MuID sign-in, matching the layout and copy of the reference
@@ -115,18 +121,17 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       if (next.hasError && !next.isLoading) {
         final error = next.error;
         final message = ApiException.messageFor(error!);
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(SnackBar(content: Text(message)));
+        MuToast.show(context, message: message, type: MuToastType.error);
       }
     });
 
     final isLoading = state.isLoading;
 
     return Scaffold(
+      backgroundColor: MuColors.canvas,
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+          padding: const EdgeInsets.symmetric(horizontal: MuSpace.screenH, vertical: 32),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -162,15 +167,15 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                   ),
               },
               if (_mode == _AuthMode.password) ...[
-                const SizedBox(height: 24),
+                const SizedBox(height: MuSpace.xl),
                 _OrDivider(),
-                const SizedBox(height: 20),
+                const SizedBox(height: MuSpace.l),
                 _SocialSignInButtons(
                   isLoading: isLoading,
                   onGoogle: _signInWithGoogle,
                   onApple: _signInWithApple,
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: MuSpace.xl),
                 _SignUpFooter(
                   onSignUp: () => context.push(RoutePaths.registerBasicInfo),
                 ),
@@ -208,18 +213,16 @@ class _PasswordForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('Welcome back', style: theme.textTheme.headlineMedium),
-        const SizedBox(height: 8),
+        Text('Welcome back', style: MuType.headline),
+        const SizedBox(height: MuSpace.s),
         Text(
           'Sign in to continue to your account',
-          style:
-              theme.textTheme.bodyMedium?.copyWith(color: MulearnColors.gray600),
+          style: MuType.body.copyWith(color: MuColors.inkSecondary),
         ),
-        const SizedBox(height: 32),
+        const SizedBox(height: MuSpace.xxl),
         Form(
           key: formKey,
           child: Column(
@@ -237,7 +240,7 @@ class _PasswordForm extends StatelessWidget {
                     ? 'Email or MuID is required.'
                     : null,
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: MuSpace.l),
               TextFormField(
                 controller: passwordController,
                 obscureText: obscure,
@@ -248,9 +251,8 @@ class _PasswordForm extends StatelessWidget {
                   labelText: 'Password',
                   suffixIcon: IconButton(
                     icon: Icon(
-                      obscure
-                          ? Icons.visibility_outlined
-                          : Icons.visibility_off_outlined,
+                      obscure ? LucideIcons.eye : LucideIcons.eyeOff,
+                      color: MuColors.inkSecondary,
                     ),
                     onPressed: onToggleObscure,
                   ),
@@ -258,7 +260,7 @@ class _PasswordForm extends StatelessWidget {
                 validator: (value) =>
                     (value == null || value.isEmpty) ? 'Password is required.' : null,
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: MuSpace.m),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -274,10 +276,10 @@ class _PasswordForm extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
-              FilledButton(
+              const SizedBox(height: MuSpace.l),
+              MuPrimaryButton(
+                label: isLoading ? 'Signing in…' : 'Sign in',
                 onPressed: isLoading ? null : onSubmit,
-                child: isLoading ? const _ButtonSpinner() : const Text('Sign in'),
               ),
             ],
           ),
@@ -304,18 +306,16 @@ class _OtpRequestForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('Login with OTP', style: theme.textTheme.headlineMedium),
-        const SizedBox(height: 8),
+        Text('Login with OTP', style: MuType.headline),
+        const SizedBox(height: MuSpace.s),
         Text(
           'Enter your email or MuID to receive an OTP',
-          style:
-              theme.textTheme.bodyMedium?.copyWith(color: MulearnColors.gray600),
+          style: MuType.body.copyWith(color: MuColors.inkSecondary),
         ),
-        const SizedBox(height: 32),
+        const SizedBox(height: MuSpace.xxl),
         Form(
           key: formKey,
           child: Column(
@@ -334,7 +334,7 @@ class _OtpRequestForm extends StatelessWidget {
                     ? 'Email or MuID is required.'
                     : null,
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: MuSpace.s),
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
@@ -343,11 +343,10 @@ class _OtpRequestForm extends StatelessWidget {
                   child: const Text('Login with Password'),
                 ),
               ),
-              const SizedBox(height: 8),
-              FilledButton(
+              const SizedBox(height: MuSpace.s),
+              MuPrimaryButton(
+                label: isLoading ? 'Sending…' : 'Request OTP',
                 onPressed: isLoading ? null : onSubmit,
-                child:
-                    isLoading ? const _ButtonSpinner() : const Text('Request OTP'),
               ),
             ],
           ),
@@ -374,7 +373,6 @@ class _OtpVerifyForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -384,18 +382,17 @@ class _OtpVerifyForm extends StatelessWidget {
             padding: EdgeInsets.zero,
             alignment: Alignment.centerLeft,
           ),
-          icon: const Icon(Icons.arrow_back, size: 18),
+          icon: const Icon(LucideIcons.arrowLeft, size: 18),
           label: const Text('Back'),
         ),
-        const SizedBox(height: 8),
-        Text('Enter OTP', style: theme.textTheme.headlineMedium),
-        const SizedBox(height: 8),
+        const SizedBox(height: MuSpace.s),
+        Text('Enter OTP', style: MuType.headline),
+        const SizedBox(height: MuSpace.s),
         Text(
           "We've sent an OTP to your email. Enter it below to continue.",
-          style:
-              theme.textTheme.bodyMedium?.copyWith(color: MulearnColors.gray600),
+          style: MuType.body.copyWith(color: MuColors.inkSecondary),
         ),
-        const SizedBox(height: 32),
+        const SizedBox(height: MuSpace.xxl),
         Form(
           key: formKey,
           child: Column(
@@ -412,11 +409,10 @@ class _OtpVerifyForm extends StatelessWidget {
                     ? 'OTP is required.'
                     : null,
               ),
-              const SizedBox(height: 16),
-              FilledButton(
+              const SizedBox(height: MuSpace.l),
+              MuPrimaryButton(
+                label: isLoading ? 'Verifying…' : 'Verify OTP',
                 onPressed: isLoading ? null : onSubmit,
-                child:
-                    isLoading ? const _ButtonSpinner() : const Text('Verify OTP'),
               ),
             ],
           ),
@@ -433,14 +429,8 @@ class _OrDivider extends StatelessWidget {
       children: [
         const Expanded(child: Divider()),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: Text(
-            'OR',
-            style: Theme.of(context)
-                .textTheme
-                .bodySmall
-                ?.copyWith(color: MulearnColors.gray600),
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: MuSpace.m),
+          child: Text('OR', style: MuType.caption),
         ),
         const Expanded(child: Divider()),
       ],
@@ -464,43 +454,22 @@ class _SocialSignInButtons extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        OutlinedButton.icon(
+        MuGhostButton(
+          label: 'Continue with Google',
+          icon: LucideIcons.chrome,
           onPressed: isLoading ? null : onGoogle,
-          icon: const _GoogleMark(),
-          label: const Text('Continue with Google'),
         ),
-        const SizedBox(height: 12),
-        OutlinedButton.icon(
-          onPressed: isLoading ? null : onApple,
-          icon: const Icon(Icons.apple, size: 20),
-          label: const Text('Continue with Apple'),
-        ),
+        // Sign in with Apple is an Apple-platform-only affordance — Android
+        // has no native Apple ID picker, so the button is never shown there.
+        if (defaultTargetPlatform == TargetPlatform.iOS) ...[
+          const SizedBox(height: MuSpace.m),
+          MuGhostButton(
+            label: 'Continue with Apple',
+            icon: LucideIcons.apple,
+            onPressed: isLoading ? null : onApple,
+          ),
+        ],
       ],
-    );
-  }
-}
-
-class _GoogleMark extends StatelessWidget {
-  const _GoogleMark();
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 18,
-      width: 18,
-      alignment: Alignment.center,
-      decoration: const BoxDecoration(
-        shape: BoxShape.circle,
-        border: Border.fromBorderSide(BorderSide(color: MulearnColors.gray600)),
-      ),
-      child: const Text(
-        'G',
-        style: TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.w700,
-          color: MulearnColors.gray600,
-        ),
-      ),
     );
   }
 }
@@ -512,40 +481,22 @@ class _SignUpFooter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Center(
       child: RichText(
         text: TextSpan(
-          style:
-              theme.textTheme.bodyMedium?.copyWith(color: MulearnColors.gray600),
+          style: MuType.body.copyWith(color: MuColors.inkSecondary),
           children: [
             const TextSpan(text: "Don't have an account? "),
             TextSpan(
               text: 'Sign up',
               style: const TextStyle(
-                color: MulearnColors.primary,
+                color: MuColors.primary,
                 fontWeight: FontWeight.w600,
               ),
               recognizer: TapGestureRecognizer()..onTap = onSignUp,
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _ButtonSpinner extends StatelessWidget {
-  const _ButtonSpinner();
-
-  @override
-  Widget build(BuildContext context) {
-    return const SizedBox(
-      height: 22,
-      width: 22,
-      child: CircularProgressIndicator(
-        strokeWidth: 2.5,
-        valueColor: AlwaysStoppedAnimation(MulearnColors.whitish),
       ),
     );
   }
@@ -562,8 +513,8 @@ class _BrandMark extends StatelessWidget {
           height: 56,
           width: 56,
           decoration: BoxDecoration(
-            gradient: MulearnGradients.trusty,
-            borderRadius: BorderRadius.circular(14),
+            gradient: MuColors.heroGradient,
+            borderRadius: BorderRadius.circular(MuRadius.inner),
           ),
           alignment: Alignment.center,
           child: const Text(
@@ -575,14 +526,8 @@ class _BrandMark extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 12),
-        Text(
-          'μLearn',
-          style: Theme.of(context)
-              .textTheme
-              .headlineSmall
-              ?.copyWith(fontWeight: FontWeight.w900),
-        ),
+        const SizedBox(height: MuSpace.m),
+        Text('μLearn', style: MuType.headline),
       ],
     );
   }

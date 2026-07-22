@@ -246,7 +246,7 @@ class LearningCirclesRepositoryImpl implements LearningCirclesRepository {
         results.add(parse(item as Map<String, dynamic>));
       } on Object catch (e, st) {
         appLogger.e(
-          'Skipping malformed learning-circle list row',
+          'Skipping malformed learning-circle list row. Raw row: $item',
           error: e,
           stackTrace: st,
         );

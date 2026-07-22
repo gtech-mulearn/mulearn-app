@@ -8,17 +8,20 @@ typedef AppleSignInResult = ({String identityToken, String? email});
 /// Wraps the native Sign in with Apple SDK to obtain an identity token for
 /// exchange with `POST /api/v1/auth/apple-mobile/`.
 ///
-/// ⚠️ Needs the "Sign in with Apple" capability (`com.apple.developer.applesignin`
-/// entitlement) enabled on the app's Xcode target before this can work on
-/// iOS/macOS. **Empirically confirmed** that adding this entitlement without a
-/// real Apple Developer Team/signing capability association breaks the app at
-/// launch (`Error waiting for a debug connection` — the sandboxed process
-/// fails to start) — so it's deliberately NOT added to
-/// `macos/Runner/*.entitlements` yet. Add it once this project has real Apple
-/// Developer Program signing configured (needed for release builds anyway).
-/// Android/other platforms additionally need `webAuthenticationOptions` (a
-/// Services ID + redirect URI), not wired here since this app's other
-/// platforms aren't in scope yet.
+/// iOS: the `com.apple.developer.applesignin` entitlement lives in
+/// `ios/Runner/Runner.entitlements`, wired via `CODE_SIGN_ENTITLEMENTS` on all
+/// three Runner build configs — this needs the paid Apple Developer Program
+/// (team `PX6QV826X4`), not a free Personal Team. **Empirically confirmed
+/// live**: Xcode refuses to provision this capability for Personal Teams at
+/// all ("Personal development teams... do not support the Sign In with
+/// Apple capability"), regardless of the App ID's Developer Portal
+/// configuration — so don't copy this entitlement onto a Personal-Team
+/// signed target.
+///
+/// macOS doesn't have this entitlement yet — add it there the same way if
+/// macOS ever needs this flow. Android/other platforms additionally need
+/// `webAuthenticationOptions` (a Services ID + redirect URI), not wired here
+/// since this app's other platforms aren't in scope yet.
 class AppleNativeSignInDataSource {
   const AppleNativeSignInDataSource();
 

@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
+import 'package:mulearn_app/core/theme/mu_radius.dart';
+import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
+import 'package:mulearn_app/core/theme/mulearn_typography.dart';
+import 'package:mulearn_app/core/widgets/mu_buttons.dart';
+import 'package:mulearn_app/core/widgets/mu_card.dart';
 import 'package:mulearn_app/features/profile/domain/entities/user_achievement.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/achievements_controller.dart';
 import 'package:mulearn_app/features/profile/presentation/widgets/issue_vc_dialog.dart';
@@ -34,22 +40,25 @@ class AchievementsTab extends ConsumerWidget {
           Center(child: Text(ApiException.messageFor(error))),
       data: (achievements) {
         if (achievements.isEmpty) {
-          return const Center(
+          return Center(
             child: Text(
               'No achievements yet.',
-              style: TextStyle(color: MulearnColors.gray600),
+              style: MuType.body.copyWith(color: MuColors.inkSecondary),
             ),
           );
         }
         return ListView.builder(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.fromLTRB(MuSpace.screenH, MuSpace.screenH, MuSpace.screenH, MuSpace.navClearance),
           itemCount: achievements.length,
-          itemBuilder: (context, index) => _AchievementCard(
-            achievement: achievements[index],
-            muid: muid,
-            userName: userName,
-            userEmail: userEmail,
-            isOwnProfile: isOwnProfile,
+          itemBuilder: (context, index) => Padding(
+            padding: const EdgeInsets.only(bottom: MuSpace.m),
+            child: _AchievementCard(
+              achievement: achievements[index],
+              muid: muid,
+              userName: userName,
+              userEmail: userEmail,
+              isOwnProfile: isOwnProfile,
+            ),
           ),
         );
       },
@@ -75,28 +84,52 @@ class _AchievementCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final canShowAction = achievement.isIssued || isOwnProfile;
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      child: ListTile(
-        leading: const Icon(Icons.emoji_events, color: MulearnColors.primary),
-        title: Text(achievement.achievement.achievementName),
-        subtitle: achievement.achievement.description != null
-            ? Text(achievement.achievement.description!)
-            : null,
-        trailing: !canShowAction
-            ? null
-            : FilledButton.tonal(
-                onPressed: () => showDialog<void>(
-                  context: context,
-                  builder: (_) => IssueVcDialog(
-                    achievement: achievement,
-                    muid: muid,
-                    userName: userName,
-                    userEmail: userEmail,
+    return MuCard(
+      child: Row(
+        children: [
+          Container(
+            height: 44,
+            width: 44,
+            decoration: BoxDecoration(
+              color: MuColors.primaryTint,
+              borderRadius: BorderRadius.circular(MuRadius.inner),
+            ),
+            alignment: Alignment.center,
+            child: const Icon(LucideIcons.award, color: MuColors.primary),
+          ),
+          const SizedBox(width: MuSpace.m),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(achievement.achievement.achievementName, style: MuType.bodyMed),
+                if (achievement.achievement.description != null)
+                  Text(
+                    achievement.achievement.description!,
+                    style: MuType.caption,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
+              ],
+            ),
+          ),
+          if (canShowAction) ...[
+            const SizedBox(width: MuSpace.s),
+            MuGhostButton(
+              label: achievement.isIssued ? 'View' : 'Issue',
+              expand: false,
+              onPressed: () => showDialog<void>(
+                context: context,
+                builder: (_) => IssueVcDialog(
+                  achievement: achievement,
+                  muid: muid,
+                  userName: userName,
+                  userEmail: userEmail,
                 ),
-                child: Text(achievement.isIssued ? 'View' : 'Issue'),
               ),
+            ),
+          ],
+        ],
       ),
     );
   }

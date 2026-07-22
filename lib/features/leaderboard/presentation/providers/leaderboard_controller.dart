@@ -1,4 +1,6 @@
+import 'package:mulearn_app/core/network/cache_config.dart';
 import 'package:mulearn_app/core/network/dio_provider.dart';
+import 'package:mulearn_app/core/storage/cache_store_provider.dart';
 import 'package:mulearn_app/features/leaderboard/data/datasources/leaderboard_remote_datasource.dart';
 import 'package:mulearn_app/features/leaderboard/data/repositories/leaderboard_repository_impl.dart';
 import 'package:mulearn_app/features/leaderboard/domain/entities/college_leaderboard_entry.dart';
@@ -10,7 +12,10 @@ part 'leaderboard_controller.g.dart';
 
 @riverpod
 LeaderboardRemoteDataSource leaderboardRemoteDataSource(Ref ref) =>
-    LeaderboardRemoteDataSource(ref.watch(dioProvider));
+    LeaderboardRemoteDataSource(
+      ref.watch(dioProvider),
+      CacheConfig.leaderboard(ref.watch(cacheStoreProvider)),
+    );
 
 /// Presentation depends on the [LeaderboardRepository] contract (rules.md
 /// §2/§5).

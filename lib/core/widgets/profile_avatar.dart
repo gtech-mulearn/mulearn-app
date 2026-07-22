@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:mulearn_app/core/theme/mulearn_gradients.dart';
+import 'package:mulearn_app/core/theme/mulearn_colors.dart';
 
 /// A circular profile photo with an initial-letter placeholder — shared by
 /// the profile header and anywhere else an avatar is shown.
@@ -23,7 +23,7 @@ class ProfileAvatar extends StatelessWidget {
       height: size,
       width: size,
       decoration: const BoxDecoration(
-        gradient: MulearnGradients.trusty,
+        gradient: MuColors.heroGradient,
         shape: BoxShape.circle,
       ),
       alignment: Alignment.center,

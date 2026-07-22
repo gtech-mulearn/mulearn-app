@@ -74,6 +74,7 @@ dependencies:
 
   # Opens an event's external registration URL in the device browser.
   url_launcher: ^6.3.1
+  lucide_icons: ^0.257.0
 
 dev_dependencies:
   flutter_test:
@@ -86,6 +87,13 @@ dev_dependencies:
   json_serializable: ^6.8.0
   envied_generator: ^1.1.1
   mocktail: ^1.0.4
+
+# Upstream lucide_icons 0.257.0 subclasses Flutter's IconData, which this
+# SDK marks a final class — the published package fails to compile as-is.
+# See third_party/lucide_icons for the patched fork (same public API).
+dependency_overrides:
+  lucide_icons:
+    path: third_party/lucide_icons
   very_good_analysis: ^7.0.0
   custom_lint: ^0.8.1
 

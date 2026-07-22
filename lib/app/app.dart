@@ -14,10 +14,17 @@ class MulearnApp extends ConsumerWidget {
     final router = ref.watch(goRouterProvider);
 
     return MaterialApp.router(
-      title: 'μLearn',
+      title: 'MuApp',
       debugShowCheckedModeBanner: FlavorConfig.instance.isDev,
       theme: MulearnTheme.light(),
-      darkTheme: MulearnTheme.dark(),
+      // The 2026-07 redesign's Mu* component library hardcodes light-theme
+      // color literals (MuColors.canvas/surface, etc.) rather than resolving
+      // through Theme.of(context), so it isn't dark-mode-aware. Left on
+      // ThemeMode.system, a device in Dark Mode gets MulearnTheme.dark()'s
+      // forced-white text over those still-light hardcoded backgrounds —
+      // white-on-white. Pinning to light mode until the component library
+      // gets real dark-mode variants.
+      themeMode: ThemeMode.light,
       routerConfig: router,
     );
   }

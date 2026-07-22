@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
+import 'package:mulearn_app/core/theme/mu_space.dart';
+import 'package:mulearn_app/core/theme/mulearn_colors.dart';
+import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
+import 'package:mulearn_app/core/widgets/mu_card.dart';
+import 'package:mulearn_app/core/widgets/mu_empty_state.dart';
+import 'package:mulearn_app/core/widgets/mu_icon_button.dart';
+import 'package:mulearn_app/core/widgets/mu_toast.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/circle_invite.dart';
 import 'package:mulearn_app/features/learning_circles/presentation/providers/learning_circles_controller.dart';
 import 'package:mulearn_app/features/learning_circles/presentation/widgets/learning_circle_tile.dart';
@@ -49,6 +57,7 @@ class _LearningCirclesScreenState extends ConsumerState<LearningCirclesScreen>
     final pendingCount = invitesState.value?.length ?? 0;
 
     return Scaffold(
+      backgroundColor: MuColors.canvas,
       appBar: AppBar(
         title: const Text('Learning Circles'),
         bottom: TabBar(
@@ -63,7 +72,17 @@ class _LearningCirclesScreenState extends ConsumerState<LearningCirclesScreen>
                   const Text('Invites'),
                   if (pendingCount > 0) ...[
                     const SizedBox(width: 6),
-                    Badge(label: Text('$pendingCount')),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 1),
+                      decoration: const BoxDecoration(
+                        color: MuColors.coral,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Text(
+                        '$pendingCount',
+                        style: MuType.chip.copyWith(color: Colors.white, fontSize: 11),
+                      ),
+                    ),
                   ],
                 ],
               ),
@@ -73,7 +92,8 @@ class _LearningCirclesScreenState extends ConsumerState<LearningCirclesScreen>
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => context.push(RoutePaths.createLearningCircle),
-        child: const Icon(Icons.add),
+        backgroundColor: MuColors.primary,
+        child: const Icon(LucideIcons.plus, color: Colors.white),
       ),
       body: TabBarView(
         controller: _tabController,
@@ -104,7 +124,11 @@ class _BrowseTab extends ConsumerWidget {
       ),
       data: (circles) {
         if (circles.isEmpty) {
-          return const Center(child: Text('No circles yet.'));
+          return const MuEmptyState(
+            icon: LucideIcons.users,
+            title: 'No circles yet',
+            message: 'Check back soon — new learning circles show up here.',
+          );
         }
         final hasMore =
             ref.read(circlesListControllerProvider.notifier).hasMore;
@@ -112,11 +136,17 @@ class _BrowseTab extends ConsumerWidget {
           onRefresh: () async => ref.invalidate(circlesListControllerProvider),
           child: ListView.builder(
             controller: scrollController,
+            padding: const EdgeInsets.fromLTRB(
+              MuSpace.screenH,
+              MuSpace.l,
+              MuSpace.screenH,
+              MuSpace.navClearance,
+            ),
             itemCount: circles.length + (hasMore ? 1 : 0),
             itemBuilder: (context, index) {
               if (index >= circles.length) {
                 return const Padding(
-                  padding: EdgeInsets.all(16),
+                  padding: EdgeInsets.all(MuSpace.l),
                   child: Center(child: CircularProgressIndicator()),
                 );
               }
@@ -150,15 +180,28 @@ class _MyInvitesTab extends ConsumerWidget {
       ),
       data: (invites) {
         if (invites.isEmpty) {
-          return const Center(child: Text('No pending invites.'));
+          return const MuEmptyState(
+            icon: LucideIcons.mail,
+            title: 'No pending invites',
+            message: "You're all caught up.",
+          );
         }
         return RefreshIndicator(
           onRefresh: () async => ref.invalidate(myPendingCircleInvitesProvider),
           child: ListView.builder(
+            padding: const EdgeInsets.fromLTRB(
+              MuSpace.screenH,
+              MuSpace.l,
+              MuSpace.screenH,
+              MuSpace.navClearance,
+            ),
             itemCount: invites.length,
-            itemBuilder: (context, index) => _InviteTile(
-              invite: invites[index],
-              isBusy: actionState.isLoading,
+            itemBuilder: (context, index) => Padding(
+              padding: const EdgeInsets.only(bottom: MuSpace.m),
+              child: _InviteTile(
+                invite: invites[index],
+                isBusy: actionState.isLoading,
+              ),
             ),
           ),
         );
@@ -183,34 +226,52 @@ class _InviteTile extends ConsumerWidget {
         .respondToInvite(invite.linkId, accept: accept);
     if (!context.mounted) return;
     final state = ref.read(circleActionsControllerProvider);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          state.hasError
-              ? ApiException.messageFor(state.error!)
-              : (accept ? 'Invite accepted.' : 'Invite declined.'),
-        ),
-      ),
+    MuToast.show(
+      context,
+      message: state.hasError
+          ? ApiException.messageFor(state.error!)
+          : (accept ? 'Invite accepted.' : 'Invite declined.'),
+      type: state.hasError ? MuToastType.error : MuToastType.success,
     );
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ListTile(
-      leading: const Icon(Icons.mail_outline),
-      title: Text(invite.circleTitle ?? 'You were invited to a circle'),
-      subtitle: invite.isLeadInvite ? const Text('Invited as lead') : null,
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
+    return MuCard(
+      child: Row(
         children: [
-          IconButton(
-            icon: const Icon(Icons.check, color: Colors.green),
+          Container(
+            height: 44,
+            width: 44,
+            decoration: const BoxDecoration(
+              color: MuColors.primaryTint,
+              shape: BoxShape.circle,
+            ),
+            alignment: Alignment.center,
+            child: const Icon(LucideIcons.mail, color: MuColors.primary, size: 20),
+          ),
+          const SizedBox(width: MuSpace.m),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  invite.circleTitle ?? 'You were invited to a circle',
+                  style: MuType.bodyMed,
+                ),
+                if (invite.isLeadInvite)
+                  Text('Invited as lead', style: MuType.caption),
+              ],
+            ),
+          ),
+          MuIconButton(
+            icon: LucideIcons.check,
             onPressed: isBusy ? null : () => _respond(context, ref, accept: true),
           ),
-          IconButton(
-            icon: const Icon(Icons.close, color: Colors.red),
-            onPressed:
-                isBusy ? null : () => _respond(context, ref, accept: false),
+          const SizedBox(width: MuSpace.s),
+          MuIconButton(
+            icon: LucideIcons.x,
+            onPressed: isBusy ? null : () => _respond(context, ref, accept: false),
           ),
         ],
       ),
@@ -233,11 +294,21 @@ class _MyCirclesTab extends ConsumerWidget {
       ),
       data: (circles) {
         if (circles.isEmpty) {
-          return const Center(child: Text("You haven't joined any circles yet."));
+          return const MuEmptyState(
+            icon: LucideIcons.users,
+            title: "You haven't joined any circles yet",
+            message: 'Browse circles and request to join one to get started.',
+          );
         }
         return RefreshIndicator(
           onRefresh: () async => ref.invalidate(myCirclesProvider),
           child: ListView.builder(
+            padding: const EdgeInsets.fromLTRB(
+              MuSpace.screenH,
+              MuSpace.l,
+              MuSpace.screenH,
+              MuSpace.navClearance,
+            ),
             itemCount: circles.length,
             itemBuilder: (context, index) {
               final circle = circles[index];

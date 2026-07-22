@@ -2,41 +2,94 @@ import 'package:flutter/material.dart';
 
 /// μLearn brand color tokens — single source of truth (rules.md §8).
 ///
-/// Ported 1:1 from the landing page's CSS custom properties. Never hardcode a
-/// hex value inline in a widget; reference these constants.
-abstract final class MulearnColors {
-  const MulearnColors._();
+/// 2026-07 redesign palette: calm blue foundation with a lime-green energy
+/// accent. Never hardcode a hex value inline in a widget; reference these
+/// constants.
+abstract final class MuColors {
+  const MuColors._();
 
-  /// Primary blue — `#0961F5`.
-  static const Color primary = Color(0xFF0961F5);
+  // --- Brand blues ---
 
-  /// Gradient start — trusty blue `#2E85FE`.
-  static const Color trustyBlue = Color(0xFF2E85FE);
+  /// Core actions, links, active states.
+  static const Color primary = Color(0xFF2E5BFF);
 
-  /// Gradient end — duke purple `#AF2EE6`.
-  static const Color dukePurple = Color(0xFFAF2EE6);
+  /// Gradient start, headers.
+  static const Color primaryDeep = Color(0xFF1A2FBF);
 
-  /// Supporting neutral — greyish `#C4C4C4`.
-  static const Color greyish = Color(0xFFC4C4C4);
+  /// Gradient end, glows.
+  static const Color primaryBright = Color(0xFF3D7BFF);
 
-  /// Supporting neutral — blackish `#1A1A1A`.
-  static const Color blackish = Color(0xFF1A1A1A);
+  /// Tinted icon-button bg, selected chip bg.
+  static const Color primaryTint = Color(0xFFE8EEFF);
 
-  /// Supporting neutral — whitish `#FEFEFE`.
-  static const Color whitish = Color(0xFFFEFEFE);
+  /// Tinted info cards (e.g. attachments).
+  static const Color primarySoft = Color(0xFFD6E4FF);
 
-  /// Muted text — gray-600 `#666771`.
-  static const Color gray600 = Color(0xFF666771);
+  // --- Energy accent (lime — CTAs that reward action) ---
 
-  /// Semantic error (Material default red kept intentionally).
-  static const Color error = Color(0xFFB3261E);
+  static const Color lime = Color(0xFFC8F169);
 
-  /// Leaderboard rank-1 badge (not a brand token — a universal medal color).
+  /// Success, live indicators, streaks.
+  static const Color limeBright = Color(0xFF5CE65C);
+
+  /// Text on lime.
+  static const Color limeInk = Color(0xFF14210A);
+
+  // --- Alert accent (used sparingly) ---
+
+  static const Color coral = Color(0xFFFF4B33);
+
+  // --- Neutrals ---
+
+  /// Primary text, black pill nav.
+  static const Color ink = Color(0xFF0B0F1A);
+
+  /// Secondary text.
+  static const Color inkSecondary = Color(0xFF5A6072);
+
+  /// Labels, placeholders.
+  static const Color inkTertiary = Color(0xFF9AA0AE);
+
+  /// Cards.
+  static const Color surface = Color(0xFFFFFFFF);
+
+  /// Scaffold bg on light/utility screens.
+  static const Color canvas = Color(0xFFF4F5F8);
+
+  static const Color divider = Color(0xFFE7E9EF);
+
+  /// Semantic error — matches [coral].
+  static const Color error = coral;
+
+  // --- Leaderboard medal colors (not brand tokens — universal medal hues) ---
+
   static const Color rankGold = Color(0xFFFFC107);
-
-  /// Leaderboard rank-2 badge.
   static const Color rankSilver = Color(0xFFB0BEC5);
-
-  /// Leaderboard rank-3 badge.
   static const Color rankBronze = Color(0xFFBF8A5D);
+
+  // --- Stat-badge accents (Home dashboard's Karma/Level/Rank icon chips) ---
+
+  static const Color statKarmaTint = Color(0xFFE9FBDA);
+  static const Color statKarmaAccent = Color(0xFF2E7D1E);
+  static const Color statLevelTint = Color(0xFFEDE7FF);
+  static const Color statLevelAccent = Color(0xFF6C3CE9);
+  static const Color statRankTint = Color(0xFFFFF3D6);
+
+  // --- Gradients ---
+
+  /// Full-bleed immersive-screen background (Profile, Leaderboard).
+  static const LinearGradient heroGradient = LinearGradient(
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    colors: [primaryDeep, primaryBright],
+  );
+
+  /// Soft pastel lavender wash — Home's header background (a lighter,
+  /// airier variant of [heroGradient] for the dark-text-on-light header
+  /// style, opted into via `MuGradientHeader(light: true)`).
+  static const LinearGradient homeHeaderGradient = LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+    colors: [Color(0xFFEDEEFB), Color(0xFFDEE1F7)],
+  );
 }

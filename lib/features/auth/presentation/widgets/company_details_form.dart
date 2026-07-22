@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mulearn_app/core/theme/mu_radius.dart';
+import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
+import 'package:mulearn_app/core/theme/mulearn_typography.dart';
+import 'package:mulearn_app/core/widgets/mu_buttons.dart';
 import 'package:mulearn_app/core/widgets/searchable_select_field.dart';
 import 'package:mulearn_app/features/auth/domain/entities/company_details.dart';
 import 'package:mulearn_app/features/auth/presentation/providers/register_providers.dart';
@@ -146,32 +150,25 @@ class _CompanyDetailsFormState extends ConsumerState<CompanyDetailsForm> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           _StepHeader(step: _step),
-          const SizedBox(height: 20),
+          const SizedBox(height: MuSpace.xl),
           _visibleStep(1, _basicInfoStep(isLoading)),
           _visibleStep(2, _contactStep(isLoading)),
           _visibleStep(3, _locationStep(isLoading)),
           _visibleStep(4, _legalInfoStep(isLoading)),
-          const SizedBox(height: 24),
+          const SizedBox(height: MuSpace.xl),
           Row(
             children: [
               if (_step > 1)
                 Expanded(
-                  child: OutlinedButton(
-                    onPressed: isLoading ? null : _back,
-                    child: const Text('Back'),
-                  ),
+                  child: MuGhostButton(label: 'Back', onPressed: isLoading ? null : _back),
                 ),
-              if (_step > 1) const SizedBox(width: 12),
+              if (_step > 1) const SizedBox(width: MuSpace.s),
               Expanded(
-                child: FilledButton(
+                child: MuPrimaryButton(
+                  label: isLoading
+                      ? 'Submitting…'
+                      : (_step < 4 ? 'Next' : 'Complete Registration'),
                   onPressed: isLoading ? null : (_step < 4 ? _next : _submit),
-                  child: isLoading
-                      ? const SizedBox(
-                          height: 22,
-                          width: 22,
-                          child: CircularProgressIndicator(strokeWidth: 2.5),
-                        )
-                      : Text(_step < 4 ? 'Next' : 'Complete Registration'),
                 ),
               ),
             ],
@@ -203,7 +200,7 @@ class _CompanyDetailsFormState extends ConsumerState<CompanyDetailsForm> {
             return null;
           },
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: MuSpace.l),
         TextFormField(
           controller: _logoController,
           enabled: !isLoading,
@@ -213,7 +210,7 @@ class _CompanyDetailsFormState extends ConsumerState<CompanyDetailsForm> {
           ),
           validator: _optionalUrl,
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: MuSpace.l),
         TextFormField(
           controller: _companyDescriptionController,
           enabled: !isLoading,
@@ -221,19 +218,19 @@ class _CompanyDetailsFormState extends ConsumerState<CompanyDetailsForm> {
           validator: (value) =>
               (value?.trim().isEmpty ?? true) ? 'Description is required.' : null,
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: MuSpace.l),
         TextFormField(
           controller: _shortPitchController,
           enabled: !isLoading,
           decoration: const InputDecoration(labelText: 'Short Pitch'),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: MuSpace.l),
         TextFormField(
           controller: _industrySectorController,
           enabled: !isLoading,
           decoration: const InputDecoration(labelText: 'Industry Sector'),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: MuSpace.l),
         SearchableSelectField(
           label: 'Company Size',
           options: _kCompanySizeOptions,
@@ -260,14 +257,14 @@ class _CompanyDetailsFormState extends ConsumerState<CompanyDetailsForm> {
             return v.contains('@') ? null : 'Invalid email address.';
           },
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: MuSpace.l),
         TextFormField(
           controller: _websiteLinkController,
           enabled: !isLoading,
           decoration: const InputDecoration(labelText: 'Website'),
           validator: _optionalUrl,
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: MuSpace.l),
         TextFormField(
           controller: _linkedinUrlController,
           enabled: !isLoading,
@@ -292,7 +289,7 @@ class _CompanyDetailsFormState extends ConsumerState<CompanyDetailsForm> {
             hintText: 'Kochi, Kerala',
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: MuSpace.l),
         countries.when(
           data: (options) => SearchableSelectField(
             label: 'Country',
@@ -318,7 +315,7 @@ class _CompanyDetailsFormState extends ConsumerState<CompanyDetailsForm> {
             onSelected: _noop,
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: MuSpace.l),
         if (_countryId == null)
           const SearchableSelectField(
             label: 'State',
@@ -337,7 +334,7 @@ class _CompanyDetailsFormState extends ConsumerState<CompanyDetailsForm> {
               _districtId = null;
             }),
           ),
-        const SizedBox(height: 16),
+        const SizedBox(height: MuSpace.l),
         if (_stateId == null)
           const SearchableSelectField(
             label: 'District',
@@ -366,26 +363,26 @@ class _CompanyDetailsFormState extends ConsumerState<CompanyDetailsForm> {
           enabled: !isLoading,
           decoration: const InputDecoration(labelText: 'Legal Name'),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: MuSpace.l),
         TextFormField(
           controller: _registrationNumberController,
           enabled: !isLoading,
           decoration: const InputDecoration(labelText: 'Registration Number'),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: MuSpace.l),
         TextFormField(
           controller: _taxIdController,
           enabled: !isLoading,
           decoration: const InputDecoration(labelText: 'Tax ID / GSTIN'),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: MuSpace.l),
         TextFormField(
           controller: _foundedYearController,
           enabled: !isLoading,
           keyboardType: TextInputType.number,
           decoration: const InputDecoration(labelText: 'Founded Year'),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: MuSpace.l),
         TextFormField(
           controller: _remotePolicyController,
           enabled: !isLoading,
@@ -394,7 +391,7 @@ class _CompanyDetailsFormState extends ConsumerState<CompanyDetailsForm> {
             hintText: 'Hybrid, Fully Remote',
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: MuSpace.l),
         TextFormField(
           controller: _cultureTextController,
           enabled: !isLoading,
@@ -414,15 +411,14 @@ class _StepHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           'Step $step of ${_kCompanySteps.length}: ${_kCompanySteps[step - 1]}',
-          style: theme.textTheme.titleMedium,
+          style: MuType.bodyMed,
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: MuSpace.s),
         Row(
           children: [
             for (var i = 1; i <= _kCompanySteps.length; i++) ...[
@@ -431,13 +427,13 @@ class _StepHeader extends StatelessWidget {
                   height: 4,
                   decoration: BoxDecoration(
                     color: i <= step
-                        ? MulearnColors.primary
-                        : MulearnColors.greyish,
-                    borderRadius: BorderRadius.circular(2),
+                        ? MuColors.primary
+                        : MuColors.divider,
+                    borderRadius: BorderRadius.circular(MuRadius.chip),
                   ),
                 ),
               ),
-              if (i != _kCompanySteps.length) const SizedBox(width: 6),
+              if (i != _kCompanySteps.length) const SizedBox(width: MuSpace.xs),
             ],
           ],
         ),

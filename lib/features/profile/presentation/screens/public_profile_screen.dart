@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mulearn_app/core/theme/mu_space.dart';
+import 'package:mulearn_app/core/theme/mulearn_colors.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
+import 'package:mulearn_app/core/widgets/mu_qr_card.dart';
 import 'package:mulearn_app/features/profile/domain/entities/user_profile.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/public_profile_controller.dart';
 import 'package:mulearn_app/features/profile/presentation/widgets/achievements_tab.dart';
@@ -24,6 +27,7 @@ class PublicProfileScreen extends ConsumerWidget {
     final profileState = ref.watch(publicUserProfileProvider(muid));
 
     return Scaffold(
+      backgroundColor: MuColors.canvas,
       appBar: AppBar(title: const Text('Profile')),
       body: profileState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -70,8 +74,10 @@ class _PublicProfileBodyState extends State<_PublicProfileBody>
             child: Column(
               children: [
                 PublicProfileHeader(profile: profile),
-                const SizedBox(height: 16),
+                const SizedBox(height: MuSpace.l),
                 ProfileStatsRow(profile: profile),
+                const SizedBox(height: MuSpace.l),
+                MuQrCard(muid: profile.muid, college: profile.collegeCode),
               ],
             ),
           ),

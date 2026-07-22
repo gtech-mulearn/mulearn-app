@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lucide_icons/lucide_icons.dart';
+import 'package:mulearn_app/core/theme/mu_space.dart';
+import 'package:mulearn_app/core/theme/mulearn_colors.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
+import 'package:mulearn_app/core/widgets/mu_qr_card.dart';
+import 'package:mulearn_app/core/widgets/mu_toast.dart';
 import 'package:mulearn_app/features/auth/presentation/providers/auth_controller.dart';
 import 'package:mulearn_app/features/profile/domain/entities/user_profile.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/profile_controller.dart';
@@ -26,12 +32,13 @@ class ProfileScreen extends ConsumerWidget {
     final profileState = ref.watch(profileControllerProvider);
 
     return Scaffold(
+      backgroundColor: MuColors.canvas,
       appBar: AppBar(
         title: const Text('Profile'),
         actions: [
           IconButton(
             tooltip: 'Sign out',
-            icon: const Icon(Icons.logout),
+            icon: const Icon(LucideIcons.logOut),
             onPressed: () =>
                 ref.read(authControllerProvider.notifier).signOut(),
           ),
@@ -102,8 +109,27 @@ class _ProfileBodyState extends State<_ProfileBody>
                     builder: (_) => ShareProfileDialog(profile: profile),
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: MuSpace.l),
                 ProfileStatsRow(profile: profile),
+                const SizedBox(height: MuSpace.l),
+                MuQrCard(
+                  muid: profile.muid,
+                  college: profile.collegeCode,
+                  onCopy: () async {
+                    await Clipboard.setData(ClipboardData(text: profile.muid));
+                    if (context.mounted) {
+                      MuToast.show(
+                        context,
+                        message: 'MUID copied',
+                        type: MuToastType.success,
+                      );
+                    }
+                  },
+                  onShare: () => showDialog<void>(
+                    context: context,
+                    builder: (_) => ShareProfileDialog(profile: profile),
+                  ),
+                ),
               ],
             ),
           ),

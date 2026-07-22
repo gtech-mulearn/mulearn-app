@@ -1,4 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- HapticFeedback (nav taps, error/success toasts, splash) silently
+         no-ops on real Android devices without this — confirmed live. -->
+    <uses-permission android:name="android.permission.VIBRATE" />
     <application
         android:label="@string/app_name"
         android:name="${applicationName}"

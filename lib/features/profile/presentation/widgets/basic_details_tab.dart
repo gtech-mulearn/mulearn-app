@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
+import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
+import 'package:mulearn_app/core/theme/mulearn_typography.dart';
+import 'package:mulearn_app/core/widgets/mu_card.dart';
+import 'package:mulearn_app/core/widgets/mu_chip.dart';
+import 'package:mulearn_app/core/widgets/mu_icon_button.dart';
 import 'package:mulearn_app/features/profile/domain/entities/socials.dart';
 import 'package:mulearn_app/features/profile/domain/entities/user_profile.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/public_profile_controller.dart';
@@ -21,37 +27,33 @@ class BasicDetailsTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
     final isOwnProfile = publicMuid == null;
     final socialsState = isOwnProfile
         ? ref.watch(socialsControllerProvider)
         : ref.watch(publicSocialsProvider(publicMuid!));
 
     return ListView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(MuSpace.screenH, MuSpace.screenH, MuSpace.screenH, MuSpace.navClearance),
       children: [
         _SectionCard(
           title: 'Roles',
           child: Wrap(
-            spacing: 8,
-            runSpacing: 8,
+            spacing: MuSpace.s,
+            runSpacing: MuSpace.s,
             children: [
               for (final role in profile.roles)
-                Chip(
-                  label: Text(role),
-                  avatar: Icon(
-                    profile.roleVerification
-                            .where((r) => r.role == role)
-                            .firstOrNull
-                            ?.isVerified ??
-                        false
-                        ? Icons.verified
-                        : Icons.hourglass_top,
-                    size: 16,
-                  ),
+                MuTagChip(
+                  label: role,
+                  style: profile.roleVerification
+                          .where((r) => r.role == role)
+                          .firstOrNull
+                          ?.isVerified ??
+                      false
+                      ? MuTagStyle.success
+                      : MuTagStyle.neutral,
                 ),
               if (profile.roles.isEmpty)
-                const Text('—', style: TextStyle(color: MulearnColors.gray600)),
+                Text('—', style: MuType.body.copyWith(color: MuColors.inkSecondary)),
             ],
           ),
         ),
@@ -69,13 +71,12 @@ class BasicDetailsTab extends ConsumerWidget {
                     ),
                   ),
           child: Wrap(
-            spacing: 8,
-            runSpacing: 8,
+            spacing: MuSpace.s,
+            runSpacing: MuSpace.s,
             children: [
-              for (final group in profile.interestGroups)
-                Chip(label: Text(group.name)),
+              for (final group in profile.interestGroups) MuTagChip(label: group.name),
               if (profile.interestGroups.isEmpty)
-                const Text('—', style: TextStyle(color: MulearnColors.gray600)),
+                Text('—', style: MuType.body.copyWith(color: MuColors.inkSecondary)),
             ],
           ),
         ),
@@ -99,13 +100,9 @@ class BasicDetailsTab extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(profile.collegeCode ?? '—', style: theme.textTheme.bodyMedium),
+              Text(profile.collegeCode ?? '—', style: MuType.bodyMed),
               if (profile.departmentName != null)
-                Text(
-                  profile.departmentName!,
-                  style: theme.textTheme.bodySmall
-                      ?.copyWith(color: MulearnColors.gray600),
-                ),
+                Text(profile.departmentName!, style: MuType.caption),
             ],
           ),
         ),
@@ -118,18 +115,6 @@ class _SocialsList extends StatelessWidget {
   const _SocialsList({required this.socials});
 
   final Socials socials;
-
-  static const _icons = {
-    'GitHub': Icons.code,
-    'LinkedIn': Icons.business_center,
-    'Instagram': Icons.camera_alt,
-    'Facebook': Icons.facebook,
-    'Dribble': Icons.sports_basketball,
-    'Behance': Icons.brush,
-    'Stack Overflow': Icons.forum,
-    'Medium': Icons.article,
-    'HackerRank': Icons.terminal,
-  };
 
   @override
   Widget build(BuildContext context) {
@@ -146,18 +131,14 @@ class _SocialsList extends StatelessWidget {
     }..removeWhere((_, value) => value == null || value.isEmpty);
 
     if (entries.isEmpty) {
-      return const Text('—', style: TextStyle(color: MulearnColors.gray600));
+      return Text('—', style: MuType.body.copyWith(color: MuColors.inkSecondary));
     }
 
     return Wrap(
-      spacing: 8,
-      runSpacing: 8,
+      spacing: MuSpace.s,
+      runSpacing: MuSpace.s,
       children: [
-        for (final entry in entries.entries)
-          Chip(
-            avatar: Icon(_icons[entry.key] ?? Icons.link, size: 16),
-            label: Text(entry.key),
-          ),
+        for (final entry in entries.entries) MuTagChip(label: entry.key),
       ],
     );
   }
@@ -172,28 +153,20 @@ class _SectionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: MuSpace.m),
+      child: MuCard(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                Expanded(
-                  child: Text(title, style: theme.textTheme.titleSmall),
-                ),
+                Expanded(child: Text(title, style: MuType.title.copyWith(fontSize: 16))),
                 if (onEdit != null)
-                  IconButton(
-                    icon: const Icon(Icons.edit_outlined, size: 18),
-                    onPressed: onEdit,
-                    visualDensity: VisualDensity.compact,
-                  ),
+                  MuIconButton(icon: LucideIcons.pencil, onPressed: onEdit),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: MuSpace.s),
             child,
           ],
         ),

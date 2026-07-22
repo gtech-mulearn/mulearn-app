@@ -3,6 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
+import 'package:mulearn_app/core/theme/mu_space.dart';
+import 'package:mulearn_app/core/theme/mulearn_colors.dart';
+import 'package:mulearn_app/core/theme/mulearn_typography.dart';
+import 'package:mulearn_app/core/widgets/mu_buttons.dart';
+import 'package:mulearn_app/core/widgets/mu_toast.dart';
 import 'package:mulearn_app/core/widgets/searchable_select_field.dart';
 import 'package:mulearn_app/features/learning_circles/presentation/providers/learning_circles_controller.dart';
 
@@ -33,8 +38,10 @@ class _CreateLearningCircleScreenState
   Future<void> _submit() async {
     if (!(_formKey.currentState?.validate() ?? false)) return;
     if (_igId == null || _orgId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please select an interest group and college.')),
+      MuToast.show(
+        context,
+        message: 'Please select an interest group and college.',
+        type: MuToastType.error,
       );
       return;
     }
@@ -62,9 +69,10 @@ class _CreateLearningCircleScreenState
     final actionState = ref.watch(circleActionsControllerProvider);
 
     return Scaffold(
+      backgroundColor: MuColors.canvas,
       appBar: AppBar(title: const Text('Create Learning Circle')),
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(MuSpace.screenH),
         child: Form(
           key: _formKey,
           child: ListView(
@@ -75,14 +83,14 @@ class _CreateLearningCircleScreenState
                 isLoading: igOptionsState.isLoading,
                 onSelected: (value) => setState(() => _igId = value),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: MuSpace.l),
               SearchableSelectField(
                 label: 'College',
                 options: orgOptionsState.value ?? const [],
                 isLoading: orgOptionsState.isLoading,
                 onSelected: (value) => setState(() => _orgId = value),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: MuSpace.l),
               TextFormField(
                 controller: _titleController,
                 maxLength: 100,
@@ -101,16 +109,16 @@ class _CreateLearningCircleScreenState
                     : null,
               ),
               if (actionState.hasError) ...[
-                const SizedBox(height: 8),
+                const SizedBox(height: MuSpace.s),
                 Text(
                   ApiException.messageFor(actionState.error!),
-                  style: TextStyle(color: Theme.of(context).colorScheme.error),
+                  style: MuType.caption.copyWith(color: MuColors.coral),
                 ),
               ],
-              const SizedBox(height: 16),
-              FilledButton(
+              const SizedBox(height: MuSpace.l),
+              MuPrimaryButton(
+                label: actionState.isLoading ? 'Creating…' : 'Create',
                 onPressed: actionState.isLoading ? null : _submit,
-                child: Text(actionState.isLoading ? 'Creating…' : 'Create'),
               ),
             ],
           ),

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mulearn_app/core/models/location_option.dart';
 import 'package:mulearn_app/core/models/reference_option.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
+import 'package:mulearn_app/core/widgets/mu_toast.dart';
 import 'package:mulearn_app/core/widgets/searchable_select_field.dart';
 import 'package:mulearn_app/features/profile/domain/entities/editable_profile.dart';
 import 'package:mulearn_app/features/profile/domain/entities/user_profile.dart';
@@ -116,8 +117,7 @@ class _EditProfileDialogState extends ConsumerState<EditProfileDialog> {
       if (mounted) Navigator.of(context).pop();
     } on Object catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text(ApiException.messageFor(e))));
+        MuToast.show(context, message: ApiException.messageFor(e), type: MuToastType.error);
       }
     } finally {
       if (mounted) setState(() => _saving = false);

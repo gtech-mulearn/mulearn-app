@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
+import 'package:mulearn_app/core/theme/mu_space.dart';
+import 'package:mulearn_app/core/theme/mulearn_colors.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/features/interest_groups/presentation/providers/interest_groups_controller.dart';
 import 'package:mulearn_app/features/interest_groups/presentation/widgets/interest_group_card.dart';
@@ -18,6 +20,7 @@ class InterestGroupsScreen extends ConsumerWidget {
     final myIds = myIdsState.value ?? const <String>[];
 
     return Scaffold(
+      backgroundColor: MuColors.canvas,
       appBar: AppBar(title: const Text('Interest Groups')),
       body: catalogState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -32,12 +35,12 @@ class InterestGroupsScreen extends ConsumerWidget {
               ..invalidate(myInterestGroupIdsProvider);
           },
           child: GridView.builder(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(MuSpace.screenH),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
-              mainAxisSpacing: 12,
-              crossAxisSpacing: 12,
-              childAspectRatio: 1.1,
+              mainAxisSpacing: MuSpace.m,
+              crossAxisSpacing: MuSpace.m,
+              childAspectRatio: 1.25,
             ),
             itemCount: groups.length,
             itemBuilder: (context, index) {

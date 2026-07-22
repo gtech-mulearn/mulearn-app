@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
+import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
+import 'package:mulearn_app/core/theme/mulearn_typography.dart';
+import 'package:mulearn_app/core/widgets/mu_buttons.dart';
 import 'package:mulearn_app/features/auth/presentation/providers/register_wizard_controller.dart';
 
 /// Registration step 1 — basic info (full name, email, password), matching
@@ -55,23 +59,22 @@ class _RegisterBasicInfoScreenState
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Scaffold(
+      backgroundColor: MuColors.canvas,
       appBar: AppBar(),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
+          padding: const EdgeInsets.symmetric(horizontal: MuSpace.screenH),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text('Step into the community', style: theme.textTheme.headlineMedium),
-              const SizedBox(height: 8),
+              Text('Step into the community', style: MuType.headline),
+              const SizedBox(height: MuSpace.s),
               Text(
                 'Create your account to get started',
-                style: theme.textTheme.bodyMedium
-                    ?.copyWith(color: MulearnColors.gray600),
+                style: MuType.body.copyWith(color: MuColors.inkSecondary),
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: MuSpace.xxl),
               Form(
                 key: _formKey,
                 child: Column(
@@ -95,7 +98,7 @@ class _RegisterBasicInfoScreenState
                         return null;
                       },
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: MuSpace.l),
                     TextFormField(
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
@@ -112,7 +115,7 @@ class _RegisterBasicInfoScreenState
                         return null;
                       },
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: MuSpace.l),
                     TextFormField(
                       controller: _passwordController,
                       obscureText: _obscurePassword,
@@ -122,9 +125,8 @@ class _RegisterBasicInfoScreenState
                         hintText: 'Create password',
                         suffixIcon: IconButton(
                           icon: Icon(
-                            _obscurePassword
-                                ? Icons.visibility_outlined
-                                : Icons.visibility_off_outlined,
+                            _obscurePassword ? LucideIcons.eye : LucideIcons.eyeOff,
+                            color: MuColors.inkSecondary,
                           ),
                           onPressed: () => setState(
                             () => _obscurePassword = !_obscurePassword,
@@ -142,7 +144,7 @@ class _RegisterBasicInfoScreenState
                         return null;
                       },
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: MuSpace.l),
                     TextFormField(
                       controller: _confirmPasswordController,
                       obscureText: _obscureConfirm,
@@ -153,9 +155,8 @@ class _RegisterBasicInfoScreenState
                         hintText: 'Re-enter password',
                         suffixIcon: IconButton(
                           icon: Icon(
-                            _obscureConfirm
-                                ? Icons.visibility_outlined
-                                : Icons.visibility_off_outlined,
+                            _obscureConfirm ? LucideIcons.eye : LucideIcons.eyeOff,
+                            color: MuColors.inkSecondary,
                           ),
                           onPressed: () => setState(
                             () => _obscureConfirm = !_obscureConfirm,
@@ -169,15 +170,12 @@ class _RegisterBasicInfoScreenState
                         return null;
                       },
                     ),
-                    const SizedBox(height: 28),
-                    FilledButton(
-                      onPressed: _continue,
-                      child: const Text('Continue'),
-                    ),
+                    const SizedBox(height: MuSpace.xl),
+                    MuPrimaryButton(label: 'Continue', onPressed: _continue),
                   ],
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: MuSpace.l),
               Center(
                 child: TextButton(
                   onPressed: () => context.pop(),

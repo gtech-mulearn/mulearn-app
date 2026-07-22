@@ -10,6 +10,14 @@ part 'learning_circle_dto.g.dart';
 /// deleted) would otherwise throw and take down the whole list — this was
 /// confirmed live as the actual cause of "My Circles" showing "Something
 /// went wrong" (rules.md §3/§9).
+///
+/// `id` needs the `circle_id`-vs-`id` normalization below: confirmed live,
+/// `/learningcircle/list/`'s rows key the identifier `id`, but
+/// `/user-circles/`'s rows key it `circle_id` instead — same entity, two
+/// endpoints, two different field names for the same value (rules.md §3:
+/// "spec is not always literal"). Without this, every `/user-circles/` row
+/// parsed with a null `id` and silently vanished from "My Circles" via
+/// [LearningCirclesRepositoryImpl._parseSkippingErrors]'s defensive skip.
 @freezed
 abstract class LearningCircleDto with _$LearningCircleDto {
   const factory LearningCircleDto({
@@ -23,7 +31,10 @@ abstract class LearningCircleDto with _$LearningCircleDto {
   const LearningCircleDto._();
 
   factory LearningCircleDto.fromJson(Map<String, dynamic> json) =>
-      _$LearningCircleDtoFromJson(json);
+      _$LearningCircleDtoFromJson({
+        ...json,
+        'id': json['id'] ?? json['circle_id'],
+      });
 
   LearningCircle toDomain() => LearningCircle(
         id: id,

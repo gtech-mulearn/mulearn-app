@@ -10,6 +10,9 @@ analyzer:
     - "**/*.g.dart"
     - "**/*.freezed.dart"
     - "lib/core/config/env.g.dart"
+    # Vendored third-party package (patched lucide_icons fork) — not our
+    # code to style-fix; see third_party/lucide_icons/pubspec.yaml.
+    - "third_party/**"
   errors:
     # False positive: `@JsonKey(fromJson: ...)` on a freezed factory
     # constructor parameter (rather than a plain field) is valid and

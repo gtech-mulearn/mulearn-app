@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
+import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
+import 'package:mulearn_app/core/theme/mulearn_typography.dart';
+import 'package:mulearn_app/core/widgets/mu_buttons.dart';
+import 'package:mulearn_app/core/widgets/mu_toast.dart';
 import 'package:mulearn_app/features/auth/presentation/providers/auth_controller.dart';
 
 enum _ResetStep { enterToken, newPassword, done }
@@ -75,23 +80,22 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
       if (next.hasError && !next.isLoading) {
         final error = next.error;
         final message = ApiException.messageFor(error!);
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(SnackBar(content: Text(message)));
+        MuToast.show(context, message: message, type: MuToastType.error);
       }
     });
 
     final isLoading = state.isLoading;
 
     return Scaffold(
+      backgroundColor: MuColors.canvas,
       appBar: AppBar(),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
+          padding: const EdgeInsets.symmetric(horizontal: MuSpace.screenH),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const SizedBox(height: 16),
+              const SizedBox(height: MuSpace.m),
               switch (_step) {
                 _ResetStep.enterToken => _EnterTokenStep(
                     formKey: _tokenFormKey,
@@ -138,18 +142,16 @@ class _EnterTokenStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('Enter your reset code', style: theme.textTheme.headlineMedium),
-        const SizedBox(height: 8),
+        Text('Enter your reset code', style: MuType.headline),
+        const SizedBox(height: MuSpace.s),
         Text(
           'Paste the code or link token from the password-reset email we sent you.',
-          style:
-              theme.textTheme.bodyMedium?.copyWith(color: MulearnColors.gray600),
+          style: MuType.body.copyWith(color: MuColors.inkSecondary),
         ),
-        const SizedBox(height: 32),
+        const SizedBox(height: MuSpace.xxl),
         Form(
           key: formKey,
           child: Column(
@@ -165,12 +167,10 @@ class _EnterTokenStep extends StatelessWidget {
                     ? 'Reset code is required.'
                     : null,
               ),
-              const SizedBox(height: 24),
-              FilledButton(
+              const SizedBox(height: MuSpace.xl),
+              MuPrimaryButton(
+                label: isLoading ? 'Verifying…' : 'Verify code',
                 onPressed: isLoading ? null : onSubmit,
-                child: isLoading
-                    ? const _ButtonSpinner()
-                    : const Text('Verify code'),
               ),
             ],
           ),
@@ -205,18 +205,16 @@ class _NewPasswordStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('Set a new password', style: theme.textTheme.headlineMedium),
-        const SizedBox(height: 8),
+        Text('Set a new password', style: MuType.headline),
+        const SizedBox(height: MuSpace.s),
         Text(
           'Your code is verified. Choose a new password.',
-          style:
-              theme.textTheme.bodyMedium?.copyWith(color: MulearnColors.gray600),
+          style: MuType.body.copyWith(color: MuColors.inkSecondary),
         ),
-        const SizedBox(height: 32),
+        const SizedBox(height: MuSpace.xxl),
         Form(
           key: formKey,
           child: Column(
@@ -231,9 +229,8 @@ class _NewPasswordStep extends StatelessWidget {
                   labelText: 'New password',
                   suffixIcon: IconButton(
                     icon: Icon(
-                      obscure
-                          ? Icons.visibility_outlined
-                          : Icons.visibility_off_outlined,
+                      obscure ? LucideIcons.eye : LucideIcons.eyeOff,
+                      color: MuColors.inkSecondary,
                     ),
                     onPressed: onToggleObscure,
                   ),
@@ -245,7 +242,7 @@ class _NewPasswordStep extends StatelessWidget {
                   return null;
                 },
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: MuSpace.l),
               TextFormField(
                 controller: confirmPasswordController,
                 obscureText: obscureConfirm,
@@ -256,9 +253,8 @@ class _NewPasswordStep extends StatelessWidget {
                   labelText: 'Confirm new password',
                   suffixIcon: IconButton(
                     icon: Icon(
-                      obscureConfirm
-                          ? Icons.visibility_outlined
-                          : Icons.visibility_off_outlined,
+                      obscureConfirm ? LucideIcons.eye : LucideIcons.eyeOff,
+                      color: MuColors.inkSecondary,
                     ),
                     onPressed: onToggleObscureConfirm,
                   ),
@@ -267,12 +263,10 @@ class _NewPasswordStep extends StatelessWidget {
                     ? "Passwords don't match."
                     : null,
               ),
-              const SizedBox(height: 24),
-              FilledButton(
+              const SizedBox(height: MuSpace.xl),
+              MuPrimaryButton(
+                label: isLoading ? 'Saving…' : 'Reset password',
                 onPressed: isLoading ? null : onSubmit,
-                child: isLoading
-                    ? const _ButtonSpinner()
-                    : const Text('Reset password'),
               ),
             ],
           ),
@@ -289,36 +283,18 @@ class _DoneStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('Password reset!', style: theme.textTheme.headlineMedium),
-        const SizedBox(height: 8),
+        Text('Password reset!', style: MuType.headline),
+        const SizedBox(height: MuSpace.s),
         Text(
           'You can now sign in with your new password.',
-          style:
-              theme.textTheme.bodyMedium?.copyWith(color: MulearnColors.gray600),
+          style: MuType.body.copyWith(color: MuColors.inkSecondary),
         ),
-        const SizedBox(height: 24),
-        FilledButton(onPressed: onSignIn, child: const Text('Sign in')),
+        const SizedBox(height: MuSpace.l),
+        MuPrimaryButton(label: 'Sign in', onPressed: onSignIn),
       ],
-    );
-  }
-}
-
-class _ButtonSpinner extends StatelessWidget {
-  const _ButtonSpinner();
-
-  @override
-  Widget build(BuildContext context) {
-    return const SizedBox(
-      height: 22,
-      width: 22,
-      child: CircularProgressIndicator(
-        strokeWidth: 2.5,
-        valueColor: AlwaysStoppedAnimation(MulearnColors.whitish),
-      ),
     );
   }
 }

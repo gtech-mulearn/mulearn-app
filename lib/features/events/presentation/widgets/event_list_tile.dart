@@ -1,7 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons/lucide_icons.dart';
+import 'package:mulearn_app/core/theme/mu_radius.dart';
+import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
-import 'package:mulearn_app/core/theme/mulearn_gradients.dart';
+import 'package:mulearn_app/core/theme/mulearn_typography.dart';
+import 'package:mulearn_app/core/widgets/mu_card.dart';
 import 'package:mulearn_app/features/events/domain/entities/event.dart';
 
 /// A single row in the full events list — cover thumbnail, title, date,
@@ -29,48 +33,60 @@ class EventListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return ListTile(
-      onTap: onTap,
-      leading: ClipRRect(
-        borderRadius: BorderRadius.circular(8),
-        child: SizedBox(
-          height: 48,
-          width: 48,
-          child: event.coverImage != null
-              ? CachedNetworkImage(
-                  imageUrl: event.coverImage!,
-                  fit: BoxFit.cover,
-                  errorWidget: (_, __, ___) => const DecoratedBox(
-                    decoration: BoxDecoration(gradient: MulearnGradients.trusty),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: MuSpace.m),
+      child: MuCard(
+        onTap: onTap,
+        child: Row(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(MuRadius.inner),
+              child: SizedBox(
+                height: 48,
+                width: 48,
+                child: event.coverImage != null
+                    ? CachedNetworkImage(
+                        imageUrl: event.coverImage!,
+                        fit: BoxFit.cover,
+                        errorWidget: (_, __, ___) => const DecoratedBox(
+                          decoration: BoxDecoration(gradient: MuColors.heroGradient),
+                        ),
+                      )
+                    : const DecoratedBox(
+                        decoration: BoxDecoration(gradient: MuColors.heroGradient),
+                      ),
+              ),
+            ),
+            const SizedBox(width: MuSpace.m),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(event.title, style: MuType.bodyMed, maxLines: 1, overflow: TextOverflow.ellipsis),
+                  const SizedBox(height: 2),
+                  Row(
+                    children: [
+                      const Icon(LucideIcons.calendar, size: 12, color: MuColors.inkSecondary),
+                      const SizedBox(width: MuSpace.xs),
+                      Text(_dateLabel, style: MuType.caption),
+                      const SizedBox(width: MuSpace.s),
+                      const Icon(LucideIcons.mapPin, size: 12, color: MuColors.inkSecondary),
+                      const SizedBox(width: MuSpace.xs),
+                      Expanded(
+                        child: Text(_venueLabel, style: MuType.caption, overflow: TextOverflow.ellipsis),
+                      ),
+                    ],
                   ),
-                )
-              : const DecoratedBox(
-                  decoration: BoxDecoration(gradient: MulearnGradients.trusty),
-                ),
+                ],
+              ),
+            ),
+            if (event.isInterested) ...[
+              const SizedBox(width: MuSpace.s),
+              const Icon(LucideIcons.checkCircle2, color: MuColors.limeBright),
+            ],
+          ],
         ),
       ),
-      title: Text(event.title, maxLines: 1, overflow: TextOverflow.ellipsis),
-      subtitle: Row(
-        children: [
-          const Icon(Icons.calendar_today, size: 12, color: MulearnColors.gray600),
-          const SizedBox(width: 4),
-          Text(_dateLabel, style: theme.textTheme.bodySmall),
-          const SizedBox(width: 10),
-          const Icon(Icons.place, size: 12, color: MulearnColors.gray600),
-          const SizedBox(width: 4),
-          Expanded(
-            child: Text(
-              _venueLabel,
-              style: theme.textTheme.bodySmall,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
-      ),
-      trailing: event.isInterested
-          ? const Icon(Icons.check_circle, color: MulearnColors.rankGold)
-          : null,
     );
   }
 }

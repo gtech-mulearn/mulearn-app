@@ -1,10 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
+import 'package:mulearn_app/core/theme/mu_space.dart';
+import 'package:mulearn_app/core/theme/mulearn_colors.dart';
+import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
+import 'package:mulearn_app/core/widgets/mu_avatar_stack.dart';
+import 'package:mulearn_app/core/widgets/mu_buttons.dart';
+import 'package:mulearn_app/core/widgets/mu_card.dart';
+import 'package:mulearn_app/core/widgets/mu_checklist.dart';
+import 'package:mulearn_app/core/widgets/mu_chip.dart';
+import 'package:mulearn_app/core/widgets/mu_icon_button.dart';
+import 'package:mulearn_app/core/widgets/mu_section_header.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/meeting_detail.dart';
+import 'package:mulearn_app/features/learning_circles/domain/entities/meeting_report_attendee.dart';
 import 'package:mulearn_app/features/learning_circles/presentation/providers/meetings_controller.dart';
 
 class MeetingDetailScreen extends ConsumerWidget {
@@ -25,19 +37,21 @@ class MeetingDetailScreen extends ConsumerWidget {
     final isCreator = meeting?.meetCode != null;
 
     return Scaffold(
+      backgroundColor: MuColors.canvas,
       appBar: AppBar(
         title: const Text('Meeting'),
         actions: [
           if (isCreator) ...[
-            IconButton(
-              icon: const Icon(Icons.edit_outlined),
-              onPressed: () =>
-                  context.push(RoutePaths.editMeetingPath(meetingId)),
+            MuIconButton(
+              icon: LucideIcons.pencil,
+              onPressed: () => context.push(RoutePaths.editMeetingPath(meetingId)),
             ),
-            IconButton(
-              icon: const Icon(Icons.delete_outline),
+            const SizedBox(width: MuSpace.s),
+            MuIconButton(
+              icon: LucideIcons.trash2,
               onPressed: () => _confirmDelete(context, ref),
             ),
+            const SizedBox(width: MuSpace.s),
           ],
         ],
       ),
@@ -94,87 +108,103 @@ class _MeetingBody extends ConsumerWidget {
     return RefreshIndicator(
       onRefresh: () async => ref.invalidate(meetingDetailProvider(meetingId)),
       child: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(MuSpace.screenH),
         children: [
-          Text(meeting.title, style: Theme.of(context).textTheme.headlineSmall),
-          const SizedBox(height: 4),
-          Text(meeting.ig, style: Theme.of(context).textTheme.bodyMedium),
-          const SizedBox(height: 12),
-          Row(
+          Wrap(
+            spacing: MuSpace.s,
             children: [
-              const Icon(Icons.calendar_today, size: 18),
-              const SizedBox(width: 8),
-              Text(meeting.meetTime),
+              MuTagChip(
+                label: meeting.isEnded ? 'Ended' : (meeting.isStarted ? 'Live now' : 'Upcoming'),
+                style: meeting.isEnded
+                    ? MuTagStyle.neutral
+                    : (meeting.isStarted ? MuTagStyle.deadline : MuTagStyle.success),
+              ),
+              MuTagChip(label: meeting.mode),
             ],
           ),
-          const SizedBox(height: 6),
-          Row(
-            children: [
-              const Icon(Icons.place_outlined, size: 18),
-              const SizedBox(width: 8),
-              Expanded(child: Text(meeting.meetPlace)),
-            ],
+          const SizedBox(height: MuSpace.m),
+          Text(meeting.title, style: MuType.headline),
+          const SizedBox(height: MuSpace.xs),
+          Text(meeting.ig, style: MuType.body.copyWith(color: MuColors.inkSecondary)),
+          const SizedBox(height: MuSpace.l),
+          MuCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _InfoRow(icon: LucideIcons.calendarClock, label: meeting.meetTime),
+                const SizedBox(height: MuSpace.m),
+                _InfoRow(icon: LucideIcons.mapPin, label: meeting.meetPlace),
+                if (meeting.meetLink != null && meeting.meetLink!.isNotEmpty) ...[
+                  const SizedBox(height: MuSpace.m),
+                  _InfoRow(icon: LucideIcons.link, label: meeting.meetLink!, selectable: true),
+                ],
+                if (meeting.meetCode != null) ...[
+                  const SizedBox(height: MuSpace.m),
+                  _InfoRow(icon: LucideIcons.qrCode, label: 'Meeting code: ${meeting.meetCode}'),
+                ],
+              ],
+            ),
           ),
-          if (meeting.meetLink != null && meeting.meetLink!.isNotEmpty) ...[
-            const SizedBox(height: 6),
-            Row(
-              children: [
-                const Icon(Icons.link, size: 18),
-                const SizedBox(width: 8),
-                Expanded(child: SelectableText(meeting.meetLink!)),
-              ],
+          if (meeting.description.isNotEmpty) ...[
+            const SizedBox(height: MuSpace.l),
+            Text(meeting.description, style: MuType.body),
+          ],
+          if (meeting.attendees.isNotEmpty) ...[
+            const SizedBox(height: MuSpace.xxl),
+            const MuSectionHeader(title: 'Attendees'),
+            const SizedBox(height: MuSpace.m),
+            MuCard(
+              child: Row(
+                children: [
+                  MuAvatarStack(
+                    names: meeting.attendees.take(5).map((a) => a.fullName).toList(),
+                    urls: meeting.attendees.take(5).map((a) => a.profilePicUrl).toList(),
+                    extraCount: meeting.attendees.length > 5 ? meeting.attendees.length - 5 : 0,
+                    size: 36,
+                  ),
+                  const Spacer(),
+                  Text(
+                    '${meeting.attendees.length} joined',
+                    style: MuType.bodyMed.copyWith(color: MuColors.inkSecondary),
+                  ),
+                ],
+              ),
             ),
           ],
-          if (meeting.meetCode != null) ...[
-            const SizedBox(height: 6),
-            Row(
-              children: [
-                const Icon(Icons.qr_code, size: 18),
-                const SizedBox(width: 8),
-                Text('Meeting code: ${meeting.meetCode}'),
-              ],
-            ),
-          ],
-          const SizedBox(height: 16),
-          Text(meeting.description),
-          const SizedBox(height: 16),
+          const SizedBox(height: MuSpace.xxl),
           if (meeting.isMember)
             Row(
               children: [
                 Expanded(
-                  child: OutlinedButton(
+                  child: MuGhostButton(
+                    label: 'RSVP',
                     onPressed: isBusy
                         ? null
-                        : () => ref
-                            .read(meetingActionsControllerProvider.notifier)
-                            .rsvp(meetingId),
-                    child: const Text('RSVP'),
+                        : () => ref.read(meetingActionsControllerProvider.notifier).rsvp(meetingId),
                   ),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: MuSpace.s),
                 Expanded(
-                  child: OutlinedButton(
+                  child: MuGhostButton(
+                    label: 'Leave meeting',
                     onPressed: isBusy
                         ? null
-                        : () => ref
-                            .read(meetingActionsControllerProvider.notifier)
-                            .leave(meetingId),
-                    child: const Text('Leave meeting'),
+                        : () => ref.read(meetingActionsControllerProvider.notifier).leave(meetingId),
                   ),
                 ),
               ],
             )
           else
-            FilledButton(
+            MuPrimaryButton(
+              label: 'Join with code',
               onPressed: isBusy ? null : () => _showJoinCodeDialog(context, ref),
-              child: const Text('Join with code'),
             ),
           if (meeting.isReportNeeded) ...[
-            const Divider(height: 32),
+            const SizedBox(height: MuSpace.xxl),
             _AttendeeReportSection(meetingId: meetingId),
           ],
           if (isCreator) ...[
-            const Divider(height: 32),
+            const SizedBox(height: MuSpace.xxl),
             _OrganizerReportSection(meetingId: meetingId),
           ],
         ],
@@ -211,6 +241,30 @@ class _MeetingBody extends ConsumerWidget {
           .read(meetingActionsControllerProvider.notifier)
           .joinWithCode(meetingId, codeController.text.trim());
     }
+  }
+}
+
+class _InfoRow extends StatelessWidget {
+  const _InfoRow({required this.icon, required this.label, this.selectable = false});
+
+  final IconData icon;
+  final String label;
+  final bool selectable;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, size: 18, color: MuColors.inkSecondary),
+        const SizedBox(width: MuSpace.s),
+        Expanded(
+          child: selectable
+              ? SelectableText(label, style: MuType.body)
+              : Text(label, style: MuType.body),
+        ),
+      ],
+    );
   }
 }
 
@@ -254,23 +308,23 @@ class _OrganizerReportSectionState
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Meeting report', style: Theme.of(context).textTheme.titleMedium),
-              const SizedBox(height: 8),
-              if (report.report != null) Text(report.report!),
-              const SizedBox(height: 8),
-              ...report.attendees.map((a) => ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    leading: CircleAvatar(
-                      child: Text(a.fullName.isNotEmpty ? a.fullName[0] : '?'),
-                    ),
-                    title: Text(a.fullName),
-                    subtitle: a.report != null ? Text(a.report!) : null,
-                    trailing: Icon(
-                      a.isLcApproved ? Icons.check_circle : Icons.circle_outlined,
-                      color: a.isLcApproved ? Colors.green : null,
-                      size: 18,
-                    ),
-                  )),
+              const MuSectionHeader(title: 'Meeting report'),
+              const SizedBox(height: MuSpace.m),
+              MuCard(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (report.report != null) ...[
+                      Text(report.report!, style: MuType.body),
+                      const SizedBox(height: MuSpace.m),
+                    ],
+                    for (var i = 0; i < report.attendees.length; i++) ...[
+                      if (i > 0) const Divider(height: MuSpace.l),
+                      _ReportAttendeeRow(attendee: report.attendees[i]),
+                    ],
+                  ],
+                ),
+              ),
             ],
           );
         }
@@ -282,47 +336,79 @@ class _OrganizerReportSectionState
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Submit meeting report',
-                style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: 8),
+            const MuSectionHeader(title: 'Submit meeting report'),
+            const SizedBox(height: MuSpace.m),
             TextField(
               controller: _reportController,
               decoration: const InputDecoration(labelText: 'Report'),
               maxLines: 3,
             ),
-            const SizedBox(height: 8),
-            Text('Mark attendance', style: Theme.of(context).textTheme.labelLarge),
-            ...report.attendees.map((a) => CheckboxListTile(
-                  contentPadding: EdgeInsets.zero,
-                  title: Text(a.fullName),
-                  subtitle: a.report != null ? Text(a.report!) : null,
-                  value: _approved[a.userId] ?? false,
-                  onChanged: (value) =>
-                      setState(() => _approved[a.userId] = value ?? false),
-                )),
-            const SizedBox(height: 8),
-            FilledButton(
+            const SizedBox(height: MuSpace.l),
+            Text('Mark attendance', style: MuType.label),
+            const SizedBox(height: MuSpace.s),
+            MuCard(
+              child: MuChecklist(
+                items: [
+                  for (final a in report.attendees)
+                    MuChecklistItem(label: a.fullName, checked: _approved[a.userId] ?? false),
+                ],
+                onToggle: (index) {
+                  final userId = report.attendees[index].userId;
+                  setState(() => _approved[userId] = !(_approved[userId] ?? false));
+                },
+              ),
+            ),
+            const SizedBox(height: MuSpace.l),
+            MuPrimaryButton(
+              label: 'Submit meeting report',
               onPressed: actionsState.isLoading
                   ? null
-                  : () => ref
-                      .read(meetingActionsControllerProvider.notifier)
-                      .submitMeetingReport(
+                  : () => ref.read(meetingActionsControllerProvider.notifier).submitMeetingReport(
                         widget.meetingId,
                         report: _reportController.text.trim(),
                         attendees: _approved,
                       ),
-              child: const Text('Submit meeting report'),
             ),
             if (actionsState.hasError) ...[
-              const SizedBox(height: 8),
+              const SizedBox(height: MuSpace.s),
               Text(
                 ApiException.messageFor(actionsState.error!),
-                style: TextStyle(color: Theme.of(context).colorScheme.error),
+                style: MuType.caption.copyWith(color: MuColors.coral),
               ),
             ],
           ],
         );
       },
+    );
+  }
+}
+
+class _ReportAttendeeRow extends StatelessWidget {
+  const _ReportAttendeeRow({required this.attendee});
+
+  final MeetingReportAttendee attendee;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(attendee.fullName, style: MuType.bodyMed),
+              if (attendee.report != null)
+                Text(attendee.report!, style: MuType.caption),
+            ],
+          ),
+        ),
+        Icon(
+          attendee.isLcApproved ? LucideIcons.checkCircle2 : LucideIcons.circle,
+          color: attendee.isLcApproved ? MuColors.limeBright : MuColors.inkTertiary,
+          size: 18,
+        ),
+      ],
     );
   }
 }
@@ -362,35 +448,42 @@ class _AttendeeReportSectionState
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Your report', style: Theme.of(context).textTheme.titleMedium),
-              const SizedBox(height: 8),
-              if (report.report != null) Text(report.report!),
-              if (report.reportLink != null) SelectableText(report.reportLink!),
+              const MuSectionHeader(title: 'Your report'),
+              const SizedBox(height: MuSpace.m),
+              MuCard(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (report.report != null) Text(report.report!, style: MuType.body),
+                    if (report.reportLink != null)
+                      SelectableText(report.reportLink!, style: MuType.body),
+                  ],
+                ),
+              ),
             ],
           );
         }
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Submit your report',
-                style: Theme.of(context).textTheme.titleMedium),
-            const SizedBox(height: 8),
+            const MuSectionHeader(title: 'Submit your report'),
+            const SizedBox(height: MuSpace.m),
             TextField(
               controller: _reportController,
               decoration: const InputDecoration(labelText: 'Report'),
               maxLines: 3,
             ),
+            const SizedBox(height: MuSpace.s),
             TextField(
               controller: _linkController,
               decoration: const InputDecoration(labelText: 'Report link (optional)'),
             ),
-            const SizedBox(height: 8),
-            FilledButton(
+            const SizedBox(height: MuSpace.l),
+            MuPrimaryButton(
+              label: 'Submit report',
               onPressed: actionsState.isLoading
                   ? null
-                  : () => ref
-                      .read(meetingActionsControllerProvider.notifier)
-                      .submitAttendeeReport(
+                  : () => ref.read(meetingActionsControllerProvider.notifier).submitAttendeeReport(
                         widget.meetingId,
                         report: _reportController.text.trim().isEmpty
                             ? null
@@ -399,7 +492,6 @@ class _AttendeeReportSectionState
                             ? null
                             : _linkController.text.trim(),
                       ),
-              child: const Text('Submit report'),
             ),
           ],
         );

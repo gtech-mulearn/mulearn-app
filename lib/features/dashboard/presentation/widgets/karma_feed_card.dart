@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons/lucide_icons.dart';
+import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
+import 'package:mulearn_app/core/theme/mulearn_typography.dart';
+import 'package:mulearn_app/core/widgets/mu_card.dart';
 import 'package:mulearn_app/features/dashboard/domain/entities/karma_feed.dart';
 
 /// Top-user / top-college highlight card — mirrors the reference
@@ -15,33 +19,31 @@ class KarmaFeedCard extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          children: [
-            if (karmaFeed.topUser case final topUser?)
-              Expanded(
-                child: _Highlight(
-                  icon: Icons.emoji_events,
-                  label: 'Top learner',
-                  title: topUser.fullName,
-                  karma: topUser.karma,
-                ),
+    return MuCard(
+      padding: const EdgeInsets.all(MuSpace.l),
+      child: Row(
+        children: [
+          if (karmaFeed.topUser case final topUser?)
+            Expanded(
+              child: _Highlight(
+                icon: LucideIcons.trophy,
+                label: 'Top learner',
+                title: topUser.fullName,
+                karma: topUser.karma,
               ),
-            if (karmaFeed.topUser != null && karmaFeed.topCollege != null)
-              const SizedBox(width: 12),
-            if (karmaFeed.topCollege case final topCollege?)
-              Expanded(
-                child: _Highlight(
-                  icon: Icons.school,
-                  label: 'Top college',
-                  title: topCollege.name,
-                  karma: topCollege.karma,
-                ),
+            ),
+          if (karmaFeed.topUser != null && karmaFeed.topCollege != null)
+            const SizedBox(width: MuSpace.m),
+          if (karmaFeed.topCollege case final topCollege?)
+            Expanded(
+              child: _Highlight(
+                icon: LucideIcons.school,
+                label: 'Top college',
+                title: topCollege.name,
+                karma: topCollege.karma,
               ),
-          ],
-        ),
+            ),
+        ],
       ),
     );
   }
@@ -62,28 +64,24 @@ class _Highlight extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
-            Icon(icon, size: 16, color: MulearnColors.primary),
+            Icon(icon, size: 16, color: MuColors.primary),
             const SizedBox(width: 4),
-            Text(
-              label,
-              style: theme.textTheme.labelSmall
-                  ?.copyWith(color: MulearnColors.gray600),
-            ),
+            Text(label.toUpperCase(), style: MuType.label),
           ],
         ),
         const SizedBox(height: 4),
         Text(
           title,
-          style: theme.textTheme.titleSmall,
+          style: MuType.bodyMed,
+          maxLines: 1,
           overflow: TextOverflow.ellipsis,
         ),
-        Text('$karma karma', style: theme.textTheme.bodySmall),
+        Text('$karma karma', style: MuType.statSmall.copyWith(color: MuColors.primary)),
       ],
     );
   }

@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mulearn_app/core/network/api_exception.dart';
+import 'package:mulearn_app/core/theme/mu_space.dart';
+import 'package:mulearn_app/core/theme/mulearn_colors.dart';
+import 'package:mulearn_app/core/widgets/error_retry_view.dart';
+import 'package:mulearn_app/core/widgets/mu_chip.dart';
+import 'package:mulearn_app/core/widgets/mu_gradient_header.dart';
 import 'package:mulearn_app/features/leaderboard/presentation/providers/leaderboard_controller.dart';
 import 'package:mulearn_app/features/leaderboard/presentation/widgets/leaderboard_list_tile.dart';
+import 'package:mulearn_app/features/leaderboard/presentation/widgets/leaderboard_podium.dart';
 
 /// Student + college leaderboards with an all-time/this-month toggle —
-/// mirrors the reference dashboard's leaderboard page.
+/// immersive gradient header, top-3 podium, then a ranked list.
 class LeaderboardScreen extends StatefulWidget {
   const LeaderboardScreen({super.key});
 
@@ -13,126 +18,146 @@ class LeaderboardScreen extends StatefulWidget {
   State<LeaderboardScreen> createState() => _LeaderboardScreenState();
 }
 
-class _LeaderboardScreenState extends State<LeaderboardScreen>
-    with SingleTickerProviderStateMixin {
-  late final _tabController = TabController(length: 2, vsync: this);
+class _LeaderboardScreenState extends State<LeaderboardScreen> {
   bool _monthly = false;
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
+  bool _students = true;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Leaderboard'),
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(text: 'Students'),
-            Tab(text: 'Colleges'),
-          ],
-        ),
-      ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(12),
-            child: SegmentedButton<bool>(
-              segments: const [
-                ButtonSegment(value: false, label: Text('All time')),
-                ButtonSegment(value: true, label: Text('This month')),
-              ],
-              selected: {_monthly},
-              onSelectionChanged: (selection) =>
-                  setState(() => _monthly = selection.first),
+      backgroundColor: MuColors.canvas,
+      body: CustomScrollView(
+        physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+        slivers: [
+          SliverToBoxAdapter(
+            child: MuGradientHeader(
+              title: 'Leaderboard',
+              bottom: Row(
+                children: [
+                  MuFilterChip(
+                    label: 'Students',
+                    selected: _students,
+                    onTap: () => setState(() => _students = true),
+                  ),
+                  const SizedBox(width: MuSpace.s),
+                  MuFilterChip(
+                    label: 'Colleges',
+                    selected: !_students,
+                    onTap: () => setState(() => _students = false),
+                  ),
+                  const Spacer(),
+                  MuFilterChip(
+                    label: _monthly ? 'This month' : 'All time',
+                    selected: true,
+                    onTap: () => setState(() => _monthly = !_monthly),
+                  ),
+                ],
+              ),
             ),
           ),
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                _StudentLeaderboardList(monthly: _monthly),
-                _CollegeLeaderboardList(monthly: _monthly),
-              ],
-            ),
-          ),
+          if (_students)
+            _StudentLeaderboardSliver(monthly: _monthly)
+          else
+            _CollegeLeaderboardSliver(monthly: _monthly),
         ],
       ),
     );
   }
 }
 
-class _StudentLeaderboardList extends ConsumerWidget {
-  const _StudentLeaderboardList({required this.monthly});
+class _StudentLeaderboardSliver extends ConsumerWidget {
+  const _StudentLeaderboardSliver({required this.monthly});
 
   final bool monthly;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final entriesState =
-        ref.watch(studentLeaderboardProvider(monthly: monthly));
+    final entriesState = ref.watch(studentLeaderboardProvider(monthly: monthly));
 
     return entriesState.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, _) =>
-          Center(child: Text(ApiException.messageFor(error))),
+      loading: () => const SliverFillRemaining(
+        child: Center(child: CircularProgressIndicator()),
+      ),
+      error: (error, _) => SliverFillRemaining(
+        child: ErrorRetryView(
+          error: error,
+          onRetry: () => ref.invalidate(studentLeaderboardProvider(monthly: monthly)),
+        ),
+      ),
       data: (entries) {
         if (entries.isEmpty) {
-          return const Center(child: Text('No students yet.'));
+          return const SliverFillRemaining(child: Center(child: Text('No students yet.')));
         }
-        return ListView.builder(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          itemCount: entries.length,
-          itemBuilder: (context, index) {
-            final entry = entries[index];
-            return LeaderboardListTile(
-              rank: index + 1,
-              title: entry.fullName,
-              subtitle: entry.institution,
-              karma: entry.totalKarma,
-              avatarUrl: entry.profilePic,
-            );
-          },
+        final podium = entries
+            .take(3)
+            .map((e) => LeaderboardPodiumEntry(
+                  name: e.fullName,
+                  karma: e.totalKarma,
+                  avatarUrl: e.profilePic,
+                ))
+            .toList();
+        final rest = entries.skip(3).toList();
+        return SliverList.list(
+          children: [
+            LeaderboardPodium(top3: podium),
+            const SizedBox(height: MuSpace.m),
+            for (var i = 0; i < rest.length; i++)
+              LeaderboardListTile(
+                rank: i + 4,
+                title: rest[i].fullName,
+                subtitle: rest[i].institution,
+                karma: rest[i].totalKarma,
+                avatarUrl: rest[i].profilePic,
+              ),
+            const SizedBox(height: MuSpace.navClearance),
+          ],
         );
       },
     );
   }
 }
 
-class _CollegeLeaderboardList extends ConsumerWidget {
-  const _CollegeLeaderboardList({required this.monthly});
+class _CollegeLeaderboardSliver extends ConsumerWidget {
+  const _CollegeLeaderboardSliver({required this.monthly});
 
   final bool monthly;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final entriesState =
-        ref.watch(collegeLeaderboardProvider(monthly: monthly));
+    final entriesState = ref.watch(collegeLeaderboardProvider(monthly: monthly));
 
     return entriesState.when(
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, _) =>
-          Center(child: Text(ApiException.messageFor(error))),
+      loading: () => const SliverFillRemaining(
+        child: Center(child: CircularProgressIndicator()),
+      ),
+      error: (error, _) => SliverFillRemaining(
+        child: ErrorRetryView(
+          error: error,
+          onRetry: () => ref.invalidate(collegeLeaderboardProvider(monthly: monthly)),
+        ),
+      ),
       data: (entries) {
         if (entries.isEmpty) {
-          return const Center(child: Text('No colleges yet.'));
+          return const SliverFillRemaining(child: Center(child: Text('No colleges yet.')));
         }
-        return ListView.builder(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          itemCount: entries.length,
-          itemBuilder: (context, index) {
-            final entry = entries[index];
-            return LeaderboardListTile(
-              rank: index + 1,
-              title: entry.title,
-              subtitle: '${entry.totalStudents} students',
-              karma: entry.totalKarma,
-            );
-          },
+        final podium = entries
+            .take(3)
+            .map((e) => LeaderboardPodiumEntry(name: e.title, karma: e.totalKarma))
+            .toList();
+        final rest = entries.skip(3).toList();
+        return SliverList.list(
+          children: [
+            LeaderboardPodium(top3: podium),
+            const SizedBox(height: MuSpace.m),
+            for (var i = 0; i < rest.length; i++)
+              LeaderboardListTile(
+                rank: i + 4,
+                title: rest[i].title,
+                subtitle: '${rest[i].totalStudents} students',
+                karma: rest[i].totalKarma,
+              ),
+            const SizedBox(height: MuSpace.navClearance),
+          ],
         );
       },
     );

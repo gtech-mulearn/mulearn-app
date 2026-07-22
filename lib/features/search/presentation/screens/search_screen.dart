@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
+import 'package:mulearn_app/core/theme/mu_space.dart';
+import 'package:mulearn_app/core/theme/mulearn_colors.dart';
+import 'package:mulearn_app/core/widgets/mu_empty_state.dart';
 import 'package:mulearn_app/features/search/presentation/providers/search_controller.dart';
 import 'package:mulearn_app/features/search/presentation/widgets/user_search_result_tile.dart';
 
@@ -61,6 +65,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
     final resultsState = ref.watch(searchControllerProvider);
 
     return Scaffold(
+      backgroundColor: MuColors.canvas,
       appBar: AppBar(
         title: const Text('Search'),
         bottom: TabBar(
@@ -74,12 +79,12 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(MuSpace.screenH),
             child: TextField(
               controller: _queryController,
               autofocus: true,
               decoration: const InputDecoration(
-                prefixIcon: Icon(Icons.search),
+                prefixIcon: Icon(LucideIcons.search, size: 20),
                 hintText: 'Search by name or MUID…',
               ),
               onSubmitted: (_) => _runSearch(),
@@ -93,20 +98,34 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
                   Center(child: Text(ApiException.messageFor(error))),
               data: (results) {
                 if (_queryController.text.trim().isEmpty) {
-                  return const Center(child: Text('Search for someone.'));
+                  return const MuEmptyState(
+                    icon: LucideIcons.search,
+                    title: 'Search for someone',
+                    message: 'Find users and mentors by name or MUID.',
+                  );
                 }
                 if (results.isEmpty) {
-                  return const Center(child: Text('No results found.'));
+                  return const MuEmptyState(
+                    icon: LucideIcons.userX,
+                    title: 'No results found',
+                    message: 'Try a different name or MUID.',
+                  );
                 }
                 final hasMore =
                     ref.read(searchControllerProvider.notifier).hasMore;
                 return ListView.builder(
                   controller: _scrollController,
+                  padding: const EdgeInsets.fromLTRB(
+                    MuSpace.screenH,
+                    0,
+                    MuSpace.screenH,
+                    MuSpace.l,
+                  ),
                   itemCount: results.length + (hasMore ? 1 : 0),
                   itemBuilder: (context, index) {
                     if (index >= results.length) {
                       return const Padding(
-                        padding: EdgeInsets.all(16),
+                        padding: EdgeInsets.all(MuSpace.l),
                         child: Center(child: CircularProgressIndicator()),
                       );
                     }

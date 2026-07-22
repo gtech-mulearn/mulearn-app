@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
+import 'package:mulearn_app/core/theme/mu_radius.dart';
+import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
+import 'package:mulearn_app/core/theme/mulearn_typography.dart';
+import 'package:mulearn_app/core/widgets/mu_card.dart';
+import 'package:mulearn_app/core/widgets/mu_section_header.dart';
 import 'package:mulearn_app/features/profile/domain/entities/karma_distribution_entry.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/public_profile_controller.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/user_log_controller.dart';
@@ -21,7 +27,6 @@ class KarmaHistoryTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
     final logState = publicMuid == null
         ? ref.watch(userLogProvider)
         : ref.watch(publicUserLogProvider(publicMuid!));
@@ -30,60 +35,92 @@ class KarmaHistoryTab extends ConsumerWidget {
         : karmaDistribution.map((e) => e.karma).reduce((a, b) => a > b ? a : b).toDouble();
 
     return ListView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(MuSpace.screenH, MuSpace.screenH, MuSpace.screenH, MuSpace.navClearance),
       children: [
-        Text('By task type', style: theme.textTheme.titleSmall),
-        const SizedBox(height: 12),
+        const MuSectionHeader(title: 'By task type'),
+        const SizedBox(height: MuSpace.m),
         if (karmaDistribution.isEmpty)
-          const Text('No karma earned yet.',
-              style: TextStyle(color: MulearnColors.gray600))
+          Text('No karma earned yet.', style: MuType.body.copyWith(color: MuColors.inkSecondary))
         else
-          for (final entry in karmaDistribution)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(entry.taskType),
-                      Text('${entry.karma}'),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(4),
-                    child: LinearProgressIndicator(
-                      value: entry.karma / maxKarma,
-                      minHeight: 6,
+          MuCard(
+            child: Column(
+              children: [
+                for (final entry in karmaDistribution)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: MuSpace.m),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(entry.taskType, style: MuType.bodyMed),
+                            Text('${entry.karma}', style: MuType.statSmall.copyWith(fontSize: 15)),
+                          ],
+                        ),
+                        const SizedBox(height: MuSpace.s),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(MuRadius.chip),
+                          child: LinearProgressIndicator(
+                            value: entry.karma / maxKarma,
+                            minHeight: 6,
+                            backgroundColor: MuColors.divider,
+                            valueColor: const AlwaysStoppedAnimation(MuColors.primary),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
+              ],
             ),
-        const SizedBox(height: 24),
-        Text('Activity log', style: theme.textTheme.titleSmall),
-        const SizedBox(height: 12),
+          ),
+        const SizedBox(height: MuSpace.xxl),
+        const MuSectionHeader(title: 'Activity log'),
+        const SizedBox(height: MuSpace.m),
         logState.when(
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (error, _) => Text(ApiException.messageFor(error)),
           data: (entries) {
             if (entries.isEmpty) {
-              return const Text('No activity yet.',
-                  style: TextStyle(color: MulearnColors.gray600));
+              return Text('No activity yet.', style: MuType.body.copyWith(color: MuColors.inkSecondary));
             }
-            return Column(
-              children: [
-                for (final entry in entries)
-                  ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    leading: const Icon(Icons.bolt, color: MulearnColors.primary),
-                    title: Text(entry.taskName),
-                    subtitle: Text(entry.createdDate),
-                    trailing: Text('+${entry.karma}'),
-                  ),
-              ],
+            return MuCard(
+              child: Column(
+                children: [
+                  for (final entry in entries)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: MuSpace.s),
+                      child: Row(
+                        children: [
+                          Container(
+                            height: 36,
+                            width: 36,
+                            decoration: BoxDecoration(
+                              color: MuColors.primaryTint,
+                              borderRadius: BorderRadius.circular(MuRadius.inner),
+                            ),
+                            alignment: Alignment.center,
+                            child: const Icon(LucideIcons.zap, size: 18, color: MuColors.primary),
+                          ),
+                          const SizedBox(width: MuSpace.m),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(entry.taskName, style: MuType.bodyMed),
+                                Text(entry.createdDate, style: MuType.caption),
+                              ],
+                            ),
+                          ),
+                          Text(
+                            '+${entry.karma}',
+                            style: MuType.bodyMed.copyWith(color: MuColors.primary),
+                          ),
+                        ],
+                      ),
+                    ),
+                ],
+              ),
             );
           },
         ),

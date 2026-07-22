@@ -150,7 +150,7 @@ class _IssueForm extends ConsumerWidget {
                 'To issue a Verifiable Credential, download the QSeverse app '
                 'and log in with your μLearn account — your DID links '
                 'automatically.',
-                style: TextStyle(color: MulearnColors.gray600),
+                style: TextStyle(color: MuColors.inkSecondary),
               ),
             ],
           );

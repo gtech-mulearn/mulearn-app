@@ -80,23 +80,23 @@ GoRouter goRouter(Ref ref) {
       };
       // Reachable while signed in without bouncing to `/home` — the
       // registration-details screen (mid-submission), the interests
-      // onboarding step that follows it, and the three bottom-nav tabs.
+      // onboarding step that follows it, and the four bottom-nav tabs.
       const allowedSignedIn = {
         RoutePaths.registerDetails,
         RoutePaths.onboardingInterests,
         RoutePaths.home,
+        RoutePaths.learningCircles,
         RoutePaths.leaderboard,
         RoutePaths.profile,
       };
       // Routes reachable while signed in, outside the bottom-nav shell —
       // pushed on top rather than switched to, so they're exempt from the
-      // "must be one of the three tabs" redirect below.
+      // "must be one of the four tabs" redirect below.
       const allowedSignedInExtra = {
         RoutePaths.search,
         RoutePaths.interestGroups,
         RoutePaths.events,
         RoutePaths.calendar,
-        RoutePaths.learningCircles,
         RoutePaths.createLearningCircle,
       };
 
@@ -179,10 +179,6 @@ GoRouter goRouter(Ref ref) {
         builder: (_, __) => const CalendarScreen(),
       ),
       GoRoute(
-        path: RoutePaths.learningCircles,
-        builder: (_, __) => const LearningCirclesScreen(),
-      ),
-      GoRoute(
         path: RoutePaths.createLearningCircle,
         builder: (_, __) => const CreateLearningCircleScreen(),
       ),
@@ -220,6 +216,14 @@ GoRouter goRouter(Ref ref) {
               GoRoute(
                 path: RoutePaths.home,
                 builder: (_, __) => const HomeScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: RoutePaths.learningCircles,
+                builder: (_, __) => const LearningCirclesScreen(),
               ),
             ],
           ),

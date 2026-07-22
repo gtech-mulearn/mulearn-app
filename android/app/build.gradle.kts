@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "org.mulearn.app"
+    namespace = "org.mulearn.muapp"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -21,7 +21,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "org.mulearn.app"
+        applicationId = "org.mulearn.muapp"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
@@ -35,11 +35,11 @@ android {
         create("dev") {
             dimension = "env"
             applicationIdSuffix = ".dev"
-            resValue("string", "app_name", "μLearn Dev")
+            resValue("string", "app_name", "MuApp Dev")
         }
         create("prod") {
             dimension = "env"
-            resValue("string", "app_name", "μLearn")
+            resValue("string", "app_name", "MuApp")
         }
     }
 

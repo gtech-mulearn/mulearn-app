@@ -1,4 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons/lucide_icons.dart';
+import 'package:mulearn_app/core/theme/mu_space.dart';
+import 'package:mulearn_app/core/theme/mulearn_colors.dart';
+import 'package:mulearn_app/core/theme/mulearn_typography.dart';
+import 'package:mulearn_app/core/widgets/mu_buttons.dart';
+import 'package:mulearn_app/core/widgets/mu_card.dart';
+import 'package:mulearn_app/core/widgets/mu_chip.dart';
+import 'package:mulearn_app/core/widgets/mu_toast.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/meeting_form.dart';
 
 const kMeetingPlatforms = [
@@ -94,8 +102,7 @@ class _MeetingFormFieldsState extends State<MeetingFormFields> {
   void _submit() {
     if (!(_formKey.currentState?.validate() ?? false)) return;
     if (_meetTime == null) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Pick a date and time.')));
+      MuToast.show(context, message: 'Pick a date and time.', type: MuToastType.error);
       return;
     }
     widget.onSubmit(MeetingForm(
@@ -120,7 +127,7 @@ class _MeetingFormFieldsState extends State<MeetingFormFields> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(MuSpace.screenH),
       child: Form(
         key: _formKey,
         child: ListView(
@@ -140,17 +147,23 @@ class _MeetingFormFieldsState extends State<MeetingFormFields> {
               validator: (v) =>
                   (v == null || v.trim().isEmpty) ? 'Required' : null,
             ),
-            const SizedBox(height: 8),
-            SegmentedButton<String>(
-              segments: const [
-                ButtonSegment(value: 'online', label: Text('Online')),
-                ButtonSegment(value: 'offline', label: Text('Offline')),
+            const SizedBox(height: MuSpace.s),
+            Row(
+              children: [
+                MuFilterChip(
+                  label: 'Online',
+                  selected: _mode == 'online',
+                  onTap: () => setState(() => _mode = 'online'),
+                ),
+                const SizedBox(width: MuSpace.s),
+                MuFilterChip(
+                  label: 'Offline',
+                  selected: _mode == 'offline',
+                  onTap: () => setState(() => _mode = 'offline'),
+                ),
               ],
-              selected: {_mode},
-              onSelectionChanged: (selection) =>
-                  setState(() => _mode = selection.first),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: MuSpace.l),
             if (_mode == 'online') ...[
               DropdownButtonFormField<String>(
                 initialValue: _platform,
@@ -182,36 +195,52 @@ class _MeetingFormFieldsState extends State<MeetingFormFields> {
                 validator: (v) =>
                     (v == null || v.trim().isEmpty) ? 'Required' : null,
               ),
-            const SizedBox(height: 16),
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              title: Text(
-                  _meetTime == null ? 'Pick date & time' : _meetTime.toString()),
-              trailing: const Icon(Icons.calendar_today),
+            const SizedBox(height: MuSpace.l),
+            MuCard(
               onTap: _pickMeetTime,
+              child: Row(
+                children: [
+                  const Icon(LucideIcons.calendarClock, size: 18, color: MuColors.inkSecondary),
+                  const SizedBox(width: MuSpace.s),
+                  Expanded(
+                    child: Text(
+                      _meetTime == null ? 'Pick date & time' : _meetTime.toString(),
+                      style: MuType.body,
+                    ),
+                  ),
+                ],
+              ),
             ),
+            const SizedBox(height: MuSpace.l),
             TextFormField(
               controller: _durationController,
               keyboardType: TextInputType.number,
               decoration: const InputDecoration(labelText: 'Duration (hours)'),
             ),
-            SwitchListTile(
-              contentPadding: EdgeInsets.zero,
-              title: const Text('Report required from attendees'),
-              value: _isReportNeeded,
-              onChanged: (value) => setState(() => _isReportNeeded = value),
+            const SizedBox(height: MuSpace.l),
+            Row(
+              children: [
+                Expanded(
+                  child: Text('Report required from attendees', style: MuType.body),
+                ),
+                Switch(
+                  value: _isReportNeeded,
+                  activeThumbColor: MuColors.primary,
+                  onChanged: (value) => setState(() => _isReportNeeded = value),
+                ),
+              ],
             ),
             if (widget.errorMessage != null) ...[
-              const SizedBox(height: 8),
+              const SizedBox(height: MuSpace.s),
               Text(
                 widget.errorMessage!,
-                style: TextStyle(color: Theme.of(context).colorScheme.error),
+                style: MuType.caption.copyWith(color: MuColors.coral),
               ),
             ],
-            const SizedBox(height: 16),
-            FilledButton(
+            const SizedBox(height: MuSpace.l),
+            MuPrimaryButton(
+              label: widget.isSubmitting ? 'Saving…' : widget.submitLabel,
               onPressed: widget.isSubmitting ? null : _submit,
-              child: Text(widget.isSubmitting ? 'Saving…' : widget.submitLabel),
             ),
           ],
         ),

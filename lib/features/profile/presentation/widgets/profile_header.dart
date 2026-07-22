@@ -2,14 +2,21 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:mulearn_app/core/theme/mulearn_gradients.dart';
+import 'package:lucide_icons/lucide_icons.dart';
+import 'package:mulearn_app/core/theme/mu_radius.dart';
+import 'package:mulearn_app/core/theme/mu_space.dart';
+import 'package:mulearn_app/core/theme/mulearn_colors.dart';
+import 'package:mulearn_app/core/theme/mulearn_typography.dart';
+import 'package:mulearn_app/core/widgets/mu_icon_button.dart';
+import 'package:mulearn_app/core/widgets/mu_toast.dart';
 import 'package:mulearn_app/core/widgets/profile_avatar.dart';
 import 'package:mulearn_app/features/profile/domain/entities/user_profile.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/cover_photo_controller.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/profile_image_controller.dart';
 
 /// Full-bleed cover photo with the avatar, identity, and edit/share actions
-/// overlaid at the bottom — mirrors the reference dashboard's profile header.
+/// overlaid at the bottom — mirrors the reference dashboard's profile header
+/// (rules.md §8).
 class ProfileHeader extends ConsumerWidget {
   const ProfileHeader({
     required this.profile,
@@ -28,8 +35,10 @@ class ProfileHeader extends ConsumerWidget {
     final bytes = await picked.readAsBytes();
     if (bytes.lengthInBytes > coverPicMaxBytes) {
       if (context.mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Cover image must be under 5 MB.')),
+        MuToast.show(
+          context,
+          message: 'Cover image must be under 5 MB.',
+          type: MuToastType.error,
         );
       }
       return;
@@ -75,7 +84,6 @@ class ProfileHeader extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
     final coverPending = ref.watch(coverPhotoControllerProvider).isLoading;
     final level = (profile.level != null && profile.level!.length > 3)
         ? profile.level!.substring(3, 4)
@@ -84,7 +92,7 @@ class ProfileHeader extends ConsumerWidget {
         profile.joined.length >= 4 ? profile.joined.substring(0, 4) : null;
 
     return ClipRRect(
-      borderRadius: BorderRadius.circular(20),
+      borderRadius: BorderRadius.circular(MuRadius.card),
       child: SizedBox(
         height: 220,
         child: Stack(
@@ -95,11 +103,11 @@ class ProfileHeader extends ConsumerWidget {
                 imageUrl: profile.coverPicUrl!,
                 fit: BoxFit.cover,
                 errorWidget: (_, __, ___) =>
-                    const DecoratedBox(decoration: BoxDecoration(gradient: MulearnGradients.trusty)),
+                    const DecoratedBox(decoration: BoxDecoration(gradient: MuColors.heroGradient)),
               )
             else
               const DecoratedBox(
-                decoration: BoxDecoration(gradient: MulearnGradients.trusty),
+                decoration: BoxDecoration(gradient: MuColors.heroGradient),
               ),
             DecoratedBox(
               decoration: BoxDecoration(
@@ -129,7 +137,7 @@ class ProfileHeader extends ConsumerWidget {
                       ),
                     )
                   : PopupMenuButton<String>(
-                      icon: const Icon(Icons.edit, color: Colors.white),
+                      icon: const Icon(LucideIcons.pencil, color: Colors.white, size: 18),
                       onSelected: (value) {
                         switch (value) {
                           case 'change':
@@ -153,9 +161,9 @@ class ProfileHeader extends ConsumerWidget {
                     ),
             ),
             Positioned(
-              left: 16,
-              right: 16,
-              bottom: 16,
+              left: MuSpace.l,
+              right: MuSpace.l,
+              bottom: MuSpace.l,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
@@ -182,24 +190,20 @@ class ProfileHeader extends ConsumerWidget {
                           height: 24,
                           width: 24,
                           decoration: BoxDecoration(
-                            color: MulearnGradients.trusty.colors.last,
+                            color: MuColors.lime,
                             shape: BoxShape.circle,
                             border: Border.all(color: Colors.white, width: 2),
                           ),
                           alignment: Alignment.center,
                           child: Text(
                             level,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 11,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: MuType.statSmall.copyWith(color: MuColors.limeInk, fontSize: 11),
                           ),
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: MuSpace.m),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -207,16 +211,12 @@ class ProfileHeader extends ConsumerWidget {
                       children: [
                         Text(
                           profile.fullName,
-                          style: theme.textTheme.titleLarge?.copyWith(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: MuType.title.copyWith(color: Colors.white),
                           overflow: TextOverflow.ellipsis,
                         ),
                         Text(
                           profile.muid,
-                          style: theme.textTheme.bodySmall
-                              ?.copyWith(color: Colors.white70),
+                          style: MuType.caption.copyWith(color: Colors.white70),
                           overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: 4),
@@ -226,15 +226,12 @@ class ProfileHeader extends ConsumerWidget {
                           children: [
                             _Badge(
                               label: profile.isPublic ? 'Public' : 'Private',
-                              color: profile.isPublic
-                                  ? Colors.greenAccent
-                                  : Colors.orangeAccent,
+                              color: profile.isPublic ? MuColors.limeBright : MuColors.coral,
                             ),
                             if (memberSince != null)
                               Text(
                                 'Member since $memberSince',
-                                style: theme.textTheme.labelSmall
-                                    ?.copyWith(color: Colors.white70),
+                                style: MuType.caption.copyWith(color: Colors.white70),
                               ),
                           ],
                         ),
@@ -244,17 +241,9 @@ class ProfileHeader extends ConsumerWidget {
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      IconButton.filledTonal(
-                        onPressed: onShare,
-                        icon: const Icon(Icons.share, size: 18),
-                        visualDensity: VisualDensity.compact,
-                      ),
+                      MuIconButton(icon: LucideIcons.share2, glass: true, onPressed: onShare),
                       const SizedBox(height: 4),
-                      IconButton.filled(
-                        onPressed: onEdit,
-                        icon: const Icon(Icons.edit_outlined, size: 18),
-                        visualDensity: VisualDensity.compact,
-                      ),
+                      MuIconButton(icon: LucideIcons.pencil, glass: true, onPressed: onEdit),
                     ],
                   ),
                 ],
@@ -279,7 +268,7 @@ class _Badge extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.2),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(MuRadius.chip),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -290,10 +279,7 @@ class _Badge extends StatelessWidget {
             decoration: BoxDecoration(color: color, shape: BoxShape.circle),
           ),
           const SizedBox(width: 4),
-          Text(
-            label,
-            style: const TextStyle(color: Colors.white, fontSize: 10),
-          ),
+          Text(label, style: MuType.chip.copyWith(color: Colors.white, fontSize: 10)),
         ],
       ),
     );

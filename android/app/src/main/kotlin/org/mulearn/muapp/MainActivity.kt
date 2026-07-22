@@ -1,4 +1,4 @@
-package org.mulearn.app
+package org.mulearn.muapp
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1,9 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
-import 'package:mulearn_app/core/theme/mulearn_gradients.dart';
+import 'package:mulearn_app/core/theme/mu_space.dart';
+import 'package:mulearn_app/core/theme/mulearn_colors.dart';
+import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
+import 'package:mulearn_app/core/widgets/mu_buttons.dart';
+import 'package:mulearn_app/core/widgets/mu_chip.dart';
+import 'package:mulearn_app/core/widgets/mu_section_header.dart';
 import 'package:mulearn_app/features/events/presentation/providers/events_controller.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -36,6 +42,7 @@ class EventDetailScreen extends ConsumerWidget {
     final isBusy = interestState.isLoading;
 
     return Scaffold(
+      backgroundColor: MuColors.canvas,
       appBar: AppBar(title: const Text('Event')),
       body: detailState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -54,119 +61,111 @@ class EventDetailScreen extends ConsumerWidget {
                       fit: BoxFit.cover,
                       errorWidget: (_, __, ___) => const DecoratedBox(
                         decoration:
-                            BoxDecoration(gradient: MulearnGradients.trusty),
+                            BoxDecoration(gradient: MuColors.heroGradient),
                       ),
                     )
                   : const DecoratedBox(
                       decoration:
-                          BoxDecoration(gradient: MulearnGradients.trusty),
+                          BoxDecoration(gradient: MuColors.heroGradient),
                     ),
             ),
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(MuSpace.screenH),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(event.title,
-                      style: Theme.of(context).textTheme.headlineSmall),
-                  const SizedBox(height: 8),
+                  Text(event.title, style: MuType.headline),
+                  const SizedBox(height: MuSpace.s),
                   Wrap(
-                    spacing: 6,
-                    children: event.tags
-                        .map((t) => Chip(
-                              label: Text(t),
-                              visualDensity: VisualDensity.compact,
-                            ))
-                        .toList(),
+                    spacing: MuSpace.xs,
+                    runSpacing: MuSpace.xs,
+                    children: event.tags.map((t) => MuTagChip(label: t)).toList(),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: MuSpace.m),
                   Row(
                     children: [
-                      const Icon(Icons.calendar_today, size: 18),
-                      const SizedBox(width: 8),
-                      Text(_formatDateRange(
-                          event.startDatetime, event.endDatetime)),
+                      const Icon(LucideIcons.calendar, size: 18, color: MuColors.inkSecondary),
+                      const SizedBox(width: MuSpace.s),
+                      Text(
+                        _formatDateRange(event.startDatetime, event.endDatetime),
+                        style: MuType.body,
+                      ),
                     ],
                   ),
-                  const SizedBox(height: 6),
+                  const SizedBox(height: MuSpace.s),
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Icon(Icons.place_outlined, size: 18),
-                      const SizedBox(width: 8),
+                      const Icon(LucideIcons.mapPin, size: 18, color: MuColors.inkSecondary),
+                      const SizedBox(width: MuSpace.s),
                       Expanded(
                         child: Text(
                           event.venue.venueType == 'online'
-                              ? (event.venue.venuePlatform?.isNotEmpty ??
-                                      false)
+                              ? (event.venue.venuePlatform?.isNotEmpty ?? false)
                                   ? 'Online · ${event.venue.venuePlatform}'
                                   : 'Online'
                               : [
                                   event.venue.venueAddress,
                                   event.venue.venueCity,
                                 ].where((s) => s != null && s.isNotEmpty).join(', '),
+                          style: MuType.body,
                         ),
                       ),
                     ],
                   ),
                   if (event.minKarma != null && event.minKarma! > 0) ...[
-                    const SizedBox(height: 6),
+                    const SizedBox(height: MuSpace.s),
                     Row(
                       children: [
-                        const Icon(Icons.bolt, size: 18),
-                        const SizedBox(width: 8),
-                        Text('${event.minKarma} karma required'),
+                        const Icon(LucideIcons.zap, size: 18, color: MuColors.inkSecondary),
+                        const SizedBox(width: MuSpace.s),
+                        Text('${event.minKarma} karma required', style: MuType.body),
                       ],
                     ),
                   ],
-                  const SizedBox(height: 16),
+                  const SizedBox(height: MuSpace.l),
                   Row(
                     children: [
                       Expanded(
-                        child: FilledButton.icon(
+                        child: MuPrimaryButton(
+                          label: isBusy
+                              ? 'Please wait…'
+                              : (event.isInterested ? 'Interested' : "I'm interested"),
+                          icon: event.isInterested ? LucideIcons.check : LucideIcons.star,
                           onPressed: isBusy
                               ? null
                               : () => ref
                                   .read(eventInterestControllerProvider.notifier)
-                                  .toggle(eventId,
-                                      interested: !event.isInterested),
-                          icon: Icon(event.isInterested
-                              ? Icons.check
-                              : Icons.star_border),
-                          label: Text(isBusy
-                              ? 'Please wait…'
-                              : (event.isInterested
-                                  ? 'Interested'
-                                  : "I'm interested")),
+                                  .toggle(eventId, interested: !event.isInterested),
                         ),
                       ),
                       if (event.registrationUrl != null &&
                           event.registrationUrl!.isNotEmpty) ...[
-                        const SizedBox(width: 12),
+                        const SizedBox(width: MuSpace.s),
                         Expanded(
-                          child: OutlinedButton(
+                          child: MuGhostButton(
+                            label: 'Register',
                             onPressed: () => launchUrl(
                               Uri.parse(event.registrationUrl!),
                               mode: LaunchMode.externalApplication,
                             ),
-                            child: const Text('Register'),
                           ),
                         ),
                       ],
                     ],
                   ),
                   if (interestState.hasError) ...[
-                    const SizedBox(height: 8),
+                    const SizedBox(height: MuSpace.s),
                     Text(
                       ApiException.messageFor(interestState.error!),
-                      style: TextStyle(color: Theme.of(context).colorScheme.error),
+                      style: MuType.caption.copyWith(color: MuColors.coral),
                     ),
                   ],
                   if (event.description != null) ...[
-                    const SizedBox(height: 24),
-                    Text('About',
-                        style: Theme.of(context).textTheme.titleMedium),
-                    const SizedBox(height: 8),
-                    Text(event.description!),
+                    const SizedBox(height: MuSpace.xxl),
+                    const MuSectionHeader(title: 'About'),
+                    const SizedBox(height: MuSpace.m),
+                    Text(event.description!, style: MuType.body),
                   ],
                 ],
               ),
