@@ -3,4 +3,5 @@
     <!-- Matches MuColors.ink — keeps the native launch screen from flashing
          white before SplashScreen's own dark cinematic backdrop takes over. -->
     <color name="splash_background">#FF0B0F1A</color>
+	<color name="ic_launcher_background">#FFFFFF</color>
 </resources>

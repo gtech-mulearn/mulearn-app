@@ -40,7 +40,7 @@ class InterestGroupsScreen extends ConsumerWidget {
               crossAxisCount: 2,
               mainAxisSpacing: MuSpace.m,
               crossAxisSpacing: MuSpace.m,
-              childAspectRatio: 1.25,
+              childAspectRatio: 0.8,
             ),
             itemCount: groups.length,
             itemBuilder: (context, index) {

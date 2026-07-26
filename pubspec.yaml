@@ -87,6 +87,18 @@ dev_dependencies:
   json_serializable: ^6.8.0
   envied_generator: ^1.1.1
   mocktail: ^1.0.4
+  flutter_launcher_icons: ^0.14.3
+
+# `dart run flutter_launcher_icons` regenerates the iOS/Android icon sets from
+# assets/icon/app_icon.png (flattened white bg — iOS icons can't have alpha)
+# and app_icon_foreground.png (transparent, for Android's adaptive icon).
+flutter_launcher_icons:
+  image_path: assets/icon/app_icon.png
+  ios: true
+  android: true
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: assets/icon/app_icon_foreground.png
+  remove_alpha_ios: true
 
 # Upstream lucide_icons 0.257.0 subclasses Flutter's IconData, which this
 # SDK marks a final class — the published package fails to compile as-is.
@@ -108,10 +120,8 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
-  # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/images/logo.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

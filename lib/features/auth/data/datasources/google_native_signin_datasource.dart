@@ -1,25 +1,36 @@
+import 'package:flutter/foundation.dart' show TargetPlatform, defaultTargetPlatform;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 
 /// Wraps the native Google Sign-In SDK to obtain an ID token for exchange
 /// with `POST /api/v1/auth/google-mobile/`.
 ///
-/// ⚠️ Needs a real Google OAuth client ID configured before this can work.
-/// [GoogleSignIn.initialize] is called with no `clientId` here, which relies
-/// on platform-level config files (`google-services.json` on Android,
-/// `GoogleService-Info.plist`/`Info.plist` `CLIENT_ID` key on iOS/macOS) that
-/// this project does not yet have — see the platform TODOs in
-/// `ios/Runner/Info.plist` / `macos/Runner/Info.plist`. Without those, the
-/// native picker itself will fail to launch; this is a credentials gap, not
-/// a code gap.
+/// iOS: the client ID below is from the real iOS OAuth client (GCP project
+/// `muapp-481514`), confirmed to match this app's bundle ID
+/// (`org.mulearn.muapp`) before wiring in — its `REVERSED_CLIENT_ID` is also
+/// registered as a URL scheme in `ios/Runner/Info.plist` (required for the
+/// sign-in redirect). Passed explicitly here rather than via a
+/// `GoogleService-Info.plist`, since this app doesn't use Firebase.
+///
+/// ⚠️ Android: no Android-type OAuth client has been provided yet (only an
+/// iOS client and an unrelated "installed"/desktop-type client, which isn't
+/// valid for a mobile app's native sign-in) — Android needs its own client
+/// keyed to the package name + release/debug SHA-1 fingerprints. Until that
+/// exists, [clientId] is left unset on Android (an iOS client ID would not
+/// work there), so tapping "Continue with Google" on Android will fail.
 class GoogleNativeSignInDataSource {
   GoogleNativeSignInDataSource();
+
+  static const _iosClientId =
+      '966772588752-tr5qq5cs4d6kfqsv6tivk3v58n26tnes.apps.googleusercontent.com';
 
   bool _initialized = false;
 
   Future<void> _ensureInitialized() async {
     if (_initialized) return;
-    await GoogleSignIn.instance.initialize();
+    await GoogleSignIn.instance.initialize(
+      clientId: defaultTargetPlatform == TargetPlatform.iOS ? _iosClientId : null,
+    );
     _initialized = true;
   }
 

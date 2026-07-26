@@ -8,7 +8,7 @@ import 'package:mulearn_app/core/theme/mulearn_colors.dart';
 /// settles.
 ///
 /// Cinematic "title card" treatment (near-black backdrop, a soft brand-color
-/// glow bloom, the wordmark punching in with an overshoot then settling) —
+/// glow bloom, the logo mark punching in with an overshoot then settling) —
 /// the kind of bold single-mark-on-black opener streaming apps use, brought
 /// to μLearn's own purple/blue brand color instead of copying anyone else's
 /// literal palette. A two-stage haptic (an anticipatory tap, then a heavier
@@ -99,14 +99,9 @@ class _SplashScreenState extends State<SplashScreen>
                     opacity: _logoOpacity,
                     child: ScaleTransition(
                       scale: _logoScale,
-                      child: const Text(
-                        'μLearn',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 40,
-                          fontWeight: FontWeight.w900,
-                          letterSpacing: -0.5,
-                        ),
+                      child: Image.asset(
+                        'assets/images/logo.png',
+                        height: 72,
                       ),
                     ),
                   ),

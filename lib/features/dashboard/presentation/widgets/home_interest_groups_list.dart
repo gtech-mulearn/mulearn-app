@@ -28,7 +28,7 @@ class HomeInterestGroupsList extends StatelessWidget {
         crossAxisCount: 2,
         mainAxisSpacing: MuSpace.m,
         crossAxisSpacing: MuSpace.m,
-        childAspectRatio: 1.25,
+        childAspectRatio: 0.8,
       ),
       itemCount: preview.length,
       itemBuilder: (context, index) {

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/theme/mu_radius.dart';
 import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
@@ -84,6 +85,18 @@ class ProfileHeader extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // A failed upload/delete previously vanished silently (spinner just
+    // stopped) — surface it so "nothing visibly changed" always means
+    // either a real success or a visible error, never an ambiguous no-op.
+    ref.listen(coverPhotoControllerProvider, (_, next) {
+      if (next.hasError && !next.isLoading) {
+        MuToast.show(
+          context,
+          message: ApiException.messageFor(next.error!),
+          type: MuToastType.error,
+        );
+      }
+    });
     final coverPending = ref.watch(coverPhotoControllerProvider).isLoading;
     final level = (profile.level != null && profile.level!.length > 3)
         ? profile.level!.substring(3, 4)

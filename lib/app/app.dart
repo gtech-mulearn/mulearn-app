@@ -14,7 +14,7 @@ class MulearnApp extends ConsumerWidget {
     final router = ref.watch(goRouterProvider);
 
     return MaterialApp.router(
-      title: 'MuApp',
+      title: 'Mulearn',
       debugShowCheckedModeBanner: FlavorConfig.instance.isDev,
       theme: MulearnTheme.light(),
       // The 2026-07 redesign's Mu* component library hardcodes light-theme
