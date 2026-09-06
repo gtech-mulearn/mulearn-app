@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
+import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/meeting_detail.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/meeting_form.dart';
@@ -34,7 +35,9 @@ class EditMeetingScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: MuColors.canvas,
-      appBar: AppBar(title: const Text('Edit Meeting')),
+      appBar: AppBar(
+        title: Text('Edit meeting', style: MuType.headline.copyWith(fontSize: 20)),
+      ),
       body: detailState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => ErrorRetryView(

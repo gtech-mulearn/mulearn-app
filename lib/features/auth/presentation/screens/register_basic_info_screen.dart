@@ -64,11 +64,12 @@ class _RegisterBasicInfoScreenState
       appBar: AppBar(),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: MuSpace.screenH),
+          padding: const EdgeInsets.symmetric(horizontal: 26),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text('Step into the community', style: MuType.headline),
+              const SizedBox(height: MuSpace.m),
+              Text('Step into the community', style: MuType.display.copyWith(fontSize: 30)),
               const SizedBox(height: MuSpace.s),
               Text(
                 'Create your account to get started',

@@ -46,14 +46,14 @@ class MuBanner extends StatelessWidget {
               Expanded(
                 child: Text(
                   eyebrow.toUpperCase(),
-                  style: MuType.eyebrow.copyWith(color: MuColors.lime),
+                  style: MuType.eyebrow.copyWith(color: MuColors.karmaAccent),
                 ),
               ),
               if (live)
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                    color: MuColors.coral,
+                    color: MuColors.error,
                     borderRadius: BorderRadius.circular(MuRadius.chip),
                   ),
                   child: Text(
@@ -73,7 +73,7 @@ class MuBanner extends StatelessWidget {
             ),
           ],
           const SizedBox(height: MuSpace.l),
-          MuLimeButton(label: ctaLabel, onPressed: onTap, expand: false, compact: true),
+          MuKarmaButton(label: ctaLabel, onPressed: onTap, expand: false, compact: true),
         ],
       ),
     );

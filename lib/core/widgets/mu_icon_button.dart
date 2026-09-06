@@ -18,7 +18,7 @@ class MuIconButton extends StatelessWidget {
   /// Use on gradient/dark backgrounds — translucent white instead of tint.
   final bool glass;
 
-  /// Shows a small lime dot (e.g. unread notifications).
+  /// Shows a small karma-accent dot (e.g. unread notifications).
   final bool badge;
 
   @override
@@ -51,7 +51,7 @@ class MuIconButton extends StatelessWidget {
               height: 8,
               width: 8,
               decoration: const BoxDecoration(
-                color: MuColors.limeBright,
+                color: MuColors.karmaAccent,
                 shape: BoxShape.circle,
               ),
             ),

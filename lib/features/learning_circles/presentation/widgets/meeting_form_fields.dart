@@ -147,6 +147,8 @@ class _MeetingFormFieldsState extends State<MeetingFormFields> {
               validator: (v) =>
                   (v == null || v.trim().isEmpty) ? 'Required' : null,
             ),
+            const SizedBox(height: MuSpace.m),
+            Text('MODE', style: MuType.label),
             const SizedBox(height: MuSpace.s),
             Row(
               children: [
@@ -195,7 +197,9 @@ class _MeetingFormFieldsState extends State<MeetingFormFields> {
                 validator: (v) =>
                     (v == null || v.trim().isEmpty) ? 'Required' : null,
               ),
-            const SizedBox(height: MuSpace.l),
+            const SizedBox(height: MuSpace.m),
+            Text('SCHEDULE', style: MuType.label),
+            const SizedBox(height: MuSpace.s),
             MuCard(
               onTap: _pickMeetTime,
               child: Row(
@@ -218,23 +222,25 @@ class _MeetingFormFieldsState extends State<MeetingFormFields> {
               decoration: const InputDecoration(labelText: 'Duration (hours)'),
             ),
             const SizedBox(height: MuSpace.l),
-            Row(
-              children: [
-                Expanded(
-                  child: Text('Report required from attendees', style: MuType.body),
-                ),
-                Switch(
-                  value: _isReportNeeded,
-                  activeThumbColor: MuColors.primary,
-                  onChanged: (value) => setState(() => _isReportNeeded = value),
-                ),
-              ],
+            MuCard(
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text('Report required from attendees', style: MuType.body),
+                  ),
+                  Switch(
+                    value: _isReportNeeded,
+                    activeThumbColor: MuColors.primary,
+                    onChanged: (value) => setState(() => _isReportNeeded = value),
+                  ),
+                ],
+              ),
             ),
             if (widget.errorMessage != null) ...[
               const SizedBox(height: MuSpace.s),
               Text(
                 widget.errorMessage!,
-                style: MuType.caption.copyWith(color: MuColors.coral),
+                style: MuType.caption.copyWith(color: MuColors.error),
               ),
             ],
             const SizedBox(height: MuSpace.l),

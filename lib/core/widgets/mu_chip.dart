@@ -43,8 +43,10 @@ class MuFilterChip extends StatelessWidget {
   }
 }
 
-/// Metadata tag style — semantic color variants.
-enum MuTagStyle { neutral, deadline, success }
+/// Metadata tag style — semantic color variants. [neutral] doubles as the
+/// design's "IG tag" pill (blue tint); [karmaNew] is the solid "NEW"-badge
+/// treatment (karma purple bg, white fg) rather than a tint pair.
+enum MuTagStyle { neutral, deadline, success, warning, karmaNew }
 
 /// Non-interactive metadata pill (e.g. "High Priority", "2 days left").
 class MuTagChip extends StatelessWidget {
@@ -57,8 +59,10 @@ class MuTagChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final (bg, fg) = switch (style) {
       MuTagStyle.neutral => (MuColors.primaryTint, MuColors.primary),
-      MuTagStyle.deadline => (const Color(0xFFFFE9E5), MuColors.coral),
-      MuTagStyle.success => (const Color(0xFFE9FBDA), const Color(0xFF2E7D1E)),
+      MuTagStyle.deadline => (MuColors.errorBg, MuColors.error),
+      MuTagStyle.success => (MuColors.successBg, MuColors.success),
+      MuTagStyle.warning => (MuColors.warningBg, MuColors.warning),
+      MuTagStyle.karmaNew => (MuColors.karmaAccent, MuColors.surface),
     };
     return Container(
       height: 28,

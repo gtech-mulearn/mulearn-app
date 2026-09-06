@@ -558,58 +558,6 @@ final class CircleIgOptionsProvider
 
 String _$circleIgOptionsHash() => r'b0089f447a4e2bc35866de0b8d41304bb9a5b09a';
 
-/// College/org options for the create-circle picker — reuses the shared
-/// [LocationRemoteDataSource] (rules.md §2), the same id space
-/// `learningcircle/create/`'s `org` field validates against.
-
-@ProviderFor(circleOrgOptions)
-const circleOrgOptionsProvider = CircleOrgOptionsProvider._();
-
-/// College/org options for the create-circle picker — reuses the shared
-/// [LocationRemoteDataSource] (rules.md §2), the same id space
-/// `learningcircle/create/`'s `org` field validates against.
-
-final class CircleOrgOptionsProvider
-    extends
-        $FunctionalProvider<
-          AsyncValue<List<SelectOption>>,
-          List<SelectOption>,
-          FutureOr<List<SelectOption>>
-        >
-    with
-        $FutureModifier<List<SelectOption>>,
-        $FutureProvider<List<SelectOption>> {
-  /// College/org options for the create-circle picker — reuses the shared
-  /// [LocationRemoteDataSource] (rules.md §2), the same id space
-  /// `learningcircle/create/`'s `org` field validates against.
-  const CircleOrgOptionsProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'circleOrgOptionsProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$circleOrgOptionsHash();
-
-  @$internal
-  @override
-  $FutureProviderElement<List<SelectOption>> $createElement(
-    $ProviderPointer pointer,
-  ) => $FutureProviderElement(pointer);
-
-  @override
-  FutureOr<List<SelectOption>> create(Ref ref) {
-    return circleOrgOptions(ref);
-  }
-}
-
-String _$circleOrgOptionsHash() => r'926d97d6b6d9a416547de1ab53be863a4331bed9';
-
 /// Accumulates circle catalog pages across "load more" — mirrors
 /// [EventsListController]'s infinite-scroll pattern.
 
@@ -643,7 +591,7 @@ final class CirclesListControllerProvider
 }
 
 String _$circlesListControllerHash() =>
-    r'df90646c35588e4ec02c18caa2b3913ceee2cf15';
+    r'3342d1c4b75c7aad4413bc261a85fa4a05a69dad';
 
 /// Accumulates circle catalog pages across "load more" — mirrors
 /// [EventsListController]'s infinite-scroll pattern.

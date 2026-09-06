@@ -53,7 +53,24 @@ abstract class UserProfileDto with _$UserProfileDto {
   const UserProfileDto._();
 
   factory UserProfileDto.fromJson(Map<String, dynamic> json) =>
-      _$UserProfileDtoFromJson(json);
+      _$UserProfileDtoFromJson(_normalizeKarmaDistribution(json));
+
+  /// The backend serializes `karma_distribution` as `{}` rather than `[]`
+  /// for an account with no karma yet — confirmed live against a real
+  /// account (rules.md §3/§9). `json_serializable`'s generated
+  /// `as List<dynamic>?` cast throws on a Map, so this normalizes that
+  /// one known empty-object shape to an empty list before delegating to
+  /// the generated parser. Any actual (non-empty) `karma_distribution` is
+  /// still an array on this backend, so a `Map` value here always means
+  /// "no data," never real entries needing recovery.
+  static Map<String, dynamic> _normalizeKarmaDistribution(
+    Map<String, dynamic> json,
+  ) {
+    if (json['karma_distribution'] is Map) {
+      return {...json, 'karma_distribution': const <dynamic>[]};
+    }
+    return json;
+  }
 
   /// Maps to the domain entity. This mapper is the single place a backend
   /// field rename must be handled (rules.md §2) — the UI never sees this DTO.

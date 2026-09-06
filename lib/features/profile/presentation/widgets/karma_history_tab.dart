@@ -1,28 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/theme/mu_radius.dart';
 import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
 import 'package:mulearn_app/core/theme/mulearn_typography.dart';
+import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/core/widgets/mu_card.dart';
-import 'package:mulearn_app/core/widgets/mu_section_header.dart';
-import 'package:mulearn_app/features/profile/domain/entities/karma_distribution_entry.dart';
+import 'package:mulearn_app/core/widgets/mu_empty_state.dart';
+import 'package:mulearn_app/features/profile/domain/entities/user_log_entry.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/public_profile_controller.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/user_log_controller.dart';
 
-/// Karma breakdown by task type, plus the raw activity log —
-/// mirrors the reference dashboard's Karma History tab. Pass [publicMuid]
-/// to view another user's log instead of the signed-in user's own.
+/// The raw karma activity log, restyled as a card list (DESIGN_SPEC.md §2
+/// "12 — Profile & karma" → "Tab: Karma History") — task/tag, karma amount
+/// with a `+`/`-` sign and success/error coloring, relative timestamp. The
+/// by-task-type breakdown that used to live here moved to Basic Details'
+/// karma-distribution donut, which already covers that same real
+/// `karmaDistribution` data. Pass [publicMuid] to view another user's log
+/// instead of the signed-in user's own.
 class KarmaHistoryTab extends ConsumerWidget {
-  const KarmaHistoryTab({
-    required this.karmaDistribution,
-    super.key,
-    this.publicMuid,
-  });
+  const KarmaHistoryTab({super.key, this.publicMuid});
 
-  final List<KarmaDistributionEntry> karmaDistribution;
   final String? publicMuid;
 
   @override
@@ -30,101 +29,127 @@ class KarmaHistoryTab extends ConsumerWidget {
     final logState = publicMuid == null
         ? ref.watch(userLogProvider)
         : ref.watch(publicUserLogProvider(publicMuid!));
-    final maxKarma = karmaDistribution.isEmpty
-        ? 1.0
-        : karmaDistribution.map((e) => e.karma).reduce((a, b) => a > b ? a : b).toDouble();
 
-    return ListView(
-      padding: const EdgeInsets.fromLTRB(MuSpace.screenH, MuSpace.screenH, MuSpace.screenH, MuSpace.navClearance),
-      children: [
-        const MuSectionHeader(title: 'By task type'),
-        const SizedBox(height: MuSpace.m),
-        if (karmaDistribution.isEmpty)
-          Text('No karma earned yet.', style: MuType.body.copyWith(color: MuColors.inkSecondary))
-        else
-          MuCard(
-            child: Column(
+    return logState.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, _) => ErrorRetryView(
+        error: error,
+        onRetry: () {
+          if (publicMuid == null) {
+            ref.invalidate(userLogProvider);
+          } else {
+            ref.invalidate(publicUserLogProvider(publicMuid!));
+          }
+        },
+      ),
+      data: (entries) {
+        if (entries.isEmpty) {
+          return const MuEmptyState(
+            icon: LucideIcons.zap,
+            title: 'No karma yet',
+            message: 'Complete tasks to start building your karma history.',
+          );
+        }
+        return ListView(
+          padding: const EdgeInsets.fromLTRB(
+            MuSpace.screenH,
+            MuSpace.screenH,
+            MuSpace.screenH,
+            MuSpace.navClearance,
+          ),
+          children: [
+            Row(
               children: [
-                for (final entry in karmaDistribution)
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: MuSpace.m),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(entry.taskType, style: MuType.bodyMed),
-                            Text('${entry.karma}', style: MuType.statSmall.copyWith(fontSize: 15)),
-                          ],
-                        ),
-                        const SizedBox(height: MuSpace.s),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(MuRadius.chip),
-                          child: LinearProgressIndicator(
-                            value: entry.karma / maxKarma,
-                            minHeight: 6,
-                            backgroundColor: MuColors.divider,
-                            valueColor: const AlwaysStoppedAnimation(MuColors.primary),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                Expanded(child: Text('KARMA HISTORY', style: MuType.eyebrow)),
+                Text(
+                  '${entries.length} ${entries.length == 1 ? 'entry' : 'entries'}',
+                  style: MuType.caption,
+                ),
               ],
             ),
-          ),
-        const SizedBox(height: MuSpace.xxl),
-        const MuSectionHeader(title: 'Activity log'),
-        const SizedBox(height: MuSpace.m),
-        logState.when(
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, _) => Text(ApiException.messageFor(error)),
-          data: (entries) {
-            if (entries.isEmpty) {
-              return Text('No activity yet.', style: MuType.body.copyWith(color: MuColors.inkSecondary));
-            }
-            return MuCard(
-              child: Column(
-                children: [
-                  for (final entry in entries)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: MuSpace.s),
-                      child: Row(
-                        children: [
-                          Container(
-                            height: 36,
-                            width: 36,
-                            decoration: BoxDecoration(
-                              color: MuColors.primaryTint,
-                              borderRadius: BorderRadius.circular(MuRadius.inner),
-                            ),
-                            alignment: Alignment.center,
-                            child: const Icon(LucideIcons.zap, size: 18, color: MuColors.primary),
-                          ),
-                          const SizedBox(width: MuSpace.m),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(entry.taskName, style: MuType.bodyMed),
-                                Text(entry.createdDate, style: MuType.caption),
-                              ],
-                            ),
-                          ),
-                          Text(
-                            '+${entry.karma}',
-                            style: MuType.bodyMed.copyWith(color: MuColors.primary),
-                          ),
-                        ],
-                      ),
-                    ),
-                ],
-              ),
-            );
-          },
-        ),
-      ],
+            const SizedBox(height: MuSpace.m),
+            for (final entry in entries) _HistoryCard(entry: entry),
+          ],
+        );
+      },
     );
   }
+}
+
+class _HistoryCard extends StatelessWidget {
+  const _HistoryCard({required this.entry});
+
+  final UserLogEntry entry;
+
+  @override
+  Widget build(BuildContext context) {
+    final isNegative = entry.karma < 0;
+    final amount = entry.karma.round();
+    final tint = isNegative ? MuColors.errorBg : MuColors.primaryTint;
+    final accent = isNegative ? MuColors.error : MuColors.primary;
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: MuSpace.s),
+      child: MuCard(
+        padding: const EdgeInsets.all(MuSpace.m),
+        child: Row(
+          children: [
+            Container(
+              height: 40,
+              width: 40,
+              decoration: BoxDecoration(
+                color: tint,
+                borderRadius: BorderRadius.circular(MuRadius.inner),
+              ),
+              alignment: Alignment.center,
+              child: Icon(LucideIcons.zap, size: 18, color: accent),
+            ),
+            const SizedBox(width: MuSpace.m),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    entry.taskName,
+                    style: MuType.bodyMed,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 2),
+                  Text(_relativeTime(entry.createdDate), style: MuType.caption),
+                ],
+              ),
+            ),
+            const SizedBox(width: MuSpace.s),
+            Text(
+              '${isNegative ? '' : '+'}$amount ϰ',
+              style: MuType.statSmall.copyWith(fontSize: 15, color: accent),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Formats a `created_date` string as a relative timestamp ("Today", "3
+/// days ago", ...). Falls back to the raw string when it isn't a
+/// parseable date, rather than guessing at an unconfirmed backend format.
+String _relativeTime(String raw) {
+  final parsed = DateTime.tryParse(raw);
+  if (parsed == null) return raw;
+  final diff = DateTime.now().difference(parsed);
+  if (diff.inDays <= 0) return 'Today';
+  if (diff.inDays == 1) return 'Yesterday';
+  if (diff.inDays < 7) return '${diff.inDays} days ago';
+  if (diff.inDays < 30) {
+    final weeks = (diff.inDays / 7).floor();
+    return '$weeks ${weeks == 1 ? 'week' : 'weeks'} ago';
+  }
+  if (diff.inDays < 365) {
+    final months = (diff.inDays / 30).floor();
+    return '$months ${months == 1 ? 'month' : 'months'} ago';
+  }
+  final years = (diff.inDays / 365).floor();
+  return '$years ${years == 1 ? 'year' : 'years'} ago';
 }

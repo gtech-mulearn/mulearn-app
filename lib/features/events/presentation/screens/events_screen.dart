@@ -5,6 +5,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
+import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/core/widgets/mu_empty_state.dart';
 import 'package:mulearn_app/core/widgets/mu_icon_button.dart';
@@ -49,7 +50,7 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
     return Scaffold(
       backgroundColor: MuColors.canvas,
       appBar: AppBar(
-        title: const Text('Events'),
+        title: Text('Events', style: MuType.headline.copyWith(fontSize: 24)),
         actions: [
           MuIconButton(
             icon: LucideIcons.calendarDays,
@@ -94,6 +95,7 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
                 final event = events[index];
                 return EventListTile(
                   event: event,
+                  gradientIndex: index,
                   onTap: () =>
                       context.push(RoutePaths.eventDetailPath(event.id)),
                 );

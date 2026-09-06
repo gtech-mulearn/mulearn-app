@@ -29,8 +29,28 @@ class LearningCirclesRemoteDataSource {
     return ApiEnvelope.unwrapObject(response);
   }
 
+  /// `GET /api/v1/dashboard/learningcircle/user-circles/`. Confirmed live
+  /// (production) that this does NOT always return a bare list under
+  /// `response` the way [ApiPaths.circlesList]'s catalog page does — some
+  /// accounts get it wrapped in an object instead. Rather than guess the
+  /// exact key without being able to inspect a real payload directly,
+  /// this tries the bare-list shape first (the originally-assumed one),
+  /// then a handful of plausible nested keys, and only surfaces
+  /// [ApiEnvelope.unwrapList]'s clear error if none of them match — so a
+  /// genuinely unexpected shape still fails loudly instead of silently
+  /// becoming an empty list.
   Future<List<dynamic>> fetchMyCircles() async {
     final response = await _dio.get<dynamic>(ApiPaths.userCircles);
+    final data = response.data;
+    if (data is Map<String, dynamic> && data['hasError'] != true) {
+      final payload = data.containsKey('response') ? data['response'] : data;
+      if (payload is Map<String, dynamic>) {
+        for (final key in ['circles', 'data', 'results', 'learning_circles']) {
+          final nested = payload[key];
+          if (nested is List) return nested;
+        }
+      }
+    }
     return ApiEnvelope.unwrapList(response);
   }
 

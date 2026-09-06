@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
+import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/theme/mu_radius.dart';
 import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
 import 'package:mulearn_app/core/theme/mulearn_typography.dart';
+import 'package:mulearn_app/core/utils/unescape_literal_unicode.dart';
 import 'package:mulearn_app/core/widgets/mu_card.dart';
+import 'package:mulearn_app/core/widgets/mu_progress_bars.dart';
 import 'package:mulearn_app/features/profile/domain/entities/level_task.dart';
 import 'package:mulearn_app/features/profile/domain/entities/user_level.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/public_profile_controller.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/user_levels_controller.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// Level-by-level task progression — mirrors the reference dashboard's Mu
 /// Voyage tab. Pass [publicMuid] to view another user's levels instead of
@@ -33,6 +39,30 @@ class MuVoyageTab extends ConsumerWidget {
       data: (levels) => ListView(
         padding: const EdgeInsets.fromLTRB(MuSpace.screenH, MuSpace.screenH, MuSpace.screenH, MuSpace.navClearance),
         children: [
+          if (publicMuid == null)
+            Padding(
+              padding: const EdgeInsets.only(bottom: MuSpace.l),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('MU VOYAGE', style: MuType.eyebrow),
+                  GestureDetector(
+                    onTap: () => context.push(RoutePaths.journey),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          'See the map',
+                          style: MuType.bodyMed.copyWith(color: MuColors.primary, fontSize: 13),
+                        ),
+                        const SizedBox(width: 2),
+                        const Icon(LucideIcons.arrowRight, size: 14, color: MuColors.primary),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
           for (final level in levels)
             Padding(
               padding: const EdgeInsets.only(bottom: MuSpace.m),
@@ -51,7 +81,14 @@ class _LevelSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final total = level.tasks.length;
     final completed = level.tasks.where((t) => t.completed).length;
+    final ringValue = total == 0 ? 1.0 : completed / total;
+    final ringColor = ringValue >= 1
+        ? MuColors.success
+        : ringValue > 0
+            ? MuColors.primary
+            : MuColors.inkFaint;
 
     return MuCard(
       padding: EdgeInsets.zero,
@@ -60,9 +97,15 @@ class _LevelSection extends StatelessWidget {
         child: ExpansionTile(
           tilePadding: const EdgeInsets.symmetric(horizontal: MuSpace.l),
           childrenPadding: const EdgeInsets.only(bottom: MuSpace.s),
+          leading: MuProgressRing(
+            value: ringValue,
+            size: 36,
+            strokeWidth: 4,
+            color: ringColor,
+          ),
           title: Text(level.name, style: MuType.bodyMed),
           subtitle: Text(
-            '$completed / ${level.tasks.length} tasks completed',
+            '$completed / $total tasks completed',
             style: MuType.caption,
           ),
           trailing: Text(
@@ -95,7 +138,7 @@ class _TaskTile extends StatelessWidget {
             Icon(
               task.completed ? LucideIcons.checkCircle2 : LucideIcons.circle,
               size: 20,
-              color: task.completed ? MuColors.limeBright : MuColors.inkTertiary,
+              color: task.completed ? MuColors.success : MuColors.inkTertiary,
             ),
             const SizedBox(width: MuSpace.m),
             Expanded(
@@ -110,7 +153,33 @@ class _TaskTile extends StatelessWidget {
                     ),
                   ),
                   if (task.taskDescription != null)
-                    Text(task.taskDescription!, style: MuType.caption),
+                    MarkdownBody(
+                      data: unescapeLiteralUnicode(task.taskDescription!),
+                      onTapLink: (text, href, title) {
+                        if (href == null) return;
+                        final uri = Uri.tryParse(href);
+                        if (uri != null) {
+                          launchUrl(uri, mode: LaunchMode.externalApplication);
+                        }
+                      },
+                      styleSheet: MarkdownStyleSheet(
+                        p: MuType.caption,
+                        h1: MuType.bodyMed,
+                        h2: MuType.bodyMed,
+                        h3: MuType.body,
+                        strong: MuType.caption.copyWith(fontWeight: FontWeight.w700),
+                        a: MuType.caption.copyWith(
+                          color: MuColors.primary,
+                          decoration: TextDecoration.underline,
+                        ),
+                        listBullet: MuType.caption,
+                        blockquote: MuType.caption.copyWith(color: MuColors.inkTertiary),
+                        code: MuType.caption.copyWith(
+                          backgroundColor: MuColors.canvas,
+                          fontFamily: 'monospace',
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ),

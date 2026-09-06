@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CollegeLeaderboardEntryDto {
 
- String get code; String get title; int get totalStudents; num get totalKarma;
+ String? get code; String? get title; int? get totalStudents; num? get totalKarma;
 /// Create a copy of CollegeLeaderboardEntryDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $CollegeLeaderboardEntryDtoCopyWith<$Res>  {
   factory $CollegeLeaderboardEntryDtoCopyWith(CollegeLeaderboardEntryDto value, $Res Function(CollegeLeaderboardEntryDto) _then) = _$CollegeLeaderboardEntryDtoCopyWithImpl;
 @useResult
 $Res call({
- String code, String title, int totalStudents, num totalKarma
+ String? code, String? title, int? totalStudents, num? totalKarma
 });
 
 
@@ -65,13 +65,13 @@ class _$CollegeLeaderboardEntryDtoCopyWithImpl<$Res>
 
 /// Create a copy of CollegeLeaderboardEntryDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? title = null,Object? totalStudents = null,Object? totalKarma = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? code = freezed,Object? title = freezed,Object? totalStudents = freezed,Object? totalKarma = freezed,}) {
   return _then(_self.copyWith(
-code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
-as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String,totalStudents: null == totalStudents ? _self.totalStudents : totalStudents // ignore: cast_nullable_to_non_nullable
-as int,totalKarma: null == totalKarma ? _self.totalKarma : totalKarma // ignore: cast_nullable_to_non_nullable
-as num,
+code: freezed == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String?,title: freezed == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+as String?,totalStudents: freezed == totalStudents ? _self.totalStudents : totalStudents // ignore: cast_nullable_to_non_nullable
+as int?,totalKarma: freezed == totalKarma ? _self.totalKarma : totalKarma // ignore: cast_nullable_to_non_nullable
+as num?,
   ));
 }
 
@@ -156,7 +156,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  String title,  int totalStudents,  num totalKarma)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? code,  String? title,  int? totalStudents,  num? totalKarma)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CollegeLeaderboardEntryDto() when $default != null:
 return $default(_that.code,_that.title,_that.totalStudents,_that.totalKarma);case _:
@@ -177,7 +177,7 @@ return $default(_that.code,_that.title,_that.totalStudents,_that.totalKarma);cas
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  String title,  int totalStudents,  num totalKarma)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? code,  String? title,  int? totalStudents,  num? totalKarma)  $default,) {final _that = this;
 switch (_that) {
 case _CollegeLeaderboardEntryDto():
 return $default(_that.code,_that.title,_that.totalStudents,_that.totalKarma);case _:
@@ -197,7 +197,7 @@ return $default(_that.code,_that.title,_that.totalStudents,_that.totalKarma);cas
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  String title,  int totalStudents,  num totalKarma)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? code,  String? title,  int? totalStudents,  num? totalKarma)?  $default,) {final _that = this;
 switch (_that) {
 case _CollegeLeaderboardEntryDto() when $default != null:
 return $default(_that.code,_that.title,_that.totalStudents,_that.totalKarma);case _:
@@ -212,13 +212,13 @@ return $default(_that.code,_that.title,_that.totalStudents,_that.totalKarma);cas
 @JsonSerializable()
 
 class _CollegeLeaderboardEntryDto extends CollegeLeaderboardEntryDto {
-  const _CollegeLeaderboardEntryDto({required this.code, required this.title, required this.totalStudents, required this.totalKarma}): super._();
+  const _CollegeLeaderboardEntryDto({this.code, this.title, this.totalStudents, this.totalKarma}): super._();
   factory _CollegeLeaderboardEntryDto.fromJson(Map<String, dynamic> json) => _$CollegeLeaderboardEntryDtoFromJson(json);
 
-@override final  String code;
-@override final  String title;
-@override final  int totalStudents;
-@override final  num totalKarma;
+@override final  String? code;
+@override final  String? title;
+@override final  int? totalStudents;
+@override final  num? totalKarma;
 
 /// Create a copy of CollegeLeaderboardEntryDto
 /// with the given fields replaced by the non-null parameter values.
@@ -253,7 +253,7 @@ abstract mixin class _$CollegeLeaderboardEntryDtoCopyWith<$Res> implements $Coll
   factory _$CollegeLeaderboardEntryDtoCopyWith(_CollegeLeaderboardEntryDto value, $Res Function(_CollegeLeaderboardEntryDto) _then) = __$CollegeLeaderboardEntryDtoCopyWithImpl;
 @override @useResult
 $Res call({
- String code, String title, int totalStudents, num totalKarma
+ String? code, String? title, int? totalStudents, num? totalKarma
 });
 
 
@@ -270,13 +270,13 @@ class __$CollegeLeaderboardEntryDtoCopyWithImpl<$Res>
 
 /// Create a copy of CollegeLeaderboardEntryDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? code = null,Object? title = null,Object? totalStudents = null,Object? totalKarma = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? code = freezed,Object? title = freezed,Object? totalStudents = freezed,Object? totalKarma = freezed,}) {
   return _then(_CollegeLeaderboardEntryDto(
-code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
-as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String,totalStudents: null == totalStudents ? _self.totalStudents : totalStudents // ignore: cast_nullable_to_non_nullable
-as int,totalKarma: null == totalKarma ? _self.totalKarma : totalKarma // ignore: cast_nullable_to_non_nullable
-as num,
+code: freezed == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+as String?,title: freezed == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+as String?,totalStudents: freezed == totalStudents ? _self.totalStudents : totalStudents // ignore: cast_nullable_to_non_nullable
+as int?,totalKarma: freezed == totalKarma ? _self.totalKarma : totalKarma // ignore: cast_nullable_to_non_nullable
+as num?,
   ));
 }
 

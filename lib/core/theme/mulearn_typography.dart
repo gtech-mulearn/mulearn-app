@@ -2,29 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
 
-/// μLearn type scale (rules.md §8) — 2026-07 redesign.
+/// μLearn type scale (rules.md §8) — 2026-09 redesign (Phase 1 of the
+/// Claude Design import).
 ///
-/// Two families: **Plus Jakarta Sans** for UI/display, **Space Grotesk** for
-/// numeric/stat accents (karma counts, ranks, IDs). Big text is light/mixed
-/// weight; small text is medium/bold — the inverse of a default Material
-/// scale, and the signature of this system's hierarchy.
+/// Two families: **Plus Jakarta Sans** for UI/body copy, **Bricolage
+/// Grotesque** for display headings and numeric/stat accents (karma counts,
+/// ranks, IDs). Headings and stat numerals are bold with tight tracking —
+/// screens override `fontSize` via `.copyWith(...)` for one-off sizes rather
+/// than this file growing a named style per screen.
 abstract final class MuType {
   const MuType._();
 
-  /// Hero names/greetings (e.g. "James Miller") — light weight is deliberate.
-  static final TextStyle display = GoogleFonts.plusJakartaSans(
-    fontSize: 34,
-    fontWeight: FontWeight.w300,
+  /// Screen H1s / hero greetings (e.g. "Welcome back", "Hey, Muhammed").
+  /// Bricolage Grotesque 700 with tight tracking; screens `.copyWith` a
+  /// different `fontSize` for the 24–34px range the design calls for.
+  static final TextStyle display = GoogleFonts.bricolageGrotesque(
+    fontSize: 32,
+    fontWeight: FontWeight.w700,
     height: 1.15,
-    letterSpacing: -0.5,
+    letterSpacing: -0.8,
     color: MuColors.ink,
   );
 
-  static final TextStyle headline = GoogleFonts.plusJakartaSans(
+  static final TextStyle headline = GoogleFonts.bricolageGrotesque(
     fontSize: 24,
     fontWeight: FontWeight.w700,
     height: 1.2,
-    letterSpacing: -0.3,
+    letterSpacing: -0.5,
     color: MuColors.ink,
   );
 
@@ -64,16 +68,18 @@ abstract final class MuType {
     color: MuColors.inkSecondary,
   );
 
-  /// Karma counts, ranks — always Space Grotesk.
-  static final TextStyle stat = GoogleFonts.spaceGrotesk(
-    fontSize: 28,
+  /// Karma counts, ranks, OTP digits — always Bricolage Grotesque. Screens
+  /// `.copyWith(fontSize: ...)` for the wide range of sizes the design uses
+  /// (22–52px) rather than this file defining one style per screen.
+  static final TextStyle stat = GoogleFonts.bricolageGrotesque(
+    fontSize: 30,
     fontWeight: FontWeight.w700,
     letterSpacing: -0.5,
     color: MuColors.ink,
   );
 
-  static final TextStyle statSmall = GoogleFonts.spaceGrotesk(
-    fontSize: 14,
+  static final TextStyle statSmall = GoogleFonts.bricolageGrotesque(
+    fontSize: 15,
     fontWeight: FontWeight.w600,
     color: MuColors.ink,
   );
@@ -81,6 +87,15 @@ abstract final class MuType {
   static final TextStyle chip = GoogleFonts.plusJakartaSans(
     fontSize: 13,
     fontWeight: FontWeight.w600,
+  );
+
+  /// Tiny all-caps pills — IG tags, difficulty/status badges, "NEW" badge.
+  /// Smaller and bolder than [chip]; use this rather than mutating [chip]
+  /// for pill/badge contexts. Call `.toUpperCase()` on the label text.
+  static final TextStyle tag = GoogleFonts.plusJakartaSans(
+    fontSize: 11,
+    fontWeight: FontWeight.w800,
+    letterSpacing: 0.6,
   );
 
   /// UPPERCASE section markers (e.g. "PRODUCTS") — call `.toUpperCase()` on
