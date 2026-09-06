@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:mulearn_app/core/theme/mu_radius.dart';
 import 'package:mulearn_app/core/theme/mu_space.dart';
+import 'package:mulearn_app/core/theme/mulearn_colors.dart';
 import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 import 'package:mulearn_app/core/widgets/mu_avatar_stack.dart';
 import 'package:mulearn_app/core/widgets/mu_card.dart';
@@ -80,16 +82,16 @@ class _TrailingButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: const Color(0xFF0B0F1A),
-      borderRadius: BorderRadius.circular(100),
+      color: MuColors.ink,
+      borderRadius: BorderRadius.circular(MuRadius.chip),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(100),
+        borderRadius: BorderRadius.circular(MuRadius.chip),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: Text(
             label,
-            style: MuType.chip.copyWith(color: Colors.white, fontSize: 12),
+            style: MuType.chip.copyWith(color: MuColors.surface, fontSize: 12),
           ),
         ),
       ),

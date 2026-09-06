@@ -56,7 +56,7 @@ final class LeaderboardRemoteDataSourceProvider
 }
 
 String _$leaderboardRemoteDataSourceHash() =>
-    r'd754d3702629b7e3bfe491b24c21174dccc156ee';
+    r'1b693a54b0f8f49f74175cdc628119866d759f18';
 
 /// Presentation depends on the [LeaderboardRepository] contract (rules.md
 /// §2/§5).

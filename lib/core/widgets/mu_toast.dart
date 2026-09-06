@@ -87,8 +87,8 @@ class _ToastWidgetState extends State<_ToastWidget> with SingleTickerProviderSta
   ]).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
 
   (IconData, Color, Color) get _style => switch (widget.type) {
-        MuToastType.success => (LucideIcons.checkCircle2, MuColors.statKarmaTint, MuColors.statKarmaAccent),
-        MuToastType.error => (LucideIcons.alertCircle, const Color(0xFFFFE9E5), MuColors.coral),
+        MuToastType.success => (LucideIcons.checkCircle2, MuColors.successBg, MuColors.success),
+        MuToastType.error => (LucideIcons.alertCircle, MuColors.errorBg, MuColors.error),
         MuToastType.info => (LucideIcons.info, MuColors.primaryTint, MuColors.primary),
       };
 
@@ -158,7 +158,7 @@ class _ToastWidgetState extends State<_ToastWidget> with SingleTickerProviderSta
                     padding: const EdgeInsets.all(MuSpace.m),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(MuRadius.inner),
-                      boxShadow: MuShadow.card,
+                      boxShadow: MuShadow.toast,
                     ),
                     child: Row(
                       children: [

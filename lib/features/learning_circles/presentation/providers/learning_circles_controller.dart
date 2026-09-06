@@ -1,4 +1,3 @@
-import 'package:mulearn_app/core/data/location_remote_datasource.dart';
 import 'package:mulearn_app/core/network/dio_provider.dart';
 import 'package:mulearn_app/core/widgets/searchable_select_field.dart';
 import 'package:mulearn_app/features/learning_circles/data/datasources/learning_circles_remote_datasource.dart';
@@ -63,30 +62,20 @@ Future<List<SelectOption>> circleIgOptions(Ref ref) async {
       .toList();
 }
 
-/// College/org options for the create-circle picker — reuses the shared
-/// [LocationRemoteDataSource] (rules.md §2), the same id space
-/// `learningcircle/create/`'s `org` field validates against.
-@riverpod
-Future<List<SelectOption>> circleOrgOptions(Ref ref) async {
-  final colleges =
-      await ref.watch(locationRemoteDataSourceProvider).fetchAllColleges();
-  return colleges
-      .map((c) => SelectOption(id: c.id, label: c.title))
-      .toList();
-}
-
 /// Accumulates circle catalog pages across "load more" — mirrors
 /// [EventsListController]'s infinite-scroll pattern.
 @riverpod
 class CirclesListController extends _$CirclesListController {
   int _page = 1;
   bool _hasMore = false;
+  bool _loadingMore = false;
 
   bool get hasMore => _hasMore;
 
   @override
   Future<List<LearningCircle>> build() async {
     _page = 1;
+    _loadingMore = false;
     final page =
         await ref.watch(learningCirclesRepositoryProvider).getCircles();
     _hasMore = page.hasNext;
@@ -94,7 +83,12 @@ class CirclesListController extends _$CirclesListController {
   }
 
   Future<void> loadMore() async {
-    if (!_hasMore) return;
+    // Guards against a scroll listener re-firing (e.g. near-bottom on every
+    // frame for a short list — such as when "Circles near you" filters out
+    // owned circles and stays short) before the in-flight page request
+    // settles, which would otherwise dispatch the same page repeatedly.
+    if (!_hasMore || _loadingMore) return;
+    _loadingMore = true;
     final current = state.value ?? [];
     final nextPage = _page + 1;
     try {
@@ -107,6 +101,8 @@ class CirclesListController extends _$CirclesListController {
       state = AsyncData([...current, ...page.circles]);
     } on Object catch (e, st) {
       state = AsyncError(e, st);
+    } finally {
+      _loadingMore = false;
     }
   }
 }

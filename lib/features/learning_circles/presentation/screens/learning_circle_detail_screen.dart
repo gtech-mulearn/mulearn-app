@@ -17,9 +17,11 @@ import 'package:mulearn_app/core/widgets/mu_section_header.dart';
 import 'package:mulearn_app/core/widgets/mu_stat_block.dart';
 import 'package:mulearn_app/core/widgets/mu_task_tile.dart';
 import 'package:mulearn_app/core/widgets/mu_toast.dart';
+import 'package:mulearn_app/core/widgets/profile_avatar.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/circle_member.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/join_request.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/learning_circle_detail.dart';
+import 'package:mulearn_app/features/learning_circles/domain/entities/meeting.dart';
 import 'package:mulearn_app/features/learning_circles/presentation/providers/learning_circles_controller.dart';
 import 'package:mulearn_app/features/learning_circles/presentation/providers/meetings_controller.dart';
 
@@ -34,7 +36,14 @@ class LearningCircleDetailScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: MuColors.canvas,
-      appBar: AppBar(title: const Text('Learning Circle')),
+      appBar: AppBar(
+        title: Text(
+          detailState.value?.title ?? 'Learning circle',
+          style: MuType.headline.copyWith(fontSize: 20),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
       body: detailState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => ErrorRetryView(
@@ -74,8 +83,6 @@ class _CircleDetailBody extends ConsumerWidget {
       child: ListView(
         padding: const EdgeInsets.all(MuSpace.screenH),
         children: [
-          Text(detail.title, style: MuType.headline),
-          const SizedBox(height: MuSpace.xs),
           Text(
             [detail.ig, if (detail.org != null) detail.org].join(' · '),
             style: MuType.body.copyWith(color: MuColors.inkSecondary),
@@ -129,7 +136,19 @@ class _CircleDetailBody extends ConsumerWidget {
             ),
           ],
           const SizedBox(height: MuSpace.xxl),
-          const MuSectionHeader(title: 'Members'),
+          Row(
+            children: [
+              Expanded(child: Text('MEMBERS', style: MuType.eyebrow)),
+              if (isLead)
+                GestureDetector(
+                  onTap: () => _showInviteDialog(context, ref, circleId),
+                  child: Text(
+                    '+ Invite',
+                    style: MuType.chip.copyWith(color: MuColors.primary),
+                  ),
+                ),
+            ],
+          ),
           const SizedBox(height: MuSpace.m),
           MuCard(
             child: Column(
@@ -258,34 +277,50 @@ class _MemberTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Row(
       children: [
-        Container(
-          height: 36,
-          width: 36,
-          decoration: const BoxDecoration(color: MuColors.primaryTint, shape: BoxShape.circle),
-          alignment: Alignment.center,
-          child: Text(
-            member.fullName.isNotEmpty ? member.fullName[0].toUpperCase() : '?',
-            style: MuType.bodyMed.copyWith(color: MuColors.primary),
-          ),
-        ),
-        const SizedBox(width: MuSpace.m),
         Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(member.fullName, style: MuType.bodyMed),
-              Text(member.muid, style: MuType.caption),
-            ],
+          child: InkWell(
+            onTap: () => context.push(RoutePaths.publicProfilePath(member.muid)),
+            borderRadius: BorderRadius.circular(8),
+            child: Row(
+              children: [
+                ProfileAvatar(
+                  url: member.profilePicUrl,
+                  name: member.fullName,
+                  size: 36,
+                ),
+                const SizedBox(width: MuSpace.m),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(member.fullName, style: MuType.bodyMed),
+                      Text(member.muid, style: MuType.caption),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-        if (member.isLeader)
-          const MuTagChip(label: 'Lead', style: MuTagStyle.success)
-        else if (isLead)
-          MuGhostButton(
-            label: 'Make lead',
-            expand: false,
-            onPressed: () => _confirmTransfer(context, ref),
-          ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            MuTagChip(
+              label: member.isLeader ? 'Lead' : 'Member',
+              style: member.isLeader ? MuTagStyle.success : MuTagStyle.neutral,
+            ),
+            if (!member.isLeader && isLead) ...[
+              const SizedBox(height: MuSpace.xs),
+              GestureDetector(
+                onTap: () => _confirmTransfer(context, ref),
+                child: Text(
+                  'Make lead',
+                  style: MuType.caption.copyWith(color: MuColors.primary),
+                ),
+              ),
+            ],
+          ],
+        ),
       ],
     );
   }
@@ -326,14 +361,17 @@ class _JoinRequestsSection extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const MuSectionHeader(title: 'Pending join requests'),
+        const MuSectionHeader(title: 'Pending request'),
         const SizedBox(height: MuSpace.m),
         requestsState.when(
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (error, _) => Text(ApiException.messageFor(error)),
           data: (requests) {
             if (requests.isEmpty) {
-              return Text('No pending requests.', style: MuType.body.copyWith(color: MuColors.inkSecondary));
+              return Text(
+                'All caught up — no pending requests.',
+                style: MuType.body.copyWith(color: MuColors.inkSecondary),
+              );
             }
             return MuCard(
               child: Column(
@@ -363,12 +401,28 @@ class _JoinRequestTile extends ConsumerWidget {
     return Row(
       children: [
         Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(request.fullName, style: MuType.bodyMed),
-              Text(request.muid, style: MuType.caption),
-            ],
+          child: InkWell(
+            onTap: () => context.push(RoutePaths.publicProfilePath(request.muid)),
+            borderRadius: BorderRadius.circular(8),
+            child: Row(
+              children: [
+                ProfileAvatar(
+                  url: request.profilePicUrl,
+                  name: request.fullName,
+                  size: 40,
+                ),
+                const SizedBox(width: MuSpace.m),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(request.fullName, style: MuType.bodyMed),
+                      Text(request.muid, style: MuType.caption),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         MuIconButton(
@@ -405,7 +459,7 @@ class _InvitesSection extends ConsumerWidget {
             const Expanded(child: MuSectionHeader(title: 'Invites')),
             MuIconButton(
               icon: LucideIcons.userPlus,
-              onPressed: () => _showInviteDialog(context, ref),
+              onPressed: () => _showInviteDialog(context, ref, circleId),
             ),
           ],
         ),
@@ -425,12 +479,29 @@ class _InvitesSection extends ConsumerWidget {
                     Row(
                       children: [
                         Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(invites[i].fullName, style: MuType.bodyMed),
-                              Text(invites[i].muid, style: MuType.caption),
-                            ],
+                          child: InkWell(
+                            onTap: () => context
+                                .push(RoutePaths.publicProfilePath(invites[i].muid)),
+                            borderRadius: BorderRadius.circular(8),
+                            child: Row(
+                              children: [
+                                ProfileAvatar(
+                                  url: invites[i].profilePicUrl,
+                                  name: invites[i].fullName,
+                                  size: 36,
+                                ),
+                                const SizedBox(width: MuSpace.m),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(invites[i].fullName, style: MuType.bodyMed),
+                                      Text(invites[i].muid, style: MuType.caption),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         MuTagChip(label: invites[i].status),
@@ -446,33 +517,40 @@ class _InvitesSection extends ConsumerWidget {
     );
   }
 
-  Future<void> _showInviteDialog(BuildContext context, WidgetRef ref) async {
-    final muidController = TextEditingController();
-    final send = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Invite a user'),
-        content: TextField(
-          controller: muidController,
-          decoration: const InputDecoration(labelText: 'MUID'),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Send'),
-          ),
-        ],
+}
+
+/// Shared by the Members section's "+ Invite" link and the Invites
+/// section's icon button — same underlying `sendInvite` call either way.
+Future<void> _showInviteDialog(
+  BuildContext context,
+  WidgetRef ref,
+  String circleId,
+) async {
+  final muidController = TextEditingController();
+  final send = await showDialog<bool>(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text('Invite a user'),
+      content: TextField(
+        controller: muidController,
+        decoration: const InputDecoration(labelText: 'MUID'),
       ),
-    );
-    if ((send ?? false) && muidController.text.trim().isNotEmpty) {
-      await ref
-          .read(circleActionsControllerProvider.notifier)
-          .sendInvite(circleId, muid: muidController.text.trim());
-    }
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(false),
+          child: const Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(true),
+          child: const Text('Send'),
+        ),
+      ],
+    ),
+  );
+  if ((send ?? false) && muidController.text.trim().isNotEmpty) {
+    await ref
+        .read(circleActionsControllerProvider.notifier)
+        .sendInvite(circleId, muid: muidController.text.trim());
   }
 }
 
@@ -506,8 +584,25 @@ class _MeetingsSection extends ConsumerWidget {
             if (meetings.isEmpty) {
               return Text('No meetings scheduled.', style: MuType.body.copyWith(color: MuColors.inkSecondary));
             }
+            final upcoming = meetings.where((m) => !m.isEnded).toList()
+              ..sort((a, b) {
+                final aTime = DateTime.tryParse(a.meetTime);
+                final bTime = DateTime.tryParse(b.meetTime);
+                if (aTime == null || bTime == null) return 0;
+                return aTime.compareTo(bTime);
+              });
+            final next = upcoming.isNotEmpty ? upcoming.first : null;
             return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                if (next != null) ...[
+                  Text('NEXT MEETING', style: MuType.eyebrow),
+                  const SizedBox(height: MuSpace.m),
+                  _NextMeetingCard(meeting: next, circleId: circleId),
+                  const SizedBox(height: MuSpace.xxl),
+                  Text('ALL MEETINGS', style: MuType.eyebrow),
+                  const SizedBox(height: MuSpace.m),
+                ],
                 for (final m in meetings)
                   Padding(
                     padding: const EdgeInsets.only(bottom: MuSpace.m),
@@ -535,6 +630,60 @@ class _MeetingsSection extends ConsumerWidget {
           },
         ),
       ],
+    );
+  }
+}
+
+/// A highlighted card for the soonest upcoming meeting (DESIGN_SPEC.md §2
+/// "11 — Circle detail": "NEXT MEETING"), with an inline RSVP that reuses
+/// the exact same [MeetingActionsController.rsvp] call the meeting-detail
+/// screen uses. The full list below (unchanged) still lists every meeting,
+/// since that's real functionality the mock doesn't have an equivalent for.
+class _NextMeetingCard extends ConsumerWidget {
+  const _NextMeetingCard({required this.meeting, required this.circleId});
+
+  final Meeting meeting;
+  final String circleId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final actionsState = ref.watch(meetingActionsControllerProvider);
+    final isBusy = actionsState.isLoading;
+
+    return MuCard(
+      variant: MuCardVariant.tinted,
+      onTap: () => context.push(RoutePaths.meetingDetailPath(meeting.id), extra: circleId),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(meeting.title, style: MuType.bodyMed.copyWith(fontSize: 16)),
+          const SizedBox(height: 2),
+          Text('${meeting.meetTime} · ${meeting.mode}', style: MuType.caption),
+          const SizedBox(height: MuSpace.m),
+          Row(
+            children: [
+              Expanded(
+                child: Text('${meeting.attendeesCount} joined', style: MuType.caption),
+              ),
+              if (meeting.isRsvp)
+                const MuTagChip(label: "You're in", style: MuTagStyle.success)
+              else
+                MuPrimaryButton(
+                  label: isBusy ? '…' : "I'll be there",
+                  expand: false,
+                  onPressed: isBusy
+                      ? null
+                      : () async {
+                          await ref
+                              .read(meetingActionsControllerProvider.notifier)
+                              .rsvp(meeting.id);
+                          ref.invalidate(circleMeetingsProvider(circleId));
+                        },
+                ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

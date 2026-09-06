@@ -22,8 +22,16 @@ class MuAvatarStack extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final overlap = size * 0.3;
+    final itemCount = names.length + (extraCount > 0 ? 1 : 0);
+    // The Stack below has only Positioned children, so with no explicit
+    // width it collapses to zero / unbounded width depending on the parent
+    // — Flutter then can't hit-test it ("Cannot hit test a render box with
+    // no size"). Compute the actual rightmost extent from the same overlap
+    // math the Positioned offsets use.
+    final width = itemCount == 0 ? 0.0 : (itemCount - 1) * (size - overlap) + size;
     return SizedBox(
       height: size,
+      width: width,
       child: Stack(
         children: [
           for (var i = 0; i < names.length; i++)
@@ -48,7 +56,7 @@ class MuAvatarStack extends StatelessWidget {
                 height: size,
                 width: size,
                 decoration: BoxDecoration(
-                  color: MuColors.lime,
+                  color: MuColors.karmaAccent,
                   shape: BoxShape.circle,
                   border: Border.all(color: MuColors.surface, width: 2),
                 ),
@@ -56,7 +64,7 @@ class MuAvatarStack extends StatelessWidget {
                 child: Text(
                   '+$extraCount',
                   style: MuType.statSmall.copyWith(
-                    color: MuColors.limeInk,
+                    color: MuColors.surface,
                     fontSize: size * 0.32,
                   ),
                 ),

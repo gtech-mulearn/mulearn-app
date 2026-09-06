@@ -153,7 +153,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                               height: 5,
                               width: 5,
                               decoration: const BoxDecoration(
-                                color: MuColors.limeBright,
+                                color: MuColors.karmaAccent,
                                 shape: BoxShape.circle,
                               ),
                             ),

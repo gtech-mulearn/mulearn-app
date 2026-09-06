@@ -3,7 +3,8 @@ import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 
 /// Labeled value block (rules.md §8) — e.g. "KARMA" / "1,204". Grid these
 /// 2-up inside cards. Pass a pre-styled [valueStyle] (usually
-/// `MuType.stat`) so callers can choose Space Grotesk vs. a smaller variant.
+/// `MuType.stat`) so callers can choose Bricolage Grotesque vs. a smaller
+/// variant.
 class MuStatBlock extends StatelessWidget {
   const MuStatBlock({
     required this.label,

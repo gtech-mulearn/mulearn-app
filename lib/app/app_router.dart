@@ -23,10 +23,14 @@ import 'package:mulearn_app/features/learning_circles/presentation/screens/edit_
 import 'package:mulearn_app/features/learning_circles/presentation/screens/learning_circle_detail_screen.dart';
 import 'package:mulearn_app/features/learning_circles/presentation/screens/learning_circles_screen.dart';
 import 'package:mulearn_app/features/learning_circles/presentation/screens/meeting_detail_screen.dart';
+import 'package:mulearn_app/features/notifications/presentation/screens/notifications_screen.dart';
+import 'package:mulearn_app/features/profile/presentation/screens/journey_screen.dart';
 import 'package:mulearn_app/features/profile/presentation/screens/profile_screen.dart';
 import 'package:mulearn_app/features/profile/presentation/screens/public_profile_screen.dart';
 import 'package:mulearn_app/features/search/presentation/screens/search_screen.dart';
 import 'package:mulearn_app/features/splash/presentation/screens/splash_screen.dart';
+import 'package:mulearn_app/features/tasks/presentation/screens/task_detail_screen.dart';
+import 'package:mulearn_app/features/tasks/presentation/screens/tasks_screen.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'app_router.g.dart';
@@ -80,24 +84,29 @@ GoRouter goRouter(Ref ref) {
       };
       // Reachable while signed in without bouncing to `/home` — the
       // registration-details screen (mid-submission), the interests
-      // onboarding step that follows it, and the four bottom-nav tabs.
+      // onboarding step that follows it, and the five bottom-nav tabs.
       const allowedSignedIn = {
         RoutePaths.registerDetails,
         RoutePaths.onboardingInterests,
         RoutePaths.home,
-        RoutePaths.learningCircles,
+        RoutePaths.tasks,
+        RoutePaths.journey,
         RoutePaths.leaderboard,
         RoutePaths.profile,
       };
       // Routes reachable while signed in, outside the bottom-nav shell —
       // pushed on top rather than switched to, so they're exempt from the
-      // "must be one of the four tabs" redirect below.
+      // "must be one of the five tabs" redirect below. Learning circles
+      // moved here (was a tab) — it's now reached only by pushing from
+      // Home's quick-link tile, matching the redesign.
       const allowedSignedInExtra = {
         RoutePaths.search,
         RoutePaths.interestGroups,
         RoutePaths.events,
         RoutePaths.calendar,
         RoutePaths.createLearningCircle,
+        RoutePaths.learningCircles,
+        RoutePaths.notifications,
       };
 
       if (!loggedIn) {
@@ -108,7 +117,8 @@ GoRouter goRouter(Ref ref) {
           location.startsWith('/interest-groups/') ||
           location.startsWith('/events/') ||
           location.startsWith('/circles/') ||
-          location.startsWith('/meetings/')) {
+          location.startsWith('/meetings/') ||
+          (location.startsWith('/tasks/') && location != RoutePaths.tasks)) {
         return null;
       }
       return allowedSignedIn.contains(location) ? null : RoutePaths.home;
@@ -179,8 +189,21 @@ GoRouter goRouter(Ref ref) {
         builder: (_, __) => const CalendarScreen(),
       ),
       GoRoute(
+        path: RoutePaths.learningCircles,
+        builder: (_, __) => const LearningCirclesScreen(),
+      ),
+      GoRoute(
         path: RoutePaths.createLearningCircle,
         builder: (_, __) => const CreateLearningCircleScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.notifications,
+        builder: (_, __) => const NotificationsScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.taskDetail,
+        builder: (_, state) =>
+            TaskDetailScreen(taskId: state.pathParameters['id']!),
       ),
       GoRoute(
         path: RoutePaths.learningCircleDetail,
@@ -222,8 +245,16 @@ GoRouter goRouter(Ref ref) {
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: RoutePaths.learningCircles,
-                builder: (_, __) => const LearningCirclesScreen(),
+                path: RoutePaths.tasks,
+                builder: (_, __) => const TasksScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: RoutePaths.journey,
+                builder: (_, __) => const JourneyScreen(),
               ),
             ],
           ),

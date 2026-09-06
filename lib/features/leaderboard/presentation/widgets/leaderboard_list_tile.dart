@@ -5,8 +5,10 @@ import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 import 'package:mulearn_app/core/widgets/profile_avatar.dart';
 
 /// A single ranked row shared by the student and college leaderboard lists —
-/// rank in Space Grotesk, avatar, name, karma right-aligned in `primary`
-/// (rules.md §8).
+/// rank numeral, avatar, name/subtitle, karma right-aligned in `primary`
+/// (DESIGN_SPEC.md §2 "09 — Leaderboard"). Meant to be stacked inside one
+/// rounded list card with a hairline divider between rows (set
+/// [showDivider] false on the last row).
 class LeaderboardListTile extends StatelessWidget {
   const LeaderboardListTile({
     required this.rank,
@@ -15,6 +17,7 @@ class LeaderboardListTile extends StatelessWidget {
     required this.karma,
     super.key,
     this.avatarUrl,
+    this.showDivider = true,
   });
 
   final int rank;
@@ -22,22 +25,28 @@ class LeaderboardListTile extends StatelessWidget {
   final String subtitle;
   final num karma;
   final String? avatarUrl;
+  final bool showDivider;
 
   Color get _rankColor => switch (rank) {
         1 => MuColors.rankGold,
         2 => MuColors.rankSilver,
         3 => MuColors.rankBronze,
-        _ => MuColors.inkTertiary,
+        _ => MuColors.inkFaint,
       };
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: MuSpace.screenH, vertical: MuSpace.s),
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 13),
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(color: showDivider ? MuColors.hairline : Colors.transparent),
+        ),
+      ),
       child: Row(
         children: [
           SizedBox(
-            width: 32,
+            width: 28,
             child: Text(
               '$rank',
               style: MuType.statSmall.copyWith(color: _rankColor),

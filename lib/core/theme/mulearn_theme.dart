@@ -95,7 +95,7 @@ abstract final class MulearnTheme {
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: _innerRadius,
-          borderSide: const BorderSide(color: MuColors.coral, width: 1.5),
+          borderSide: const BorderSide(color: MuColors.error, width: 1.5),
         ),
         contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
         hintStyle: MuType.body.copyWith(color: MuColors.inkTertiary),

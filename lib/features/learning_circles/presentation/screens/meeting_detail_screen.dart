@@ -39,7 +39,12 @@ class MeetingDetailScreen extends ConsumerWidget {
     return Scaffold(
       backgroundColor: MuColors.canvas,
       appBar: AppBar(
-        title: const Text('Meeting'),
+        title: Text(
+          meeting?.title ?? 'Meeting',
+          style: MuType.headline.copyWith(fontSize: 20),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
         actions: [
           if (isCreator) ...[
             MuIconButton(
@@ -123,8 +128,6 @@ class _MeetingBody extends ConsumerWidget {
             ],
           ),
           const SizedBox(height: MuSpace.m),
-          Text(meeting.title, style: MuType.headline),
-          const SizedBox(height: MuSpace.xs),
           Text(meeting.ig, style: MuType.body.copyWith(color: MuColors.inkSecondary)),
           const SizedBox(height: MuSpace.l),
           MuCard(
@@ -373,7 +376,7 @@ class _OrganizerReportSectionState
               const SizedBox(height: MuSpace.s),
               Text(
                 ApiException.messageFor(actionsState.error!),
-                style: MuType.caption.copyWith(color: MuColors.coral),
+                style: MuType.caption.copyWith(color: MuColors.error),
               ),
             ],
           ],
@@ -405,7 +408,7 @@ class _ReportAttendeeRow extends StatelessWidget {
         ),
         Icon(
           attendee.isLcApproved ? LucideIcons.checkCircle2 : LucideIcons.circle,
-          color: attendee.isLcApproved ? MuColors.limeBright : MuColors.inkTertiary,
+          color: attendee.isLcApproved ? MuColors.success : MuColors.inkTertiary,
           size: 18,
         ),
       ],

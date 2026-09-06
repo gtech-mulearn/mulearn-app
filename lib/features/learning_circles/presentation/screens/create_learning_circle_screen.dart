@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mulearn_app/core/auth/current_user_college.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/theme/mu_space.dart';
@@ -11,7 +12,11 @@ import 'package:mulearn_app/core/widgets/mu_toast.dart';
 import 'package:mulearn_app/core/widgets/searchable_select_field.dart';
 import 'package:mulearn_app/features/learning_circles/presentation/providers/learning_circles_controller.dart';
 
-/// Create-circle form — IG + org pickers, title, description.
+/// Create-circle form — IG picker, title, description. The college is no
+/// longer a picker: it defaults to the signed-in user's own college
+/// ([currentUserCollegeProvider]) — a circle only ever makes sense at the
+/// creator's own campus, so asking them to re-pick it from a 1000+ row list
+/// was pure friction, not a real choice.
 class CreateLearningCircleScreen extends ConsumerStatefulWidget {
   const CreateLearningCircleScreen({super.key});
 
@@ -26,7 +31,6 @@ class _CreateLearningCircleScreenState
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   String? _igId;
-  String? _orgId;
 
   @override
   void dispose() {
@@ -35,12 +39,21 @@ class _CreateLearningCircleScreenState
     super.dispose();
   }
 
-  Future<void> _submit() async {
+  Future<void> _submit(String? orgId) async {
     if (!(_formKey.currentState?.validate() ?? false)) return;
-    if (_igId == null || _orgId == null) {
+    if (_igId == null) {
       MuToast.show(
         context,
-        message: 'Please select an interest group and college.',
+        message: 'Please select an interest group.',
+        type: MuToastType.error,
+      );
+      return;
+    }
+    if (orgId == null) {
+      MuToast.show(
+        context,
+        message:
+            'Your account has no college on file — update your profile before creating a circle.',
         type: MuToastType.error,
       );
       return;
@@ -49,7 +62,7 @@ class _CreateLearningCircleScreenState
         .read(circleActionsControllerProvider.notifier)
         .createCircle(
           igId: _igId!,
-          orgId: _orgId!,
+          orgId: orgId,
           title: _titleController.text.trim(),
           description: _descriptionController.text.trim(),
         );
@@ -65,30 +78,48 @@ class _CreateLearningCircleScreenState
   @override
   Widget build(BuildContext context) {
     final igOptionsState = ref.watch(circleIgOptionsProvider);
-    final orgOptionsState = ref.watch(circleOrgOptionsProvider);
+    final collegeState = ref.watch(currentUserCollegeProvider);
     final actionState = ref.watch(circleActionsControllerProvider);
+    final orgId = collegeState.value?.id;
 
     return Scaffold(
       backgroundColor: MuColors.canvas,
-      appBar: AppBar(title: const Text('Create Learning Circle')),
+      appBar: AppBar(),
       body: Padding(
         padding: const EdgeInsets.all(MuSpace.screenH),
         child: Form(
           key: _formKey,
           child: ListView(
             children: [
+              Text('Start a circle', style: MuType.display.copyWith(fontSize: 26)),
+              const SizedBox(height: MuSpace.xs),
+              Text(
+                'Pick a skill, invite a few friends, and learn weekly.',
+                style: MuType.body.copyWith(color: MuColors.inkSecondary),
+              ),
+              const SizedBox(height: MuSpace.xxl),
               SearchableSelectField(
                 label: 'Interest group',
                 options: igOptionsState.value ?? const [],
                 isLoading: igOptionsState.isLoading,
                 onSelected: (value) => setState(() => _igId = value),
               ),
-              const SizedBox(height: MuSpace.l),
-              SearchableSelectField(
-                label: 'College',
-                options: orgOptionsState.value ?? const [],
-                isLoading: orgOptionsState.isLoading,
-                onSelected: (value) => setState(() => _orgId = value),
+              const SizedBox(height: MuSpace.s),
+              collegeState.when(
+                loading: () => Text(
+                  'Loading your college…',
+                  style: MuType.caption,
+                ),
+                error: (_, __) => Text(
+                  "Couldn't load your college — try again.",
+                  style: MuType.caption.copyWith(color: MuColors.error),
+                ),
+                data: (college) => Text(
+                  college.code != null
+                      ? 'Circle location: your college (${college.code})'
+                      : 'Circle location: your college',
+                  style: MuType.caption,
+                ),
               ),
               const SizedBox(height: MuSpace.l),
               TextFormField(
@@ -112,13 +143,13 @@ class _CreateLearningCircleScreenState
                 const SizedBox(height: MuSpace.s),
                 Text(
                   ApiException.messageFor(actionState.error!),
-                  style: MuType.caption.copyWith(color: MuColors.coral),
+                  style: MuType.caption.copyWith(color: MuColors.error),
                 ),
               ],
               const SizedBox(height: MuSpace.l),
               MuPrimaryButton(
                 label: actionState.isLoading ? 'Creating…' : 'Create',
-                onPressed: actionState.isLoading ? null : _submit,
+                onPressed: actionState.isLoading ? null : () => _submit(orgId),
               ),
             ],
           ),

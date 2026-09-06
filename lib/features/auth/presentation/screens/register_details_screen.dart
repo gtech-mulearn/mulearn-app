@@ -55,7 +55,7 @@ class RegisterDetailsScreen extends ConsumerWidget {
       appBar: AppBar(),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
+          padding: const EdgeInsets.symmetric(horizontal: 26),
           child: switch (role) {
             RegistrationRole.student => StudentDetailsForm(
                 onSubmitted: () => _onSubmitted(context, ref, role),

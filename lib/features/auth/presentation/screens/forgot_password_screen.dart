@@ -65,12 +65,12 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
       appBar: AppBar(),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: MuSpace.screenH),
+          padding: const EdgeInsets.symmetric(horizontal: 26),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const SizedBox(height: MuSpace.m),
-              Text('Forgot password?', style: MuType.headline),
+              Text('Forgot password?', style: MuType.display.copyWith(fontSize: 30)),
               const SizedBox(height: MuSpace.s),
               Text(
                 _sent
@@ -92,11 +92,11 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                         enabled: !isLoading,
                         onFieldSubmitted: (_) => _submit(),
                         decoration: const InputDecoration(
-                          labelText: 'Email or MuID',
-                          hintText: 'email@example.com or muid',
+                          labelText: 'EMAIL OR MUID',
+                          hintText: 'you@college.edu',
                         ),
                         validator: (value) => (value?.trim().isEmpty ?? true)
-                            ? 'Email or MuID is required.'
+                            ? 'Enter your email or MuID to continue.'
                             : null,
                       ),
                       const SizedBox(height: MuSpace.xl),

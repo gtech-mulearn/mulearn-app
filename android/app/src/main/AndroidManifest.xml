@@ -1,4 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Talks to the μLearn API (mulearn.org). Flutter only injects INTERNET
+         into the debug/profile manifests, so a release build needs it declared
+         here or every network call fails. -->
+    <uses-permission android:name="android.permission.INTERNET" />
     <!-- HapticFeedback (nav taps, error/success toasts, splash) silently
          no-ops on real Android devices without this — confirmed live. -->
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -43,6 +47,13 @@
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT"/>
             <data android:mimeType="text/plain"/>
+        </intent>
+        <!-- url_launcher opens event / task / IG links in an external browser
+             (LaunchMode.externalApplication). Android 11+ package visibility
+             hides those handlers unless we declare the intent here. -->
+        <intent>
+            <action android:name="android.intent.action.VIEW"/>
+            <data android:scheme="https"/>
         </intent>
     </queries>
 </manifest>

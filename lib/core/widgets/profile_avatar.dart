@@ -19,11 +19,15 @@ class ProfileAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final initial = name.trim().isNotEmpty ? name.trim()[0].toUpperCase() : 'μ';
+    // Cycle through the avatar palette, keyed by name so a given person's
+    // initials always land on the same color.
+    final avatarColor =
+        MuColors.avatarPalette[name.trim().hashCode.abs() % MuColors.avatarPalette.length];
     final placeholder = Container(
       height: size,
       width: size,
-      decoration: const BoxDecoration(
-        gradient: MuColors.heroGradient,
+      decoration: BoxDecoration(
+        color: avatarColor,
         shape: BoxShape.circle,
       ),
       alignment: Alignment.center,

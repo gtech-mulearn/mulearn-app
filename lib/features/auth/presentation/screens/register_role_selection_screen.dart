@@ -45,11 +45,12 @@ class _RegisterRoleSelectionScreenState
       appBar: AppBar(),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: MuSpace.screenH),
+          padding: const EdgeInsets.symmetric(horizontal: 26),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text('Tell us about yourself', style: MuType.headline),
+              const SizedBox(height: MuSpace.m),
+              Text('Tell us about yourself', style: MuType.display.copyWith(fontSize: 30)),
               const SizedBox(height: MuSpace.s),
               Text(
                 'Select your role to continue',

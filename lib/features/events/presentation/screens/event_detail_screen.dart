@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
+import 'package:mulearn_app/core/theme/mu_radius.dart';
 import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
 import 'package:mulearn_app/core/theme/mulearn_typography.dart';
@@ -55,26 +56,44 @@ class EventDetailScreen extends ConsumerWidget {
           children: [
             AspectRatio(
               aspectRatio: 16 / 9,
-              child: (event.bannerImage ?? event.coverImage) != null
-                  ? CachedNetworkImage(
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  const DecoratedBox(
+                    decoration: BoxDecoration(gradient: MuColors.karmaGradient),
+                  ),
+                  if ((event.bannerImage ?? event.coverImage) != null)
+                    CachedNetworkImage(
                       imageUrl: (event.bannerImage ?? event.coverImage)!,
                       fit: BoxFit.cover,
                       errorWidget: (_, __, ___) => const DecoratedBox(
-                        decoration:
-                            BoxDecoration(gradient: MuColors.heroGradient),
+                        decoration: BoxDecoration(gradient: MuColors.karmaGradient),
                       ),
-                    )
-                  : const DecoratedBox(
-                      decoration:
-                          BoxDecoration(gradient: MuColors.heroGradient),
                     ),
+                  Positioned(
+                    right: MuSpace.m,
+                    top: MuSpace.m,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withValues(alpha: 0.32),
+                        borderRadius: BorderRadius.circular(MuRadius.chip),
+                      ),
+                      child: Text(
+                        event.venue.venueType == 'online' ? 'ONLINE' : 'IN PERSON',
+                        style: MuType.tag.copyWith(color: MuColors.surface),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(MuSpace.screenH),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(event.title, style: MuType.headline),
+                  Text(event.title, style: MuType.headline.copyWith(fontSize: 26)),
                   const SizedBox(height: MuSpace.s),
                   Wrap(
                     spacing: MuSpace.xs,
@@ -158,7 +177,7 @@ class EventDetailScreen extends ConsumerWidget {
                     const SizedBox(height: MuSpace.s),
                     Text(
                       ApiException.messageFor(interestState.error!),
-                      style: MuType.caption.copyWith(color: MuColors.coral),
+                      style: MuType.caption.copyWith(color: MuColors.error),
                     ),
                   ],
                   if (event.description != null) ...[

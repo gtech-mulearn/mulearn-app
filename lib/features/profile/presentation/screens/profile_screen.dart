@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:mulearn_app/core/theme/mu_radius.dart';
+import 'package:mulearn_app/core/theme/mu_shadow.dart';
 import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
+import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/core/widgets/mu_qr_card.dart';
 import 'package:mulearn_app/core/widgets/mu_toast.dart';
-import 'package:mulearn_app/features/auth/presentation/providers/auth_controller.dart';
 import 'package:mulearn_app/features/profile/domain/entities/user_profile.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/profile_controller.dart';
 import 'package:mulearn_app/features/profile/presentation/widgets/achievements_tab.dart';
@@ -33,27 +34,20 @@ class ProfileScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: MuColors.canvas,
-      appBar: AppBar(
-        title: const Text('Profile'),
-        actions: [
-          IconButton(
-            tooltip: 'Sign out',
-            icon: const Icon(LucideIcons.logOut),
-            onPressed: () =>
-                ref.read(authControllerProvider.notifier).signOut(),
+      body: SafeArea(
+        bottom: false,
+        child: profileState.when(
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (error, _) => ErrorRetryView(
+            error: error,
+            onRetry: () =>
+                ref.read(profileControllerProvider.notifier).refresh(),
           ),
-        ],
-      ),
-      body: profileState.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, _) => ErrorRetryView(
-          error: error,
-          onRetry: () => ref.read(profileControllerProvider.notifier).refresh(),
-        ),
-        data: (profile) => RefreshIndicator(
-          onRefresh: () =>
-              ref.read(profileControllerProvider.notifier).refresh(),
-          child: _ProfileBody(profile: profile),
+          data: (profile) => RefreshIndicator(
+            onRefresh: () =>
+                ref.read(profileControllerProvider.notifier).refresh(),
+            child: _ProfileBody(profile: profile),
+          ),
         ),
       ),
     );
@@ -137,18 +131,7 @@ class _ProfileBodyState extends State<_ProfileBody>
         SliverPersistentHeader(
           pinned: true,
           delegate: TabBarSliverDelegate(
-            TabBar(
-              controller: _tabController,
-              isScrollable: true,
-              tabAlignment: TabAlignment.start,
-              tabs: const [
-                Tab(text: 'Basic Details'),
-                Tab(text: 'Karma History'),
-                Tab(text: 'Mu Voyage'),
-                Tab(text: 'Achievements'),
-                Tab(text: 'Badges'),
-              ],
-            ),
+            buildProfilePillTabBar(_tabController),
           ),
         ),
       ],
@@ -156,7 +139,7 @@ class _ProfileBodyState extends State<_ProfileBody>
         controller: _tabController,
         children: [
           BasicDetailsTab(profile: profile),
-          KarmaHistoryTab(karmaDistribution: profile.karmaDistribution),
+          const KarmaHistoryTab(),
           const MuVoyageTab(),
           AchievementsTab(
             muid: profile.muid,
@@ -168,4 +151,48 @@ class _ProfileBodyState extends State<_ProfileBody>
       ),
     );
   }
+}
+
+/// Scrollable, segmented pill-style tab row (DESIGN_SPEC.md §1 "Filter
+/// chip" / §2 "12 — Profile & karma" segmented control) — confirmed against
+/// the rendered mock: a white active pill with a soft shadow on the plain
+/// canvas backdrop ([TabBarSliverDelegate] already paints the scaffold
+/// background behind it), not a solid black fill. The design mock only
+/// shows 3 sub-tabs (Basic Details / Karma History / Mu Voyage), but this
+/// screen keeps all 5 real tabs (Achievements and Badges are working
+/// features, not dropped), scrolling rather than trying to force 5 items
+/// into a fixed 3-pill layout. Shared by [ProfileScreen] and
+/// `PublicProfileScreen` so both profile views present the same chrome.
+TabBar buildProfilePillTabBar(TabController controller) {
+  return TabBar(
+    controller: controller,
+    isScrollable: true,
+    tabAlignment: TabAlignment.start,
+    indicator: BoxDecoration(
+      color: MuColors.surface,
+      borderRadius: BorderRadius.circular(MuRadius.chip),
+      boxShadow: MuShadow.card,
+    ),
+    indicatorSize: TabBarIndicatorSize.tab,
+    dividerColor: Colors.transparent,
+    labelColor: MuColors.ink,
+    unselectedLabelColor: MuColors.inkTertiary,
+    labelStyle: MuType.chip,
+    unselectedLabelStyle: MuType.chip,
+    padding: const EdgeInsets.symmetric(
+      horizontal: MuSpace.screenH,
+      vertical: MuSpace.s,
+    ),
+    labelPadding: const EdgeInsets.symmetric(
+      horizontal: MuSpace.m,
+      vertical: 6,
+    ),
+    tabs: const [
+      Tab(text: 'Basic Details'),
+      Tab(text: 'Karma History'),
+      Tab(text: 'Mu Voyage'),
+      Tab(text: 'Achievements'),
+      Tab(text: 'Badges'),
+    ],
+  );
 }

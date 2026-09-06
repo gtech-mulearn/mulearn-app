@@ -91,7 +91,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
       appBar: AppBar(),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: MuSpace.screenH),
+          padding: const EdgeInsets.symmetric(horizontal: 26),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -145,7 +145,7 @@ class _EnterTokenStep extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('Enter your reset code', style: MuType.headline),
+        Text('Enter your reset code', style: MuType.display.copyWith(fontSize: 30)),
         const SizedBox(height: MuSpace.s),
         Text(
           'Paste the code or link token from the password-reset email we sent you.',
@@ -208,7 +208,7 @@ class _NewPasswordStep extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('Set a new password', style: MuType.headline),
+        Text('Set a new password', style: MuType.display.copyWith(fontSize: 30)),
         const SizedBox(height: MuSpace.s),
         Text(
           'Your code is verified. Choose a new password.',
@@ -286,7 +286,7 @@ class _DoneStep extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('Password reset!', style: MuType.headline),
+        Text('Password reset!', style: MuType.display.copyWith(fontSize: 30)),
         const SizedBox(height: MuSpace.s),
         Text(
           'You can now sign in with your new password.',
