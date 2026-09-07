@@ -6,6 +6,7 @@ import 'package:mulearn_app/core/theme/mulearn_colors.dart';
 import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 import 'package:mulearn_app/core/widgets/profile_avatar.dart';
 import 'package:mulearn_app/features/profile/domain/entities/user_profile.dart';
+import 'package:mulearn_app/features/profile/domain/level_number.dart';
 
 /// Level number → the product's stable level names (DESIGN_SPEC.md §2
 /// "06 — Level journey" `LEVELS`) — static display copy, not per-user data.
@@ -74,9 +75,7 @@ class _Content extends StatelessWidget {
   Widget build(BuildContext context) {
     final titleColor = onDark ? Colors.white : MuColors.ink;
     final subColor = onDark ? Colors.white70 : MuColors.inkSecondary;
-    final levelN = (profile.level != null && profile.level!.length > 3)
-        ? int.tryParse(profile.level!.substring(3)) ?? 1
-        : 1;
+    final levelN = parseLevelNumber(profile.level);
     final levelName =
         (levelN >= 1 && levelN <= _levelNames.length)
             ? _levelNames[levelN - 1]

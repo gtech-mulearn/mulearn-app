@@ -55,6 +55,12 @@ dependencies:
   # Secure storage — tokens only (rules.md §1)
   flutter_secure_storage: ^9.2.2
 
+  # Local, non-sensitive UI-state flags (e.g. "was the daily rank popup
+  # already shown today") — deliberately NOT flutter_secure_storage, which
+  # rules.md §1 reserves for tokens only. New dependency, flagged per
+  # rules.md §9 rather than added silently.
+  shared_preferences: ^2.3.3
+
   # Images
   cached_network_image: ^3.4.1
   image_picker: ^1.1.2

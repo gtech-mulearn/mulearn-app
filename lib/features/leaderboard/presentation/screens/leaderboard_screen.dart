@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:mulearn_app/core/auth/current_user_rank_summary.dart';
 import 'package:mulearn_app/core/theme/mu_radius.dart';
 import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
 import 'package:mulearn_app/core/theme/mulearn_typography.dart';
+import 'package:mulearn_app/core/utils/mu_haptics.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/core/widgets/mu_card.dart';
 import 'package:mulearn_app/core/widgets/mu_gradient_header.dart';
 import 'package:mulearn_app/features/leaderboard/domain/entities/college_leaderboard_entry.dart';
 import 'package:mulearn_app/features/leaderboard/presentation/providers/leaderboard_controller.dart';
+import 'package:mulearn_app/features/leaderboard/presentation/providers/rank_popup_gate.dart';
 import 'package:mulearn_app/features/leaderboard/presentation/widgets/leaderboard_list_tile.dart';
 import 'package:mulearn_app/features/leaderboard/presentation/widgets/leaderboard_podium.dart';
+import 'package:mulearn_app/features/leaderboard/presentation/widgets/rank_summary_popup.dart';
 
 /// The monthly college-leaderboard endpoint doesn't return a `title` at
 /// all (confirmed live — see `CollegeLeaderboardEntryDto`'s doc comment),
@@ -25,16 +29,46 @@ String _collegeDisplayName(CollegeLeaderboardEntry entry) =>
 /// (Learners, Colleges) rather than the mock's 3 — there is no
 /// interest-group leaderboard endpoint, so that segment is omitted rather
 /// than shown empty or faked (per the approved plan).
-class LeaderboardScreen extends StatefulWidget {
+class LeaderboardScreen extends ConsumerStatefulWidget {
   const LeaderboardScreen({super.key});
 
   @override
-  State<LeaderboardScreen> createState() => _LeaderboardScreenState();
+  ConsumerState<LeaderboardScreen> createState() => _LeaderboardScreenState();
 }
 
-class _LeaderboardScreenState extends State<LeaderboardScreen> {
+class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
   bool _monthly = false;
   bool _students = true;
+
+  @override
+  void initState() {
+    super.initState();
+    // Once-a-day "your rank" celebratory popup — gated by RankPopupGate so
+    // it shows at most once per calendar day (per the user's explicit
+    // request), not on every visit to this tab.
+    WidgetsBinding.instance.addPostFrameCallback((_) => _maybeShowRankPopup());
+  }
+
+  Future<void> _maybeShowRankPopup() async {
+    final gate = ref.read(rankPopupGateProvider);
+    if (!await gate.shouldShowToday()) return;
+    if (!mounted) return;
+
+    try {
+      final summary = await ref.read(currentUserRankSummaryProvider.future);
+      await gate.markShownToday();
+      if (!mounted) return;
+      await RankSummaryPopup.show(
+        context,
+        rank: summary.rank,
+        karma: summary.karma,
+        percentile: summary.percentile,
+      );
+    } on Exception {
+      // Best-effort — a failed fetch just means no popup today, never worth
+      // surfacing an error for a purely celebratory extra.
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,12 +85,19 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
                 children: [
                   _SegmentedControl(
                     students: _students,
-                    onChanged: (value) => setState(() => _students = value),
+                    onChanged: (value) {
+                      if (value == _students) return;
+                      MuHaptics.selection();
+                      setState(() => _students = value);
+                    },
                   ),
                   const Spacer(),
                   _MonthlyToggle(
                     monthly: _monthly,
-                    onTap: () => setState(() => _monthly = !_monthly),
+                    onTap: () {
+                      MuHaptics.selection();
+                      setState(() => _monthly = !_monthly);
+                    },
                   ),
                 ],
               ),

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:mulearn_app/core/theme/mu_radius.dart';
 import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
 import 'package:mulearn_app/core/theme/mulearn_typography.dart';
+import 'package:mulearn_app/core/utils/mu_haptics.dart';
 
 /// Branded loading screen shown while the initial session is resolved from
 /// secure storage. The router redirects away from here once auth state
@@ -59,9 +59,9 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     super.initState();
-    HapticFeedback.mediumImpact();
+    MuHaptics.medium();
     Future.delayed(const Duration(milliseconds: 450), () {
-      if (mounted) HapticFeedback.heavyImpact();
+      if (mounted) MuHaptics.heavy();
     });
     _controller.forward();
   }

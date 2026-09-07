@@ -55,7 +55,7 @@ final class TasksRemoteDataSourceProvider
 }
 
 String _$tasksRemoteDataSourceHash() =>
-    r'dcd67a5bfe07896be9b04ae88d60ecb5e27854d8';
+    r'787758d542b4079be550b350120dfc3c9f4f107b';
 
 @ProviderFor(tasksRepository)
 const tasksRepositoryProvider = TasksRepositoryProvider._();

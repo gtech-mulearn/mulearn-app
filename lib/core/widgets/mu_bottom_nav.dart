@@ -1,10 +1,10 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:mulearn_app/core/theme/mu_radius.dart';
 import 'package:mulearn_app/core/theme/mu_shadow.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
+import 'package:mulearn_app/core/utils/mu_haptics.dart';
 
 class MuNavItem {
   const MuNavItem({required this.icon, required this.label});
@@ -53,7 +53,7 @@ class _MuBottomNavState extends State<MuBottomNav> {
         ((localDx / itemWidth) - 0.5).clamp(0.0, widget.items.length - 1.0);
     final nearest = continuousIndex.round().clamp(0, widget.items.length - 1);
     if (nearest != _dragHoverIndex) {
-      HapticFeedback.selectionClick();
+      MuHaptics.selection();
     }
     setState(() {
       _dragging = true;
@@ -120,7 +120,7 @@ class _MuBottomNavState extends State<MuBottomNav> {
                       final index = (details.localPosition.dx / itemWidth)
                           .floor()
                           .clamp(0, widget.items.length - 1);
-                      HapticFeedback.selectionClick();
+                      MuHaptics.selection();
                       widget.onTap(index);
                     },
                     onHorizontalDragStart: (details) =>

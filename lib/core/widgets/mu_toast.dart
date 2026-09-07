@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/theme/mu_radius.dart';
 import 'package:mulearn_app/core/theme/mu_shadow.dart';
 import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
 import 'package:mulearn_app/core/theme/mulearn_typography.dart';
+import 'package:mulearn_app/core/utils/mu_haptics.dart';
 
 enum MuToastType { success, error, info }
 
@@ -97,18 +97,18 @@ class _ToastWidgetState extends State<_ToastWidget> with SingleTickerProviderSta
     super.initState();
     switch (widget.type) {
       case MuToastType.success:
-        HapticFeedback.mediumImpact();
+        MuHaptics.medium();
       case MuToastType.error:
         // A single impact reads as a generic tap — errors get a double-buzz
         // (mirrors iOS's own UINotificationFeedbackGenerator.error pattern),
         // timed against the shake's two outward peaks so the buzz and the
         // wobble land together instead of fighting each other.
-        HapticFeedback.heavyImpact();
+        MuHaptics.heavy();
         Future.delayed(const Duration(milliseconds: 130), () {
-          if (mounted) HapticFeedback.heavyImpact();
+          if (mounted) MuHaptics.heavy();
         });
       case MuToastType.info:
-        HapticFeedback.lightImpact();
+        MuHaptics.light();
     }
     _controller.forward();
     Future.delayed(widget.duration, _dismiss);

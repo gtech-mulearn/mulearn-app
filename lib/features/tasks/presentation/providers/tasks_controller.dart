@@ -1,4 +1,6 @@
+import 'package:mulearn_app/core/network/cache_config.dart';
 import 'package:mulearn_app/core/network/dio_provider.dart';
+import 'package:mulearn_app/core/storage/cache_store_provider.dart';
 import 'package:mulearn_app/features/tasks/data/datasources/tasks_remote_datasource.dart';
 import 'package:mulearn_app/features/tasks/data/repositories/tasks_repository_impl.dart';
 import 'package:mulearn_app/features/tasks/domain/entities/task_catalog_item.dart';
@@ -8,8 +10,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'tasks_controller.g.dart';
 
 @riverpod
-TasksRemoteDataSource tasksRemoteDataSource(Ref ref) =>
-    TasksRemoteDataSource(ref.watch(dioProvider));
+TasksRemoteDataSource tasksRemoteDataSource(Ref ref) => TasksRemoteDataSource(
+      ref.watch(dioProvider),
+      CacheConfig.tasks(ref.watch(cacheStoreProvider)),
+    );
 
 @riverpod
 TasksRepository tasksRepository(Ref ref) =>

@@ -12,6 +12,7 @@ import 'package:mulearn_app/core/widgets/mu_icon_button.dart';
 import 'package:mulearn_app/core/widgets/mu_toast.dart';
 import 'package:mulearn_app/core/widgets/profile_avatar.dart';
 import 'package:mulearn_app/features/profile/domain/entities/user_profile.dart';
+import 'package:mulearn_app/features/profile/domain/level_number.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/cover_photo_controller.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/profile_image_controller.dart';
 
@@ -194,9 +195,7 @@ class _HeaderContent extends StatelessWidget {
     final titleColor = onDark ? Colors.white : MuColors.ink;
     final subColor = onDark ? Colors.white70 : MuColors.inkSecondary;
     final iconColor = onDark ? Colors.white : MuColors.primary;
-    final levelN = (profile.level != null && profile.level!.length > 3)
-        ? int.tryParse(profile.level!.substring(3)) ?? 1
-        : 1;
+    final levelN = parseLevelNumber(profile.level);
     final levelName =
         (levelN >= 1 && levelN <= _levelNames.length)
             ? _levelNames[levelN - 1]

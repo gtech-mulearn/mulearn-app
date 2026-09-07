@@ -37,4 +37,19 @@ abstract final class CacheConfig {
         hitCacheOnErrorExcept: const [401, 403],
         maxStale: const Duration(minutes: 3),
       );
+
+  /// Client-side cache for the task catalog (`GET
+  /// /api/v1/dashboard/task/list/`) — confirmed live to send no
+  /// `Cache-Control` header, same gap as [leaderboard]. The catalog itself
+  /// (titles/descriptions/karma) barely changes hour to hour, and the one
+  /// thing that DOES change per-user — `completed` — isn't worth refetching
+  /// this eagerly for, so a much longer window than the leaderboard's is
+  /// fine here: every visit to the Tasks tab was otherwise re-running this
+  /// on the backend for no benefit.
+  static CacheOptions tasks(CacheStore store) => CacheOptions(
+        store: store,
+        policy: CachePolicy.forceCache,
+        hitCacheOnErrorExcept: const [401, 403],
+        maxStale: const Duration(hours: 4),
+      );
 }

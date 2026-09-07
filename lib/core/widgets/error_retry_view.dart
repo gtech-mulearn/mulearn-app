@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
+import 'package:mulearn_app/core/utils/mu_haptics.dart';
 import 'package:mulearn_app/core/widgets/mu_empty_state.dart';
 
 /// Centered error state with a retry button — built on [MuEmptyState]
@@ -26,7 +26,7 @@ class _ErrorRetryViewState extends State<ErrorRetryView> {
   @override
   void initState() {
     super.initState();
-    HapticFeedback.heavyImpact();
+    MuHaptics.heavy();
   }
 
   @override
