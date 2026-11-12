@@ -182,9 +182,17 @@ class LearningCirclesRemoteDataSource {
 
   // --- Meetings ---
 
-  Future<List<dynamic>> fetchCircleMeetings(String circleId) async {
-    final response = await _dio.get<dynamic>(ApiPaths.meetingList(circleId));
-    return ApiEnvelope.unwrapList(response);
+  /// `GET .../meeting/list/<circle_id>/` — paginated (`{data, pagination}`)
+  /// since backend 5dd14fa0.
+  Future<Map<String, dynamic>> fetchCircleMeetings(
+    String circleId, {
+    required int pageIndex,
+  }) async {
+    final response = await _dio.get<dynamic>(
+      ApiPaths.meetingList(circleId),
+      queryParameters: PageIndexPaging.query(pageIndex),
+    );
+    return ApiEnvelope.unwrapObject(response);
   }
 
   Future<Map<String, dynamic>> fetchMeetingDetail(String id) async {

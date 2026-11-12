@@ -13,6 +13,7 @@ import 'package:mulearn_app/core/widgets/mu_buttons.dart';
 import 'package:mulearn_app/core/widgets/mu_card.dart';
 import 'package:mulearn_app/core/widgets/mu_chip.dart';
 import 'package:mulearn_app/core/widgets/mu_icon_button.dart';
+import 'package:mulearn_app/core/widgets/mu_load_more_footer.dart';
 import 'package:mulearn_app/core/widgets/mu_section_header.dart';
 import 'package:mulearn_app/core/widgets/mu_stat_block.dart';
 import 'package:mulearn_app/core/widgets/mu_task_tile.dart';
@@ -562,7 +563,7 @@ class _MeetingsSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final meetingsState = ref.watch(circleMeetingsProvider(circleId));
+    final meetingsState = ref.watch(circleMeetingsControllerProvider(circleId));
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -580,7 +581,8 @@ class _MeetingsSection extends ConsumerWidget {
         meetingsState.when(
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (error, _) => Text(ApiException.messageFor(error)),
-          data: (meetings) {
+          data: (paged) {
+            final meetings = paged.items;
             if (meetings.isEmpty) {
               return Text('No meetings scheduled.', style: MuType.body.copyWith(color: MuColors.inkSecondary));
             }
@@ -624,6 +626,19 @@ class _MeetingsSection extends ConsumerWidget {
                         extra: circleId,
                       ),
                     ),
+                  ),
+                if (paged.hasMore && (paged.isLoadingMore || paged.loadMoreError != null))
+                  MuLoadMoreFooter(
+                    isLoading: paged.isLoadingMore,
+                    error: paged.loadMoreError,
+                    onRetry: () =>
+                        ref.read(circleMeetingsControllerProvider(circleId).notifier).loadMore(),
+                  )
+                else if (paged.hasMore)
+                  MuGhostButton(
+                    label: 'Show more meetings',
+                    onPressed: () =>
+                        ref.read(circleMeetingsControllerProvider(circleId).notifier).loadMore(),
                   ),
               ],
             );
@@ -677,7 +692,7 @@ class _NextMeetingCard extends ConsumerWidget {
                           await ref
                               .read(meetingActionsControllerProvider.notifier)
                               .rsvp(meeting.id);
-                          ref.invalidate(circleMeetingsProvider(circleId));
+                          ref.invalidate(circleMeetingsControllerProvider(circleId));
                         },
                 ),
             ],

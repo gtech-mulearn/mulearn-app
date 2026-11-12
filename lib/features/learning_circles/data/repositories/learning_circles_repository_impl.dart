@@ -19,9 +19,9 @@ import 'package:mulearn_app/features/learning_circles/domain/entities/join_reque
 import 'package:mulearn_app/features/learning_circles/domain/entities/learning_circle.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/learning_circle_detail.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/learning_circle_page.dart';
-import 'package:mulearn_app/features/learning_circles/domain/entities/meeting.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/meeting_detail.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/meeting_form.dart';
+import 'package:mulearn_app/features/learning_circles/domain/entities/meeting_page.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/meeting_report.dart';
 import 'package:mulearn_app/features/learning_circles/domain/repositories/learning_circles_repository.dart';
 
@@ -157,11 +157,16 @@ class LearningCirclesRepositoryImpl implements LearningCirclesRepository {
       _guard(() => _remote.respondToInvite(linkId, accept: accept));
 
   @override
-  Future<List<Meeting>> getCircleMeetings(String circleId) => _guard(() async {
-        final items = await _remote.fetchCircleMeetings(circleId);
-        return _parseSkippingErrors(
-          items,
-          (json) => MeetingDto.fromJson(json).toDomain(),
+  Future<MeetingPage> getCircleMeetings(String circleId, {required int pageIndex}) =>
+      _guard(() async {
+        final payload = await _remote.fetchCircleMeetings(circleId, pageIndex: pageIndex);
+        final items = payload['data'] as List<dynamic>? ?? [];
+        return MeetingPage(
+          meetings: _parseSkippingErrors(
+            items,
+            (json) => MeetingDto.fromJson(json).toDomain(),
+          ),
+          hasNext: PageIndexPaging.parse(payload['pagination'] as Map<String, dynamic>?).hasNext,
         );
       });
 

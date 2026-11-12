@@ -5,9 +5,9 @@ import 'package:mulearn_app/features/learning_circles/domain/entities/join_reque
 import 'package:mulearn_app/features/learning_circles/domain/entities/learning_circle.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/learning_circle_detail.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/learning_circle_page.dart';
-import 'package:mulearn_app/features/learning_circles/domain/entities/meeting.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/meeting_detail.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/meeting_form.dart';
+import 'package:mulearn_app/features/learning_circles/domain/entities/meeting_page.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/meeting_report.dart';
 
 abstract interface class LearningCirclesRepository {
@@ -51,7 +51,7 @@ abstract interface class LearningCirclesRepository {
   Future<void> respondToInvite(String linkId, {required bool accept});
 
   // --- Meetings ---
-  Future<List<Meeting>> getCircleMeetings(String circleId);
+  Future<MeetingPage> getCircleMeetings(String circleId, {required int pageIndex});
   Future<MeetingDetail> getMeetingDetail(String id);
   Future<void> createMeeting(String circleId, MeetingForm form);
   Future<void> editMeeting(String id, MeetingForm form);

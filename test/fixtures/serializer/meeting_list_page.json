@@ -1,0 +1,44 @@
+{
+  "_meta": {
+    "source": "serializer",
+    "endpoint": "GET /api/v1/dashboard/learningcircle/meeting/list/<circle_id>/",
+    "backend_ref": "mulearnbackend@87f7f80a api/dashboard/learningcircle/learningcircle_views.py:251-281 (paginated_response); learningcircle_serializer.py:628-720 CircleMeetupMinSerializer",
+    "note": "Dev has no learning circles yet (2026-11-12). Re-record from dev once seeded."
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {"general": []},
+    "response": {
+      "data": [
+        {
+          "id": "6f1d2c1e-0d4b-4e7a-9f55-3b7e0c1a9a01",
+          "title": "Week 3: State management",
+          "description": "Walk through Riverpod providers together.",
+          "org": "St. Josephs Colege of Engineering and Technology",
+          "ig_id": "b0e1a7c2-55aa-4c11-8e2b-1f2a3b4c5d6e",
+          "ig_name": "Mobile Development",
+          "mode": "online",
+          "is_recurring": true,
+          "recurrence_type": "weekly",
+          "recurrence": 4,
+          "meet_place": "Google Meet",
+          "is_rsvp": false,
+          "can_remove_rsvp": false,
+          "circle_id": "c1",
+          "coord_x": 0.0,
+          "coord_y": 0.0,
+          "meet_time": "2026-11-20T18:00:00+05:30",
+          "meet_link": "https://meet.google.com/abc-defg-hij",
+          "is_started": false,
+          "is_ended": false,
+          "is_joined": false,
+          "attendees_count": 3,
+          "created_by": "Fixture User",
+          "created_by_id": "9a8b7c6d-0000-4000-8000-000000000001"
+        }
+      ],
+      "pagination": {"count": 12, "totalPages": 2, "isNext": true, "isPrev": false, "nextPage": 2}
+    }
+  }
+}

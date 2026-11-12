@@ -1,3 +1,5 @@
+import 'package:mulearn_app/core/network/paging.dart';
+import 'package:mulearn_app/core/utils/app_logger.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/attendee_report.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/meeting.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/meeting_detail.dart';
@@ -8,9 +10,50 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'meetings_controller.g.dart';
 
+/// A circle's meetings, one page at a time — the same paging behaviour as
+/// [CirclesListController]: keep-on-error, de-duplicated by id, and
+/// concurrent [loadMore] calls share one request.
 @riverpod
-Future<List<Meeting>> circleMeetings(Ref ref, String circleId) =>
-    ref.watch(learningCirclesRepositoryProvider).getCircleMeetings(circleId);
+class CircleMeetingsController extends _$CircleMeetingsController {
+  int _pageIndex = 1;
+  Future<void>? _inFlight;
+
+  @override
+  Future<PagedState<Meeting>> build(String circleId) async {
+    _pageIndex = 1;
+    _inFlight = null;
+    final page = await ref
+        .watch(learningCirclesRepositoryProvider)
+        .getCircleMeetings(circleId, pageIndex: 1);
+    return PagedState(items: page.meetings, hasMore: page.hasNext);
+  }
+
+  /// Loads the next page, or retries it after a failure.
+  Future<void> loadMore() =>
+      _inFlight ??= _loadNextPage().whenComplete(() => _inFlight = null);
+
+  Future<void> _loadNextPage() async {
+    final current = state.value;
+    if (current == null || !current.hasMore) return;
+    state = AsyncData(current.copyWith(isLoadingMore: true, loadMoreError: null));
+    final next = _pageIndex + 1;
+    try {
+      final page = await ref
+          .read(learningCirclesRepositoryProvider)
+          .getCircleMeetings(circleId, pageIndex: next);
+      if (!ref.mounted) return;
+      _pageIndex = next;
+      state = AsyncData(PagedState(
+        items: mergeUniqueBy(current.items, page.meetings, (m) => m.id),
+        hasMore: page.hasNext,
+      ));
+    } on Object catch (e, st) {
+      appLogger.w('Loading more meetings failed', error: e, stackTrace: st);
+      if (!ref.mounted) return;
+      state = AsyncData(current.copyWith(isLoadingMore: false, loadMoreError: e));
+    }
+  }
+}
 
 @riverpod
 Future<MeetingDetail> meetingDetail(Ref ref, String id) =>
@@ -37,7 +80,7 @@ class MeetingActionsController extends _$MeetingActionsController {
       await ref
           .read(learningCirclesRepositoryProvider)
           .createMeeting(circleId, form);
-      ref.invalidate(circleMeetingsProvider(circleId));
+      ref.invalidate(circleMeetingsControllerProvider(circleId));
     });
     return !state.hasError;
   }
@@ -58,7 +101,7 @@ class MeetingActionsController extends _$MeetingActionsController {
     state = const AsyncLoading();
     state = await AsyncValue.guard(() async {
       await ref.read(learningCirclesRepositoryProvider).deleteMeeting(id);
-      if (circleId != null) ref.invalidate(circleMeetingsProvider(circleId));
+      if (circleId != null) ref.invalidate(circleMeetingsControllerProvider(circleId));
     });
     return !state.hasError;
   }
