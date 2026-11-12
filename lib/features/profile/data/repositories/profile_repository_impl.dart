@@ -40,10 +40,8 @@ class ProfileRepositoryImpl implements ProfileRepository {
   final LocationRemoteDataSource _locationRemote;
 
   @override
-  Future<UserProfile> getCurrentUserProfile() => _guard(() async {
-        final json = await _remote.fetchCurrentUserProfile();
-        return UserProfileDto.fromJson(json).toDomain();
-      });
+  UserProfile profileFromPayload(Map<String, dynamic> payload) =>
+      UserProfileDto.fromJson(payload).toDomain();
 
   @override
   Future<UserProfile> getPublicUserProfile(String muid) => _guard(() async {

@@ -189,7 +189,7 @@ final class MyProgressSummaryControllerProvider
 }
 
 String _$myProgressSummaryControllerHash() =>
-    r'41a316d57c7fc975c1e593a2efbc9e071f415160';
+    r'07762c39adc4153c3099566eea49907030e7d448';
 
 abstract class _$MyProgressSummaryController
     extends $AsyncNotifier<MyProgressSummary> {

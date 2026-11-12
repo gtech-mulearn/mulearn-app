@@ -9,11 +9,6 @@ class ProfileRemoteDataSource {
 
   final Dio _dio;
 
-  /// `GET /api/v1/dashboard/profile/user-profile/`.
-  Future<Map<String, dynamic>> fetchCurrentUserProfile() async {
-    final response = await _dio.get<dynamic>(ApiPaths.userProfile);
-    return ApiEnvelope.unwrapObject(response);
-  }
 
   /// `GET /api/v1/dashboard/profile/`.
   Future<Map<String, dynamic>> fetchEditableProfile() async {

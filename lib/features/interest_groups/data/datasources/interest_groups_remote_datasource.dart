@@ -24,20 +24,6 @@ class InterestGroupsRemoteDataSource {
     return payload['interestGroup'] as Map<String, dynamic>;
   }
 
-  /// `GET /api/v1/dashboard/profile/user-profile/` — the current user's own
-  /// profile; only `interest_groups` (already filtered to joined groups) is
-  /// read here. Calling this endpoint directly (rather than importing the
-  /// `profile` feature's repository) keeps the two features independent per
-  /// rules.md §2, at the cost of a small amount of duplicated parsing.
-  Future<List<String>> fetchMyGroupIds() async {
-    final response = await _dio.get<dynamic>(ApiPaths.userProfile);
-    final payload = ApiEnvelope.unwrapObject(response);
-    final groups = payload['interest_groups'] as List<dynamic>? ?? [];
-    return groups
-        .cast<Map<String, dynamic>>()
-        .map((g) => g['id'] as String)
-        .toList();
-  }
 
   /// `PATCH /api/v1/dashboard/profile/ig-edit/` `{"interest_group": ids}`.
   Future<void> setMyGroupIds(List<String> groupIds) async {

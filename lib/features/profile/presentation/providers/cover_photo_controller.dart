@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:mulearn_app/core/session/my_profile_payload.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/profile_controller.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -30,7 +31,7 @@ class CoverPhotoController extends _$CoverPhotoController {
       if (previousUrl != null && previousUrl.isNotEmpty) {
         await CachedNetworkImage.evictFromCache(previousUrl);
       }
-      ref.invalidate(profileControllerProvider);
+      ref.invalidate(myProfilePayloadProvider);
     });
     if (ref.mounted) state = result;
   }
@@ -43,7 +44,7 @@ class CoverPhotoController extends _$CoverPhotoController {
       if (previousUrl != null && previousUrl.isNotEmpty) {
         await CachedNetworkImage.evictFromCache(previousUrl);
       }
-      ref.invalidate(profileControllerProvider);
+      ref.invalidate(myProfilePayloadProvider);
     });
     if (ref.mounted) state = result;
   }

@@ -24,8 +24,9 @@ SessionRemoteDataSource sessionRemoteDataSource(Ref ref) =>
 /// The signed-in user (`/dashboard/user/info/`); `null` when signed out.
 @Riverpod(keepAlive: true)
 Future<CurrentUser?> currentUser(Ref ref) async {
+  final datasource = ref.watch(sessionRemoteDataSourceProvider);
   if (!await ref.watch(appAuthControllerProvider.future)) return null;
-  final json = await _guard(() => ref.read(sessionRemoteDataSourceProvider).fetchUserInfo());
+  final json = await _guard(datasource.fetchUserInfo);
   return CurrentUserDto.fromJson(json).toDomain();
 }
 
@@ -33,9 +34,10 @@ Future<CurrentUser?> currentUser(Ref ref) async {
 /// role (others get `[]` without a request).
 @Riverpod(keepAlive: true)
 Future<List<MentorApplication>> mentorApplications(Ref ref) async {
+  final datasource = ref.watch(sessionRemoteDataSourceProvider);
   final user = await ref.watch(currentUserProvider.future);
   if (user == null || !user.roles.contains(RoleTitles.mentor)) return const [];
-  final items = await _guard(() => ref.read(sessionRemoteDataSourceProvider).fetchMentorApplications());
+  final items = await _guard(datasource.fetchMentorApplications);
   return items
       .map((j) => MentorApplicationDto.fromJson(j as Map<String, dynamic>).toDomain())
       .toList();

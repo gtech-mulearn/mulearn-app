@@ -8,11 +8,9 @@ abstract interface class InterestGroupsRepository {
 
   Future<InterestGroupSummary> getDetail(String id);
 
-  /// The current user's joined group ids — sourced from their own profile
-  /// (`GET .../profile/user-profile/`), fetched independently of the
-  /// `profile` feature (rules.md §2: features never import each other) by
-  /// calling the same shared endpoint with a minimal projection.
-  Future<List<String>> getMyGroupIds();
+  /// The joined group ids in the shared `user-profile` payload
+  /// (`interest_groups`, already filtered to joined groups).
+  List<String> groupIdsFromPayload(Map<String, dynamic> payload);
 
   /// Replaces the user's full set of joined groups — the backend's
   /// `ig-edit` endpoint takes the complete list, not a single add/remove.

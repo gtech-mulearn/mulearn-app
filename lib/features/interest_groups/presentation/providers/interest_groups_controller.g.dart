@@ -274,12 +274,12 @@ final class MyInterestGroupIdsProvider
 }
 
 String _$myInterestGroupIdsHash() =>
-    r'f51eb54459940422e808e711306cb93d1022c48a';
+    r'ce78f04222aa8048827e0123b5c5e473d9ea8b7b';
 
 /// Joins or leaves a single group by replacing the user's full membership
 /// set (the backend's `ig-edit` takes the complete list, not a delta) —
-/// then invalidates [myInterestGroupIdsProvider] so every card reflects the
-/// change.
+/// then invalidates the shared profile so every card (and Profile) reflects
+/// the change.
 
 @ProviderFor(InterestGroupMembershipController)
 const interestGroupMembershipControllerProvider =
@@ -287,14 +287,14 @@ const interestGroupMembershipControllerProvider =
 
 /// Joins or leaves a single group by replacing the user's full membership
 /// set (the backend's `ig-edit` takes the complete list, not a delta) —
-/// then invalidates [myInterestGroupIdsProvider] so every card reflects the
-/// change.
+/// then invalidates the shared profile so every card (and Profile) reflects
+/// the change.
 final class InterestGroupMembershipControllerProvider
     extends $AsyncNotifierProvider<InterestGroupMembershipController, void> {
   /// Joins or leaves a single group by replacing the user's full membership
   /// set (the backend's `ig-edit` takes the complete list, not a delta) —
-  /// then invalidates [myInterestGroupIdsProvider] so every card reflects the
-  /// change.
+  /// then invalidates the shared profile so every card (and Profile) reflects
+  /// the change.
   const InterestGroupMembershipControllerProvider._()
     : super(
         from: null,
@@ -317,12 +317,12 @@ final class InterestGroupMembershipControllerProvider
 }
 
 String _$interestGroupMembershipControllerHash() =>
-    r'20e4583420780a08942ec4dcfb387341faca5182';
+    r'6704262e4d023852a7c2648d4b00c4d7108c0b46';
 
 /// Joins or leaves a single group by replacing the user's full membership
 /// set (the backend's `ig-edit` takes the complete list, not a delta) —
-/// then invalidates [myInterestGroupIdsProvider] so every card reflects the
-/// change.
+/// then invalidates the shared profile so every card (and Profile) reflects
+/// the change.
 
 abstract class _$InterestGroupMembershipController
     extends $AsyncNotifier<void> {

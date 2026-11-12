@@ -18,11 +18,4 @@ class DashboardRemoteDataSource {
     return payload['data'] as List<dynamic>;
   }
 
-  /// `GET /api/v1/dashboard/profile/user-profile/` — reused as-is; this
-  /// feature only projects a few fields out of it (see
-  /// [MyProgressSummaryDto]).
-  Future<Map<String, dynamic>> fetchMyProgressSummary() async {
-    final response = await _dio.get<dynamic>(ApiPaths.userProfile);
-    return ApiEnvelope.unwrapObject(response);
-  }
 }

@@ -41,7 +41,11 @@ class InterestGroupsRepositoryImpl implements InterestGroupsRepository {
       });
 
   @override
-  Future<List<String>> getMyGroupIds() => _guard(_remote.fetchMyGroupIds);
+  List<String> groupIdsFromPayload(Map<String, dynamic> payload) =>
+      (payload['interest_groups'] as List<dynamic>? ?? const [])
+          .cast<Map<String, dynamic>>()
+          .map((g) => g['id'] as String)
+          .toList();
 
   @override
   Future<void> setMyGroupIds(List<String> groupIds) =>

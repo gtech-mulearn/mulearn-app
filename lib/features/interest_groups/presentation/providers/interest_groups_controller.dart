@@ -1,4 +1,5 @@
 import 'package:mulearn_app/core/network/dio_provider.dart';
+import 'package:mulearn_app/core/session/my_profile_payload.dart';
 import 'package:mulearn_app/features/interest_groups/data/datasources/interest_groups_remote_datasource.dart';
 import 'package:mulearn_app/features/interest_groups/data/repositories/interest_groups_repository_impl.dart';
 import 'package:mulearn_app/features/interest_groups/domain/entities/interest_group_summary.dart';
@@ -26,13 +27,15 @@ Future<InterestGroupSummary> interestGroupDetail(Ref ref, String id) =>
     ref.watch(interestGroupsRepositoryProvider).getDetail(id);
 
 @riverpod
-Future<List<String>> myInterestGroupIds(Ref ref) =>
-    ref.watch(interestGroupsRepositoryProvider).getMyGroupIds();
+Future<List<String>> myInterestGroupIds(Ref ref) async {
+  final repository = ref.watch(interestGroupsRepositoryProvider);
+  return repository.groupIdsFromPayload(await ref.watch(myProfilePayloadProvider.future));
+}
 
 /// Joins or leaves a single group by replacing the user's full membership
 /// set (the backend's `ig-edit` takes the complete list, not a delta) —
-/// then invalidates [myInterestGroupIdsProvider] so every card reflects the
-/// change.
+/// then invalidates the shared profile so every card (and Profile) reflects
+/// the change.
 @riverpod
 class InterestGroupMembershipController
     extends _$InterestGroupMembershipController {
@@ -43,12 +46,13 @@ class InterestGroupMembershipController
     state = const AsyncLoading();
     final result = await AsyncValue.guard(() async {
       final repo = ref.read(interestGroupsRepositoryProvider);
-      final currentIds = await repo.getMyGroupIds();
+      final currentIds =
+          repo.groupIdsFromPayload(await ref.read(myProfilePayloadProvider.future));
       final nextIds = join
           ? {...currentIds, groupId}.toList()
           : (currentIds.toList()..remove(groupId));
       await repo.setMyGroupIds(nextIds);
-      ref.invalidate(myInterestGroupIdsProvider);
+      ref.invalidate(myProfilePayloadProvider);
     });
     if (ref.mounted) state = result;
   }

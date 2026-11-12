@@ -8,7 +8,6 @@ abstract interface class DashboardRepository {
   /// `GET /api/v1/dashboard/events/featured/`.
   Future<List<FeaturedEvent>> getFeaturedEvents();
 
-  /// `GET /api/v1/dashboard/profile/user-profile/`, projected down to just
-  /// the fields the home summary card needs.
-  Future<MyProgressSummary> getMyProgressSummary();
+  /// Maps the shared `user-profile` payload (`myProfilePayloadProvider`).
+  MyProgressSummary summaryFromPayload(Map<String, dynamic> payload);
 }

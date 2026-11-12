@@ -1,11 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:mulearn_app/core/session/my_profile_payload.dart';
 import 'package:mulearn_app/features/profile/domain/entities/user_profile.dart';
 import 'package:mulearn_app/features/profile/domain/repositories/profile_repository.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/profile_controller.dart';
 
 class MockProfileRepository extends Mock implements ProfileRepository {}
+
+const payload = <String, dynamic>{'id': 'user-1'};
 
 void main() {
   late MockProfileRepository repository;
@@ -14,7 +17,10 @@ void main() {
 
   ProviderContainer makeContainer() {
     final container = ProviderContainer(
-      overrides: [profileRepositoryProvider.overrideWithValue(repository)],
+      overrides: [
+        profileRepositoryProvider.overrideWithValue(repository),
+        myProfilePayloadProvider.overrideWith((ref) async => payload),
+      ],
     );
     addTearDown(container.dispose);
     return container;
@@ -30,21 +36,19 @@ void main() {
     level: 'Level 5',
   );
 
-  test('loads the profile on build', () async {
-    when(() => repository.getCurrentUserProfile())
-        .thenAnswer((_) async => profile);
+  test('maps the shared user-profile payload on build', () async {
+    when(() => repository.profileFromPayload(payload)).thenReturn(profile);
 
     final container = makeContainer();
     final result = await container.read(profileControllerProvider.future);
 
     expect(result.fullName, 'Ada Lovelace');
     expect(result.karma, 4200);
-    verify(() => repository.getCurrentUserProfile()).called(1);
+    verify(() => repository.profileFromPayload(payload)).called(1);
   });
 
-  test('surfaces repository errors as AsyncError', () async {
-    when(() => repository.getCurrentUserProfile())
-        .thenAnswer((_) async => throw Exception('boom'));
+  test('surfaces mapping errors as AsyncError', () async {
+    when(() => repository.profileFromPayload(payload)).thenThrow(Exception('boom'));
 
     final container = makeContainer();
     // Keep the provider alive while its build future settles.

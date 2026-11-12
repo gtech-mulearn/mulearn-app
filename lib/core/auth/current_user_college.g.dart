@@ -14,10 +14,8 @@ part of 'current_user_college.dart';
 /// does: "which college am I in" is needed by more than one feature (e.g.
 /// `learning_circles` defaulting a new circle's college to the creator's
 /// own, no picker) without any of them importing `features/profile`'s
-/// domain layer. This is a thin, independent hit to the same real
-/// `user-profile` endpoint `features/profile` also calls — mirroring the
-/// dashboard/profile precedent of keeping separate minimal projections off
-/// one endpoint rather than cross-importing it.
+/// domain layer. Read from the shared `user-profile` payload
+/// ([myProfilePayloadProvider]) — no request of its own.
 ///
 /// `id` is confirmed to be in the same id space `learningcircle/create/`'s
 /// `org` field expects — it's set via the college-change flow's `org_id`,
@@ -33,10 +31,8 @@ const currentUserCollegeProvider = CurrentUserCollegeProvider._();
 /// does: "which college am I in" is needed by more than one feature (e.g.
 /// `learning_circles` defaulting a new circle's college to the creator's
 /// own, no picker) without any of them importing `features/profile`'s
-/// domain layer. This is a thin, independent hit to the same real
-/// `user-profile` endpoint `features/profile` also calls — mirroring the
-/// dashboard/profile precedent of keeping separate minimal projections off
-/// one endpoint rather than cross-importing it.
+/// domain layer. Read from the shared `user-profile` payload
+/// ([myProfilePayloadProvider]) — no request of its own.
 ///
 /// `id` is confirmed to be in the same id space `learningcircle/create/`'s
 /// `org` field expects — it's set via the college-change flow's `org_id`,
@@ -59,10 +55,8 @@ final class CurrentUserCollegeProvider
   /// does: "which college am I in" is needed by more than one feature (e.g.
   /// `learning_circles` defaulting a new circle's college to the creator's
   /// own, no picker) without any of them importing `features/profile`'s
-  /// domain layer. This is a thin, independent hit to the same real
-  /// `user-profile` endpoint `features/profile` also calls — mirroring the
-  /// dashboard/profile precedent of keeping separate minimal projections off
-  /// one endpoint rather than cross-importing it.
+  /// domain layer. Read from the shared `user-profile` payload
+  /// ([myProfilePayloadProvider]) — no request of its own.
   ///
   /// `id` is confirmed to be in the same id space `learningcircle/create/`'s
   /// `org` field expects — it's set via the college-change flow's `org_id`,
@@ -95,4 +89,4 @@ final class CurrentUserCollegeProvider
 }
 
 String _$currentUserCollegeHash() =>
-    r'69c27dc5152e85e8f8e06c7f9301fb7f9fa3ea5d';
+    r'ee9a7eb9d930a08e9a6288bfc856baed303b0592';

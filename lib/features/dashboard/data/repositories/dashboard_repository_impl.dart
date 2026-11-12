@@ -23,10 +23,8 @@ class DashboardRepositoryImpl implements DashboardRepository {
       });
 
   @override
-  Future<MyProgressSummary> getMyProgressSummary() => _guard(() async {
-        final json = await _remote.fetchMyProgressSummary();
-        return MyProgressSummaryDto.fromJson(json).toDomain();
-      });
+  MyProgressSummary summaryFromPayload(Map<String, dynamic> payload) =>
+      MyProgressSummaryDto.fromJson(payload).toDomain();
 
   Future<T> _guard<T>(Future<T> Function() action) async {
     try {

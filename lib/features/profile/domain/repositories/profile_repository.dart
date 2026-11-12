@@ -16,8 +16,8 @@ import 'package:mulearn_app/features/profile/domain/entities/vc_subject_info.dar
 /// Profile repository contract (rules.md §2/§5). Every method throws
 /// [ApiException] on failure.
 abstract interface class ProfileRepository {
-  /// `GET /api/v1/dashboard/profile/user-profile/`.
-  Future<UserProfile> getCurrentUserProfile();
+  /// Maps the shared `user-profile` payload (`myProfilePayloadProvider`).
+  UserProfile profileFromPayload(Map<String, dynamic> payload);
 
   /// `GET /api/v1/dashboard/profile/user-profile/{muid}/`.
   Future<UserProfile> getPublicUserProfile(String muid);

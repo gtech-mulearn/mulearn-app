@@ -99,7 +99,7 @@ final class CurrentUserProvider
   }
 }
 
-String _$currentUserHash() => r'30623662dd19d59715ef9a01f35c4be903178620';
+String _$currentUserHash() => r'cd8efa7744c41b09ba8d73ec95f4d21457c65d30';
 
 /// The user's mentor applications — fetched only for users with the Mentor
 /// role (others get `[]` without a request).
@@ -149,7 +149,7 @@ final class MentorApplicationsProvider
 }
 
 String _$mentorApplicationsHash() =>
-    r'3c8e2deab1b4baabbbb67dbc547ab10294287d40';
+    r'14584f60e0da203951a4a79614921a6b6b88030b';
 
 /// What the signed-in user can do; `null` when signed out. A failure to
 /// load either source is an error, never a silent downgrade.

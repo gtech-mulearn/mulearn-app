@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
+import 'package:mulearn_app/core/session/my_profile_payload.dart';
 import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
 import 'package:mulearn_app/core/theme/mulearn_typography.dart';
@@ -38,7 +39,7 @@ class InterestGroupsScreen extends ConsumerWidget {
             onRefresh: () async {
               ref
                 ..invalidate(interestGroupsCatalogProvider)
-                ..invalidate(myInterestGroupIdsProvider);
+                ..invalidate(myProfilePayloadProvider);
             },
             child: CustomScrollView(
               physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
