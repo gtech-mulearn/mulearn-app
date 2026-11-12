@@ -68,4 +68,4 @@ final class CurrentUserMuidProvider
   }
 }
 
-String _$currentUserMuidHash() => r'9b5ba0fc466ecebdd11c242d69f2928cb08828d4';
+String _$currentUserMuidHash() => r'0007585e118fe0de0bd4cfe73b707c7eec4b45f2';
