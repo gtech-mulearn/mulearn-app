@@ -11,7 +11,8 @@ _StudentLeaderboardEntryDto _$StudentLeaderboardEntryDtoFromJson(
 ) => _StudentLeaderboardEntryDto(
   fullName: json['full_name'] as String,
   totalKarma: json['total_karma'] as num,
-  institution: json['institution'] as String,
+  institution: json['institution'] as String?,
+  muid: json['muid'] as String?,
   profilePic: json['profile_pic'] as String?,
 );
 
@@ -21,5 +22,6 @@ Map<String, dynamic> _$StudentLeaderboardEntryDtoToJson(
   'full_name': instance.fullName,
   'total_karma': instance.totalKarma,
   'institution': instance.institution,
+  'muid': instance.muid,
   'profile_pic': instance.profilePic,
 };

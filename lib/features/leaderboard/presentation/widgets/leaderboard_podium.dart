@@ -10,11 +10,15 @@ class LeaderboardPodiumEntry {
     required this.name,
     required this.karma,
     this.avatarUrl,
+    this.onTap,
   });
 
   final String name;
   final num karma;
   final String? avatarUrl;
+
+  /// Opens the student's profile; the slot isn't tappable when null.
+  final VoidCallback? onTap;
 }
 
 /// Top-3 podium row (DESIGN_SPEC.md §2 "09 — Leaderboard") — medal-ring
@@ -68,7 +72,7 @@ class _PodiumSlot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    final slot = Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
@@ -116,5 +120,6 @@ class _PodiumSlot extends StatelessWidget {
         ),
       ],
     );
+    return entry.onTap == null ? slot : InkWell(onTap: entry.onTap, child: slot);
   }
 }

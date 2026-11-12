@@ -122,6 +122,11 @@ class HomeScreen extends ConsumerWidget {
                                       rank: i + 1,
                                       name: top[i].fullName,
                                       meta: top[i].institution,
+                                      onTap: top[i].muid == null
+                                          ? null
+                                          : () => context.push(
+                                                RoutePaths.publicProfilePath(top[i].muid!),
+                                              ),
                                       karma: top[i].totalKarma.toInt(),
                                       avatarUrl: top[i].profilePic,
                                       showDivider: i != top.length - 1,
@@ -432,22 +437,24 @@ class _MoverRow extends StatelessWidget {
   const _MoverRow({
     required this.rank,
     required this.name,
-    required this.meta,
     required this.karma,
     required this.showDivider,
+    this.meta,
     this.avatarUrl,
+    this.onTap,
   });
 
   final int rank;
   final String name;
-  final String meta;
+  final String? meta;
   final int karma;
   final String? avatarUrl;
   final bool showDivider;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final row = Container(
       padding: const EdgeInsets.symmetric(vertical: MuSpace.m),
       decoration: BoxDecoration(
         border: showDivider
@@ -472,7 +479,8 @@ class _MoverRow extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(name, style: MuType.bodyMed, maxLines: 1, overflow: TextOverflow.ellipsis),
-                Text(meta, style: MuType.caption, maxLines: 1, overflow: TextOverflow.ellipsis),
+                if (meta != null)
+                  Text(meta!, style: MuType.caption, maxLines: 1, overflow: TextOverflow.ellipsis),
               ],
             ),
           ),
@@ -487,5 +495,6 @@ class _MoverRow extends StatelessWidget {
         ],
       ),
     );
+    return onTap == null ? row : InkWell(onTap: onTap, child: row);
   }
 }

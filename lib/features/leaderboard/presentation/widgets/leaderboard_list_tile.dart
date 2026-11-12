@@ -13,19 +13,24 @@ class LeaderboardListTile extends StatelessWidget {
   const LeaderboardListTile({
     required this.rank,
     required this.title,
-    required this.subtitle,
     required this.karma,
     super.key,
+    this.subtitle,
     this.avatarUrl,
     this.showDivider = true,
+    this.onTap,
   });
 
   final int rank;
   final String title;
-  final String subtitle;
+  /// Omitted when null (e.g. a student with no college).
+  final String? subtitle;
   final num karma;
   final String? avatarUrl;
   final bool showDivider;
+
+  /// Opens the row's profile; the row isn't tappable when null.
+  final VoidCallback? onTap;
 
   Color get _rankColor => switch (rank) {
         1 => MuColors.rankGold,
@@ -36,7 +41,7 @@ class LeaderboardListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final row = Container(
       padding: const EdgeInsets.symmetric(vertical: 13),
       decoration: BoxDecoration(
         border: Border(
@@ -61,7 +66,8 @@ class LeaderboardListTile extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(title, style: MuType.bodyMed, maxLines: 1, overflow: TextOverflow.ellipsis),
-                Text(subtitle, style: MuType.caption, maxLines: 1, overflow: TextOverflow.ellipsis),
+                if (subtitle != null)
+                  Text(subtitle!, style: MuType.caption, maxLines: 1, overflow: TextOverflow.ellipsis),
               ],
             ),
           ),
@@ -69,5 +75,6 @@ class LeaderboardListTile extends StatelessWidget {
         ],
       ),
     );
+    return onTap == null ? row : InkWell(onTap: onTap, child: row);
   }
 }

@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$StudentLeaderboardEntryDto {
 
- String get fullName; num get totalKarma; String get institution; String? get profilePic;
+ String get fullName; num get totalKarma; String? get institution; String? get muid; String? get profilePic;
 /// Create a copy of StudentLeaderboardEntryDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $StudentLeaderboardEntryDtoCopyWith<StudentLeaderboardEntryDto> get copyWith => 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is StudentLeaderboardEntryDto&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.totalKarma, totalKarma) || other.totalKarma == totalKarma)&&(identical(other.institution, institution) || other.institution == institution)&&(identical(other.profilePic, profilePic) || other.profilePic == profilePic));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StudentLeaderboardEntryDto&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.totalKarma, totalKarma) || other.totalKarma == totalKarma)&&(identical(other.institution, institution) || other.institution == institution)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.profilePic, profilePic) || other.profilePic == profilePic));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,fullName,totalKarma,institution,profilePic);
+int get hashCode => Object.hash(runtimeType,fullName,totalKarma,institution,muid,profilePic);
 
 @override
 String toString() {
-  return 'StudentLeaderboardEntryDto(fullName: $fullName, totalKarma: $totalKarma, institution: $institution, profilePic: $profilePic)';
+  return 'StudentLeaderboardEntryDto(fullName: $fullName, totalKarma: $totalKarma, institution: $institution, muid: $muid, profilePic: $profilePic)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $StudentLeaderboardEntryDtoCopyWith<$Res>  {
   factory $StudentLeaderboardEntryDtoCopyWith(StudentLeaderboardEntryDto value, $Res Function(StudentLeaderboardEntryDto) _then) = _$StudentLeaderboardEntryDtoCopyWithImpl;
 @useResult
 $Res call({
- String fullName, num totalKarma, String institution, String? profilePic
+ String fullName, num totalKarma, String? institution, String? muid, String? profilePic
 });
 
 
@@ -65,12 +65,13 @@ class _$StudentLeaderboardEntryDtoCopyWithImpl<$Res>
 
 /// Create a copy of StudentLeaderboardEntryDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? fullName = null,Object? totalKarma = null,Object? institution = null,Object? profilePic = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? fullName = null,Object? totalKarma = null,Object? institution = freezed,Object? muid = freezed,Object? profilePic = freezed,}) {
   return _then(_self.copyWith(
 fullName: null == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
 as String,totalKarma: null == totalKarma ? _self.totalKarma : totalKarma // ignore: cast_nullable_to_non_nullable
-as num,institution: null == institution ? _self.institution : institution // ignore: cast_nullable_to_non_nullable
-as String,profilePic: freezed == profilePic ? _self.profilePic : profilePic // ignore: cast_nullable_to_non_nullable
+as num,institution: freezed == institution ? _self.institution : institution // ignore: cast_nullable_to_non_nullable
+as String?,muid: freezed == muid ? _self.muid : muid // ignore: cast_nullable_to_non_nullable
+as String?,profilePic: freezed == profilePic ? _self.profilePic : profilePic // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -156,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String fullName,  num totalKarma,  String institution,  String? profilePic)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String fullName,  num totalKarma,  String? institution,  String? muid,  String? profilePic)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _StudentLeaderboardEntryDto() when $default != null:
-return $default(_that.fullName,_that.totalKarma,_that.institution,_that.profilePic);case _:
+return $default(_that.fullName,_that.totalKarma,_that.institution,_that.muid,_that.profilePic);case _:
   return orElse();
 
 }
@@ -177,10 +178,10 @@ return $default(_that.fullName,_that.totalKarma,_that.institution,_that.profileP
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String fullName,  num totalKarma,  String institution,  String? profilePic)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String fullName,  num totalKarma,  String? institution,  String? muid,  String? profilePic)  $default,) {final _that = this;
 switch (_that) {
 case _StudentLeaderboardEntryDto():
-return $default(_that.fullName,_that.totalKarma,_that.institution,_that.profilePic);case _:
+return $default(_that.fullName,_that.totalKarma,_that.institution,_that.muid,_that.profilePic);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -197,10 +198,10 @@ return $default(_that.fullName,_that.totalKarma,_that.institution,_that.profileP
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String fullName,  num totalKarma,  String institution,  String? profilePic)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String fullName,  num totalKarma,  String? institution,  String? muid,  String? profilePic)?  $default,) {final _that = this;
 switch (_that) {
 case _StudentLeaderboardEntryDto() when $default != null:
-return $default(_that.fullName,_that.totalKarma,_that.institution,_that.profilePic);case _:
+return $default(_that.fullName,_that.totalKarma,_that.institution,_that.muid,_that.profilePic);case _:
   return null;
 
 }
@@ -212,12 +213,13 @@ return $default(_that.fullName,_that.totalKarma,_that.institution,_that.profileP
 @JsonSerializable()
 
 class _StudentLeaderboardEntryDto extends StudentLeaderboardEntryDto {
-  const _StudentLeaderboardEntryDto({required this.fullName, required this.totalKarma, required this.institution, this.profilePic}): super._();
+  const _StudentLeaderboardEntryDto({required this.fullName, required this.totalKarma, this.institution, this.muid, this.profilePic}): super._();
   factory _StudentLeaderboardEntryDto.fromJson(Map<String, dynamic> json) => _$StudentLeaderboardEntryDtoFromJson(json);
 
 @override final  String fullName;
 @override final  num totalKarma;
-@override final  String institution;
+@override final  String? institution;
+@override final  String? muid;
 @override final  String? profilePic;
 
 /// Create a copy of StudentLeaderboardEntryDto
@@ -233,16 +235,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StudentLeaderboardEntryDto&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.totalKarma, totalKarma) || other.totalKarma == totalKarma)&&(identical(other.institution, institution) || other.institution == institution)&&(identical(other.profilePic, profilePic) || other.profilePic == profilePic));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StudentLeaderboardEntryDto&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.totalKarma, totalKarma) || other.totalKarma == totalKarma)&&(identical(other.institution, institution) || other.institution == institution)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.profilePic, profilePic) || other.profilePic == profilePic));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,fullName,totalKarma,institution,profilePic);
+int get hashCode => Object.hash(runtimeType,fullName,totalKarma,institution,muid,profilePic);
 
 @override
 String toString() {
-  return 'StudentLeaderboardEntryDto(fullName: $fullName, totalKarma: $totalKarma, institution: $institution, profilePic: $profilePic)';
+  return 'StudentLeaderboardEntryDto(fullName: $fullName, totalKarma: $totalKarma, institution: $institution, muid: $muid, profilePic: $profilePic)';
 }
 
 
@@ -253,7 +255,7 @@ abstract mixin class _$StudentLeaderboardEntryDtoCopyWith<$Res> implements $Stud
   factory _$StudentLeaderboardEntryDtoCopyWith(_StudentLeaderboardEntryDto value, $Res Function(_StudentLeaderboardEntryDto) _then) = __$StudentLeaderboardEntryDtoCopyWithImpl;
 @override @useResult
 $Res call({
- String fullName, num totalKarma, String institution, String? profilePic
+ String fullName, num totalKarma, String? institution, String? muid, String? profilePic
 });
 
 
@@ -270,12 +272,13 @@ class __$StudentLeaderboardEntryDtoCopyWithImpl<$Res>
 
 /// Create a copy of StudentLeaderboardEntryDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? fullName = null,Object? totalKarma = null,Object? institution = null,Object? profilePic = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? fullName = null,Object? totalKarma = null,Object? institution = freezed,Object? muid = freezed,Object? profilePic = freezed,}) {
   return _then(_StudentLeaderboardEntryDto(
 fullName: null == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
 as String,totalKarma: null == totalKarma ? _self.totalKarma : totalKarma // ignore: cast_nullable_to_non_nullable
-as num,institution: null == institution ? _self.institution : institution // ignore: cast_nullable_to_non_nullable
-as String,profilePic: freezed == profilePic ? _self.profilePic : profilePic // ignore: cast_nullable_to_non_nullable
+as num,institution: freezed == institution ? _self.institution : institution // ignore: cast_nullable_to_non_nullable
+as String?,muid: freezed == muid ? _self.muid : muid // ignore: cast_nullable_to_non_nullable
+as String?,profilePic: freezed == profilePic ? _self.profilePic : profilePic // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

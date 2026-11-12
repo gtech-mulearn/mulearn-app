@@ -4,12 +4,17 @@ import 'package:mulearn_app/features/leaderboard/domain/entities/student_leaderb
 part 'student_leaderboard_entry_dto.freezed.dart';
 part 'student_leaderboard_entry_dto.g.dart';
 
+/// One row of `GET /api/v1/leaderboard/students[-monthly]/`, built by
+/// mu_celery/leaderboard_cron.py: `{muid, full_name, total_karma,
+/// institution, profile_pic}`; `institution` is null for a student with no
+/// college link.
 @freezed
 abstract class StudentLeaderboardEntryDto with _$StudentLeaderboardEntryDto {
   const factory StudentLeaderboardEntryDto({
     required String fullName,
     required num totalKarma,
-    required String institution,
+    String? institution,
+    String? muid,
     String? profilePic,
   }) = _StudentLeaderboardEntryDto;
 
@@ -22,6 +27,7 @@ abstract class StudentLeaderboardEntryDto with _$StudentLeaderboardEntryDto {
         fullName: fullName,
         totalKarma: totalKarma,
         institution: institution,
+        muid: muid,
         profilePic: profilePic,
       );
 }

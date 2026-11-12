@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/theme/mu_radius.dart';
 import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
@@ -199,6 +201,7 @@ class _StudentLeaderboardSliver extends ConsumerWidget {
                   name: e.fullName,
                   karma: e.totalKarma,
                   avatarUrl: e.profilePic,
+                  onTap: _openProfile(context, e.muid),
                 ))
             .toList();
         final rest = entries.skip(3).toList();
@@ -221,6 +224,7 @@ class _StudentLeaderboardSliver extends ConsumerWidget {
                           karma: rest[i].totalKarma,
                           avatarUrl: rest[i].profilePic,
                           showDivider: i < rest.length - 1,
+                          onTap: _openProfile(context, rest[i].muid),
                         ),
                     ],
                   ),
@@ -297,3 +301,7 @@ class _CollegeLeaderboardSliver extends ConsumerWidget {
     );
   }
 }
+
+/// Opens a student's public profile, or nothing when the row has no muid.
+VoidCallback? _openProfile(BuildContext context, String? muid) =>
+    muid == null ? null : () => context.push(RoutePaths.publicProfilePath(muid));
