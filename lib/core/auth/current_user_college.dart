@@ -16,7 +16,7 @@ part 'current_user_college.g.dart';
 /// `org` field expects — it's set via the college-change flow's `org_id`,
 /// which is itself sourced from `/api/v1/register/college/list/`, the same
 /// namespace `learningcircle/create/` validates against (rules.md §3/§9).
-@riverpod
+@Riverpod(retry: noRetry)
 Future<({String? id, String? code})> currentUserCollege(Ref ref) async {
   final json = await ref.watch(myProfilePayloadProvider.future);
   return (

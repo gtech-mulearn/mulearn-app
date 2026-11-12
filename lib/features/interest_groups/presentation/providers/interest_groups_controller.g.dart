@@ -251,7 +251,7 @@ final class MyInterestGroupIdsProvider
     : super(
         from: null,
         argument: null,
-        retry: null,
+        retry: noRetry,
         name: r'myInterestGroupIdsProvider',
         isAutoDispose: true,
         dependencies: null,
@@ -274,7 +274,7 @@ final class MyInterestGroupIdsProvider
 }
 
 String _$myInterestGroupIdsHash() =>
-    r'ce78f04222aa8048827e0123b5c5e473d9ea8b7b';
+    r'3864b731ebe0559b1be8520023d12cc2592a43e5';
 
 /// Joins or leaves a single group by replacing the user's full membership
 /// set (the backend's `ig-edit` takes the complete list, not a delta) —
@@ -317,7 +317,7 @@ final class InterestGroupMembershipControllerProvider
 }
 
 String _$interestGroupMembershipControllerHash() =>
-    r'6704262e4d023852a7c2648d4b00c4d7108c0b46';
+    r'0d9d40134997aeabfbb90a4d6f40ef002236df71';
 
 /// Joins or leaves a single group by replacing the user's full membership
 /// set (the backend's `ig-edit` takes the complete list, not a delta) —

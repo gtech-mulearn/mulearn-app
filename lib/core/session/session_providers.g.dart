@@ -77,7 +77,7 @@ final class CurrentUserProvider
     : super(
         from: null,
         argument: null,
-        retry: null,
+        retry: noRetry,
         name: r'currentUserProvider',
         isAutoDispose: false,
         dependencies: null,
@@ -99,7 +99,7 @@ final class CurrentUserProvider
   }
 }
 
-String _$currentUserHash() => r'cd8efa7744c41b09ba8d73ec95f4d21457c65d30';
+String _$currentUserHash() => r'dbbe24ee407aacdcc13d986cbf9c51160f3e7a52';
 
 /// The user's mentor applications — fetched only for users with the Mentor
 /// role (others get `[]` without a request).
@@ -126,7 +126,7 @@ final class MentorApplicationsProvider
     : super(
         from: null,
         argument: null,
-        retry: null,
+        retry: noRetry,
         name: r'mentorApplicationsProvider',
         isAutoDispose: false,
         dependencies: null,
@@ -149,7 +149,7 @@ final class MentorApplicationsProvider
 }
 
 String _$mentorApplicationsHash() =>
-    r'14584f60e0da203951a4a79614921a6b6b88030b';
+    r'd3c7b8701cb0eb985a49d12ff3d1c7acb15e287f';
 
 /// What the signed-in user can do; `null` when signed out. A failure to
 /// load either source is an error, never a silent downgrade.
@@ -174,7 +174,7 @@ final class CapabilitiesProvider
     : super(
         from: null,
         argument: null,
-        retry: null,
+        retry: noRetry,
         name: r'capabilitiesProvider',
         isAutoDispose: false,
         dependencies: null,
@@ -196,4 +196,4 @@ final class CapabilitiesProvider
   }
 }
 
-String _$capabilitiesHash() => r'e6a6ad2cf4b3699ada56c8024391f4b57929f18f';
+String _$capabilitiesHash() => r'9ce765e10fcad02b12573b3b1f125c66d2b94eea';

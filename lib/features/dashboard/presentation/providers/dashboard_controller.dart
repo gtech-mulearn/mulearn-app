@@ -35,7 +35,7 @@ class FeaturedEventsController extends _$FeaturedEventsController {
   }
 }
 
-@riverpod
+@Riverpod(retry: noRetry)
 class MyProgressSummaryController extends _$MyProgressSummaryController {
   @override
   Future<MyProgressSummary> build() async {

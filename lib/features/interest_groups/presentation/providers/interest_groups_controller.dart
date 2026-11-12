@@ -26,7 +26,7 @@ Future<List<InterestGroupSummary>> interestGroupsCatalog(Ref ref) =>
 Future<InterestGroupSummary> interestGroupDetail(Ref ref, String id) =>
     ref.watch(interestGroupsRepositoryProvider).getDetail(id);
 
-@riverpod
+@Riverpod(retry: noRetry)
 Future<List<String>> myInterestGroupIds(Ref ref) async {
   final repository = ref.watch(interestGroupsRepositoryProvider);
   return repository.groupIdsFromPayload(await ref.watch(myProfilePayloadProvider.future));
@@ -46,8 +46,11 @@ class InterestGroupMembershipController
     state = const AsyncLoading();
     final result = await AsyncValue.guard(() async {
       final repo = ref.read(interestGroupsRepositoryProvider);
+      // ig-edit replaces the whole list: start from the server's current
+      // membership, not the copy cached at session start (a group joined on
+      // the web since then would otherwise be dropped).
       final currentIds =
-          repo.groupIdsFromPayload(await ref.read(myProfilePayloadProvider.future));
+          repo.groupIdsFromPayload(await ref.refresh(myProfilePayloadProvider.future));
       final nextIds = join
           ? {...currentIds, groupId}.toList()
           : (currentIds.toList()..remove(groupId));

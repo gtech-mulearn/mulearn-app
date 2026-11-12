@@ -4,7 +4,10 @@ import 'package:mulearn_app/core/network/api_envelope.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/network/api_paths.dart';
 import 'package:mulearn_app/core/network/dio_provider.dart';
+import 'package:mulearn_app/core/utils/no_retry.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+export 'package:mulearn_app/core/utils/no_retry.dart' show noRetry;
 
 part 'my_profile_payload.g.dart';
 
@@ -16,9 +19,9 @@ part 'my_profile_payload.g.dart';
 /// refreshes every reader at once. It watches the auth state, so signing out
 /// discards it. Rejected when signed out (no reader runs then).
 ///
-/// Not auto-retried (Riverpod 3 retries failing providers by default, which
-/// would keep every reader loading): a failure surfaces at once so screens
-/// show their error state and Retry, which invalidates this provider.
+/// Neither this nor its readers is auto-retried ([noRetry]): a failure
+/// surfaces at once so screens show their error state and Retry, which
+/// invalidates this provider.
 @Riverpod(keepAlive: true, retry: noRetry)
 Future<Map<String, dynamic>> myProfilePayload(Ref ref) async {
   final dio = ref.watch(dioProvider);
@@ -31,6 +34,3 @@ Future<Map<String, dynamic>> myProfilePayload(Ref ref) async {
     throw ApiException.fromDioException(e);
   }
 }
-
-/// A Riverpod retry policy that never retries.
-Duration? noRetry(int retryCount, Object error) => null;

@@ -73,13 +73,44 @@ void main() {
     expect(profileCalls(), 2);
   });
 
-  test('a failed profile load shows as an error at once (no silent retry loop)', () async {
+  test('a failed profile load shows as an error at once in every reader (no silent retry loop)', () async {
     adapter = FakeHttpAdapter({'GET $_profilePath': (_) => const FakeResponse(-1, null)});
-    final c = makeContainer()..listen(profileControllerProvider, (_, __) {});
+    final c = makeContainer()
+      ..listen(profileControllerProvider, (_, __) {})
+      ..listen(myProgressSummaryControllerProvider, (_, __) {})
+      ..listen(myInterestGroupIdsProvider, (_, __) {})
+      ..listen(currentUserCollegeProvider, (_, __) {});
 
     await Future<void>.delayed(const Duration(milliseconds: 100));
 
-    expect(c.read(profileControllerProvider).hasError, isTrue,
-        reason: 'the Profile screen shows its error and Retry button instead of spinning');
+    // While Riverpod retries, the state is AsyncLoading carrying the error
+    // (hasError is already true) and screens keep showing the spinner.
+    final states = <String, AsyncValue<Object?>>{
+      'profile': c.read(profileControllerProvider),
+      'home summary': c.read(myProgressSummaryControllerProvider),
+      'IG membership': c.read(myInterestGroupIdsProvider),
+      'college': c.read(currentUserCollegeProvider),
+    };
+    for (final MapEntry(key: name, value: state) in states.entries) {
+      expect(state.isLoading, isFalse, reason: '$name must show its error, not keep loading');
+      expect(state.hasError, isTrue, reason: name);
+    }
+    expect(profileCalls(), 1, reason: 'readers never re-request on their own');
+  });
+
+  test('a reader recovers when the shared profile is refetched', () async {
+    var fail = true;
+    adapter = FakeHttpAdapter({
+      'GET $_profilePath': (_) => fail ? const FakeResponse(-1, null) : FakeResponse(200, loadFixture('dev/user_profile')),
+    });
+    final c = makeContainer()..listen(profileControllerProvider, (_, __) {});
+    await Future<void>.delayed(const Duration(milliseconds: 50));
+    expect(c.read(profileControllerProvider).hasError, isTrue);
+
+    fail = false;
+    final retry = c.read(profileControllerProvider.notifier).refresh; // the Retry button
+    await retry();
+
+    expect(await c.read(profileControllerProvider.future), isNotNull);
   });
 }

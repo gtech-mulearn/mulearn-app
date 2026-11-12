@@ -89,6 +89,17 @@ void main() {
     );
   });
 
+  test('a failed user-info fetch makes capabilities an error at once, not a long spinner', () async {
+    final c = containerWith(FakeHttpAdapter({_userInfo: (_) => const FakeResponse(-1, null)}))
+      ..listen(capabilitiesProvider, (_, __) {});
+
+    await Future<void>.delayed(const Duration(milliseconds: 100));
+
+    final state = c.read(capabilitiesProvider);
+    expect(state.isLoading, isFalse);
+    expect(state.error, isA<ApiException>());
+  });
+
   test('currentUser refetches after an account switch', () async {
     var fixture = 'dev/user_info';
     final adapter = FakeHttpAdapter({_userInfo: (_) => FakeResponse(200, loadFixture(fixture))});

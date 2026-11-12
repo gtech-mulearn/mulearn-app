@@ -66,7 +66,7 @@ final class CurrentUserCollegeProvider
     : super(
         from: null,
         argument: null,
-        retry: null,
+        retry: noRetry,
         name: r'currentUserCollegeProvider',
         isAutoDispose: true,
         dependencies: null,
@@ -89,4 +89,4 @@ final class CurrentUserCollegeProvider
 }
 
 String _$currentUserCollegeHash() =>
-    r'ee9a7eb9d930a08e9a6288bfc856baed303b0592';
+    r'50a05b3d0f81bb12c8b168c287751ba520899e6f';

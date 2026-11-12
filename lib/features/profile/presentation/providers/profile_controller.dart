@@ -22,7 +22,7 @@ ProfileRepository profileRepository(Ref ref) => ProfileRepositoryImpl(
 /// The current user's profile, mapped from the shared `user-profile` payload
 /// (one request for every reader). Call [refresh] to refetch, e.g. from the
 /// error-state retry button.
-@riverpod
+@Riverpod(retry: noRetry)
 class ProfileController extends _$ProfileController {
   @override
   Future<UserProfile> build() async {

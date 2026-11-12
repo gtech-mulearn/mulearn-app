@@ -173,7 +173,7 @@ final class MyProgressSummaryControllerProvider
     : super(
         from: null,
         argument: null,
-        retry: null,
+        retry: noRetry,
         name: r'myProgressSummaryControllerProvider',
         isAutoDispose: true,
         dependencies: null,
@@ -189,7 +189,7 @@ final class MyProgressSummaryControllerProvider
 }
 
 String _$myProgressSummaryControllerHash() =>
-    r'07762c39adc4153c3099566eea49907030e7d448';
+    r'8e989f9b8d0e1f254ea3e4ef6c7cbe67fd4b7975';
 
 abstract class _$MyProgressSummaryController
     extends $AsyncNotifier<MyProgressSummary> {

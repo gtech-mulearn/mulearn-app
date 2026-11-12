@@ -44,7 +44,7 @@ final class SessionActionsProvider
   }
 }
 
-String _$sessionActionsHash() => r'd2c76f4f6e0693b685ea793d3d704d3c97e1d2a5';
+String _$sessionActionsHash() => r'395238b682cc9e764b467c5837318d376086cfec';
 
 /// Session-wide actions any screen may trigger.
 

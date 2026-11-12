@@ -75,6 +75,34 @@ void main() {
     expect(signedInDuringLogout, isFalse);
   });
 
+  test('sign-out clears the local session before the server call', () async {
+    // A slow revoke must not leave this device signed in (app killed
+    // mid-call), nor wipe the next user's tokens when it finally returns.
+    late FakeSecureStorage storage;
+    storage = FakeSecureStorage();
+    tokens = TokenStorage(storage);
+    await tokens.saveTokens(accessToken: 'a', refreshToken: 'r');
+    Map<String, String>? storedDuringLogout;
+    var cacheCleanedBeforeLogout = false;
+    var logoutCalled = false;
+    when(cache.clean).thenAnswer((_) async => cacheCleanedBeforeLogout = !logoutCalled);
+    final adapter = FakeHttpAdapter({
+      'POST /api/v1/auth/logout/': (_) {
+        logoutCalled = true;
+        storedDuringLogout = Map.of(storage.values);
+        return ok;
+      },
+    });
+    final c = containerWith(adapter);
+    await c.read(appAuthControllerProvider.future);
+
+    await c.read(sessionActionsProvider.notifier).signOut();
+
+    expect(adapter.requests.single.data, {'refreshToken': 'r'});
+    expect(storedDuringLogout, isEmpty);
+    expect(cacheCleanedBeforeLogout, isTrue);
+  });
+
   test('sign-out still clears locally when the logout call fails', () async {
     final c = containerWith(FakeHttpAdapter({'POST /api/v1/auth/logout/': (_) => const FakeResponse(-1, null)}));
     await c.read(appAuthControllerProvider.future);

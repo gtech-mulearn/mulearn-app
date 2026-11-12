@@ -16,9 +16,9 @@ part of 'my_profile_payload.dart';
 /// refreshes every reader at once. It watches the auth state, so signing out
 /// discards it. Rejected when signed out (no reader runs then).
 ///
-/// Not auto-retried (Riverpod 3 retries failing providers by default, which
-/// would keep every reader loading): a failure surfaces at once so screens
-/// show their error state and Retry, which invalidates this provider.
+/// Neither this nor its readers is auto-retried ([noRetry]): a failure
+/// surfaces at once so screens show their error state and Retry, which
+/// invalidates this provider.
 
 @ProviderFor(myProfilePayload)
 const myProfilePayloadProvider = MyProfilePayloadProvider._();
@@ -31,9 +31,9 @@ const myProfilePayloadProvider = MyProfilePayloadProvider._();
 /// refreshes every reader at once. It watches the auth state, so signing out
 /// discards it. Rejected when signed out (no reader runs then).
 ///
-/// Not auto-retried (Riverpod 3 retries failing providers by default, which
-/// would keep every reader loading): a failure surfaces at once so screens
-/// show their error state and Retry, which invalidates this provider.
+/// Neither this nor its readers is auto-retried ([noRetry]): a failure
+/// surfaces at once so screens show their error state and Retry, which
+/// invalidates this provider.
 
 final class MyProfilePayloadProvider
     extends
@@ -53,9 +53,9 @@ final class MyProfilePayloadProvider
   /// refreshes every reader at once. It watches the auth state, so signing out
   /// discards it. Rejected when signed out (no reader runs then).
   ///
-  /// Not auto-retried (Riverpod 3 retries failing providers by default, which
-  /// would keep every reader loading): a failure surfaces at once so screens
-  /// show their error state and Retry, which invalidates this provider.
+  /// Neither this nor its readers is auto-retried ([noRetry]): a failure
+  /// surfaces at once so screens show their error state and Retry, which
+  /// invalidates this provider.
   const MyProfilePayloadProvider._()
     : super(
         from: null,

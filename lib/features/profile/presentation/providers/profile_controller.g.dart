@@ -123,7 +123,7 @@ final class ProfileControllerProvider
     : super(
         from: null,
         argument: null,
-        retry: null,
+        retry: noRetry,
         name: r'profileControllerProvider',
         isAutoDispose: true,
         dependencies: null,
@@ -138,7 +138,7 @@ final class ProfileControllerProvider
   ProfileController create() => ProfileController();
 }
 
-String _$profileControllerHash() => r'a97fd75d9d987e5508e077df409df7118d3aa6e6';
+String _$profileControllerHash() => r'a55eac4420d2c511f1a3b4a6a8cfff44e651edcb';
 
 /// The current user's profile, mapped from the shared `user-profile` payload
 /// (one request for every reader). Call [refresh] to refetch, e.g. from the
