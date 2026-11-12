@@ -30,7 +30,7 @@ class AuthRepositoryImpl implements AuthRepository {
         emailOrMuid: emailOrMuid,
         password: password,
       );
-      return _completeSignIn(payload);
+      return await _completeSignIn(payload);
     } on DioException catch (e) {
       throw ApiException.fromDioException(e);
     }
@@ -46,7 +46,7 @@ class AuthRepositoryImpl implements AuthRepository {
         emailOrMuid: emailOrMuid,
         otp: otp,
       );
-      return _completeSignIn(payload);
+      return await _completeSignIn(payload);
     } on DioException catch (e) {
       throw ApiException.fromDioException(e);
     }
@@ -95,7 +95,7 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<AuthSession> signInWithGoogle({required String idToken}) async {
     try {
       final payload = await _remote.authenticateWithGoogle(idToken: idToken);
-      return _completeSignIn(payload);
+      return await _completeSignIn(payload);
     } on DioException catch (e) {
       throw ApiException.fromDioException(e);
     }
@@ -111,7 +111,7 @@ class AuthRepositoryImpl implements AuthRepository {
         identityToken: identityToken,
         email: email,
       );
-      return _completeSignIn(payload);
+      return await _completeSignIn(payload);
     } on DioException catch (e) {
       throw ApiException.fromDioException(e);
     }

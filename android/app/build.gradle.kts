@@ -18,6 +18,13 @@ if (hasReleaseKeystore) {
     keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
 
+// A prod release must never silently fall back to debug signing (that APK
+// can't update a store install). Dev/debug builds keep the fallback above.
+val isProdRelease = gradle.startParameter.taskNames.any { it.contains("ProdRelease", ignoreCase = true) }
+if (isProdRelease && !hasReleaseKeystore) {
+    throw GradleException("Prod release builds need android/key.properties — see docs/releases.md.")
+}
+
 android {
     namespace = "org.mulearn.muapp"
     compileSdk = flutter.compileSdkVersion
@@ -68,20 +75,8 @@ android {
         }
     }
 
-    signingConfigs {
-        if (keystorePropertiesFile.exists()) {
-            create("release") {
-                keyAlias = keystoreProperties["keyAlias"] as String?
-                keyPassword = keystoreProperties["keyPassword"] as String?
-                storeFile = keystoreProperties["storeFile"]?.let { file(it) }
-                storePassword = keystoreProperties["storePassword"] as String?
-            }
-        }
-    }
-
     buildTypes {
         release {
-
             signingConfig = if (hasReleaseKeystore) {
                 signingConfigs.getByName("release")
             } else {

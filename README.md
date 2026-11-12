@@ -47,7 +47,7 @@ See [`docs/mulearn-flutter-architecture.md`](docs/mulearn-flutter-architecture.m
 
 ### Prerequisites
 
-- Flutter SDK (Dart `^3.12.2`)
+- Flutter SDK **3.47.9** (Dart 3.13.7), the version CI pins; the app requires Dart `^3.12.2`
 - For iOS: Xcode + CocoaPods
 - For Android: Android SDK (`sdk.dir` in `android/local.properties`)
 
