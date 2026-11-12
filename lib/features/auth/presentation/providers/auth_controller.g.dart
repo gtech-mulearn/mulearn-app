@@ -104,7 +104,7 @@ final class AuthRepositoryProvider
   }
 }
 
-String _$authRepositoryHash() => r'b692f41f48a45408bfa74b9900c3932eda1b3e2a';
+String _$authRepositoryHash() => r'b6b60864f705e7d84a5d4867fdcc26a41c2b1b5f';
 
 @ProviderFor(googleNativeSignInDataSource)
 const googleNativeSignInDataSourceProvider =

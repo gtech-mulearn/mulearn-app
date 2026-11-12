@@ -1,6 +1,7 @@
 import 'package:mulearn_app/core/auth/app_auth_controller.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/network/dio_provider.dart';
+import 'package:mulearn_app/core/storage/cache_store_provider.dart';
 import 'package:mulearn_app/core/storage/secure_storage_provider.dart';
 import 'package:mulearn_app/core/utils/app_logger.dart';
 import 'package:mulearn_app/features/auth/data/datasources/apple_native_signin_datasource.dart';
@@ -23,6 +24,7 @@ AuthRemoteDataSource authRemoteDataSource(Ref ref) =>
 AuthRepository authRepository(Ref ref) => AuthRepositoryImpl(
       remote: ref.watch(authRemoteDataSourceProvider),
       tokenStorage: ref.watch(tokenStorageProvider),
+      cacheStore: ref.watch(cacheStoreProvider),
     );
 
 @Riverpod(keepAlive: true)

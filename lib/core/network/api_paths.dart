@@ -19,6 +19,10 @@ abstract final class ApiPaths {
   /// SimpleJWT refresh proxy — body is `{"refreshToken": "..."}`.
   static const String refreshToken = '/api/v1/auth/get-access-token/';
 
+  /// Authserver LogoutAPIView — `{"refreshToken": "..."}`; revokes every
+  /// refresh token issued before it.
+  static const String logout = '/api/v1/auth/logout/';
+
   /// Request a password-reset email.
   static const String forgotPassword =
       '/api/v1/dashboard/user/forgot-password/';

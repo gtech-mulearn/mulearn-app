@@ -109,4 +109,19 @@ class AuthRemoteDataSource {
     );
     return ApiEnvelope.unwrapObject(response);
   }
+
+  /// `POST /api/v1/auth/logout/` — revokes the refresh token server-side.
+  /// Short timeouts: sign-out must not hang on a slow network.
+  Future<void> logout(String refreshToken) async {
+    final response = await _dio.post<dynamic>(
+      ApiPaths.logout,
+      data: {'refreshToken': refreshToken},
+      options: Options(
+        headers: {RequestFlags.skipAuth: true},
+        sendTimeout: const Duration(seconds: 5),
+        receiveTimeout: const Duration(seconds: 5),
+      ),
+    );
+    ApiEnvelope.unwrapObject(response);
+  }
 }

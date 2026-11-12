@@ -1,3 +1,4 @@
+import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:flutter/foundation.dart' show TargetPlatform;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -37,7 +38,11 @@ void main() {
   });
 
   AuthRepositoryImpl repoServing(FakeHttpAdapter adapter) =>
-      AuthRepositoryImpl(remote: AuthRemoteDataSource(fakeDio(adapter)), tokenStorage: tokens);
+      AuthRepositoryImpl(
+        remote: AuthRemoteDataSource(fakeDio(adapter)),
+        tokenStorage: tokens,
+        cacheStore: MemCacheStore(),
+      );
 
   group('Google (authserver GoogleMobileAuthAPIView)', () {
     test('an unknown Google email asks to register and stores no tokens', () async {

@@ -53,6 +53,7 @@ Dio dio(Ref ref) {
       refreshDio: ref.watch(refreshDioProvider),
       tokenStorage: ref.watch(tokenStorageProvider),
       sessionEventBus: ref.watch(sessionEventBusProvider),
+      cacheStore: store,
     ),
   );
   if (FlavorConfig.instance.isDev) dio.interceptors.add(_logInterceptor());
