@@ -148,3 +148,24 @@ Dev was seeded through its APIs on 2026-11-12 (admin account, user-authorised): 
 New findings for later plans:
 - Action controllers set `state` after an `await` without `ref.mounted`; leaving a screen mid-request throws (hardening plan).
 - The dev database lost `interest_group.icon` outside db-scripts on 2026-11-12; restored by the user. A restore alter (1.93) sits uncommitted in a db-scripts worktree by the user's choice.
+
+## 13. Gap status after Plan 2 (2026-11-12)
+
+| Item | Status | Evidence / what is pending |
+|---|---|---|
+| Typed error kinds (§8.1 Errors) | Done | `ebd8152` |
+| ARCH-04 / REL-03 / REL-04 telemetry hook | Done (logging reporter) | `f9bdc36`; a Sentry/Crashlytics account is still needed to send reports anywhere |
+| Mutations after leaving a screen (Plan 1 finding) | Done | `8347965`; architecture test forbids the pattern |
+| Session + capabilities (§8.1, SEC-13, ARCH-02 profile→auth) | Done | `daf9518`; live: QA mentor's role link is unverified while its application is APPROVED — capabilities use `/mentor/status/` |
+| ARCH-07 / PERF-01 shared user-profile read model | Done | `0a93404`; one request for Profile, Home summary, IG membership, college; ProfileEventBus removed |
+| SEC-12 / PERF-04 persistent, user-scoped cache | Done | `4b91c17`; Hive store opened on the phone without falling back |
+| ARCH-02 module boundaries | Done | `87871b9`; architecture test enforces feature/core/domain rules |
+| UX-09 / REL-06 tab navigation | Done — device check pending | `1ec49b2` |
+| DS-01 dashboard colour tokens | Done | `987853b`; contrast and no-literal tests; seen on the phone (purple avatar/karma glow) |
+
+Seen on the phone (2026-11-12, QA student): Home "Happening soon" now lists the featured events (Plan 1 Task 4b confirmed).
+
+New findings for Plan 3:
+- Home shows the raw level name ("Level lvl1"); the dashboard formats it.
+- Journey marks lvl2–lvl6 "CLEARED" and lvl7 "YOU ARE HERE" for a 0-karma lvl1 student — the level status logic disagrees with `/profile/user-profile/`'s `level`.
+- Riverpod 3 auto-retries failing providers app-wide; only the shared profile opts out. Decide a global retry policy (hardening plan).
