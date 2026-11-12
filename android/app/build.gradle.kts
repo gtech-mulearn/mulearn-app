@@ -7,18 +7,19 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
-// Release signing config, read from android/key.properties (never committed).
-// CI writes this file from GitHub Secrets (see .github/workflows/release-*.yml);
-// locally you can create it by hand — see docs/releases.md.
+
+// Release signing — see android/key.properties (gitignored). Falls back to
+// debug signing when the file is absent (e.g. a fresh checkout without it
+// set up yet) so `flutter run --release` still works for local dev.
 val keystorePropertiesFile = rootProject.file("key.properties")
-val keystoreProperties = Properties().apply {
-    if (keystorePropertiesFile.exists()) {
-        FileInputStream(keystorePropertiesFile).use { load(it) }
-    }
+val keystoreProperties = Properties()
+val hasReleaseKeystore = keystorePropertiesFile.exists()
+if (hasReleaseKeystore) {
+    keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
 
 android {
-    namespace = "org.mulearn.app"
+    namespace = "org.mulearn.muapp"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -34,7 +35,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "org.mulearn.app"
+        applicationId = "org.mulearn.muapp"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
@@ -48,11 +49,22 @@ android {
         create("dev") {
             dimension = "env"
             applicationIdSuffix = ".dev"
-            resValue("string", "app_name", "μLearn Dev")
+            resValue("string", "app_name", "Mulearn Dev")
         }
         create("prod") {
             dimension = "env"
-            resValue("string", "app_name", "μLearn")
+            resValue("string", "app_name", "Mulearn")
+        }
+    }
+
+    signingConfigs {
+        if (hasReleaseKeystore) {
+            create("release") {
+                keyAlias = keystoreProperties["keyAlias"] as String
+                keyPassword = keystoreProperties["keyPassword"] as String
+                storeFile = file(keystoreProperties["storeFile"] as String)
+                storePassword = keystoreProperties["storePassword"] as String
+            }
         }
     }
 
@@ -69,10 +81,8 @@ android {
 
     buildTypes {
         release {
-            // Sign with the release keystore when android/key.properties exists
-            // (CI provides it from GitHub Secrets); otherwise fall back to the
-            // debug keys so `flutter run --release` still works locally.
-            signingConfig = if (keystorePropertiesFile.exists()) {
+
+            signingConfig = if (hasReleaseKeystore) {
                 signingConfigs.getByName("release")
             } else {
                 signingConfigs.getByName("debug")

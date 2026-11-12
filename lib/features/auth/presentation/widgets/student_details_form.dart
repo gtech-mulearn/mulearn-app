@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mulearn_app/core/theme/mu_space.dart';
+import 'package:mulearn_app/core/widgets/mu_buttons.dart';
+import 'package:mulearn_app/core/widgets/mu_chip.dart';
 import 'package:mulearn_app/core/widgets/searchable_select_field.dart';
 import 'package:mulearn_app/features/auth/domain/entities/registration_role.dart';
 import 'package:mulearn_app/features/auth/presentation/providers/register_providers.dart';
@@ -82,24 +85,26 @@ class _StudentDetailsFormState extends ConsumerState<StudentDetailsForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          SegmentedButton<OrganizationType>(
-            segments: const [
-              ButtonSegment(
-                value: OrganizationType.college,
-                label: Text('College'),
+          Row(
+            children: [
+              MuFilterChip(
+                label: 'College',
+                selected: _organizationType == OrganizationType.college,
+                onTap: isLoading
+                    ? () {}
+                    : () => setState(() => _organizationType = OrganizationType.college),
               ),
-              ButtonSegment(
-                value: OrganizationType.company,
-                label: Text('Company'),
+              const SizedBox(width: MuSpace.s),
+              MuFilterChip(
+                label: 'Company',
+                selected: _organizationType == OrganizationType.company,
+                onTap: isLoading
+                    ? () {}
+                    : () => setState(() => _organizationType = OrganizationType.company),
               ),
             ],
-            selected: {_organizationType},
-            onSelectionChanged: isLoading
-                ? null
-                : (selection) =>
-                    setState(() => _organizationType = selection.first),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: MuSpace.l),
           if (isCollege) ...[
             colleges.when(
               data: (options) => SearchableSelectField(
@@ -127,7 +132,7 @@ class _StudentDetailsFormState extends ConsumerState<StudentDetailsForm> {
               ),
             ),
             if (_college == kSearchableSelectOthersValue) ...[
-              const SizedBox(height: 16),
+              const SizedBox(height: MuSpace.l),
               TextFormField(
                 controller: _customCollegeController,
                 enabled: !isLoading,
@@ -137,7 +142,7 @@ class _StudentDetailsFormState extends ConsumerState<StudentDetailsForm> {
                     : null,
               ),
             ],
-            const SizedBox(height: 16),
+            const SizedBox(height: MuSpace.l),
             departments.when(
               data: (options) => SearchableSelectField(
                 label: 'Department',
@@ -163,7 +168,7 @@ class _StudentDetailsFormState extends ConsumerState<StudentDetailsForm> {
                 onSelected: _noop,
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: MuSpace.l),
             TextFormField(
               controller: _graduationYearController,
               enabled: !isLoading,
@@ -205,7 +210,7 @@ class _StudentDetailsFormState extends ConsumerState<StudentDetailsForm> {
               ),
             ),
             if (_organization == kSearchableSelectOthersValue) ...[
-              const SizedBox(height: 16),
+              const SizedBox(height: MuSpace.l),
               TextFormField(
                 controller: _customOrganizationController,
                 enabled: !isLoading,
@@ -216,16 +221,10 @@ class _StudentDetailsFormState extends ConsumerState<StudentDetailsForm> {
               ),
             ],
           ],
-          const SizedBox(height: 28),
-          FilledButton(
+          const SizedBox(height: MuSpace.xl),
+          MuPrimaryButton(
+            label: isLoading ? 'Submitting…' : 'Complete Registration',
             onPressed: isLoading ? null : _submit,
-            child: isLoading
-                ? const SizedBox(
-                    height: 22,
-                    width: 22,
-                    child: CircularProgressIndicator(strokeWidth: 2.5),
-                  )
-                : const Text('Complete Registration'),
           ),
         ],
       ),

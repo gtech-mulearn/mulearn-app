@@ -1,13 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/auth/current_user_claims.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
+import 'package:mulearn_app/core/theme/mu_space.dart';
+import 'package:mulearn_app/core/theme/mulearn_colors.dart';
+import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
+import 'package:mulearn_app/core/widgets/mu_buttons.dart';
+import 'package:mulearn_app/core/widgets/mu_card.dart';
+import 'package:mulearn_app/core/widgets/mu_chip.dart';
+import 'package:mulearn_app/core/widgets/mu_icon_button.dart';
+import 'package:mulearn_app/core/widgets/mu_section_header.dart';
+import 'package:mulearn_app/core/widgets/mu_stat_block.dart';
+import 'package:mulearn_app/core/widgets/mu_task_tile.dart';
+import 'package:mulearn_app/core/widgets/mu_toast.dart';
+import 'package:mulearn_app/core/widgets/profile_avatar.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/circle_member.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/join_request.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/learning_circle_detail.dart';
+import 'package:mulearn_app/features/learning_circles/domain/entities/meeting.dart';
 import 'package:mulearn_app/features/learning_circles/presentation/providers/learning_circles_controller.dart';
 import 'package:mulearn_app/features/learning_circles/presentation/providers/meetings_controller.dart';
 
@@ -21,7 +35,15 @@ class LearningCircleDetailScreen extends ConsumerWidget {
     final detailState = ref.watch(circleDetailProvider(circleId));
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Learning Circle')),
+      backgroundColor: MuColors.canvas,
+      appBar: AppBar(
+        title: Text(
+          detailState.value?.title ?? 'Learning circle',
+          style: MuType.headline.copyWith(fontSize: 20),
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
       body: detailState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => ErrorRetryView(
@@ -59,78 +81,92 @@ class _CircleDetailBody extends ConsumerWidget {
           ..invalidate(circleMembersProvider(circleId));
       },
       child: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(MuSpace.screenH),
         children: [
-          Text(detail.title, style: Theme.of(context).textTheme.headlineSmall),
-          const SizedBox(height: 4),
           Text(
             [detail.ig, if (detail.org != null) detail.org].join(' · '),
-            style: Theme.of(context).textTheme.bodyMedium,
+            style: MuType.body.copyWith(color: MuColors.inkSecondary),
           ),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 16,
-            children: [
-              _Stat(label: 'Members', value: '${detail.totalMembers ?? 0}'),
-              _Stat(label: 'Karma', value: '${detail.totalKarma ?? 0}'),
-              if (detail.rank != null)
-                _Stat(label: 'Rank', value: '#${detail.rank}'),
-            ],
+          const SizedBox(height: MuSpace.l),
+          MuCard(
+            child: Row(
+              children: [
+                Expanded(
+                  child: MuStatBlock(label: 'Members', value: '${detail.totalMembers ?? 0}'),
+                ),
+                Expanded(
+                  child: MuStatBlock(label: 'Karma', value: '${detail.totalKarma ?? 0}'),
+                ),
+                if (detail.rank != null)
+                  Expanded(child: MuStatBlock(label: 'Rank', value: '#${detail.rank}')),
+              ],
+            ),
           ),
           if (detail.description.isNotEmpty) ...[
-            const SizedBox(height: 16),
-            Text(detail.description),
+            const SizedBox(height: MuSpace.l),
+            Text(detail.description, style: MuType.body),
           ],
-          const SizedBox(height: 16),
+          const SizedBox(height: MuSpace.l),
           if (!isMember)
-            FilledButton.icon(
-              onPressed: actionState.isLoading
-                  ? null
-                  : () => _requestToJoin(context, ref),
-              icon: const Icon(Icons.group_add),
-              label: Text(
-                  actionState.isLoading ? 'Sending…' : 'Request to join'),
+            MuPrimaryButton(
+              label: actionState.isLoading ? 'Sending…' : 'Request to join',
+              icon: LucideIcons.userPlus,
+              onPressed: actionState.isLoading ? null : () => _requestToJoin(context, ref),
             ),
           if (isLead) ...[
-            const SizedBox(height: 8),
+            const SizedBox(height: MuSpace.s),
             Row(
               children: [
                 Expanded(
-                  child: OutlinedButton.icon(
+                  child: MuGhostButton(
+                    label: 'Edit',
+                    icon: LucideIcons.pencil,
                     onPressed: () => _showEditDialog(context, ref, detail),
-                    icon: const Icon(Icons.edit_outlined),
-                    label: const Text('Edit'),
                   ),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: MuSpace.s),
                 Expanded(
-                  child: OutlinedButton.icon(
+                  child: MuGhostButton(
+                    label: 'Delete',
+                    icon: LucideIcons.trash2,
                     onPressed: () => _confirmDelete(context, ref),
-                    icon: Icon(Icons.delete_outline,
-                        color: Theme.of(context).colorScheme.error),
-                    label: Text('Delete',
-                        style:
-                            TextStyle(color: Theme.of(context).colorScheme.error)),
                   ),
                 ),
               ],
             ),
           ],
-          const Divider(height: 32),
-          Text('Members', style: Theme.of(context).textTheme.titleMedium),
-          const SizedBox(height: 8),
-          ...members.map((m) => _MemberTile(
-                member: m,
-                isLead: isLead,
-                circleId: circleId,
-              )),
+          const SizedBox(height: MuSpace.xxl),
+          Row(
+            children: [
+              Expanded(child: Text('MEMBERS', style: MuType.eyebrow)),
+              if (isLead)
+                GestureDetector(
+                  onTap: () => _showInviteDialog(context, ref, circleId),
+                  child: Text(
+                    '+ Invite',
+                    style: MuType.chip.copyWith(color: MuColors.primary),
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(height: MuSpace.m),
+          MuCard(
+            child: Column(
+              children: [
+                for (var i = 0; i < members.length; i++) ...[
+                  if (i > 0) const Divider(height: MuSpace.l),
+                  _MemberTile(member: members[i], isLead: isLead, circleId: circleId),
+                ],
+              ],
+            ),
+          ),
           if (isLead) ...[
-            const Divider(height: 32),
+            const SizedBox(height: MuSpace.xxl),
             _JoinRequestsSection(circleId: circleId),
-            const Divider(height: 32),
+            const SizedBox(height: MuSpace.xxl),
             _InvitesSection(circleId: circleId),
           ],
-          const Divider(height: 32),
+          const SizedBox(height: MuSpace.xxl),
           _MeetingsSection(circleId: circleId, isLead: isLead),
         ],
       ),
@@ -143,14 +179,12 @@ class _CircleDetailBody extends ConsumerWidget {
         .requestToJoin(circleId);
     if (!context.mounted) return;
     final state = ref.read(circleActionsControllerProvider);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          state.hasError
-              ? ApiException.messageFor(state.error!)
-              : 'Request to join sent.',
-        ),
-      ),
+    MuToast.show(
+      context,
+      message: state.hasError
+          ? ApiException.messageFor(state.error!)
+          : 'Request to join sent.',
+      type: state.hasError ? MuToastType.error : MuToastType.success,
     );
   }
 
@@ -228,23 +262,6 @@ class _CircleDetailBody extends ConsumerWidget {
   }
 }
 
-class _Stat extends StatelessWidget {
-  const _Stat({required this.label, required this.value});
-
-  final String label;
-  final String value;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(value, style: Theme.of(context).textTheme.titleMedium),
-        Text(label, style: Theme.of(context).textTheme.labelSmall),
-      ],
-    );
-  }
-}
-
 class _MemberTile extends ConsumerWidget {
   const _MemberTile({
     required this.member,
@@ -258,21 +275,53 @@ class _MemberTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ListTile(
-      contentPadding: EdgeInsets.zero,
-      leading: CircleAvatar(
-        child: Text(member.fullName.isNotEmpty ? member.fullName[0] : '?'),
-      ),
-      title: Text(member.fullName),
-      subtitle: Text(member.muid),
-      trailing: member.isLeader
-          ? const Chip(label: Text('Lead'), visualDensity: VisualDensity.compact)
-          : (isLead
-              ? TextButton(
-                  onPressed: () => _confirmTransfer(context, ref),
-                  child: const Text('Make lead'),
-                )
-              : null),
+    return Row(
+      children: [
+        Expanded(
+          child: InkWell(
+            onTap: () => context.push(RoutePaths.publicProfilePath(member.muid)),
+            borderRadius: BorderRadius.circular(8),
+            child: Row(
+              children: [
+                ProfileAvatar(
+                  url: member.profilePicUrl,
+                  name: member.fullName,
+                  size: 36,
+                ),
+                const SizedBox(width: MuSpace.m),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(member.fullName, style: MuType.bodyMed),
+                      Text(member.muid, style: MuType.caption),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            MuTagChip(
+              label: member.isLeader ? 'Lead' : 'Member',
+              style: member.isLeader ? MuTagStyle.success : MuTagStyle.neutral,
+            ),
+            if (!member.isLeader && isLead) ...[
+              const SizedBox(height: MuSpace.xs),
+              GestureDetector(
+                onTap: () => _confirmTransfer(context, ref),
+                child: Text(
+                  'Make lead',
+                  style: MuType.caption.copyWith(color: MuColors.primary),
+                ),
+              ),
+            ],
+          ],
+        ),
+      ],
     );
   }
 
@@ -312,19 +361,27 @@ class _JoinRequestsSection extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Pending join requests',
-            style: Theme.of(context).textTheme.titleMedium),
-        const SizedBox(height: 8),
+        const MuSectionHeader(title: 'Pending request'),
+        const SizedBox(height: MuSpace.m),
         requestsState.when(
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (error, _) => Text(ApiException.messageFor(error)),
           data: (requests) {
-            if (requests.isEmpty) return const Text('No pending requests.');
-            return Column(
-              children: requests.map((r) => _JoinRequestTile(
-                    request: r,
-                    circleId: circleId,
-                  )).toList(),
+            if (requests.isEmpty) {
+              return Text(
+                'All caught up — no pending requests.',
+                style: MuType.body.copyWith(color: MuColors.inkSecondary),
+              );
+            }
+            return MuCard(
+              child: Column(
+                children: [
+                  for (var i = 0; i < requests.length; i++) ...[
+                    if (i > 0) const Divider(height: MuSpace.l),
+                    _JoinRequestTile(request: requests[i], circleId: circleId),
+                  ],
+                ],
+              ),
             );
           },
         ),
@@ -341,29 +398,47 @@ class _JoinRequestTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ListTile(
-      contentPadding: EdgeInsets.zero,
-      title: Text(request.fullName),
-      subtitle: Text(request.muid),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          IconButton(
-            icon: const Icon(Icons.check, color: Colors.green),
-            onPressed: () => ref
-                .read(circleActionsControllerProvider.notifier)
-                .respondToJoinRequest(circleId,
-                    linkId: request.linkId, accept: true),
+    return Row(
+      children: [
+        Expanded(
+          child: InkWell(
+            onTap: () => context.push(RoutePaths.publicProfilePath(request.muid)),
+            borderRadius: BorderRadius.circular(8),
+            child: Row(
+              children: [
+                ProfileAvatar(
+                  url: request.profilePicUrl,
+                  name: request.fullName,
+                  size: 40,
+                ),
+                const SizedBox(width: MuSpace.m),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(request.fullName, style: MuType.bodyMed),
+                      Text(request.muid, style: MuType.caption),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
-          IconButton(
-            icon: const Icon(Icons.close, color: Colors.red),
-            onPressed: () => ref
-                .read(circleActionsControllerProvider.notifier)
-                .respondToJoinRequest(circleId,
-                    linkId: request.linkId, accept: false),
-          ),
-        ],
-      ),
+        ),
+        MuIconButton(
+          icon: LucideIcons.check,
+          onPressed: () => ref
+              .read(circleActionsControllerProvider.notifier)
+              .respondToJoinRequest(circleId, linkId: request.linkId, accept: true),
+        ),
+        const SizedBox(width: MuSpace.s),
+        MuIconButton(
+          icon: LucideIcons.x,
+          onPressed: () => ref
+              .read(circleActionsControllerProvider.notifier)
+              .respondToJoinRequest(circleId, linkId: request.linkId, accept: false),
+        ),
+      ],
     );
   }
 }
@@ -381,33 +456,60 @@ class _InvitesSection extends ConsumerWidget {
       children: [
         Row(
           children: [
-            Expanded(
-              child: Text('Invites', style: Theme.of(context).textTheme.titleMedium),
-            ),
-            TextButton.icon(
-              onPressed: () => _showInviteDialog(context, ref),
-              icon: const Icon(Icons.person_add_alt),
-              label: const Text('Invite'),
+            const Expanded(child: MuSectionHeader(title: 'Invites')),
+            MuIconButton(
+              icon: LucideIcons.userPlus,
+              onPressed: () => _showInviteDialog(context, ref, circleId),
             ),
           ],
         ),
+        const SizedBox(height: MuSpace.m),
         invitesState.when(
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (error, _) => Text(ApiException.messageFor(error)),
           data: (invites) {
-            if (invites.isEmpty) return const Text('No invites sent yet.');
-            return Column(
-              children: invites
-                  .map((i) => ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        title: Text(i.fullName),
-                        subtitle: Text(i.muid),
-                        trailing: Chip(
-                          label: Text(i.status),
-                          visualDensity: VisualDensity.compact,
+            if (invites.isEmpty) {
+              return Text('No invites sent yet.', style: MuType.body.copyWith(color: MuColors.inkSecondary));
+            }
+            return MuCard(
+              child: Column(
+                children: [
+                  for (var i = 0; i < invites.length; i++) ...[
+                    if (i > 0) const Divider(height: MuSpace.l),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: InkWell(
+                            onTap: () => context
+                                .push(RoutePaths.publicProfilePath(invites[i].muid)),
+                            borderRadius: BorderRadius.circular(8),
+                            child: Row(
+                              children: [
+                                ProfileAvatar(
+                                  url: invites[i].profilePicUrl,
+                                  name: invites[i].fullName,
+                                  size: 36,
+                                ),
+                                const SizedBox(width: MuSpace.m),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(invites[i].fullName, style: MuType.bodyMed),
+                                      Text(invites[i].muid, style: MuType.caption),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
-                      ))
-                  .toList(),
+                        MuTagChip(label: invites[i].status),
+                      ],
+                    ),
+                  ],
+                ],
+              ),
             );
           },
         ),
@@ -415,33 +517,40 @@ class _InvitesSection extends ConsumerWidget {
     );
   }
 
-  Future<void> _showInviteDialog(BuildContext context, WidgetRef ref) async {
-    final muidController = TextEditingController();
-    final send = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Invite a user'),
-        content: TextField(
-          controller: muidController,
-          decoration: const InputDecoration(labelText: 'MUID'),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Send'),
-          ),
-        ],
+}
+
+/// Shared by the Members section's "+ Invite" link and the Invites
+/// section's icon button — same underlying `sendInvite` call either way.
+Future<void> _showInviteDialog(
+  BuildContext context,
+  WidgetRef ref,
+  String circleId,
+) async {
+  final muidController = TextEditingController();
+  final send = await showDialog<bool>(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text('Invite a user'),
+      content: TextField(
+        controller: muidController,
+        decoration: const InputDecoration(labelText: 'MUID'),
       ),
-    );
-    if ((send ?? false) && muidController.text.trim().isNotEmpty) {
-      await ref
-          .read(circleActionsControllerProvider.notifier)
-          .sendInvite(circleId, muid: muidController.text.trim());
-    }
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(false),
+          child: const Text('Cancel'),
+        ),
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(true),
+          child: const Text('Send'),
+        ),
+      ],
+    ),
+  );
+  if ((send ?? false) && muidController.text.trim().isNotEmpty) {
+    await ref
+        .read(circleActionsControllerProvider.notifier)
+        .sendInvite(circleId, muid: muidController.text.trim());
   }
 }
 
@@ -459,40 +568,122 @@ class _MeetingsSection extends ConsumerWidget {
       children: [
         Row(
           children: [
-            Expanded(
-              child: Text('Meetings', style: Theme.of(context).textTheme.titleMedium),
-            ),
+            const Expanded(child: MuSectionHeader(title: 'Meetings')),
             if (isLead)
-              TextButton.icon(
-                onPressed: () => context
-                    .push(RoutePaths.createMeetingPath(circleId)),
-                icon: const Icon(Icons.add),
-                label: const Text('New'),
+              MuIconButton(
+                icon: LucideIcons.plus,
+                onPressed: () => context.push(RoutePaths.createMeetingPath(circleId)),
               ),
           ],
         ),
+        const SizedBox(height: MuSpace.m),
         meetingsState.when(
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (error, _) => Text(ApiException.messageFor(error)),
           data: (meetings) {
-            if (meetings.isEmpty) return const Text('No meetings scheduled.');
+            if (meetings.isEmpty) {
+              return Text('No meetings scheduled.', style: MuType.body.copyWith(color: MuColors.inkSecondary));
+            }
+            final upcoming = meetings.where((m) => !m.isEnded).toList()
+              ..sort((a, b) {
+                final aTime = DateTime.tryParse(a.meetTime);
+                final bTime = DateTime.tryParse(b.meetTime);
+                if (aTime == null || bTime == null) return 0;
+                return aTime.compareTo(bTime);
+              });
+            final next = upcoming.isNotEmpty ? upcoming.first : null;
             return Column(
-              children: meetings
-                  .map((m) => ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        leading: const Icon(Icons.video_call_outlined),
-                        title: Text(m.title),
-                        subtitle: Text(m.meetTime),
-                        onTap: () => context.push(
-                          RoutePaths.meetingDetailPath(m.id),
-                          extra: circleId,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (next != null) ...[
+                  Text('NEXT MEETING', style: MuType.eyebrow),
+                  const SizedBox(height: MuSpace.m),
+                  _NextMeetingCard(meeting: next, circleId: circleId),
+                  const SizedBox(height: MuSpace.xxl),
+                  Text('ALL MEETINGS', style: MuType.eyebrow),
+                  const SizedBox(height: MuSpace.m),
+                ],
+                for (final m in meetings)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: MuSpace.m),
+                    child: MuTaskTile(
+                      title: m.title,
+                      subtitle: m.meetTime,
+                      tags: [
+                        MuTagChip(
+                          label: m.isEnded ? 'Ended' : (m.isStarted ? 'Live now' : 'Upcoming'),
+                          style: m.isEnded
+                              ? MuTagStyle.neutral
+                              : (m.isStarted ? MuTagStyle.deadline : MuTagStyle.success),
                         ),
-                      ))
-                  .toList(),
+                        MuTagChip(label: m.mode),
+                      ],
+                      trailingLabel: '${m.attendeesCount} joined',
+                      onTap: () => context.push(
+                        RoutePaths.meetingDetailPath(m.id),
+                        extra: circleId,
+                      ),
+                    ),
+                  ),
+              ],
             );
           },
         ),
       ],
+    );
+  }
+}
+
+/// A highlighted card for the soonest upcoming meeting (DESIGN_SPEC.md §2
+/// "11 — Circle detail": "NEXT MEETING"), with an inline RSVP that reuses
+/// the exact same [MeetingActionsController.rsvp] call the meeting-detail
+/// screen uses. The full list below (unchanged) still lists every meeting,
+/// since that's real functionality the mock doesn't have an equivalent for.
+class _NextMeetingCard extends ConsumerWidget {
+  const _NextMeetingCard({required this.meeting, required this.circleId});
+
+  final Meeting meeting;
+  final String circleId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final actionsState = ref.watch(meetingActionsControllerProvider);
+    final isBusy = actionsState.isLoading;
+
+    return MuCard(
+      variant: MuCardVariant.tinted,
+      onTap: () => context.push(RoutePaths.meetingDetailPath(meeting.id), extra: circleId),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(meeting.title, style: MuType.bodyMed.copyWith(fontSize: 16)),
+          const SizedBox(height: 2),
+          Text('${meeting.meetTime} · ${meeting.mode}', style: MuType.caption),
+          const SizedBox(height: MuSpace.m),
+          Row(
+            children: [
+              Expanded(
+                child: Text('${meeting.attendeesCount} joined', style: MuType.caption),
+              ),
+              if (meeting.isRsvp)
+                const MuTagChip(label: "You're in", style: MuTagStyle.success)
+              else
+                MuPrimaryButton(
+                  label: isBusy ? '…' : "I'll be there",
+                  expand: false,
+                  onPressed: isBusy
+                      ? null
+                      : () async {
+                          await ref
+                              .read(meetingActionsControllerProvider.notifier)
+                              .rsvp(meeting.id);
+                          ref.invalidate(circleMeetingsProvider(circleId));
+                        },
+                ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

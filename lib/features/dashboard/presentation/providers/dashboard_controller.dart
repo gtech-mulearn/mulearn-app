@@ -1,3 +1,4 @@
+import 'package:mulearn_app/core/events/profile_event_bus.dart';
 import 'package:mulearn_app/core/network/dio_provider.dart';
 import 'package:mulearn_app/features/dashboard/data/datasources/dashboard_remote_datasource.dart';
 import 'package:mulearn_app/features/dashboard/data/repositories/dashboard_repository_impl.dart';
@@ -50,8 +51,20 @@ class FeaturedEventsController extends _$FeaturedEventsController {
 @riverpod
 class MyProgressSummaryController extends _$MyProgressSummaryController {
   @override
-  Future<MyProgressSummary> build() =>
-      ref.watch(dashboardRepositoryProvider).getMyProgressSummary();
+  Future<MyProgressSummary> build() {
+    // `features/profile` mutates the same `dashboard/profile/user-profile/`
+    // endpoint this reads from but can't invalidate this provider directly
+    // (rules.md §2: no direct cross-feature import) — listen for its signal
+    // via the shared bus instead, mirroring AppAuthController's use of
+    // SessionEventBus.
+    final bus = ref.watch(profileEventBusProvider);
+    final sub = bus.events.listen((event) {
+      if (event == ProfileEvent.updated) refresh();
+    });
+    ref.onDispose(sub.cancel);
+
+    return ref.watch(dashboardRepositoryProvider).getMyProgressSummary();
+  }
 
   Future<void> refresh() async {
     state = const AsyncLoading();

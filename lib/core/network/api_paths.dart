@@ -77,6 +77,15 @@ abstract final class ApiPaths {
   static const String userLevels =
       '/api/v1/dashboard/profile/get-user-levels/';
 
+  /// `GET` — the full browsable task catalog, under `response` as an object
+  /// keyed by category: `start_journey`, `become_expert`, `events` (each a
+  /// bare array of task objects). Confirmed live — publicly reachable even
+  /// signed out, though `completed` presumably reflects the caller's own
+  /// progress once a real session token is attached. Distinct from
+  /// [userLevels]: that endpoint nests tasks under the user's own level
+  /// progress; this one is the flat catalog the Tasks tab actually browses.
+  static const String taskList = '/api/v1/dashboard/task/list/';
+
   /// `GET` — the current user's social links.
   static const String socials = '/api/v1/dashboard/profile/socials/';
 

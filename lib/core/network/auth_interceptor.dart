@@ -58,7 +58,16 @@ class AuthInterceptor extends Interceptor {
     final alreadyRetried =
         err.requestOptions.extra[RequestFlags.retried] == true;
 
-    if (response?.statusCode != 401 || isRefreshCall || alreadyRetried) {
+    // Confirmed live against dev.mulearn.org: this backend returns 403, not
+    // 401, for an expired/invalid access token — refreshing only on 401
+    // silently never triggers, leaving every authenticated screen stuck on
+    // "Something went wrong"/403 until the user manually signs in again. A
+    // genuine (non-auth) 403 still surfaces correctly: the retried request
+    // fails again post-refresh and that second failure is what reaches the
+    // caller.
+    final isAuthError =
+        response?.statusCode == 401 || response?.statusCode == 403;
+    if (!isAuthError || isRefreshCall || alreadyRetried) {
       return handler.next(err);
     }
 

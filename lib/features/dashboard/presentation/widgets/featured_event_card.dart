@@ -1,9 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
+import 'package:mulearn_app/core/theme/mu_radius.dart';
+import 'package:mulearn_app/core/theme/mu_shadow.dart';
+import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
-import 'package:mulearn_app/core/theme/mulearn_gradients.dart';
+import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 import 'package:mulearn_app/features/dashboard/domain/entities/featured_event.dart';
 
 /// A single featured-event card for the home dashboard's horizontal list —
@@ -31,68 +35,91 @@ class FeaturedEventCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return SizedBox(
-      width: 240,
-      child: Card(
+      width: 252,
+      child: Material(
+        color: MuColors.surface,
+        borderRadius: BorderRadius.circular(MuRadius.inner),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           onTap: () => context.push(RoutePaths.eventDetailPath(event.id)),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(
-                height: 100,
-                width: double.infinity,
-                child: event.coverImage != null
-                    ? CachedNetworkImage(
-                        imageUrl: event.coverImage!,
-                        fit: BoxFit.cover,
-                        errorWidget: (_, __, ___) => const DecoratedBox(
-                          decoration: BoxDecoration(
-                              gradient: MulearnGradients.trusty),
-                        ),
-                      )
-                    : const DecoratedBox(
-                        decoration:
-                            BoxDecoration(gradient: MulearnGradients.trusty),
-                      ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+          child: Ink(
+            decoration: const BoxDecoration(boxShadow: MuShadow.card),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Stack(
                   children: [
-                    Text(
-                      event.title,
-                      style: theme.textTheme.titleSmall,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
+                    SizedBox(
+                      height: 108,
+                      width: double.infinity,
+                      child: event.coverImage != null
+                          ? CachedNetworkImage(
+                              imageUrl: event.coverImage!,
+                              fit: BoxFit.cover,
+                              errorWidget: (_, __, ___) => const DecoratedBox(
+                                decoration: BoxDecoration(gradient: MuColors.heroGradient),
+                              ),
+                            )
+                          : const DecoratedBox(
+                              decoration: BoxDecoration(gradient: MuColors.heroGradient),
+                            ),
                     ),
-                    const SizedBox(height: 6),
-                    Row(
-                      children: [
-                        const Icon(Icons.calendar_today,
-                            size: 12, color: MulearnColors.gray600),
-                        const SizedBox(width: 4),
-                        Text(_dateLabel, style: theme.textTheme.bodySmall),
-                        const SizedBox(width: 10),
-                        const Icon(Icons.place,
-                            size: 12, color: MulearnColors.gray600),
-                        const SizedBox(width: 4),
-                        Expanded(
-                          child: Text(
-                            _venueLabel,
-                            style: theme.textTheme.bodySmall,
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                    Positioned(
+                      left: MuSpace.s,
+                      bottom: MuSpace.s,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: MuSpace.s, vertical: 3),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.92),
+                          borderRadius: BorderRadius.circular(MuRadius.chip),
                         ),
-                      ],
+                        child: Text(
+                          _dateLabel,
+                          style: MuType.chip.copyWith(color: MuColors.ink, fontSize: 11),
+                        ),
+                      ),
                     ),
                   ],
                 ),
-              ),
-            ],
+                Padding(
+                  padding: const EdgeInsets.all(MuSpace.m),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        event.title,
+                        style: MuType.bodyMed,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: MuSpace.xs),
+                      Row(
+                        children: [
+                          const Icon(LucideIcons.mapPin, size: 12, color: MuColors.inkTertiary),
+                          const SizedBox(width: 4),
+                          Expanded(
+                            child: Text(
+                              _venueLabel,
+                              style: MuType.caption,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          if (event.interestCount > 0) ...[
+                            const Icon(LucideIcons.users, size: 12, color: MuColors.primary),
+                            const SizedBox(width: 4),
+                            Text(
+                              '${event.interestCount}',
+                              style: MuType.caption.copyWith(color: MuColors.primary),
+                            ),
+                          ],
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

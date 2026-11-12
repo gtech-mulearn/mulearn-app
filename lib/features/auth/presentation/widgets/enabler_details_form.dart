@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mulearn_app/core/theme/mu_space.dart';
+import 'package:mulearn_app/core/widgets/mu_buttons.dart';
 import 'package:mulearn_app/core/widgets/searchable_select_field.dart';
 import 'package:mulearn_app/features/auth/domain/entities/registration_role.dart';
 import 'package:mulearn_app/features/auth/presentation/providers/register_providers.dart';
@@ -83,7 +85,7 @@ class _EnablerDetailsFormState extends ConsumerState<EnablerDetailsForm> {
             ),
           ),
           if (_college == kSearchableSelectOthersValue) ...[
-            const SizedBox(height: 16),
+            const SizedBox(height: MuSpace.l),
             TextFormField(
               controller: _customCollegeController,
               enabled: !isLoading,
@@ -93,16 +95,10 @@ class _EnablerDetailsFormState extends ConsumerState<EnablerDetailsForm> {
                   : null,
             ),
           ],
-          const SizedBox(height: 28),
-          FilledButton(
+          const SizedBox(height: MuSpace.xl),
+          MuPrimaryButton(
+            label: isLoading ? 'Submitting…' : 'Complete Registration',
             onPressed: isLoading ? null : _submit,
-            child: isLoading
-                ? const SizedBox(
-                    height: 22,
-                    width: 22,
-                    child: CircularProgressIndicator(strokeWidth: 2.5),
-                  )
-                : const Text('Complete Registration'),
           ),
         ],
       ),

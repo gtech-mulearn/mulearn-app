@@ -111,7 +111,7 @@ class SearchableSelectField extends StatelessWidget {
                   ? Theme.of(context)
                       .textTheme
                       .bodyMedium
-                      ?.copyWith(color: MulearnColors.gray600)
+                      ?.copyWith(color: MuColors.inkSecondary)
                   : Theme.of(context).textTheme.bodyMedium,
               overflow: TextOverflow.ellipsis,
             ),
@@ -215,7 +215,7 @@ class _SearchableSelectSheetState extends State<_SearchableSelectSheet> {
                           style: Theme.of(context)
                               .textTheme
                               .bodyMedium
-                              ?.copyWith(color: MulearnColors.gray600),
+                              ?.copyWith(color: MuColors.inkSecondary),
                         ),
                       ),
                     if (widget.allowOthers) ...[

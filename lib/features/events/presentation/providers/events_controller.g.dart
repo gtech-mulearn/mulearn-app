@@ -209,7 +209,7 @@ final class EventsListControllerProvider
 }
 
 String _$eventsListControllerHash() =>
-    r'4dee95b6d1fb9baa575af4018f73031a0f891b27';
+    r'1bd32127663fb0b94bbaf52ef921c7991acce0a9';
 
 /// Accumulates event pages across "load more" — mirrors [SearchController]'s
 /// infinite-scroll pattern.

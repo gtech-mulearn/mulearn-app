@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
+import 'package:mulearn_app/core/theme/mulearn_colors.dart';
+import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/meeting_form.dart';
 import 'package:mulearn_app/features/learning_circles/presentation/providers/meetings_controller.dart';
 import 'package:mulearn_app/features/learning_circles/presentation/widgets/meeting_form_fields.dart';
@@ -27,7 +29,10 @@ class CreateMeetingScreen extends ConsumerWidget {
     final actionState = ref.watch(meetingActionsControllerProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('New Meeting')),
+      backgroundColor: MuColors.canvas,
+      appBar: AppBar(
+        title: Text('New meeting', style: MuType.headline.copyWith(fontSize: 20)),
+      ),
       body: MeetingFormFields(
         isSubmitting: actionState.isLoading,
         submitLabel: 'Create meeting',

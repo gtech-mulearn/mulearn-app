@@ -9,10 +9,10 @@ part of 'college_leaderboard_entry_dto.dart';
 _CollegeLeaderboardEntryDto _$CollegeLeaderboardEntryDtoFromJson(
   Map<String, dynamic> json,
 ) => _CollegeLeaderboardEntryDto(
-  code: json['code'] as String,
-  title: json['title'] as String,
-  totalStudents: (json['total_students'] as num).toInt(),
-  totalKarma: json['total_karma'] as num,
+  code: json['code'] as String?,
+  title: json['title'] as String?,
+  totalStudents: (json['total_students'] as num?)?.toInt(),
+  totalKarma: json['total_karma'] as num?,
 );
 
 Map<String, dynamic> _$CollegeLeaderboardEntryDtoToJson(
