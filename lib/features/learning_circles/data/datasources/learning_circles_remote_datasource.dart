@@ -108,17 +108,6 @@ class LearningCirclesRemoteDataSource {
     return ApiEnvelope.unwrapObject(response);
   }
 
-  Future<void> approveMember(
-    String id, {
-    required String muid,
-    required bool accept,
-  }) async {
-    final response = await _dio.post<dynamic>(
-      ApiPaths.circleMembersAdd(id),
-      data: {'muid': muid, 'flag': accept},
-    );
-    ApiEnvelope.unwrapObject(response);
-  }
 
   Future<void> transferLead(String id, {required String muid}) async {
     final response = await _dio.post<dynamic>(

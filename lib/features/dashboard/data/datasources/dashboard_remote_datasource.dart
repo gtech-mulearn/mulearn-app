@@ -9,11 +9,6 @@ class DashboardRemoteDataSource {
 
   final Dio _dio;
 
-  /// `GET /api/v1/dashboard/profile/karma-feed/`.
-  Future<Map<String, dynamic>> fetchKarmaFeed() async {
-    final response = await _dio.get<dynamic>(ApiPaths.karmaFeed);
-    return ApiEnvelope.unwrapObject(response);
-  }
 
   /// `GET /api/v1/dashboard/events/featured/` — items live under
   /// `response.data`, a `pagination` sibling key sits alongside it.

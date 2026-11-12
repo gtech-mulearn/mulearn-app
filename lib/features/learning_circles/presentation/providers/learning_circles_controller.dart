@@ -171,21 +171,6 @@ class CircleActionsController extends _$CircleActionsController {
     );
   }
 
-  Future<void> approveMember(
-    String circleId, {
-    required String muid,
-    required bool accept,
-  }) async {
-    state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
-      await ref
-          .read(learningCirclesRepositoryProvider)
-          .approveMember(circleId, muid: muid, accept: accept);
-      ref
-        ..invalidate(circleMembersProvider(circleId))
-        ..invalidate(circleJoinRequestsProvider(circleId));
-    });
-  }
 
   Future<void> transferLead(String circleId, {required String muid}) async {
     state = const AsyncLoading();

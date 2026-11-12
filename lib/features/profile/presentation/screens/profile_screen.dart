@@ -10,6 +10,7 @@ import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/core/widgets/mu_qr_card.dart';
 import 'package:mulearn_app/core/widgets/mu_toast.dart';
 import 'package:mulearn_app/features/profile/domain/entities/user_profile.dart';
+import 'package:mulearn_app/features/profile/presentation/providers/editable_profile_controller.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/profile_controller.dart';
 import 'package:mulearn_app/features/profile/presentation/widgets/achievements_tab.dart';
 import 'package:mulearn_app/features/profile/presentation/widgets/badges_tab.dart';
@@ -141,10 +142,15 @@ class _ProfileBodyState extends State<_ProfileBody>
           BasicDetailsTab(profile: profile),
           const KarmaHistoryTab(),
           const MuVoyageTab(),
-          AchievementsTab(
-            muid: profile.muid,
-            userName: profile.fullName,
-            userEmail: profile.email,
+          Consumer(
+            builder: (context, ref, _) {
+              final email = ref.watch(editableProfileControllerProvider).value?.email;
+              return AchievementsTab(
+                muid: profile.muid,
+                userName: profile.fullName,
+                userEmail: (email?.isEmpty ?? true) ? null : email,
+              );
+            },
           ),
           BadgesTab(muid: profile.muid),
         ],

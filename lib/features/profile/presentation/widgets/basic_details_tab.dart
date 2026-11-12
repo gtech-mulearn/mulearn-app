@@ -18,6 +18,7 @@ import 'package:mulearn_app/features/profile/domain/entities/karma_distribution_
 import 'package:mulearn_app/features/profile/domain/entities/socials.dart';
 import 'package:mulearn_app/features/profile/domain/entities/user_log_entry.dart';
 import 'package:mulearn_app/features/profile/domain/entities/user_profile.dart';
+import 'package:mulearn_app/features/profile/presentation/providers/editable_profile_controller.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/public_profile_controller.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/socials_controller.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/user_log_controller.dart';
@@ -40,6 +41,11 @@ class BasicDetailsTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Only GET /dashboard/profile/ returns the department, and only for the
+    // signed-in user; a public profile shows the college alone.
+    final department = publicMuid == null
+        ? ref.watch(editableProfileControllerProvider).value?.department?.title
+        : null;
     final isOwnProfile = publicMuid == null;
     final socialsState = isOwnProfile
         ? ref.watch(socialsControllerProvider)
@@ -163,8 +169,7 @@ class BasicDetailsTab extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(profile.collegeCode ?? '—', style: MuType.bodyMed),
-              if (profile.departmentName != null)
-                Text(profile.departmentName!, style: MuType.caption),
+              if (department != null) Text(department, style: MuType.caption),
             ],
           ),
         ),

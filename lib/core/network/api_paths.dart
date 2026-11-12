@@ -234,11 +234,6 @@ abstract final class ApiPaths {
 
   // --- Dashboard (home screen) — confirmed live (rules.md §3/§9) ---
 
-  /// `GET` — the current top user + top college highlight, under
-  /// `response.top_user` / `response.top_college`. Despite the name, this is
-  /// a small highlight widget, not a paginated activity feed (that's
-  /// [userLog]).
-  static const String karmaFeed = '/api/v1/dashboard/profile/karma-feed/';
 
   /// `GET` — featured events, under `response.data` with a `pagination`
   /// sibling key. Confirmed live: 5 items, `isNext: false` for this account,

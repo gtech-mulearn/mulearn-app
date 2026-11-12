@@ -1,0 +1,29 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/profile/",
+    "account": "student",
+    "status": 200,
+    "recorded_at": "2026-11-12T16:15:37.235606Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "full_name": "Fixture User",
+      "email": "user@example.com",
+      "mobile": null,
+      "gender": null,
+      "dob": null,
+      "communities": [],
+      "district": null,
+      "department": {
+        "id": "c6c50473-bf3c-11f1-9f2a-062e965e7537",
+        "title": "Computer Science"
+      }
+    }
+  }
+}

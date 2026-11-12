@@ -99,13 +99,6 @@ class LearningCirclesRepositoryImpl implements LearningCirclesRepository {
         return CircleMembersDto.fromJson(json).toDomain();
       });
 
-  @override
-  Future<void> approveMember(
-    String id, {
-    required String muid,
-    required bool accept,
-  }) =>
-      _guard(() => _remote.approveMember(id, muid: muid, accept: accept));
 
   @override
   Future<void> transferLead(String id, {required String muid}) =>

@@ -126,7 +126,6 @@ class _PublicProfileBodyState extends State<_PublicProfileBody>
           AchievementsTab(
             muid: profile.muid,
             userName: profile.fullName,
-            userEmail: profile.email,
             isOwnProfile: false,
           ),
           BadgesTab(muid: profile.muid),

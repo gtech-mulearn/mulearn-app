@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$EditableProfileDto {
 
- String? get fullName; String? get email; String? get mobile; String? get gender; String? get dob; DistrictLocationDto? get district; List<String> get communities;
+ String? get fullName; String? get email; String? get mobile; String? get gender; String? get dob; DistrictLocationDto? get district; List<String> get communities; ReferenceOptionDto? get department;
 /// Create a copy of EditableProfileDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $EditableProfileDtoCopyWith<EditableProfileDto> get copyWith => _$EditableProfil
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EditableProfileDto&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.email, email) || other.email == email)&&(identical(other.mobile, mobile) || other.mobile == mobile)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.dob, dob) || other.dob == dob)&&(identical(other.district, district) || other.district == district)&&const DeepCollectionEquality().equals(other.communities, communities));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EditableProfileDto&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.email, email) || other.email == email)&&(identical(other.mobile, mobile) || other.mobile == mobile)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.dob, dob) || other.dob == dob)&&(identical(other.district, district) || other.district == district)&&const DeepCollectionEquality().equals(other.communities, communities)&&(identical(other.department, department) || other.department == department));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,fullName,email,mobile,gender,dob,district,const DeepCollectionEquality().hash(communities));
+int get hashCode => Object.hash(runtimeType,fullName,email,mobile,gender,dob,district,const DeepCollectionEquality().hash(communities),department);
 
 @override
 String toString() {
-  return 'EditableProfileDto(fullName: $fullName, email: $email, mobile: $mobile, gender: $gender, dob: $dob, district: $district, communities: $communities)';
+  return 'EditableProfileDto(fullName: $fullName, email: $email, mobile: $mobile, gender: $gender, dob: $dob, district: $district, communities: $communities, department: $department)';
 }
 
 
@@ -48,11 +48,11 @@ abstract mixin class $EditableProfileDtoCopyWith<$Res>  {
   factory $EditableProfileDtoCopyWith(EditableProfileDto value, $Res Function(EditableProfileDto) _then) = _$EditableProfileDtoCopyWithImpl;
 @useResult
 $Res call({
- String? fullName, String? email, String? mobile, String? gender, String? dob, DistrictLocationDto? district, List<String> communities
+ String? fullName, String? email, String? mobile, String? gender, String? dob, DistrictLocationDto? district, List<String> communities, ReferenceOptionDto? department
 });
 
 
-$DistrictLocationDtoCopyWith<$Res>? get district;
+$DistrictLocationDtoCopyWith<$Res>? get district;$ReferenceOptionDtoCopyWith<$Res>? get department;
 
 }
 /// @nodoc
@@ -65,7 +65,7 @@ class _$EditableProfileDtoCopyWithImpl<$Res>
 
 /// Create a copy of EditableProfileDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? fullName = freezed,Object? email = freezed,Object? mobile = freezed,Object? gender = freezed,Object? dob = freezed,Object? district = freezed,Object? communities = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? fullName = freezed,Object? email = freezed,Object? mobile = freezed,Object? gender = freezed,Object? dob = freezed,Object? district = freezed,Object? communities = null,Object? department = freezed,}) {
   return _then(_self.copyWith(
 fullName: freezed == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
 as String?,email: freezed == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
@@ -74,7 +74,8 @@ as String?,gender: freezed == gender ? _self.gender : gender // ignore: cast_nul
 as String?,dob: freezed == dob ? _self.dob : dob // ignore: cast_nullable_to_non_nullable
 as String?,district: freezed == district ? _self.district : district // ignore: cast_nullable_to_non_nullable
 as DistrictLocationDto?,communities: null == communities ? _self.communities : communities // ignore: cast_nullable_to_non_nullable
-as List<String>,
+as List<String>,department: freezed == department ? _self.department : department // ignore: cast_nullable_to_non_nullable
+as ReferenceOptionDto?,
   ));
 }
 /// Create a copy of EditableProfileDto
@@ -88,6 +89,18 @@ $DistrictLocationDtoCopyWith<$Res>? get district {
 
   return $DistrictLocationDtoCopyWith<$Res>(_self.district!, (value) {
     return _then(_self.copyWith(district: value));
+  });
+}/// Create a copy of EditableProfileDto
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ReferenceOptionDtoCopyWith<$Res>? get department {
+    if (_self.department == null) {
+    return null;
+  }
+
+  return $ReferenceOptionDtoCopyWith<$Res>(_self.department!, (value) {
+    return _then(_self.copyWith(department: value));
   });
 }
 }
@@ -171,10 +184,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? fullName,  String? email,  String? mobile,  String? gender,  String? dob,  DistrictLocationDto? district,  List<String> communities)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? fullName,  String? email,  String? mobile,  String? gender,  String? dob,  DistrictLocationDto? district,  List<String> communities,  ReferenceOptionDto? department)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EditableProfileDto() when $default != null:
-return $default(_that.fullName,_that.email,_that.mobile,_that.gender,_that.dob,_that.district,_that.communities);case _:
+return $default(_that.fullName,_that.email,_that.mobile,_that.gender,_that.dob,_that.district,_that.communities,_that.department);case _:
   return orElse();
 
 }
@@ -192,10 +205,10 @@ return $default(_that.fullName,_that.email,_that.mobile,_that.gender,_that.dob,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? fullName,  String? email,  String? mobile,  String? gender,  String? dob,  DistrictLocationDto? district,  List<String> communities)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? fullName,  String? email,  String? mobile,  String? gender,  String? dob,  DistrictLocationDto? district,  List<String> communities,  ReferenceOptionDto? department)  $default,) {final _that = this;
 switch (_that) {
 case _EditableProfileDto():
-return $default(_that.fullName,_that.email,_that.mobile,_that.gender,_that.dob,_that.district,_that.communities);case _:
+return $default(_that.fullName,_that.email,_that.mobile,_that.gender,_that.dob,_that.district,_that.communities,_that.department);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -212,10 +225,10 @@ return $default(_that.fullName,_that.email,_that.mobile,_that.gender,_that.dob,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? fullName,  String? email,  String? mobile,  String? gender,  String? dob,  DistrictLocationDto? district,  List<String> communities)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? fullName,  String? email,  String? mobile,  String? gender,  String? dob,  DistrictLocationDto? district,  List<String> communities,  ReferenceOptionDto? department)?  $default,) {final _that = this;
 switch (_that) {
 case _EditableProfileDto() when $default != null:
-return $default(_that.fullName,_that.email,_that.mobile,_that.gender,_that.dob,_that.district,_that.communities);case _:
+return $default(_that.fullName,_that.email,_that.mobile,_that.gender,_that.dob,_that.district,_that.communities,_that.department);case _:
   return null;
 
 }
@@ -227,7 +240,7 @@ return $default(_that.fullName,_that.email,_that.mobile,_that.gender,_that.dob,_
 @JsonSerializable()
 
 class _EditableProfileDto extends EditableProfileDto {
-  const _EditableProfileDto({this.fullName, this.email, this.mobile, this.gender, this.dob, this.district, final  List<String> communities = const []}): _communities = communities,super._();
+  const _EditableProfileDto({this.fullName, this.email, this.mobile, this.gender, this.dob, this.district, final  List<String> communities = const [], this.department}): _communities = communities,super._();
   factory _EditableProfileDto.fromJson(Map<String, dynamic> json) => _$EditableProfileDtoFromJson(json);
 
 @override final  String? fullName;
@@ -243,6 +256,7 @@ class _EditableProfileDto extends EditableProfileDto {
   return EqualUnmodifiableListView(_communities);
 }
 
+@override final  ReferenceOptionDto? department;
 
 /// Create a copy of EditableProfileDto
 /// with the given fields replaced by the non-null parameter values.
@@ -257,16 +271,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EditableProfileDto&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.email, email) || other.email == email)&&(identical(other.mobile, mobile) || other.mobile == mobile)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.dob, dob) || other.dob == dob)&&(identical(other.district, district) || other.district == district)&&const DeepCollectionEquality().equals(other._communities, _communities));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EditableProfileDto&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.email, email) || other.email == email)&&(identical(other.mobile, mobile) || other.mobile == mobile)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.dob, dob) || other.dob == dob)&&(identical(other.district, district) || other.district == district)&&const DeepCollectionEquality().equals(other._communities, _communities)&&(identical(other.department, department) || other.department == department));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,fullName,email,mobile,gender,dob,district,const DeepCollectionEquality().hash(_communities));
+int get hashCode => Object.hash(runtimeType,fullName,email,mobile,gender,dob,district,const DeepCollectionEquality().hash(_communities),department);
 
 @override
 String toString() {
-  return 'EditableProfileDto(fullName: $fullName, email: $email, mobile: $mobile, gender: $gender, dob: $dob, district: $district, communities: $communities)';
+  return 'EditableProfileDto(fullName: $fullName, email: $email, mobile: $mobile, gender: $gender, dob: $dob, district: $district, communities: $communities, department: $department)';
 }
 
 
@@ -277,11 +291,11 @@ abstract mixin class _$EditableProfileDtoCopyWith<$Res> implements $EditableProf
   factory _$EditableProfileDtoCopyWith(_EditableProfileDto value, $Res Function(_EditableProfileDto) _then) = __$EditableProfileDtoCopyWithImpl;
 @override @useResult
 $Res call({
- String? fullName, String? email, String? mobile, String? gender, String? dob, DistrictLocationDto? district, List<String> communities
+ String? fullName, String? email, String? mobile, String? gender, String? dob, DistrictLocationDto? district, List<String> communities, ReferenceOptionDto? department
 });
 
 
-@override $DistrictLocationDtoCopyWith<$Res>? get district;
+@override $DistrictLocationDtoCopyWith<$Res>? get district;@override $ReferenceOptionDtoCopyWith<$Res>? get department;
 
 }
 /// @nodoc
@@ -294,7 +308,7 @@ class __$EditableProfileDtoCopyWithImpl<$Res>
 
 /// Create a copy of EditableProfileDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? fullName = freezed,Object? email = freezed,Object? mobile = freezed,Object? gender = freezed,Object? dob = freezed,Object? district = freezed,Object? communities = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? fullName = freezed,Object? email = freezed,Object? mobile = freezed,Object? gender = freezed,Object? dob = freezed,Object? district = freezed,Object? communities = null,Object? department = freezed,}) {
   return _then(_EditableProfileDto(
 fullName: freezed == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
 as String?,email: freezed == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
@@ -303,7 +317,8 @@ as String?,gender: freezed == gender ? _self.gender : gender // ignore: cast_nul
 as String?,dob: freezed == dob ? _self.dob : dob // ignore: cast_nullable_to_non_nullable
 as String?,district: freezed == district ? _self.district : district // ignore: cast_nullable_to_non_nullable
 as DistrictLocationDto?,communities: null == communities ? _self._communities : communities // ignore: cast_nullable_to_non_nullable
-as List<String>,
+as List<String>,department: freezed == department ? _self.department : department // ignore: cast_nullable_to_non_nullable
+as ReferenceOptionDto?,
   ));
 }
 
@@ -318,6 +333,18 @@ $DistrictLocationDtoCopyWith<$Res>? get district {
 
   return $DistrictLocationDtoCopyWith<$Res>(_self.district!, (value) {
     return _then(_self.copyWith(district: value));
+  });
+}/// Create a copy of EditableProfileDto
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ReferenceOptionDtoCopyWith<$Res>? get department {
+    if (_self.department == null) {
+    return null;
+  }
+
+  return $ReferenceOptionDtoCopyWith<$Res>(_self.department!, (value) {
+    return _then(_self.copyWith(department: value));
   });
 }
 }

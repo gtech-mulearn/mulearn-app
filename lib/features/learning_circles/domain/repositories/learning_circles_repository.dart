@@ -33,7 +33,6 @@ abstract interface class LearningCirclesRepository {
 
   // --- Members & leadership ---
   Future<CircleMembers> getCircleMembers(String id);
-  Future<void> approveMember(String id, {required String muid, required bool accept});
   Future<void> transferLead(String id, {required String muid});
 
   // --- Joining ---

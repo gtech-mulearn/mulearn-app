@@ -1,8 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:mulearn_app/features/dashboard/domain/entities/karma_feed.dart';
-import 'package:mulearn_app/features/dashboard/domain/entities/karma_feed_top_user.dart';
 import 'package:mulearn_app/features/dashboard/domain/entities/my_progress_summary.dart';
 import 'package:mulearn_app/features/dashboard/domain/repositories/dashboard_repository.dart';
 import 'package:mulearn_app/features/dashboard/presentation/providers/dashboard_controller.dart';
@@ -22,29 +20,7 @@ void main() {
     return container;
   }
 
-  test('KarmaFeedController loads the karma feed on build', () async {
-    const feed = KarmaFeed(
-      topUser: KarmaFeedTopUser(fullName: 'Ada', muid: 'ada@mulearn', karma: 100),
-    );
-    when(() => repository.getKarmaFeed()).thenAnswer((_) async => feed);
 
-    final container = makeContainer();
-    final result = await container.read(karmaFeedControllerProvider.future);
-
-    expect(result.topUser?.fullName, 'Ada');
-    verify(() => repository.getKarmaFeed()).called(1);
-  });
-
-  test('KarmaFeedController.refresh() re-fetches', () async {
-    const feed = KarmaFeed();
-    when(() => repository.getKarmaFeed()).thenAnswer((_) async => feed);
-
-    final container = makeContainer();
-    await container.read(karmaFeedControllerProvider.future);
-    await container.read(karmaFeedControllerProvider.notifier).refresh();
-
-    verify(() => repository.getKarmaFeed()).called(2);
-  });
 
   test('FeaturedEventsController surfaces repository errors as AsyncError',
       () async {

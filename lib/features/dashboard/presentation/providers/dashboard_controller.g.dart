@@ -113,52 +113,6 @@ final class DashboardRepositoryProvider
 String _$dashboardRepositoryHash() =>
     r'7b8de6e77090b445fd69facc27796ecb670a7ec1';
 
-@ProviderFor(KarmaFeedController)
-const karmaFeedControllerProvider = KarmaFeedControllerProvider._();
-
-final class KarmaFeedControllerProvider
-    extends $AsyncNotifierProvider<KarmaFeedController, KarmaFeed> {
-  const KarmaFeedControllerProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'karmaFeedControllerProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$karmaFeedControllerHash();
-
-  @$internal
-  @override
-  KarmaFeedController create() => KarmaFeedController();
-}
-
-String _$karmaFeedControllerHash() =>
-    r'd7062589ea7ef0af238b36b131869262a58845d0';
-
-abstract class _$KarmaFeedController extends $AsyncNotifier<KarmaFeed> {
-  FutureOr<KarmaFeed> build();
-  @$mustCallSuper
-  @override
-  void runBuild() {
-    final created = build();
-    final ref = this.ref as $Ref<AsyncValue<KarmaFeed>, KarmaFeed>;
-    final element =
-        ref.element
-            as $ClassProviderElement<
-              AnyNotifier<AsyncValue<KarmaFeed>, KarmaFeed>,
-              AsyncValue<KarmaFeed>,
-              Object?,
-              Object?
-            >;
-    element.handleValue(ref, created);
-  }
-}
-
 @ProviderFor(FeaturedEventsController)
 const featuredEventsControllerProvider = FeaturedEventsControllerProvider._();
 
