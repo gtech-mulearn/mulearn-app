@@ -1,4 +1,5 @@
 import 'package:mulearn_app/core/auth/app_auth_controller.dart';
+import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/network/dio_provider.dart';
 import 'package:mulearn_app/core/storage/secure_storage_provider.dart';
 import 'package:mulearn_app/core/utils/app_logger.dart';
@@ -6,6 +7,7 @@ import 'package:mulearn_app/features/auth/data/datasources/apple_native_signin_d
 import 'package:mulearn_app/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:mulearn_app/features/auth/data/datasources/google_native_signin_datasource.dart';
 import 'package:mulearn_app/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:mulearn_app/features/auth/domain/entities/social_sign_in_outcome.dart';
 import 'package:mulearn_app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -96,23 +98,38 @@ class AuthController extends _$AuthController {
       );
 
   /// Triggers the native Google account picker, then exchanges the resulting
-  /// ID token for an app session.
-  Future<void> signInWithGoogle() => _guard(() async {
-        final idToken = await ref.read(googleNativeSignInDataSourceProvider).signIn();
-        await ref.read(authRepositoryProvider).signInWithGoogle(idToken: idToken);
+  /// ID token. Signs in for a known account; for an unknown email returns
+  /// [SocialNeedsRegistration] so the screen can start Google sign-up.
+  Future<SocialSignInOutcome> signInWithGoogle() async {
+    late SocialSignInOutcome outcome;
+    await _guard(() async {
+      final idToken = await ref.read(googleNativeSignInDataSourceProvider).signIn();
+      outcome = await ref.read(authRepositoryProvider).signInWithGoogle(idToken: idToken);
+      if (outcome is SocialSignedIn) {
+        ref.read(appAuthControllerProvider.notifier).setSignedIn();
+      }
+    });
+    return outcome;
+  }
+
+  /// Triggers the native Sign in with Apple flow, then exchanges the
+  /// resulting identity token for an app session. Throws
+  /// [AppleAccountNotFound] when no account uses the Apple ID's email.
+  Future<void> signInWithApple() => _guard(() async {
+        final credential = await ref.read(appleNativeSignInDataSourceProvider).signIn();
+        try {
+          await ref.read(authRepositoryProvider).signInWithApple(
+                identityToken: credential.identityToken,
+              );
+        } on ApiException catch (e) {
+          if (e.message == _appleNoAccountMessage) throw const AppleAccountNotFound();
+          rethrow;
+        }
         ref.read(appAuthControllerProvider.notifier).setSignedIn();
       });
 
-  /// Triggers the native Sign in with Apple flow, then exchanges the
-  /// resulting identity token for an app session.
-  Future<void> signInWithApple() => _guard(() async {
-        final credential = await ref.read(appleNativeSignInDataSourceProvider).signIn();
-        await ref.read(authRepositoryProvider).signInWithApple(
-              identityToken: credential.identityToken,
-              email: credential.email,
-            );
-        ref.read(appAuthControllerProvider.notifier).setSignedIn();
-      });
+  /// The authserver's exact reply when no account uses the Apple email.
+  static const _appleNoAccountMessage = 'No account found with this email';
 
   Future<void> signOut() async {
     // Flip the app to signed-out FIRST, synchronously — the router redirect

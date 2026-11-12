@@ -45,6 +45,16 @@ abstract interface class RegisterRepository {
     String? referralMuid,
   });
 
+  /// Creates the account for a Google sign-up using the authserver's
+  /// [tempToken] (email comes from the token, no password), persists the
+  /// returned tokens, and returns the session. Throws [ApiException].
+  Future<AuthSession> registerWithGoogle({
+    required String tempToken,
+    required String fullName,
+    required String roleId,
+    String? referralMuid,
+  });
+
   /// Creates the Company record for the Company role. Must be called after
   /// [registerUser] has already authenticated the POC user.
   ///

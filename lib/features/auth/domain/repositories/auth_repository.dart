@@ -1,4 +1,5 @@
 import 'package:mulearn_app/features/auth/domain/entities/auth_session.dart';
+import 'package:mulearn_app/features/auth/domain/entities/social_sign_in_outcome.dart';
 
 /// Auth repository contract (rules.md §2/§5). Presentation depends on this
 /// abstraction, never the concrete [AuthRepositoryImpl].
@@ -44,20 +45,19 @@ abstract interface class AuthRepository {
   /// Throws [ApiException] on failure.
   Future<void> resetPassword({required String token, required String password});
 
-  /// Exchange a native Google Sign-In ID token for an app session, persist
-  /// the token pair, and return the session.
+  /// Exchange a native Google ID token. A known account is signed in (token
+  /// pair persisted) → [SocialSignedIn]; an unknown email returns
+  /// [SocialNeedsRegistration] with the authserver's tempToken and stores
+  /// nothing.
   ///
   /// Throws [ApiException] on failure.
-  Future<AuthSession> signInWithGoogle({required String idToken});
+  Future<SocialSignInOutcome> signInWithGoogle({required String idToken});
 
   /// Exchange a native Sign in with Apple identity token for an app session,
   /// persist the token pair, and return the session.
   ///
   /// Throws [ApiException] on failure.
-  Future<AuthSession> signInWithApple({
-    required String identityToken,
-    String? email,
-  });
+  Future<AuthSession> signInWithApple({required String identityToken});
 
   /// Force a token refresh using the stored refresh token. Returns the new
   /// session, or null if there is no usable refresh token.

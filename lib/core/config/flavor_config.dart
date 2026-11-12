@@ -13,10 +13,14 @@ class FlavorConfig {
   const FlavorConfig._({
     required this.flavor,
     required this.apiBaseUrl,
+    required this.googleServerClientId,
   });
 
   final Flavor flavor;
   final String apiBaseUrl;
+
+  /// Google OAuth web client id for Android's `serverClientId`; may be empty.
+  final String googleServerClientId;
 
   static FlavorConfig? _instance;
 
@@ -39,6 +43,10 @@ class FlavorConfig {
       apiBaseUrl: switch (flavor) {
         Flavor.dev => EnvDev.apiBaseUrl,
         Flavor.prod => EnvProd.apiBaseUrl,
+      },
+      googleServerClientId: switch (flavor) {
+        Flavor.dev => EnvDev.googleServerClientId,
+        Flavor.prod => EnvProd.googleServerClientId,
       },
     );
     return _instance = config;

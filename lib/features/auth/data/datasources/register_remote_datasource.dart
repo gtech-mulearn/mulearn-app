@@ -64,6 +64,27 @@ class RegisterRemoteDataSource {
     return ApiEnvelope.unwrapObject(response);
   }
 
+  /// `POST /api/v1/register/` with the authserver's Google `tempToken`. The
+  /// backend takes the email from the token (any client email is ignored)
+  /// and creates the account without a password, so neither is sent.
+  Future<Map<String, dynamic>> registerWithGoogle({
+    required String tempToken,
+    required String fullName,
+    required String roleId,
+    String? referralMuid,
+  }) async {
+    final response = await _dio.post<dynamic>(
+      ApiPaths.register,
+      data: {
+        'tempToken': tempToken,
+        'user': {'full_name': fullName, 'role': roleId},
+        if (referralMuid != null) 'referral': {'muid': referralMuid},
+      },
+      options: Options(headers: {RequestFlags.skipAuth: true}),
+    );
+    return ApiEnvelope.unwrapObject(response);
+  }
+
   /// `POST /api/v1/dashboard/company/register/` — authenticated; called after
   /// [register] for the Company role. Blank optional fields are omitted,
   /// mirroring the reference client.

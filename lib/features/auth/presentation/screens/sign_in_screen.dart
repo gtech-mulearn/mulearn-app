@@ -13,7 +13,9 @@ import 'package:mulearn_app/core/theme/mulearn_colors.dart';
 import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 import 'package:mulearn_app/core/widgets/mu_buttons.dart';
 import 'package:mulearn_app/core/widgets/mu_toast.dart';
+import 'package:mulearn_app/features/auth/domain/entities/social_sign_in_outcome.dart';
 import 'package:mulearn_app/features/auth/presentation/providers/auth_controller.dart';
+import 'package:mulearn_app/features/auth/presentation/providers/register_wizard_controller.dart';
 
 /// Email/MuID sign-in, matching the layout and copy of the reference
 /// `mulearn-dashboard` login screen: password sign-in with an OTP-login
@@ -108,19 +110,60 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
   void _switchMode(_AuthMode mode) => setState(() => _mode = mode);
 
   Future<void> _signInWithGoogle() async {
+    final SocialSignInOutcome outcome;
     try {
-      await ref.read(authControllerProvider.notifier).signInWithGoogle();
+      outcome = await ref.read(authControllerProvider.notifier).signInWithGoogle();
     } on Object catch (_) {
-      // Surfaced via the ref.listen snackbar below.
+      return; // Surfaced via the ref.listen snackbar below.
+    }
+    if (outcome is SocialNeedsRegistration && mounted) {
+      ref.read(registerWizardControllerProvider.notifier).setGoogleSignUp(
+            tempToken: outcome.tempToken,
+            email: outcome.email,
+            fullName: outcome.fullName,
+          );
+      await context.push(RoutePaths.registerBasicInfo);
     }
   }
 
   Future<void> _signInWithApple() async {
     try {
       await ref.read(authControllerProvider.notifier).signInWithApple();
+    } on AppleAccountNotFound {
+      if (mounted) await _showAppleAccountNotFound();
     } on Object catch (_) {
       // Surfaced via the ref.listen snackbar below.
     }
+  }
+
+  Future<void> _showAppleAccountNotFound() => showDialog<void>(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          title: const Text('No account yet'),
+          content: const Text(
+            "No μLearn account uses this Apple ID's email yet. Create an "
+            'account with that email first, then sign in with Apple.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: const Text('Close'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+                _startSignUp();
+              },
+              child: const Text('Create account'),
+            ),
+          ],
+        ),
+      );
+
+  /// Normal (password) sign-up: drop any half-finished Google sign-up first.
+  void _startSignUp() {
+    ref.read(registerWizardControllerProvider.notifier).reset();
+    context.push(RoutePaths.registerBasicInfo);
   }
 
   @override
@@ -128,7 +171,8 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     final state = ref.watch(authControllerProvider);
 
     ref.listen(authControllerProvider, (_, next) {
-      if (next.hasError && !next.isLoading) {
+      // Apple's "no account" case gets its own dialog, not a toast.
+      if (next.hasError && !next.isLoading && next.error is! AppleAccountNotFound) {
         final error = next.error;
         final message = ApiException.messageFor(error!);
         MuToast.show(context, message: message, type: MuToastType.error);
@@ -185,12 +229,13 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                     const SizedBox(height: MuSpace.l),
                     _SocialSignInButtons(
                       isLoading: isLoading,
+                      showGoogle: ref.watch(googleNativeSignInDataSourceProvider).isAvailable,
                       onGoogle: _signInWithGoogle,
                       onApple: _signInWithApple,
                     ),
                     const SizedBox(height: MuSpace.xl),
                     _SignUpFooter(
-                      onSignUp: () => context.push(RoutePaths.registerBasicInfo),
+                      onSignUp: _startSignUp,
                     ),
                   ],
                 ],
@@ -499,28 +544,35 @@ class _OrDivider extends StatelessWidget {
 class _SocialSignInButtons extends StatelessWidget {
   const _SocialSignInButtons({
     required this.isLoading,
+    required this.showGoogle,
     required this.onGoogle,
     required this.onApple,
   });
 
   final bool isLoading;
+
+  /// False where native Google sign-in can't return an ID token (Android
+  /// without a server client id) — the button is hidden, not left to fail.
+  final bool showGoogle;
   final VoidCallback onGoogle;
   final VoidCallback onApple;
 
   @override
   Widget build(BuildContext context) {
+    final showApple = defaultTargetPlatform == TargetPlatform.iOS;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        MuGhostButton(
-          label: 'Continue with Google',
-          icon: LucideIcons.chrome,
-          onPressed: isLoading ? null : onGoogle,
-        ),
+        if (showGoogle)
+          MuGhostButton(
+            label: 'Continue with Google',
+            icon: LucideIcons.chrome,
+            onPressed: isLoading ? null : onGoogle,
+          ),
         // Sign in with Apple is an Apple-platform-only affordance — Android
         // has no native Apple ID picker, so the button is never shown there.
-        if (defaultTargetPlatform == TargetPlatform.iOS) ...[
-          const SizedBox(height: MuSpace.m),
+        if (showApple) ...[
+          if (showGoogle) const SizedBox(height: MuSpace.m),
           MuGhostButton(
             label: 'Continue with Apple',
             icon: LucideIcons.apple,

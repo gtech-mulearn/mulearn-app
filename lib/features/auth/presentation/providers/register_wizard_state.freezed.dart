@@ -14,7 +14,10 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$RegisterWizardState {
 
- String? get fullName; String? get email; String? get password; RegistrationRole? get role;
+ String? get fullName; String? get email; String? get password; RegistrationRole? get role;/// Set when sign-up started from "Continue with Google" for an unknown
+/// email: the account is created from this authserver token, with the
+/// token's email and no password.
+ String? get googleTempToken;
 /// Create a copy of RegisterWizardState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +28,16 @@ $RegisterWizardStateCopyWith<RegisterWizardState> get copyWith => _$RegisterWiza
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RegisterWizardState&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.email, email) || other.email == email)&&(identical(other.password, password) || other.password == password)&&(identical(other.role, role) || other.role == role));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RegisterWizardState&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.email, email) || other.email == email)&&(identical(other.password, password) || other.password == password)&&(identical(other.role, role) || other.role == role)&&(identical(other.googleTempToken, googleTempToken) || other.googleTempToken == googleTempToken));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,fullName,email,password,role);
+int get hashCode => Object.hash(runtimeType,fullName,email,password,role,googleTempToken);
 
 @override
 String toString() {
-  return 'RegisterWizardState(fullName: $fullName, email: $email, password: $password, role: $role)';
+  return 'RegisterWizardState(fullName: $fullName, email: $email, password: $password, role: $role, googleTempToken: $googleTempToken)';
 }
 
 
@@ -45,7 +48,7 @@ abstract mixin class $RegisterWizardStateCopyWith<$Res>  {
   factory $RegisterWizardStateCopyWith(RegisterWizardState value, $Res Function(RegisterWizardState) _then) = _$RegisterWizardStateCopyWithImpl;
 @useResult
 $Res call({
- String? fullName, String? email, String? password, RegistrationRole? role
+ String? fullName, String? email, String? password, RegistrationRole? role, String? googleTempToken
 });
 
 
@@ -62,13 +65,14 @@ class _$RegisterWizardStateCopyWithImpl<$Res>
 
 /// Create a copy of RegisterWizardState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? fullName = freezed,Object? email = freezed,Object? password = freezed,Object? role = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? fullName = freezed,Object? email = freezed,Object? password = freezed,Object? role = freezed,Object? googleTempToken = freezed,}) {
   return _then(_self.copyWith(
 fullName: freezed == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
 as String?,email: freezed == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String?,password: freezed == password ? _self.password : password // ignore: cast_nullable_to_non_nullable
 as String?,role: freezed == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
-as RegistrationRole?,
+as RegistrationRole?,googleTempToken: freezed == googleTempToken ? _self.googleTempToken : googleTempToken // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -153,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? fullName,  String? email,  String? password,  RegistrationRole? role)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? fullName,  String? email,  String? password,  RegistrationRole? role,  String? googleTempToken)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RegisterWizardState() when $default != null:
-return $default(_that.fullName,_that.email,_that.password,_that.role);case _:
+return $default(_that.fullName,_that.email,_that.password,_that.role,_that.googleTempToken);case _:
   return orElse();
 
 }
@@ -174,10 +178,10 @@ return $default(_that.fullName,_that.email,_that.password,_that.role);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? fullName,  String? email,  String? password,  RegistrationRole? role)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? fullName,  String? email,  String? password,  RegistrationRole? role,  String? googleTempToken)  $default,) {final _that = this;
 switch (_that) {
 case _RegisterWizardState():
-return $default(_that.fullName,_that.email,_that.password,_that.role);case _:
+return $default(_that.fullName,_that.email,_that.password,_that.role,_that.googleTempToken);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -194,10 +198,10 @@ return $default(_that.fullName,_that.email,_that.password,_that.role);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? fullName,  String? email,  String? password,  RegistrationRole? role)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? fullName,  String? email,  String? password,  RegistrationRole? role,  String? googleTempToken)?  $default,) {final _that = this;
 switch (_that) {
 case _RegisterWizardState() when $default != null:
-return $default(_that.fullName,_that.email,_that.password,_that.role);case _:
+return $default(_that.fullName,_that.email,_that.password,_that.role,_that.googleTempToken);case _:
   return null;
 
 }
@@ -209,13 +213,17 @@ return $default(_that.fullName,_that.email,_that.password,_that.role);case _:
 
 
 class _RegisterWizardState implements RegisterWizardState {
-  const _RegisterWizardState({this.fullName, this.email, this.password, this.role});
+  const _RegisterWizardState({this.fullName, this.email, this.password, this.role, this.googleTempToken});
   
 
 @override final  String? fullName;
 @override final  String? email;
 @override final  String? password;
 @override final  RegistrationRole? role;
+/// Set when sign-up started from "Continue with Google" for an unknown
+/// email: the account is created from this authserver token, with the
+/// token's email and no password.
+@override final  String? googleTempToken;
 
 /// Create a copy of RegisterWizardState
 /// with the given fields replaced by the non-null parameter values.
@@ -227,16 +235,16 @@ _$RegisterWizardStateCopyWith<_RegisterWizardState> get copyWith => __$RegisterW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RegisterWizardState&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.email, email) || other.email == email)&&(identical(other.password, password) || other.password == password)&&(identical(other.role, role) || other.role == role));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RegisterWizardState&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.email, email) || other.email == email)&&(identical(other.password, password) || other.password == password)&&(identical(other.role, role) || other.role == role)&&(identical(other.googleTempToken, googleTempToken) || other.googleTempToken == googleTempToken));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,fullName,email,password,role);
+int get hashCode => Object.hash(runtimeType,fullName,email,password,role,googleTempToken);
 
 @override
 String toString() {
-  return 'RegisterWizardState(fullName: $fullName, email: $email, password: $password, role: $role)';
+  return 'RegisterWizardState(fullName: $fullName, email: $email, password: $password, role: $role, googleTempToken: $googleTempToken)';
 }
 
 
@@ -247,7 +255,7 @@ abstract mixin class _$RegisterWizardStateCopyWith<$Res> implements $RegisterWiz
   factory _$RegisterWizardStateCopyWith(_RegisterWizardState value, $Res Function(_RegisterWizardState) _then) = __$RegisterWizardStateCopyWithImpl;
 @override @useResult
 $Res call({
- String? fullName, String? email, String? password, RegistrationRole? role
+ String? fullName, String? email, String? password, RegistrationRole? role, String? googleTempToken
 });
 
 
@@ -264,13 +272,14 @@ class __$RegisterWizardStateCopyWithImpl<$Res>
 
 /// Create a copy of RegisterWizardState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? fullName = freezed,Object? email = freezed,Object? password = freezed,Object? role = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? fullName = freezed,Object? email = freezed,Object? password = freezed,Object? role = freezed,Object? googleTempToken = freezed,}) {
   return _then(_RegisterWizardState(
 fullName: freezed == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
 as String?,email: freezed == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String?,password: freezed == password ? _self.password : password // ignore: cast_nullable_to_non_nullable
 as String?,role: freezed == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
-as RegistrationRole?,
+as RegistrationRole?,googleTempToken: freezed == googleTempToken ? _self.googleTempToken : googleTempToken // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

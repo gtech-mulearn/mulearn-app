@@ -72,6 +72,51 @@ void main() {
     return container;
   }
 
+  group('submitGeneric — Google sign-up', () {
+    test('registers with the tempToken and needs no password', () async {
+      when(
+        () => repository.registerWithGoogle(
+          tempToken: any(named: 'tempToken'),
+          fullName: any(named: 'fullName'),
+          roleId: any(named: 'roleId'),
+        ),
+      ).thenAnswer((_) async => session);
+      when(
+        () => repository.selectOrganization(
+          organization: any(named: 'organization'),
+          isStudent: any(named: 'isStudent'),
+          department: any(named: 'department'),
+          graduationYear: any(named: 'graduationYear'),
+        ),
+      ).thenAnswer((_) async {});
+
+      final container = makeContainer();
+      container.read(registerWizardControllerProvider.notifier)
+        ..setGoogleSignUp(tempToken: 't', email: 'ada@gmail.com', fullName: 'Ada')
+        ..setBasicInfo(fullName: 'Ada Lovelace', email: 'ada@gmail.com');
+      await container.read(appAuthControllerProvider.future);
+
+      await container.read(registerSubmitControllerProvider.notifier).submitGeneric(
+            role: RegistrationRole.student,
+            college: 'college-1',
+          );
+
+      expect(container.read(registerSubmitControllerProvider).hasError, isFalse);
+      verify(
+        () => repository.registerWithGoogle(tempToken: 't', fullName: 'Ada Lovelace', roleId: 'role-student'),
+      ).called(1);
+      verifyNever(
+        () => repository.registerUser(
+          fullName: any(named: 'fullName'),
+          email: any(named: 'email'),
+          password: any(named: 'password'),
+          roleId: any(named: 'roleId'),
+        ),
+      );
+      expect(container.read(appAuthControllerProvider).value, isTrue);
+    });
+  });
+
   group('submitGeneric — student', () {
     test('College branch selects an existing college', () async {
       when(

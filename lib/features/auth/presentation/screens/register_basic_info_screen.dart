@@ -29,6 +29,11 @@ class _RegisterBasicInfoScreenState
   bool _obscurePassword = true;
   bool _obscureConfirm = true;
 
+  /// Signing up from "Continue with Google": the email comes from the Google
+  /// account (read-only) and there is no password.
+  bool get _isGoogleSignUp =>
+      ref.read(registerWizardControllerProvider).googleTempToken != null;
+
   @override
   void initState() {
     super.initState();
@@ -52,13 +57,14 @@ class _RegisterBasicInfoScreenState
     ref.read(registerWizardControllerProvider.notifier).setBasicInfo(
           fullName: _fullNameController.text.trim(),
           email: _emailController.text.trim(),
-          password: _passwordController.text,
+          password: _isGoogleSignUp ? null : _passwordController.text,
         );
     context.push(RoutePaths.registerRoleSelection);
   }
 
   @override
   Widget build(BuildContext context) {
+    final isGoogle = _isGoogleSignUp;
     return Scaffold(
       backgroundColor: MuColors.canvas,
       appBar: AppBar(),
@@ -72,7 +78,9 @@ class _RegisterBasicInfoScreenState
               Text('Step into the community', style: MuType.display.copyWith(fontSize: 30)),
               const SizedBox(height: MuSpace.s),
               Text(
-                'Create your account to get started',
+                isGoogle
+                    ? 'Finish creating your account with your Google email'
+                    : 'Create your account to get started',
                 style: MuType.body.copyWith(color: MuColors.inkSecondary),
               ),
               const SizedBox(height: MuSpace.xxl),
@@ -102,11 +110,13 @@ class _RegisterBasicInfoScreenState
                     const SizedBox(height: MuSpace.l),
                     TextFormField(
                       controller: _emailController,
+                      readOnly: isGoogle,
                       keyboardType: TextInputType.emailAddress,
                       textInputAction: TextInputAction.next,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         labelText: 'Email Address',
                         hintText: 'Email address',
+                        helperText: isGoogle ? 'From your Google account' : null,
                       ),
                       validator: (value) {
                         final v = value?.trim() ?? '';
@@ -116,6 +126,7 @@ class _RegisterBasicInfoScreenState
                         return null;
                       },
                     ),
+                    if (!isGoogle) ...[
                     const SizedBox(height: MuSpace.l),
                     TextFormField(
                       controller: _passwordController,
@@ -171,6 +182,7 @@ class _RegisterBasicInfoScreenState
                         return null;
                       },
                     ),
+                    ],
                     const SizedBox(height: MuSpace.xl),
                     MuPrimaryButton(label: 'Continue', onPressed: _continue),
                   ],

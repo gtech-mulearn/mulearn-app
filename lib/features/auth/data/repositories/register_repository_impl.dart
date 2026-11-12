@@ -97,26 +97,48 @@ class RegisterRepositoryImpl implements RegisterRepository {
         roleId: roleId,
         referralMuid: referralMuid,
       );
-
-      final tokens = AuthTokenParser.tryParse(payload);
-      if (tokens == null) {
-        throw const ApiException(
-          message: 'Registered, but could not read the auth tokens from the '
-              'response.',
-        );
-      }
-
-      await _tokenStorage.saveTokens(
-        accessToken: tokens.accessToken,
-        refreshToken: tokens.refreshToken,
-      );
-      return AuthSession(
-        accessToken: tokens.accessToken,
-        refreshToken: tokens.refreshToken,
-      );
+      return await _storeSession(payload);
     } on DioException catch (e) {
       throw ApiException.fromDioException(e);
     }
+  }
+
+  @override
+  Future<AuthSession> registerWithGoogle({
+    required String tempToken,
+    required String fullName,
+    required String roleId,
+    String? referralMuid,
+  }) async {
+    try {
+      final payload = await _remote.registerWithGoogle(
+        tempToken: tempToken,
+        fullName: fullName,
+        roleId: roleId,
+        referralMuid: referralMuid,
+      );
+      return await _storeSession(payload);
+    } on DioException catch (e) {
+      throw ApiException.fromDioException(e);
+    }
+  }
+
+  Future<AuthSession> _storeSession(Map<String, dynamic> payload) async {
+    final tokens = AuthTokenParser.tryParse(payload);
+    if (tokens == null) {
+      throw const ApiException(
+        message: 'Registered, but could not read the auth tokens from the '
+            'response.',
+      );
+    }
+    await _tokenStorage.saveTokens(
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
+    );
+    return AuthSession(
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
+    );
   }
 
   @override

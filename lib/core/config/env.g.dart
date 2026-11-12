@@ -11,6 +11,8 @@ part of 'env.dart';
 // generated_from: .env.dev
 final class _EnvDev {
   static const String apiBaseUrl = 'https://dev.mulearn.org';
+
+  static const String googleServerClientId = '';
 }
 
 // coverage:ignore-file
@@ -18,4 +20,6 @@ final class _EnvDev {
 // generated_from: .env.prod
 final class _EnvProd {
   static const String apiBaseUrl = 'https://mulearn.org';
+
+  static const String googleServerClientId = '';
 }

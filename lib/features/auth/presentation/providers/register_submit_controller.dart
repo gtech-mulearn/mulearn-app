@@ -50,7 +50,10 @@ class RegisterSubmitController extends _$RegisterSubmitController {
       final fullName = wizard.fullName;
       final email = wizard.email;
       final password = wizard.password;
-      if (fullName == null || email == null || password == null) {
+      final googleTempToken = wizard.googleTempToken;
+      if (fullName == null ||
+          email == null ||
+          (googleTempToken == null && password == null)) {
         throw const ApiException(message: 'Missing basic info. Please start over.');
       }
 
@@ -64,12 +67,20 @@ class RegisterSubmitController extends _$RegisterSubmitController {
       }
 
       final repo = ref.read(registerRepositoryProvider);
-      await repo.registerUser(
-        fullName: fullName,
-        email: email,
-        password: password,
-        roleId: roleId,
-      );
+      if (googleTempToken != null) {
+        await repo.registerWithGoogle(
+          tempToken: googleTempToken,
+          fullName: fullName,
+          roleId: roleId,
+        );
+      } else {
+        await repo.registerUser(
+          fullName: fullName,
+          email: email,
+          password: password!,
+          roleId: roleId,
+        );
+      }
       ref.read(appAuthControllerProvider.notifier).setSignedIn();
 
       // Now authenticated — handle org linking.

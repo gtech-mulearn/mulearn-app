@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart' show TargetPlatform, defaultTargetPlatform;
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:mulearn_app/core/config/flavor_config.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 
 /// Wraps the native Google Sign-In SDK to obtain an ID token for exchange
@@ -12,14 +13,25 @@ import 'package:mulearn_app/core/network/api_exception.dart';
 /// sign-in redirect). Passed explicitly here rather than via a
 /// `GoogleService-Info.plist`, since this app doesn't use Firebase.
 ///
-/// ⚠️ Android: no Android-type OAuth client has been provided yet (only an
-/// iOS client and an unrelated "installed"/desktop-type client, which isn't
-/// valid for a mobile app's native sign-in) — Android needs its own client
-/// keyed to the package name + release/debug SHA-1 fingerprints. Until that
-/// exists, [clientId] is left unset on Android (an iOS client ID would not
-/// work there), so tapping "Continue with Google" on Android will fail.
+/// Android: the native SDK only returns an ID token when given the OAuth
+/// *web* client id as `serverClientId` (plus an Android client registered for
+/// the package name and signing SHA-1). That id comes from
+/// `GOOGLE_SERVER_CLIENT_ID`; while it is empty, [isAvailable] is false and
+/// the sign-in screen hides the button instead of offering one that fails.
 class GoogleNativeSignInDataSource {
-  GoogleNativeSignInDataSource();
+  GoogleNativeSignInDataSource({TargetPlatform? platform, String? serverClientId})
+      : _platform = platform ?? defaultTargetPlatform,
+        _serverClientId = serverClientId ?? FlavorConfig.instance.googleServerClientId;
+
+  final TargetPlatform _platform;
+  final String _serverClientId;
+
+  /// Whether this platform can complete a native Google sign-in.
+  bool get isAvailable => switch (_platform) {
+        TargetPlatform.iOS => true,
+        TargetPlatform.android => _serverClientId.isNotEmpty,
+        _ => false,
+      };
 
   static const _iosClientId =
       '966772588752-tr5qq5cs4d6kfqsv6tivk3v58n26tnes.apps.googleusercontent.com';
@@ -29,7 +41,8 @@ class GoogleNativeSignInDataSource {
   Future<void> _ensureInitialized() async {
     if (_initialized) return;
     await GoogleSignIn.instance.initialize(
-      clientId: defaultTargetPlatform == TargetPlatform.iOS ? _iosClientId : null,
+      clientId: _platform == TargetPlatform.iOS ? _iosClientId : null,
+      serverClientId: _platform == TargetPlatform.android ? _serverClientId : null,
     );
     _initialized = true;
   }
