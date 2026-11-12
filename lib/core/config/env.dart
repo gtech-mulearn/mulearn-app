@@ -17,6 +17,10 @@ abstract class EnvDev {
   /// is hidden on Android while it is empty.
   @EnviedField(varName: 'GOOGLE_SERVER_CLIENT_ID', defaultValue: '')
   static const String googleServerClientId = _EnvDev.googleServerClientId;
+
+  /// The μLearn web dashboard, for flows the app hands off (company sign-up).
+  @EnviedField(varName: 'DASHBOARD_URL')
+  static const String dashboardUrl = _EnvDev.dashboardUrl;
 }
 
 @Envied(path: '.env.prod', name: 'EnvProd')
@@ -27,4 +31,8 @@ abstract class EnvProd {
   /// See [EnvDev.googleServerClientId].
   @EnviedField(varName: 'GOOGLE_SERVER_CLIENT_ID', defaultValue: '')
   static const String googleServerClientId = _EnvProd.googleServerClientId;
+
+  /// See [EnvDev.dashboardUrl]. Defaults to the production dashboard.
+  @EnviedField(varName: 'DASHBOARD_URL', defaultValue: 'https://app.mulearn.org')
+  static const String dashboardUrl = _EnvProd.dashboardUrl;
 }

@@ -13,6 +13,8 @@ final class _EnvDev {
   static const String apiBaseUrl = 'https://dev.mulearn.org';
 
   static const String googleServerClientId = '';
+
+  static const String dashboardUrl = 'https://dev.mulearn.org';
 }
 
 // coverage:ignore-file
@@ -22,4 +24,6 @@ final class _EnvProd {
   static const String apiBaseUrl = 'https://mulearn.org';
 
   static const String googleServerClientId = '';
+
+  static const String dashboardUrl = 'https://app.mulearn.org';
 }

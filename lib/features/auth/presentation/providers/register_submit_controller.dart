@@ -1,6 +1,5 @@
 import 'package:mulearn_app/core/auth/app_auth_controller.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
-import 'package:mulearn_app/features/auth/domain/entities/company_details.dart';
 import 'package:mulearn_app/features/auth/domain/entities/registration_role.dart';
 import 'package:mulearn_app/features/auth/presentation/providers/register_providers.dart';
 import 'package:mulearn_app/features/auth/presentation/providers/register_wizard_controller.dart';
@@ -139,43 +138,6 @@ class RegisterSubmitController extends _$RegisterSubmitController {
           );
         }
       }
-    });
-    if (state.hasError) {
-      Error.throwWithStackTrace(state.error!, state.stackTrace ?? StackTrace.current);
-    }
-  }
-
-  /// Company path: register the POC user, then create the company record.
-  Future<void> submitCompany(CompanyDetails details) async {
-    state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
-      final wizard = ref.read(registerWizardControllerProvider);
-      final fullName = wizard.fullName;
-      final email = wizard.email;
-      final password = wizard.password;
-      if (fullName == null || email == null || password == null) {
-        throw const ApiException(message: 'Missing basic info. Please start over.');
-      }
-
-      final roles = await ref.read(registerRolesProvider.future);
-      final roleId = resolveRoleId(roles, RegistrationRole.company.apiTitle);
-      if (roleId == null) {
-        throw const ApiException(
-          message: 'Role list has not loaded yet or "Company" not found. '
-              'Please try again.',
-        );
-      }
-
-      final repo = ref.read(registerRepositoryProvider);
-      await repo.registerUser(
-        fullName: fullName,
-        email: email,
-        password: password,
-        roleId: roleId,
-      );
-      ref.read(appAuthControllerProvider.notifier).setSignedIn();
-
-      await repo.registerCompany(details);
     });
     if (state.hasError) {
       Error.throwWithStackTrace(state.error!, state.stackTrace ?? StackTrace.current);

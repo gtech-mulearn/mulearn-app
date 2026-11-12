@@ -14,6 +14,7 @@ class FlavorConfig {
     required this.flavor,
     required this.apiBaseUrl,
     required this.googleServerClientId,
+    required this.dashboardUrl,
   });
 
   final Flavor flavor;
@@ -21,6 +22,9 @@ class FlavorConfig {
 
   /// Google OAuth web client id for Android's `serverClientId`; may be empty.
   final String googleServerClientId;
+
+  /// The μLearn web dashboard for this environment.
+  final String dashboardUrl;
 
   static FlavorConfig? _instance;
 
@@ -47,6 +51,10 @@ class FlavorConfig {
       googleServerClientId: switch (flavor) {
         Flavor.dev => EnvDev.googleServerClientId,
         Flavor.prod => EnvProd.googleServerClientId,
+      },
+      dashboardUrl: switch (flavor) {
+        Flavor.dev => EnvDev.dashboardUrl,
+        Flavor.prod => EnvProd.dashboardUrl,
       },
     );
     return _instance = config;

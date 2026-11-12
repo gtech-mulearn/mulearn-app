@@ -164,9 +164,8 @@ abstract final class ApiPaths {
   // --- Registration (rules.md §3/§9: confirmed against the live dashboard
   // frontend, not the OpenAPI schema) ---
 
-  /// Create a new user account — student/mentor/enabler, and the Company
-  /// role's initial POC account (a company record is created separately via
-  /// [companyRegister]).
+  /// Create a new user account — student, mentor or enabler. Company accounts
+  /// are created on the web dashboard (they need a verification document).
   static const String register = '/api/v1/register/';
 
   /// `GET` — list of roles, `{id, title}`, under `response.roles`. Role UUIDs
@@ -228,9 +227,6 @@ abstract final class ApiPaths {
   /// `POST {"endgoals": [...]}` — save chosen end goals.
   static const String selectEndgoals = '/api/v1/register/select-endgoals/';
 
-  /// `POST` — create the Company record for the Company role (called after
-  /// [register] has already authenticated the POC user).
-  static const String companyRegister = '/api/v1/dashboard/company/register/';
 
   // --- Dashboard (home screen) — confirmed live (rules.md §3/§9) ---
 

@@ -1,7 +1,6 @@
 import 'package:mulearn_app/core/models/location_option.dart';
 import 'package:mulearn_app/core/models/reference_option.dart';
 import 'package:mulearn_app/features/auth/domain/entities/auth_session.dart';
-import 'package:mulearn_app/features/auth/domain/entities/company_details.dart';
 
 /// Registration + onboarding-lookup repository contract (rules.md §2/§5).
 ///
@@ -55,11 +54,6 @@ abstract interface class RegisterRepository {
     String? referralMuid,
   });
 
-  /// Creates the Company record for the Company role. Must be called after
-  /// [registerUser] has already authenticated the POC user.
-  ///
-  /// Throws [ApiException] on failure.
-  Future<void> registerCompany(CompanyDetails details);
 
   /// Links the newly-registered user to an existing college/company.
   /// Authenticated — must be called after [registerUser].

@@ -8,7 +8,6 @@ import 'package:mulearn_app/core/network/auth_token_parser.dart';
 import 'package:mulearn_app/core/storage/secure_storage_provider.dart';
 import 'package:mulearn_app/features/auth/data/datasources/register_remote_datasource.dart';
 import 'package:mulearn_app/features/auth/domain/entities/auth_session.dart';
-import 'package:mulearn_app/features/auth/domain/entities/company_details.dart';
 import 'package:mulearn_app/features/auth/domain/repositories/register_repository.dart';
 
 class RegisterRepositoryImpl implements RegisterRepository {
@@ -141,14 +140,6 @@ class RegisterRepositoryImpl implements RegisterRepository {
     );
   }
 
-  @override
-  Future<void> registerCompany(CompanyDetails details) async {
-    try {
-      await _remote.registerCompany(details);
-    } on DioException catch (e) {
-      throw ApiException.fromDioException(e);
-    }
-  }
 
   @override
   Future<void> selectOrganization({
