@@ -62,7 +62,7 @@ class LearningCircleTile extends StatelessWidget {
               alignment: Alignment.center,
               child: Text(
                 _code(circle.title),
-                style: MuType.tag.copyWith(color: Colors.white, fontSize: 12),
+                style: MuType.tag.copyWith(color: MuColors.onBrand, fontSize: 12),
               ),
             ),
             const SizedBox(width: MuSpace.m),

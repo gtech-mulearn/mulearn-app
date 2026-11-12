@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mulearn_app/core/theme/mu_radius.dart';
+import 'package:mulearn_app/core/theme/mu_shadow.dart';
 import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
 import 'package:mulearn_app/core/theme/mulearn_typography.dart';
@@ -107,13 +108,7 @@ class _PodiumSlot extends StatelessWidget {
             color: _barColor,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(MuRadius.inner)),
             boxShadow: rank == 1
-                ? [
-                    const BoxShadow(
-                      color: Color(0x991A1A1A),
-                      blurRadius: 20,
-                      offset: Offset(0, 8),
-                    ),
-                  ]
+                ? MuShadow.podium
                 : null,
           ),
           child: Text('$rank', style: MuType.stat.copyWith(color: _rankTextColor, fontSize: 20)),

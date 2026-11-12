@@ -190,7 +190,7 @@ class MuGhostButton extends StatelessWidget {
               : (pressed ? MuColors.surface : MuColors.surface.withValues(alpha: 0.7)),
           border: Border.all(
             color: light
-                ? Colors.white.withValues(alpha: pressed ? 0.9 : 0.6)
+                ? MuColors.onBrand.withValues(alpha: pressed ? 0.9 : 0.6)
                 : (pressed ? MuColors.ink : MuColors.divider),
             width: 1.5,
           ),

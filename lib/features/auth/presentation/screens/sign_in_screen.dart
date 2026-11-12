@@ -632,7 +632,7 @@ class _BrandMark extends StatelessWidget {
           alignment: Alignment.center,
           child: Text(
             'μ',
-            style: MuType.display.copyWith(color: Colors.white, fontSize: 36, height: 1),
+            style: MuType.display.copyWith(color: MuColors.onBrand, fontSize: 36, height: 1),
           ),
         ),
         const SizedBox(height: MuSpace.m),

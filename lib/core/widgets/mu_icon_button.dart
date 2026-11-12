@@ -27,7 +27,7 @@ class MuIconButton extends StatelessWidget {
       clipBehavior: Clip.none,
       children: [
         Material(
-          color: glass ? Colors.white.withValues(alpha: 0.16) : MuColors.primaryTint,
+          color: glass ? MuColors.onBrand.withValues(alpha: 0.16) : MuColors.primaryTint,
           shape: const CircleBorder(),
           child: InkWell(
             onTap: onPressed,

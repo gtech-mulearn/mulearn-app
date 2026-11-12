@@ -156,7 +156,7 @@ class ProfileHeader extends ConsumerWidget {
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [Color(0x1A000000), Color(0x99000000)],
+                  colors: MuColors.coverScrim,
                 ),
               ),
             ),
@@ -191,9 +191,9 @@ class _HeaderContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final titleColor = onDark ? Colors.white : MuColors.ink;
-    final subColor = onDark ? Colors.white70 : MuColors.inkSecondary;
-    final iconColor = onDark ? Colors.white : MuColors.primary;
+    final titleColor = onDark ? MuColors.onBrand : MuColors.ink;
+    final subColor = onDark ? MuColors.onBrand.withValues(alpha: 0.7) : MuColors.inkSecondary;
+    final iconColor = onDark ? MuColors.onBrand : MuColors.primary;
     final levelN = (profile.level != null && profile.level!.length > 3)
         ? int.tryParse(profile.level!.substring(3)) ?? 1
         : 1;
@@ -215,7 +215,7 @@ class _HeaderContent extends StatelessWidget {
                 decoration: onDark
                     ? BoxDecoration(
                         shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white, width: 2),
+                        border: Border.all(color: MuColors.onBrand, width: 2),
                       )
                     : null,
                 child: ProfileAvatar(
@@ -296,7 +296,7 @@ class _HeaderContent extends StatelessWidget {
               Text(
                 'Member since ${profile.joined.substring(0, 4)}',
                 style: MuType.caption.copyWith(
-                  color: onDark ? Colors.white70 : MuColors.inkTertiary,
+                  color: onDark ? MuColors.onBrand.withValues(alpha: 0.7) : MuColors.inkTertiary,
                 ),
               ),
             ],
@@ -319,7 +319,7 @@ class _Badge extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
       decoration: BoxDecoration(
-        color: onDark ? Colors.white.withValues(alpha: 0.16) : color.withValues(alpha: 0.12),
+        color: onDark ? MuColors.onBrand.withValues(alpha: 0.16) : color.withValues(alpha: 0.12),
         borderRadius: BorderRadius.circular(99),
       ),
       child: Row(
@@ -334,7 +334,7 @@ class _Badge extends StatelessWidget {
           Text(
             label,
             style: MuType.chip.copyWith(
-              color: onDark ? Colors.white : color,
+              color: onDark ? MuColors.onBrand : color,
               fontSize: 10,
             ),
           ),

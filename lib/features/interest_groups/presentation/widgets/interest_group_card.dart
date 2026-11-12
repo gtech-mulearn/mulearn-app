@@ -100,7 +100,7 @@ class InterestGroupCard extends StatelessWidget {
                         shape: BoxShape.circle,
                         border: Border.all(color: MuColors.ink, width: 2),
                       ),
-                      child: const Icon(LucideIcons.check, size: 12, color: Colors.white),
+                      child: const Icon(LucideIcons.check, size: 12, color: MuColors.onBrand),
                     ),
                   ),
               ],

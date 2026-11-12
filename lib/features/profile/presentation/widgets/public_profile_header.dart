@@ -52,7 +52,7 @@ class PublicProfileHeader extends StatelessWidget {
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: [Color(0x1A000000), Color(0x99000000)],
+                  colors: MuColors.coverScrim,
                 ),
               ),
             ),
@@ -72,8 +72,8 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final titleColor = onDark ? Colors.white : MuColors.ink;
-    final subColor = onDark ? Colors.white70 : MuColors.inkSecondary;
+    final titleColor = onDark ? MuColors.onBrand : MuColors.ink;
+    final subColor = onDark ? MuColors.onBrand.withValues(alpha: 0.7) : MuColors.inkSecondary;
     final levelN = (profile.level != null && profile.level!.length > 3)
         ? int.tryParse(profile.level!.substring(3)) ?? 1
         : 1;
@@ -93,7 +93,7 @@ class _Content extends StatelessWidget {
               decoration: onDark
                   ? BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white, width: 2),
+                      border: Border.all(color: MuColors.onBrand, width: 2),
                     )
                   : null,
               child: ProfileAvatar(
@@ -135,7 +135,7 @@ class _Content extends StatelessWidget {
           Text(
             'Member since ${profile.joined.substring(0, 4)}',
             style: MuType.caption.copyWith(
-              color: onDark ? Colors.white70 : MuColors.inkTertiary,
+              color: onDark ? MuColors.onBrand.withValues(alpha: 0.7) : MuColors.inkTertiary,
             ),
           ),
         ],

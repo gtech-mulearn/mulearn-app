@@ -66,14 +66,14 @@ class _BadgeCard extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(LucideIcons.medal, color: Colors.white, size: 32),
+          const Icon(LucideIcons.medal, color: MuColors.onBrand, size: 32),
           const SizedBox(height: MuSpace.s),
           Text(
             title,
             textAlign: TextAlign.center,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: MuType.bodyMed.copyWith(color: Colors.white),
+            style: MuType.bodyMed.copyWith(color: MuColors.onBrand),
           ),
         ],
       ),

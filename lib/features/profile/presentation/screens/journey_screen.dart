@@ -140,7 +140,7 @@ class _JourneyHeaderCard extends StatelessWidget {
             value: ringValue,
             size: 72,
             strokeWidth: 6,
-            trackColor: Colors.white.withValues(alpha: 0.14),
+            trackColor: MuColors.onBrand.withValues(alpha: 0.14),
             child: Text(
               '$levelNumber',
               style: MuType.stat.copyWith(color: MuColors.surface, fontSize: 26),
@@ -160,7 +160,7 @@ class _JourneyHeaderCard extends StatelessWidget {
                   nextLevel == null
                       ? "You've cleared every level so far."
                       : '$remaining more karma unlocks Level ${levelNumber + 1} · ${nextLevel!.name}',
-                  style: MuType.caption.copyWith(color: Colors.white.withValues(alpha: 0.7)),
+                  style: MuType.caption.copyWith(color: MuColors.onBrand.withValues(alpha: 0.7)),
                 ),
               ],
             ),
@@ -219,7 +219,7 @@ class _LevelCard extends StatelessWidget {
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
                     color: status == _LevelStatus.current
-                        ? Colors.white.withValues(alpha: 0.12)
+                        ? MuColors.onBrand.withValues(alpha: 0.12)
                         : MuColors.primaryTint,
                     shape: BoxShape.circle,
                   ),
@@ -257,7 +257,7 @@ class _LevelCard extends StatelessWidget {
                   '${level.karma} karma',
                   style: MuType.caption.copyWith(
                     color: status == _LevelStatus.current
-                        ? Colors.white.withValues(alpha: 0.7)
+                        ? MuColors.onBrand.withValues(alpha: 0.7)
                         : MuColors.inkSecondary,
                   ),
                 ),
@@ -266,7 +266,7 @@ class _LevelCard extends StatelessWidget {
                   '$doneTasks/${level.tasks.length} tasks',
                   style: MuType.caption.copyWith(
                     color: status == _LevelStatus.current
-                        ? Colors.white.withValues(alpha: 0.7)
+                        ? MuColors.onBrand.withValues(alpha: 0.7)
                         : MuColors.inkSecondary,
                   ),
                 ),

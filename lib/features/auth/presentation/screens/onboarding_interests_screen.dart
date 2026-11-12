@@ -198,7 +198,7 @@ class _ProgressRow extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: i <= step
                           ? (dark ? MuColors.surface : MuColors.primary)
-                          : (dark ? Colors.white.withValues(alpha: 0.16) : MuColors.divider),
+                          : (dark ? MuColors.onBrand.withValues(alpha: 0.16) : MuColors.divider),
                       borderRadius: BorderRadius.circular(MuRadius.chip),
                     ),
                   ),
@@ -214,7 +214,7 @@ class _ProgressRow extends StatelessWidget {
             style: TextButton.styleFrom(padding: EdgeInsets.zero),
             child: Text(
               'Skip',
-              style: MuType.chip.copyWith(color: dark ? Colors.white70 : MuColors.inkTertiary),
+              style: MuType.chip.copyWith(color: dark ? MuColors.onBrand.withValues(alpha: 0.7) : MuColors.inkTertiary),
             ),
           ),
         ],
@@ -253,7 +253,7 @@ class _StepCtaRow extends StatelessWidget {
               onPressed: onBack,
               child: Text(
                 backLabel!,
-                style: MuType.chip.copyWith(color: dark ? Colors.white70 : MuColors.inkSecondary),
+                style: MuType.chip.copyWith(color: dark ? MuColors.onBrand.withValues(alpha: 0.7) : MuColors.inkSecondary),
               ),
             ),
           ],
@@ -363,11 +363,11 @@ class _IntroFloatingCards extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('RANK', style: MuType.tag.copyWith(color: Colors.white60)),
+            Text('RANK', style: MuType.tag.copyWith(color: MuColors.onBrand.withValues(alpha: 0.6))),
             const SizedBox(height: MuSpace.xs),
-            Text('#263', style: MuType.stat.copyWith(color: Colors.white, fontSize: 22)),
+            Text('#263', style: MuType.stat.copyWith(color: MuColors.onBrand, fontSize: 22)),
             const SizedBox(height: MuSpace.xs),
-            Text('Top 1% this week', style: MuType.caption.copyWith(color: Colors.white60)),
+            Text('Top 1% this week', style: MuType.caption.copyWith(color: MuColors.onBrand.withValues(alpha: 0.6))),
           ],
         ),
       );
@@ -516,7 +516,7 @@ class _KarmaDemoCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('LEVEL 1 · INITIATE', style: MuType.tag.copyWith(color: Colors.white60)),
+              Text('LEVEL 1 · INITIATE', style: MuType.tag.copyWith(color: MuColors.onBrand.withValues(alpha: 0.6))),
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
@@ -533,10 +533,10 @@ class _KarmaDemoCard extends StatelessWidget {
             child: Text(
               '$earned',
               key: ValueKey(earned),
-              style: MuType.stat.copyWith(color: Colors.white, fontSize: 46),
+              style: MuType.stat.copyWith(color: MuColors.onBrand, fontSize: 46),
             ),
           ),
-          Text('/ $_max karma', style: MuType.caption.copyWith(color: Colors.white60)),
+          Text('/ $_max karma', style: MuType.caption.copyWith(color: MuColors.onBrand.withValues(alpha: 0.6))),
           const SizedBox(height: MuSpace.m),
           ClipRRect(
             borderRadius: BorderRadius.circular(MuRadius.chip),
@@ -547,7 +547,7 @@ class _KarmaDemoCard extends StatelessWidget {
               builder: (context, value, _) => LinearProgressIndicator(
                 value: value,
                 minHeight: 9,
-                backgroundColor: Colors.white.withValues(alpha: 0.14),
+                backgroundColor: MuColors.onBrand.withValues(alpha: 0.14),
                 valueColor: const AlwaysStoppedAnimation(MuColors.primary),
               ),
             ),
@@ -558,7 +558,7 @@ class _KarmaDemoCard extends StatelessWidget {
             if (i != demoTasks.length - 1) const SizedBox(height: MuSpace.s),
           ],
           const SizedBox(height: MuSpace.m),
-          Text(hint, style: MuType.caption.copyWith(color: Colors.white60)),
+          Text(hint, style: MuType.caption.copyWith(color: MuColors.onBrand.withValues(alpha: 0.6))),
         ],
       ),
     );
@@ -580,10 +580,10 @@ class _DemoTaskRow extends StatelessWidget {
         duration: const Duration(milliseconds: 180),
         padding: const EdgeInsets.symmetric(horizontal: MuSpace.m, vertical: MuSpace.s + 2),
         decoration: BoxDecoration(
-          color: done ? MuColors.karmaAccent.withValues(alpha: 0.2) : Colors.white.withValues(alpha: 0.05),
+          color: done ? MuColors.karmaAccent.withValues(alpha: 0.2) : MuColors.onBrand.withValues(alpha: 0.05),
           borderRadius: BorderRadius.circular(MuRadius.inner),
           border: Border.all(
-            color: done ? MuColors.karmaAccent : Colors.white.withValues(alpha: 0.1),
+            color: done ? MuColors.karmaAccent : MuColors.onBrand.withValues(alpha: 0.1),
           ),
         ),
         child: Row(
@@ -591,13 +591,13 @@ class _DemoTaskRow extends StatelessWidget {
             Icon(
               done ? LucideIcons.checkCircle2 : LucideIcons.circle,
               size: 18,
-              color: done ? MuColors.karmaAccent : Colors.white38,
+              color: done ? MuColors.karmaAccent : MuColors.onBrand.withValues(alpha: 0.38),
             ),
             const SizedBox(width: MuSpace.s),
             Expanded(
               child: Text(
                 task.label,
-                style: MuType.bodyMed.copyWith(color: Colors.white, fontSize: 14),
+                style: MuType.bodyMed.copyWith(color: MuColors.onBrand, fontSize: 14),
               ),
             ),
             Text(
@@ -649,7 +649,7 @@ class _LevelsStep extends StatelessWidget {
         Text(
           'Interest groups open at level 4. By level 7 you have mastered a '
           'domain in public.',
-          style: MuType.body.copyWith(color: Colors.white70),
+          style: MuType.body.copyWith(color: MuColors.onBrand.withValues(alpha: 0.7)),
         ),
         const SizedBox(height: MuSpace.l),
         Expanded(
@@ -682,7 +682,7 @@ class _LevelRow extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(MuSpace.m),
       decoration: BoxDecoration(
-        color: highlighted ? MuColors.karmaAccent.withValues(alpha: 0.16) : Colors.white.withValues(alpha: 0.05),
+        color: highlighted ? MuColors.karmaAccent.withValues(alpha: 0.16) : MuColors.onBrand.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(MuRadius.inner),
         border: highlighted ? Border.all(color: MuColors.karmaAccent.withValues(alpha: 0.5)) : null,
       ),
@@ -692,13 +692,13 @@ class _LevelRow extends StatelessWidget {
             height: 36,
             width: 36,
             decoration: BoxDecoration(
-              color: highlighted ? MuColors.karmaAccent : Colors.white.withValues(alpha: 0.12),
+              color: highlighted ? MuColors.karmaAccent : MuColors.onBrand.withValues(alpha: 0.12),
               shape: BoxShape.circle,
             ),
             alignment: Alignment.center,
             child: Text(
               '${level.n}',
-              style: MuType.bodyMed.copyWith(color: Colors.white, fontWeight: FontWeight.w700),
+              style: MuType.bodyMed.copyWith(color: MuColors.onBrand, fontWeight: FontWeight.w700),
             ),
           ),
           const SizedBox(width: MuSpace.m),
@@ -706,8 +706,8 @@ class _LevelRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(level.name, style: MuType.bodyMed.copyWith(color: Colors.white)),
-                Text(level.range, style: MuType.caption.copyWith(color: Colors.white60)),
+                Text(level.name, style: MuType.bodyMed.copyWith(color: MuColors.onBrand)),
+                Text(level.range, style: MuType.caption.copyWith(color: MuColors.onBrand.withValues(alpha: 0.6))),
               ],
             ),
           ),
@@ -718,7 +718,7 @@ class _LevelRow extends StatelessWidget {
                 color: MuColors.karmaAccent,
                 borderRadius: BorderRadius.circular(MuRadius.chip),
               ),
-              child: Text(level.tag!.toUpperCase(), style: MuType.tag.copyWith(color: Colors.white)),
+              child: Text(level.tag!.toUpperCase(), style: MuType.tag.copyWith(color: MuColors.onBrand)),
             ),
         ],
       ),

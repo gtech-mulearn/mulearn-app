@@ -95,7 +95,7 @@ lib/
 ## 8. Design & theming
 
 - Brand tokens live in `core/theme/mulearn_colors.dart` and `core/theme/mulearn_theme.dart` — this is the single source of truth, ported from the landing page's CSS custom properties. Never hardcode a hex color inline in a widget; reference `MulearnColors.primary` etc.
-- Primary blue `#0961F5`; brand gradient 135° `#2E85FE → #AF2EE6`; supporting neutrals greyish `#C4C4C4`, blackish `#1A1A1A`, whitish `#FEFEFE`, gray-600 `#666771`.
+- Primary blue `#0961F5`; brand gradient 135° `#2E85FE → #8F44ED` (karma purple aligned to the dashboard's `--brand-purple`, 2026-11-12); supporting neutrals greyish `#C4C4C4`, blackish `#1A1A1A`, whitish `#FEFEFE`, gray-600 `#666771`.
 - Match heading weight hierarchy from the web app (h1 heaviest/black down to h5 medium) rather than inventing a new scale.
 
 ---

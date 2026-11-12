@@ -313,7 +313,7 @@ class _KarmaHeroCard extends StatelessWidget {
                           Text(
                             'TOTAL KARMA',
                             style: MuType.eyebrow.copyWith(
-                              color: Colors.white.withValues(alpha: 0.55),
+                              color: MuColors.onBrand.withValues(alpha: 0.55),
                             ),
                           ),
                           const Spacer(),
@@ -324,12 +324,12 @@ class _KarmaHeroCard extends StatelessWidget {
                                 vertical: 4,
                               ),
                               decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.12),
+                                color: MuColors.onBrand.withValues(alpha: 0.12),
                                 borderRadius: BorderRadius.circular(MuRadius.chip),
                               ),
                               child: Text(
                                 'Rank #${summary.rank} · Top ${summary.percentile!.round()}%',
-                                style: MuType.chip.copyWith(color: Colors.white, fontSize: 11),
+                                style: MuType.chip.copyWith(color: MuColors.onBrand, fontSize: 11),
                               ),
                             ),
                         ],
@@ -337,18 +337,18 @@ class _KarmaHeroCard extends StatelessWidget {
                       const SizedBox(height: MuSpace.l),
                       Text(
                         _formatKarma(summary.karma),
-                        style: MuType.stat.copyWith(fontSize: 50, color: Colors.white, height: 1),
+                        style: MuType.stat.copyWith(fontSize: 50, color: MuColors.onBrand, height: 1),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         'karma earned',
-                        style: MuType.caption.copyWith(color: Colors.white.withValues(alpha: 0.5)),
+                        style: MuType.caption.copyWith(color: MuColors.onBrand.withValues(alpha: 0.5)),
                       ),
                       if (summary.level != null) ...[
                         const SizedBox(height: MuSpace.l),
                         Text(
                           'Level ${summary.level}',
-                          style: MuType.bodyMed.copyWith(color: Colors.white),
+                          style: MuType.bodyMed.copyWith(color: MuColors.onBrand),
                         ),
                       ],
                       const SizedBox(height: MuSpace.l),
@@ -358,14 +358,14 @@ class _KarmaHeroCard extends StatelessWidget {
                           Text(
                             'View your journey',
                             style: MuType.caption.copyWith(
-                              color: Colors.white.withValues(alpha: 0.6),
+                              color: MuColors.onBrand.withValues(alpha: 0.6),
                             ),
                           ),
                           const SizedBox(width: 4),
                           Icon(
                             LucideIcons.arrowRight,
                             size: 12,
-                            color: Colors.white.withValues(alpha: 0.6),
+                            color: MuColors.onBrand.withValues(alpha: 0.6),
                           ),
                         ],
                       ),

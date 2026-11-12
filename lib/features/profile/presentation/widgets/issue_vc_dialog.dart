@@ -201,7 +201,7 @@ class _IssuedView extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Icon(Icons.check_circle, color: Colors.green, size: 32),
+        const Icon(Icons.check_circle, color: MuColors.successFill, size: 32),
         const SizedBox(height: 8),
         const Text('Credential issued — scan to add it to your wallet.'),
         const SizedBox(height: 12),

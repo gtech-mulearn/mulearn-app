@@ -88,7 +88,7 @@ class _SegmentedControl extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.14),
+        color: MuColors.onBrand.withValues(alpha: 0.14),
         borderRadius: BorderRadius.circular(MuRadius.chip),
       ),
       child: Row(
@@ -149,7 +149,7 @@ class _MonthlyToggle extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.14),
+          color: MuColors.onBrand.withValues(alpha: 0.14),
           borderRadius: BorderRadius.circular(MuRadius.chip),
         ),
         child: Row(

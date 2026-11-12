@@ -231,9 +231,9 @@ class _HeroCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.08),
+                      color: MuColors.onBrand.withValues(alpha: 0.08),
                       borderRadius: BorderRadius.circular(MuRadius.chip),
-                      border: Border.all(color: Colors.white.withValues(alpha: 0.16)),
+                      border: Border.all(color: MuColors.onBrand.withValues(alpha: 0.16)),
                     ),
                     child: Text(
                       group.category.toUpperCase(),
@@ -248,11 +248,11 @@ class _HeroCard extends StatelessWidget {
                 style: MuType.display.copyWith(color: MuColors.surface, fontSize: 26),
               ),
               const SizedBox(height: MuSpace.xl),
-              Container(height: 1, color: Colors.white.withValues(alpha: 0.12)),
+              Container(height: 1, color: MuColors.onBrand.withValues(alpha: 0.12)),
               const SizedBox(height: MuSpace.l),
               Row(
                 children: [
-                  const Icon(LucideIcons.users, size: 16, color: Color(0xFFB9B9C2)),
+                  const Icon(LucideIcons.users, size: 16, color: MuColors.onBrandMuted),
                   const SizedBox(width: MuSpace.s),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -264,7 +264,7 @@ class _HeroCard extends StatelessWidget {
                       ),
                       Text(
                         'MEMBERS',
-                        style: MuType.label.copyWith(color: const Color(0xFFB9B9C2)),
+                        style: MuType.label.copyWith(color: MuColors.onBrandMuted),
                       ),
                     ],
                   ),
@@ -297,7 +297,7 @@ class _HeroIcon extends StatelessWidget {
       height: 52,
       width: 52,
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.1),
+        color: MuColors.onBrand.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(MuRadius.inner),
       ),
       clipBehavior: Clip.antiAlias,
