@@ -7,6 +7,7 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+
 // Release signing — see android/key.properties (gitignored). Falls back to
 // debug signing when the file is absent (e.g. a fresh checkout without it
 // set up yet) so `flutter run --release` still works for local dev.
@@ -67,8 +68,20 @@ android {
         }
     }
 
+    signingConfigs {
+        if (keystorePropertiesFile.exists()) {
+            create("release") {
+                keyAlias = keystoreProperties["keyAlias"] as String?
+                keyPassword = keystoreProperties["keyPassword"] as String?
+                storeFile = keystoreProperties["storeFile"]?.let { file(it) }
+                storePassword = keystoreProperties["storePassword"] as String?
+            }
+        }
+    }
+
     buildTypes {
         release {
+
             signingConfig = if (hasReleaseKeystore) {
                 signingConfigs.getByName("release")
             } else {
