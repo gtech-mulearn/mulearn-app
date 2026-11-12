@@ -23,6 +23,8 @@ abstract final class RoutePaths {
   static const String leaderboard = '/leaderboard';
   static const String profile = '/profile';
   static const String notifications = '/notifications';
+  static const String settings = '/settings';
+  static const String settingsPassword = '/settings/password';
 
   /// Read-only view of another user's profile by muid.
   static const String publicProfile = '/u/:muid';

@@ -177,6 +177,10 @@ class ProfileRepositoryImpl implements ProfileRepository {
       _guard(() => _remote.togglePublicProfile(isPublic: isPublic));
 
   @override
+  Future<void> changePassword({required String current, required String next}) =>
+      _guard(() => _remote.changePassword(current: current, next: next));
+
+  @override
   Future<String?> getCoverPic() => _guard(_remote.fetchCoverPic);
 
   @override

@@ -609,10 +609,7 @@ class _QuickActionsList extends ConsumerWidget {
           _QuickActionRow(
             icon: LucideIcons.settings,
             label: 'Account settings',
-            onTap: () => MuToast.show(
-              context,
-              message: 'Account settings — coming next.',
-            ),
+            onTap: () => context.push(RoutePaths.settings),
           ),
           _QuickActionRow(
             icon: LucideIcons.zap,

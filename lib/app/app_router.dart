@@ -24,9 +24,11 @@ import 'package:mulearn_app/features/learning_circles/presentation/screens/learn
 import 'package:mulearn_app/features/learning_circles/presentation/screens/learning_circles_screen.dart';
 import 'package:mulearn_app/features/learning_circles/presentation/screens/meeting_detail_screen.dart';
 import 'package:mulearn_app/features/notifications/presentation/screens/notifications_screen.dart';
+import 'package:mulearn_app/features/profile/presentation/screens/change_password_screen.dart';
 import 'package:mulearn_app/features/profile/presentation/screens/journey_screen.dart';
 import 'package:mulearn_app/features/profile/presentation/screens/profile_screen.dart';
 import 'package:mulearn_app/features/profile/presentation/screens/public_profile_screen.dart';
+import 'package:mulearn_app/features/profile/presentation/screens/settings_screen.dart';
 import 'package:mulearn_app/features/search/presentation/screens/search_screen.dart';
 import 'package:mulearn_app/features/splash/presentation/screens/splash_screen.dart';
 import 'package:mulearn_app/features/tasks/presentation/screens/task_detail_screen.dart';
@@ -199,6 +201,14 @@ GoRouter goRouter(Ref ref) {
       GoRoute(
         path: RoutePaths.notifications,
         builder: (_, __) => const NotificationsScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.settings,
+        builder: (_, __) => const SettingsScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.settingsPassword,
+        builder: (_, __) => const ChangePasswordScreen(),
       ),
       GoRoute(
         path: RoutePaths.taskDetail,

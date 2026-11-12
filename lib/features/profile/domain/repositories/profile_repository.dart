@@ -78,6 +78,9 @@ abstract interface class ProfileRepository {
   /// `PUT /api/v1/dashboard/profile/share-user-profile/` `{"is_public"}`.
   Future<void> togglePublicProfile({required bool isPublic});
 
+  /// Changes the signed-in user's password.
+  Future<void> changePassword({required String current, required String next});
+
   /// `GET /api/v1/dashboard/profile/cover-pic/` — null if none uploaded.
   Future<String?> getCoverPic();
 

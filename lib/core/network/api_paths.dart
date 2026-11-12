@@ -126,6 +126,10 @@ abstract final class ApiPaths {
   /// this public alternative is the one that actually works for browsing.
   static String interestGroupDetail(String id) => '/api/v1/public/ig/$id/';
 
+  /// `POST {"current_password", "password"}` — change the password
+  /// (ResetPasswordAPI); 400 "Current Password is incorrect" otherwise.
+  static const String changePassword = '/api/v1/dashboard/profile/change-password/';
+
   /// `PUT {"is_public": bool}` — toggle profile visibility.
   static const String shareUserProfile =
       '/api/v1/dashboard/profile/share-user-profile/';

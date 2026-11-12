@@ -106,6 +106,15 @@ class ProfileRemoteDataSource {
     ApiEnvelope.unwrapObject(response);
   }
 
+  /// `POST /api/v1/dashboard/profile/change-password/`.
+  Future<void> changePassword({required String current, required String next}) async {
+    final response = await _dio.post<dynamic>(
+      ApiPaths.changePassword,
+      data: {'current_password': current, 'password': next},
+    );
+    ApiEnvelope.unwrapObject(response);
+  }
+
   /// `PUT /api/v1/dashboard/profile/share-user-profile/` `{"is_public"}`.
   Future<void> togglePublicProfile({required bool isPublic}) async {
     final response = await _dio.put<dynamic>(

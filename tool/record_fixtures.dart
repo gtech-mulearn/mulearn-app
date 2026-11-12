@@ -23,11 +23,12 @@ const _roles = ['student', 'mentor', 'enabler', 'campuslead'];
 /// Non-GET targets must be side-effect free on dev (e.g. a foreign id that
 /// 404s, or a request the backend rejects).
 class _Target {
-  const _Target(this.slug, this.path, {this.account = 'student', this.method = 'GET'});
+  const _Target(this.slug, this.path, {this.account = 'student', this.method = 'GET', this.data});
   final String slug;
   final String path;
   final String? account;
   final String method;
+  final Object? data;
 }
 
 List<_Target> _targets() {
@@ -70,6 +71,13 @@ List<_Target> _targets() {
       'notification_read_foreign',
       '/api/v1/notification/00000000-0000-4000-8000-000000000000/read/',
       method: 'PATCH',
+    ),
+    // A wrong current password: rejected before anything changes.
+    const _Target(
+      'change_password_wrong_current',
+      '/api/v1/dashboard/profile/change-password/',
+      method: 'POST',
+      data: {'current_password': 'not-the-current-password', 'password': 'unused-new-password-1'},
     ),
   ];
 }
@@ -139,6 +147,7 @@ Future<void> main(List<String> only) async {
     }
     final res = await dio.request<dynamic>(
       target.path,
+      data: target.data,
       options: Options(method: target.method, headers: {
         if (account != null) 'Authorization': 'Bearer ${tokens[account]}',
       }),

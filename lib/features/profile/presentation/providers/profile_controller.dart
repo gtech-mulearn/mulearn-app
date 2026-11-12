@@ -33,15 +33,17 @@ class ProfileController extends _$ProfileController {
   /// Refetches the shared profile; every reader of it refreshes.
   Future<void> refresh() async => ref.invalidate(myProfilePayloadProvider);
 
-  /// Toggles profile visibility, then reflects the change immediately
-  /// without a full refetch.
+  /// Toggles profile visibility: shown at once, then the shared profile is
+  /// refetched so every reader (and a later rebuild) agrees with the server.
   Future<void> togglePublic({required bool isPublic}) async {
     final current = state.value;
     await ref
         .read(profileRepositoryProvider)
         .togglePublicProfile(isPublic: isPublic);
+    if (!ref.mounted) return;
     if (current != null) {
       state = AsyncData(current.copyWith(isPublic: isPublic));
     }
+    ref.invalidate(myProfilePayloadProvider);
   }
 }
