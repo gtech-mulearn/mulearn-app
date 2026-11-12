@@ -16,9 +16,9 @@ import 'package:mulearn_app/core/widgets/mu_icon_button.dart';
 import 'package:mulearn_app/core/widgets/mu_load_more_footer.dart';
 import 'package:mulearn_app/core/widgets/mu_section_header.dart';
 import 'package:mulearn_app/core/widgets/mu_toast.dart';
-import 'package:mulearn_app/features/learning_circles/domain/entities/circle_invite.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/circle_member.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/learning_circle.dart';
+import 'package:mulearn_app/features/learning_circles/domain/entities/received_circle_invite.dart';
 import 'package:mulearn_app/features/learning_circles/presentation/providers/learning_circles_controller.dart';
 import 'package:mulearn_app/features/learning_circles/presentation/widgets/learning_circle_tile.dart';
 
@@ -258,7 +258,7 @@ class _LearningCirclesScreenState extends ConsumerState<LearningCirclesScreen> {
 class _InvitesSection extends StatelessWidget {
   const _InvitesSection({required this.invites, required this.isBusy});
 
-  final List<CircleInvite> invites;
+  final List<ReceivedCircleInvite> invites;
   final bool isBusy;
 
   @override
@@ -289,7 +289,7 @@ class _InvitesSection extends StatelessWidget {
 class _InviteTile extends ConsumerWidget {
   const _InviteTile({required this.invite, required this.isBusy});
 
-  final CircleInvite invite;
+  final ReceivedCircleInvite invite;
   final bool isBusy;
 
   Future<void> _respond(
@@ -331,10 +331,11 @@ class _InviteTile extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  invite.circleTitle ?? 'You were invited to a circle',
-                  style: MuType.bodyMed,
-                ),
+                Text(invite.circleTitle, style: MuType.bodyMed),
+                if (invite.igName != null)
+                  Text(invite.igName!, style: MuType.caption),
+                if (invite.invitedByName != null)
+                  Text('Invited by ${invite.invitedByName}', style: MuType.caption),
                 if (invite.isLeadInvite)
                   Text('Invited as lead', style: MuType.caption),
               ],

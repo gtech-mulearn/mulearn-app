@@ -9,6 +9,7 @@ import 'package:mulearn_app/features/learning_circles/domain/entities/circle_mem
 import 'package:mulearn_app/features/learning_circles/domain/entities/join_request.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/learning_circle.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/learning_circle_detail.dart';
+import 'package:mulearn_app/features/learning_circles/domain/entities/received_circle_invite.dart';
 import 'package:mulearn_app/features/learning_circles/domain/repositories/learning_circles_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -45,7 +46,7 @@ Future<List<CircleInvite>> circleSentInvites(Ref ref, String id) =>
     ref.watch(learningCirclesRepositoryProvider).getSentInvites(id);
 
 @riverpod
-Future<List<CircleInvite>> myPendingCircleInvites(Ref ref) =>
+Future<List<ReceivedCircleInvite>> myPendingCircleInvites(Ref ref) =>
     ref.watch(learningCirclesRepositoryProvider).getMyPendingInvites();
 
 /// IG options for the create-circle picker — `{id, name}` only (rules.md

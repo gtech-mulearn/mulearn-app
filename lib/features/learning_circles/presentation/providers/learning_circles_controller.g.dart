@@ -470,13 +470,13 @@ const myPendingCircleInvitesProvider = MyPendingCircleInvitesProvider._();
 final class MyPendingCircleInvitesProvider
     extends
         $FunctionalProvider<
-          AsyncValue<List<CircleInvite>>,
-          List<CircleInvite>,
-          FutureOr<List<CircleInvite>>
+          AsyncValue<List<ReceivedCircleInvite>>,
+          List<ReceivedCircleInvite>,
+          FutureOr<List<ReceivedCircleInvite>>
         >
     with
-        $FutureModifier<List<CircleInvite>>,
-        $FutureProvider<List<CircleInvite>> {
+        $FutureModifier<List<ReceivedCircleInvite>>,
+        $FutureProvider<List<ReceivedCircleInvite>> {
   const MyPendingCircleInvitesProvider._()
     : super(
         from: null,
@@ -493,18 +493,18 @@ final class MyPendingCircleInvitesProvider
 
   @$internal
   @override
-  $FutureProviderElement<List<CircleInvite>> $createElement(
+  $FutureProviderElement<List<ReceivedCircleInvite>> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<List<CircleInvite>> create(Ref ref) {
+  FutureOr<List<ReceivedCircleInvite>> create(Ref ref) {
     return myPendingCircleInvites(ref);
   }
 }
 
 String _$myPendingCircleInvitesHash() =>
-    r'd75b493fc82a437eef366ce68dc7903cd59d0121';
+    r'39f134bc9cd21e1614cf523a7edc6d40b7edddd6';
 
 /// IG options for the create-circle picker — `{id, name}` only (rules.md
 /// §2: fetched independently rather than importing the `interest_groups`

@@ -1,0 +1,33 @@
+{
+  "_meta": {
+    "source": "serializer",
+    "endpoint": "GET /api/v1/dashboard/learningcircle/invite/status/",
+    "backend_ref": "mulearnbackend@87f7f80a api/dashboard/learningcircle/learningcircle_views.py:1551-1565; learningcircle_serializer.py:767-790 CircleInviteStatusSerializer",
+    "note": "Dev has no learning circles yet (2026-11-12). Second item has invited_by null (inviter removed)."
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {"general": ["Invitations fetched successfully"]},
+    "response": [
+      {
+        "link_id": "l1",
+        "circle_id": "c1",
+        "circle_title": "Flutter Study Group",
+        "ig": "Mobile Development",
+        "is_lead_invite": false,
+        "invited_by": {"user_id": "u9", "full_name": "Fixture User", "profile_pic": null},
+        "created_at": "2026-11-12T10:15:00+05:30"
+      },
+      {
+        "link_id": "l2",
+        "circle_id": "c2",
+        "circle_title": "Design Systems Circle",
+        "ig": "UI/UX",
+        "is_lead_invite": true,
+        "invited_by": null,
+        "created_at": "2026-11-10T09:00:00+05:30"
+      }
+    ]
+  }
+}

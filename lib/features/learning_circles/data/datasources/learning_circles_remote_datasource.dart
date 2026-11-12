@@ -172,10 +172,12 @@ class LearningCirclesRemoteDataSource {
     return ApiEnvelope.unwrapList(response);
   }
 
+  /// `POST learningcircle/invite/status/<linkId>/` — the backend requires
+  /// `action` ∈ {accept, reject} (CircleInviteStatusAPI.post).
   Future<void> respondToInvite(String linkId, {required bool accept}) async {
     final response = await _dio.post<dynamic>(
       ApiPaths.circleInviteRespond(linkId),
-      data: {'is_accepted': accept},
+      data: {'action': accept ? 'accept' : 'reject'},
     );
     ApiEnvelope.unwrapObject(response);
   }

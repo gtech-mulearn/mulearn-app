@@ -15,8 +15,6 @@ _CircleInviteDto _$CircleInviteDtoFromJson(Map<String, dynamic> json) =>
       userId: json['user_id'] as String?,
       profilePic: json['profile_pic'] as String?,
       invitedAt: json['invited_at'] as String?,
-      circleId: json['circle_id'] as String?,
-      circleTitle: json['circle_title'] as String?,
       isLeadInvite: json['is_lead_invite'] as bool? ?? false,
     );
 
@@ -29,7 +27,5 @@ Map<String, dynamic> _$CircleInviteDtoToJson(_CircleInviteDto instance) =>
       'user_id': instance.userId,
       'profile_pic': instance.profilePic,
       'invited_at': instance.invitedAt,
-      'circle_id': instance.circleId,
-      'circle_title': instance.circleTitle,
       'is_lead_invite': instance.isLeadInvite,
     };

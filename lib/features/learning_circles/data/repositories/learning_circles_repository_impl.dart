@@ -12,6 +12,7 @@ import 'package:mulearn_app/features/learning_circles/data/dtos/learning_circle_
 import 'package:mulearn_app/features/learning_circles/data/dtos/meeting_detail_dto.dart';
 import 'package:mulearn_app/features/learning_circles/data/dtos/meeting_dto.dart';
 import 'package:mulearn_app/features/learning_circles/data/dtos/meeting_report_dto.dart';
+import 'package:mulearn_app/features/learning_circles/data/dtos/received_circle_invite_dto.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/attendee_report.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/circle_invite.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/circle_members.dart';
@@ -23,6 +24,7 @@ import 'package:mulearn_app/features/learning_circles/domain/entities/meeting_de
 import 'package:mulearn_app/features/learning_circles/domain/entities/meeting_form.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/meeting_page.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/meeting_report.dart';
+import 'package:mulearn_app/features/learning_circles/domain/entities/received_circle_invite.dart';
 import 'package:mulearn_app/features/learning_circles/domain/repositories/learning_circles_repository.dart';
 
 class LearningCirclesRepositoryImpl implements LearningCirclesRepository {
@@ -144,11 +146,11 @@ class LearningCirclesRepositoryImpl implements LearningCirclesRepository {
       });
 
   @override
-  Future<List<CircleInvite>> getMyPendingInvites() => _guard(() async {
+  Future<List<ReceivedCircleInvite>> getMyPendingInvites() => _guard(() async {
         final items = await _remote.fetchMyPendingInvites();
         return _parseSkippingErrors(
           items,
-          (json) => CircleInviteDto.fromJson(json).toDomain(),
+          (json) => ReceivedCircleInviteDto.fromJson(json).toDomain(),
         );
       });
 
