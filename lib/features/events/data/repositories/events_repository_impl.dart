@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/network/paging.dart';
-import 'package:mulearn_app/core/utils/app_logger.dart';
+import 'package:mulearn_app/core/network/tolerant_parse.dart';
 import 'package:mulearn_app/features/events/data/datasources/events_remote_datasource.dart';
 import 'package:mulearn_app/features/events/data/dtos/event_dto.dart';
 import 'package:mulearn_app/features/events/domain/entities/event.dart';
@@ -19,33 +19,15 @@ class EventsRepositoryImpl implements EventsRepository {
         final items = payload['data'] as List<dynamic>? ?? [];
         final info = PageIndexPaging.parse(payload['pagination'] as Map<String, dynamic>?);
         return EventPage(
-          events: _parseSkippingErrors(
+          events: parseEachOrReport(
             items,
             (json) => EventDto.fromJson(json).toDomain(),
+            what: 'EventDto',
           ),
           hasNext: info.hasNext,
           totalPages: info.totalPages,
         );
       });
-
-  /// Skips rows that don't match [EventDto]'s expected shape instead of
-  /// crashing the whole page — mirrors the same defensive pattern used in
-  /// `LearningCirclesRepositoryImpl` for backends whose list rows don't
-  /// reliably match the assumed DTO shape.
-  List<T> _parseSkippingErrors<T>(
-    List<dynamic> items,
-    T Function(Map<String, dynamic>) parse,
-  ) {
-    final results = <T>[];
-    for (final item in items) {
-      try {
-        results.add(parse(item as Map<String, dynamic>));
-      } on Object catch (e, st) {
-        appLogger.e('Skipping malformed event list row', error: e, stackTrace: st);
-      }
-    }
-    return results;
-  }
 
   @override
   Future<Event> getEventDetail(String id) => _guard(() async {

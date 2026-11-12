@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mulearn_app/app/app.dart';
 import 'package:mulearn_app/core/config/flavor_config.dart';
 import 'package:mulearn_app/core/storage/cache_store_provider.dart';
+import 'package:mulearn_app/core/telemetry/crash_reporter.dart';
+import 'package:mulearn_app/core/telemetry/error_hooks.dart';
 import 'package:mulearn_app/core/utils/app_logger.dart';
 
 /// Shared entrypoint used by every flavor's `main_*.dart` (architecture §2).
@@ -16,13 +18,7 @@ Future<void> bootstrap(Flavor flavor) async {
   final config = FlavorConfig.initialize(flavor);
   appLogger.i('Booting μLearn (${config.flavor.name}) → ${config.apiBaseUrl}');
 
-  FlutterError.onError = (details) {
-    appLogger.e(
-      'FlutterError',
-      error: details.exception,
-      stackTrace: details.stack,
-    );
-  };
+  installErrorHooks(crashReporter);
 
   // HTTP response cache store.
   //
@@ -35,6 +31,7 @@ Future<void> bootstrap(Flavor flavor) async {
 
   runApp(
     ProviderScope(
+      observers: [TelemetryProviderObserver(crashReporter)],
       overrides: [
         cacheStoreProvider.overrideWithValue(cacheStore),
       ],

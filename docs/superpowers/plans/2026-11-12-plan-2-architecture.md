@@ -54,7 +54,7 @@
 
 **Files:**
 - Create: `lib/core/telemetry/crash_reporter.dart`, `lib/core/telemetry/error_hooks.dart`, `lib/core/network/tolerant_parse.dart`
-- Modify: `lib/app/bootstrap.dart`; the four private parse helpers — `events_repository_impl.dart:35`, `leaderboard_repository_impl.dart:57`, `learning_circles_repository_impl.dart:239` (`_parseSkippingErrors`) and `calendar_repository_impl.dart:47` (`_parseEach`) — are deleted and their callers use `parseEachOrReport`
+- Modify: `lib/bootstrap.dart`; the four private parse helpers — `events_repository_impl.dart:35`, `leaderboard_repository_impl.dart:57`, `learning_circles_repository_impl.dart:239` (`_parseSkippingErrors`) and `calendar_repository_impl.dart:47` (`_parseEach`) — are deleted and their callers use `parseEachOrReport`
 - Test: `test/core/telemetry/error_hooks_test.dart`, `test/core/network/tolerant_parse_test.dart`
 
 **Interfaces:**
@@ -152,7 +152,7 @@ Today four providers each `GET /dashboard/profile/user-profile/` (`profile_remot
 
 **Files:**
 - Create: `lib/core/network/cache_scope_interceptor.dart`, `lib/core/auth/jwt_claims.dart`, `lib/core/storage/cache_store_factory.dart`
-- Modify: `lib/core/network/cache_config.dart` (both options use `CacheConfig.keyBuilder`), `lib/core/network/dio_provider.dart` (order: `CacheScopeInterceptor` → `DioCacheInterceptor` → `AuthInterceptor`), `lib/app/bootstrap.dart` (persistent store), `lib/core/auth/current_user_claims.dart` (uses `jwtClaim`), `pubspec.yaml` (`path_provider: ^2.1.6`)
+- Modify: `lib/core/network/cache_config.dart` (both options use `CacheConfig.keyBuilder`), `lib/core/network/dio_provider.dart` (order: `CacheScopeInterceptor` → `DioCacheInterceptor` → `AuthInterceptor`), `lib/bootstrap.dart` (persistent store), `lib/core/auth/current_user_claims.dart` (uses `jwtClaim`), `pubspec.yaml` (`path_provider: ^2.1.6`)
 - Test: `test/core/network/cache_scope_test.dart`, `test/core/storage/cache_store_factory_test.dart`
 
 **Interfaces:**

@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/network/paging.dart';
+import 'package:mulearn_app/core/network/tolerant_parse.dart';
 import 'package:mulearn_app/core/utils/app_logger.dart';
 import 'package:mulearn_app/features/learning_circles/data/datasources/learning_circles_remote_datasource.dart';
 import 'package:mulearn_app/features/learning_circles/data/dtos/attendee_report_dto.dart';
@@ -37,9 +38,10 @@ class LearningCirclesRepositoryImpl implements LearningCirclesRepository {
         final payload = await _remote.fetchCircles(pageIndex: pageIndex);
         final items = payload['data'] as List<dynamic>? ?? [];
         return LearningCirclePage(
-          circles: _parseSkippingErrors(
+          circles: parseEachOrReport(
             items,
             (json) => LearningCircleDto.fromJson(json).toDomain(),
+            what: 'LearningCircleDto',
           ),
           hasNext: PageIndexPaging.parse(payload['pagination'] as Map<String, dynamic>?).hasNext,
         );
@@ -48,9 +50,10 @@ class LearningCirclesRepositoryImpl implements LearningCirclesRepository {
   @override
   Future<List<LearningCircle>> getMyCircles() => _guard(() async {
         final items = await _remote.fetchMyCircles();
-        return _parseSkippingErrors(
+        return parseEachOrReport(
           items,
           (json) => LearningCircleDto.fromJson(json).toDomain(),
+          what: 'LearningCircleDto',
         );
       });
 
@@ -99,7 +102,6 @@ class LearningCirclesRepositoryImpl implements LearningCirclesRepository {
         return CircleMembersDto.fromJson(json).toDomain();
       });
 
-
   @override
   Future<void> transferLead(String id, {required String muid}) =>
       _guard(() => _remote.transferLead(id, muid: muid));
@@ -110,9 +112,10 @@ class LearningCirclesRepositoryImpl implements LearningCirclesRepository {
   @override
   Future<List<JoinRequest>> getJoinRequests(String id) => _guard(() async {
         final items = await _remote.fetchJoinRequests(id);
-        return _parseSkippingErrors(
+        return parseEachOrReport(
           items,
           (json) => JoinRequestDto.fromJson(json).toDomain(),
+          what: 'JoinRequestDto',
         );
       });
 
@@ -132,18 +135,20 @@ class LearningCirclesRepositoryImpl implements LearningCirclesRepository {
   @override
   Future<List<CircleInvite>> getSentInvites(String id) => _guard(() async {
         final items = await _remote.fetchSentInvites(id);
-        return _parseSkippingErrors(
+        return parseEachOrReport(
           items,
           (json) => CircleInviteDto.fromJson(json).toDomain(),
+          what: 'CircleInviteDto',
         );
       });
 
   @override
   Future<List<ReceivedCircleInvite>> getMyPendingInvites() => _guard(() async {
         final items = await _remote.fetchMyPendingInvites();
-        return _parseSkippingErrors(
+        return parseEachOrReport(
           items,
           (json) => ReceivedCircleInviteDto.fromJson(json).toDomain(),
+          what: 'ReceivedCircleInviteDto',
         );
       });
 
@@ -157,9 +162,10 @@ class LearningCirclesRepositoryImpl implements LearningCirclesRepository {
         final payload = await _remote.fetchCircleMeetings(circleId, pageIndex: pageIndex);
         final items = payload['data'] as List<dynamic>? ?? [];
         return MeetingPage(
-          meetings: _parseSkippingErrors(
+          meetings: parseEachOrReport(
             items,
             (json) => MeetingDto.fromJson(json).toDomain(),
+            what: 'MeetingDto',
           ),
           hasNext: PageIndexPaging.parse(payload['pagination'] as Map<String, dynamic>?).hasNext,
         );
@@ -227,33 +233,6 @@ class LearningCirclesRepositoryImpl implements LearningCirclesRepository {
             report: report,
             attendees: attendees,
           ));
-
-  /// Parses each row with [parse], skipping (and logging) any row that
-  /// throws instead of letting one malformed record crash the whole list —
-  /// confirmed live as necessary (rules.md §3/§9): `/user-circles/`'s
-  /// populated item shape has never been directly observed (only an empty
-  /// `[]` response was confirmed live), and a real account's circle there
-  /// threw `type 'Null' is not a subtype of type 'String'` on `id`,
-  /// meaning that endpoint's rows don't reliably match `/list/`'s shape
-  /// this DTO was modeled on.
-  List<T> _parseSkippingErrors<T>(
-    List<dynamic> items,
-    T Function(Map<String, dynamic>) parse,
-  ) {
-    final results = <T>[];
-    for (final item in items) {
-      try {
-        results.add(parse(item as Map<String, dynamic>));
-      } on Object catch (e, st) {
-        appLogger.e(
-          'Skipping malformed learning-circle list row. Raw row: $item',
-          error: e,
-          stackTrace: st,
-        );
-      }
-    }
-    return results;
-  }
 
   Future<T> _guard<T>(Future<T> Function() action) async {
     try {
