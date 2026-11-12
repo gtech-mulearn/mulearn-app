@@ -12,7 +12,7 @@ The official μLearn mobile app, built with Flutter. It's the mobile companion t
 - **Search** — find users and mentors by name or MUID
 - **Interest Groups** — browse the catalog, view group detail, join/leave
 - **Events** — browse, view detail, mark interest/RSVP
-- **Calendar** — unified month-grid view of events and learning-circle sessions
+- **Calendar** — unified month-grid view of events and, for mentors, mentorship sessions
 - **Learning Circles** — full management: browse/create/join circles, members, join requests, invites (send/receive/accept/reject), meetings (create/edit/delete/RSVP/join-by-code), attendee and organizer meeting reports, lead transfer
 
 ## Tech stack
