@@ -1,5 +1,33 @@
 import 'package:dio/dio.dart';
 
+/// What went wrong, independent of the message — lets screens pick an
+/// offline/forbidden/validation state without parsing text (spec §8.1).
+enum ApiErrorKind {
+  /// The server was never reached (no connection, DNS, TLS…).
+  network,
+
+  /// The request or response took too long.
+  timeout,
+
+  /// 401 — the session is missing or no longer valid.
+  unauthorized,
+
+  /// 403 — signed in but not allowed (also an expired token on this backend).
+  forbidden,
+
+  /// 400/422 or field errors — the input was rejected.
+  validation,
+
+  /// 404.
+  notFound,
+
+  /// 5xx.
+  server,
+
+  /// Nothing in the error identifies it.
+  unknown,
+}
+
 /// Normalized error surfaced to the domain/presentation layers.
 ///
 /// Handles the error shapes the μLearn backend produces (rules.md §3),
@@ -21,7 +49,8 @@ class ApiException implements Exception {
     this.statusCode,
     this.fieldErrors = const {},
     this.isNetworkError = false,
-  });
+    ApiErrorKind? kind,
+  }) : _kind = kind;
 
   factory ApiException.fromDioException(DioException e) {
     switch (e.type) {
@@ -32,6 +61,7 @@ class ApiException implements Exception {
         return const ApiException(
           message: 'The connection timed out. Please try again.',
           isNetworkError: true,
+          kind: ApiErrorKind.timeout,
         );
       case DioExceptionType.connectionError:
       case DioExceptionType.unknown:
@@ -39,6 +69,7 @@ class ApiException implements Exception {
           message: 'Could not reach the server. Check your connection.',
           isNetworkError: true,
           statusCode: e.response?.statusCode,
+          kind: ApiErrorKind.network,
         );
       case DioExceptionType.cancel:
         return const ApiException(message: 'Request cancelled.');
@@ -134,6 +165,24 @@ class ApiException implements Exception {
 
   /// True when the request never reached the server (timeout, no connection).
   final bool isNetworkError;
+
+  final ApiErrorKind? _kind;
+
+  /// The error's category: set explicitly for timeouts/connection failures,
+  /// otherwise derived from the status code and field errors.
+  ApiErrorKind get kind {
+    if (_kind case final kind?) return kind;
+    final status = statusCode;
+    if (status == 401) return ApiErrorKind.unauthorized;
+    if (status == 403) return ApiErrorKind.forbidden;
+    if (status == 404) return ApiErrorKind.notFound;
+    if (status == 400 || status == 422 || fieldErrors.isNotEmpty) {
+      return ApiErrorKind.validation;
+    }
+    if (status != null && status >= 500) return ApiErrorKind.server;
+    if (isNetworkError) return ApiErrorKind.network;
+    return ApiErrorKind.unknown;
+  }
 
   bool get isUnauthorized => statusCode == 401;
 

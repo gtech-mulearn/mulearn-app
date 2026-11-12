@@ -170,4 +170,45 @@ void main() {
       expect(e.message, 'Request failed (400).');
     });
   });
+
+  group('ApiException.kind', () {
+    ApiException fromStatus(int status) => ApiException.fromEnvelopeBody({
+          'hasError': true,
+          'statusCode': status,
+          'message': {'general': ['x']},
+          'response': <String, dynamic>{},
+        });
+
+    test('a timeout is a timeout (and still a network error)', () {
+      final e = ApiException.fromDioException(
+        DioException(requestOptions: req(), type: DioExceptionType.connectionTimeout),
+      );
+      expect(e.kind, ApiErrorKind.timeout);
+      expect(e.isNetworkError, isTrue);
+    });
+
+    test('no connection is a network error', () {
+      final e = ApiException.fromDioException(
+        DioException(requestOptions: req(), type: DioExceptionType.connectionError),
+      );
+      expect(e.kind, ApiErrorKind.network);
+    });
+
+    test('status codes map to their kinds', () {
+      expect(fromStatus(401).kind, ApiErrorKind.unauthorized);
+      expect(fromStatus(403).kind, ApiErrorKind.forbidden);
+      expect(fromStatus(404).kind, ApiErrorKind.notFound);
+      expect(fromStatus(500).kind, ApiErrorKind.server);
+      expect(fromStatus(502).kind, ApiErrorKind.server);
+    });
+
+    test('field errors recorded live are a validation error', () {
+      final e = ApiException.fromEnvelopeBody(loadFixture('dev/profile_patch_invalid_email'));
+      expect(e.kind, ApiErrorKind.validation);
+    });
+
+    test('an error with nothing to classify is unknown', () {
+      expect(const ApiException(message: 'x').kind, ApiErrorKind.unknown);
+    });
+  });
 }
