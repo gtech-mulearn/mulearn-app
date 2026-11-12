@@ -4,7 +4,7 @@
     "endpoint": "/api/v1/notification/?page=1&page_size=20",
     "account": "student",
     "status": 200,
-    "recorded_at": "2026-11-12T15:31:36.724770Z"
+    "recorded_at": "2026-11-12T19:00:50.485300Z"
   },
   "body": {
     "hasError": false,
@@ -13,10 +13,25 @@
       "general": []
     },
     "response": {
-      "count": 34,
+      "count": 35,
       "page": 1,
       "page_size": 20,
       "results": [
+        {
+          "id": "35677b85-742f-4534-8d4f-981e9b92f347",
+          "type": "LC_INVITE",
+          "category": "LC",
+          "title": "Circle Invitation",
+          "description": "You have been invited to join Blender: Donut to Diorama.",
+          "entity_type": "learning_circle",
+          "entity_id": "217cd8ca-d6a3-4e75-9621-036c057f7ecd",
+          "is_read": false,
+          "is_archived": false,
+          "created_at": "2026-11-12T16:00:02Z",
+          "read_at": null,
+          "source": "personal",
+          "redirect_url": null
+        },
         {
           "id": "c6a4179d-eddf-4312-9938-61baac4caa29",
           "type": "EVENT_PUBLISHED",
@@ -298,21 +313,6 @@
           "is_read": false,
           "is_archived": false,
           "created_at": "2026-11-12T15:20:20Z",
-          "read_at": null,
-          "source": "broadcast",
-          "redirect_url": "/dashboard/learning-circle/"
-        },
-        {
-          "id": "33ea9a1d-4843-4470-8da3-1bef4a6e0492",
-          "type": null,
-          "category": "SYSTEM",
-          "title": "New Learning Circle Created",
-          "description": "A new Learning Circle \"Product Management 101\" has been formed in your campus!",
-          "entity_type": null,
-          "entity_id": null,
-          "is_read": false,
-          "is_archived": false,
-          "created_at": "2026-11-12T15:20:18Z",
           "read_at": null,
           "source": "broadcast",
           "redirect_url": "/dashboard/learning-circle/"

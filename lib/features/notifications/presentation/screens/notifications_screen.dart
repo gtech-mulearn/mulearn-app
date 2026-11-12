@@ -1,23 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
 import 'package:mulearn_app/core/theme/mulearn_typography.dart';
+import 'package:mulearn_app/core/utils/app_logger.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/core/widgets/mu_empty_state.dart';
 import 'package:mulearn_app/features/notifications/presentation/providers/notifications_controller.dart';
 import 'package:mulearn_app/features/notifications/presentation/widgets/notification_list_tile.dart';
 
-/// Notification inbox (DESIGN_SPEC.md §2 "14 — Notifications").
-///
-/// No backend endpoint exists yet — this screen is real (entity +
-/// repository + controller, all wired through Riverpod like every other
-/// feature), just backed by a datasource that always returns an empty list
-/// until the backend adds a `notifications` endpoint. See
-/// [NotificationsRemoteDataSource] for the placeholder. Renders through the
-/// existing [MuEmptyState] widget for that (today, permanent) empty case.
+/// Notification inbox (DESIGN_SPEC.md §2 "14 — Notifications"), backed by
+/// the v2 feed (`/api/v1/notification/`).
 class NotificationsScreen extends ConsumerWidget {
   const NotificationsScreen({super.key});
 
@@ -49,7 +43,8 @@ class NotificationsScreen extends ConsumerWidget {
             error: error,
             onRetry: () => ref.invalidate(notificationsControllerProvider),
           ),
-          data: (notifications) {
+          data: (paged) {
+            final notifications = paged.items;
             if (notifications.isEmpty) {
               return const MuEmptyState(
                 icon: LucideIcons.bell,
@@ -64,13 +59,10 @@ class NotificationsScreen extends ConsumerWidget {
                 final notification = notifications[index];
                 return NotificationListTile(
                   notification: notification,
-                  onTap: () {
-                    ref
-                        .read(notificationsControllerProvider.notifier)
-                        .markRead(notification.id);
-                    final route = notification.targetRoute;
-                    if (route != null) context.push(route);
-                  },
+                  onTap: () => ref
+                      .read(notificationsControllerProvider.notifier)
+                      .markRead(notification.id)
+                      .catchError((Object e) => appLogger.w('Mark read failed', error: e)),
                 );
               },
             );

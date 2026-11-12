@@ -1,22 +1,31 @@
-import 'package:mulearn_app/features/notifications/domain/entities/app_notification.dart';
+import 'package:dio/dio.dart';
+import 'package:mulearn_app/core/network/api_envelope.dart';
+import 'package:mulearn_app/core/network/api_paths.dart';
+import 'package:mulearn_app/core/network/paging.dart';
 
-/// Notifications datasource.
-///
-/// No backend endpoint exists yet for notifications — there's nothing in
-/// `ApiPaths`, no FCM/push package in `pubspec.yaml`, no server-side feed to
-/// call. This class is the single, clearly-documented placeholder for that
-/// gap: it returns an empty list until a real `notifications` endpoint is
-/// added, at which point only this file (plus `markAllRead`) needs to
-/// change — the rest of the feature (entity, repository contract,
-/// controller, screen) is already real and doesn't fake any content.
+/// The v2 notification API (`api/notification/notification_view.py`). Every
+/// write sends `{}` like the dashboard (`notification.api.ts`).
 class NotificationsRemoteDataSource {
-  const NotificationsRemoteDataSource();
+  const NotificationsRemoteDataSource(this._dio);
 
-  /// No backend endpoint exists yet for notifications. Returns an empty
-  /// list until one is added.
-  Future<List<AppNotification>> fetchNotifications() async => const [];
+  final Dio _dio;
 
-  /// No backend endpoint exists yet to persist read-state. No-op until one
-  /// is added.
-  Future<void> markAllRead() async {}
+  /// `{count, page, page_size, results}`.
+  Future<Map<String, dynamic>> fetchPage(int page) async => ApiEnvelope.unwrapObject(
+        await _dio.get<dynamic>(NotificationPaths.feed, queryParameters: PagePaging.query(page)),
+      );
+
+  Future<int> fetchUnreadCount() async {
+    final body = ApiEnvelope.unwrapObject(await _dio.get<dynamic>(NotificationPaths.unreadCount));
+    return body['unread_count'] as int? ?? 0;
+  }
+
+  Future<void> markRead(String id) async =>
+      ApiEnvelope.unwrapObject(await _dio.patch<dynamic>(NotificationPaths.read(id), data: <String, dynamic>{}));
+
+  Future<void> markAllRead() async =>
+      ApiEnvelope.unwrapObject(await _dio.patch<dynamic>(NotificationPaths.readAll, data: <String, dynamic>{}));
+
+  Future<void> archive(String id) async =>
+      ApiEnvelope.unwrapObject(await _dio.patch<dynamic>(NotificationPaths.archive(id), data: <String, dynamic>{}));
 }

@@ -32,6 +32,31 @@ abstract final class PageIndexPaging {
       );
 }
 
+/// The notification feed's convention (`NotificationListView`,
+/// `api/notification/notification_view.py`): `page` and `page_size` (default
+/// 20, max 100) in, `{count, page, page_size, results}` under `response`
+/// out. There is a next page while `page * page_size < count` (the
+/// dashboard's rule in `use-notification.ts`).
+abstract final class PagePaging {
+  const PagePaging._();
+
+  static const int defaultPageSize = 20;
+
+  static Map<String, Object> query(int page, {int pageSize = defaultPageSize}) =>
+      {'page': page, 'page_size': pageSize};
+
+  static PageInfo parse(Map<String, dynamic> response) {
+    final count = response['count'] as int? ?? 0;
+    final page = response['page'] as int? ?? 1;
+    final pageSize = response['page_size'] as int? ?? defaultPageSize;
+    return PageInfo(
+      hasNext: page * pageSize < count,
+      totalPages: count == 0 ? 1 : (count / pageSize).ceil(),
+      count: count,
+    );
+  }
+}
+
 /// A list built up page by page. A failed "load more" keeps [items] and
 /// records [loadMoreError], so the screen can offer a retry instead of
 /// replacing what the user already sees with an error.

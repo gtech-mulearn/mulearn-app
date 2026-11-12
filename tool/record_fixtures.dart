@@ -1,6 +1,7 @@
 // Records real responses from the dev backend as test fixtures.
 //
-//   dart run tool/record_fixtures.dart
+//   dart run tool/record_fixtures.dart            # every target
+//   dart run tool/record_fixtures.dart slug1 slug2 # only these
 //
 // Reads QA account credentials from `.env.qa` (gitignored; see
 // `.env.qa.example`), signs in through the same auth endpoint the app uses,
@@ -19,11 +20,14 @@ const _baseUrl = 'https://dev.mulearn.org';
 const _roles = ['student', 'mentor', 'enabler', 'campuslead'];
 
 /// One fixture to record: [account] is null for unauthenticated endpoints.
+/// Non-GET targets must be side-effect free on dev (e.g. a foreign id that
+/// 404s, or a request the backend rejects).
 class _Target {
-  const _Target(this.slug, this.path, {this.account = 'student'});
+  const _Target(this.slug, this.path, {this.account = 'student', this.method = 'GET'});
   final String slug;
   final String path;
   final String? account;
+  final String method;
 }
 
 List<_Target> _targets() {
@@ -61,6 +65,12 @@ List<_Target> _targets() {
     const _Target('notifications_unread_count', '/api/v1/notification/unread-count/'),
     const _Target('learner_summary', '/api/v1/dashboard/home/learner/summary/'),
     const _Target('learner_streak', '/api/v1/dashboard/home/learner/streak/'),
+    // A random, unowned id: the backend answers 404 and changes nothing.
+    const _Target(
+      'notification_read_foreign',
+      '/api/v1/notification/00000000-0000-4000-8000-000000000000/read/',
+      method: 'PATCH',
+    ),
   ];
 }
 
@@ -87,7 +97,7 @@ String? _muidFromJwt(String jwt) {
   return (jsonDecode(payload) as Map<String, dynamic>)['muid'] as String?;
 }
 
-Future<void> main() async {
+Future<void> main(List<String> only) async {
   final env = _readEnv('.env.qa');
   final dio = Dio(BaseOptions(
     baseUrl: _baseUrl,
@@ -121,21 +131,22 @@ Future<void> main() async {
   final outDir = Directory('test/fixtures/dev')..createSync(recursive: true);
   final recordedAt = DateTime.now().toUtc().toIso8601String();
   for (final target in _targets()) {
+    if (only.isNotEmpty && !only.contains(target.slug)) continue;
     final account = target.account;
     if (account != null && !tokens.containsKey(account)) {
       print('skip ${target.slug}: no $account session');
       continue;
     }
-    final res = await dio.get<dynamic>(
+    final res = await dio.request<dynamic>(
       target.path,
-      options: Options(headers: {
+      options: Options(method: target.method, headers: {
         if (account != null) 'Authorization': 'Bearer ${tokens[account]}',
       }),
     );
     final fixture = {
       '_meta': {
         'source': 'dev',
-        'endpoint': target.path,
+        'endpoint': target.method == 'GET' ? target.path : '${target.method} ${target.path}',
         'account': account,
         'status': res.statusCode,
         'recorded_at': recordedAt,

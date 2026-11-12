@@ -6,7 +6,7 @@ import 'package:mulearn_app/core/theme/mulearn_colors.dart';
 import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 import 'package:mulearn_app/features/notifications/domain/entities/app_notification.dart';
 
-/// One row in the notification inbox — icon-square colored by [kind],
+/// One row in the notification inbox — icon-square colored by category,
 /// title/body/timestamp, unread items lifted onto a white surface with a
 /// small blue dot, read items muted flat against a hairline bg
 /// (DESIGN_SPEC.md §2 "14 — Notifications").
@@ -16,23 +16,23 @@ class NotificationListTile extends StatelessWidget {
   final AppNotification notification;
   final VoidCallback? onTap;
 
-  static const _kindStyle = {
-    NotificationKind.karma: (
+  static const _categoryStyle = {
+    'KARMA': (
       icon: LucideIcons.zap,
       bg: MuColors.primaryTint,
       fg: MuColors.primary,
     ),
-    NotificationKind.level: (
-      icon: LucideIcons.trophy,
+    'SYSTEM': (
+      icon: LucideIcons.megaphone,
       bg: MuColors.ink,
       fg: MuColors.karmaAccent,
     ),
-    NotificationKind.circle: (
+    'LC': (
       icon: LucideIcons.users,
       bg: MuColors.successBg,
       fg: MuColors.success,
     ),
-    NotificationKind.event: (
+    'EVENTS': (
       icon: LucideIcons.calendarDays,
       bg: MuColors.warningBg,
       fg: MuColors.warning,
@@ -41,7 +41,7 @@ class NotificationListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final style = _kindStyle[notification.kind]!;
+    final style = _categoryStyle[notification.category] ?? _categoryStyle['SYSTEM']!;
     final unread = !notification.read;
 
     return Padding(
@@ -91,10 +91,10 @@ class NotificationListTile extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(height: MuSpace.xs),
-                      Text(notification.body, style: MuType.caption),
+                      Text(notification.description, style: MuType.caption),
                       const SizedBox(height: MuSpace.xs),
                       Text(
-                        _timeAgo(notification.timestamp),
+                        _timeAgo(notification.createdAt),
                         style: MuType.caption.copyWith(color: MuColors.inkFaint),
                       ),
                     ],

@@ -355,6 +355,29 @@ abstract final class ApiPaths {
       '/api/v1/leaderboard/college-monthly/';
 }
 
+// --- Notifications — `api/notification/urls.py` (v2 feed), confirmed live ---
+
+/// Notification endpoints. The feed merges personal rows and audience
+/// broadcasts; read/archive accept either id space.
+abstract final class NotificationPaths {
+  const NotificationPaths._();
+
+  /// `GET ?page&page_size` — the merged feed.
+  static const String feed = '/api/v1/notification/';
+
+  /// `GET` — `{unread_count}`: unread, non-archived personal rows only.
+  static const String unreadCount = '/api/v1/notification/unread-count/';
+
+  /// `PATCH {}` — mark every personal row and visible broadcast read.
+  static const String readAll = '/api/v1/notification/read-all/';
+
+  /// `PATCH {}` — mark one read; 404 "Notification not found" if not visible.
+  static String read(String id) => '/api/v1/notification/$id/read/';
+
+  /// `PATCH {}` — hide one from the feed.
+  static String archive(String id) => '/api/v1/notification/$id/archive/';
+}
+
 /// Per-request option flags read by the interceptors.
 abstract final class RequestFlags {
   const RequestFlags._();

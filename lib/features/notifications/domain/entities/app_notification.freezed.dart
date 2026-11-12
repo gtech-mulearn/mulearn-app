@@ -14,9 +14,12 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AppNotification {
 
- String get id; NotificationKind get kind; String get title; String get body; DateTime get timestamp; bool get read;/// Route to push when tapped, e.g. [RoutePaths.profile]. Null when the
-/// notification has no associated destination.
- String? get targetRoute;
+ String get id; String get title; String get description; bool get isBroadcast; bool get read; DateTime get createdAt;/// e.g. `LC_INVITE`, `EVENT_PUBLISHED`; null for broadcasts.
+ String? get type;/// e.g. `LC`, `EVENTS`, `KARMA`, `SYSTEM`.
+ String? get category;/// What the notification is about (`learning_circle`, `event`, ...) and
+/// its id; both null for broadcasts.
+ String? get entityType; String? get entityId;/// A relative path or an https URL chosen by the sender, if any.
+ String? get redirectUrl;
 /// Create a copy of AppNotification
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -27,16 +30,16 @@ $AppNotificationCopyWith<AppNotification> get copyWith => _$AppNotificationCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppNotification&&(identical(other.id, id) || other.id == id)&&(identical(other.kind, kind) || other.kind == kind)&&(identical(other.title, title) || other.title == title)&&(identical(other.body, body) || other.body == body)&&(identical(other.timestamp, timestamp) || other.timestamp == timestamp)&&(identical(other.read, read) || other.read == read)&&(identical(other.targetRoute, targetRoute) || other.targetRoute == targetRoute));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppNotification&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.isBroadcast, isBroadcast) || other.isBroadcast == isBroadcast)&&(identical(other.read, read) || other.read == read)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.type, type) || other.type == type)&&(identical(other.category, category) || other.category == category)&&(identical(other.entityType, entityType) || other.entityType == entityType)&&(identical(other.entityId, entityId) || other.entityId == entityId)&&(identical(other.redirectUrl, redirectUrl) || other.redirectUrl == redirectUrl));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,kind,title,body,timestamp,read,targetRoute);
+int get hashCode => Object.hash(runtimeType,id,title,description,isBroadcast,read,createdAt,type,category,entityType,entityId,redirectUrl);
 
 @override
 String toString() {
-  return 'AppNotification(id: $id, kind: $kind, title: $title, body: $body, timestamp: $timestamp, read: $read, targetRoute: $targetRoute)';
+  return 'AppNotification(id: $id, title: $title, description: $description, isBroadcast: $isBroadcast, read: $read, createdAt: $createdAt, type: $type, category: $category, entityType: $entityType, entityId: $entityId, redirectUrl: $redirectUrl)';
 }
 
 
@@ -47,7 +50,7 @@ abstract mixin class $AppNotificationCopyWith<$Res>  {
   factory $AppNotificationCopyWith(AppNotification value, $Res Function(AppNotification) _then) = _$AppNotificationCopyWithImpl;
 @useResult
 $Res call({
- String id, NotificationKind kind, String title, String body, DateTime timestamp, bool read, String? targetRoute
+ String id, String title, String description, bool isBroadcast, bool read, DateTime createdAt, String? type, String? category, String? entityType, String? entityId, String? redirectUrl
 });
 
 
@@ -64,15 +67,19 @@ class _$AppNotificationCopyWithImpl<$Res>
 
 /// Create a copy of AppNotification
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? kind = null,Object? title = null,Object? body = null,Object? timestamp = null,Object? read = null,Object? targetRoute = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? description = null,Object? isBroadcast = null,Object? read = null,Object? createdAt = null,Object? type = freezed,Object? category = freezed,Object? entityType = freezed,Object? entityId = freezed,Object? redirectUrl = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,kind: null == kind ? _self.kind : kind // ignore: cast_nullable_to_non_nullable
-as NotificationKind,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String,body: null == body ? _self.body : body // ignore: cast_nullable_to_non_nullable
-as String,timestamp: null == timestamp ? _self.timestamp : timestamp // ignore: cast_nullable_to_non_nullable
-as DateTime,read: null == read ? _self.read : read // ignore: cast_nullable_to_non_nullable
-as bool,targetRoute: freezed == targetRoute ? _self.targetRoute : targetRoute // ignore: cast_nullable_to_non_nullable
+as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
+as String,isBroadcast: null == isBroadcast ? _self.isBroadcast : isBroadcast // ignore: cast_nullable_to_non_nullable
+as bool,read: null == read ? _self.read : read // ignore: cast_nullable_to_non_nullable
+as bool,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String?,category: freezed == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
+as String?,entityType: freezed == entityType ? _self.entityType : entityType // ignore: cast_nullable_to_non_nullable
+as String?,entityId: freezed == entityId ? _self.entityId : entityId // ignore: cast_nullable_to_non_nullable
+as String?,redirectUrl: freezed == redirectUrl ? _self.redirectUrl : redirectUrl // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -158,10 +165,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  NotificationKind kind,  String title,  String body,  DateTime timestamp,  bool read,  String? targetRoute)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String description,  bool isBroadcast,  bool read,  DateTime createdAt,  String? type,  String? category,  String? entityType,  String? entityId,  String? redirectUrl)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AppNotification() when $default != null:
-return $default(_that.id,_that.kind,_that.title,_that.body,_that.timestamp,_that.read,_that.targetRoute);case _:
+return $default(_that.id,_that.title,_that.description,_that.isBroadcast,_that.read,_that.createdAt,_that.type,_that.category,_that.entityType,_that.entityId,_that.redirectUrl);case _:
   return orElse();
 
 }
@@ -179,10 +186,10 @@ return $default(_that.id,_that.kind,_that.title,_that.body,_that.timestamp,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  NotificationKind kind,  String title,  String body,  DateTime timestamp,  bool read,  String? targetRoute)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String description,  bool isBroadcast,  bool read,  DateTime createdAt,  String? type,  String? category,  String? entityType,  String? entityId,  String? redirectUrl)  $default,) {final _that = this;
 switch (_that) {
 case _AppNotification():
-return $default(_that.id,_that.kind,_that.title,_that.body,_that.timestamp,_that.read,_that.targetRoute);case _:
+return $default(_that.id,_that.title,_that.description,_that.isBroadcast,_that.read,_that.createdAt,_that.type,_that.category,_that.entityType,_that.entityId,_that.redirectUrl);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -199,10 +206,10 @@ return $default(_that.id,_that.kind,_that.title,_that.body,_that.timestamp,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  NotificationKind kind,  String title,  String body,  DateTime timestamp,  bool read,  String? targetRoute)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String description,  bool isBroadcast,  bool read,  DateTime createdAt,  String? type,  String? category,  String? entityType,  String? entityId,  String? redirectUrl)?  $default,) {final _that = this;
 switch (_that) {
 case _AppNotification() when $default != null:
-return $default(_that.id,_that.kind,_that.title,_that.body,_that.timestamp,_that.read,_that.targetRoute);case _:
+return $default(_that.id,_that.title,_that.description,_that.isBroadcast,_that.read,_that.createdAt,_that.type,_that.category,_that.entityType,_that.entityId,_that.redirectUrl);case _:
   return null;
 
 }
@@ -214,18 +221,25 @@ return $default(_that.id,_that.kind,_that.title,_that.body,_that.timestamp,_that
 
 
 class _AppNotification implements AppNotification {
-  const _AppNotification({required this.id, required this.kind, required this.title, required this.body, required this.timestamp, required this.read, this.targetRoute});
+  const _AppNotification({required this.id, required this.title, required this.description, required this.isBroadcast, required this.read, required this.createdAt, this.type, this.category, this.entityType, this.entityId, this.redirectUrl});
   
 
 @override final  String id;
-@override final  NotificationKind kind;
 @override final  String title;
-@override final  String body;
-@override final  DateTime timestamp;
+@override final  String description;
+@override final  bool isBroadcast;
 @override final  bool read;
-/// Route to push when tapped, e.g. [RoutePaths.profile]. Null when the
-/// notification has no associated destination.
-@override final  String? targetRoute;
+@override final  DateTime createdAt;
+/// e.g. `LC_INVITE`, `EVENT_PUBLISHED`; null for broadcasts.
+@override final  String? type;
+/// e.g. `LC`, `EVENTS`, `KARMA`, `SYSTEM`.
+@override final  String? category;
+/// What the notification is about (`learning_circle`, `event`, ...) and
+/// its id; both null for broadcasts.
+@override final  String? entityType;
+@override final  String? entityId;
+/// A relative path or an https URL chosen by the sender, if any.
+@override final  String? redirectUrl;
 
 /// Create a copy of AppNotification
 /// with the given fields replaced by the non-null parameter values.
@@ -237,16 +251,16 @@ _$AppNotificationCopyWith<_AppNotification> get copyWith => __$AppNotificationCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppNotification&&(identical(other.id, id) || other.id == id)&&(identical(other.kind, kind) || other.kind == kind)&&(identical(other.title, title) || other.title == title)&&(identical(other.body, body) || other.body == body)&&(identical(other.timestamp, timestamp) || other.timestamp == timestamp)&&(identical(other.read, read) || other.read == read)&&(identical(other.targetRoute, targetRoute) || other.targetRoute == targetRoute));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppNotification&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.isBroadcast, isBroadcast) || other.isBroadcast == isBroadcast)&&(identical(other.read, read) || other.read == read)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.type, type) || other.type == type)&&(identical(other.category, category) || other.category == category)&&(identical(other.entityType, entityType) || other.entityType == entityType)&&(identical(other.entityId, entityId) || other.entityId == entityId)&&(identical(other.redirectUrl, redirectUrl) || other.redirectUrl == redirectUrl));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,kind,title,body,timestamp,read,targetRoute);
+int get hashCode => Object.hash(runtimeType,id,title,description,isBroadcast,read,createdAt,type,category,entityType,entityId,redirectUrl);
 
 @override
 String toString() {
-  return 'AppNotification(id: $id, kind: $kind, title: $title, body: $body, timestamp: $timestamp, read: $read, targetRoute: $targetRoute)';
+  return 'AppNotification(id: $id, title: $title, description: $description, isBroadcast: $isBroadcast, read: $read, createdAt: $createdAt, type: $type, category: $category, entityType: $entityType, entityId: $entityId, redirectUrl: $redirectUrl)';
 }
 
 
@@ -257,7 +271,7 @@ abstract mixin class _$AppNotificationCopyWith<$Res> implements $AppNotification
   factory _$AppNotificationCopyWith(_AppNotification value, $Res Function(_AppNotification) _then) = __$AppNotificationCopyWithImpl;
 @override @useResult
 $Res call({
- String id, NotificationKind kind, String title, String body, DateTime timestamp, bool read, String? targetRoute
+ String id, String title, String description, bool isBroadcast, bool read, DateTime createdAt, String? type, String? category, String? entityType, String? entityId, String? redirectUrl
 });
 
 
@@ -274,15 +288,19 @@ class __$AppNotificationCopyWithImpl<$Res>
 
 /// Create a copy of AppNotification
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? kind = null,Object? title = null,Object? body = null,Object? timestamp = null,Object? read = null,Object? targetRoute = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? description = null,Object? isBroadcast = null,Object? read = null,Object? createdAt = null,Object? type = freezed,Object? category = freezed,Object? entityType = freezed,Object? entityId = freezed,Object? redirectUrl = freezed,}) {
   return _then(_AppNotification(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,kind: null == kind ? _self.kind : kind // ignore: cast_nullable_to_non_nullable
-as NotificationKind,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
-as String,body: null == body ? _self.body : body // ignore: cast_nullable_to_non_nullable
-as String,timestamp: null == timestamp ? _self.timestamp : timestamp // ignore: cast_nullable_to_non_nullable
-as DateTime,read: null == read ? _self.read : read // ignore: cast_nullable_to_non_nullable
-as bool,targetRoute: freezed == targetRoute ? _self.targetRoute : targetRoute // ignore: cast_nullable_to_non_nullable
+as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
+as String,isBroadcast: null == isBroadcast ? _self.isBroadcast : isBroadcast // ignore: cast_nullable_to_non_nullable
+as bool,read: null == read ? _self.read : read // ignore: cast_nullable_to_non_nullable
+as bool,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as String?,category: freezed == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
+as String?,entityType: freezed == entityType ? _self.entityType : entityType // ignore: cast_nullable_to_non_nullable
+as String?,entityId: freezed == entityId ? _self.entityId : entityId // ignore: cast_nullable_to_non_nullable
+as String?,redirectUrl: freezed == redirectUrl ? _self.redirectUrl : redirectUrl // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

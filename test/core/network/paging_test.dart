@@ -38,4 +38,27 @@ void main() {
     expect(merged.map((x) => x.id), ['a', 'b', 'c']);
     expect(merged[1].v, 1, reason: 'the first occurrence wins');
   });
+
+  group('PagePaging (notifications: page/page_size)', () {
+    test('query uses page and page_size', () {
+      expect(PagePaging.query(2), {'page': 2, 'page_size': 20});
+    });
+
+    test('there is a next page while page * page_size < count', () {
+      final first = PagePaging.parse({'count': 35, 'page': 1, 'page_size': 20, 'results': <Object>[]});
+      final second = PagePaging.parse({'count': 35, 'page': 2, 'page_size': 20, 'results': <Object>[]});
+
+      expect(first.hasNext, isTrue);
+      expect(first.totalPages, 2);
+      expect(first.count, 35);
+      expect(second.hasNext, isFalse);
+    });
+
+    test('an empty feed has one page and no next', () {
+      final empty = PagePaging.parse({'count': 0, 'page': 1, 'page_size': 20, 'results': <Object>[]});
+
+      expect(empty.hasNext, isFalse);
+      expect(empty.totalPages, 1);
+    });
+  });
 }
