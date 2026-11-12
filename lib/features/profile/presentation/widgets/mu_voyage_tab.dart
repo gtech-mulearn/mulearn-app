@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
+import 'package:mulearn_app/core/router/tab_navigation.dart';
 import 'package:mulearn_app/core/theme/mu_radius.dart';
 import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
@@ -47,7 +47,7 @@ class MuVoyageTab extends ConsumerWidget {
                 children: [
                   Text('MU VOYAGE', style: MuType.eyebrow),
                   GestureDetector(
-                    onTap: () => context.push(RoutePaths.journey),
+                    onTap: () => context.openTab(RoutePaths.journey),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [

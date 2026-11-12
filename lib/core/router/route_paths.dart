@@ -16,6 +16,10 @@ abstract final class RoutePaths {
   static const String taskDetail = '/tasks/:id';
   static String taskDetailPath(String id) => '/tasks/$id';
   static const String journey = '/journey';
+
+  /// The bottom-bar tab roots, in the shell's branch order (`app_router.dart`).
+  /// Open them with `context.openTab`, never `push`.
+  static const List<String> tabRoots = [home, tasks, journey, leaderboard, profile];
   static const String leaderboard = '/leaderboard';
   static const String profile = '/profile';
   static const String notifications = '/notifications';

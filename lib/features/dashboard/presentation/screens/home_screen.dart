@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/leaderboard/leaderboard_providers.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
+import 'package:mulearn_app/core/router/tab_navigation.dart';
 import 'package:mulearn_app/core/theme/mu_radius.dart';
 import 'package:mulearn_app/core/theme/mu_shadow.dart';
 import 'package:mulearn_app/core/theme/mu_space.dart';
@@ -84,7 +85,7 @@ class HomeScreen extends ConsumerWidget {
                             icon: LucideIcons.listTodo,
                             title: 'Find a task',
                             subtitle: "Browse what's open",
-                            onTap: () => context.push(RoutePaths.tasks),
+                            onTap: () => context.openTab(RoutePaths.tasks),
                           ),
                         ),
                         const SizedBox(width: MuSpace.m),
@@ -101,7 +102,7 @@ class HomeScreen extends ConsumerWidget {
                     const SizedBox(height: MuSpace.xxl),
                     MuSectionHeader(
                       title: 'Top performers',
-                      onViewAll: () => context.push(RoutePaths.leaderboard),
+                      onViewAll: () => context.openTab(RoutePaths.leaderboard),
                     ),
                     const SizedBox(height: MuSpace.m),
                     Consumer(
@@ -240,7 +241,7 @@ class _HomeHeader extends StatelessWidget {
         ),
         const SizedBox(width: MuSpace.s),
         GestureDetector(
-          onTap: () => context.push(RoutePaths.profile),
+          onTap: () => context.openTab(RoutePaths.profile),
           child: ProfileAvatar(url: s?.profilePicUrl, name: s?.fullName ?? '', size: 44),
         ),
       ],
@@ -271,7 +272,7 @@ class _KarmaHeroCard extends StatelessWidget {
     final hasRank = summary.rank != null && summary.percentile != null;
 
     return GestureDetector(
-      onTap: () => context.push(RoutePaths.journey),
+      onTap: () => context.openTab(RoutePaths.journey),
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(MuRadius.hero),
