@@ -41,7 +41,7 @@ class InterestGroupMembershipController
 
   Future<void> toggle(String groupId, {required bool join}) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       final repo = ref.read(interestGroupsRepositoryProvider);
       final currentIds = await repo.getMyGroupIds();
       final nextIds = join
@@ -50,5 +50,6 @@ class InterestGroupMembershipController
       await repo.setMyGroupIds(nextIds);
       ref.invalidate(myInterestGroupIdsProvider);
     });
+    if (ref.mounted) state = result;
   }
 }

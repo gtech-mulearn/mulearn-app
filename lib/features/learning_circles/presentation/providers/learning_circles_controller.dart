@@ -125,7 +125,7 @@ class CircleActionsController extends _$CircleActionsController {
   }) async {
     state = const AsyncLoading();
     String? circleId;
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       circleId = await ref.read(learningCirclesRepositoryProvider).createCircle(
             igId: igId,
             orgId: orgId,
@@ -133,6 +133,7 @@ class CircleActionsController extends _$CircleActionsController {
             description: description,
           );
     });
+    if (ref.mounted) state = result;
     return circleId;
   }
 
@@ -144,7 +145,7 @@ class CircleActionsController extends _$CircleActionsController {
     String? description,
   }) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       await ref.read(learningCirclesRepositoryProvider).editCircle(
             id,
             igId: igId,
@@ -154,27 +155,30 @@ class CircleActionsController extends _$CircleActionsController {
           );
       ref.invalidate(circleDetailProvider(id));
     });
+    if (ref.mounted) state = result;
   }
 
   Future<bool> deleteCircle(String id) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(
+    final result = await AsyncValue.guard(
       () => ref.read(learningCirclesRepositoryProvider).deleteCircle(id),
     );
-    return !state.hasError;
+    if (ref.mounted) state = result;
+    return !result.hasError;
   }
 
   Future<void> requestToJoin(String id) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(
+    final result = await AsyncValue.guard(
       () => ref.read(learningCirclesRepositoryProvider).requestToJoin(id),
     );
+    if (ref.mounted) state = result;
   }
 
 
   Future<void> transferLead(String circleId, {required String muid}) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       await ref
           .read(learningCirclesRepositoryProvider)
           .transferLead(circleId, muid: muid);
@@ -182,6 +186,7 @@ class CircleActionsController extends _$CircleActionsController {
         ..invalidate(circleMembersProvider(circleId))
         ..invalidate(circleDetailProvider(circleId));
     });
+    if (ref.mounted) state = result;
   }
 
   Future<void> respondToJoinRequest(
@@ -190,7 +195,7 @@ class CircleActionsController extends _$CircleActionsController {
     required bool accept,
   }) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       await ref
           .read(learningCirclesRepositoryProvider)
           .respondToJoinRequest(circleId, linkId: linkId, accept: accept);
@@ -198,21 +203,23 @@ class CircleActionsController extends _$CircleActionsController {
         ..invalidate(circleJoinRequestsProvider(circleId))
         ..invalidate(circleMembersProvider(circleId));
     });
+    if (ref.mounted) state = result;
   }
 
   Future<void> sendInvite(String circleId, {required String muid}) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       await ref
           .read(learningCirclesRepositoryProvider)
           .sendInvite(circleId, muid: muid);
       ref.invalidate(circleSentInvitesProvider(circleId));
     });
+    if (ref.mounted) state = result;
   }
 
   Future<void> respondToInvite(String linkId, {required bool accept}) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       await ref
           .read(learningCirclesRepositoryProvider)
           .respondToInvite(linkId, accept: accept);
@@ -220,5 +227,6 @@ class CircleActionsController extends _$CircleActionsController {
         ..invalidate(myPendingCircleInvitesProvider)
         ..invalidate(myCirclesProvider);
     });
+    if (ref.mounted) state = result;
   }
 }

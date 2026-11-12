@@ -11,7 +11,7 @@ class ProfileImageController extends _$ProfileImageController {
 
   Future<void> upload(List<int> bytes, String filename) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       final profile = await ref.read(profileControllerProvider.future);
       await ref.read(profileRepositoryProvider).updateProfileImage(
             bytes: bytes,
@@ -24,5 +24,6 @@ class ProfileImageController extends _$ProfileImageController {
       // shared bus so Home's avatar doesn't keep showing the stale photo.
       ref.read(profileEventBusProvider).emit(ProfileEvent.updated);
     });
+    if (ref.mounted) state = result;
   }
 }

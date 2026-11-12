@@ -23,7 +23,7 @@ class CoverPhotoController extends _$CoverPhotoController {
     // previous URL from cache forces a real re-fetch regardless.
     final previousUrl = ref.read(profileControllerProvider).value?.coverPicUrl;
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       await ref
           .read(profileRepositoryProvider)
           .uploadCoverPic(bytes, filename);
@@ -32,17 +32,19 @@ class CoverPhotoController extends _$CoverPhotoController {
       }
       ref.invalidate(profileControllerProvider);
     });
+    if (ref.mounted) state = result;
   }
 
   Future<void> delete() async {
     final previousUrl = ref.read(profileControllerProvider).value?.coverPicUrl;
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       await ref.read(profileRepositoryProvider).deleteCoverPic();
       if (previousUrl != null && previousUrl.isNotEmpty) {
         await CachedNetworkImage.evictFromCache(previousUrl);
       }
       ref.invalidate(profileControllerProvider);
     });
+    if (ref.mounted) state = result;
   }
 }

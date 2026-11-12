@@ -28,9 +28,10 @@ class FeaturedEventsController extends _$FeaturedEventsController {
 
   Future<void> refresh() async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(
+    final result = await AsyncValue.guard(
       () => ref.read(dashboardRepositoryProvider).getFeaturedEvents(),
     );
+    if (ref.mounted) state = result;
   }
 }
 
@@ -54,8 +55,9 @@ class MyProgressSummaryController extends _$MyProgressSummaryController {
 
   Future<void> refresh() async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(
+    final result = await AsyncValue.guard(
       () => ref.read(dashboardRepositoryProvider).getMyProgressSummary(),
     );
+    if (ref.mounted) state = result;
   }
 }

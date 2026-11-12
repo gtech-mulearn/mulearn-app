@@ -150,14 +150,15 @@ class AuthController extends _$AuthController {
 
   Future<void> _guard(Future<void> Function() action) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(action);
-    final error = state.error;
+    final result = await AsyncValue.guard(action);
+    if (ref.mounted) state = result;
+    final error = result.error;
     if (error != null) {
       // Logged regardless of type so a non-ApiException (parsing bug,
       // platform-channel failure, etc.) is never silently reduced to the
       // screen's generic "Something went wrong." with no trace of why.
-      appLogger.e('Auth action failed', error: error, stackTrace: state.stackTrace);
-      Error.throwWithStackTrace(error, state.stackTrace ?? StackTrace.current);
+      appLogger.e('Auth action failed', error: error, stackTrace: result.stackTrace);
+      Error.throwWithStackTrace(error, result.stackTrace ?? StackTrace.current);
     }
   }
 }

@@ -73,7 +73,7 @@ class EventInterestController extends _$EventInterestController {
 
   Future<void> toggle(String eventId, {required bool interested}) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       await ref
           .read(eventsRepositoryProvider)
           .setInterested(eventId, interested: interested);
@@ -81,5 +81,6 @@ class EventInterestController extends _$EventInterestController {
         ..invalidate(eventDetailProvider(eventId))
         ..invalidate(eventsListControllerProvider);
     });
+    if (ref.mounted) state = result;
   }
 }

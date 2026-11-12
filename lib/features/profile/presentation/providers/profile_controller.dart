@@ -29,9 +29,10 @@ class ProfileController extends _$ProfileController {
 
   Future<void> refresh() async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(
+    final result = await AsyncValue.guard(
       () => ref.read(profileRepositoryProvider).getCurrentUserProfile(),
     );
+    if (ref.mounted) state = result;
   }
 
   /// Toggles profile visibility, then reflects the change immediately

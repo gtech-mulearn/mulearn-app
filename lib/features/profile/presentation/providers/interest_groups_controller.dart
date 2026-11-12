@@ -19,9 +19,10 @@ class InterestGroupsEditController extends _$InterestGroupsEditController {
 
   Future<void> save(List<String> groupIds) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       await ref.read(profileRepositoryProvider).updateInterestGroups(groupIds);
       ref.invalidate(profileControllerProvider);
     });
+    if (ref.mounted) state = result;
   }
 }

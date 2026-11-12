@@ -44,7 +44,7 @@ class RegisterSubmitController extends _$RegisterSubmitController {
     OrganizationType? organizationType,
   }) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       final wizard = ref.read(registerWizardControllerProvider);
       final fullName = wizard.fullName;
       final email = wizard.email;
@@ -139,8 +139,9 @@ class RegisterSubmitController extends _$RegisterSubmitController {
         }
       }
     });
-    if (state.hasError) {
-      Error.throwWithStackTrace(state.error!, state.stackTrace ?? StackTrace.current);
+    if (ref.mounted) state = result;
+    if (result.hasError) {
+      Error.throwWithStackTrace(result.error!, result.stackTrace ?? StackTrace.current);
     }
   }
 }

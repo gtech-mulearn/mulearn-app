@@ -15,11 +15,12 @@ class InterestsController extends _$InterestsController {
   /// endgoal step in quiz mode).
   Future<void> submitPathwaysOnly(List<String> pathways) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(
+    final result = await AsyncValue.guard(
       () => ref.read(registerRepositoryProvider).selectDomains(pathways),
     );
-    if (state.hasError) {
-      Error.throwWithStackTrace(state.error!, state.stackTrace ?? StackTrace.current);
+    if (ref.mounted) state = result;
+    if (result.hasError) {
+      Error.throwWithStackTrace(result.error!, result.stackTrace ?? StackTrace.current);
     }
   }
 
@@ -29,13 +30,14 @@ class InterestsController extends _$InterestsController {
     List<String> endgoals,
   ) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       final repo = ref.read(registerRepositoryProvider);
       await repo.selectDomains(pathways);
       await repo.selectEndgoals(endgoals);
     });
-    if (state.hasError) {
-      Error.throwWithStackTrace(state.error!, state.stackTrace ?? StackTrace.current);
+    if (ref.mounted) state = result;
+    if (result.hasError) {
+      Error.throwWithStackTrace(result.error!, result.stackTrace ?? StackTrace.current);
     }
   }
 }

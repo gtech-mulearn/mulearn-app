@@ -46,12 +46,13 @@ class ChangeCollegeController extends _$ChangeCollegeController {
     required String departmentId,
   }) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       await ref.read(profileRepositoryProvider).changeCollege(
             orgId: orgId,
             departmentId: departmentId,
           );
       ref.invalidate(profileControllerProvider);
     });
+    if (ref.mounted) state = result;
   }
 }
