@@ -1,0 +1,154 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/events/featured/",
+    "account": "student",
+    "status": 200,
+    "recorded_at": "2026-11-12T15:31:36.724770Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": [
+        "Featured events retrieved."
+      ]
+    },
+    "response": {
+      "data": [
+        {
+          "id": "05a5e4a5-a8e4-42f6-bbe1-5448e6a50308",
+          "title": "Build with Flutter: Mobile Dev Bootcamp",
+          "slug": "build-with-flutter-mobile-dev-bootcamp",
+          "cover_image": null,
+          "status": "published",
+          "scope": "global",
+          "event_scope": "coder",
+          "event_type": "bootcamp",
+          "start_datetime": "2026-11-22T04:30:00Z",
+          "end_datetime": "2026-11-23T11:30:00Z",
+          "venue": {
+            "venue_type": "online",
+            "venue_address": null,
+            "venue_city": null,
+            "venue_maps_url": null,
+            "venue_online_link": "https://meet.google.com/bui-ld-w-amp",
+            "venue_platform": "Google Meet"
+          },
+          "organizer": {
+            "organiser_type": "global_ig",
+            "organiser_ig": {
+              "id": "4ff0a5e5-d1ef-44dd-ac13-9a2f9e7717e3",
+              "name": "Web Development",
+              "icon": null,
+              "cover_image": null,
+              "icon_image": null
+            },
+            "organiser_campus": null,
+            "organiser_company": null,
+            "organiser_ci_id": null
+          },
+          "is_featured": true,
+          "is_collaboration": false,
+          "interest_count": 0,
+          "min_karma": null,
+          "tags": [
+            "flutter",
+            "mobile",
+            "dart"
+          ],
+          "user_limit": 0,
+          "category_id": null,
+          "category_name": null,
+          "viewer_interest_status": "none"
+        },
+        {
+          "id": "1419e01f-df1d-4acc-854b-1f8417ac22de",
+          "title": "GenAI Hack Weekend",
+          "slug": "genai-hack-weekend",
+          "cover_image": null,
+          "status": "published",
+          "scope": "global",
+          "event_scope": "coder",
+          "event_type": "hackathon",
+          "start_datetime": "2026-12-05T03:30:00Z",
+          "end_datetime": "2026-12-07T11:30:00Z",
+          "venue": {
+            "venue_type": "physical",
+            "venue_address": "Kerala Startup Mission, Integrated Startup Complex, Kalamassery",
+            "venue_city": "Kochi",
+            "venue_maps_url": "https://maps.google.com/?q=Kerala+Startup+Mission+Kalamassery",
+            "venue_online_link": null,
+            "venue_platform": null
+          },
+          "organizer": {
+            "organiser_type": "admin",
+            "organiser_ig": null,
+            "organiser_campus": null,
+            "organiser_company": null,
+            "organiser_ci_id": null
+          },
+          "is_featured": true,
+          "is_collaboration": false,
+          "interest_count": 0,
+          "min_karma": null,
+          "tags": [
+            "genai",
+            "hackathon",
+            "llm"
+          ],
+          "user_limit": 0,
+          "category_id": null,
+          "category_name": null,
+          "viewer_interest_status": "none"
+        },
+        {
+          "id": "c642e480-e1c4-4be9-ae82-949f8f1e9f95",
+          "title": "30 Days of Code: November Sprint",
+          "slug": "30-days-of-code-november-sprint",
+          "cover_image": null,
+          "status": "ongoing",
+          "scope": "global",
+          "event_scope": "coder",
+          "event_type": "bootcamp",
+          "start_datetime": "2026-11-01T03:30:00Z",
+          "end_datetime": "2026-11-30T15:30:00Z",
+          "venue": {
+            "venue_type": "online",
+            "venue_address": null,
+            "venue_city": null,
+            "venue_maps_url": null,
+            "venue_online_link": "https://meet.google.com/30--days-int",
+            "venue_platform": "Google Meet"
+          },
+          "organizer": {
+            "organiser_type": "admin",
+            "organiser_ig": null,
+            "organiser_campus": null,
+            "organiser_company": null,
+            "organiser_ci_id": null
+          },
+          "is_featured": true,
+          "is_collaboration": false,
+          "interest_count": 0,
+          "min_karma": null,
+          "tags": [
+            "challenge",
+            "daily-coding"
+          ],
+          "user_limit": 0,
+          "category_id": null,
+          "category_name": null,
+          "viewer_interest_status": "none"
+        }
+      ],
+      "pagination": {
+        "count": 3,
+        "totalPages": 1,
+        "isNext": false,
+        "isPrev": false,
+        "nextPage": null
+      }
+    }
+  }
+}

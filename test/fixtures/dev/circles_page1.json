@@ -4,7 +4,7 @@
     "endpoint": "/api/v1/dashboard/learningcircle/list/?pageIndex=1&perPage=20",
     "account": "student",
     "status": 200,
-    "recorded_at": "2026-11-12T12:23:10.326981Z"
+    "recorded_at": "2026-11-12T15:31:36.724770Z"
   },
   "body": {
     "hasError": false,
@@ -13,9 +13,150 @@
       "general": []
     },
     "response": {
-      "data": [],
+      "data": [
+        {
+          "id": "d314ba5e-de7a-4918-8889-941fd3f45687",
+          "ig": "Quantum Technologies",
+          "title": "Quantum Computing Basics",
+          "org": "St. Josephs Colege of Engineering and Technology",
+          "total_members": 2,
+          "is_joined": false,
+          "is_creator": false,
+          "status": "not_joined"
+        },
+        {
+          "id": "d612e4c3-4c09-4721-9143-4e2a218712e8",
+          "ig": "Web Development",
+          "title": "Web Accessibility Study Group",
+          "org": "St. Josephs Colege of Engineering and Technology",
+          "total_members": 1,
+          "is_joined": false,
+          "is_creator": false,
+          "status": "not_joined"
+        },
+        {
+          "id": "6101f52b-7c1f-424f-9fe2-3f2501523bfe",
+          "ig": "Data Science",
+          "title": "Kaggle Starter Circle",
+          "org": "St. Josephs Colege of Engineering and Technology",
+          "total_members": 2,
+          "is_joined": false,
+          "is_creator": false,
+          "status": "not_joined"
+        },
+        {
+          "id": "217cd8ca-d6a3-4e75-9621-036c057f7ecd",
+          "ig": "Blender",
+          "title": "Blender: Donut to Diorama",
+          "org": "St. Josephs Colege of Engineering and Technology",
+          "total_members": 2,
+          "is_joined": false,
+          "is_creator": false,
+          "status": "not_joined"
+        },
+        {
+          "id": "feffb39d-440f-4bfb-99c9-80314091290d",
+          "ig": "Project Management",
+          "title": "Product Management 101",
+          "org": "St. Josephs Colege of Engineering and Technology",
+          "total_members": 1,
+          "is_joined": false,
+          "is_creator": false,
+          "status": "not_joined"
+        },
+        {
+          "id": "2a2d8564-e218-4193-9338-8c0e9be402a7",
+          "ig": "Cyber Security",
+          "title": "CTF Practice Squad",
+          "org": "St. Josephs Colege of Engineering and Technology",
+          "total_members": 1,
+          "is_joined": false,
+          "is_creator": false,
+          "status": "not_joined"
+        },
+        {
+          "id": "38bf7bfa-9c94-4bdc-bf78-a7246106912d",
+          "ig": "Generative AI",
+          "title": "LLM Paper Reading Club",
+          "org": "St. Josephs Colege of Engineering and Technology",
+          "total_members": 2,
+          "is_joined": false,
+          "is_creator": false,
+          "status": "not_joined"
+        },
+        {
+          "id": "75ad3006-1eae-47ea-9055-a42db27d369b",
+          "ig": "Internet Of Things (IOT) And Robotics",
+          "title": "Arduino Tinkerers",
+          "org": "St. Josephs Colege of Engineering and Technology",
+          "total_members": 2,
+          "is_joined": false,
+          "is_creator": false,
+          "status": "not_joined"
+        },
+        {
+          "id": "463e9e4a-7255-431d-95f9-5bd181a48d12",
+          "ig": "Ui Ux",
+          "title": "Figma to Production",
+          "org": "St. Josephs Colege of Engineering and Technology",
+          "total_members": 3,
+          "is_joined": true,
+          "is_creator": false,
+          "status": "joined"
+        },
+        {
+          "id": "aab8a28c-8f5c-4c4e-bf8d-7e99c4a56ece",
+          "ig": "Data Structures and Algorithm",
+          "title": "LeetCode 75 Sprint",
+          "org": "St. Josephs Colege of Engineering and Technology",
+          "total_members": 3,
+          "is_joined": false,
+          "is_creator": false,
+          "status": "pending"
+        },
+        {
+          "id": "40a52b79-a820-4dfa-9a12-0bb960567a55",
+          "ig": "Web Development",
+          "title": "Full-Stack Fridays",
+          "org": "St. Josephs Colege of Engineering and Technology",
+          "total_members": 4,
+          "is_joined": true,
+          "is_creator": false,
+          "status": "joined"
+        },
+        {
+          "id": "aebb7d15-ef32-4815-bdb3-60839043cee0",
+          "ig": "Data Structures and Algorithm",
+          "title": "DSA Daily Grind",
+          "org": "St. Josephs Colege of Engineering and Technology",
+          "total_members": 3,
+          "is_joined": false,
+          "is_creator": false,
+          "status": "pending"
+        },
+        {
+          "id": "526bb1c7-3398-43b4-9484-cb188f2aa34f",
+          "ig": "AI",
+          "title": "Prompt Engineering Lab",
+          "org": "St. Josephs Colege of Engineering and Technology",
+          "total_members": 3,
+          "is_joined": true,
+          "is_creator": true,
+          "status": "joined"
+        },
+        {
+          "id": "4cfd3477-08c7-421e-9137-fd6cbc412465",
+          "ig": "Web Development",
+          "title": "Flutter Builders",
+          "org": "St. Josephs Colege of Engineering and Technology",
+          "total_members": 4,
+          "is_joined": true,
+          "is_creator": true,
+          "status": "joined"
+        }
+      ],
       "pagination": {
-        "count": 0,
+        "count": 14,
         "totalPages": 1,
         "isNext": false,
         "isPrev": false,

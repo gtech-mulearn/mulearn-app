@@ -43,6 +43,8 @@ List<_Target> _targets() {
     const _Target('user_profile', '/api/v1/dashboard/profile/user-profile/'),
     const _Target('task_list', '/api/v1/dashboard/task/list/'),
     const _Target('events_page1', '/api/v1/dashboard/events/?pageIndex=1&perPage=20'),
+    const _Target('events_page2', '/api/v1/dashboard/events/?pageIndex=2&perPage=20'),
+    const _Target('events_featured', '/api/v1/dashboard/events/featured/'),
     const _Target('circles_page1', '/api/v1/dashboard/learningcircle/list/?pageIndex=1&perPage=20'),
     const _Target('user_circles', '/api/v1/dashboard/learningcircle/user-circles/'),
     const _Target('my_invites', '/api/v1/dashboard/learningcircle/invite/status/'),

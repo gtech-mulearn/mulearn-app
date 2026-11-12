@@ -148,6 +148,31 @@ Backend sends `CustomResponse(response=serializer.errors).get_failure_response()
   - `hasError: true` with `response: []` and no messages → `'Request failed (400).'`.
 - [ ] **Step 3: Run** → FAIL. **Step 4: Implement.** When `message` yields no general text and no field errors, and `data['response']` is a `Map`, apply `_flattenFieldErrors` to it. **Step 5: Run** → PASS; analyze clean. **Step 6: Checkpoint.**
 
+### Task 4b: Event organiser contract (API-15, found 2026-11-12 with seeded dev data)
+
+The audit could not see this: dev had no events. Once IG- and campus-organised events existed, the Events list and Home's "Happening soon" failed to parse. The featured section hid the error and rendered nothing. Backend `OrganizerInfoSerializer` (api/dashboard/events/serializers.py) sends:
+- `organiser_ig` as `MinimalIGSerializer {id, name, icon, cover_image, icon_image}` or null;
+- `organiser_campus` and `organiser_company` as `MinimalCampusSerializer {id, title, org_type}` or null.
+
+The app typed `organiserIg` and `organiserCampus` as `String?`.
+
+**Files:**
+- Add `lib/core/models/event_organizer_ig(_dto).dart`.
+- Rename `event_organizer_company(_dto).dart` to `event_organizer_org(_dto).dart`, a shared campus/company org type.
+- Modify `event_organizer(_dto).dart`.
+- Add the targets `events_page2` and `events_featured` to `tool/record_fixtures.dart`, then re-record every `test/fixtures/dev/*.json` against the seeded data.
+- Test: `test/core/models/event_organizer_dto_test.dart`.
+
+- [x] **Step 1: Re-record the fixtures.** Seeded dev now has 22 events visible to the QA student (2 pages) and 3 featured events, covering admin, global_ig and campus organisers.
+- [x] **Step 2: Write the failing tests.**
+  - Every recorded event parses, through both `EventDto` and `FeaturedEventDto`.
+  - An IG organiser keeps its id and name.
+  - A campus organiser keeps its id and title.
+  - An admin event has no organiser entity.
+  - A company organiser parses with the `{id, title, org_type}` shape.
+- [x] **Step 3: Run** → compile failure (`String` has no `id`/`name`/`title`). **Step 4: Implement** the typed IG and org DTOs and entities. **Step 5: Run** → PASS; the full suite and analysis are clean.
+- [ ] **Step 6: On device.** Home's "Happening soon" shows featured events, and the Events list loads.
+
 ### Task 5: Circle meeting list pagination (API-03)
 
 Backend: `LearningCircleMeetingListView.get` returns `paginated_response({data, pagination})` (`learningcircle_views.py:251-281`, since `5dd14fa0`, 2026-08-19). Items are `CircleMeetupMinSerializer` (`learningcircle_serializer.py:628-720`).

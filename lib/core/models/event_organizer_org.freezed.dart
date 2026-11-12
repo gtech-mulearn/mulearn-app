@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'event_organizer_company.dart';
+part of 'event_organizer_org.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -12,20 +12,20 @@ part of 'event_organizer_company.dart';
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
-mixin _$EventOrganizerCompany {
+mixin _$EventOrganizerOrg {
 
  String get id; String get title; String get orgType;
-/// Create a copy of EventOrganizerCompany
+/// Create a copy of EventOrganizerOrg
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$EventOrganizerCompanyCopyWith<EventOrganizerCompany> get copyWith => _$EventOrganizerCompanyCopyWithImpl<EventOrganizerCompany>(this as EventOrganizerCompany, _$identity);
+$EventOrganizerOrgCopyWith<EventOrganizerOrg> get copyWith => _$EventOrganizerOrgCopyWithImpl<EventOrganizerOrg>(this as EventOrganizerOrg, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EventOrganizerCompany&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.orgType, orgType) || other.orgType == orgType));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EventOrganizerOrg&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.orgType, orgType) || other.orgType == orgType));
 }
 
 
@@ -34,15 +34,15 @@ int get hashCode => Object.hash(runtimeType,id,title,orgType);
 
 @override
 String toString() {
-  return 'EventOrganizerCompany(id: $id, title: $title, orgType: $orgType)';
+  return 'EventOrganizerOrg(id: $id, title: $title, orgType: $orgType)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $EventOrganizerCompanyCopyWith<$Res>  {
-  factory $EventOrganizerCompanyCopyWith(EventOrganizerCompany value, $Res Function(EventOrganizerCompany) _then) = _$EventOrganizerCompanyCopyWithImpl;
+abstract mixin class $EventOrganizerOrgCopyWith<$Res>  {
+  factory $EventOrganizerOrgCopyWith(EventOrganizerOrg value, $Res Function(EventOrganizerOrg) _then) = _$EventOrganizerOrgCopyWithImpl;
 @useResult
 $Res call({
  String id, String title, String orgType
@@ -53,14 +53,14 @@ $Res call({
 
 }
 /// @nodoc
-class _$EventOrganizerCompanyCopyWithImpl<$Res>
-    implements $EventOrganizerCompanyCopyWith<$Res> {
-  _$EventOrganizerCompanyCopyWithImpl(this._self, this._then);
+class _$EventOrganizerOrgCopyWithImpl<$Res>
+    implements $EventOrganizerOrgCopyWith<$Res> {
+  _$EventOrganizerOrgCopyWithImpl(this._self, this._then);
 
-  final EventOrganizerCompany _self;
-  final $Res Function(EventOrganizerCompany) _then;
+  final EventOrganizerOrg _self;
+  final $Res Function(EventOrganizerOrg) _then;
 
-/// Create a copy of EventOrganizerCompany
+/// Create a copy of EventOrganizerOrg
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? orgType = null,}) {
   return _then(_self.copyWith(
@@ -74,8 +74,8 @@ as String,
 }
 
 
-/// Adds pattern-matching-related methods to [EventOrganizerCompany].
-extension EventOrganizerCompanyPatterns on EventOrganizerCompany {
+/// Adds pattern-matching-related methods to [EventOrganizerOrg].
+extension EventOrganizerOrgPatterns on EventOrganizerOrg {
 /// A variant of `map` that fallback to returning `orElse`.
 ///
 /// It is equivalent to doing:
@@ -88,10 +88,10 @@ extension EventOrganizerCompanyPatterns on EventOrganizerCompany {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _EventOrganizerCompany value)?  $default,{required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _EventOrganizerOrg value)?  $default,{required TResult orElse(),}){
 final _that = this;
 switch (_that) {
-case _EventOrganizerCompany() when $default != null:
+case _EventOrganizerOrg() when $default != null:
 return $default(_that);case _:
   return orElse();
 
@@ -110,10 +110,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _EventOrganizerCompany value)  $default,){
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _EventOrganizerOrg value)  $default,){
 final _that = this;
 switch (_that) {
-case _EventOrganizerCompany():
+case _EventOrganizerOrg():
 return $default(_that);case _:
   throw StateError('Unexpected subclass');
 
@@ -131,10 +131,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _EventOrganizerCompany value)?  $default,){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _EventOrganizerOrg value)?  $default,){
 final _that = this;
 switch (_that) {
-case _EventOrganizerCompany() when $default != null:
+case _EventOrganizerOrg() when $default != null:
 return $default(_that);case _:
   return null;
 
@@ -154,7 +154,7 @@ return $default(_that);case _:
 
 @optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String orgType)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
-case _EventOrganizerCompany() when $default != null:
+case _EventOrganizerOrg() when $default != null:
 return $default(_that.id,_that.title,_that.orgType);case _:
   return orElse();
 
@@ -175,7 +175,7 @@ return $default(_that.id,_that.title,_that.orgType);case _:
 
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String orgType)  $default,) {final _that = this;
 switch (_that) {
-case _EventOrganizerCompany():
+case _EventOrganizerOrg():
 return $default(_that.id,_that.title,_that.orgType);case _:
   throw StateError('Unexpected subclass');
 
@@ -195,7 +195,7 @@ return $default(_that.id,_that.title,_that.orgType);case _:
 
 @optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String orgType)?  $default,) {final _that = this;
 switch (_that) {
-case _EventOrganizerCompany() when $default != null:
+case _EventOrganizerOrg() when $default != null:
 return $default(_that.id,_that.title,_that.orgType);case _:
   return null;
 
@@ -207,25 +207,25 @@ return $default(_that.id,_that.title,_that.orgType);case _:
 /// @nodoc
 
 
-class _EventOrganizerCompany implements EventOrganizerCompany {
-  const _EventOrganizerCompany({required this.id, required this.title, required this.orgType});
+class _EventOrganizerOrg implements EventOrganizerOrg {
+  const _EventOrganizerOrg({required this.id, required this.title, required this.orgType});
   
 
 @override final  String id;
 @override final  String title;
 @override final  String orgType;
 
-/// Create a copy of EventOrganizerCompany
+/// Create a copy of EventOrganizerOrg
 /// with the given fields replaced by the non-null parameter values.
 @override @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-_$EventOrganizerCompanyCopyWith<_EventOrganizerCompany> get copyWith => __$EventOrganizerCompanyCopyWithImpl<_EventOrganizerCompany>(this, _$identity);
+_$EventOrganizerOrgCopyWith<_EventOrganizerOrg> get copyWith => __$EventOrganizerOrgCopyWithImpl<_EventOrganizerOrg>(this, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EventOrganizerCompany&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.orgType, orgType) || other.orgType == orgType));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EventOrganizerOrg&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.orgType, orgType) || other.orgType == orgType));
 }
 
 
@@ -234,15 +234,15 @@ int get hashCode => Object.hash(runtimeType,id,title,orgType);
 
 @override
 String toString() {
-  return 'EventOrganizerCompany(id: $id, title: $title, orgType: $orgType)';
+  return 'EventOrganizerOrg(id: $id, title: $title, orgType: $orgType)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class _$EventOrganizerCompanyCopyWith<$Res> implements $EventOrganizerCompanyCopyWith<$Res> {
-  factory _$EventOrganizerCompanyCopyWith(_EventOrganizerCompany value, $Res Function(_EventOrganizerCompany) _then) = __$EventOrganizerCompanyCopyWithImpl;
+abstract mixin class _$EventOrganizerOrgCopyWith<$Res> implements $EventOrganizerOrgCopyWith<$Res> {
+  factory _$EventOrganizerOrgCopyWith(_EventOrganizerOrg value, $Res Function(_EventOrganizerOrg) _then) = __$EventOrganizerOrgCopyWithImpl;
 @override @useResult
 $Res call({
  String id, String title, String orgType
@@ -253,17 +253,17 @@ $Res call({
 
 }
 /// @nodoc
-class __$EventOrganizerCompanyCopyWithImpl<$Res>
-    implements _$EventOrganizerCompanyCopyWith<$Res> {
-  __$EventOrganizerCompanyCopyWithImpl(this._self, this._then);
+class __$EventOrganizerOrgCopyWithImpl<$Res>
+    implements _$EventOrganizerOrgCopyWith<$Res> {
+  __$EventOrganizerOrgCopyWithImpl(this._self, this._then);
 
-  final _EventOrganizerCompany _self;
-  final $Res Function(_EventOrganizerCompany) _then;
+  final _EventOrganizerOrg _self;
+  final $Res Function(_EventOrganizerOrg) _then;
 
-/// Create a copy of EventOrganizerCompany
+/// Create a copy of EventOrganizerOrg
 /// with the given fields replaced by the non-null parameter values.
 @override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? orgType = null,}) {
-  return _then(_EventOrganizerCompany(
+  return _then(_EventOrganizerOrg(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,orgType: null == orgType ? _self.orgType : orgType // ignore: cast_nullable_to_non_nullable
