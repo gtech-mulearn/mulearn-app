@@ -23,6 +23,14 @@ abstract final class ApiPaths {
   /// refresh token issued before it.
   static const String logout = '/api/v1/auth/logout/';
 
+  /// `GET` — the signed-in user (`UserSerializer`): muid, name, roles (every
+  /// role link, verified or not), `exist_in_guild`, profile pic, company.
+  static const String userInfo = '/api/v1/dashboard/user/info/';
+
+  /// `GET` — the signed-in user's mentor applications; 400 "No mentor
+  /// requests found for your account." when there are none.
+  static const String mentorStatus = '/api/v1/dashboard/mentor/status/';
+
   /// Request a password-reset email.
   static const String forgotPassword =
       '/api/v1/dashboard/user/forgot-password/';

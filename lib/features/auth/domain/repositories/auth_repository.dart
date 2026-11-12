@@ -63,8 +63,6 @@ abstract interface class AuthRepository {
   /// session, or null if there is no usable refresh token.
   Future<AuthSession?> refreshToken();
 
-  /// Clear stored tokens.
-  Future<void> signOut();
 
   /// The current session reconstructed from secure storage, or null if signed
   /// out. Does not hit the network.

@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
+import 'package:mulearn_app/core/session/session_actions.dart';
 import 'package:mulearn_app/core/theme/mu_radius.dart';
 import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
@@ -13,7 +14,6 @@ import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 import 'package:mulearn_app/core/widgets/mu_card.dart';
 import 'package:mulearn_app/core/widgets/mu_chip.dart';
 import 'package:mulearn_app/core/widgets/mu_toast.dart';
-import 'package:mulearn_app/features/auth/presentation/providers/auth_controller.dart';
 import 'package:mulearn_app/features/profile/domain/entities/karma_distribution_entry.dart';
 import 'package:mulearn_app/features/profile/domain/entities/socials.dart';
 import 'package:mulearn_app/features/profile/domain/entities/user_log_entry.dart';
@@ -596,7 +596,7 @@ class _QuickActionsList extends ConsumerWidget {
       ),
     );
     if (confirmed ?? false) {
-      await ref.read(authControllerProvider.notifier).signOut();
+      await ref.read(sessionActionsProvider.notifier).signOut();
     }
   }
 

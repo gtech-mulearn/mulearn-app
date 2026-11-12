@@ -91,7 +91,7 @@ final class InterestGroupsEditControllerProvider
 }
 
 String _$interestGroupsEditControllerHash() =>
-    r'e6de279cd33d553fca6cb4d1df79e7ce9cceb315';
+    r'6bed652244fb3824751595c3aa916d748a6211c6';
 
 /// Saves the user's chosen interest groups, then refreshes the main profile
 /// so the sidebar reflects the change.

@@ -139,7 +139,7 @@ final class FeaturedEventsControllerProvider
 }
 
 String _$featuredEventsControllerHash() =>
-    r'f54578ca25cbeccb5716c6754c9e39b900e51097';
+    r'99d239a53fffa79d93f24e12c91c70cdc27768e7';
 
 abstract class _$FeaturedEventsController
     extends $AsyncNotifier<List<FeaturedEvent>> {
@@ -189,7 +189,7 @@ final class MyProgressSummaryControllerProvider
 }
 
 String _$myProgressSummaryControllerHash() =>
-    r'fcf6657634609d618a14c84d6f590e52c495475a';
+    r'41a316d57c7fc975c1e593a2efbc9e071f415160';
 
 abstract class _$MyProgressSummaryController
     extends $AsyncNotifier<MyProgressSummary> {

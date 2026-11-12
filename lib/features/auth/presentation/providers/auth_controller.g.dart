@@ -104,7 +104,7 @@ final class AuthRepositoryProvider
   }
 }
 
-String _$authRepositoryHash() => r'b6b60864f705e7d84a5d4867fdcc26a41c2b1b5f';
+String _$authRepositoryHash() => r'b692f41f48a45408bfa74b9900c3932eda1b3e2a';
 
 @ProviderFor(googleNativeSignInDataSource)
 const googleNativeSignInDataSourceProvider =
@@ -256,7 +256,7 @@ final class AuthControllerProvider
   AuthController create() => AuthController();
 }
 
-String _$authControllerHash() => r'aad502fa088759cf0c355df68ef50f4890be0d10';
+String _$authControllerHash() => r'd819419614d55ad7f83634964a3b4ae8143427f7';
 
 /// Drives the sign-in / sign-out actions. Exposes `AsyncValue<void>` so
 /// screens get automatic loading/error states via [AsyncValue.guard]

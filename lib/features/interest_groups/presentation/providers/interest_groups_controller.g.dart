@@ -317,7 +317,7 @@ final class InterestGroupMembershipControllerProvider
 }
 
 String _$interestGroupMembershipControllerHash() =>
-    r'd7964aa149e549d045584f14ed258d3bb3aabb8d';
+    r'20e4583420780a08942ec4dcfb387341faca5182';
 
 /// Joins or leaves a single group by replacing the user's full membership
 /// set (the backend's `ig-edit` takes the complete list, not a delta) —

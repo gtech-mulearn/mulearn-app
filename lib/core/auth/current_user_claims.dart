@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:mulearn_app/core/auth/app_auth_controller.dart';
 import 'package:mulearn_app/core/storage/secure_storage_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -16,6 +17,8 @@ part 'current_user_claims.g.dart';
 /// without any of them importing `features/auth` or `features/profile`.
 @riverpod
 Future<String?> currentUserMuid(Ref ref) async {
+  // Re-read on every sign-in/out so a cached muid never outlives its session.
+  if (!await ref.watch(appAuthControllerProvider.future)) return null;
   final token = await ref.watch(tokenStorageProvider).readAccessToken();
   if (token == null) return null;
   final parts = token.split('.');

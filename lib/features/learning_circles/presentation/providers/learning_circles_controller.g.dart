@@ -662,7 +662,7 @@ final class CircleActionsControllerProvider
 }
 
 String _$circleActionsControllerHash() =>
-    r'5cc3311f3b998a30258f6c030a043fd8bd5f7958';
+    r'17a1de9767b940e2374ebfcbaba6bb9372b42ec6';
 
 /// Every mutating circle action (create/edit/delete/join/membership/
 /// invites) — a single notifier so screens show one consistent busy/error

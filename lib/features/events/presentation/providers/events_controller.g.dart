@@ -267,7 +267,7 @@ final class EventInterestControllerProvider
 }
 
 String _$eventInterestControllerHash() =>
-    r'e38b1036807d412dabe777dc6091e529560b6200';
+    r'7fda948c27f8b64fd6ba5dc2780ed7d9c4889413';
 
 /// Toggles interest for a single event, then invalidates the detail and
 /// list providers so both reflect the new `viewerInterestStatus`.

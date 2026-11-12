@@ -1,7 +1,7 @@
 import 'package:mulearn_app/core/auth/app_auth_controller.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/network/dio_provider.dart';
-import 'package:mulearn_app/core/storage/cache_store_provider.dart';
+import 'package:mulearn_app/core/session/session_actions.dart';
 import 'package:mulearn_app/core/storage/secure_storage_provider.dart';
 import 'package:mulearn_app/core/utils/app_logger.dart';
 import 'package:mulearn_app/features/auth/data/datasources/apple_native_signin_datasource.dart';
@@ -24,7 +24,6 @@ AuthRemoteDataSource authRemoteDataSource(Ref ref) =>
 AuthRepository authRepository(Ref ref) => AuthRepositoryImpl(
       remote: ref.watch(authRemoteDataSourceProvider),
       tokenStorage: ref.watch(tokenStorageProvider),
-      cacheStore: ref.watch(cacheStoreProvider),
     );
 
 @Riverpod(keepAlive: true)
@@ -133,20 +132,9 @@ class AuthController extends _$AuthController {
   /// The authserver's exact reply when no account uses the Apple email.
   static const _appleNoAccountMessage = 'No account found with this email';
 
-  Future<void> signOut() async {
-    // Flip the app to signed-out FIRST, synchronously — the router redirect
-    // must fire immediately. Clearing local storage happens after: even if
-    // that Keychain/storage call hangs or throws, it must never trap the
-    // user on the screen they just tried to leave (an `await` before this
-    // line would do exactly that on a stuck platform call, since neither a
-    // `catch` nor a `finally` runs until the `await` itself resolves).
-    ref.read(appAuthControllerProvider.notifier).setSignedOut();
-    try {
-      await ref.read(authRepositoryProvider).signOut();
-    } on Object catch (e, st) {
-      appLogger.e('Failed to clear local session on sign-out', error: e, stackTrace: st);
-    }
-  }
+  /// Signs out through the core session (router state first, then the
+  /// server-side revoke, tokens and cache).
+  Future<void> signOut() => ref.read(sessionActionsProvider.notifier).signOut();
 
   Future<void> _guard(Future<void> Function() action) async {
     state = const AsyncLoading();

@@ -138,7 +138,7 @@ final class ProfileControllerProvider
   ProfileController create() => ProfileController();
 }
 
-String _$profileControllerHash() => r'1b317c6c23bb8bc9cb4774fb3e9fcdcd4c5ae70e';
+String _$profileControllerHash() => r'0f6b734c102b167eb0ef5116b041ee268a2a2e6b';
 
 /// Loads the current user's profile once on screen load and caches it for the
 /// session (Riverpod's built-in caching — build prompt §5). Call [refresh] to

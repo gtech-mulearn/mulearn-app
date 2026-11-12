@@ -40,6 +40,7 @@ List<_Target> _targets() {
     const _Target('user_info_mentor', '/api/v1/dashboard/user/info/', account: 'mentor'),
     const _Target('user_info_enabler', '/api/v1/dashboard/user/info/', account: 'enabler'),
     const _Target('user_info_campuslead', '/api/v1/dashboard/user/info/', account: 'campuslead'),
+    const _Target('mentor_status', '/api/v1/dashboard/mentor/status/', account: 'mentor'),
     const _Target('user_profile', '/api/v1/dashboard/profile/user-profile/'),
     const _Target('editable_profile', '/api/v1/dashboard/profile/'),
     const _Target('task_list', '/api/v1/dashboard/task/list/'),
