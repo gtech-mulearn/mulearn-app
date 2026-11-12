@@ -39,6 +39,8 @@ migrate_working_dir/
 # Env files — .env.dev is committed (no secrets, just the API host).
 # .env.prod is injected in CI / provided locally; never commit it.
 .env.prod
+# QA account credentials for tool/record_fixtures.dart — never commit.
+.env.qa
 
 # Symbolication related
 app.*.symbols

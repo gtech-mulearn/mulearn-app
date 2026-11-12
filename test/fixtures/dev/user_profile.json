@@ -1,0 +1,54 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/profile/user-profile/",
+    "account": "student",
+    "status": 200,
+    "recorded_at": "2026-11-12T12:23:10.326981Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "id": "04afe242-e329-4491-af58-d555abd82e5f",
+      "joined": "2026-11-12T10:41:44Z",
+      "full_name": "Fixture User",
+      "gender": null,
+      "muid": "qastudentone@mulearn",
+      "roles": [
+        "Student"
+      ],
+      "role_verification": [
+        {
+          "role": "Student",
+          "is_verified": true
+        }
+      ],
+      "lead_enabler_verified": false,
+      "college_id": null,
+      "college_code": null,
+      "org_district_id": null,
+      "karma": 0,
+      "rank": 3,
+      "karma_distribution": {
+        "events": [],
+        "ig": [],
+        "intern": {
+          "karma": 0
+        },
+        "general": [],
+        "level": []
+      },
+      "level": "lvl1",
+      "grit": 100,
+      "profile_pic": null,
+      "cover_pic": null,
+      "interest_groups": [],
+      "is_public": false,
+      "percentile": 100.0
+    }
+  }
+}

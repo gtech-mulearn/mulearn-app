@@ -1,0 +1,33 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/home/learner/summary/",
+    "account": "student",
+    "status": 200,
+    "recorded_at": "2026-11-12T12:23:10.326981Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": [
+        "Learner dashboard summary fetched successfully"
+      ]
+    },
+    "response": {
+      "stats": {
+        "weekly_karma": 0,
+        "total_karma": 0,
+        "rank": 2,
+        "active_circles": 0,
+        "streak_days": 0
+      },
+      "next_meeting": null,
+      "quick_action_counts": {
+        "circles": 0,
+        "leaderboard_rank": 2,
+        "job_openings": 0
+      }
+    }
+  }
+}

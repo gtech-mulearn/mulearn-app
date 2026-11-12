@@ -1,0 +1,36 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/user/info/",
+    "account": "student",
+    "status": 200,
+    "recorded_at": "2026-11-12T12:23:10.326981Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "muid": "qastudentone@mulearn",
+      "full_name": "Fixture User",
+      "email": "user@example.com",
+      "mobile": null,
+      "gender": null,
+      "dob": null,
+      "exist_in_guild": false,
+      "joined": "2026-11-12 10:41:44+00:00",
+      "roles": [
+        "Student"
+      ],
+      "profile_pic": null,
+      "dynamic_type": [],
+      "user_domains": [],
+      "user_endgoals": [],
+      "interested_in_work": false,
+      "interested_in_gig_work": false,
+      "company": null
+    }
+  }
+}

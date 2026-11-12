@@ -1,0 +1,17 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/leaderboard/college-monthly/",
+    "account": null,
+    "status": 200,
+    "recorded_at": "2026-11-12T12:23:10.326981Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": []
+  }
+}

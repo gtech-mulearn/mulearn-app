@@ -1,0 +1,28 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/calendar/events/?start_date=2026-11-01&end_date=2026-11-30",
+    "account": "mentor",
+    "status": 200,
+    "recorded_at": "2026-11-12T12:23:10.326981Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "events": {
+        "upcoming": [],
+        "ongoing": [],
+        "completed": []
+      },
+      "sessions": {
+        "upcoming": [],
+        "ongoing": [],
+        "completed": []
+      }
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/learningcircle/list/?pageIndex=1&perPage=20",
+    "account": "student",
+    "status": 200,
+    "recorded_at": "2026-11-12T12:23:10.326981Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "data": [],
+      "pagination": {
+        "count": 0,
+        "totalPages": 1,
+        "isNext": false,
+        "isPrev": false,
+        "nextPage": null
+      }
+    }
+  }
+}

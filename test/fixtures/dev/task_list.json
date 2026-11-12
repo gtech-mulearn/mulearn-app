@@ -1,0 +1,90 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/task/list/",
+    "account": "student",
+    "status": 200,
+    "recorded_at": "2026-11-12T12:23:10.326981Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "start_journey": [
+        {
+          "id": "412891a2-a974-43c3-b3bf-378d4137a6a4",
+          "hashtag": "#app-test",
+          "title": "Appraisal task",
+          "description": "This is test task for testing appraisal bot",
+          "karma": 100,
+          "channel": "task-dropbox",
+          "discord_id": "1409243188195102850",
+          "type": "Hashtag Task",
+          "variable_karma": false,
+          "level": null,
+          "ig": null,
+          "event": null,
+          "event_id": null,
+          "company_name": null,
+          "completed": false
+        },
+        {
+          "id": "44cf1ae0-7058-482d-8740-aa2cb63e9a5e",
+          "hashtag": "#app-test2",
+          "title": "Appraisal Task2",
+          "description": "Appraisal Task2",
+          "karma": 1000,
+          "channel": "task-dropbox",
+          "discord_id": "1409243188195102850",
+          "type": "Hashtag Task",
+          "variable_karma": false,
+          "level": null,
+          "ig": null,
+          "event": null,
+          "event_id": null,
+          "company_name": null,
+          "completed": false
+        },
+        {
+          "id": "a95aa012-689e-4f69-acb5-ee22cb350229",
+          "hashtag": "#app-test3",
+          "title": "Appraisal Task3",
+          "description": "Appraisal Task3",
+          "karma": 1000,
+          "channel": "task-dropbox",
+          "discord_id": "1409243188195102850",
+          "type": "Hashtag Task",
+          "variable_karma": false,
+          "level": null,
+          "ig": null,
+          "event": null,
+          "event_id": null,
+          "company_name": null,
+          "completed": false
+        },
+        {
+          "id": "67653764-bf6a-4367-8880-7e87de246fdd",
+          "hashtag": "#app-test4",
+          "title": "Appraisal Task4",
+          "description": "Appraisal Task4",
+          "karma": 1000,
+          "channel": "task-dropbox",
+          "discord_id": "1409243188195102850",
+          "type": "Hashtag Task",
+          "variable_karma": false,
+          "level": null,
+          "ig": null,
+          "event": null,
+          "event_id": null,
+          "company_name": null,
+          "completed": false
+        }
+      ],
+      "become_expert": [],
+      "events": []
+    }
+  }
+}
