@@ -23,6 +23,7 @@
 - `flutter analyze` → `No issues found!`; `flutter test` all green; each commit also passes alone in `_worktrees/app-verify` (Plan 2 ruling).
 - One commit per task, in order, on `feat/app-parity`; no `Co-Authored-By`/AI trailer; never push (user rule).
 - Copy follows the dashboard where one exists (quoted per task); errors show `ApiException.messageFor(e)`, i.e. the backend's own message.
+- **No timer-based polling of the backend** (user, 2026-11-13: about 70k members share one backend). Server state refreshes only on user-driven triggers (sign-in, app resume, a screen becoming visible, pull-to-refresh, the user's own mutation), each behind a staleness gate. Values the app can derive from its own actions are updated locally rather than refetched.
 
 ## Review Focus
 
@@ -64,7 +65,24 @@
   - `ApiPaths.notifications = '/api/v1/notification/'`, `notificationsUnreadCount`, `notificationsReadAll`, `notificationRead(String id)`, `notificationArchive(String id)`.
   - Entity `AppNotification {id, type, category, title, description, entityType?, entityId?, redirectUrl?, isBroadcast, read, createdAt}` (the old `NotificationKind`/`targetRoute` go away).
   - `NotificationsController` (`PagedState<AppNotification>`; `refresh()`, `loadMore()`, `markRead(id)`, `markAllRead()`, `archive(id)`).
-  - `@Riverpod(keepAlive: true, retry: noRetry) class UnreadNotifications` → `int`; watches `appAuthControllerProvider` (0 when signed out); `refresh()`; polls every 60 s while the app is resumed, refreshes on resume, and stops polling when paused (the dashboard's `REFETCH_INTERVAL`).
+  - `@Riverpod(keepAlive: true, retry: noRetry) class UnreadNotifications` → `int`. It watches `appAuthControllerProvider` (0 when signed out, no request). It has an injectable clock (`DateTime Function() now`) and `const Duration unreadStaleAfter = Duration(minutes: 5)`. Methods:
+    - `refreshIfStale()` fetches only when the last successful fetch is older than `unreadStaleAfter`.
+    - `refresh()` fetches unconditionally; used for pull-to-refresh.
+    - `onRead({required bool wasUnread, required bool isBroadcast})`, `onAllRead()` and `onArchived({...})` adjust the count locally with no request. A personal unread item is −1, clamped at 0; a broadcast is unchanged, because the backend counts personal rows only; all read is 0.
+    - Concurrent calls share one in-flight request. A failed fetch keeps the last known count and isn't retried; the next trigger tries again.
+  - Triggers, and only these:
+    - cold start or sign-in: `refresh`;
+    - `AppLifecycleState.resumed`: `refreshIfStale`;
+    - the Home tab becoming visible: `refreshIfStale`;
+    - pull-to-refresh on Home or Notifications: `refresh`;
+    - the Notifications screen's first page loading: `refresh`, because opening the inbox is the moment the count matters.
+  - The feed (`NotificationsController`) is auto-disposed with its screen. It loads on open, on pull-to-refresh and on scroll-to-end, and is never refetched in the background.
+- **Why not polling (ruling):**
+  - *What the backend offers:* no WebSocket route carries notifications (`mulearnbackend/routing.py` serves only `ws/v1/public/landing-stats/` and the circle chat; the `WEBSOCKET` channel has templates but no consumer), and there is no push (no device tokens, FEAT-16). `unread-count` is a Redis cache-aside read (`notif:unread:{user_id}`), but every call still costs a JWT check and a worker.
+  - *What polling would cost:* a 60 s poll is 60 requests per foreground user per hour, or (concurrent foreground users ÷ 60) requests per second around the clock, for a number that rarely changes. These triggers cost about 1–3 requests per session, and at most 12 an hour for someone switching apps constantly.
+  - *The trade-off:* a notification that arrives while the user sits on one non-Home screen shows on the next resume, Home visit or inbox open.
+  - *The real fix is backend work (out of scope here):* FCM push. The OS keeps one shared connection per device, so the app needs no polling and gets updates in the background, and `dispatch()` already knows the recipients. A per-user Channels group would serve the web dashboard.
+  - *Cost if wrong:* badges lag by up to one navigation.
 - Consumes: `PagedState`, `parseEachOrReport`, `ApiException`, `noRetry`.
 
 - [ ] **Step 1: Record fixtures.** Re-run the existing `notifications_page1`/`notifications_unread_count` targets and add `notification_read_foreign` (PATCH `<random uuid>/read/` → 404 envelope). Expected: `notifications_page1` has `count` > 0 and a `results[0]` with every field in the facts table.
@@ -72,7 +90,13 @@
   - `PagePaging.parse({'count': 35, 'page': 1, 'page_size': 20, ...})` → `hasNext` true; page 2 of 35 → false.
   - `NotificationDto` over `dev/notifications_page1` parses every item; `source: 'broadcast'` → `isBroadcast`; `created_at` parsed as UTC.
   - Controller: first page then `loadMore` requests `?page=2&page_size=20` and appends with dedupe by id. A `loadMore` failure keeps the loaded items and exposes the error for the retry row. `markRead` flips `read` at once and sends `PATCH …/<id>/read/`. A failed `markRead` restores `read: false` and rethrows the backend message. `archive` removes the item at once and restores it at its index on failure. `markAllRead` sends `PATCH read-all/` and marks every loaded item read.
-  - `UnreadNotifications`: reads `unread_count`; returns 0 with no request when signed out; `markRead`/`markAllRead`/`archive` refresh it.
+  - `UnreadNotifications`:
+    - It reads `unread_count`, and returns 0 with no request when signed out.
+    - `no request without a trigger`: with a fake clock advanced 60 minutes and no trigger, there are zero requests.
+    - `resume within the staleness window doesn't refetch`: resumes at +1 min and +4 min make no request; one at +6 min makes exactly one.
+    - Two simultaneous `refreshIfStale` calls make one request.
+    - `marking read adjusts the badge locally`: reading a personal unread item lowers the count by 1 with no request; reading a broadcast leaves it unchanged; all read sets it to 0; the count never goes below 0.
+    - A failed fetch keeps the previous count.
 - [ ] **Step 3: Run** `flutter test test/features/notifications test/core/network/paging_test.dart` → FAIL (types missing).
 - [ ] **Step 4: Implement.** Parse items with `parseEachOrReport(what: 'NotificationDto')`.
 - [ ] **Step 5: Run** the same → PASS; `flutter analyze` clean.
@@ -97,7 +121,7 @@
   - `notification_target_test` table: one row per rule above.
   - `unsafe or unknown targets open nothing`: `redirect_url: 'javascript:alert(1)'`, `'http://x.org'`, `type: 'SOMETHING_NEW'` with no entity → `NoTarget`. `'https://evil.example/x'` → `WebPage` (external, like the dashboard).
   - Screen: items grouped under "Today" and "Earlier" by local date. Unread items show a dot and are announced "Unread". Tapping marks read, then navigates for an `AppRoute`. Swiping ← archives, then a toast "Notification archived". "Mark all read" calls the controller. The empty state reads "You're all caught up". Load-more errors show the retry row and keep the list.
-  - Home: the bell shows the unread count (hidden at 0, "99+" above 99); its semantics label is "Notifications, N unread".
+  - Home: the bell shows the unread count (hidden at 0, "99+" above 99); its semantics label is "Notifications, N unread". Home calls `refreshIfStale` when it becomes visible, never on a timer. Tapping a row calls `markRead`, then `onRead` — no extra unread-count request.
 - [ ] **Step 2: Run** `flutter test test/features/notifications` → FAIL.
 - [ ] **Step 3: Implement.** `WebPage` opens with `launchUrl(mode: LaunchMode.externalApplication)`. Reuse `MuEmptyState`, `ErrorRetryView` and `MuLoadMoreFooter`.
 - [ ] **Step 4: Run** → PASS; analyze clean. **Step 5: Phone:** open Notifications as the QA student, tap an `LC_INVITE` row → the circle opens; the badge drops.
@@ -141,7 +165,7 @@
   - Change dev `DASHBOARD_URL` to `https://mulearn-dashboard.vercel.app` (the user named this the dev dashboard). Plan 1's `https://dev.mulearn.org` is the marketing site, so the Company hand-off and the web links went to the wrong host.
 - Modify: `android/app/src/main/AndroidManifest.xml` — add an `autoVerify` VIEW intent-filter for `https://${discordRedirectHost}/dashboard/connect-discord`. The host comes from the redirect in `DISCORD_AUTH_URL`, set as a flavour `manifestPlaceholders` entry in `android/app/build.gradle(.kts)`: dev `mulearn-dev.vercel.app`, prod `app.mulearn.org`.
 - Create: `lib/core/session/discord_connect.dart` (datasource + controller), `lib/features/profile/presentation/screens/connect_discord_screen.dart`
-- Modify: router (`/dashboard/connect-discord` → the connect screen, query `code`; the sign-in redirect keeps `from=`), Settings Discord row, `task_detail_screen.dart` (when `needsDiscord`: "Connect Discord to earn karma" replaces the post-proof hint), app-resume hook (when `needsDiscord`, invalidate `currentUserProvider` on resume)
+- Modify: router (`/dashboard/connect-discord` → the connect screen, query `code`; the sign-in redirect keeps `from=`), Settings Discord row, `task_detail_screen.dart` (when `needsDiscord`: "Connect Discord to earn karma" replaces the post-proof hint), a one-shot resume check: launching the Discord flow sets a pending flag, and the first resume after it invalidates `currentUserProvider` once and clears the flag. Ordinary resumes make no request (no polling; see Global Constraints).
 - Test: `test/core/session/discord_connect_test.dart`, `test/features/profile/connect_discord_screen_test.dart`, `test/core/router/deep_link_test.dart`
 
 **Interfaces:**
@@ -367,4 +391,5 @@
   - the Play signing fingerprint for `app.mulearn.org`;
   - the prod `DISCORD_AUTH_URL`;
   - whether a backend password change reaches authserver logins (Task 3).
-- [ ] **Step 4: Commit** `docs: close out plan 3`.
+- [ ] **Step 4:** Update `docs/backend-and-ops-todo.md` (FCM push and the other backend/ops asks) with what Plan 3 confirmed or added.
+- [ ] **Step 5: Commit** `docs: close out plan 3`.
