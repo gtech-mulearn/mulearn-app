@@ -15,11 +15,6 @@ class NotificationsRemoteDataSource {
         await _dio.get<dynamic>(NotificationPaths.feed, queryParameters: PagePaging.query(page)),
       );
 
-  Future<int> fetchUnreadCount() async {
-    final body = ApiEnvelope.unwrapObject(await _dio.get<dynamic>(NotificationPaths.unreadCount));
-    return body['unread_count'] as int? ?? 0;
-  }
-
   Future<void> markRead(String id) async =>
       ApiEnvelope.unwrapObject(await _dio.patch<dynamic>(NotificationPaths.read(id), data: <String, dynamic>{}));
 

@@ -8,48 +8,103 @@ part of 'unread_notifications.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// The unread badge (`GET /api/v1/notification/unread-count/`: unread,
-/// non-archived personal rows; broadcasts aren't counted).
+/// `GET /api/v1/notification/unread-count/` → `{unread_count}`.
+
+@ProviderFor(fetchUnreadCount)
+const fetchUnreadCountProvider = FetchUnreadCountProvider._();
+
+/// `GET /api/v1/notification/unread-count/` → `{unread_count}`.
+
+final class FetchUnreadCountProvider
+    extends
+        $FunctionalProvider<
+          Future<int> Function(),
+          Future<int> Function(),
+          Future<int> Function()
+        >
+    with $Provider<Future<int> Function()> {
+  /// `GET /api/v1/notification/unread-count/` → `{unread_count}`.
+  const FetchUnreadCountProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'fetchUnreadCountProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$fetchUnreadCountHash();
+
+  @$internal
+  @override
+  $ProviderElement<Future<int> Function()> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  Future<int> Function() create(Ref ref) {
+    return fetchUnreadCount(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(Future<int> Function() value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<Future<int> Function()>(value),
+    );
+  }
+}
+
+String _$fetchUnreadCountHash() => r'6bd81b65f874d84681203f99e007957179c1221a';
+
+/// The unread badge: unread, non-archived personal notifications
+/// (`UnreadCountView`; broadcasts aren't counted). In core because Home and
+/// the inbox both use it.
 ///
 /// Never polled. About 70k members share one backend (user, 2026-11-13) and
 /// the backend has no push or WebSocket for notifications, so the count is
 /// fetched only on user-driven triggers:
 /// - sign-in / cold start: this provider's build;
-/// - app resume and Home becoming visible: [refreshIfStale];
+/// - app resume and the Home tab being selected: [refreshIfStale];
 /// - pull-to-refresh and opening the inbox: [refresh].
 /// The inbox's own read/archive actions adjust it locally ([onRead],
-/// [onAllRead], [onArchived]) instead of refetching. See
-/// `docs/backend-and-ops-todo.md` (push) for the real-time fix.
+/// [onAllRead], [onArchived]) instead of refetching. Real-time updates need
+/// push (`docs/backend-and-ops-todo.md`).
 
 @ProviderFor(UnreadNotifications)
 const unreadNotificationsProvider = UnreadNotificationsProvider._();
 
-/// The unread badge (`GET /api/v1/notification/unread-count/`: unread,
-/// non-archived personal rows; broadcasts aren't counted).
+/// The unread badge: unread, non-archived personal notifications
+/// (`UnreadCountView`; broadcasts aren't counted). In core because Home and
+/// the inbox both use it.
 ///
 /// Never polled. About 70k members share one backend (user, 2026-11-13) and
 /// the backend has no push or WebSocket for notifications, so the count is
 /// fetched only on user-driven triggers:
 /// - sign-in / cold start: this provider's build;
-/// - app resume and Home becoming visible: [refreshIfStale];
+/// - app resume and the Home tab being selected: [refreshIfStale];
 /// - pull-to-refresh and opening the inbox: [refresh].
 /// The inbox's own read/archive actions adjust it locally ([onRead],
-/// [onAllRead], [onArchived]) instead of refetching. See
-/// `docs/backend-and-ops-todo.md` (push) for the real-time fix.
+/// [onAllRead], [onArchived]) instead of refetching. Real-time updates need
+/// push (`docs/backend-and-ops-todo.md`).
 final class UnreadNotificationsProvider
     extends $AsyncNotifierProvider<UnreadNotifications, int> {
-  /// The unread badge (`GET /api/v1/notification/unread-count/`: unread,
-  /// non-archived personal rows; broadcasts aren't counted).
+  /// The unread badge: unread, non-archived personal notifications
+  /// (`UnreadCountView`; broadcasts aren't counted). In core because Home and
+  /// the inbox both use it.
   ///
   /// Never polled. About 70k members share one backend (user, 2026-11-13) and
   /// the backend has no push or WebSocket for notifications, so the count is
   /// fetched only on user-driven triggers:
   /// - sign-in / cold start: this provider's build;
-  /// - app resume and Home becoming visible: [refreshIfStale];
+  /// - app resume and the Home tab being selected: [refreshIfStale];
   /// - pull-to-refresh and opening the inbox: [refresh].
   /// The inbox's own read/archive actions adjust it locally ([onRead],
-  /// [onAllRead], [onArchived]) instead of refetching. See
-  /// `docs/backend-and-ops-todo.md` (push) for the real-time fix.
+  /// [onAllRead], [onArchived]) instead of refetching. Real-time updates need
+  /// push (`docs/backend-and-ops-todo.md`).
   const UnreadNotificationsProvider._()
     : super(
         from: null,
@@ -70,20 +125,21 @@ final class UnreadNotificationsProvider
 }
 
 String _$unreadNotificationsHash() =>
-    r'cd767e6cfdfe80a2d20149a3436f667ba4b329c1';
+    r'a0ce99d3f60176590045b5cc56158ea682b8a493';
 
-/// The unread badge (`GET /api/v1/notification/unread-count/`: unread,
-/// non-archived personal rows; broadcasts aren't counted).
+/// The unread badge: unread, non-archived personal notifications
+/// (`UnreadCountView`; broadcasts aren't counted). In core because Home and
+/// the inbox both use it.
 ///
 /// Never polled. About 70k members share one backend (user, 2026-11-13) and
 /// the backend has no push or WebSocket for notifications, so the count is
 /// fetched only on user-driven triggers:
 /// - sign-in / cold start: this provider's build;
-/// - app resume and Home becoming visible: [refreshIfStale];
+/// - app resume and the Home tab being selected: [refreshIfStale];
 /// - pull-to-refresh and opening the inbox: [refresh].
 /// The inbox's own read/archive actions adjust it locally ([onRead],
-/// [onAllRead], [onArchived]) instead of refetching. See
-/// `docs/backend-and-ops-todo.md` (push) for the real-time fix.
+/// [onAllRead], [onArchived]) instead of refetching. Real-time updates need
+/// push (`docs/backend-and-ops-todo.md`).
 
 abstract class _$UnreadNotifications extends $AsyncNotifier<int> {
   FutureOr<int> build();

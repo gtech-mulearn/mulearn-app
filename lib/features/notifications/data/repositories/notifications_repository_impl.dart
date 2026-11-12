@@ -24,9 +24,6 @@ class NotificationsRepositoryImpl implements NotificationsRepository {
       });
 
   @override
-  Future<int> getUnreadCount() => _guard(_remote.fetchUnreadCount);
-
-  @override
   Future<void> markRead(String id) => _guard(() => _remote.markRead(id));
 
   @override

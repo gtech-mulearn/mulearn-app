@@ -1,10 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mulearn_app/core/auth/app_auth_controller.dart';
-import 'package:mulearn_app/features/notifications/presentation/providers/unread_notifications.dart';
+import 'package:mulearn_app/core/notifications/unread_notifications.dart';
 
+import '../../features/notifications/notifications_test_support.dart';
 import '../../support/fake_http_adapter.dart';
-import 'notifications_test_support.dart';
 
 /// GET /api/v1/notification/unread-count/ (UnreadCountView) — personal,
 /// unread, non-archived rows only. Refreshed on user-driven triggers, never on

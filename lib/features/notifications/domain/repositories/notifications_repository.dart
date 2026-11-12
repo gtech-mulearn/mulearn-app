@@ -6,9 +6,6 @@ abstract interface class NotificationsRepository {
   /// One page of the merged feed, newest first. [page] starts at 1.
   Future<NotificationPage> getPage(int page);
 
-  /// Unread, non-archived personal notifications (broadcasts aren't counted).
-  Future<int> getUnreadCount();
-
   Future<void> markRead(String id);
 
   Future<void> markAllRead();

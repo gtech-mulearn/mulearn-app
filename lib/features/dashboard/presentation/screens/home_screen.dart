@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/leaderboard/leaderboard_providers.dart';
+import 'package:mulearn_app/core/notifications/unread_notifications.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/router/tab_navigation.dart';
 import 'package:mulearn_app/core/theme/mu_radius.dart';
@@ -235,9 +236,16 @@ class _HomeHeader extends StatelessWidget {
           ),
         ),
         const SizedBox(width: MuSpace.m),
-        MuIconButton(
-          icon: LucideIcons.bell,
-          onPressed: () => context.push(RoutePaths.notifications),
+        Consumer(
+          builder: (context, ref, _) {
+            final unread = ref.watch(unreadNotificationsProvider).value ?? 0;
+            return MuIconButton(
+              icon: LucideIcons.bell,
+              badgeCount: unread,
+              tooltip: unread == 0 ? 'Notifications' : 'Notifications, $unread unread',
+              onPressed: () => context.push(RoutePaths.notifications),
+            );
+          },
         ),
         const SizedBox(width: MuSpace.s),
         GestureDetector(

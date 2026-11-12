@@ -1,9 +1,9 @@
 import 'package:mulearn_app/core/network/paging.dart';
+import 'package:mulearn_app/core/notifications/unread_notifications.dart';
 import 'package:mulearn_app/core/utils/app_logger.dart';
 import 'package:mulearn_app/core/utils/no_retry.dart';
 import 'package:mulearn_app/features/notifications/domain/entities/app_notification.dart';
 import 'package:mulearn_app/features/notifications/presentation/providers/notifications_repository_provider.dart';
-import 'package:mulearn_app/features/notifications/presentation/providers/unread_notifications.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 export 'notifications_repository_provider.dart';

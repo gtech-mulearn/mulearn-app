@@ -1,8 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
+import 'package:mulearn_app/core/notifications/unread_notifications.dart';
 import 'package:mulearn_app/features/notifications/presentation/providers/notifications_controller.dart';
-import 'package:mulearn_app/features/notifications/presentation/providers/unread_notifications.dart';
 
 import '../../support/fake_http_adapter.dart';
 import 'notifications_test_support.dart';

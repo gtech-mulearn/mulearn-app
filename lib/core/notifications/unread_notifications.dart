@@ -1,8 +1,12 @@
+import 'package:dio/dio.dart';
 import 'package:mulearn_app/core/auth/app_auth_controller.dart';
+import 'package:mulearn_app/core/network/api_envelope.dart';
+import 'package:mulearn_app/core/network/api_exception.dart';
+import 'package:mulearn_app/core/network/api_paths.dart';
+import 'package:mulearn_app/core/network/dio_provider.dart';
 import 'package:mulearn_app/core/utils/app_logger.dart';
 import 'package:mulearn_app/core/utils/clock.dart';
 import 'package:mulearn_app/core/utils/no_retry.dart';
-import 'package:mulearn_app/features/notifications/presentation/providers/notifications_repository_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'unread_notifications.g.dart';
@@ -10,18 +14,33 @@ part 'unread_notifications.g.dart';
 /// How long a fetched unread count is trusted before a trigger refetches it.
 const Duration unreadStaleAfter = Duration(minutes: 5);
 
-/// The unread badge (`GET /api/v1/notification/unread-count/`: unread,
-/// non-archived personal rows; broadcasts aren't counted).
+/// `GET /api/v1/notification/unread-count/` → `{unread_count}`.
+@riverpod
+Future<int> Function() fetchUnreadCount(Ref ref) {
+  final dio = ref.watch(dioProvider);
+  return () async {
+    try {
+      final body = ApiEnvelope.unwrapObject(await dio.get<dynamic>(NotificationPaths.unreadCount));
+      return body['unread_count'] as int? ?? 0;
+    } on DioException catch (e) {
+      throw ApiException.fromDioException(e);
+    }
+  };
+}
+
+/// The unread badge: unread, non-archived personal notifications
+/// (`UnreadCountView`; broadcasts aren't counted). In core because Home and
+/// the inbox both use it.
 ///
 /// Never polled. About 70k members share one backend (user, 2026-11-13) and
 /// the backend has no push or WebSocket for notifications, so the count is
 /// fetched only on user-driven triggers:
 /// - sign-in / cold start: this provider's build;
-/// - app resume and Home becoming visible: [refreshIfStale];
+/// - app resume and the Home tab being selected: [refreshIfStale];
 /// - pull-to-refresh and opening the inbox: [refresh].
 /// The inbox's own read/archive actions adjust it locally ([onRead],
-/// [onAllRead], [onArchived]) instead of refetching. See
-/// `docs/backend-and-ops-todo.md` (push) for the real-time fix.
+/// [onAllRead], [onArchived]) instead of refetching. Real-time updates need
+/// push (`docs/backend-and-ops-todo.md`).
 @Riverpod(keepAlive: true, retry: noRetry)
 class UnreadNotifications extends _$UnreadNotifications {
   DateTime? _fetchedAt;
@@ -29,12 +48,12 @@ class UnreadNotifications extends _$UnreadNotifications {
 
   @override
   Future<int> build() async {
-    final repository = ref.watch(notificationsRepositoryProvider);
+    final fetch = ref.watch(fetchUnreadCountProvider);
     final now = ref.watch(clockProvider);
     _fetchedAt = null;
     _inFlight = null;
     if (!await ref.watch(appAuthControllerProvider.future)) return 0;
-    final count = await repository.getUnreadCount();
+    final count = await fetch();
     _fetchedAt = now();
     return count;
   }
@@ -42,8 +61,9 @@ class UnreadNotifications extends _$UnreadNotifications {
   /// Fetches only if the last successful fetch is older than
   /// [unreadStaleAfter] (and none is under way).
   Future<void> refreshIfStale() {
+    final inFlight = _inFlight;
+    if (inFlight != null) return inFlight;
     final fetchedAt = _fetchedAt;
-    if (_inFlight != null) return _inFlight!;
     if (fetchedAt == null && state.isLoading) return Future.value(); // the first load is running
     if (fetchedAt != null && ref.read(clockProvider)().difference(fetchedAt) < unreadStaleAfter) {
       return Future.value();
@@ -57,10 +77,10 @@ class UnreadNotifications extends _$UnreadNotifications {
 
   Future<void> _fetch() async {
     if (ref.read(appAuthControllerProvider).value != true) return;
-    final repository = ref.read(notificationsRepositoryProvider);
+    final fetch = ref.read(fetchUnreadCountProvider);
     final now = ref.read(clockProvider);
     try {
-      final count = await repository.getUnreadCount();
+      final count = await fetch();
       if (!ref.mounted) return;
       _fetchedAt = now();
       state = AsyncData(count);
