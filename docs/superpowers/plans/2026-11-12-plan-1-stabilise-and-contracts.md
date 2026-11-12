@@ -44,28 +44,28 @@
 - Modify: `.github/workflows/ci.yml`, `release-dev.yml`, `release-prod.yml` (pin `flutter-version: 3.47.9` next to `channel: stable`)
 - Modify: `README.md` ("Prerequisites": Flutter 3.47.9)
 
-- [ ] **Step 1: Confirm the baseline.** Run `flutter analyze`. Expected: 5 issues (4× `unawaited_return_in_try_block` in `auth_repository_impl.dart`, 1× `analysis_options_deprecated_plugins`).
-- [ ] **Step 2: Fix the four returns.** Change `return _completeSignIn(payload);` to `return await _completeSignIn(payload);` at the four sites.
-- [ ] **Step 3: Move riverpod_lint to the new analyzer plugin system.** Set `riverpod_lint: ^3.1.9` in `dev_dependencies`. Remove `analyzer: plugins: - custom_lint` and add a top-level block:
+- [x] **Step 1: Confirm the baseline.** Run `flutter analyze`. Expected: 5 issues (4× `unawaited_return_in_try_block` in `auth_repository_impl.dart`, 1× `analysis_options_deprecated_plugins`).
+- [x] **Step 2: Fix the four returns.** Change `return _completeSignIn(payload);` to `return await _completeSignIn(payload);` at the four sites.
+- [x] **Step 3: Move riverpod_lint to the new analyzer plugin system.** Set `riverpod_lint: ^3.1.9` in `dev_dependencies`. Remove `analyzer: plugins: - custom_lint` and add a top-level block:
   ```yaml
   plugins:
     riverpod_lint: ^3.1.9
   ```
   Run `flutter pub get`. **If resolution fails** (an analyzer constraint conflict with `freezed`/`riverpod_generator`/`json_serializable`), revert to 3.0.3 and instead add `analysis_options_deprecated_plugins: ignore` under `analyzer: errors:` with a comment naming the blocking package and version.
-- [ ] **Step 4: Verify analyze.** Run `flutter analyze`. Expected: `No issues found!`. Run `flutter test`. Expected: all 47 pass.
-- [ ] **Step 5: Fix the Gradle signing config.** Delete the second `signingConfigs { … }` block (lines 71–80). Above `android {`, add:
+- [x] **Step 4: Verify analyze.** Run `flutter analyze`. Expected: `No issues found!`. Run `flutter test`. Expected: all 47 pass.
+- [x] **Step 5: Fix the Gradle signing config.** Delete the second `signingConfigs { … }` block (lines 71–80). Above `android {`, add:
   ```kotlin
   val isProdRelease = gradle.startParameter.taskNames.any { it.contains("ProdRelease", ignoreCase = true) }
   if (isProdRelease && !hasReleaseKeystore) {
       throw GradleException("Prod release builds need android/key.properties — see docs/releases.md.")
   }
   ```
-- [ ] **Step 6: Verify all three build paths.**
+- [x] **Step 6: Verify all three build paths.**
   - `flutter build apk --flavor dev --debug -t lib/main_dev.dart` → `Built build\app\outputs\flutter-apk\app-dev-debug.apk`.
   - `flutter build apk --flavor prod --release -t lib/main_prod.dart` with no `key.properties` → fails with the message above.
   - Create a throwaway keystore in the scratchpad (`keytool -genkeypair -keystore <scratch>/tmp-release.jks -alias tmp -keyalg RSA -keysize 2048 -validity 1 -storepass tmppass -keypass tmppass -dname CN=tmp`) and a temporary `android/key.properties` pointing at it. Run the prod release build → `Built …app-prod-release.apk`. **Delete `android/key.properties` and the keystore** afterwards, and confirm `git status` doesn't list them.
-- [ ] **Step 7: Pin Flutter in CI.** Add `flutter-version: 3.47.9` to each `subosito/flutter-action@v2` step. Update the README prerequisites line.
-- [ ] **Step 8: Checkpoint.** `git status --short` lists only the files above plus `pubspec.lock`. Re-run `flutter analyze` and `flutter test`.
+- [x] **Step 7: Pin Flutter in CI.** Add `flutter-version: 3.47.9` to each `subosito/flutter-action@v2` step. Update the README prerequisites line.
+- [x] **Step 8: Checkpoint.** `git status --short` lists only the files above plus `pubspec.lock`. Re-run `flutter analyze` and `flutter test`.
 
 ### Task 2: Fixture and fake-HTTP test support
 
@@ -83,15 +83,15 @@
   - `Map<String, dynamic> loadFixture(String name)`: reads `test/fixtures/<name>.json` and returns its `body` (the full envelope).
   - `Map<String, dynamic> scrubFixture(Object? json, {required Set<String> keepMuids})` in `tool/fixture_scrub.dart`. It replaces values of `full_name`, `name` (inside person objects), `email`, `mobile`, `profile_pic`, `cover_pic`, `dob` with fixed placeholders (`"Fixture User"`, `"user@example.com"`, `null` …), and every `muid` not in `keepMuids` with `"fixture-user@mulearn"`. Keys and types are kept.
 
-- [ ] **Step 1: Write failing tests.**
+- [x] **Step 1: Write failing tests.**
   - `fixtures_test.dart`: `loadFixture('serializer/example')` returns a map containing `hasError` and `response`.
   - `fixture_scrub_test.dart`: input `{'response': {'full_name': 'Real Name', 'email': 'a@b.c', 'muid': 'someone@mulearn', 'karma': 10}}` with `keepMuids: {}` → `full_name == 'Fixture User'`, `email == 'user@example.com'`, `muid == 'fixture-user@mulearn'`, `karma == 10`. Nested lists of people are scrubbed too.
-- [ ] **Step 2: Run them.** `flutter test test/support test/tool` → FAIL (missing files).
-- [ ] **Step 3: Implement** the adapter, loader and scrubber, and add `test/fixtures/serializer/example.json` (`{"_meta":{"source":"serializer"},"body":{"hasError":false,"statusCode":200,"message":{"general":[]},"response":{}}}`).
-- [ ] **Step 4: Implement `tool/record_fixtures.dart`.** It is plain Dart (imports `dio` only, nothing from `lib/`) and runs as `dart run tool/record_fixtures.dart`. It reads `.env.qa` (`QA_<ROLE>_EMAIL`, `QA_<ROLE>_PASSWORD` for `STUDENT`, `MENTOR`, `ENABLER`, `CAMPUSLEAD`), signs in through `/api/v1/auth/user-authentication/`, GETs a fixed list, scrubs each body, and writes `test/fixtures/dev/<slug>.json` as `{"_meta":{"source":"dev","endpoint":"…","account":"student","recorded_at":"<ISO date>"},"body":<envelope>}`. Initial list (student unless noted): `/dashboard/user/info/`, `/dashboard/profile/user-profile/`, `/dashboard/task/list/`, `/dashboard/events/?pageIndex=1&perPage=20`, `/dashboard/learningcircle/list/?pageIndex=1&perPage=20`, `/dashboard/learningcircle/user-circles/`, `/dashboard/learningcircle/invite/status/`, `/dashboard/calendar/events/?start_date=<first of month>&end_date=<last of month>` (student and mentor), `/leaderboard/students/`, `/leaderboard/students-monthly/`, `/leaderboard/college/`, `/leaderboard/college-monthly/`, `/dashboard/ig/list/`, `/dashboard/profile/karma-feed/`, `/notification/?page=1&page_size=20`, `/notification/unread-count/`, `/dashboard/home/learner/summary/`, `/dashboard/home/learner/streak/`. It never prints tokens or passwords.
-- [ ] **Step 5: Record.** Create `.env.qa` from the four QA accounts (values from Claude's memory file, not typed into any tracked file). Run the recorder. Expected: one file per endpoint, and `grep -ri "example.com\|@mulearn" test/fixtures/dev` shows only placeholders and QA muids.
-- [ ] **Step 6: Run the tests.** `flutter test test/support test/tool` → PASS. `flutter analyze` → no issues (add `tool/` to analysis if it's excluded).
-- [ ] **Step 7: Checkpoint.** `git status --short` must **not** list `.env.qa`.
+- [x] **Step 2: Run them.** `flutter test test/support test/tool` → FAIL (missing files).
+- [x] **Step 3: Implement** the adapter, loader and scrubber, and add `test/fixtures/serializer/example.json` (`{"_meta":{"source":"serializer"},"body":{"hasError":false,"statusCode":200,"message":{"general":[]},"response":{}}}`).
+- [x] **Step 4: Implement `tool/record_fixtures.dart`.** It is plain Dart (imports `dio` only, nothing from `lib/`) and runs as `dart run tool/record_fixtures.dart`. It reads `.env.qa` (`QA_<ROLE>_EMAIL`, `QA_<ROLE>_PASSWORD` for `STUDENT`, `MENTOR`, `ENABLER`, `CAMPUSLEAD`), signs in through `/api/v1/auth/user-authentication/`, GETs a fixed list, scrubs each body, and writes `test/fixtures/dev/<slug>.json` as `{"_meta":{"source":"dev","endpoint":"…","account":"student","recorded_at":"<ISO date>"},"body":<envelope>}`. Initial list (student unless noted): `/dashboard/user/info/`, `/dashboard/profile/user-profile/`, `/dashboard/task/list/`, `/dashboard/events/?pageIndex=1&perPage=20`, `/dashboard/learningcircle/list/?pageIndex=1&perPage=20`, `/dashboard/learningcircle/user-circles/`, `/dashboard/learningcircle/invite/status/`, `/dashboard/calendar/events/?start_date=<first of month>&end_date=<last of month>` (student and mentor), `/leaderboard/students/`, `/leaderboard/students-monthly/`, `/leaderboard/college/`, `/leaderboard/college-monthly/`, `/dashboard/ig/list/`, `/dashboard/profile/karma-feed/`, `/notification/?page=1&page_size=20`, `/notification/unread-count/`, `/dashboard/home/learner/summary/`, `/dashboard/home/learner/streak/`. It never prints tokens or passwords.
+- [x] **Step 5: Record.** Create `.env.qa` from the four QA accounts (values from Claude's memory file, not typed into any tracked file). Run the recorder. Expected: one file per endpoint, and `grep -ri "example.com\|@mulearn" test/fixtures/dev` shows only placeholders and QA muids.
+- [x] **Step 6: Run the tests.** `flutter test test/support test/tool` → PASS. `flutter analyze` → no issues (add `tool/` to analysis if it's excluded).
+- [x] **Step 7: Checkpoint.** `git status --short` must **not** list `.env.qa`.
 
 ### Task 3: Pagination foundation; Events and Circles "load more" (API-01, API-02, REL-02)
 
@@ -111,7 +111,7 @@ Backend: `CommonUtils.get_paginated_queryset` reads `pageIndex` and `perPage` (`
   - `List<T> mergeUniqueBy<T, K>(List<T> current, List<T> incoming, K Function(T) key)`: keeps the first occurrence, order preserved.
 - Changes: `EventsRepository.getEvents({int pageIndex = 1})`; `LearningCirclesRepository.getCircles({int pageIndex = 1})`; `EventsListController` and `CirclesListController` now hold `PagedState<…>` and keep `Future<void> loadMore()` (which is also the retry action).
 
-- [ ] **Step 1: Write the failing paging tests.**
+- [x] **Step 1: Write the failing paging tests.**
   ```dart
   expect(PageIndexPaging.query(2), {'pageIndex': 2, 'perPage': 20});
   expect(PageIndexPaging.parse({'count': 41, 'totalPages': 3, 'isNext': true, 'isPrev': false, 'nextPage': 2}),
@@ -119,19 +119,19 @@ Backend: `CommonUtils.get_paginated_queryset` reads `pageIndex` and `perPage` (`
   expect(PageIndexPaging.parse(null), const PageInfo(hasNext: false, totalPages: 1, count: 0));
   expect(mergeUniqueBy([a1, b1], [b2, c1], (x) => x.id).map((x) => x.id), ['a', 'b', 'c']);
   ```
-- [ ] **Step 2: Write the failing datasource test.** With `FakeHttpAdapter` routing `GET /api/v1/dashboard/events/` to `loadFixture('dev/events_page1')`: `fetchEvents(pageIndex: 2)` sends query `{pageIndex: 2, perPage: 20}` and **no** `page` key (`adapter.requests.single.queryParameters`).
-- [ ] **Step 3: Write the failing controller tests** (repository mocked with mocktail), for both `EventsListController` and `CirclesListController`:
+- [x] **Step 2: Write the failing datasource test.** With `FakeHttpAdapter` routing `GET /api/v1/dashboard/events/` to `loadFixture('dev/events_page1')`: `fetchEvents(pageIndex: 2)` sends query `{pageIndex: 2, perPage: 20}` and **no** `page` key (`adapter.requests.single.queryParameters`).
+- [x] **Step 3: Write the failing controller tests** (repository mocked with mocktail), for both `EventsListController` and `CirclesListController`:
   - `build loads page 1`: items are page 1, `hasMore` comes from `hasNext`, `getEvents(pageIndex: 1)` is called once.
   - `loadMore appends page 2 without duplicates`: page 2 repeats one id from page 1 → that id appears once.
   - `loadMore error keeps items`: page 2 throws → `items` unchanged, `loadMoreError` non-null, `isLoadingMore` false. A second `loadMore` retries page 2.
   - `concurrent loadMore issues one request`: two `loadMore()` calls without awaiting → `getEvents(pageIndex: 2)` called once.
   - `empty first page`: `data: []`, `count: 0` → `items` empty, `hasMore` false, and `loadMore()` makes no call.
-- [ ] **Step 4: Run** `flutter test test/core/network/paging_test.dart test/features/events test/features/learning_circles/circles_list_controller_test.dart` → FAIL.
-- [ ] **Step 5: Implement** `paging.dart`, the two datasources (send `PageIndexPaging.query(pageIndex)`), repositories (use `PageIndexPaging.parse`), and controllers. Run build_runner.
-- [ ] **Step 6: Update the screens.** Read `state.value!.items`. At the list end: show a `MuSkeleton` row while `isLoadingMore`; when `loadMoreError != null`, show a row with "Couldn't load more." and a "Try again" `MuGhostButton` that calls `loadMore()`. Keep the existing empty states.
-- [ ] **Step 7: Run all tests and analyze.** PASS / no issues.
-- [ ] **Step 8: Check on the emulator.** `flutter run --flavor dev -t lib/main_dev.dart -d emulator-5554`, sign in as the QA student, open Events and Circles, and capture screenshots with `adb exec-out screencap -p > <scratch>/events.png`. Expected on today's dev data: the empty state, no error, no repeated requests in the dev log (the dev `LogInterceptor` prints each request line).
-- [ ] **Step 9: Checkpoint.**
+- [x] **Step 4: Run** `flutter test test/core/network/paging_test.dart test/features/events test/features/learning_circles/circles_list_controller_test.dart` → FAIL.
+- [x] **Step 5: Implement** `paging.dart`, the two datasources (send `PageIndexPaging.query(pageIndex)`), repositories (use `PageIndexPaging.parse`), and controllers. Run build_runner.
+- [x] **Step 6: Update the screens.** Read `state.value!.items`. At the list end: show a `MuSkeleton` row while `isLoadingMore`; when `loadMoreError != null`, show a row with "Couldn't load more." and a "Try again" `MuGhostButton` that calls `loadMore()`. Keep the existing empty states.
+- [x] **Step 7: Run all tests and analyze.** PASS / no issues.
+- [x] **Step 8: Check on the emulator.** `flutter run --flavor dev -t lib/main_dev.dart -d emulator-5554`, sign in as the QA student, open Events and Circles, and capture screenshots with `adb exec-out screencap -p > <scratch>/events.png`. Expected on today's dev data: the empty state, no error, no repeated requests in the dev log (the dev `LogInterceptor` prints each request line).
+- [x] **Step 9: Checkpoint.**
 
 ### Task 4: Validation errors that arrive under `response` (API-09)
 
@@ -139,14 +139,14 @@ Backend sends `CustomResponse(response=serializer.errors).get_failure_response()
 
 **Files:** Modify `lib/core/network/api_exception.dart` (`fromEnvelopeBody`); Test `test/core/network/api_exception_test.dart`; Fixture `test/fixtures/dev/profile_patch_invalid_email.json`.
 
-- [ ] **Step 1: Record the live fixture.** As the QA student, `PATCH /api/v1/dashboard/profile/` with body `{"email": "not-an-email"}`. Expected: HTTP 400, `hasError: true`, the field error under `response.email`. Save it (scrubbed) as the fixture. The QA student's email is unchanged, because the request fails validation.
-- [ ] **Step 2: Write the failing tests.**
+- [x] **Step 1: Record the live fixture.** As the QA student, `PATCH /api/v1/dashboard/profile/` with body `{"email": "not-an-email"}`. Expected: HTTP 400, `hasError: true`, the field error under `response.email`. Save it (scrubbed) as the fixture. The QA student's email is unchanged, because the request fails validation.
+- [x] **Step 2: Write the failing tests.**
   - The envelope `{'hasError': true, 'statusCode': 400, 'message': {'general': []}, 'response': {'interest_group': ['Cannot select more than 3 interest groups']}}` gives `message == 'Cannot select more than 3 interest groups'` and `errorFor('interest_group')` equal to the same text.
   - Nested `response: {'user': {'email': ['Enter a valid email address.']}}` → `errorFor('email') == 'Enter a valid email address.'`.
   - When `message.general` is non-empty, it still wins over `response` field errors.
   - The recorded fixture parses to a non-null `errorFor('email')`.
   - `hasError: true` with `response: []` and no messages → `'Request failed (400).'`.
-- [ ] **Step 3: Run** → FAIL. **Step 4: Implement.** When `message` yields no general text and no field errors, and `data['response']` is a `Map`, apply `_flattenFieldErrors` to it. **Step 5: Run** → PASS; analyze clean. **Step 6: Checkpoint.**
+- [x] **Step 3: Run** → FAIL. **Step 4: Implement.** When `message` yields no general text and no field errors, and `data['response']` is a `Map`, apply `_flattenFieldErrors` to it. **Step 5: Run** → PASS; analyze clean. **Step 6: Checkpoint.**
 
 ### Task 4b: Event organiser contract (API-15, found 2026-11-12 with seeded dev data)
 
@@ -171,7 +171,7 @@ The app typed `organiserIg` and `organiserCampus` as `String?`.
   - An admin event has no organiser entity.
   - A company organiser parses with the `{id, title, org_type}` shape.
 - [x] **Step 3: Run** → compile failure (`String` has no `id`/`name`/`title`). **Step 4: Implement** the typed IG and org DTOs and entities. **Step 5: Run** → PASS; the full suite and analysis are clean.
-- [ ] **Step 6: On device.** Home's "Happening soon" shows featured events, and the Events list loads.
+- [ ] **Step 6: On device.** Home's "Happening soon" shows featured events, and the Events list loads. *(pending: the user checks on the phone)*
 
 ### Task 5: Circle meeting list pagination (API-03)
 
@@ -184,11 +184,11 @@ Backend: `LearningCircleMeetingListView.get` returns `paginated_response({data, 
 - Fixture: `test/fixtures/serializer/meeting_list_page.json` (one item built from the serializer's 21 fields, `pagination` with `isNext: true`)
 - Test: `test/features/learning_circles/circle_meetings_controller_test.dart`, plus a datasource test
 
-- [ ] **Step 1: Failing datasource test.** `fetchCircleMeetings('c1', pageIndex: 2)` requests `GET /api/v1/dashboard/learningcircle/meeting/list/c1/` with `{pageIndex: 2, perPage: 20}`. The repository maps the fixture to `MeetingPage(hasNext: true)` with one meeting whose `igName` comes from `ig_name`.
-- [ ] **Step 2: Failing controller tests:** `build loads page 1`, `loadMore appends`, `empty meeting list` (`data: []` → empty, `hasMore` false).
-- [ ] **Step 3: Run → FAIL. Step 4: Implement** (build_runner). **Step 5: Run → PASS; analyze clean.**
-- [ ] **Step 6: Live check (gated on seed data).** Once dev has an interest group: the QA campus lead creates a circle and a meeting; the app's circle detail shows the meeting; then delete the meeting and the circle. Until then, record "blocked: no IG on dev" in the checkpoint notes.
-- [ ] **Step 7: Checkpoint.**
+- [x] **Step 1: Failing datasource test.** `fetchCircleMeetings('c1', pageIndex: 2)` requests `GET /api/v1/dashboard/learningcircle/meeting/list/c1/` with `{pageIndex: 2, perPage: 20}`. The repository maps the fixture to `MeetingPage(hasNext: true)` with one meeting whose `igName` comes from `ig_name`.
+- [x] **Step 2: Failing controller tests:** `build loads page 1`, `loadMore appends`, `empty meeting list` (`data: []` → empty, `hasMore` false).
+- [x] **Step 3: Run → FAIL. Step 4: Implement** (build_runner). **Step 5: Run → PASS; analyze clean.**
+- [x] **Step 6: Live check (gated on seed data).** Once dev has an interest group: the QA campus lead creates a circle and a meeting; the app's circle detail shows the meeting; then delete the meeting and the circle. Until then, record "blocked: no IG on dev" in the checkpoint notes.
+- [x] **Step 7: Checkpoint.**
 
 ### Task 6: Invitations: respond with `action`, parse received invites (API-04, API-05)
 
@@ -203,13 +203,13 @@ Backend: `CircleInviteStatusAPI.post` requires `action ∈ {accept, reject}` (`l
 **Interfaces:**
 - Produces: `ReceivedCircleInvite { required String linkId, required String circleId, required String circleTitle, String? igName, @Default(false) bool isLeadInvite, String? invitedByName, String? invitedByProfilePic, String? createdAt }`
 
-- [ ] **Step 1: Failing tests.**
+- [x] **Step 1: Failing tests.**
   - The DTO parses both fixture items; the second has `invitedByName == null`.
   - `respondToInvite('l1', accept: true)` posts to `/api/v1/dashboard/learningcircle/invite/status/l1/` with body `{'action': 'accept'}`; `accept: false` sends `{'action': 'reject'}`.
   - `already responded message surfaces`: the fake route returns 400 `{'hasError': true, 'statusCode': 400, 'message': {'general': ['This invitation has already been responded to']}, 'response': {}}` → the controller's `AsyncError` holds an `ApiException` with exactly that message.
-- [ ] **Step 2: Run → FAIL. Step 3: Implement** (build_runner). The invite tile shows the circle title (primary), the IG name, "Invited by {name}" when known, and "Invited as lead" when `isLeadInvite`. Accept and Decline buttons stay as they are. **Step 4: Run → PASS; analyze clean.**
-- [ ] **Step 5: Live check (gated on seed data):** the QA campus lead invites the QA student → the student sees it in the app → declines → the backend confirms; then delete the circle.
-- [ ] **Step 6: Checkpoint.**
+- [x] **Step 2: Run → FAIL. Step 3: Implement** (build_runner). The invite tile shows the circle title (primary), the IG name, "Invited by {name}" when known, and "Invited as lead" when `isLeadInvite`. Accept and Decline buttons stay as they are. **Step 4: Run → PASS; analyze clean.**
+- [x] **Step 5: Live check (gated on seed data):** the QA campus lead invites the QA student → the student sees it in the app → declines → the backend confirms; then delete the circle.
+- [x] **Step 6: Checkpoint.**
 
 ### Task 7: Calendar mentor sessions (API-06)
 
@@ -220,10 +220,10 @@ Backend: `sessions.{upcoming,ongoing,completed}` items are `MentorshipSessionCal
 **Interfaces:**
 - Produces: `CalendarSessionDto { required String id, required String title, required String startsAt, required String endsAt, @Default('') String status, String? mode, String? meetingLink, String? venue, String? mentorName, int? menteeCount }` with `CalendarEntry toDomain()` → `CalendarEntry(kind: CalendarEntryKind.session, start: startsAt, end: endsAt, venueType: mode, organiserName: mentorName, …)`.
 
-- [ ] **Step 1: Failing test.** The fixture has 1 event, 1 valid session and 1 session missing `starts_at` → `getEntries` returns 2 entries (1 event, 1 session with `start` equal to the fixture's `starts_at`). The malformed item is skipped and logged, and nothing throws. The dev student fixture parses to the events present and zero sessions.
-- [ ] **Step 2: Run → FAIL. Step 3: Implement.** Parse each item in its own try/catch through a shared `_parseEach` helper that logs with `appLogger.e`. **Step 4: Run → PASS; analyze clean.**
-- [ ] **Step 5: Live check (gated on mentor approval):** the approved QA mentor creates one session through `/dashboard/mentor/session/create/` (Plan 4 builds the UI; here use the recorder's HTTP client), the calendar shows it, then delete or cancel it.
-- [ ] **Step 6: Checkpoint.**
+- [x] **Step 1: Failing test.** The fixture has 1 event, 1 valid session and 1 session missing `starts_at` → `getEntries` returns 2 entries (1 event, 1 session with `start` equal to the fixture's `starts_at`). The malformed item is skipped and logged, and nothing throws. The dev student fixture parses to the events present and zero sessions.
+- [x] **Step 2: Run → FAIL. Step 3: Implement.** Parse each item in its own try/catch through a shared `_parseEach` helper that logs with `appLogger.e`. **Step 4: Run → PASS; analyze clean.**
+- [x] **Step 5: Live check (gated on mentor approval):** the approved QA mentor creates one session through `/dashboard/mentor/session/create/` (Plan 4 builds the UI; here use the recorder's HTTP client), the calendar shows it, then delete or cancel it.
+- [x] **Step 6: Checkpoint.**
 
 ### Task 8: Leaderboard rows without a college; open profiles (API-07)
 
@@ -231,10 +231,10 @@ Backend: `"institution": u.colleges[0].org.title if u.colleges else None` and `"
 
 **Files:** Modify `lib/features/leaderboard/data/dtos/student_leaderboard_entry_dto.dart`, `domain/entities/student_leaderboard_entry.dart` (`String? institution`, `String? muid`), `presentation/screens/leaderboard_screen.dart:220`, `presentation/widgets/leaderboard_podium.dart`, `lib/features/dashboard/presentation/screens/home_screen.dart:124`; Fixture `test/fixtures/serializer/students_leaderboard.json` (3 rows, one with `institution: null`); Test `test/features/leaderboard/student_leaderboard_dto_test.dart`.
 
-- [ ] **Step 1: Failing test.** All 3 fixture rows parse; the null row has `institution == null`; every row has its `muid`.
-- [ ] **Step 2: Run → FAIL. Step 3: Implement.** Omit the subtitle when `institution` is null (no placeholder text). A row or podium item with a `muid` is tappable and calls `context.push(RoutePaths.publicProfilePath(muid))`. **Step 4: Run → PASS; analyze clean.**
-- [ ] **Step 5: Emulator check:** Ranks and Home "Top performers" render on today's dev data (empty) without errors; screenshot.
-- [ ] **Step 6: Checkpoint.**
+- [x] **Step 1: Failing test.** All 3 fixture rows parse; the null row has `institution == null`; every row has its `muid`.
+- [x] **Step 2: Run → FAIL. Step 3: Implement.** Omit the subtitle when `institution` is null (no placeholder text). A row or podium item with a `muid` is tappable and calls `context.push(RoutePaths.publicProfilePath(muid))`. **Step 4: Run → PASS; analyze clean.**
+- [x] **Step 5: Emulator check:** Ranks and Home "Top performers" render on today's dev data (empty) without errors; screenshot.
+- [x] **Step 6: Checkpoint.**
 
 ### Task 9: Dead code and dead fields (API-11, API-12, API-14)
 
@@ -245,9 +245,9 @@ Backend: `"institution": u.colleges[0].org.title if u.colleges else None` and `"
 - Modify: `profile/data/dtos/user_profile_dto.dart` and `domain/entities/user_profile.dart`: remove `email`, `mobile`, `departmentId`, `departmentName`, `isVerified` (never returned by `UserProfileSerializer`, `profile_serializer.py:148-172`)
 - Modify: the usages. `basic_details_tab.dart:166-167` and `edit_profile_dialog.dart:202` read the department from `EditableProfile` (`department.title`, from `GET /dashboard/profile/`). `edit_profile_dialog.dart:79-82` drops the `profile.email`/`profile.mobile` fallbacks. `profile_screen.dart:147`/`public_profile_screen.dart:129` drop `userEmail` (pass the editable profile's email for the own profile only, if the dialog needs it).
 
-- [ ] **Step 1:** Run `flutter test` (baseline green). **Step 2:** Make the deletions and edits; run build_runner. **Step 3:** `flutter analyze` → no issues (this catches every dangling reference); `flutter test` → pass (minus the two deleted karma-feed tests).
-- [ ] **Step 4: Emulator check:** the Profile → Basic Details and Edit Profile dialog still show the department and email for the QA student (who has none set: they appear as empty fields, not as errors).
-- [ ] **Step 5: Checkpoint.**
+- [x] **Step 1:** Run `flutter test` (baseline green). **Step 2:** Make the deletions and edits; run build_runner. **Step 3:** `flutter analyze` → no issues (this catches every dangling reference); `flutter test` → pass (minus the two deleted karma-feed tests).
+- [x] **Step 4: Emulator check:** the Profile → Basic Details and Edit Profile dialog still show the department and email for the QA student (who has none set: they appear as empty fields, not as errors).
+- [x] **Step 5: Checkpoint.**
 
 ### Task 10: Social sign-in: Google sign-up, Android availability, Apple guidance (AUTH-01, AUTH-02, AUTH-03)
 
@@ -268,14 +268,14 @@ Backend and authserver: an unknown Google email returns `{isNewUser: true, tempT
   - `GoogleNativeSignInDataSource.isAvailable` → `bool` (iOS: true; Android: `googleServerClientId.isNotEmpty`; other platforms: false)
   - `RegisterWizardController.setGoogleSignUp({required String tempToken, required String email, required String fullName})`
 
-- [ ] **Step 1: Failing tests.**
+- [x] **Step 1: Failing tests.**
   - The repository given `{'isNewUser': true, 'tempToken': 't', 'email': 'e@x.org', 'fullName': 'N'}` returns `SocialNeedsRegistration(tempToken: 't', …)` and saves **no** tokens. Given `{accessToken, refreshToken, isNewUser: false}`, it returns `SocialSignedIn` and saves tokens.
   - The Apple datasource body is exactly `{'identity_token': x, 'identityToken': x}` (no `email`).
   - `isAvailable`: Android with an empty id → false; Android with an id → true; iOS → true.
   - The register datasource with `tempToken: 't'` posts `{'tempToken': 't', 'user': {'full_name': 'N', 'role': '<id>'}}` (no `email` or `password`). The submit controller in Google mode doesn't require a password.
-- [ ] **Step 2: Run → FAIL. Step 3: Implement** (build_runner). Sign-in screen: `SocialNeedsRegistration` → `setGoogleSignUp` then `context.push(RoutePaths.registerBasicInfo)`. `AppleAccountNotFound` → a dialog with the text "No μLearn account uses this Apple ID's email yet. Create an account with that email first, then sign in with Apple." and the actions "Create account" (to `/register`) and "Close". **Step 4: Run → PASS; analyze clean.**
-- [ ] **Step 5: Emulator check:** the Google button is hidden on the Android emulator (empty client id); the sign-in screen otherwise renders unchanged; screenshot. Note in the checkpoint: a real Google/Apple account test is pending the user (needs real identities and the Android client id).
-- [ ] **Step 6: Checkpoint.**
+- [x] **Step 2: Run → FAIL. Step 3: Implement** (build_runner). Sign-in screen: `SocialNeedsRegistration` → `setGoogleSignUp` then `context.push(RoutePaths.registerBasicInfo)`. `AppleAccountNotFound` → a dialog with the text "No μLearn account uses this Apple ID's email yet. Create an account with that email first, then sign in with Apple." and the actions "Create account" (to `/register`) and "Close". **Step 4: Run → PASS; analyze clean.**
+- [x] **Step 5: Emulator check:** the Google button is hidden on the Android emulator (empty client id); the sign-in screen otherwise renders unchanged; screenshot. Note in the checkpoint: a real Google/Apple account test is pending the user (needs real identities and the Android client id).
+- [x] **Step 6: Checkpoint.**
 
 ### Task 11: Remove Company from mobile registration (COMPANY-01)
 
@@ -287,7 +287,7 @@ Backend: `CompanyRegisterSerializer` requires `verification_document_url` (`api/
 - Delete: `widgets/company_details_form.dart`, `domain/entities/company_details.dart`
 - Test: update `register_submit_controller_test.dart` (remove the `submitCompany` test); add `test/features/auth/register_role_selection_test.dart` (widget test: no "Company" option; the dashboard note is visible)
 
-- [ ] **Step 1: Failing widget test** for the role screen. **Step 2: Run → FAIL. Step 3: Implement** (build_runner). **Step 4: Run all → PASS; analyze clean.** **Step 5: Emulator check** of the role screen (screenshot). **Step 6: Checkpoint.**
+- [x] **Step 1: Failing widget test** for the role screen. **Step 2: Run → FAIL. Step 3: Implement** (build_runner). **Step 4: Run all → PASS; analyze clean.** **Step 5: Emulator check** of the role screen (screenshot). **Step 6: Checkpoint.**
 
 ### Task 12: Session reliability and real sign-out (AUTH-05, REL-05, SEC-09, SEC-12)
 
@@ -302,25 +302,25 @@ Authserver: `LogoutAPIView` takes `{refreshToken}` and records a global-logout t
 - Produces: `enum RefreshOutcome { refreshed, rejected, unavailable }` (in `auth_interceptor.dart`); `AuthRemoteDataSource.logout(String refreshToken)` → `Future<void>` (5 s send/receive timeout, `skipAuth`); `AuthRepositoryImpl({…, required CacheStore cacheStore})`.
 - Rules: `rejected` = the refresh request got an HTTP response (any 4xx, or `hasError: true`) → clear tokens and emit `SessionEvent.expired`. `unavailable` = no response (timeout, connection error) or 5xx → keep the tokens, pass the original error on, emit nothing. Before a retry, `FormData` bodies are replaced with `formData.clone()`.
 
-- [ ] **Step 1: Failing interceptor tests** (`FakeHttpAdapter` on both Dios, `TokenStorage` over an in-memory `FlutterSecureStorage` fake):
+- [x] **Step 1: Failing interceptor tests** (`FakeHttpAdapter` on both Dios, `TokenStorage` over an in-memory `FlutterSecureStorage` fake):
   - `403 then refresh then retry succeeds`: the original call resolves with the retried response; the new access token is stored.
   - `refresh rejected signs out`: the refresh route returns 400 `hasError` → storage cleared, one `SessionEvent.expired`.
   - `refresh timeout keeps the session`: the refresh route simulates a connection error → tokens still stored, no event, the caller gets the original 403 `DioException`.
   - `concurrent 403s share one refresh`: two parallel calls → the refresh route is hit once.
   - `multipart retry clones FormData`: the retried request's `data` is a `FormData` and `!identical` to the original.
-- [ ] **Step 2: Failing sign-out tests:**
+- [x] **Step 2: Failing sign-out tests:**
   - `signOut calls logout then clears`: logout is called with the stored refresh token; tokens are cleared; `cacheStore.clean()` is called.
   - `signOut clears locally when logout call fails`: logout throws a connection error → tokens are still cleared and the cache cleaned; the router state is signed-out.
-- [ ] **Step 3: Run → FAIL. Step 4: Implement. Step 5: Run → PASS; analyze clean.**
-- [ ] **Step 6: Live check on dev:** sign in as the QA student, call logout with that refresh token, then call `get-access-token` with the same refresh token → expect `hasError: true` with "Token has been invalidated. Please log in again." Then on the emulator: sign in, sign out, sign in again → Home loads.
-- [ ] **Step 7: Checkpoint.**
+- [x] **Step 3: Run → FAIL. Step 4: Implement. Step 5: Run → PASS; analyze clean.**
+- [x] **Step 6: Live check on dev:** sign in as the QA student, call logout with that refresh token, then call `get-access-token` with the same refresh token → expect `hasError: true` with "Token has been invalidated. Please log in again." Then on the emulator: sign in, sign out, sign in again → Home loads.
+- [x] **Step 7: Checkpoint.**
 
 ### Task 13: Plan close-out
 
-- [ ] **Step 1:** `flutter analyze` → No issues found!; `flutter test` → all pass; `flutter build apk --flavor dev --debug -t lib/main_dev.dart` → built.
-- [ ] **Step 2:** Re-run the recorder (Task 2) and the full test suite to catch any change on dev since Task 2.
-- [ ] **Step 3:** Update the gap status table in the spec (§12, to be added) with each Plan 1 item: done / done-pending-live-check (and why) / blocked.
-- [ ] **Step 4:** Report to the user: what's done, which live checks are pending seed data or the mentor approval, and the next plan.
+- [x] **Step 1:** `flutter analyze` → No issues found!; `flutter test` → all pass; `flutter build apk --flavor dev --debug -t lib/main_dev.dart` → built.
+- [x] **Step 2:** Re-run the recorder (Task 2) and the full test suite to catch any change on dev since Task 2.
+- [x] **Step 3:** Update the gap status table in the spec (§12, to be added) with each Plan 1 item: done / done-pending-live-check (and why) / blocked.
+- [x] **Step 4:** Report to the user: what's done, which live checks are pending seed data or the mentor approval, and the next plan.
 
 ## Prerequisite needed from the user (does not block starting)
 

@@ -122,3 +122,29 @@ File and class naming within the conventions; exact widget composition using the
 | Discord connect via App Links | **Yes, the dashboard repo may be touched** | Add `public/.well-known/assetlinks.json` (and the iOS `apple-app-site-association`) to `mulearn-dashboard` on its own feature branch from `dev` (never `master`/`production`). The app handles `https://dev.mulearn.org/dashboard/connect-discord?code=…` and calls `/register/connect-discord/` itself. Signing-key fingerprints are needed for the file. |
 
 **Approval:** the user said "continue building" after answering; treated as approval of this design.
+
+## 12. Gap status after Plan 1 (2026-11-12)
+
+Dev was seeded through its APIs on 2026-11-12 (admin account, user-authorised): 23 interest groups, 12 learners at the dev college, 14 learning circles with invites, 9 meetings, 30 events, 2 mentor sessions; the QA mentor was assigned IG mentor. Each row's commit is on `feat/app-parity`; "isolated" means analyze + the full suite passed on that commit alone.
+
+| Item | Status | Evidence / what is pending |
+|---|---|---|
+| Build hygiene (signing, Flutter pin, analyzer) | Done | `f2c4749` |
+| Fixture + fake-HTTP test support | Done | `a01cb37`; fixtures re-recorded against seeded dev in `3255dab` |
+| API-01/02, REL-02 paging (events, circles) | Done — device check pending | `485c3d0`; dev has 22 events visible to the QA student (2 pages). Paging on the phone not yet confirmed by the user. |
+| API-09 errors under `response` | Done | `6b31d5f`; live 400 from `PATCH /dashboard/profile/` |
+| API-15 event organiser objects (new) | Done — device check pending | `3255dab`; found with seeded data: IG/campus-organised events broke the Events list and Home "Happening soon" |
+| API-03 circle meeting paging | Done | `cfc8844`; live paginated list recorded |
+| API-04/05 invites | Done | `bb66b4b`; live: old body 400, `{action}` 200, repeat 400 |
+| API-06 calendar mentor sessions | Done | `bd35760`; live with 2 real sessions after mentor assignment |
+| API-07 leaderboard rows, profile links | Done | `651a6d2`; dev student boards stay empty for seeded users — the cron ranks only `exist_in_guild` users |
+| API-11/12/14 dead code and fields | Done | `397c71f`; department now from `GET /dashboard/profile/` (live) |
+| AUTH-01/02/03 social sign-in | Done — real accounts pending | `f0ab1e6`; contracts verified in authserver/backend source. Android Google needs the web client id (`GOOGLE_SERVER_CLIENT_ID`); Apple needs an iOS device. |
+| COMPANY-01 company sign-up | Done | `3af429b`; handed off to the dashboard (`DASHBOARD_URL`) |
+| AUTH-05, REL-05, SEC-09, SEC-12 session + sign-out | Done — device cycle pending | `7e91c66`; live: logout revokes the refresh token |
+| SEC-05 IG member emails | Backend-only | Not an app change (see Plan 1 "Correction to the audit") |
+| API-13 IG icon fields | Moved to Plan 3 | Seeded IGs have no icon images yet |
+
+New findings for later plans:
+- Action controllers set `state` after an `await` without `ref.mounted`; leaving a screen mid-request throws (hardening plan).
+- The dev database lost `interest_group.icon` outside db-scripts on 2026-11-12; restored by the user. A restore alter (1.93) sits uncommitted in a db-scripts worktree by the user's choice.
