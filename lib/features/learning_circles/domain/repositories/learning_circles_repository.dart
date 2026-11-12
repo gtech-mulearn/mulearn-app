@@ -12,7 +12,7 @@ import 'package:mulearn_app/features/learning_circles/domain/entities/meeting_re
 
 abstract interface class LearningCirclesRepository {
   // --- Circles ---
-  Future<LearningCirclePage> getCircles({int page = 1});
+  Future<LearningCirclePage> getCircles({required int pageIndex});
   Future<List<LearningCircle>> getMyCircles();
   Future<LearningCircleDetail> getCircleDetail(String id);
   Future<String> createCircle({

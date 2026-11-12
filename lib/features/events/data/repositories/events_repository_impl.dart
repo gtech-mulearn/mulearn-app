@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
+import 'package:mulearn_app/core/network/paging.dart';
 import 'package:mulearn_app/core/utils/app_logger.dart';
 import 'package:mulearn_app/features/events/data/datasources/events_remote_datasource.dart';
 import 'package:mulearn_app/features/events/data/dtos/event_dto.dart';
@@ -13,17 +14,17 @@ class EventsRepositoryImpl implements EventsRepository {
   final EventsRemoteDataSource _remote;
 
   @override
-  Future<EventPage> getEvents({int page = 1}) => _guard(() async {
-        final payload = await _remote.fetchEvents(page: page);
+  Future<EventPage> getEvents({required int pageIndex}) => _guard(() async {
+        final payload = await _remote.fetchEvents(pageIndex: pageIndex);
         final items = payload['data'] as List<dynamic>? ?? [];
-        final pagination = payload['pagination'] as Map<String, dynamic>?;
+        final info = PageIndexPaging.parse(payload['pagination'] as Map<String, dynamic>?);
         return EventPage(
           events: _parseSkippingErrors(
             items,
             (json) => EventDto.fromJson(json).toDomain(),
           ),
-          hasNext: pagination?['isNext'] as bool? ?? false,
-          totalPages: pagination?['totalPages'] as int? ?? 1,
+          hasNext: info.hasNext,
+          totalPages: info.totalPages,
         );
       });
 

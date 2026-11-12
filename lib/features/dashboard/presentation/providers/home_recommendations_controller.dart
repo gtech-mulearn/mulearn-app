@@ -24,7 +24,7 @@ Future<List<LearningCircle>> circlesForMyInterestGroups(Ref ref) async {
       .toSet();
   if (myNames.isEmpty) return const [];
 
-  final page = await ref.watch(learningCirclesRepositoryProvider).getCircles();
+  final page = await ref.watch(learningCirclesRepositoryProvider).getCircles(pageIndex: 1);
   return page.circles
       .where((c) => myNames.contains(c.ig.trim().toLowerCase()))
       .toList();

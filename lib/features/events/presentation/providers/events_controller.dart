@@ -1,4 +1,6 @@
 import 'package:mulearn_app/core/network/dio_provider.dart';
+import 'package:mulearn_app/core/network/paging.dart';
+import 'package:mulearn_app/core/utils/app_logger.dart';
 import 'package:mulearn_app/features/events/data/datasources/events_remote_datasource.dart';
 import 'package:mulearn_app/features/events/data/repositories/events_repository_impl.dart';
 import 'package:mulearn_app/features/events/domain/entities/event.dart';
@@ -20,45 +22,44 @@ EventsRepository eventsRepository(Ref ref) =>
 Future<Event> eventDetail(Ref ref, String id) =>
     ref.watch(eventsRepositoryProvider).getEventDetail(id);
 
-/// Accumulates event pages across "load more" — mirrors [SearchController]'s
-/// infinite-scroll pattern.
+/// Accumulates event pages across "load more". A failed page keeps the events
+/// already shown and records the error for an inline retry.
 @riverpod
 class EventsListController extends _$EventsListController {
-  int _page = 1;
-  bool _hasMore = false;
-  bool _loadingMore = false;
-
-  bool get hasMore => _hasMore;
+  int _pageIndex = 1;
+  Future<void>? _inFlight;
 
   @override
-  Future<List<Event>> build() async {
-    _page = 1;
-    _loadingMore = false;
-    final page = await ref.watch(eventsRepositoryProvider).getEvents();
-    _hasMore = page.hasNext;
-    return page.events;
+  Future<PagedState<Event>> build() async {
+    _pageIndex = 1;
+    _inFlight = null;
+    final page = await ref.watch(eventsRepositoryProvider).getEvents(pageIndex: 1);
+    return PagedState(items: page.events, hasMore: page.hasNext);
   }
 
-  Future<void> loadMore() async {
-    // Guards against a scroll listener re-firing (e.g. near-bottom on every
-    // frame for a short list) before the in-flight page request settles,
-    // which would otherwise dispatch the same page repeatedly.
-    if (!_hasMore || _loadingMore) return;
-    _loadingMore = true;
-    final current = state.value ?? [];
-    final nextPage = _page + 1;
+  /// Loads the next page, or retries it after a failure. Calls made while a
+  /// page is in flight (a scroll listener firing every frame) share that one
+  /// request.
+  Future<void> loadMore() =>
+      _inFlight ??= _loadNextPage().whenComplete(() => _inFlight = null);
+
+  Future<void> _loadNextPage() async {
+    final current = state.value;
+    if (current == null || !current.hasMore) return;
+    state = AsyncData(current.copyWith(isLoadingMore: true, loadMoreError: null));
+    final next = _pageIndex + 1;
     try {
-      final page = await ref
-          .read(eventsRepositoryProvider)
-          .getEvents(page: nextPage);
+      final page = await ref.read(eventsRepositoryProvider).getEvents(pageIndex: next);
       if (!ref.mounted) return;
-      _page = nextPage;
-      _hasMore = page.hasNext;
-      state = AsyncData([...current, ...page.events]);
+      _pageIndex = next;
+      state = AsyncData(PagedState(
+        items: mergeUniqueBy(current.items, page.events, (e) => e.id),
+        hasMore: page.hasNext,
+      ));
     } on Object catch (e, st) {
-      state = AsyncError(e, st);
-    } finally {
-      _loadingMore = false;
+      appLogger.w('Loading more events failed', error: e, stackTrace: st);
+      if (!ref.mounted) return;
+      state = AsyncData(current.copyWith(isLoadingMore: false, loadMoreError: e));
     }
   }
 }

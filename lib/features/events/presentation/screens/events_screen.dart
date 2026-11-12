@@ -9,6 +9,7 @@ import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/core/widgets/mu_empty_state.dart';
 import 'package:mulearn_app/core/widgets/mu_icon_button.dart';
+import 'package:mulearn_app/core/widgets/mu_load_more_footer.dart';
 import 'package:mulearn_app/features/events/presentation/providers/events_controller.dart';
 import 'package:mulearn_app/features/events/presentation/widgets/event_list_tile.dart';
 
@@ -31,6 +32,10 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
   }
 
   void _onScroll() {
+    final paged = ref.read(eventsListControllerProvider).value;
+    // After a failed page, only the explicit "Try again" retries — otherwise
+    // every scroll frame would fire another request while offline.
+    if (paged == null || paged.loadMoreError != null) return;
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 200) {
       ref.read(eventsListControllerProvider.notifier).loadMore();
@@ -65,7 +70,8 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
           error: error,
           onRetry: () => ref.invalidate(eventsListControllerProvider),
         ),
-        data: (events) {
+        data: (paged) {
+          final events = paged.items;
           if (events.isEmpty) {
             return const MuEmptyState(
               icon: LucideIcons.calendarDays,
@@ -73,7 +79,7 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
               message: 'Check back soon for upcoming events.',
             );
           }
-          final hasMore = ref.read(eventsListControllerProvider.notifier).hasMore;
+          final hasMore = paged.hasMore;
           return RefreshIndicator(
             onRefresh: () async => ref.invalidate(eventsListControllerProvider),
             child: ListView.builder(
@@ -87,9 +93,11 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
               itemCount: events.length + (hasMore ? 1 : 0),
               itemBuilder: (context, index) {
                 if (index >= events.length) {
-                  return const Padding(
-                    padding: EdgeInsets.all(MuSpace.l),
-                    child: Center(child: CircularProgressIndicator()),
+                  return MuLoadMoreFooter(
+                    isLoading: paged.isLoadingMore,
+                    error: paged.loadMoreError,
+                    onRetry: () =>
+                        ref.read(eventsListControllerProvider.notifier).loadMore(),
                   );
                 }
                 final event = events[index];

@@ -1,4 +1,6 @@
 import 'package:mulearn_app/core/network/dio_provider.dart';
+import 'package:mulearn_app/core/network/paging.dart';
+import 'package:mulearn_app/core/utils/app_logger.dart';
 import 'package:mulearn_app/core/widgets/searchable_select_field.dart';
 import 'package:mulearn_app/features/learning_circles/data/datasources/learning_circles_remote_datasource.dart';
 import 'package:mulearn_app/features/learning_circles/data/repositories/learning_circles_repository_impl.dart';
@@ -62,47 +64,46 @@ Future<List<SelectOption>> circleIgOptions(Ref ref) async {
       .toList();
 }
 
-/// Accumulates circle catalog pages across "load more" — mirrors
-/// [EventsListController]'s infinite-scroll pattern.
+/// Accumulates circle catalog pages across "load more". A failed page keeps
+/// the circles already shown and records the error for an inline retry.
 @riverpod
 class CirclesListController extends _$CirclesListController {
-  int _page = 1;
-  bool _hasMore = false;
-  bool _loadingMore = false;
-
-  bool get hasMore => _hasMore;
+  int _pageIndex = 1;
+  Future<void>? _inFlight;
 
   @override
-  Future<List<LearningCircle>> build() async {
-    _page = 1;
-    _loadingMore = false;
+  Future<PagedState<LearningCircle>> build() async {
+    _pageIndex = 1;
+    _inFlight = null;
     final page =
-        await ref.watch(learningCirclesRepositoryProvider).getCircles();
-    _hasMore = page.hasNext;
-    return page.circles;
+        await ref.watch(learningCirclesRepositoryProvider).getCircles(pageIndex: 1);
+    return PagedState(items: page.circles, hasMore: page.hasNext);
   }
 
-  Future<void> loadMore() async {
-    // Guards against a scroll listener re-firing (e.g. near-bottom on every
-    // frame for a short list — such as when "Circles near you" filters out
-    // owned circles and stays short) before the in-flight page request
-    // settles, which would otherwise dispatch the same page repeatedly.
-    if (!_hasMore || _loadingMore) return;
-    _loadingMore = true;
-    final current = state.value ?? [];
-    final nextPage = _page + 1;
+  /// Loads the next page, or retries it after a failure. Calls made while a
+  /// page is in flight (a scroll listener firing every frame, for example
+  /// when "Circles near you" filters the list short) share that one request.
+  Future<void> loadMore() =>
+      _inFlight ??= _loadNextPage().whenComplete(() => _inFlight = null);
+
+  Future<void> _loadNextPage() async {
+    final current = state.value;
+    if (current == null || !current.hasMore) return;
+    state = AsyncData(current.copyWith(isLoadingMore: true, loadMoreError: null));
+    final next = _pageIndex + 1;
     try {
-      final page = await ref
-          .read(learningCirclesRepositoryProvider)
-          .getCircles(page: nextPage);
+      final page =
+          await ref.read(learningCirclesRepositoryProvider).getCircles(pageIndex: next);
       if (!ref.mounted) return;
-      _page = nextPage;
-      _hasMore = page.hasNext;
-      state = AsyncData([...current, ...page.circles]);
+      _pageIndex = next;
+      state = AsyncData(PagedState(
+        items: mergeUniqueBy(current.items, page.circles, (c) => c.id),
+        hasMore: page.hasNext,
+      ));
     } on Object catch (e, st) {
-      state = AsyncError(e, st);
-    } finally {
-      _loadingMore = false;
+      appLogger.w('Loading more circles failed', error: e, stackTrace: st);
+      if (!ref.mounted) return;
+      state = AsyncData(current.copyWith(isLoadingMore: false, loadMoreError: e));
     }
   }
 }

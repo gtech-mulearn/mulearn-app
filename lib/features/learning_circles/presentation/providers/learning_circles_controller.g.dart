@@ -558,19 +558,22 @@ final class CircleIgOptionsProvider
 
 String _$circleIgOptionsHash() => r'b0089f447a4e2bc35866de0b8d41304bb9a5b09a';
 
-/// Accumulates circle catalog pages across "load more" — mirrors
-/// [EventsListController]'s infinite-scroll pattern.
+/// Accumulates circle catalog pages across "load more". A failed page keeps
+/// the circles already shown and records the error for an inline retry.
 
 @ProviderFor(CirclesListController)
 const circlesListControllerProvider = CirclesListControllerProvider._();
 
-/// Accumulates circle catalog pages across "load more" — mirrors
-/// [EventsListController]'s infinite-scroll pattern.
+/// Accumulates circle catalog pages across "load more". A failed page keeps
+/// the circles already shown and records the error for an inline retry.
 final class CirclesListControllerProvider
     extends
-        $AsyncNotifierProvider<CirclesListController, List<LearningCircle>> {
-  /// Accumulates circle catalog pages across "load more" — mirrors
-  /// [EventsListController]'s infinite-scroll pattern.
+        $AsyncNotifierProvider<
+          CirclesListController,
+          PagedState<LearningCircle>
+        > {
+  /// Accumulates circle catalog pages across "load more". A failed page keeps
+  /// the circles already shown and records the error for an inline retry.
   const CirclesListControllerProvider._()
     : super(
         from: null,
@@ -591,29 +594,32 @@ final class CirclesListControllerProvider
 }
 
 String _$circlesListControllerHash() =>
-    r'3342d1c4b75c7aad4413bc261a85fa4a05a69dad';
+    r'ceb23ab9cbfa178f919dff6d5314376e0969e8a6';
 
-/// Accumulates circle catalog pages across "load more" — mirrors
-/// [EventsListController]'s infinite-scroll pattern.
+/// Accumulates circle catalog pages across "load more". A failed page keeps
+/// the circles already shown and records the error for an inline retry.
 
 abstract class _$CirclesListController
-    extends $AsyncNotifier<List<LearningCircle>> {
-  FutureOr<List<LearningCircle>> build();
+    extends $AsyncNotifier<PagedState<LearningCircle>> {
+  FutureOr<PagedState<LearningCircle>> build();
   @$mustCallSuper
   @override
   void runBuild() {
     final created = build();
     final ref =
         this.ref
-            as $Ref<AsyncValue<List<LearningCircle>>, List<LearningCircle>>;
+            as $Ref<
+              AsyncValue<PagedState<LearningCircle>>,
+              PagedState<LearningCircle>
+            >;
     final element =
         ref.element
             as $ClassProviderElement<
               AnyNotifier<
-                AsyncValue<List<LearningCircle>>,
-                List<LearningCircle>
+                AsyncValue<PagedState<LearningCircle>>,
+                PagedState<LearningCircle>
               >,
-              AsyncValue<List<LearningCircle>>,
+              AsyncValue<PagedState<LearningCircle>>,
               Object?,
               Object?
             >;

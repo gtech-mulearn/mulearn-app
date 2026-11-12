@@ -177,18 +177,18 @@ final class EventDetailFamily extends $Family
   String toString() => r'eventDetailProvider';
 }
 
-/// Accumulates event pages across "load more" — mirrors [SearchController]'s
-/// infinite-scroll pattern.
+/// Accumulates event pages across "load more". A failed page keeps the events
+/// already shown and records the error for an inline retry.
 
 @ProviderFor(EventsListController)
 const eventsListControllerProvider = EventsListControllerProvider._();
 
-/// Accumulates event pages across "load more" — mirrors [SearchController]'s
-/// infinite-scroll pattern.
+/// Accumulates event pages across "load more". A failed page keeps the events
+/// already shown and records the error for an inline retry.
 final class EventsListControllerProvider
-    extends $AsyncNotifierProvider<EventsListController, List<Event>> {
-  /// Accumulates event pages across "load more" — mirrors [SearchController]'s
-  /// infinite-scroll pattern.
+    extends $AsyncNotifierProvider<EventsListController, PagedState<Event>> {
+  /// Accumulates event pages across "load more". A failed page keeps the events
+  /// already shown and records the error for an inline retry.
   const EventsListControllerProvider._()
     : super(
         from: null,
@@ -209,23 +209,25 @@ final class EventsListControllerProvider
 }
 
 String _$eventsListControllerHash() =>
-    r'1bd32127663fb0b94bbaf52ef921c7991acce0a9';
+    r'f9a2c9d971a79d75da515bab5c9f0f9403aa4da7';
 
-/// Accumulates event pages across "load more" — mirrors [SearchController]'s
-/// infinite-scroll pattern.
+/// Accumulates event pages across "load more". A failed page keeps the events
+/// already shown and records the error for an inline retry.
 
-abstract class _$EventsListController extends $AsyncNotifier<List<Event>> {
-  FutureOr<List<Event>> build();
+abstract class _$EventsListController
+    extends $AsyncNotifier<PagedState<Event>> {
+  FutureOr<PagedState<Event>> build();
   @$mustCallSuper
   @override
   void runBuild() {
     final created = build();
-    final ref = this.ref as $Ref<AsyncValue<List<Event>>, List<Event>>;
+    final ref =
+        this.ref as $Ref<AsyncValue<PagedState<Event>>, PagedState<Event>>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<AsyncValue<List<Event>>, List<Event>>,
-              AsyncValue<List<Event>>,
+              AnyNotifier<AsyncValue<PagedState<Event>>, PagedState<Event>>,
+              AsyncValue<PagedState<Event>>,
               Object?,
               Object?
             >;

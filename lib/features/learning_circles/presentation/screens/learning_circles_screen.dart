@@ -13,6 +13,7 @@ import 'package:mulearn_app/core/widgets/mu_avatar_stack.dart';
 import 'package:mulearn_app/core/widgets/mu_card.dart';
 import 'package:mulearn_app/core/widgets/mu_chip.dart';
 import 'package:mulearn_app/core/widgets/mu_icon_button.dart';
+import 'package:mulearn_app/core/widgets/mu_load_more_footer.dart';
 import 'package:mulearn_app/core/widgets/mu_section_header.dart';
 import 'package:mulearn_app/core/widgets/mu_toast.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/circle_invite.dart';
@@ -47,6 +48,10 @@ class _LearningCirclesScreenState extends ConsumerState<LearningCirclesScreen> {
   }
 
   void _onScroll() {
+    final paged = ref.read(circlesListControllerProvider).value;
+    // After a failed page, only the explicit "Try again" retries — otherwise
+    // every scroll frame would fire another request while offline.
+    if (paged == null || paged.loadMoreError != null) return;
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 200) {
       ref.read(circlesListControllerProvider.notifier).loadMore();
@@ -81,11 +86,11 @@ class _LearningCirclesScreenState extends ConsumerState<LearningCirclesScreen> {
 
     final myCircleIds =
         myCirclesState.value?.map((c) => c.id).toSet() ?? const <String>{};
-    final nearYou =
-        (circlesState.value ?? const <LearningCircle>[])
-            .where((c) => !myCircleIds.contains(c.id))
-            .toList();
-    final hasMore = ref.read(circlesListControllerProvider.notifier).hasMore;
+    final paged = circlesState.value;
+    final nearYou = (paged?.items ?? const <LearningCircle>[])
+        .where((c) => !myCircleIds.contains(c.id))
+        .toList();
+    final hasMore = paged?.hasMore ?? false;
 
     return Scaffold(
       backgroundColor: MuColors.canvas,
@@ -228,9 +233,12 @@ class _LearningCirclesScreenState extends ConsumerState<LearningCirclesScreen> {
                             onJoinTap: () => _requestToJoin(circle.id),
                           ),
                         if (hasMore)
-                          const Padding(
-                            padding: EdgeInsets.symmetric(vertical: MuSpace.m),
-                            child: Center(child: CircularProgressIndicator()),
+                          MuLoadMoreFooter(
+                            isLoading: paged?.isLoadingMore ?? false,
+                            error: paged?.loadMoreError,
+                            onRetry: () => ref
+                                .read(circlesListControllerProvider.notifier)
+                                .loadMore(),
                           ),
                       ],
                     ),

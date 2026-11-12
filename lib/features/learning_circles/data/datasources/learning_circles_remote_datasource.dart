@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:mulearn_app/core/network/api_envelope.dart';
 import 'package:mulearn_app/core/network/api_paths.dart';
+import 'package:mulearn_app/core/network/paging.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/meeting_form.dart';
 
 class LearningCirclesRemoteDataSource {
@@ -21,10 +22,13 @@ class LearningCirclesRemoteDataSource {
 
   // --- Circles ---
 
-  Future<Map<String, dynamic>> fetchCircles({int page = 1}) async {
+  /// `GET /api/v1/dashboard/learningcircle/list/?pageIndex=&perPage=`. The
+  /// backend pages with `pageIndex` and ignores `page`
+  /// (`learningcircle_views.py:102-138`).
+  Future<Map<String, dynamic>> fetchCircles({required int pageIndex}) async {
     final response = await _dio.get<dynamic>(
       ApiPaths.circlesList,
-      queryParameters: {'page': page},
+      queryParameters: PageIndexPaging.query(pageIndex),
     );
     return ApiEnvelope.unwrapObject(response);
   }

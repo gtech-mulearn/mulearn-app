@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
+import 'package:mulearn_app/core/network/paging.dart';
 import 'package:mulearn_app/core/utils/app_logger.dart';
 import 'package:mulearn_app/features/learning_circles/data/datasources/learning_circles_remote_datasource.dart';
 import 'package:mulearn_app/features/learning_circles/data/dtos/attendee_report_dto.dart';
@@ -30,16 +31,15 @@ class LearningCirclesRepositoryImpl implements LearningCirclesRepository {
   final LearningCirclesRemoteDataSource _remote;
 
   @override
-  Future<LearningCirclePage> getCircles({int page = 1}) => _guard(() async {
-        final payload = await _remote.fetchCircles(page: page);
-        final items = payload['data'] as List<dynamic>;
-        final pagination = payload['pagination'] as Map<String, dynamic>?;
+  Future<LearningCirclePage> getCircles({required int pageIndex}) => _guard(() async {
+        final payload = await _remote.fetchCircles(pageIndex: pageIndex);
+        final items = payload['data'] as List<dynamic>? ?? [];
         return LearningCirclePage(
           circles: _parseSkippingErrors(
             items,
             (json) => LearningCircleDto.fromJson(json).toDomain(),
           ),
-          hasNext: pagination?['isNext'] as bool? ?? false,
+          hasNext: PageIndexPaging.parse(payload['pagination'] as Map<String, dynamic>?).hasNext,
         );
       });
 
