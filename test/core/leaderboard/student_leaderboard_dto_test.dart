@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mulearn_app/features/leaderboard/data/dtos/student_leaderboard_entry_dto.dart';
+import 'package:mulearn_app/core/leaderboard/data/dtos/student_leaderboard_entry_dto.dart';
 
 import '../../support/fixtures.dart';
 

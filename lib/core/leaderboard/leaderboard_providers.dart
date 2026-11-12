@@ -1,14 +1,14 @@
+import 'package:mulearn_app/core/leaderboard/data/datasources/leaderboard_remote_datasource.dart';
+import 'package:mulearn_app/core/leaderboard/data/repositories/leaderboard_repository_impl.dart';
+import 'package:mulearn_app/core/leaderboard/domain/entities/college_leaderboard_entry.dart';
+import 'package:mulearn_app/core/leaderboard/domain/entities/student_leaderboard_entry.dart';
+import 'package:mulearn_app/core/leaderboard/domain/repositories/leaderboard_repository.dart';
 import 'package:mulearn_app/core/network/cache_config.dart';
 import 'package:mulearn_app/core/network/dio_provider.dart';
 import 'package:mulearn_app/core/storage/cache_store_provider.dart';
-import 'package:mulearn_app/features/leaderboard/data/datasources/leaderboard_remote_datasource.dart';
-import 'package:mulearn_app/features/leaderboard/data/repositories/leaderboard_repository_impl.dart';
-import 'package:mulearn_app/features/leaderboard/domain/entities/college_leaderboard_entry.dart';
-import 'package:mulearn_app/features/leaderboard/domain/entities/student_leaderboard_entry.dart';
-import 'package:mulearn_app/features/leaderboard/domain/repositories/leaderboard_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'leaderboard_controller.g.dart';
+part 'leaderboard_providers.g.dart';
 
 @riverpod
 LeaderboardRemoteDataSource leaderboardRemoteDataSource(Ref ref) =>
@@ -17,8 +17,9 @@ LeaderboardRemoteDataSource leaderboardRemoteDataSource(Ref ref) =>
       CacheConfig.leaderboard(ref.watch(cacheStoreProvider)),
     );
 
-/// Presentation depends on the [LeaderboardRepository] contract (rules.md
-/// §2/§5).
+/// Shared read model (rules.md §2): Home's "Top performers" and the
+/// Leaderboard screen both read these. Presentation depends on the
+/// [LeaderboardRepository] contract.
 @riverpod
 LeaderboardRepository leaderboardRepository(Ref ref) =>
     LeaderboardRepositoryImpl(ref.watch(leaderboardRemoteDataSourceProvider));

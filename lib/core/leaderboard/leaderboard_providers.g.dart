@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'leaderboard_controller.dart';
+part of 'leaderboard_providers.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -58,14 +58,16 @@ final class LeaderboardRemoteDataSourceProvider
 String _$leaderboardRemoteDataSourceHash() =>
     r'1b693a54b0f8f49f74175cdc628119866d759f18';
 
-/// Presentation depends on the [LeaderboardRepository] contract (rules.md
-/// §2/§5).
+/// Shared read model (rules.md §2): Home's "Top performers" and the
+/// Leaderboard screen both read these. Presentation depends on the
+/// [LeaderboardRepository] contract.
 
 @ProviderFor(leaderboardRepository)
 const leaderboardRepositoryProvider = LeaderboardRepositoryProvider._();
 
-/// Presentation depends on the [LeaderboardRepository] contract (rules.md
-/// §2/§5).
+/// Shared read model (rules.md §2): Home's "Top performers" and the
+/// Leaderboard screen both read these. Presentation depends on the
+/// [LeaderboardRepository] contract.
 
 final class LeaderboardRepositoryProvider
     extends
@@ -75,8 +77,9 @@ final class LeaderboardRepositoryProvider
           LeaderboardRepository
         >
     with $Provider<LeaderboardRepository> {
-  /// Presentation depends on the [LeaderboardRepository] contract (rules.md
-  /// §2/§5).
+  /// Shared read model (rules.md §2): Home's "Top performers" and the
+  /// Leaderboard screen both read these. Presentation depends on the
+  /// [LeaderboardRepository] contract.
   const LeaderboardRepositoryProvider._()
     : super(
         from: null,

@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:mulearn_app/features/leaderboard/domain/entities/student_leaderboard_entry.dart';
+import 'package:mulearn_app/core/leaderboard/domain/entities/student_leaderboard_entry.dart';
 
 part 'student_leaderboard_entry_dto.freezed.dart';
 part 'student_leaderboard_entry_dto.g.dart';

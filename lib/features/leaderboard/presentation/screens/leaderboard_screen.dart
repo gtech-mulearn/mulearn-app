@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:mulearn_app/core/leaderboard/domain/entities/college_leaderboard_entry.dart';
+import 'package:mulearn_app/core/leaderboard/leaderboard_providers.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/theme/mu_radius.dart';
 import 'package:mulearn_app/core/theme/mu_space.dart';
@@ -10,8 +12,6 @@ import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/core/widgets/mu_card.dart';
 import 'package:mulearn_app/core/widgets/mu_gradient_header.dart';
-import 'package:mulearn_app/features/leaderboard/domain/entities/college_leaderboard_entry.dart';
-import 'package:mulearn_app/features/leaderboard/presentation/providers/leaderboard_controller.dart';
 import 'package:mulearn_app/features/leaderboard/presentation/widgets/leaderboard_list_tile.dart';
 import 'package:mulearn_app/features/leaderboard/presentation/widgets/leaderboard_podium.dart';
 

@@ -1,10 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:mulearn_app/features/leaderboard/domain/entities/college_leaderboard_entry.dart';
-import 'package:mulearn_app/features/leaderboard/domain/entities/student_leaderboard_entry.dart';
-import 'package:mulearn_app/features/leaderboard/domain/repositories/leaderboard_repository.dart';
-import 'package:mulearn_app/features/leaderboard/presentation/providers/leaderboard_controller.dart';
+import 'package:mulearn_app/core/leaderboard/domain/entities/college_leaderboard_entry.dart';
+import 'package:mulearn_app/core/leaderboard/domain/entities/student_leaderboard_entry.dart';
+import 'package:mulearn_app/core/leaderboard/domain/repositories/leaderboard_repository.dart';
+import 'package:mulearn_app/core/leaderboard/leaderboard_providers.dart';
 
 class MockLeaderboardRepository extends Mock implements LeaderboardRepository {}
 

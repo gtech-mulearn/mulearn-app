@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:mulearn_app/core/leaderboard/leaderboard_providers.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/theme/mu_radius.dart';
 import 'package:mulearn_app/core/theme/mu_shadow.dart';
@@ -17,7 +18,6 @@ import 'package:mulearn_app/core/widgets/profile_avatar.dart';
 import 'package:mulearn_app/features/dashboard/domain/entities/my_progress_summary.dart';
 import 'package:mulearn_app/features/dashboard/presentation/providers/dashboard_controller.dart';
 import 'package:mulearn_app/features/dashboard/presentation/widgets/featured_events_list.dart';
-import 'package:mulearn_app/features/leaderboard/presentation/providers/leaderboard_controller.dart';
 
 /// Home dashboard — the landing screen after sign-in (DESIGN_SPEC.md §2 "03 —
 /// Home"). Greeting header, a dark karma "hero" card, quick links into Tasks

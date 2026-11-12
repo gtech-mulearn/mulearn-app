@@ -1,7 +1,7 @@
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mulearn_app/features/leaderboard/data/datasources/leaderboard_remote_datasource.dart';
-import 'package:mulearn_app/features/leaderboard/data/repositories/leaderboard_repository_impl.dart';
+import 'package:mulearn_app/core/leaderboard/data/datasources/leaderboard_remote_datasource.dart';
+import 'package:mulearn_app/core/leaderboard/data/repositories/leaderboard_repository_impl.dart';
 
 import '../../support/fake_http_adapter.dart';
 import '../../support/fixtures.dart';

@@ -1,5 +1,5 @@
-import 'package:mulearn_app/features/leaderboard/domain/entities/college_leaderboard_entry.dart';
-import 'package:mulearn_app/features/leaderboard/domain/entities/student_leaderboard_entry.dart';
+import 'package:mulearn_app/core/leaderboard/domain/entities/college_leaderboard_entry.dart';
+import 'package:mulearn_app/core/leaderboard/domain/entities/student_leaderboard_entry.dart';
 
 /// Leaderboard repository contract (rules.md §2/§5). Throws [ApiException]
 /// on failure.
