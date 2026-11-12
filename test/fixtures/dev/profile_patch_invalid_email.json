@@ -1,0 +1,21 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "PATCH /api/v1/dashboard/profile/ {\"email\": \"not-an-email\"}",
+    "account": "student",
+    "status": 400,
+    "recorded_at": "2026-11-12T14:29:15.947349+00:00"
+  },
+  "body": {
+    "hasError": true,
+    "statusCode": 400,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "email": [
+        "Enter a valid email address."
+      ]
+    }
+  }
+}

@@ -2,6 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 
+import '../../support/fixtures.dart';
+
 void main() {
   RequestOptions req() => RequestOptions(path: '/x');
 
@@ -84,6 +86,88 @@ void main() {
       );
       expect(e.errorFor('full_name'), 'This field may not be blank.');
       expect(e.errorFor('email'), 'Enter a valid email address.');
+    });
+  });
+
+  // Several backend views return serializer errors under `response`, not
+  // `message` (`CustomResponse(response=serializer.errors)` — profile PATCH,
+  // ig-edit, user/organization, qseverse).
+  group('ApiException.fromEnvelopeBody with errors under response', () {
+    test('uses a response field error when message carries nothing', () {
+      final e = ApiException.fromEnvelopeBody({
+        'hasError': true,
+        'statusCode': 400,
+        'message': {'general': <String>[]},
+        'response': {
+          'interest_group': ['Cannot select more than 3 interest groups'],
+        },
+      });
+
+      expect(e.message, 'Cannot select more than 3 interest groups');
+      expect(e.errorFor('interest_group'), 'Cannot select more than 3 interest groups');
+      expect(e.statusCode, 400);
+    });
+
+    test('flattens nested response field errors to the leaf field', () {
+      final e = ApiException.fromEnvelopeBody({
+        'hasError': true,
+        'statusCode': 400,
+        'message': {'general': <String>[]},
+        'response': {
+          'user': {
+            'email': ['Enter a valid email address.'],
+          },
+        },
+      });
+
+      expect(e.errorFor('email'), 'Enter a valid email address.');
+    });
+
+    test('message.general still wins over response field errors', () {
+      final e = ApiException.fromEnvelopeBody({
+        'hasError': true,
+        'statusCode': 400,
+        'message': {
+          'general': ['Interest Group not found or inactive'],
+        },
+        'response': {
+          'interest_group': ['ignored'],
+        },
+      });
+
+      expect(e.message, 'Interest Group not found or inactive');
+    });
+
+    test('parses the error recorded live from PATCH /dashboard/profile/', () {
+      final e = ApiException.fromEnvelopeBody(
+        loadFixture('dev/profile_patch_invalid_email'),
+      );
+
+      expect(e.errorFor('email'), 'Enter a valid email address.');
+      expect(e.message, 'Enter a valid email address.');
+    });
+
+    test('ignores plain data strings under response (only DRF list leaves are errors)', () {
+      final e = ApiException.fromEnvelopeBody({
+        'hasError': true,
+        'statusCode': 400,
+        'message': {'general': <String>[]},
+        'response': {'circle_id': '3f2a9c1e-0000-4000-8000-000000000000'},
+      });
+
+      expect(e.message, 'Request failed (400).');
+      expect(e.fieldErrors, isEmpty);
+    });
+
+    test('falls back to a generic message when nothing explains the error', () {
+      final e = ApiException.fromEnvelopeBody({
+        'hasError': true,
+        'statusCode': 400,
+        'message': {'general': <String>[]},
+        'response': <dynamic>[],
+      });
+
+      expect(e.message, 'Request failed (400).');
     });
   });
 }

@@ -89,6 +89,22 @@ class ApiException implements Exception {
       return ApiException(message: message, statusCode: status);
     }
 
+    // Serializer errors returned under `response` instead of `message`
+    // (`CustomResponse(response=serializer.errors)` — profile PATCH, ig-edit,
+    // user/organization, qseverse). Only list leaves count: a failure
+    // envelope's `response` can also carry plain data strings.
+    final response = data['response'];
+    if (response is Map<String, dynamic>) {
+      final responseErrors = _flattenFieldErrors(response, acceptStrings: false);
+      if (responseErrors.isNotEmpty) {
+        return ApiException(
+          message: responseErrors.values.first.firstOrNull ?? 'Validation failed.',
+          statusCode: status,
+          fieldErrors: responseErrors,
+        );
+      }
+    }
+
     // Raw top-level field-keyed errors (no `message` wrapper).
     final fieldErrors = _parseFieldErrors(data);
     if (fieldErrors.isNotEmpty) {
@@ -131,12 +147,15 @@ class ApiException implements Exception {
   static String messageFor(Object error) =>
       error is ApiException ? error.message : 'Something went wrong.';
 
-  /// Recursively flattens `message`'s field errors to leaf field names,
-  /// skipping `general` (handled separately) at every nesting level. E.g.
+  /// Recursively flattens field errors to leaf field names, skipping
+  /// `general` (handled separately) at every nesting level. E.g.
   /// `{"general": [], "user": {"email": ["..."]}}` → `{"email": ["..."]}`.
+  /// [acceptStrings] keeps bare string leaves as errors; pass `false` for
+  /// `response` bodies, where only DRF's list-of-messages leaves are errors.
   static Map<String, List<String>> _flattenFieldErrors(
-    Map<String, dynamic> node,
-  ) {
+    Map<String, dynamic> node, {
+    bool acceptStrings = true,
+  }) {
     final result = <String, List<String>>{};
     for (final entry in node.entries) {
       if (entry.key == 'general') continue;
@@ -144,8 +163,8 @@ class ApiException implements Exception {
       if (value is List) {
         result[entry.key] = value.map((e) => e.toString()).toList();
       } else if (value is Map<String, dynamic>) {
-        result.addAll(_flattenFieldErrors(value));
-      } else if (value is String) {
+        result.addAll(_flattenFieldErrors(value, acceptStrings: acceptStrings));
+      } else if (acceptStrings && value is String) {
         result[entry.key] = [value];
       }
     }
