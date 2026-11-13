@@ -42,7 +42,10 @@ void main() {
       find.descendant(of: find.byType(MuButton), matching: find.byType(Opacity)).first,
     );
     expect(opacity.opacity, MuOpacity.disabled);
-    expect(tester.getSemantics(find.byType(MuButton)), matchesSemantics(isButton: true, label: 'Register', hasEnabledState: true));
+    expect(
+      tester.getSemantics(find.byType(MuButton)),
+      matchesSemantics(isButton: true, label: 'Register', hasEnabledState: true),
+    );
   });
 
   testWidgets('ink variant fills with night; knob shows the volt disc', (tester) async {

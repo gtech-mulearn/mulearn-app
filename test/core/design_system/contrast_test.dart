@@ -35,6 +35,7 @@ List<(String, Color, Color)> _textPairs(MuPalette p) => [
   ('warning/surface', p.warning, p.surface),
   ('danger/dangerTint', p.danger, p.dangerTint),
   ('danger/surface', p.danger, p.surface),
+  ('surface/danger (danger button label)', p.surface, p.danger),
   ('inkPrint/igCoder', p.inkPrint, p.igCoder),
   ('inkPrint/igMaker', p.inkPrint, p.igMaker),
   ('inkPrint/igCreative', p.inkPrint, p.igCreative),

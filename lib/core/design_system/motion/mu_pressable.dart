@@ -62,9 +62,7 @@ class _MuPressableState extends State<MuPressable> with SingleTickerProviderStat
       return;
     }
     // Start from the on-screen value and current velocity: interruptible.
-    _scale.animateWith(
-      SpringSimulation(MuSprings.snappy.description, _scale.value, target, _scale.velocity),
-    );
+    _scale.animateWith(SpringSimulation(MuSprings.snappy.description, _scale.value, target, _scale.velocity));
   }
 
   @override

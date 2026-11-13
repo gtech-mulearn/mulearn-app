@@ -21,6 +21,9 @@ enum MuButtonVariant {
 
   /// Karma only: Claim level, Collect reward.
   volt,
+
+  /// Destructive confirmation only (Leave circle, Delete session).
+  danger,
 }
 
 /// Height.
@@ -85,6 +88,7 @@ class MuButton extends StatelessWidget {
       MuButtonVariant.outline => (Colors.transparent, c.ink, c.lineStrong),
       MuButtonVariant.ghost => (Colors.transparent, c.cobaltText, null),
       MuButtonVariant.volt => (c.volt, c.onVolt, null),
+      MuButtonVariant.danger => (c.danger, c.surface, null),
     };
     final small = size == MuButtonSize.small;
     final height = small ? MuSizes.buttonHSm : MuSizes.buttonH;
@@ -98,10 +102,7 @@ class MuButton extends StatelessWidget {
       mainAxisAlignment: showKnob ? MainAxisAlignment.spaceBetween : MainAxisAlignment.center,
       children: [
         if (loading) ...[
-          SizedBox.square(
-            dimension: 18,
-            child: CircularProgressIndicator(strokeWidth: 2, color: fg),
-          ),
+          SizedBox.square(dimension: 18, child: CircularProgressIndicator(strokeWidth: 2, color: fg)),
           const SizedBox(width: MuSpacing.space2),
         ] else if (icon != null) ...[
           Icon(icon, size: small ? MuSizes.iconSm : 18, color: fg),
@@ -126,7 +127,9 @@ class MuButton extends StatelessWidget {
       height: height,
       padding: EdgeInsetsDirectional.only(
         start: variant == MuButtonVariant.ghost ? MuSpacing.space3 : (small ? MuSpacing.space4 : MuSpacing.space6),
-        end: showKnob ? 6 : (variant == MuButtonVariant.ghost ? MuSpacing.space3 : (small ? MuSpacing.space4 : MuSpacing.space6)),
+        end: showKnob
+            ? 6
+            : (variant == MuButtonVariant.ghost ? MuSpacing.space3 : (small ? MuSpacing.space4 : MuSpacing.space6)),
       ),
       decoration: BoxDecoration(
         color: bg,
@@ -183,9 +186,7 @@ class _FocusRingState extends State<_FocusRing> {
     return FocusableActionDetector(
       enabled: widget.enabled,
       onShowFocusHighlight: (v) => setState(() => _highlight = v),
-      actions: {
-        ActivateIntent: CallbackAction<ActivateIntent>(onInvoke: (_) => widget.onActivate?.call()),
-      },
+      actions: {ActivateIntent: CallbackAction<ActivateIntent>(onInvoke: (_) => widget.onActivate?.call())},
       child: DecoratedBox(
         position: DecorationPosition.foreground,
         decoration: BoxDecoration(
