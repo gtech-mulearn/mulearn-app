@@ -22,14 +22,13 @@ class MulearnApp extends ConsumerWidget {
       // not yet migrated keep their look. MuThemeData replaces this once the
       // last screen moves over (plan 5).
       theme: MulearnTheme.light().copyWith(extensions: [MuTheme.light()]),
-      // The 2026-07 redesign's Mu* component library hardcodes light-theme
-      // color literals (MuColors.canvas/surface, etc.) rather than resolving
-      // through Theme.of(context), so it isn't dark-mode-aware. Left on
-      // ThemeMode.system, a device in Dark Mode gets MulearnTheme.dark()'s
-      // forced-white text over those still-light hardcoded backgrounds —
-      // white-on-white. Pinning to light mode until the component library
-      // gets real dark-mode variants.
-      themeMode: ThemeMode.light,
+      // Follows the phone's dark mode. The Material base stays the light
+      // one on purpose: screens not yet migrated hard-code light colours
+      // (MuColors.canvas/surface…), and MulearnTheme.dark()'s white text over
+      // them was white-on-white. Only the design system's palette switches,
+      // so migrated screens go dark and old ones keep their light look until
+      // they move over.
+      darkTheme: MulearnTheme.light().copyWith(extensions: [MuTheme.dark()]),
       routerConfig: router,
     );
   }

@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/design_system/navigation/mu_nav_capsule.dart';
+import 'package:mulearn_app/core/design_system/theme/mu_theme.dart';
 import 'package:mulearn_app/core/notifications/unread_notifications.dart';
 import 'package:mulearn_app/core/notifications/unread_refresh_triggers.dart';
 import 'package:mulearn_app/core/session/discord_resume_check.dart';
@@ -34,19 +36,22 @@ class MainShell extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      extendBody: true,
-      body: UnreadRefreshTriggers(child: DiscordResumeCheck(child: navigationShell)),
-      bottomNavigationBar: MuNavCapsule(
-        items: _items,
-        currentIndex: navigationShell.currentIndex,
-        onSelect: (index) {
-          if (index == 0) unawaited(ref.read(unreadNotificationsProvider.notifier).refreshIfStale());
-          navigationShell.goBranch(
-            index,
-            initialLocation: index == navigationShell.currentIndex,
-          );
-        },
+    // Status-bar icons follow the design system palette (dark on light
+    // chalk, light on dark chalk).
+    final dark = context.mu.colors.chalk.computeLuminance() < 0.5;
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: dark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
+      child: Scaffold(
+        extendBody: true,
+        body: UnreadRefreshTriggers(child: DiscordResumeCheck(child: navigationShell)),
+        bottomNavigationBar: MuNavCapsule(
+          items: _items,
+          currentIndex: navigationShell.currentIndex,
+          onSelect: (index) {
+            if (index == 0) unawaited(ref.read(unreadNotificationsProvider.notifier).refreshIfStale());
+            navigationShell.goBranch(index, initialLocation: index == navigationShell.currentIndex);
+          },
+        ),
       ),
     );
   }

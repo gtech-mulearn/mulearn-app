@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mulearn_app/core/design_system/theme/mu_theme.dart';
 import 'package:mulearn_app/core/theme/mu_space.dart';
-import 'package:mulearn_app/core/theme/mulearn_colors.dart';
-import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 
 /// Which illustrated state to show. Mirrors the dashboard's StateDisplay
 /// variants (`src/components/ui/state-display.tsx`):
@@ -98,11 +97,11 @@ class MuStateDisplay extends StatelessWidget {
             constraints: const BoxConstraints(maxWidth: 448),
             child: Column(
               children: [
-                Text(title ?? config.title, style: MuType.title, textAlign: TextAlign.center),
+                Text(title ?? config.title, style: context.mu.text.title2, textAlign: TextAlign.center),
                 const SizedBox(height: MuSpace.xs),
                 Text(
                   description ?? config.description,
-                  style: MuType.body.copyWith(fontSize: 14, color: MuColors.inkSecondary),
+                  style: context.mu.text.body.copyWith(fontSize: 14, color: context.mu.colors.ink2),
                   textAlign: TextAlign.center,
                 ),
               ],
