@@ -38,6 +38,19 @@ class _ConnectDiscordScreenState extends ConsumerState<ConnectDiscordScreen> {
     }
   }
 
+  /// "Try again" returns through a new App Link to this same page (go_router
+  /// keys the page by route pattern), so a changed code must start its own
+  /// exchange; the controller still sends each code once.
+  @override
+  void didUpdateWidget(ConnectDiscordScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (_hasCode && widget.code != oldWidget.code) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) unawaited(ref.read(discordConnectControllerProvider.notifier).connect(widget.code!));
+      });
+    }
+  }
+
   void _startFlow() => unawaited(ref.read(discordConnectFlowProvider.notifier).start());
 
   /// Opened from a link, the screen is the whole stack: leave to Home.

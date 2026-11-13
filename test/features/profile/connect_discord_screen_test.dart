@@ -24,7 +24,7 @@ void main() {
     });
   });
 
-  Future<void> pumpAt(WidgetTester tester, String location) async {
+  Future<GoRouter> pumpAt(WidgetTester tester, String location) async {
     final tokens = TokenStorage(FakeSecureStorage());
     await tokens.saveTokens(accessToken: 'a', refreshToken: 'r');
     final container = ProviderContainer(retry: (_, __) => null, overrides: [
@@ -44,6 +44,7 @@ void main() {
     addTearDown(router.dispose);
     await tester.pumpWidget(UncontrolledProviderScope(container: container, child: MaterialApp.router(routerConfig: router)));
     await settle(tester);
+    return router;
   }
 
   int connectCalls() =>
@@ -70,6 +71,23 @@ void main() {
 
     expect(find.byType(ConnectDiscordScreen), findsOneWidget);
     expect(connectCalls(), 1);
+  });
+
+  // Plan 3 final review, Important 2: "Try again" sends the user back to
+  // Discord; the new App Link reuses this page (same route pattern), so the
+  // new code must still be exchanged.
+  testWidgets('a second link after a failure sends its new code', (tester) async {
+    final router = await pumpAt(tester, '/dashboard/connect-discord?code=first');
+    expect(connectCalls(), 1);
+
+    router.go('/dashboard/connect-discord?code=second');
+    await settle(tester);
+
+    final codes = adapter.requests
+        .where((RequestOptions r) => r.uri.path == '/api/v1/register/connect-discord/')
+        .map((r) => r.uri.queryParameters['code'])
+        .toList();
+    expect(codes, ['first', 'second']);
   });
 
   testWidgets('a screen opened from the link has a way home', (tester) async {

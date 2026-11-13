@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mulearn_app/app/app.dart';
+import 'package:mulearn_app/app/app_scope.dart';
 import 'package:mulearn_app/core/config/flavor_config.dart';
 import 'package:mulearn_app/core/storage/cache_store_factory.dart';
 import 'package:mulearn_app/core/storage/cache_store_provider.dart';
@@ -11,7 +11,7 @@ import 'package:mulearn_app/core/utils/app_logger.dart';
 /// Shared entrypoint used by every flavor's `main_*.dart` (architecture §2).
 ///
 /// Initializes the flavor config, wires up shared services, and runs the app
-/// inside a [ProviderScope].
+/// inside the app's root scope ([appProviderScope]).
 Future<void> bootstrap(Flavor flavor) async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -25,8 +25,7 @@ Future<void> bootstrap(Flavor flavor) async {
   final cacheStore = await openCacheStore();
 
   runApp(
-    ProviderScope(
-      observers: [TelemetryProviderObserver(crashReporter)],
+    appProviderScope(
       overrides: [
         cacheStoreProvider.overrideWithValue(cacheStore),
       ],

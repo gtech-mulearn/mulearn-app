@@ -62,7 +62,7 @@ lib/
 - Keep providers scoped to the feature that owns them (`presentation/providers/`) unless genuinely cross-feature (then it goes in `core/`).
 - Prefer last-good-state-visible-during-refresh over full-screen loading spinners on refetch, where the UX benefits (e.g. pull-to-refresh on a list). Don't reflexively use `AsyncLoading` for every refetch.
 - **Pull-to-refresh is `MuRefresh`** (`core/widgets/mu_refresh.dart`): pass a function that awaits the real refetch (`ref.refresh(provider.future)`), and render with `.when(skipError: true, ...)` so a failed refresh keeps the rows and shows a toast.
-- **Providers that read shared server state use `retry: noRetry`** (`core/utils/no_retry.dart`): Riverpod 3 retries failures by default and the screen would spin instead of showing its error and Retry.
+- **Nothing is retried automatically.** The root scope (`app/app_scope.dart`) sets `retry: noRetry`. Riverpod 3's default retries a failure 10 times over about 38 s, which keeps pull-to-refresh spinning and adds load to a backend that is already failing. Shared-state providers also declare `retry: noRetry` themselves (`core/utils/no_retry.dart`). Tests that pass their own `retry:` don't see the production policy; `test/app/app_scope_test.dart` does.
 - **A mutation that invalidates other providers after its request holds `ref.keepAlive()`** until it's done, so closing the screen mid-request can't drop the refresh.
 - **Features never import each other** (enforced by `test/architecture/import_boundaries_test.dart`): shared state goes in `core/` (e.g. `core/notifications/`, `core/session/`); a feature that needs a little of another's data makes its own small call.
 

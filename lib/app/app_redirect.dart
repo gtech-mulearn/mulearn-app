@@ -77,7 +77,9 @@ String _with(String path, String? from) =>
 String? appRedirect({required AsyncValue<bool> auth, required Uri uri}) {
   final path = _normalise(uri.path);
   final from = _resumable(uri.queryParameters['from']);
-  final here = _resumable(uri.toString());
+  // A real App Link reaches the router as its full URI (Android passes the
+  // intent's data; go_router keeps scheme and host): resume its in-app part.
+  final here = _resumable(Uri(path: uri.path, query: uri.hasQuery ? uri.query : null).toString());
 
   // Session still being resolved from secure storage.
   if (auth.isLoading || !auth.hasValue) {

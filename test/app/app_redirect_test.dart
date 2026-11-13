@@ -16,6 +16,23 @@ void main() {
     expect(appRedirect(auth: signedIn, uri: u('/settings/password')), isNull);
   });
 
+  // Plan 3 final review, Important 1: Android hands Flutter the App Link's
+  // full URI and go_router keeps its scheme and host in `state.uri`.
+  test('a real App Link (full https URI) keeps its target through splash and sign-in', () {
+    final link = u('https://mulearn-dev.vercel.app/dashboard/connect-discord?code=abc');
+    const target = '/dashboard/connect-discord?code=abc';
+
+    final toSplash = appRedirect(auth: loading, uri: link);
+    expect(toSplash, '/splash?from=${fromOf(target)}');
+    expect(appRedirect(auth: signedIn, uri: u(toSplash!)), target);
+
+    final toSignIn = appRedirect(auth: signedOut, uri: link);
+    expect(toSignIn, '/sign-in?from=${fromOf(target)}');
+    expect(appRedirect(auth: signedIn, uri: u(toSignIn!)), target);
+
+    expect(appRedirect(auth: signedIn, uri: link), isNull);
+  });
+
   group('role workspaces (Plan 4)', () {
     test('workspace routes are signed-in screens', () {
       for (final path in [
