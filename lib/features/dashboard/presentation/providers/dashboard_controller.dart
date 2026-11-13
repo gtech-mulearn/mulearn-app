@@ -3,6 +3,7 @@ import 'package:mulearn_app/core/session/my_profile_payload.dart';
 import 'package:mulearn_app/features/dashboard/data/datasources/dashboard_remote_datasource.dart';
 import 'package:mulearn_app/features/dashboard/data/repositories/dashboard_repository_impl.dart';
 import 'package:mulearn_app/features/dashboard/domain/entities/featured_event.dart';
+import 'package:mulearn_app/features/dashboard/domain/entities/learner_summary.dart';
 import 'package:mulearn_app/features/dashboard/domain/entities/my_progress_summary.dart';
 import 'package:mulearn_app/features/dashboard/domain/repositories/dashboard_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -19,6 +20,12 @@ DashboardRemoteDataSource dashboardRemoteDataSource(Ref ref) =>
 DashboardRepository dashboardRepository(Ref ref) =>
     DashboardRepositoryImpl(ref.watch(dashboardRemoteDataSourceProvider));
 
+
+/// The learner's week for Home (weekly karma, streak, next meetup). Fetched
+/// when Home is shown and on pull-to-refresh; a failure shows its own retry.
+@Riverpod(retry: noRetry)
+Future<LearnerSummary> learnerSummary(Ref ref) =>
+    ref.watch(dashboardRepositoryProvider).getLearnerSummary();
 
 @riverpod
 class FeaturedEventsController extends _$FeaturedEventsController {

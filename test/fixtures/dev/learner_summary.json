@@ -4,7 +4,7 @@
     "endpoint": "/api/v1/dashboard/home/learner/summary/",
     "account": "student",
     "status": 200,
-    "recorded_at": "2026-11-12T15:31:36.724770Z"
+    "recorded_at": "2026-11-13T05:39:05.720576Z"
   },
   "body": {
     "hasError": false,

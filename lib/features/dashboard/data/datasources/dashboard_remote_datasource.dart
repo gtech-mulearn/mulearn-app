@@ -12,6 +12,9 @@ class DashboardRemoteDataSource {
 
   /// `GET /api/v1/dashboard/events/featured/` — items live under
   /// `response.data`, a `pagination` sibling key sits alongside it.
+  Future<Map<String, dynamic>> fetchLearnerSummary() async =>
+      ApiEnvelope.unwrapObject(await _dio.get<dynamic>(ApiPaths.learnerSummary));
+
   Future<List<dynamic>> fetchFeaturedEvents() async {
     final response = await _dio.get<dynamic>(ApiPaths.featuredEvents);
     final payload = ApiEnvelope.unwrapObject(response);

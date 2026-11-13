@@ -113,6 +113,53 @@ final class DashboardRepositoryProvider
 String _$dashboardRepositoryHash() =>
     r'7b8de6e77090b445fd69facc27796ecb670a7ec1';
 
+/// The learner's week for Home (weekly karma, streak, next meetup). Fetched
+/// when Home is shown and on pull-to-refresh; a failure shows its own retry.
+
+@ProviderFor(learnerSummary)
+const learnerSummaryProvider = LearnerSummaryProvider._();
+
+/// The learner's week for Home (weekly karma, streak, next meetup). Fetched
+/// when Home is shown and on pull-to-refresh; a failure shows its own retry.
+
+final class LearnerSummaryProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<LearnerSummary>,
+          LearnerSummary,
+          FutureOr<LearnerSummary>
+        >
+    with $FutureModifier<LearnerSummary>, $FutureProvider<LearnerSummary> {
+  /// The learner's week for Home (weekly karma, streak, next meetup). Fetched
+  /// when Home is shown and on pull-to-refresh; a failure shows its own retry.
+  const LearnerSummaryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: noRetry,
+        name: r'learnerSummaryProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$learnerSummaryHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<LearnerSummary> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<LearnerSummary> create(Ref ref) {
+    return learnerSummary(ref);
+  }
+}
+
+String _$learnerSummaryHash() => r'd06bf252a93faa62a77a14570221ac77d5e8da34';
+
 @ProviderFor(FeaturedEventsController)
 const featuredEventsControllerProvider = FeaturedEventsControllerProvider._();
 

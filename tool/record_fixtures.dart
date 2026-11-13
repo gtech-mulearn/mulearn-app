@@ -65,6 +65,8 @@ List<_Target> _targets() {
     const _Target('notifications_page1', '/api/v1/notification/?page=1&page_size=20'),
     const _Target('notifications_unread_count', '/api/v1/notification/unread-count/'),
     const _Target('learner_summary', '/api/v1/dashboard/home/learner/summary/'),
+    // A published, global, admin-organised event with no linked tasks.
+    const _Target('event_detail', '/api/v1/dashboard/events/3d2eba4f-915d-40b9-bc28-dc04c98ed4a9/'),
     const _Target('learner_streak', '/api/v1/dashboard/home/learner/streak/'),
     // A random, unowned id: the backend answers 404 and changes nothing.
     const _Target(

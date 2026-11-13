@@ -252,6 +252,10 @@ abstract final class ApiPaths {
   // --- Dashboard (home screen) — confirmed live (rules.md §3/§9) ---
 
 
+  /// `GET` — the learner's week: `{stats, next_meeting, quick_action_counts}`
+  /// (LearnerDashboardSummaryAPIView).
+  static const String learnerSummary = '/api/v1/dashboard/home/learner/summary/';
+
   /// `GET` — featured events, under `response.data` with a `pagination`
   /// sibling key. Confirmed live: 5 items, `isNext: false` for this account,
   /// so the home screen's "featured" widget doesn't need load-more paging.
