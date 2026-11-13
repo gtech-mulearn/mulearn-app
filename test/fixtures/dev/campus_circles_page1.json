@@ -1,0 +1,139 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/campus/learning-circles/?sortBy=-member_count&pageIndex=1&perPage=20",
+    "account": "campuslead",
+    "status": 200,
+    "recorded_at": "2026-11-13T13:11:56.972989Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "data": [
+        {
+          "id": "40a52b79-a820-4dfa-9a12-0bb960567a55",
+          "name": "Full-Stack Fridays",
+          "ig_name": "Web Development",
+          "member_count": 4,
+          "meeting_count": 1,
+          "last_meeting_time": "2026-11-13T13:00:00Z"
+        },
+        {
+          "id": "4cfd3477-08c7-421e-9137-fd6cbc412465",
+          "name": "Flutter Builders",
+          "ig_name": "Web Development",
+          "member_count": 4,
+          "meeting_count": 2,
+          "last_meeting_time": "2026-11-22T12:00:00Z"
+        },
+        {
+          "id": "463e9e4a-7255-431d-95f9-5bd181a48d12",
+          "name": "Figma to Production",
+          "ig_name": "Ui Ux",
+          "member_count": 3,
+          "meeting_count": 1,
+          "last_meeting_time": "2026-11-18T12:30:00Z"
+        },
+        {
+          "id": "526bb1c7-3398-43b4-9484-cb188f2aa34f",
+          "name": "Prompt Engineering Lab",
+          "ig_name": "AI",
+          "member_count": 3,
+          "meeting_count": 1,
+          "last_meeting_time": "2026-11-18T14:30:00Z"
+        },
+        {
+          "id": "aab8a28c-8f5c-4c4e-bf8d-7e99c4a56ece",
+          "name": "LeetCode 75 Sprint",
+          "ig_name": "Data Structures and Algorithm",
+          "member_count": 3,
+          "meeting_count": 1,
+          "last_meeting_time": "2026-11-16T15:00:00Z"
+        },
+        {
+          "id": "aebb7d15-ef32-4815-bdb3-60839043cee0",
+          "name": "DSA Daily Grind",
+          "ig_name": "Data Structures and Algorithm",
+          "member_count": 3,
+          "meeting_count": 1,
+          "last_meeting_time": "2026-11-14T10:30:00Z"
+        },
+        {
+          "id": "217cd8ca-d6a3-4e75-9621-036c057f7ecd",
+          "name": "Blender: Donut to Diorama",
+          "ig_name": "Blender",
+          "member_count": 2,
+          "meeting_count": 0,
+          "last_meeting_time": null
+        },
+        {
+          "id": "38bf7bfa-9c94-4bdc-bf78-a7246106912d",
+          "name": "LLM Paper Reading Club",
+          "ig_name": "Generative AI",
+          "member_count": 2,
+          "meeting_count": 1,
+          "last_meeting_time": "2026-11-17T14:00:00Z"
+        },
+        {
+          "id": "6101f52b-7c1f-424f-9fe2-3f2501523bfe",
+          "name": "Kaggle Starter Circle",
+          "ig_name": "Data Science",
+          "member_count": 2,
+          "meeting_count": 0,
+          "last_meeting_time": null
+        },
+        {
+          "id": "75ad3006-1eae-47ea-9055-a42db27d369b",
+          "name": "Arduino Tinkerers",
+          "ig_name": "Internet Of Things (IOT) And Robotics",
+          "member_count": 2,
+          "meeting_count": 1,
+          "last_meeting_time": "2026-11-20T08:30:00Z"
+        },
+        {
+          "id": "d314ba5e-de7a-4918-8889-941fd3f45687",
+          "name": "Quantum Computing Basics",
+          "ig_name": "Quantum Technologies",
+          "member_count": 2,
+          "meeting_count": 0,
+          "last_meeting_time": null
+        },
+        {
+          "id": "2a2d8564-e218-4193-9338-8c0e9be402a7",
+          "name": "CTF Practice Squad",
+          "ig_name": "Cyber Security",
+          "member_count": 1,
+          "meeting_count": 0,
+          "last_meeting_time": null
+        },
+        {
+          "id": "d612e4c3-4c09-4721-9143-4e2a218712e8",
+          "name": "Web Accessibility Study Group",
+          "ig_name": "Web Development",
+          "member_count": 1,
+          "meeting_count": 0,
+          "last_meeting_time": null
+        },
+        {
+          "id": "feffb39d-440f-4bfb-99c9-80314091290d",
+          "name": "Product Management 101",
+          "ig_name": "Project Management",
+          "member_count": 1,
+          "meeting_count": 0,
+          "last_meeting_time": null
+        }
+      ],
+      "pagination": {
+        "count": 14,
+        "totalPages": 1,
+        "isNext": false,
+        "isPrev": false,
+        "nextPage": null
+      }
+    }
+  }
+}

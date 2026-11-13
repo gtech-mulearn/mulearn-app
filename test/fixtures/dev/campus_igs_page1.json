@@ -1,0 +1,187 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/campus/igs/?sortBy=-member_count&pageIndex=1&perPage=20",
+    "account": "campuslead",
+    "status": 200,
+    "recorded_at": "2026-11-13T13:11:56.972989Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "data": [
+        {
+          "id": "4ff0a5e5-d1ef-44dd-ac13-9a2f9e7717e3",
+          "name": "Web Development",
+          "code": "WEBDEV",
+          "campus_member_count": 6,
+          "cover_image": null,
+          "icon_image": null
+        },
+        {
+          "id": "b434ea03-908f-4078-8d02-26ebc3575d36",
+          "name": "AI",
+          "code": "AI",
+          "campus_member_count": 4,
+          "cover_image": null,
+          "icon_image": null
+        },
+        {
+          "id": "22ac542c-c849-428e-a91c-77e6b4c2c1aa",
+          "name": "Ui Ux",
+          "code": "UIUX",
+          "campus_member_count": 3,
+          "cover_image": null,
+          "icon_image": null
+        },
+        {
+          "id": "662370ae-bfa6-41c6-8962-60a3476f8143",
+          "name": "Data Structures and Algorithm",
+          "code": "DSA",
+          "campus_member_count": 3,
+          "cover_image": null,
+          "icon_image": null
+        },
+        {
+          "id": "2de51ebe-b72a-40fe-a41f-2264f20ac264",
+          "name": "Data Science",
+          "code": "DS",
+          "campus_member_count": 2,
+          "cover_image": null,
+          "icon_image": null
+        },
+        {
+          "id": "6897a65c-7e4b-4412-90b6-3a08ef2255f2",
+          "name": "Game Dev",
+          "code": "GDEV",
+          "campus_member_count": 2,
+          "cover_image": null,
+          "icon_image": null
+        },
+        {
+          "id": "85f18181-a8d0-4343-9217-c674d958b235",
+          "name": "Quantum Technologies",
+          "code": "qt",
+          "campus_member_count": 2,
+          "cover_image": null,
+          "icon_image": null
+        },
+        {
+          "id": "9a21bbd3-860a-4743-8379-54a0f5984f27",
+          "name": "Generative AI",
+          "code": "genai",
+          "campus_member_count": 2,
+          "cover_image": null,
+          "icon_image": null
+        },
+        {
+          "id": "c55ff174-cbac-4eeb-a4f1-a0b676c20903",
+          "name": "Internet Of Things (IOT) And Robotics",
+          "code": "IOT",
+          "campus_member_count": 2,
+          "cover_image": null,
+          "icon_image": null
+        },
+        {
+          "id": "e506c2f8-8cee-4a88-8728-7d43b7365d1d",
+          "name": "Blender",
+          "code": "blr",
+          "campus_member_count": 2,
+          "cover_image": null,
+          "icon_image": null
+        },
+        {
+          "id": "f8f8e361-a1ee-4ed2-9c4f-1daba9150f48",
+          "name": "Data Analytics",
+          "code": "DA",
+          "campus_member_count": 2,
+          "cover_image": null,
+          "icon_image": null
+        },
+        {
+          "id": "069325d2-a5a4-47fe-a5cc-e16569a9ea08",
+          "name": "Civil",
+          "code": "CIV",
+          "campus_member_count": 1,
+          "cover_image": null,
+          "icon_image": null
+        },
+        {
+          "id": "1502f6f1-6c84-4ef9-980f-8f984c056088",
+          "name": "Comics",
+          "code": "cm",
+          "campus_member_count": 1,
+          "cover_image": null,
+          "icon_image": null
+        },
+        {
+          "id": "31c589b8-d876-41da-9e53-89b1b5a200a8",
+          "name": "Devops",
+          "code": "dop",
+          "campus_member_count": 1,
+          "cover_image": null,
+          "icon_image": null
+        },
+        {
+          "id": "42c929a0-b308-4540-bb29-d73a92843f22",
+          "name": "Strategic Leadership",
+          "code": "SL",
+          "campus_member_count": 1,
+          "cover_image": null,
+          "icon_image": null
+        },
+        {
+          "id": "61cc75ba-319e-4825-9072-a38230c40ece",
+          "name": "MuV",
+          "code": "MUV",
+          "campus_member_count": 1,
+          "cover_image": null,
+          "icon_image": null
+        },
+        {
+          "id": "72cd26ef-f8ff-4680-8ed2-786a10f16a13",
+          "name": "Human Resources",
+          "code": "HR",
+          "campus_member_count": 1,
+          "cover_image": null,
+          "icon_image": null
+        },
+        {
+          "id": "96a37467-11ba-4ff2-8534-342e89b96f4e",
+          "name": "Cyber Security",
+          "code": "CYB",
+          "campus_member_count": 1,
+          "cover_image": null,
+          "icon_image": null
+        },
+        {
+          "id": "c746528b-cf5c-4330-8c0e-8c4727a10b0e",
+          "name": "Space",
+          "code": "SP",
+          "campus_member_count": 1,
+          "cover_image": null,
+          "icon_image": null
+        },
+        {
+          "id": "c7d691bc-2d48-49f4-afa6-c631a8defa17",
+          "name": "Blockchain",
+          "code": "BLOC",
+          "campus_member_count": 1,
+          "cover_image": null,
+          "icon_image": null
+        }
+      ],
+      "pagination": {
+        "count": 22,
+        "totalPages": 2,
+        "isNext": true,
+        "isPrev": false,
+        "nextPage": 2
+      }
+    }
+  }
+}

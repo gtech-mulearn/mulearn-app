@@ -58,7 +58,17 @@ class CampusOverviewScreen extends ConsumerWidget {
                 _Funnel(stages: s.funnel, max: s.funnelMax),
                 const SizedBox(height: MuSpace.xl),
               ],
-              const _Heading('Circles'),
+              Row(
+                children: [
+                  const Expanded(child: _Heading('Circles')),
+                  Flexible(
+                    child: TextButton(
+                      onPressed: () => context.push(RoutePaths.campusGroups),
+                      child: const Text('All circles and groups', overflow: TextOverflow.ellipsis),
+                    ),
+                  ),
+                ],
+              ),
               _CircleHealthSection(circles: s.circleHealth),
               const SizedBox(height: MuSpace.xl),
               const _Heading('Karma this week'),
@@ -72,9 +82,11 @@ class CampusOverviewScreen extends ConsumerWidget {
               Row(
                 children: [
                   const Expanded(child: _Heading('Top students')),
-                  TextButton(
-                    onPressed: () => context.push(RoutePaths.campusStudents),
-                    child: const Text('All students'),
+                  Flexible(
+                    child: TextButton(
+                      onPressed: () => context.push(RoutePaths.campusStudents),
+                      child: const Text('All students', overflow: TextOverflow.ellipsis),
+                    ),
                   ),
                 ],
               ),

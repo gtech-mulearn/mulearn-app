@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:mulearn_app/features/campus/domain/entities/campus_groups.dart';
 import 'package:mulearn_app/features/campus/domain/entities/campus_student.dart';
 import 'package:mulearn_app/features/campus/domain/entities/campus_summary.dart';
 import 'package:mulearn_app/features/campus/domain/entities/student_activity.dart';
@@ -85,6 +86,56 @@ List<KarmaDay> parseWeeklyKarma(Map<String, dynamic> json) {
   }
   days.sort((a, b) => a.day.compareTo(b.day));
   return days;
+}
+
+/// One row of `campus/learning-circles/`.
+@freezed
+abstract class CampusCircleDto with _$CampusCircleDto {
+  const factory CampusCircleDto({
+    required String id,
+    @Default('') String name,
+    String? igName,
+    @Default(0) int memberCount,
+    @Default(0) int meetingCount,
+    String? lastMeetingTime,
+  }) = _CampusCircleDto;
+
+  const CampusCircleDto._();
+
+  factory CampusCircleDto.fromJson(Map<String, dynamic> json) => _$CampusCircleDtoFromJson(json);
+
+  CampusCircle toDomain() => CampusCircle(
+        id: id,
+        name: name,
+        igName: igName ?? '',
+        memberCount: memberCount,
+        meetingCount: meetingCount,
+        lastMeetingTime: _time(lastMeetingTime),
+      );
+}
+
+/// One row of `campus/igs/`.
+@freezed
+abstract class CampusIgDto with _$CampusIgDto {
+  const factory CampusIgDto({
+    required String id,
+    @Default('') String name,
+    @Default('') String code,
+    @Default(0) int campusMemberCount,
+    String? iconImage,
+  }) = _CampusIgDto;
+
+  const CampusIgDto._();
+
+  factory CampusIgDto.fromJson(Map<String, dynamic> json) => _$CampusIgDtoFromJson(json);
+
+  CampusIg toDomain() => CampusIg(
+        id: id,
+        name: name,
+        code: code,
+        campusMemberCount: campusMemberCount,
+        iconImage: (iconImage ?? '').isEmpty ? null : iconImage,
+      );
 }
 
 /// One row of `campus/students/<muid>/activity/` (`StudentActivityTimelineSerializer`).

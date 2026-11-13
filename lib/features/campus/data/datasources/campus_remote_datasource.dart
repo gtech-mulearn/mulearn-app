@@ -14,6 +14,12 @@ class CampusRemoteDataSource {
   Future<Map<String, dynamic>> fetchWeeklyKarma() async =>
       ApiEnvelope.unwrapObject(await _dio.get<dynamic>(CampusPaths.weeklyKarma));
 
+  Future<Map<String, dynamic>> fetchCircles(Map<String, Object> query) async =>
+      ApiEnvelope.unwrapObject(await _dio.get<dynamic>(CampusPaths.circles, queryParameters: query));
+
+  Future<Map<String, dynamic>> fetchIgs(Map<String, Object> query) async =>
+      ApiEnvelope.unwrapObject(await _dio.get<dynamic>(CampusPaths.igs, queryParameters: query));
+
   /// `{data, pagination}`.
   Future<Map<String, dynamic>> fetchStudentActivity(String muid, Map<String, Object> query) async =>
       ApiEnvelope.unwrapObject(await _dio.get<dynamic>(CampusPaths.studentActivity(muid), queryParameters: query));
