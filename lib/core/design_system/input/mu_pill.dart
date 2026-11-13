@@ -58,7 +58,7 @@ class MuPill extends StatelessWidget {
       MuPillTone.danger => (c.dangerTint, c.danger),
       MuPillTone.volt => (c.volt, c.onVolt),
       // Printed matter: white in both themes (on-cobalt is #fff in each).
-      MuPillTone.paper => (c.onCobalt.withValues(alpha: 0.72), c.inkPrint),
+      MuPillTone.paper => (c.onCobalt.withValues(alpha: 0.88), c.inkPrint),
       MuPillTone.night => (c.night, c.onNight),
     };
     final style = (mono ? mu.text.code : mu.text.label).copyWith(color: fg, fontSize: 12, height: 1);

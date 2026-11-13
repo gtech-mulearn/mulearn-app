@@ -117,7 +117,7 @@ class _PublicProfileBodyState extends State<_PublicProfileBody>
         SliverPersistentHeader(
           pinned: true,
           delegate: TabBarSliverDelegate(
-            buildProfilePillTabBar(_tabController),
+            buildProfilePillTabBar(context, _tabController),
           ),
         ),
       ],

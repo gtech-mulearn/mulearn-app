@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mulearn_app/core/design_system/feedback/mu_toast.dart';
+import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/session/session_providers.dart';
-import 'package:mulearn_app/core/theme/mu_radius.dart';
-import 'package:mulearn_app/core/theme/mu_shadow.dart';
-import 'package:mulearn_app/core/theme/mu_space.dart';
-import 'package:mulearn_app/core/theme/mulearn_colors.dart';
-import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/core/widgets/mu_qr_card.dart';
 import 'package:mulearn_app/core/widgets/mu_refresh.dart';
@@ -38,7 +33,7 @@ class ProfileScreen extends ConsumerWidget {
     final profileState = ref.watch(profileControllerProvider);
 
     return Scaffold(
-      backgroundColor: MuColors.canvas,
+      backgroundColor: context.mu.colors.chalk,
       body: SafeArea(
         bottom: false,
         child: profileState.when(
@@ -47,11 +42,8 @@ class ProfileScreen extends ConsumerWidget {
           skipLoadingOnReload: true,
           skipError: true,
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, _) => ErrorRetryView(
-            error: error,
-            onRetry: () =>
-                ref.read(profileControllerProvider.notifier).refresh(),
-          ),
+          error: (error, _) =>
+              ErrorRetryView(error: error, onRetry: () => ref.read(profileControllerProvider.notifier).refresh()),
           data: (profile) => MuRefresh(
             onRefresh: () {
               invalidateSessionState(ref.invalidate);
@@ -74,8 +66,7 @@ class _ProfileBody extends StatefulWidget {
   State<_ProfileBody> createState() => _ProfileBodyState();
 }
 
-class _ProfileBodyState extends State<_ProfileBody>
-    with SingleTickerProviderStateMixin {
+class _ProfileBodyState extends State<_ProfileBody> with SingleTickerProviderStateMixin {
   late final _tabController = TabController(length: 5, vsync: this);
 
   @override
@@ -100,7 +91,7 @@ class _ProfileBodyState extends State<_ProfileBody>
       headerSliverBuilder: (context, innerBoxIsScrolled) => [
         SliverToBoxAdapter(
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.fromLTRB(MuSpacing.space4, MuSpacing.space2, MuSpacing.space4, MuSpacing.space4),
             child: Column(
               children: [
                 ProfileHeader(
@@ -118,20 +109,16 @@ class _ProfileBodyState extends State<_ProfileBody>
                 const PendingRoleBanners(),
                 // Open role workspaces (spec §8.2 item 5).
                 const WorkspaceLinks(),
-                const SizedBox(height: MuSpace.l),
+                const SizedBox(height: MuSpacing.space4),
                 ProfileStatsRow(profile: profile),
-                const SizedBox(height: MuSpace.l),
+                const SizedBox(height: MuSpacing.space4),
                 MuQrCard(
                   muid: profile.muid,
                   college: profile.collegeCode,
                   onCopy: () async {
                     await Clipboard.setData(ClipboardData(text: profile.muid));
                     if (context.mounted) {
-                      MuToast.show(
-                        context,
-                        message: 'MUID copied',
-                        type: MuToastType.success,
-                      );
+                      MuToast.show(context, message: 'MUID copied', type: MuToastType.success);
                     }
                   },
                   onShare: () => showDialog<void>(
@@ -145,9 +132,7 @@ class _ProfileBodyState extends State<_ProfileBody>
         ),
         SliverPersistentHeader(
           pinned: true,
-          delegate: TabBarSliverDelegate(
-            buildProfilePillTabBar(_tabController),
-          ),
+          delegate: TabBarSliverDelegate(buildProfilePillTabBar(context, _tabController)),
         ),
       ],
       body: TabBarView(
@@ -183,30 +168,22 @@ class _ProfileBodyState extends State<_ProfileBody>
 /// features, not dropped), scrolling rather than trying to force 5 items
 /// into a fixed 3-pill layout. Shared by [ProfileScreen] and
 /// `PublicProfileScreen` so both profile views present the same chrome.
-TabBar buildProfilePillTabBar(TabController controller) {
+TabBar buildProfilePillTabBar(BuildContext context, TabController controller) {
+  final mu = context.mu;
+  final c = mu.colors;
   return TabBar(
     controller: controller,
     isScrollable: true,
     tabAlignment: TabAlignment.start,
-    indicator: BoxDecoration(
-      color: MuColors.surface,
-      borderRadius: BorderRadius.circular(MuRadius.chip),
-      boxShadow: MuShadow.card,
-    ),
+    indicator: BoxDecoration(color: c.night, borderRadius: BorderRadius.circular(MuRadii.round)),
     indicatorSize: TabBarIndicatorSize.tab,
     dividerColor: Colors.transparent,
-    labelColor: MuColors.ink,
-    unselectedLabelColor: MuColors.inkTertiary,
-    labelStyle: MuType.chip,
-    unselectedLabelStyle: MuType.chip,
-    padding: const EdgeInsets.symmetric(
-      horizontal: MuSpace.screenH,
-      vertical: MuSpace.s,
-    ),
-    labelPadding: const EdgeInsets.symmetric(
-      horizontal: MuSpace.m,
-      vertical: 6,
-    ),
+    labelColor: c.onNight,
+    unselectedLabelColor: c.ink2,
+    labelStyle: mu.text.label.copyWith(fontSize: 14),
+    unselectedLabelStyle: mu.text.label.copyWith(fontSize: 14),
+    padding: const EdgeInsets.symmetric(horizontal: MuSpacing.space4, vertical: MuSpacing.space2),
+    labelPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
     tabs: const [
       Tab(text: 'Basic Details'),
       Tab(text: 'Karma History'),

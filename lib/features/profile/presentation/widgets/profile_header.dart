@@ -3,14 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:mulearn_app/core/design_system/feedback/mu_toast.dart';
-import 'package:mulearn_app/core/design_system/input/mu_icon_button.dart';
+import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
-import 'package:mulearn_app/core/theme/mu_radius.dart';
-import 'package:mulearn_app/core/theme/mu_space.dart';
-import 'package:mulearn_app/core/theme/mulearn_colors.dart';
-import 'package:mulearn_app/core/theme/mulearn_typography.dart';
-import 'package:mulearn_app/core/widgets/profile_avatar.dart';
 import 'package:mulearn_app/features/profile/domain/entities/user_profile.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/cover_photo_controller.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/profile_image_controller.dart';
@@ -23,21 +17,12 @@ const _levelNames = [
   'Practitioner', 'Mentor', 'Master',
 ];
 
-/// Profile identity header. With no cover photo set, this is the plain
-/// avatar/name/handle directly on the canvas (DESIGN_SPEC.md §2 "12 —
-/// Profile & karma"), confirmed against the rendered mock — no card, no
-/// dark background. Cover photo is a real feature the mock doesn't model
-/// at all; when one IS set, it's still shown (dropping it silently would
-/// be a real regression, not a redesign), just as a rounded card behind
-/// the same content with a dark scrim for legibility, rather than the old
-/// dominant full-bleed banner.
+/// The own-profile header as a poster (artifact: ProfilePoster): the name
+/// huge and heavy on cobalt, or on the member's cover photo when they've set
+/// one; their photo in a capsule window (tap to change it); level, muid,
+/// visibility and join year as pills; cover, share and edit as glass tools.
 class ProfileHeader extends ConsumerWidget {
-  const ProfileHeader({
-    required this.profile,
-    required this.onEdit,
-    required this.onShare,
-    super.key,
-  });
+  const ProfileHeader({required this.profile, required this.onEdit, required this.onShare, super.key});
 
   final UserProfile profile;
   final VoidCallback onEdit;
@@ -49,51 +34,29 @@ class ProfileHeader extends ConsumerWidget {
     final bytes = await picked.readAsBytes();
     if (bytes.lengthInBytes > coverPicMaxBytes) {
       if (context.mounted) {
-        MuToast.show(
-          context,
-          message: 'Cover image must be under 5 MB.',
-          type: MuToastType.error,
-        );
+        MuToast.show(context, message: 'Cover image must be under 5 MB.', type: MuToastType.error);
       }
       return;
     }
-    await ref
-        .read(coverPhotoControllerProvider.notifier)
-        .upload(bytes, picked.name);
+    await ref.read(coverPhotoControllerProvider.notifier).upload(bytes, picked.name);
   }
 
   Future<void> _deleteCover(BuildContext context, WidgetRef ref) async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Remove cover photo?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Remove'),
-          ),
-        ],
-      ),
+    final confirmed = await showMuConfirm(
+      context,
+      title: 'Remove cover photo?',
+      body: 'Your profile goes back to the plain blue poster.',
+      confirmLabel: 'Remove',
+      destructive: true,
     );
-    if (confirmed ?? false) {
-      await ref.read(coverPhotoControllerProvider.notifier).delete();
-    }
+    if (confirmed) await ref.read(coverPhotoControllerProvider.notifier).delete();
   }
 
-  Future<void> _pickAndUploadProfilePic(
-    BuildContext context,
-    WidgetRef ref,
-  ) async {
+  Future<void> _pickAndUploadProfilePic(BuildContext context, WidgetRef ref) async {
     final picked = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (picked == null) return;
     final bytes = await picked.readAsBytes();
-    await ref
-        .read(profileImageControllerProvider.notifier)
-        .upload(bytes, picked.name);
+    await ref.read(profileImageControllerProvider.notifier).upload(bytes, picked.name);
   }
 
   @override
@@ -103,243 +66,196 @@ class ProfileHeader extends ConsumerWidget {
     // either a real success or a visible error, never an ambiguous no-op.
     ref.listen(coverPhotoControllerProvider, (_, next) {
       if (next.hasError && !next.isLoading) {
-        MuToast.show(
-          context,
-          message: ApiException.messageFor(next.error!),
-          type: MuToastType.error,
-        );
+        MuToast.show(context, message: ApiException.messageFor(next.error!), type: MuToastType.error);
       }
     });
+    final mu = context.mu;
+    final c = mu.colors;
     final coverPending = ref.watch(coverPhotoControllerProvider).isLoading;
-    final hasCover =
-        profile.coverPicUrl != null && profile.coverPicUrl!.isNotEmpty;
+    final hasCover = profile.coverPicUrl != null && profile.coverPicUrl!.isNotEmpty;
 
-    final content = _HeaderContent(
-      profile: profile,
-      onDark: hasCover,
-      coverPending: coverPending,
-      onPickAvatar: () => _pickAndUploadProfilePic(context, ref),
-      onCoverMenuSelected: (value) {
-        switch (value) {
-          case 'change':
-            _pickAndUploadCover(context, ref);
-          case 'remove':
-            _deleteCover(context, ref);
-        }
-      },
-      hasCover: hasCover,
-      onShare: onShare,
-      onEdit: onEdit,
-    );
+    final levelN = (profile.level != null && profile.level!.length > 3)
+        ? int.tryParse(profile.level!.substring(3)) ?? 1
+        : 1;
+    final levelName = (levelN >= 1 && levelN <= _levelNames.length) ? _levelNames[levelN - 1] : null;
+    final name = profile.fullName.trim().isEmpty ? profile.muid : profile.fullName.trim();
+    final nameSize = name.length > 26 ? 30.0 : (name.length > 16 ? 36.0 : 44.0);
 
-    if (!hasCover) return content;
-
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(MuRadius.hero),
-      child: Stack(
-        children: [
+    final poster = Stack(
+      children: [
+        if (hasCover) ...[
           Positioned.fill(
             child: CachedNetworkImage(
               imageUrl: profile.coverPicUrl!,
               fit: BoxFit.cover,
-              errorWidget: (_, __, ___) => const ColoredBox(color: MuColors.ink),
+              errorWidget: (_, _, _) => ColoredBox(color: c.cobalt),
             ),
           ),
-          // A flat overlay was darkening the whole photo uniformly, making
-          // even a successfully-loaded cover image look almost identical to
-          // "no cover" (both render as a near-solid dark card). A gradient
-          // keeps the photo visible and only darkens toward the bottom,
-          // where the name/handle/badges actually need the contrast.
-          const Positioned.fill(
+          // Darken toward the bottom only, where the name needs contrast.
+          Positioned.fill(
             child: DecoratedBox(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
-                  colors: MuColors.coverScrim,
+                  colors: [c.night.withValues(alpha: 0.1), c.night.withValues(alpha: 0.7)],
                 ),
               ),
             ),
           ),
-          Padding(padding: const EdgeInsets.all(MuSpace.l), child: content),
         ],
-      ),
-    );
-  }
-}
-
-class _HeaderContent extends StatelessWidget {
-  const _HeaderContent({
-    required this.profile,
-    required this.onDark,
-    required this.coverPending,
-    required this.hasCover,
-    required this.onPickAvatar,
-    required this.onCoverMenuSelected,
-    required this.onShare,
-    required this.onEdit,
-  });
-
-  final UserProfile profile;
-  final bool onDark;
-  final bool coverPending;
-  final bool hasCover;
-  final VoidCallback onPickAvatar;
-  final ValueChanged<String> onCoverMenuSelected;
-  final VoidCallback onShare;
-  final VoidCallback onEdit;
-
-  @override
-  Widget build(BuildContext context) {
-    final titleColor = onDark ? MuColors.onBrand : MuColors.ink;
-    final subColor = onDark ? MuColors.onBrand.withValues(alpha: 0.7) : MuColors.inkSecondary;
-    final iconColor = onDark ? MuColors.onBrand : MuColors.primary;
-    final levelN = (profile.level != null && profile.level!.length > 3)
-        ? int.tryParse(profile.level!.substring(3)) ?? 1
-        : 1;
-    final levelName =
-        (levelN >= 1 && levelN <= _levelNames.length)
-            ? _levelNames[levelN - 1]
-            : null;
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            GestureDetector(
-              onTap: onPickAvatar,
+        // The photo window: a capsule cut flat at the bottom.
+        PositionedDirectional(
+          end: -6,
+          bottom: 0,
+          child: Semantics(
+            button: true,
+            label: 'Change profile photo',
+            excludeSemantics: true,
+            child: MuPressable(
+              onTap: () => _pickAndUploadProfilePic(context, ref),
               child: Container(
-                decoration: onDark
-                    ? BoxDecoration(
-                        shape: BoxShape.circle,
-                        border: Border.all(color: MuColors.onBrand, width: 2),
-                      )
-                    : null,
-                child: ProfileAvatar(
-                  url: profile.profilePicUrl,
-                  name: profile.fullName,
-                  size: 72,
+                width: 124,
+                height: 156,
+                clipBehavior: Clip.antiAlias,
+                decoration: BoxDecoration(
+                  color: c.volt,
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(62)),
                 ),
+                child: (profile.profilePicUrl ?? '').isEmpty
+                    ? Center(
+                        child: Text(
+                          MuAvatar.initialsOf(name),
+                          style: mu.text.poster.copyWith(fontSize: 52, color: c.onVolt),
+                        ),
+                      )
+                    : CachedNetworkImage(
+                        imageUrl: profile.profilePicUrl!,
+                        fit: BoxFit.cover,
+                        errorWidget: (_, _, _) => Center(
+                          child: Text(
+                            MuAvatar.initialsOf(name),
+                            style: mu.text.poster.copyWith(fontSize: 52, color: c.onVolt),
+                          ),
+                        ),
+                      ),
               ),
             ),
-            const SizedBox(width: MuSpace.l),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 4),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space3, MuSpacing.space3, MuSpacing.space6),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  if (coverPending)
+                    Padding(
+                      padding: const EdgeInsets.all(MuSpacing.space3),
+                      child: SizedBox.square(
+                        dimension: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2, color: c.onCobalt),
+                      ),
+                    )
+                  else
+                    PopupMenuButton<String>(
+                      tooltip: 'Cover photo',
+                      padding: EdgeInsets.zero,
+                      // Same glass circle as Share and Edit beside it.
+                      child: SizedBox.square(
+                        dimension: MuSizes.touchMin,
+                        child: Center(
+                          child: Container(
+                            width: MuSizes.iconBtn,
+                            height: MuSizes.iconBtn,
+                            decoration: BoxDecoration(
+                              color: c.onCobalt.withValues(alpha: 0.18),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(LucideIcons.image, color: c.onCobalt, size: MuSizes.iconMd),
+                          ),
+                        ),
+                      ),
+                      onSelected: (value) {
+                        switch (value) {
+                          case 'change':
+                            _pickAndUploadCover(context, ref);
+                          case 'remove':
+                            _deleteCover(context, ref);
+                        }
+                      },
+                      itemBuilder: (_) => [
+                        const PopupMenuItem(value: 'change', child: Text('Change cover')),
+                        if (hasCover) const PopupMenuItem(value: 'remove', child: Text('Remove cover')),
+                      ],
+                    ),
+                  MuIconButton(
+                    tooltip: 'Share profile',
+                    icon: LucideIcons.share2,
+                    variant: MuIconButtonVariant.glass,
+                    onPressed: onShare,
+                  ),
+                  MuIconButton(
+                    tooltip: 'Edit profile',
+                    icon: LucideIcons.pencil,
+                    variant: MuIconButtonVariant.glass,
+                    onPressed: onEdit,
+                  ),
+                ],
+              ),
+              const SizedBox(height: MuSpacing.space2),
+              // Keep the name and pills clear of the photo window.
+              Padding(
+                padding: const EdgeInsetsDirectional.only(end: 112),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
-                      profile.fullName,
-                      style: MuType.headline
-                          .copyWith(fontSize: 24, color: titleColor),
-                      overflow: TextOverflow.ellipsis,
+                    Semantics(
+                      header: true,
+                      child: Text(
+                        name.toUpperCase(),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: mu.text.poster.copyWith(fontSize: nameSize, color: c.onCobalt),
+                      ),
                     ),
-                    const SizedBox(height: 2),
+                    const SizedBox(height: MuSpacing.space2),
                     Text(
-                      levelName != null
-                          ? '@${profile.muid} · Level $levelN $levelName'
-                          : '@${profile.muid} · Level $levelN',
-                      style: MuType.body.copyWith(color: subColor),
-                      overflow: TextOverflow.ellipsis,
+                      levelName == null ? 'Level $levelN' : 'Level $levelN · $levelName',
+                      style: mu.text.body.copyWith(color: c.onCobalt.withValues(alpha: 0.9)),
+                    ),
+                    const SizedBox(height: MuSpacing.space3),
+                    Wrap(
+                      spacing: 6,
+                      runSpacing: 6,
+                      children: [
+                        MuPill('Level $levelN', tone: MuPillTone.volt),
+                        MuPill(profile.muid, tone: MuPillTone.paper, mono: true),
+                        MuPill(
+                          profile.isPublic ? 'Public' : 'Private',
+                          tone: MuPillTone.paper,
+                          icon: profile.isPublic ? LucideIcons.globe : LucideIcons.lock,
+                        ),
+                        if (profile.joined.length >= 4)
+                          MuPill('Since ${profile.joined.substring(0, 4)}', tone: MuPillTone.paper),
+                      ],
                     ),
                   ],
                 ),
               ),
-            ),
-            const SizedBox(width: MuSpace.s),
-            if (coverPending)
-              SizedBox(
-                height: 20,
-                width: 20,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  color: iconColor,
-                ),
-              )
-            else
-              PopupMenuButton<String>(
-                icon: Icon(LucideIcons.image, size: 18, color: iconColor),
-                tooltip: 'Cover photo',
-                onSelected: onCoverMenuSelected,
-                itemBuilder: (context) => [
-                  const PopupMenuItem(
-                    value: 'change',
-                    child: Text('Change cover'),
-                  ),
-                  if (hasCover)
-                    const PopupMenuItem(
-                      value: 'remove',
-                      child: Text('Remove cover'),
-                    ),
-                ],
-              ),
-            MuIconButton(tooltip: 'Share profile', icon: LucideIcons.share2, glass: onDark, onPressed: onShare),
-            const SizedBox(width: MuSpace.xs),
-            MuIconButton(tooltip: 'Edit profile', icon: LucideIcons.pencil, glass: onDark, onPressed: onEdit),
-          ],
-        ),
-        const SizedBox(height: MuSpace.s),
-        Row(
-          children: [
-            _Badge(
-              label: profile.isPublic ? 'Public' : 'Private',
-              color: profile.isPublic ? MuColors.success : MuColors.error,
-              onDark: onDark,
-            ),
-            if (profile.joined.length >= 4) ...[
-              const SizedBox(width: 8),
-              Text(
-                'Member since ${profile.joined.substring(0, 4)}',
-                style: MuType.caption.copyWith(
-                  color: onDark ? MuColors.onBrand.withValues(alpha: 0.7) : MuColors.inkTertiary,
-                ),
-              ),
             ],
-          ],
+          ),
         ),
       ],
     );
-  }
-}
 
-class _Badge extends StatelessWidget {
-  const _Badge({required this.label, required this.color, required this.onDark});
-
-  final String label;
-  final Color color;
-  final bool onDark;
-
-  @override
-  Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-      decoration: BoxDecoration(
-        color: onDark ? MuColors.onBrand.withValues(alpha: 0.16) : color.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(99),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            height: 6,
-            width: 6,
-            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-          ),
-          const SizedBox(width: 4),
-          Text(
-            label,
-            style: MuType.chip.copyWith(
-              color: onDark ? MuColors.onBrand : color,
-              fontSize: 10,
-            ),
-          ),
-        ],
-      ),
+      clipBehavior: Clip.antiAlias,
+      constraints: const BoxConstraints(minHeight: 236),
+      decoration: BoxDecoration(color: c.cobalt, borderRadius: BorderRadius.circular(MuRadii.panel)),
+      child: poster,
     );
   }
 }

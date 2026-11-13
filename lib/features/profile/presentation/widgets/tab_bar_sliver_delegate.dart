@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mulearn_app/core/design_system/theme/mu_theme.dart';
 
 /// Pins a [TabBar] as a sliver header below a scrollable header — the
 /// standard adapter Flutter requires to place a fixed-height widget inside
@@ -22,7 +23,7 @@ class TabBarSliverDelegate extends SliverPersistentHeaderDelegate {
     bool overlapsContent,
   ) {
     return ColoredBox(
-      color: Theme.of(context).scaffoldBackgroundColor,
+      color: context.mu.colors.chalk,
       child: tabBar,
     );
   }
