@@ -217,12 +217,24 @@ class _SessionFormState extends ConsumerState<_SessionForm> {
         _busy = false;
         if (e is ApiException && e.fieldErrors.isNotEmpty) {
           _fieldErrors = {for (final f in e.fieldErrors.entries) f.key: f.value.firstOrNull ?? ''};
+          // A field this form doesn't show (recurrence_*, non_field_errors,
+          // …) still has to reach the mentor, under the form.
+          final hidden = [
+            for (final f in e.fieldErrors.entries)
+              if (!_shownFields.contains(f.key)) ...f.value,
+          ];
+          if (hidden.isNotEmpty) _formError = hidden.join('\n');
         } else {
           _formError = ApiException.messageFor(e);
         }
       });
     }
   }
+
+  /// Backend fields that have a place under an input on this form.
+  static const _shownFields = {
+    'entity_id', 'title', 'description', 'meeting_link', 'venue', 'starts_at', 'ends_at', 'max_participants', //
+  };
 
   /// A field's error: the backend's for that field, else the local one.
   String? _errorFor(String field) {
@@ -371,13 +383,14 @@ class _SessionFormState extends ConsumerState<_SessionForm> {
             ),
             _PickerRow(
               label: 'Until',
-              value: _draft.recurrenceEndDate == null ? 'No end date' : formatDay(_draft.recurrenceEndDate!),
+              value: _draft.recurrenceEndDate == null ? 'Pick a date' : formatDay(_draft.recurrenceEndDate!),
               onTap: () async {
                 final starts = _draft.startsLocal ?? DateTime.now();
                 final date = await showDatePicker(
                   context: context,
                   initialDate: _draft.recurrenceEndDate ?? starts.add(const Duration(days: 28)),
-                  firstDate: starts,
+                  // The backend needs the end after the first session's day.
+                  firstDate: starts.add(const Duration(days: 1)),
                   lastDate: DateTime(starts.year + 2),
                 );
                 if (date != null && mounted) setState(() => _draft = _draft.copyWith(recurrenceEndDate: date));

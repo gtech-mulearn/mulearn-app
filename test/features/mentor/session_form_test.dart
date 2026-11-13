@@ -81,6 +81,48 @@ void main() {
     expect(find.text('Meeting link must not be provided for an offline session.'), findsOneWidget);
   });
 
+  // Final review, Important 3: errors keyed to fields the form doesn't show
+  // (recurrence_*, non_field_errors, …) were set aside and never rendered.
+  testWidgets("a backend error for a field the form doesn't show is still shown", (tester) async {
+    adapter.routes['POST $_create'] = (_) => const FakeResponse(400, {
+          'hasError': true,
+          'statusCode': 400,
+          'message': {
+            'general': <String>[],
+            'recurrence_interval': ['recurrence_interval must be a positive integer when is_recurring is true.'],
+          },
+          'response': <String, dynamic>{},
+        });
+    await pumpMentor(tester, adapter, '/mentor/sessions/new');
+
+    await tester.enterText(find.widgetWithText(TextFormField, 'Title'), 'Career clinic');
+    await tester.tap(find.text('Create session'));
+    await settleMentor(tester);
+
+    expect(find.text('recurrence_interval must be a positive integer when is_recurring is true.'), findsOneWidget);
+  });
+
+  testWidgets('a shown and a hidden field error both reach the mentor, once each', (tester) async {
+    adapter.routes['POST $_create'] = (_) => const FakeResponse(400, {
+          'hasError': true,
+          'statusCode': 400,
+          'message': {
+            'general': <String>[],
+            'title': ['A session with this exact title and start time already exists.'],
+            'non_field_errors': ['You do not have an active mentor grant for this scope.'],
+          },
+          'response': <String, dynamic>{},
+        });
+    await pumpMentor(tester, adapter, '/mentor/sessions/new');
+
+    await tester.enterText(find.widgetWithText(TextFormField, 'Title'), 'Career clinic');
+    await tester.tap(find.text('Create session'));
+    await settleMentor(tester);
+
+    expect(find.text('A session with this exact title and start time already exists.'), findsOneWidget);
+    expect(find.text('You do not have an active mentor grant for this scope.'), findsOneWidget);
+  });
+
   testWidgets('a missing title is refused before any request', (tester) async {
     await pumpMentor(tester, adapter, '/mentor/sessions/new');
 

@@ -87,7 +87,15 @@ abstract class SessionDraft with _$SessionDraft {
       if (venue.trim().isEmpty) return 'Venue is required for a hybrid session.';
       if (meetingLink.trim().isEmpty) return 'Meeting link is required for a hybrid session.';
     }
-    if (isRecurring && recurrenceType == null) return 'Choose how often it repeats.';
+    if (isRecurring) {
+      if (recurrenceType == null) return 'Choose how often it repeats.';
+      // The backend always needs an end, after the first session's day.
+      final until = recurrenceEndDate;
+      if (until == null) return 'Choose when it stops repeating.';
+      if (!DateTime(until.year, until.month, until.day).isAfter(DateTime(starts.year, starts.month, starts.day))) {
+        return "The repeat must end after the first session's day.";
+      }
+    }
     return null;
   }
 

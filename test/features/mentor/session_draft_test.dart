@@ -55,7 +55,22 @@ void main() {
 
     test('a repeating session needs how often', () {
       expect(draft().copyWith(isRecurring: true).validate(), 'Choose how often it repeats.');
-      expect(draft().copyWith(isRecurring: true, recurrenceType: RecurrenceType.weekly).validate(), isNull);
+      expect(
+        draft()
+            .copyWith(isRecurring: true, recurrenceType: RecurrenceType.weekly, recurrenceEndDate: DateTime(2026, 12, 18))
+            .validate(),
+        isNull,
+      );
+    });
+
+    // Final review, Important 3: the backend always requires an end date
+    // after the first session's day (SessionCreateSerializer.validate).
+    test('a repeating session needs an end date after its first day', () {
+      final weekly = draft().copyWith(isRecurring: true, recurrenceType: RecurrenceType.weekly);
+      expect(weekly.validate(), 'Choose when it stops repeating.');
+      expect(weekly.copyWith(recurrenceEndDate: DateTime(2026, 11, 20)).validate(),
+          "The repeat must end after the first session's day.");
+      expect(weekly.copyWith(recurrenceEndDate: DateTime(2026, 11, 21)).validate(), isNull);
     });
   });
 
