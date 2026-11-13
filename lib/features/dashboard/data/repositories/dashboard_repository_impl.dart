@@ -43,6 +43,20 @@ class DashboardRepositoryImpl implements DashboardRepository {
         return total;
       });
 
+  @override
+  Future<({String code, String college, String? statLabel, num? statValue})> getCampusHeadline() => _guard(() async {
+        final body = await _remote.fetchCampusSummary();
+        final campus = body['campus'] as Map<String, dynamic>? ?? const {};
+        final stats = body['stat_cards'] as List<dynamic>? ?? const [];
+        final first = stats.isEmpty ? null : stats.first as Map<String, dynamic>;
+        return (
+          code: '${campus['campus_code'] ?? ''}',
+          college: '${campus['college_name'] ?? ''}',
+          statLabel: first?['label'] as String?,
+          statValue: first?['value'] as num?,
+        );
+      });
+
   Future<T> _guard<T>(Future<T> Function() action) async {
     try {
       return await action();

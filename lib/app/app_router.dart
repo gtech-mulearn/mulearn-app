@@ -14,6 +14,7 @@ import 'package:mulearn_app/features/auth/presentation/screens/register_role_sel
 import 'package:mulearn_app/features/auth/presentation/screens/reset_password_screen.dart';
 import 'package:mulearn_app/features/auth/presentation/screens/sign_in_screen.dart';
 import 'package:mulearn_app/features/calendar/presentation/screens/calendar_screen.dart';
+import 'package:mulearn_app/features/campus/presentation/screens/campus_overview_screen.dart';
 import 'package:mulearn_app/features/dashboard/presentation/screens/home_screen.dart';
 import 'package:mulearn_app/features/events/presentation/screens/event_detail_screen.dart';
 import 'package:mulearn_app/features/events/presentation/screens/events_screen.dart';
@@ -167,6 +168,14 @@ GoRouter goRouter(Ref ref) {
           select: (a) => a.mentor,
           role: 'Mentor',
           builder: (_) => const MentorHubScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.campus,
+        builder: (_, __) => WorkspaceGate(
+          select: (a) => a.campus,
+          role: 'Campus',
+          builder: (_) => const CampusOverviewScreen(),
         ),
       ),
       GoRoute(

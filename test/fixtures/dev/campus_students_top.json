@@ -1,0 +1,97 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/campus/student-details/?sortBy=-karma&pageIndex=1&perPage=5",
+    "account": "campuslead",
+    "status": 200,
+    "recorded_at": "2026-11-13T12:48:27.630210Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "data": [
+        {
+          "full_name": "Fixture User",
+          "muid": "fixture-user@mulearn",
+          "karma": 0,
+          "rank": 7,
+          "level": "lvl1",
+          "join_date": "2026-11-12 15:18:39+00:00",
+          "last_karma_gained": "2026-11-12 15:18:37+00:00",
+          "graduation_year": "2027",
+          "department": "Management",
+          "is_alumni": false,
+          "ig_count": 3,
+          "lc_count": 1
+        },
+        {
+          "full_name": "Fixture User",
+          "muid": "qastudentone@mulearn",
+          "karma": 0,
+          "rank": 15,
+          "level": "lvl1",
+          "join_date": "2026-11-12 15:19:01+00:00",
+          "last_karma_gained": "2026-11-12 10:41:44+00:00",
+          "graduation_year": "2027",
+          "department": "Computer Science",
+          "is_alumni": false,
+          "ig_count": 3,
+          "lc_count": 4
+        },
+        {
+          "full_name": "Fixture User",
+          "muid": "fixture-user@mulearn",
+          "karma": 0,
+          "rank": 9,
+          "level": "lvl1",
+          "join_date": "2026-11-12 15:18:32+00:00",
+          "last_karma_gained": "2026-11-12 15:18:30+00:00",
+          "graduation_year": "2028",
+          "department": "Artificial Intelligence",
+          "is_alumni": false,
+          "ig_count": 3,
+          "lc_count": 3
+        },
+        {
+          "full_name": "Fixture User",
+          "muid": "fixture-user@mulearn",
+          "karma": 0,
+          "rank": 1,
+          "level": "lvl1",
+          "join_date": "2026-11-12 15:18:59+00:00",
+          "last_karma_gained": "2026-11-12 15:18:58+00:00",
+          "graduation_year": "2028",
+          "department": "Mathematics",
+          "is_alumni": false,
+          "ig_count": 3,
+          "lc_count": 3
+        },
+        {
+          "full_name": "Fixture User",
+          "muid": "fixture-user@mulearn",
+          "karma": 0,
+          "rank": 4,
+          "level": "lvl1",
+          "join_date": "2026-11-12 15:18:49+00:00",
+          "last_karma_gained": "2026-11-12 15:18:47+00:00",
+          "graduation_year": "2027",
+          "department": "Electronics",
+          "is_alumni": false,
+          "ig_count": 3,
+          "lc_count": 2
+        }
+      ],
+      "pagination": {
+        "count": 23,
+        "totalPages": 5,
+        "isNext": true,
+        "isPrev": false,
+        "nextPage": 2
+      }
+    }
+  }
+}

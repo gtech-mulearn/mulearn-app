@@ -1,0 +1,409 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/campus/home-summary/",
+    "account": "enabler",
+    "status": 200,
+    "recorded_at": "2026-11-13T12:48:27.630210Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": [
+        "Campus dashboard summary fetched successfully"
+      ]
+    },
+    "response": {
+      "campus": {
+        "org_id": "ad3a3793-d780-4ec1-b03e-fac92e0faa0d",
+        "college_name": "St. Josephs Colege of Engineering and Technology",
+        "campus_code": "SJC",
+        "campus_zone": "Central Zone"
+      },
+      "stat_cards": [
+        {
+          "key": "active_members",
+          "label": "Active members",
+          "value": 16,
+          "delta": 16,
+          "delta_type": "increase",
+          "period": "30d"
+        },
+        {
+          "key": "total_karma",
+          "label": "Karma",
+          "value": 0,
+          "delta": 0,
+          "delta_type": "increase",
+          "period": "30d"
+        },
+        {
+          "key": "active_circles",
+          "label": "Circles",
+          "value": 14,
+          "delta": 0,
+          "delta_type": "neutral",
+          "period": "30d"
+        },
+        {
+          "key": "rank",
+          "label": "Campus rank",
+          "value": null,
+          "delta": 0,
+          "delta_type": "neutral",
+          "period": "30d"
+        }
+      ],
+      "member_funnel": {
+        "max": 23,
+        "stages": [
+          {
+            "key": "registered",
+            "label": "Registered",
+            "count": 23,
+            "percentage": 100.0
+          },
+          {
+            "key": "onboarded",
+            "label": "Onboarded",
+            "count": 23,
+            "percentage": 100.0
+          },
+          {
+            "key": "active",
+            "label": "Active",
+            "count": 16,
+            "percentage": 69.57
+          },
+          {
+            "key": "level_2_plus",
+            "label": "Level 2+",
+            "count": 0,
+            "percentage": 0.0
+          },
+          {
+            "key": "circle_lead",
+            "label": "Circle Lead",
+            "count": 12,
+            "percentage": 52.17
+          }
+        ]
+      },
+      "circle_health": [
+        {
+          "circle_id": "217cd8ca-d6a3-4e75-9621-036c057f7ecd",
+          "circle_name": "Blender: Donut to Diorama",
+          "ig_id": "e506c2f8-8cee-4a88-8728-7d43b7365d1d",
+          "ig_name": "Blender",
+          "member_count": 2,
+          "sessions_per_month": 0,
+          "last_session_at": null,
+          "status": "inactive"
+        },
+        {
+          "circle_id": "2a2d8564-e218-4193-9338-8c0e9be402a7",
+          "circle_name": "CTF Practice Squad",
+          "ig_id": "96a37467-11ba-4ff2-8534-342e89b96f4e",
+          "ig_name": "Cyber Security",
+          "member_count": 1,
+          "sessions_per_month": 0,
+          "last_session_at": null,
+          "status": "inactive"
+        },
+        {
+          "circle_id": "38bf7bfa-9c94-4bdc-bf78-a7246106912d",
+          "circle_name": "LLM Paper Reading Club",
+          "ig_id": "9a21bbd3-860a-4743-8379-54a0f5984f27",
+          "ig_name": "Generative AI",
+          "member_count": 2,
+          "sessions_per_month": 1,
+          "last_session_at": "2026-11-17T14:00:00+00:00",
+          "status": "slow"
+        },
+        {
+          "circle_id": "40a52b79-a820-4dfa-9a12-0bb960567a55",
+          "circle_name": "Full-Stack Fridays",
+          "ig_id": "4ff0a5e5-d1ef-44dd-ac13-9a2f9e7717e3",
+          "ig_name": "Web Development",
+          "member_count": 4,
+          "sessions_per_month": 1,
+          "last_session_at": "2026-11-13T13:00:00+00:00",
+          "status": "slow"
+        },
+        {
+          "circle_id": "463e9e4a-7255-431d-95f9-5bd181a48d12",
+          "circle_name": "Figma to Production",
+          "ig_id": "22ac542c-c849-428e-a91c-77e6b4c2c1aa",
+          "ig_name": "Ui Ux",
+          "member_count": 3,
+          "sessions_per_month": 1,
+          "last_session_at": "2026-11-18T12:30:00+00:00",
+          "status": "slow"
+        },
+        {
+          "circle_id": "4cfd3477-08c7-421e-9137-fd6cbc412465",
+          "circle_name": "Flutter Builders",
+          "ig_id": "4ff0a5e5-d1ef-44dd-ac13-9a2f9e7717e3",
+          "ig_name": "Web Development",
+          "member_count": 4,
+          "sessions_per_month": 2,
+          "last_session_at": "2026-11-22T12:00:00+00:00",
+          "status": "active"
+        },
+        {
+          "circle_id": "526bb1c7-3398-43b4-9484-cb188f2aa34f",
+          "circle_name": "Prompt Engineering Lab",
+          "ig_id": "b434ea03-908f-4078-8d02-26ebc3575d36",
+          "ig_name": "AI",
+          "member_count": 3,
+          "sessions_per_month": 1,
+          "last_session_at": "2026-11-18T14:30:00+00:00",
+          "status": "slow"
+        },
+        {
+          "circle_id": "6101f52b-7c1f-424f-9fe2-3f2501523bfe",
+          "circle_name": "Kaggle Starter Circle",
+          "ig_id": "2de51ebe-b72a-40fe-a41f-2264f20ac264",
+          "ig_name": "Data Science",
+          "member_count": 2,
+          "sessions_per_month": 0,
+          "last_session_at": null,
+          "status": "inactive"
+        },
+        {
+          "circle_id": "75ad3006-1eae-47ea-9055-a42db27d369b",
+          "circle_name": "Arduino Tinkerers",
+          "ig_id": "c55ff174-cbac-4eeb-a4f1-a0b676c20903",
+          "ig_name": "Internet Of Things (IOT) And Robotics",
+          "member_count": 2,
+          "sessions_per_month": 1,
+          "last_session_at": "2026-11-20T08:30:00+00:00",
+          "status": "slow"
+        },
+        {
+          "circle_id": "aab8a28c-8f5c-4c4e-bf8d-7e99c4a56ece",
+          "circle_name": "LeetCode 75 Sprint",
+          "ig_id": "662370ae-bfa6-41c6-8962-60a3476f8143",
+          "ig_name": "Data Structures and Algorithm",
+          "member_count": 3,
+          "sessions_per_month": 1,
+          "last_session_at": "2026-11-16T15:00:00+00:00",
+          "status": "slow"
+        },
+        {
+          "circle_id": "aebb7d15-ef32-4815-bdb3-60839043cee0",
+          "circle_name": "DSA Daily Grind",
+          "ig_id": "662370ae-bfa6-41c6-8962-60a3476f8143",
+          "ig_name": "Data Structures and Algorithm",
+          "member_count": 3,
+          "sessions_per_month": 1,
+          "last_session_at": "2026-11-14T10:30:00+00:00",
+          "status": "slow"
+        },
+        {
+          "circle_id": "d314ba5e-de7a-4918-8889-941fd3f45687",
+          "circle_name": "Quantum Computing Basics",
+          "ig_id": "85f18181-a8d0-4343-9217-c674d958b235",
+          "ig_name": "Quantum Technologies",
+          "member_count": 2,
+          "sessions_per_month": 0,
+          "last_session_at": null,
+          "status": "inactive"
+        },
+        {
+          "circle_id": "d612e4c3-4c09-4721-9143-4e2a218712e8",
+          "circle_name": "Web Accessibility Study Group",
+          "ig_id": "4ff0a5e5-d1ef-44dd-ac13-9a2f9e7717e3",
+          "ig_name": "Web Development",
+          "member_count": 1,
+          "sessions_per_month": 0,
+          "last_session_at": null,
+          "status": "inactive"
+        },
+        {
+          "circle_id": "feffb39d-440f-4bfb-99c9-80314091290d",
+          "circle_name": "Product Management 101",
+          "ig_id": "d1d734b9-b374-46c4-8bff-e3a9b081715c",
+          "ig_name": "Project Management",
+          "member_count": 1,
+          "sessions_per_month": 0,
+          "last_session_at": null,
+          "status": "inactive"
+        }
+      ],
+      "recent_activity": [
+        {
+          "id": "d314ba5e-de7a-4918-8889-941fd3f45687",
+          "type": "circle_created",
+          "title": "Quantum Computing Basics created",
+          "description": "Quantum Computing Basics was created",
+          "created_at": "2026-11-12T15:20:23+00:00",
+          "actor": {
+            "id": "1ccb0b0c-13a9-4f4d-bee3-c7b2d111907f",
+            "full_name": "Fixture User",
+            "muid": "fixture-user@mulearn",
+            "profile_pic": null
+          },
+          "metadata": {
+            "circle_id": "d314ba5e-de7a-4918-8889-941fd3f45687",
+            "circle_name": "Quantum Computing Basics"
+          }
+        },
+        {
+          "id": "d612e4c3-4c09-4721-9143-4e2a218712e8",
+          "type": "circle_created",
+          "title": "Web Accessibility Study Group created",
+          "description": "Web Accessibility Study Group was created",
+          "created_at": "2026-11-12T15:20:23+00:00",
+          "actor": {
+            "id": "f6276ea2-3cd0-4087-bc09-1288968edda5",
+            "full_name": "Fixture User",
+            "muid": "fixture-user@mulearn",
+            "profile_pic": null
+          },
+          "metadata": {
+            "circle_id": "d612e4c3-4c09-4721-9143-4e2a218712e8",
+            "circle_name": "Web Accessibility Study Group"
+          }
+        },
+        {
+          "id": "6101f52b-7c1f-424f-9fe2-3f2501523bfe",
+          "type": "circle_created",
+          "title": "Kaggle Starter Circle created",
+          "description": "Kaggle Starter Circle was created",
+          "created_at": "2026-11-12T15:20:22+00:00",
+          "actor": {
+            "id": "17b8fd7d-6d18-484d-8985-6a11f337af4d",
+            "full_name": "Fixture User",
+            "muid": "fixture-user@mulearn",
+            "profile_pic": null
+          },
+          "metadata": {
+            "circle_id": "6101f52b-7c1f-424f-9fe2-3f2501523bfe",
+            "circle_name": "Kaggle Starter Circle"
+          }
+        },
+        {
+          "id": "217cd8ca-d6a3-4e75-9621-036c057f7ecd",
+          "type": "circle_created",
+          "title": "Blender: Donut to Diorama created",
+          "description": "Blender: Donut to Diorama was created",
+          "created_at": "2026-11-12T15:20:21+00:00",
+          "actor": {
+            "id": "c0d283ea-35a7-40eb-83e5-e42aa61a22ef",
+            "full_name": "Fixture User",
+            "muid": "fixture-user@mulearn",
+            "profile_pic": null
+          },
+          "metadata": {
+            "circle_id": "217cd8ca-d6a3-4e75-9621-036c057f7ecd",
+            "circle_name": "Blender: Donut to Diorama"
+          }
+        },
+        {
+          "id": "feffb39d-440f-4bfb-99c9-80314091290d",
+          "type": "circle_created",
+          "title": "Product Management 101 created",
+          "description": "Product Management 101 was created",
+          "created_at": "2026-11-12T15:20:19+00:00",
+          "actor": {
+            "id": "0115efaa-c563-4131-ac75-df7351d7a32a",
+            "full_name": "Fixture User",
+            "muid": "fixture-user@mulearn",
+            "profile_pic": null
+          },
+          "metadata": {
+            "circle_id": "feffb39d-440f-4bfb-99c9-80314091290d",
+            "circle_name": "Product Management 101"
+          }
+        },
+        {
+          "id": "2a2d8564-e218-4193-9338-8c0e9be402a7",
+          "type": "circle_created",
+          "title": "CTF Practice Squad created",
+          "description": "CTF Practice Squad was created",
+          "created_at": "2026-11-12T15:20:18+00:00",
+          "actor": {
+            "id": "23902b70-b5cf-4583-aab7-48dd33feba7e",
+            "full_name": "Fixture User",
+            "muid": "fixture-user@mulearn",
+            "profile_pic": null
+          },
+          "metadata": {
+            "circle_id": "2a2d8564-e218-4193-9338-8c0e9be402a7",
+            "circle_name": "CTF Practice Squad"
+          }
+        },
+        {
+          "id": "38bf7bfa-9c94-4bdc-bf78-a7246106912d",
+          "type": "circle_created",
+          "title": "LLM Paper Reading Club created",
+          "description": "LLM Paper Reading Club was created",
+          "created_at": "2026-11-12T15:20:17+00:00",
+          "actor": {
+            "id": "0f26f561-2170-4047-ba93-acb803845dde",
+            "full_name": "Fixture User",
+            "muid": "fixture-user@mulearn",
+            "profile_pic": null
+          },
+          "metadata": {
+            "circle_id": "38bf7bfa-9c94-4bdc-bf78-a7246106912d",
+            "circle_name": "LLM Paper Reading Club"
+          }
+        },
+        {
+          "id": "75ad3006-1eae-47ea-9055-a42db27d369b",
+          "type": "circle_created",
+          "title": "Arduino Tinkerers created",
+          "description": "Arduino Tinkerers was created",
+          "created_at": "2026-11-12T15:20:15+00:00",
+          "actor": {
+            "id": "c40cfd09-a94d-4109-ae29-7429e65b8d44",
+            "full_name": "Fixture User",
+            "muid": "fixture-user@mulearn",
+            "profile_pic": null
+          },
+          "metadata": {
+            "circle_id": "75ad3006-1eae-47ea-9055-a42db27d369b",
+            "circle_name": "Arduino Tinkerers"
+          }
+        },
+        {
+          "id": "463e9e4a-7255-431d-95f9-5bd181a48d12",
+          "type": "circle_created",
+          "title": "Figma to Production created",
+          "description": "Figma to Production was created",
+          "created_at": "2026-11-12T15:20:12+00:00",
+          "actor": {
+            "id": "7580336f-0198-4d8b-b015-ad64f2a4abb1",
+            "full_name": "Fixture User",
+            "muid": "fixture-user@mulearn",
+            "profile_pic": null
+          },
+          "metadata": {
+            "circle_id": "463e9e4a-7255-431d-95f9-5bd181a48d12",
+            "circle_name": "Figma to Production"
+          }
+        },
+        {
+          "id": "aab8a28c-8f5c-4c4e-bf8d-7e99c4a56ece",
+          "type": "circle_created",
+          "title": "LeetCode 75 Sprint created",
+          "description": "LeetCode 75 Sprint was created",
+          "created_at": "2026-11-12T15:20:10+00:00",
+          "actor": {
+            "id": "aa6ca0dc-529e-4aa5-ad50-d3361289220e",
+            "full_name": "Fixture User",
+            "muid": "fixture-user@mulearn",
+            "profile_pic": null
+          },
+          "metadata": {
+            "circle_id": "aab8a28c-8f5c-4c4e-bf8d-7e99c4a56ece",
+            "circle_name": "LeetCode 75 Sprint"
+          }
+        }
+      ]
+    }
+  }
+}

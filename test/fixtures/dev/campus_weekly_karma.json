@@ -1,0 +1,26 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/campus/weekly-karma/",
+    "account": "campuslead",
+    "status": 200,
+    "recorded_at": "2026-11-13T12:48:27.630210Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "college_name": "St. Josephs Colege of Engineering and Technology",
+      "2026-11-13": 0,
+      "2026-11-12": 0,
+      "2026-11-11": 0,
+      "2026-11-10": 0,
+      "2026-11-09": 0,
+      "2026-11-08": 0,
+      "2026-11-07": 0
+    }
+  }
+}

@@ -49,3 +49,62 @@ final class MentorUpcomingCountProvider
 
 String _$mentorUpcomingCountHash() =>
     r'f424feca4d756eabe7714481cdd0311059a62390';
+
+/// The Home campus card's line; watched only when the campus workspace is
+/// open.
+
+@ProviderFor(campusHeadline)
+const campusHeadlineProvider = CampusHeadlineProvider._();
+
+/// The Home campus card's line; watched only when the campus workspace is
+/// open.
+
+final class CampusHeadlineProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<
+            ({String code, String college, String? statLabel, num? statValue})
+          >,
+          ({String code, String college, String? statLabel, num? statValue}),
+          FutureOr<
+            ({String code, String college, String? statLabel, num? statValue})
+          >
+        >
+    with
+        $FutureModifier<
+          ({String code, String college, String? statLabel, num? statValue})
+        >,
+        $FutureProvider<
+          ({String code, String college, String? statLabel, num? statValue})
+        > {
+  /// The Home campus card's line; watched only when the campus workspace is
+  /// open.
+  const CampusHeadlineProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: noRetry,
+        name: r'campusHeadlineProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$campusHeadlineHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<
+    ({String code, String college, String? statLabel, num? statValue})
+  >
+  $createElement($ProviderPointer pointer) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<({String code, String college, String? statLabel, num? statValue})>
+  create(Ref ref) {
+    return campusHeadline(ref);
+  }
+}
+
+String _$campusHeadlineHash() => r'1ac2f3387ec729e23474bc90290a3ade1e273f31';

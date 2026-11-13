@@ -61,6 +61,12 @@ List<_Target> _targets() {
     const _Target('mentor_student_requests',
         '/api/v1/dashboard/mentor/session/student-requests/?pageIndex=1&perPage=1', account: 'mentor'),
     const _Target('mentor_ig_dropdown', '/api/v1/dashboard/mentor/tasks/ig-dropdown/', account: 'mentor'),
+    // Plan 4: campus workspace (QA campus lead; the enabler sees the same campus).
+    const _Target('campus_home_summary', '/api/v1/dashboard/campus/home-summary/', account: 'campuslead'),
+    const _Target('campus_weekly_karma', '/api/v1/dashboard/campus/weekly-karma/', account: 'campuslead'),
+    const _Target('campus_students_top',
+        '/api/v1/dashboard/campus/student-details/?sortBy=-karma&pageIndex=1&perPage=5', account: 'campuslead'),
+    const _Target('campus_home_summary_enabler', '/api/v1/dashboard/campus/home-summary/', account: 'enabler'),
     const _Target('mentor_persona_status', '/api/v1/dashboard/mentor/persona/status/', account: 'mentor'),
     const _Target('mentor_persona_current', '/api/v1/dashboard/mentor/persona/current/', account: 'mentor'),
     // Refused (a scope the QA mentor doesn't hold), so nothing changes.

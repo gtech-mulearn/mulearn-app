@@ -27,6 +27,7 @@ void main() {
         'GET /api/v1/leaderboard/students/': (_) => FakeResponse(200, loadFixture('dev/leaderboard_students')),
         'GET /api/v1/dashboard/events/featured/': (_) => FakeResponse(200, loadFixture('dev/events_featured')),
         _overview: (_) => FakeResponse(200, loadFixture('dev/mentor_overview')),
+        'GET /api/v1/dashboard/campus/home-summary/': (_) => FakeResponse(200, loadFixture('dev/campus_home_summary')),
         'GET /api/v1/notification/unread-count/': (_) => const FakeResponse(200, {
               'hasError': false,
               'statusCode': 200,
@@ -47,6 +48,7 @@ void main() {
     final router = GoRouter(initialLocation: '/s', routes: [
       GoRoute(path: '/s', builder: (_, __) => screen),
       GoRoute(path: '/mentor', builder: (_, __) => const Text('mentor hub')),
+      GoRoute(path: '/campus', builder: (_, __) => const Text('campus overview')),
     ]);
     addTearDown(router.dispose);
     tester.view.physicalSize = const Size(1080, 4000);
@@ -87,6 +89,28 @@ void main() {
 
     expect(find.text('Mentor workspace'), findsNothing);
     expect(adapter.requests.where((r) => r.uri.path.startsWith('/api/v1/dashboard/mentor/overview')), isEmpty);
+  });
+
+  testWidgets('Home shows a verified campus lead their campus with its headline', (tester) async {
+    adapter = adapterFor(userInfo: 'dev/user_info_campuslead', profile: 'dev/user_profile_campuslead');
+    await pump(tester, const HomeScreen());
+
+    expect(find.text('Campus workspace'), findsOneWidget);
+    expect(find.text('SJC · Active members 16'), findsOneWidget);
+    expect(find.text('Mentor workspace'), findsNothing);
+
+    await tester.tap(find.text('Campus workspace'));
+    for (var i = 0; i < 4; i++) {
+      await tester.pump(const Duration(milliseconds: 50));
+    }
+    expect(find.text('campus overview'), findsOneWidget);
+  });
+
+  testWidgets('Profile lists the campus workspace for an enabler', (tester) async {
+    adapter = adapterFor(userInfo: 'dev/user_info_enabler', profile: 'dev/user_profile_enabler');
+    await pump(tester, const Scaffold(body: WorkspaceLinks()));
+
+    expect(find.text('Campus workspace'), findsOneWidget);
   });
 
   testWidgets('Profile lists the mentor workspace under Workspaces', (tester) async {

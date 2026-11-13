@@ -16,6 +16,10 @@ class DashboardRemoteDataSource {
   Future<Map<String, dynamic>> fetchMentorOverview() async =>
       ApiEnvelope.unwrapObject(await _dio.get<dynamic>(MentorPaths.overview));
 
+  /// `GET campus/home-summary/` — Home reads the campus and its first stat.
+  Future<Map<String, dynamic>> fetchCampusSummary() async =>
+      ApiEnvelope.unwrapObject(await _dio.get<dynamic>(CampusPaths.homeSummary));
+
   Future<Map<String, dynamic>> fetchLearnerSummary() async =>
       ApiEnvelope.unwrapObject(await _dio.get<dynamic>(ApiPaths.learnerSummary));
 

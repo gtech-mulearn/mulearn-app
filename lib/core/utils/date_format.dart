@@ -39,6 +39,19 @@ String formatWhen({required DateTime starts, required DateTime ends, required Da
   return '${formatDayHeading(starts, now)} · ${formatTime(starts)}';
 }
 
+/// How long ago, as people say it: "Just now", "5 min ago", "3h ago"
+/// (same day), "Yesterday", else "Mon 2 Nov". Both local.
+String formatAgo(DateTime t, DateTime now) {
+  final d = now.difference(t);
+  if (d.inMinutes < 1) return 'Just now';
+  if (d.inMinutes < 60) return '${d.inMinutes} min ago';
+  return switch (_daysBetween(t, now)) {
+    0 => '${d.inHours}h ago',
+    1 => 'Yesterday',
+    _ => formatDay(t),
+  };
+}
+
 /// "Fri 20 Nov · 6:00 PM – 7:30 PM"; the end's day is repeated only when it
 /// differs.
 String formatRange(DateTime starts, DateTime ends) => _daysBetween(starts, ends) == 0

@@ -20,6 +20,7 @@ class WorkspaceLinks extends ConsumerWidget {
     if (access == null) return const SizedBox.shrink();
     final links = [
       if (access.mentor == WorkspaceState.open) (LucideIcons.graduationCap, 'Mentor workspace', RoutePaths.mentor),
+      if (access.campus == WorkspaceState.open) (LucideIcons.school, 'Campus workspace', RoutePaths.campus),
     ];
     if (links.isEmpty) return const SizedBox.shrink();
     return Padding(

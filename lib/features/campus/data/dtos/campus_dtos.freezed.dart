@@ -1,0 +1,310 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
+// ignore_for_file: type=lint
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
+
+part of 'campus_dtos.dart';
+
+// **************************************************************************
+// FreezedGenerator
+// **************************************************************************
+
+// dart format off
+T _$identity<T>(T value) => value;
+
+/// @nodoc
+mixin _$CampusStudentDto {
+
+ String get fullName; String get muid; int get karma; int? get rank; String get level; String? get joinDate; String? get lastKarmaGained; String? get graduationYear; String? get department; bool get isAlumni; int get igCount; int get lcCount;
+/// Create a copy of CampusStudentDto
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$CampusStudentDtoCopyWith<CampusStudentDto> get copyWith => _$CampusStudentDtoCopyWithImpl<CampusStudentDto>(this as CampusStudentDto, _$identity);
+
+  /// Serializes this CampusStudentDto to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CampusStudentDto&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.rank, rank) || other.rank == rank)&&(identical(other.level, level) || other.level == level)&&(identical(other.joinDate, joinDate) || other.joinDate == joinDate)&&(identical(other.lastKarmaGained, lastKarmaGained) || other.lastKarmaGained == lastKarmaGained)&&(identical(other.graduationYear, graduationYear) || other.graduationYear == graduationYear)&&(identical(other.department, department) || other.department == department)&&(identical(other.isAlumni, isAlumni) || other.isAlumni == isAlumni)&&(identical(other.igCount, igCount) || other.igCount == igCount)&&(identical(other.lcCount, lcCount) || other.lcCount == lcCount));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,fullName,muid,karma,rank,level,joinDate,lastKarmaGained,graduationYear,department,isAlumni,igCount,lcCount);
+
+@override
+String toString() {
+  return 'CampusStudentDto(fullName: $fullName, muid: $muid, karma: $karma, rank: $rank, level: $level, joinDate: $joinDate, lastKarmaGained: $lastKarmaGained, graduationYear: $graduationYear, department: $department, isAlumni: $isAlumni, igCount: $igCount, lcCount: $lcCount)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $CampusStudentDtoCopyWith<$Res>  {
+  factory $CampusStudentDtoCopyWith(CampusStudentDto value, $Res Function(CampusStudentDto) _then) = _$CampusStudentDtoCopyWithImpl;
+@useResult
+$Res call({
+ String fullName, String muid, int karma, int? rank, String level, String? joinDate, String? lastKarmaGained, String? graduationYear, String? department, bool isAlumni, int igCount, int lcCount
+});
+
+
+
+
+}
+/// @nodoc
+class _$CampusStudentDtoCopyWithImpl<$Res>
+    implements $CampusStudentDtoCopyWith<$Res> {
+  _$CampusStudentDtoCopyWithImpl(this._self, this._then);
+
+  final CampusStudentDto _self;
+  final $Res Function(CampusStudentDto) _then;
+
+/// Create a copy of CampusStudentDto
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? fullName = null,Object? muid = null,Object? karma = null,Object? rank = freezed,Object? level = null,Object? joinDate = freezed,Object? lastKarmaGained = freezed,Object? graduationYear = freezed,Object? department = freezed,Object? isAlumni = null,Object? igCount = null,Object? lcCount = null,}) {
+  return _then(_self.copyWith(
+fullName: null == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
+as String,muid: null == muid ? _self.muid : muid // ignore: cast_nullable_to_non_nullable
+as String,karma: null == karma ? _self.karma : karma // ignore: cast_nullable_to_non_nullable
+as int,rank: freezed == rank ? _self.rank : rank // ignore: cast_nullable_to_non_nullable
+as int?,level: null == level ? _self.level : level // ignore: cast_nullable_to_non_nullable
+as String,joinDate: freezed == joinDate ? _self.joinDate : joinDate // ignore: cast_nullable_to_non_nullable
+as String?,lastKarmaGained: freezed == lastKarmaGained ? _self.lastKarmaGained : lastKarmaGained // ignore: cast_nullable_to_non_nullable
+as String?,graduationYear: freezed == graduationYear ? _self.graduationYear : graduationYear // ignore: cast_nullable_to_non_nullable
+as String?,department: freezed == department ? _self.department : department // ignore: cast_nullable_to_non_nullable
+as String?,isAlumni: null == isAlumni ? _self.isAlumni : isAlumni // ignore: cast_nullable_to_non_nullable
+as bool,igCount: null == igCount ? _self.igCount : igCount // ignore: cast_nullable_to_non_nullable
+as int,lcCount: null == lcCount ? _self.lcCount : lcCount // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [CampusStudentDto].
+extension CampusStudentDtoPatterns on CampusStudentDto {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _CampusStudentDto value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _CampusStudentDto() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _CampusStudentDto value)  $default,){
+final _that = this;
+switch (_that) {
+case _CampusStudentDto():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _CampusStudentDto value)?  $default,){
+final _that = this;
+switch (_that) {
+case _CampusStudentDto() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String fullName,  String muid,  int karma,  int? rank,  String level,  String? joinDate,  String? lastKarmaGained,  String? graduationYear,  String? department,  bool isAlumni,  int igCount,  int lcCount)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _CampusStudentDto() when $default != null:
+return $default(_that.fullName,_that.muid,_that.karma,_that.rank,_that.level,_that.joinDate,_that.lastKarmaGained,_that.graduationYear,_that.department,_that.isAlumni,_that.igCount,_that.lcCount);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String fullName,  String muid,  int karma,  int? rank,  String level,  String? joinDate,  String? lastKarmaGained,  String? graduationYear,  String? department,  bool isAlumni,  int igCount,  int lcCount)  $default,) {final _that = this;
+switch (_that) {
+case _CampusStudentDto():
+return $default(_that.fullName,_that.muid,_that.karma,_that.rank,_that.level,_that.joinDate,_that.lastKarmaGained,_that.graduationYear,_that.department,_that.isAlumni,_that.igCount,_that.lcCount);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String fullName,  String muid,  int karma,  int? rank,  String level,  String? joinDate,  String? lastKarmaGained,  String? graduationYear,  String? department,  bool isAlumni,  int igCount,  int lcCount)?  $default,) {final _that = this;
+switch (_that) {
+case _CampusStudentDto() when $default != null:
+return $default(_that.fullName,_that.muid,_that.karma,_that.rank,_that.level,_that.joinDate,_that.lastKarmaGained,_that.graduationYear,_that.department,_that.isAlumni,_that.igCount,_that.lcCount);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _CampusStudentDto extends CampusStudentDto {
+  const _CampusStudentDto({this.fullName = '', this.muid = '', this.karma = 0, this.rank, this.level = '', this.joinDate, this.lastKarmaGained, this.graduationYear, this.department, this.isAlumni = false, this.igCount = 0, this.lcCount = 0}): super._();
+  factory _CampusStudentDto.fromJson(Map<String, dynamic> json) => _$CampusStudentDtoFromJson(json);
+
+@override@JsonKey() final  String fullName;
+@override@JsonKey() final  String muid;
+@override@JsonKey() final  int karma;
+@override final  int? rank;
+@override@JsonKey() final  String level;
+@override final  String? joinDate;
+@override final  String? lastKarmaGained;
+@override final  String? graduationYear;
+@override final  String? department;
+@override@JsonKey() final  bool isAlumni;
+@override@JsonKey() final  int igCount;
+@override@JsonKey() final  int lcCount;
+
+/// Create a copy of CampusStudentDto
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$CampusStudentDtoCopyWith<_CampusStudentDto> get copyWith => __$CampusStudentDtoCopyWithImpl<_CampusStudentDto>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$CampusStudentDtoToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CampusStudentDto&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.rank, rank) || other.rank == rank)&&(identical(other.level, level) || other.level == level)&&(identical(other.joinDate, joinDate) || other.joinDate == joinDate)&&(identical(other.lastKarmaGained, lastKarmaGained) || other.lastKarmaGained == lastKarmaGained)&&(identical(other.graduationYear, graduationYear) || other.graduationYear == graduationYear)&&(identical(other.department, department) || other.department == department)&&(identical(other.isAlumni, isAlumni) || other.isAlumni == isAlumni)&&(identical(other.igCount, igCount) || other.igCount == igCount)&&(identical(other.lcCount, lcCount) || other.lcCount == lcCount));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,fullName,muid,karma,rank,level,joinDate,lastKarmaGained,graduationYear,department,isAlumni,igCount,lcCount);
+
+@override
+String toString() {
+  return 'CampusStudentDto(fullName: $fullName, muid: $muid, karma: $karma, rank: $rank, level: $level, joinDate: $joinDate, lastKarmaGained: $lastKarmaGained, graduationYear: $graduationYear, department: $department, isAlumni: $isAlumni, igCount: $igCount, lcCount: $lcCount)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$CampusStudentDtoCopyWith<$Res> implements $CampusStudentDtoCopyWith<$Res> {
+  factory _$CampusStudentDtoCopyWith(_CampusStudentDto value, $Res Function(_CampusStudentDto) _then) = __$CampusStudentDtoCopyWithImpl;
+@override @useResult
+$Res call({
+ String fullName, String muid, int karma, int? rank, String level, String? joinDate, String? lastKarmaGained, String? graduationYear, String? department, bool isAlumni, int igCount, int lcCount
+});
+
+
+
+
+}
+/// @nodoc
+class __$CampusStudentDtoCopyWithImpl<$Res>
+    implements _$CampusStudentDtoCopyWith<$Res> {
+  __$CampusStudentDtoCopyWithImpl(this._self, this._then);
+
+  final _CampusStudentDto _self;
+  final $Res Function(_CampusStudentDto) _then;
+
+/// Create a copy of CampusStudentDto
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? fullName = null,Object? muid = null,Object? karma = null,Object? rank = freezed,Object? level = null,Object? joinDate = freezed,Object? lastKarmaGained = freezed,Object? graduationYear = freezed,Object? department = freezed,Object? isAlumni = null,Object? igCount = null,Object? lcCount = null,}) {
+  return _then(_CampusStudentDto(
+fullName: null == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
+as String,muid: null == muid ? _self.muid : muid // ignore: cast_nullable_to_non_nullable
+as String,karma: null == karma ? _self.karma : karma // ignore: cast_nullable_to_non_nullable
+as int,rank: freezed == rank ? _self.rank : rank // ignore: cast_nullable_to_non_nullable
+as int?,level: null == level ? _self.level : level // ignore: cast_nullable_to_non_nullable
+as String,joinDate: freezed == joinDate ? _self.joinDate : joinDate // ignore: cast_nullable_to_non_nullable
+as String?,lastKarmaGained: freezed == lastKarmaGained ? _self.lastKarmaGained : lastKarmaGained // ignore: cast_nullable_to_non_nullable
+as String?,graduationYear: freezed == graduationYear ? _self.graduationYear : graduationYear // ignore: cast_nullable_to_non_nullable
+as String?,department: freezed == department ? _self.department : department // ignore: cast_nullable_to_non_nullable
+as String?,isAlumni: null == isAlumni ? _self.isAlumni : isAlumni // ignore: cast_nullable_to_non_nullable
+as bool,igCount: null == igCount ? _self.igCount : igCount // ignore: cast_nullable_to_non_nullable
+as int,lcCount: null == lcCount ? _self.lcCount : lcCount // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+
+}
+
+// dart format on

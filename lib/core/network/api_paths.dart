@@ -466,6 +466,54 @@ abstract final class MentorPaths {
   static const String igDropdown = '$_base/tasks/ig-dropdown/';
 }
 
+// --- Campus workspace — `api/dashboard/campus/urls.py` (Plan 4) ---
+
+/// Campus endpoints: `campus_staff_required` (Campus Lead, Lead Enabler,
+/// Enabler). `student-list/` and the `igs|learning-circles/<id>/members/`
+/// endpoints return 500 on dev and are not used.
+abstract final class CampusPaths {
+  const CampusPaths._();
+
+  static const String _base = '/api/v1/dashboard/campus';
+
+  /// `{campus, stat_cards, member_funnel, circle_health, recent_activity}`.
+  static const String homeSummary = '$_base/home-summary/';
+
+  /// `{college_name, "YYYY-MM-DD": karma, …}` for the last 7 days.
+  static const String weeklyKarma = '$_base/weekly-karma/';
+
+  /// `GET ?search&sortBy&is_alumni&ig&pageIndex&perPage` — what the dashboard uses.
+  static const String students = '$_base/student-details/';
+  static String studentActivity(String muid) => '$_base/students/${Uri.encodeComponent(muid)}/activity/';
+  static const String circles = '$_base/learning-circles/';
+  static const String igs = '$_base/igs/';
+
+  /// `GET ?status=pending_campus_approval`.
+  static const String events = '$_base/events/';
+
+  /// Campus Lead (and Admin) only.
+  static const String orgLinks = '/api/v1/dashboard/user/unverified-org-links/';
+  static String orgLink(String id) => '/api/v1/dashboard/user/unverified-org-links/$id/';
+  static String eventApprove(String id) => '/api/v1/dashboard/events/campus/$id/approve/';
+  static String eventReject(String id) => '/api/v1/dashboard/events/campus/$id/reject/';
+  static const String myInvites = '/api/v1/dashboard/events/my-invites/';
+  static String inviteAccept(String eventId, String id) =>
+      '/api/v1/dashboard/events/manage/$eventId/collaborators/$id/accept/';
+  static String inviteReject(String eventId, String id) =>
+      '/api/v1/dashboard/events/manage/$eventId/collaborators/$id/reject/';
+}
+
+/// Enabler endpoints (`api/dashboard/enabler/urls.py`): Enabler / Lead Enabler.
+abstract final class EnablerPaths {
+  const EnablerPaths._();
+
+  static const String _base = '/api/v1/dashboard/enabler';
+  static const String homeSummary = '$_base/home-summary/';
+  static const String campuses = '$_base/campuses/';
+  static String campusReview(String id) => '$_base/campuses/$id/review/';
+  static String campusNotes(String id) => '$_base/campuses/$id/notes/';
+}
+
 /// Per-request option flags read by the interceptors.
 abstract final class RequestFlags {
   const RequestFlags._();

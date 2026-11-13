@@ -18,11 +18,14 @@ class WorkspaceCards extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final access = ref.watch(workspaceAccessProvider).value;
-    if (access == null || access.mentor != WorkspaceState.open) return const SizedBox.shrink();
-    return const Column(
+    if (access == null) return const SizedBox.shrink();
+    final mentor = access.mentor == WorkspaceState.open;
+    final campus = access.campus == WorkspaceState.open;
+    if (!mentor && !campus) return const SizedBox.shrink();
+    return Column(
       children: [
-        SizedBox(height: MuSpace.l),
-        _MentorCard(),
+        if (mentor) ...[const SizedBox(height: MuSpace.l), const _MentorCard()],
+        if (campus) ...[const SizedBox(height: MuSpace.l), const _CampusCard()],
       ],
     );
   }
@@ -44,6 +47,27 @@ class _MentorCard extends ConsumerWidget {
       title: 'Mentor workspace',
       subtitle: subtitle,
       onTap: () => context.push(RoutePaths.mentor),
+    );
+  }
+}
+
+class _CampusCard extends ConsumerWidget {
+  const _CampusCard();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final h = ref.watch(campusHeadlineProvider).value;
+    final subtitle = h == null
+        ? 'Students, circles and approvals'
+        : [
+            if (h.code.isNotEmpty) h.code else h.college,
+            if (h.statLabel != null && h.statValue != null) '${h.statLabel} ${h.statValue}',
+          ].join(' · ');
+    return WorkspaceCard(
+      icon: LucideIcons.school,
+      title: 'Campus workspace',
+      subtitle: subtitle,
+      onTap: () => context.push(RoutePaths.campus),
     );
   }
 }

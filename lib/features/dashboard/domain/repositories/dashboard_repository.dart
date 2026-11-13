@@ -13,6 +13,10 @@ abstract interface class DashboardRepository {
   /// Home workspace card (the mentor feature has the full overview).
   Future<int> getMentorUpcomingCount();
 
+  /// The campus code and its first headline number, for the Home campus
+  /// card (the campus feature has the full overview).
+  Future<({String code, String college, String? statLabel, num? statValue})> getCampusHeadline();
+
   /// The learner's week: weekly karma, streak, next circle meeting.
   Future<LearnerSummary> getLearnerSummary();
 
