@@ -1,0 +1,19 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "PATCH /api/v1/dashboard/user/unverified-org-links/00000000-0000-0000-0000-000000000000/",
+    "account": "campuslead",
+    "status": 400,
+    "recorded_at": "2026-11-13T13:22:48.754941Z"
+  },
+  "body": {
+    "hasError": true,
+    "statusCode": 400,
+    "message": {
+      "general": [
+        "Organization link not found."
+      ]
+    },
+    "response": {}
+  }
+}

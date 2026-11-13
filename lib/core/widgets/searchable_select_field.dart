@@ -177,6 +177,7 @@ class _SearchableSelectSheetState extends State<_SearchableSelectSheet> {
                       ),
                     ),
                     IconButton(
+                      tooltip: 'Close',
                       icon: const Icon(Icons.close),
                       onPressed: () => Navigator.of(context).pop(),
                     ),

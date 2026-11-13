@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mulearn_app/core/session/session_providers.dart';
 import 'package:mulearn_app/core/theme/mu_radius.dart';
 import 'package:mulearn_app/core/theme/mu_shadow.dart';
 import 'package:mulearn_app/core/theme/mu_space.dart';
@@ -8,8 +9,12 @@ import 'package:mulearn_app/core/theme/mulearn_colors.dart';
 import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/core/widgets/mu_qr_card.dart';
+import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/core/widgets/mu_toast.dart';
+import 'package:mulearn_app/core/widgets/role_pending_banner.dart';
+import 'package:mulearn_app/core/widgets/workspace_links.dart';
 import 'package:mulearn_app/features/profile/domain/entities/user_profile.dart';
+import 'package:mulearn_app/features/profile/presentation/providers/editable_profile_controller.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/profile_controller.dart';
 import 'package:mulearn_app/features/profile/presentation/widgets/achievements_tab.dart';
 import 'package:mulearn_app/features/profile/presentation/widgets/badges_tab.dart';
@@ -37,15 +42,21 @@ class ProfileScreen extends ConsumerWidget {
       body: SafeArea(
         bottom: false,
         child: profileState.when(
+          // Keep the body (and its tab and scroll) while the shared profile
+          // reloads after a change (Plan 2 minor 7) or a refresh fails.
+          skipLoadingOnReload: true,
+          skipError: true,
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (error, _) => ErrorRetryView(
             error: error,
             onRetry: () =>
                 ref.read(profileControllerProvider.notifier).refresh(),
           ),
-          data: (profile) => RefreshIndicator(
-            onRefresh: () =>
-                ref.read(profileControllerProvider.notifier).refresh(),
+          data: (profile) => MuRefresh(
+            onRefresh: () {
+              invalidateSessionState(ref.invalidate);
+              return ref.read(profileControllerProvider.notifier).refresh();
+            },
             child: _ProfileBody(profile: profile),
           ),
         ),
@@ -103,6 +114,10 @@ class _ProfileBodyState extends State<_ProfileBody>
                     builder: (_) => ShareProfileDialog(profile: profile),
                   ),
                 ),
+                // A role awaiting verification (ROLE-02).
+                const PendingRoleBanners(),
+                // Open role workspaces (spec §8.2 item 5).
+                const WorkspaceLinks(),
                 const SizedBox(height: MuSpace.l),
                 ProfileStatsRow(profile: profile),
                 const SizedBox(height: MuSpace.l),
@@ -141,10 +156,15 @@ class _ProfileBodyState extends State<_ProfileBody>
           BasicDetailsTab(profile: profile),
           const KarmaHistoryTab(),
           const MuVoyageTab(),
-          AchievementsTab(
-            muid: profile.muid,
-            userName: profile.fullName,
-            userEmail: profile.email,
+          Consumer(
+            builder: (context, ref, _) {
+              final email = ref.watch(editableProfileControllerProvider).value?.email;
+              return AchievementsTab(
+                muid: profile.muid,
+                userName: profile.fullName,
+                userEmail: (email?.isEmpty ?? true) ? null : email,
+              );
+            },
           ),
           BadgesTab(muid: profile.muid),
         ],

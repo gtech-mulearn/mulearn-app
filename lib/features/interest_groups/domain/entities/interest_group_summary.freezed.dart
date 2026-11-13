@@ -14,7 +14,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$InterestGroupSummary {
 
- String get id; String get name; String get category; int get memberCount; List<IgPersonRef> get leads; List<IgPersonRef> get mentors; String? get about; String? get resource; String? get icon; String? get code; List<String> get prerequisites; List<String> get careerOpportunities;
+ String get id; String get name; String get category; int get memberCount; List<IgPersonRef> get leads; List<IgPersonRef> get mentors; String? get about; String? get resource; String? get icon; String? get code; List<String> get prerequisites; List<String> get careerOpportunities;/// API-13: the current image fields (`icon` is the legacy one).
+ String? get iconImage; String? get coverImage; String? get officeHours; List<IgImpactProject> get impactProjects;
 /// Create a copy of InterestGroupSummary
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +26,16 @@ $InterestGroupSummaryCopyWith<InterestGroupSummary> get copyWith => _$InterestGr
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is InterestGroupSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.category, category) || other.category == category)&&(identical(other.memberCount, memberCount) || other.memberCount == memberCount)&&const DeepCollectionEquality().equals(other.leads, leads)&&const DeepCollectionEquality().equals(other.mentors, mentors)&&(identical(other.about, about) || other.about == about)&&(identical(other.resource, resource) || other.resource == resource)&&(identical(other.icon, icon) || other.icon == icon)&&(identical(other.code, code) || other.code == code)&&const DeepCollectionEquality().equals(other.prerequisites, prerequisites)&&const DeepCollectionEquality().equals(other.careerOpportunities, careerOpportunities));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is InterestGroupSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.category, category) || other.category == category)&&(identical(other.memberCount, memberCount) || other.memberCount == memberCount)&&const DeepCollectionEquality().equals(other.leads, leads)&&const DeepCollectionEquality().equals(other.mentors, mentors)&&(identical(other.about, about) || other.about == about)&&(identical(other.resource, resource) || other.resource == resource)&&(identical(other.icon, icon) || other.icon == icon)&&(identical(other.code, code) || other.code == code)&&const DeepCollectionEquality().equals(other.prerequisites, prerequisites)&&const DeepCollectionEquality().equals(other.careerOpportunities, careerOpportunities)&&(identical(other.iconImage, iconImage) || other.iconImage == iconImage)&&(identical(other.coverImage, coverImage) || other.coverImage == coverImage)&&(identical(other.officeHours, officeHours) || other.officeHours == officeHours)&&const DeepCollectionEquality().equals(other.impactProjects, impactProjects));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,category,memberCount,const DeepCollectionEquality().hash(leads),const DeepCollectionEquality().hash(mentors),about,resource,icon,code,const DeepCollectionEquality().hash(prerequisites),const DeepCollectionEquality().hash(careerOpportunities));
+int get hashCode => Object.hash(runtimeType,id,name,category,memberCount,const DeepCollectionEquality().hash(leads),const DeepCollectionEquality().hash(mentors),about,resource,icon,code,const DeepCollectionEquality().hash(prerequisites),const DeepCollectionEquality().hash(careerOpportunities),iconImage,coverImage,officeHours,const DeepCollectionEquality().hash(impactProjects));
 
 @override
 String toString() {
-  return 'InterestGroupSummary(id: $id, name: $name, category: $category, memberCount: $memberCount, leads: $leads, mentors: $mentors, about: $about, resource: $resource, icon: $icon, code: $code, prerequisites: $prerequisites, careerOpportunities: $careerOpportunities)';
+  return 'InterestGroupSummary(id: $id, name: $name, category: $category, memberCount: $memberCount, leads: $leads, mentors: $mentors, about: $about, resource: $resource, icon: $icon, code: $code, prerequisites: $prerequisites, careerOpportunities: $careerOpportunities, iconImage: $iconImage, coverImage: $coverImage, officeHours: $officeHours, impactProjects: $impactProjects)';
 }
 
 
@@ -45,7 +46,7 @@ abstract mixin class $InterestGroupSummaryCopyWith<$Res>  {
   factory $InterestGroupSummaryCopyWith(InterestGroupSummary value, $Res Function(InterestGroupSummary) _then) = _$InterestGroupSummaryCopyWithImpl;
 @useResult
 $Res call({
- String id, String name, String category, int memberCount, List<IgPersonRef> leads, List<IgPersonRef> mentors, String? about, String? resource, String? icon, String? code, List<String> prerequisites, List<String> careerOpportunities
+ String id, String name, String category, int memberCount, List<IgPersonRef> leads, List<IgPersonRef> mentors, String? about, String? resource, String? icon, String? code, List<String> prerequisites, List<String> careerOpportunities, String? iconImage, String? coverImage, String? officeHours, List<IgImpactProject> impactProjects
 });
 
 
@@ -62,7 +63,7 @@ class _$InterestGroupSummaryCopyWithImpl<$Res>
 
 /// Create a copy of InterestGroupSummary
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? category = null,Object? memberCount = null,Object? leads = null,Object? mentors = null,Object? about = freezed,Object? resource = freezed,Object? icon = freezed,Object? code = freezed,Object? prerequisites = null,Object? careerOpportunities = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? category = null,Object? memberCount = null,Object? leads = null,Object? mentors = null,Object? about = freezed,Object? resource = freezed,Object? icon = freezed,Object? code = freezed,Object? prerequisites = null,Object? careerOpportunities = null,Object? iconImage = freezed,Object? coverImage = freezed,Object? officeHours = freezed,Object? impactProjects = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -76,7 +77,11 @@ as String?,icon: freezed == icon ? _self.icon : icon // ignore: cast_nullable_to
 as String?,code: freezed == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String?,prerequisites: null == prerequisites ? _self.prerequisites : prerequisites // ignore: cast_nullable_to_non_nullable
 as List<String>,careerOpportunities: null == careerOpportunities ? _self.careerOpportunities : careerOpportunities // ignore: cast_nullable_to_non_nullable
-as List<String>,
+as List<String>,iconImage: freezed == iconImage ? _self.iconImage : iconImage // ignore: cast_nullable_to_non_nullable
+as String?,coverImage: freezed == coverImage ? _self.coverImage : coverImage // ignore: cast_nullable_to_non_nullable
+as String?,officeHours: freezed == officeHours ? _self.officeHours : officeHours // ignore: cast_nullable_to_non_nullable
+as String?,impactProjects: null == impactProjects ? _self.impactProjects : impactProjects // ignore: cast_nullable_to_non_nullable
+as List<IgImpactProject>,
   ));
 }
 
@@ -161,10 +166,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  String category,  int memberCount,  List<IgPersonRef> leads,  List<IgPersonRef> mentors,  String? about,  String? resource,  String? icon,  String? code,  List<String> prerequisites,  List<String> careerOpportunities)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  String category,  int memberCount,  List<IgPersonRef> leads,  List<IgPersonRef> mentors,  String? about,  String? resource,  String? icon,  String? code,  List<String> prerequisites,  List<String> careerOpportunities,  String? iconImage,  String? coverImage,  String? officeHours,  List<IgImpactProject> impactProjects)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _InterestGroupSummary() when $default != null:
-return $default(_that.id,_that.name,_that.category,_that.memberCount,_that.leads,_that.mentors,_that.about,_that.resource,_that.icon,_that.code,_that.prerequisites,_that.careerOpportunities);case _:
+return $default(_that.id,_that.name,_that.category,_that.memberCount,_that.leads,_that.mentors,_that.about,_that.resource,_that.icon,_that.code,_that.prerequisites,_that.careerOpportunities,_that.iconImage,_that.coverImage,_that.officeHours,_that.impactProjects);case _:
   return orElse();
 
 }
@@ -182,10 +187,10 @@ return $default(_that.id,_that.name,_that.category,_that.memberCount,_that.leads
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  String category,  int memberCount,  List<IgPersonRef> leads,  List<IgPersonRef> mentors,  String? about,  String? resource,  String? icon,  String? code,  List<String> prerequisites,  List<String> careerOpportunities)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  String category,  int memberCount,  List<IgPersonRef> leads,  List<IgPersonRef> mentors,  String? about,  String? resource,  String? icon,  String? code,  List<String> prerequisites,  List<String> careerOpportunities,  String? iconImage,  String? coverImage,  String? officeHours,  List<IgImpactProject> impactProjects)  $default,) {final _that = this;
 switch (_that) {
 case _InterestGroupSummary():
-return $default(_that.id,_that.name,_that.category,_that.memberCount,_that.leads,_that.mentors,_that.about,_that.resource,_that.icon,_that.code,_that.prerequisites,_that.careerOpportunities);case _:
+return $default(_that.id,_that.name,_that.category,_that.memberCount,_that.leads,_that.mentors,_that.about,_that.resource,_that.icon,_that.code,_that.prerequisites,_that.careerOpportunities,_that.iconImage,_that.coverImage,_that.officeHours,_that.impactProjects);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -202,10 +207,10 @@ return $default(_that.id,_that.name,_that.category,_that.memberCount,_that.leads
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  String category,  int memberCount,  List<IgPersonRef> leads,  List<IgPersonRef> mentors,  String? about,  String? resource,  String? icon,  String? code,  List<String> prerequisites,  List<String> careerOpportunities)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  String category,  int memberCount,  List<IgPersonRef> leads,  List<IgPersonRef> mentors,  String? about,  String? resource,  String? icon,  String? code,  List<String> prerequisites,  List<String> careerOpportunities,  String? iconImage,  String? coverImage,  String? officeHours,  List<IgImpactProject> impactProjects)?  $default,) {final _that = this;
 switch (_that) {
 case _InterestGroupSummary() when $default != null:
-return $default(_that.id,_that.name,_that.category,_that.memberCount,_that.leads,_that.mentors,_that.about,_that.resource,_that.icon,_that.code,_that.prerequisites,_that.careerOpportunities);case _:
+return $default(_that.id,_that.name,_that.category,_that.memberCount,_that.leads,_that.mentors,_that.about,_that.resource,_that.icon,_that.code,_that.prerequisites,_that.careerOpportunities,_that.iconImage,_that.coverImage,_that.officeHours,_that.impactProjects);case _:
   return null;
 
 }
@@ -217,7 +222,7 @@ return $default(_that.id,_that.name,_that.category,_that.memberCount,_that.leads
 
 
 class _InterestGroupSummary implements InterestGroupSummary {
-  const _InterestGroupSummary({required this.id, required this.name, required this.category, required this.memberCount, required final  List<IgPersonRef> leads, required final  List<IgPersonRef> mentors, this.about, this.resource, this.icon, this.code, final  List<String> prerequisites = const [], final  List<String> careerOpportunities = const []}): _leads = leads,_mentors = mentors,_prerequisites = prerequisites,_careerOpportunities = careerOpportunities;
+  const _InterestGroupSummary({required this.id, required this.name, required this.category, required this.memberCount, required final  List<IgPersonRef> leads, required final  List<IgPersonRef> mentors, this.about, this.resource, this.icon, this.code, final  List<String> prerequisites = const [], final  List<String> careerOpportunities = const [], this.iconImage, this.coverImage, this.officeHours, final  List<IgImpactProject> impactProjects = const []}): _leads = leads,_mentors = mentors,_prerequisites = prerequisites,_careerOpportunities = careerOpportunities,_impactProjects = impactProjects;
   
 
 @override final  String id;
@@ -256,6 +261,17 @@ class _InterestGroupSummary implements InterestGroupSummary {
   return EqualUnmodifiableListView(_careerOpportunities);
 }
 
+/// API-13: the current image fields (`icon` is the legacy one).
+@override final  String? iconImage;
+@override final  String? coverImage;
+@override final  String? officeHours;
+ final  List<IgImpactProject> _impactProjects;
+@override@JsonKey() List<IgImpactProject> get impactProjects {
+  if (_impactProjects is EqualUnmodifiableListView) return _impactProjects;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_impactProjects);
+}
+
 
 /// Create a copy of InterestGroupSummary
 /// with the given fields replaced by the non-null parameter values.
@@ -267,16 +283,16 @@ _$InterestGroupSummaryCopyWith<_InterestGroupSummary> get copyWith => __$Interes
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _InterestGroupSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.category, category) || other.category == category)&&(identical(other.memberCount, memberCount) || other.memberCount == memberCount)&&const DeepCollectionEquality().equals(other._leads, _leads)&&const DeepCollectionEquality().equals(other._mentors, _mentors)&&(identical(other.about, about) || other.about == about)&&(identical(other.resource, resource) || other.resource == resource)&&(identical(other.icon, icon) || other.icon == icon)&&(identical(other.code, code) || other.code == code)&&const DeepCollectionEquality().equals(other._prerequisites, _prerequisites)&&const DeepCollectionEquality().equals(other._careerOpportunities, _careerOpportunities));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _InterestGroupSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.category, category) || other.category == category)&&(identical(other.memberCount, memberCount) || other.memberCount == memberCount)&&const DeepCollectionEquality().equals(other._leads, _leads)&&const DeepCollectionEquality().equals(other._mentors, _mentors)&&(identical(other.about, about) || other.about == about)&&(identical(other.resource, resource) || other.resource == resource)&&(identical(other.icon, icon) || other.icon == icon)&&(identical(other.code, code) || other.code == code)&&const DeepCollectionEquality().equals(other._prerequisites, _prerequisites)&&const DeepCollectionEquality().equals(other._careerOpportunities, _careerOpportunities)&&(identical(other.iconImage, iconImage) || other.iconImage == iconImage)&&(identical(other.coverImage, coverImage) || other.coverImage == coverImage)&&(identical(other.officeHours, officeHours) || other.officeHours == officeHours)&&const DeepCollectionEquality().equals(other._impactProjects, _impactProjects));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,category,memberCount,const DeepCollectionEquality().hash(_leads),const DeepCollectionEquality().hash(_mentors),about,resource,icon,code,const DeepCollectionEquality().hash(_prerequisites),const DeepCollectionEquality().hash(_careerOpportunities));
+int get hashCode => Object.hash(runtimeType,id,name,category,memberCount,const DeepCollectionEquality().hash(_leads),const DeepCollectionEquality().hash(_mentors),about,resource,icon,code,const DeepCollectionEquality().hash(_prerequisites),const DeepCollectionEquality().hash(_careerOpportunities),iconImage,coverImage,officeHours,const DeepCollectionEquality().hash(_impactProjects));
 
 @override
 String toString() {
-  return 'InterestGroupSummary(id: $id, name: $name, category: $category, memberCount: $memberCount, leads: $leads, mentors: $mentors, about: $about, resource: $resource, icon: $icon, code: $code, prerequisites: $prerequisites, careerOpportunities: $careerOpportunities)';
+  return 'InterestGroupSummary(id: $id, name: $name, category: $category, memberCount: $memberCount, leads: $leads, mentors: $mentors, about: $about, resource: $resource, icon: $icon, code: $code, prerequisites: $prerequisites, careerOpportunities: $careerOpportunities, iconImage: $iconImage, coverImage: $coverImage, officeHours: $officeHours, impactProjects: $impactProjects)';
 }
 
 
@@ -287,7 +303,7 @@ abstract mixin class _$InterestGroupSummaryCopyWith<$Res> implements $InterestGr
   factory _$InterestGroupSummaryCopyWith(_InterestGroupSummary value, $Res Function(_InterestGroupSummary) _then) = __$InterestGroupSummaryCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String name, String category, int memberCount, List<IgPersonRef> leads, List<IgPersonRef> mentors, String? about, String? resource, String? icon, String? code, List<String> prerequisites, List<String> careerOpportunities
+ String id, String name, String category, int memberCount, List<IgPersonRef> leads, List<IgPersonRef> mentors, String? about, String? resource, String? icon, String? code, List<String> prerequisites, List<String> careerOpportunities, String? iconImage, String? coverImage, String? officeHours, List<IgImpactProject> impactProjects
 });
 
 
@@ -304,7 +320,7 @@ class __$InterestGroupSummaryCopyWithImpl<$Res>
 
 /// Create a copy of InterestGroupSummary
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? category = null,Object? memberCount = null,Object? leads = null,Object? mentors = null,Object? about = freezed,Object? resource = freezed,Object? icon = freezed,Object? code = freezed,Object? prerequisites = null,Object? careerOpportunities = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? category = null,Object? memberCount = null,Object? leads = null,Object? mentors = null,Object? about = freezed,Object? resource = freezed,Object? icon = freezed,Object? code = freezed,Object? prerequisites = null,Object? careerOpportunities = null,Object? iconImage = freezed,Object? coverImage = freezed,Object? officeHours = freezed,Object? impactProjects = null,}) {
   return _then(_InterestGroupSummary(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -318,7 +334,11 @@ as String?,icon: freezed == icon ? _self.icon : icon // ignore: cast_nullable_to
 as String?,code: freezed == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String?,prerequisites: null == prerequisites ? _self._prerequisites : prerequisites // ignore: cast_nullable_to_non_nullable
 as List<String>,careerOpportunities: null == careerOpportunities ? _self._careerOpportunities : careerOpportunities // ignore: cast_nullable_to_non_nullable
-as List<String>,
+as List<String>,iconImage: freezed == iconImage ? _self.iconImage : iconImage // ignore: cast_nullable_to_non_nullable
+as String?,coverImage: freezed == coverImage ? _self.coverImage : coverImage // ignore: cast_nullable_to_non_nullable
+as String?,officeHours: freezed == officeHours ? _self.officeHours : officeHours // ignore: cast_nullable_to_non_nullable
+as String?,impactProjects: null == impactProjects ? _self._impactProjects : impactProjects // ignore: cast_nullable_to_non_nullable
+as List<IgImpactProject>,
   ));
 }
 

@@ -1,3 +1,4 @@
+import 'package:mulearn_app/core/session/my_profile_payload.dart';
 import 'package:mulearn_app/features/profile/domain/entities/editable_profile.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/profile_controller.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -35,6 +36,6 @@ class EditableProfileController extends _$EditableProfileController {
         );
     ref
       ..invalidateSelf()
-      ..invalidate(profileControllerProvider);
+      ..invalidate(myProfilePayloadProvider);
   }
 }

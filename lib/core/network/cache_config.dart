@@ -1,4 +1,6 @@
+import 'package:dio/dio.dart';
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
+import 'package:mulearn_app/core/network/cache_scope_interceptor.dart';
 
 /// HTTP-response cache policy (architecture §12).
 ///
@@ -11,8 +13,14 @@ import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 abstract final class CacheConfig {
   const CacheConfig._();
 
+  /// Cache key = the request's user scope ([CacheScopeInterceptor]) + the
+  /// library's default key (method + URL + query), so entries are per user.
+  static String keyBuilder(RequestOptions request) =>
+      '${request.extra[CacheScopeInterceptor.extraKey] ?? 'anon'}|${CacheOptions.defaultCacheKeyBuilder(request)}';
+
   static CacheOptions base(CacheStore store) => CacheOptions(
         store: store,
+        keyBuilder: keyBuilder,
         // Honor server Cache-Control headers by default (CachePolicy.request).
         // Serve stale cache on network failure, but never for auth errors.
         hitCacheOnErrorExcept: const [401, 403],
@@ -33,6 +41,7 @@ abstract final class CacheConfig {
   /// as usual.
   static CacheOptions leaderboard(CacheStore store) => CacheOptions(
         store: store,
+        keyBuilder: keyBuilder,
         policy: CachePolicy.forceCache,
         hitCacheOnErrorExcept: const [401, 403],
         maxStale: const Duration(minutes: 3),

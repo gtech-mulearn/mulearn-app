@@ -1,0 +1,20 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "DELETE /api/v1/dashboard/learningcircle/members/remove/526bb1c7-3398-43b4-9484-cb188f2aa34f/",
+    "account": "student",
+    "status": 200,
+    "recorded_at": "2026-11-13T06:24:08.154049+00:00",
+    "note": "Plan 3 Task 8 live check; the change was undone afterwards"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": [
+        "Member removed successfully"
+      ]
+    },
+    "response": {}
+  }
+}

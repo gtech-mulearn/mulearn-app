@@ -1,0 +1,27 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "POST /api/v1/dashboard/achievement/claim/d129b439-cc78-408c-b080-d1d1cd703682/",
+    "account": "student",
+    "status": 400,
+    "recorded_at": "2026-11-13T06:01:35.669173+00:00",
+    "note": "QA-only achievements seeded for Plan 3 Task 7 and removed afterwards"
+  },
+  "body": {
+    "hasError": true,
+    "statusCode": 400,
+    "message": {
+      "general": [
+        "Not eligible: total_karma: 0/500"
+      ]
+    },
+    "response": {
+      "progress": {
+        "current": 0,
+        "required": 500,
+        "percentage": 0,
+        "milestone_type": "total_karma"
+      }
+    }
+  }
+}

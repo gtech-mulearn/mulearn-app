@@ -5,14 +5,11 @@ import 'package:mulearn_app/features/calendar/domain/entities/calendar_entry_kin
 part 'calendar_entry_dto.freezed.dart';
 part 'calendar_entry_dto.g.dart';
 
-/// Raw shape of one entry in any of `calendar/events/`'s six buckets.
-/// Confirmed live for `events.*` (rules.md §3/§9): `{id, title, slug,
-/// status, start, end, venue_type, organiser_name, category_name,
-/// is_featured}`. The `sessions.*` buckets share the same endpoint and are
-/// presumed to follow the same shape, but the test account belongs to no
-/// learning circle yet, so that presumption is unverified — every field
-/// beyond `id`/`title`/`start`/`end` is therefore nullable/defaulted here
-/// so a shape mismatch degrades gracefully instead of crashing the parse.
+/// One item of `calendar/events/`'s `events.{upcoming,ongoing,completed}`
+/// buckets — EventCalendarItemSerializer: `{id, title, slug, status, start,
+/// end, venue_type, organiser_name, category_name, is_featured}` (confirmed
+/// live on dev 2026-11-12). Mentor sessions use their own shape:
+/// [CalendarSessionDto].
 @freezed
 abstract class CalendarEntryDto with _$CalendarEntryDto {
   const factory CalendarEntryDto({

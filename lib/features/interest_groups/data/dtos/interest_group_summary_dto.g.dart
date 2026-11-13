@@ -25,6 +25,12 @@ _InterestGroupSummaryDto _$InterestGroupSummaryDtoFromJson(
   code: json['code'] as String?,
   prerequisites: _stringListFromJson(json['prerequisites']),
   careerOpportunities: _stringListFromJson(json['career_opportunities']),
+  iconImage: json['icon_image'] as String?,
+  coverImage: json['cover_image'] as String?,
+  officeHours: json['office_hours'] as String?,
+  impactProjects: (json['impact_projects'] as List<dynamic>?)
+      ?.map((e) => e as Map<String, dynamic>)
+      .toList(),
 );
 
 Map<String, dynamic> _$InterestGroupSummaryDtoToJson(
@@ -42,4 +48,8 @@ Map<String, dynamic> _$InterestGroupSummaryDtoToJson(
   'code': instance.code,
   'prerequisites': instance.prerequisites,
   'career_opportunities': instance.careerOpportunities,
+  'icon_image': instance.iconImage,
+  'cover_image': instance.coverImage,
+  'office_hours': instance.officeHours,
+  'impact_projects': instance.impactProjects,
 };

@@ -19,6 +19,18 @@ abstract final class ApiPaths {
   /// SimpleJWT refresh proxy — body is `{"refreshToken": "..."}`.
   static const String refreshToken = '/api/v1/auth/get-access-token/';
 
+  /// Authserver LogoutAPIView — `{"refreshToken": "..."}`; revokes every
+  /// refresh token issued before it.
+  static const String logout = '/api/v1/auth/logout/';
+
+  /// `GET` — the signed-in user (`UserSerializer`): muid, name, roles (every
+  /// role link, verified or not), `exist_in_guild`, profile pic, company.
+  static const String userInfo = '/api/v1/dashboard/user/info/';
+
+  /// `GET` — the signed-in user's mentor applications; 400 "No mentor
+  /// requests found for your account." when there are none.
+  static const String mentorStatus = '/api/v1/dashboard/mentor/status/';
+
   /// Request a password-reset email.
   static const String forgotPassword =
       '/api/v1/dashboard/user/forgot-password/';
@@ -114,6 +126,17 @@ abstract final class ApiPaths {
   /// this public alternative is the one that actually works for browsing.
   static String interestGroupDetail(String id) => '/api/v1/public/ig/$id/';
 
+  /// `POST {"current_password", "password"}` — change the password
+  /// (ResetPasswordAPI); 400 "Current Password is incorrect" otherwise.
+  static const String changePassword = '/api/v1/dashboard/profile/change-password/';
+
+  /// `POST` — join an interest group (learners: at most 3; "Cannot join more
+  /// than 3 interest groups"). InterestGroupMembershipAPI.
+  static String igJoin(String id) => '/api/v1/dashboard/ig/$id/join/';
+
+  /// `DELETE` — leave an interest group.
+  static String igLeave(String id) => '/api/v1/dashboard/ig/$id/leave/';
+
   /// `PUT {"is_public": bool}` — toggle profile visibility.
   static const String shareUserProfile =
       '/api/v1/dashboard/profile/share-user-profile/';
@@ -136,6 +159,19 @@ abstract final class ApiPaths {
   /// `GET` — a user's earned achievements by [muid].
   static String userAchievements(String muid) =>
       '/api/v1/dashboard/achievement/list/user/$muid/';
+
+  /// `GET` — achievements the signed-in user can claim now.
+  static const String achievementEligible = '/api/v1/dashboard/achievement/eligible/';
+
+  /// `GET` — the rule engine's progress towards every achievement.
+  static const String achievementProgress = '/api/v1/dashboard/achievement/progress/';
+
+  /// `GET` — the achievement catalog (name, description, icon).
+  static const String achievementCatalog = '/api/v1/dashboard/achievement/list/';
+
+  /// `POST {}` — claim [id]; 400 "Achievement already claimed" or
+  /// "Not eligible: …" otherwise.
+  static String achievementClaim(String id) => '/api/v1/dashboard/achievement/claim/$id/';
 
   /// `POST {"achievement_id", "vc_url"}` — save the VC URL after a
   /// successful QSeverse issuance (confusingly named `issueVC` in the
@@ -164,9 +200,13 @@ abstract final class ApiPaths {
   // --- Registration (rules.md §3/§9: confirmed against the live dashboard
   // frontend, not the OpenAPI schema) ---
 
-  /// Create a new user account — student/mentor/enabler, and the Company
-  /// role's initial POC account (a company record is created separately via
-  /// [companyRegister]).
+  /// `GET ?code=` — the backend exchanges Discord's OAuth code (redirect
+  /// `{FR_DOMAIN}/dashboard/connect-discord`) and adds the user to the
+  /// server in the background (ConnectDiscordAPI).
+  static const String connectDiscord = '/api/v1/register/connect-discord/';
+
+  /// Create a new user account — student, mentor or enabler. Company accounts
+  /// are created on the web dashboard (they need a verification document).
   static const String register = '/api/v1/register/';
 
   /// `GET` — list of roles, `{id, title}`, under `response.roles`. Role UUIDs
@@ -228,17 +268,13 @@ abstract final class ApiPaths {
   /// `POST {"endgoals": [...]}` — save chosen end goals.
   static const String selectEndgoals = '/api/v1/register/select-endgoals/';
 
-  /// `POST` — create the Company record for the Company role (called after
-  /// [register] has already authenticated the POC user).
-  static const String companyRegister = '/api/v1/dashboard/company/register/';
 
   // --- Dashboard (home screen) — confirmed live (rules.md §3/§9) ---
 
-  /// `GET` — the current top user + top college highlight, under
-  /// `response.top_user` / `response.top_college`. Despite the name, this is
-  /// a small highlight widget, not a paginated activity feed (that's
-  /// [userLog]).
-  static const String karmaFeed = '/api/v1/dashboard/profile/karma-feed/';
+
+  /// `GET` — the learner's week: `{stats, next_meeting, quick_action_counts}`
+  /// (LearnerDashboardSummaryAPIView).
+  static const String learnerSummary = '/api/v1/dashboard/home/learner/summary/';
 
   /// `GET` — featured events, under `response.data` with a `pagination`
   /// sibling key. Confirmed live: 5 items, `isNext: false` for this account,
@@ -299,6 +335,12 @@ abstract final class ApiPaths {
   static String circleJoin(String id) =>
       '/api/v1/dashboard/learningcircle/join/$id/';
 
+  /// `DELETE` — leave (members only; leads transfer first, creators delete).
+  static String circleLeave(String id) => '/api/v1/dashboard/learningcircle/leave/$id/';
+
+  /// `DELETE {"muid"}` — the lead or creator removes a member.
+  static String circleMemberRemove(String id) => '/api/v1/dashboard/learningcircle/members/remove/$id/';
+
   static String circleInvite(String id) =>
       '/api/v1/dashboard/learningcircle/invite/$id/';
   static String circleInviteSent(String id) =>
@@ -350,6 +392,126 @@ abstract final class ApiPaths {
   /// `GET` — all colleges this month, same shape as [collegeLeaderboard].
   static const String collegeLeaderboardMonthly =
       '/api/v1/leaderboard/college-monthly/';
+}
+
+// --- Notifications — `api/notification/urls.py` (v2 feed), confirmed live ---
+
+/// Notification endpoints. The feed merges personal rows and audience
+/// broadcasts; read/archive accept either id space.
+abstract final class NotificationPaths {
+  const NotificationPaths._();
+
+  /// `GET ?page&page_size` — the merged feed.
+  static const String feed = '/api/v1/notification/';
+
+  /// `GET` — `{unread_count}`: unread, non-archived personal rows only.
+  static const String unreadCount = '/api/v1/notification/unread-count/';
+
+  /// `PATCH {}` — mark every personal row and visible broadcast read.
+  static const String readAll = '/api/v1/notification/read-all/';
+
+  /// `PATCH {}` — mark one read; 404 "Notification not found" if not visible.
+  static String read(String id) => '/api/v1/notification/$id/read/';
+
+  /// `PATCH {}` — hide one from the feed.
+  static String archive(String id) => '/api/v1/notification/$id/archive/';
+}
+
+// --- Mentor workspace — `api/dashboard/mentor/urls.py` (Plan 4) ---
+
+/// Mentor endpoints. Sessions, participants, availability and requests are
+/// `role_required([Mentor])`; writes also need an active mentor account.
+abstract final class MentorPaths {
+  const MentorPaths._();
+
+  static const String _base = '/api/v1/dashboard/mentor';
+
+  /// `GET` → `{scopes: [{scope_type, scope_id, scope_name, metrics}]}`.
+  static const String overview = '$_base/overview/';
+  static const String analyticsPersonal = '$_base/analytics/personal/';
+  static const String profileCompletion = '$_base/profile/completion/';
+  static const String personaStatus = '$_base/persona/status/';
+  static const String personaCurrent = '$_base/persona/current/';
+
+  /// `POST {persona: learner|mentor, scope_type?, scope_id?}`.
+  static const String personaSwitch = '$_base/persona/switch/';
+
+  /// `GET ?status=&sortBy=&pageIndex&perPage` — the caller's own sessions.
+  static const String sessions = '$_base/session/list/';
+  static String session(String id) => '$_base/session/list/$id/';
+  static const String sessionCreate = '$_base/session/create/';
+
+  /// `PATCH` edits, `DELETE` soft-deletes.
+  static String sessionUpdate(String id) => '$_base/session/update/$id/';
+
+  /// `POST` — only a SCHEDULED session.
+  static String sessionComplete(String id) => '$_base/session/complete/$id/';
+  static String participants(String sessionId) => '$_base/session/participant/list/$sessionId/';
+
+  /// `POST {muid}`.
+  static String participantAdd(String sessionId) => '$_base/session/participant/add/$sessionId/';
+
+  /// `PATCH {attendance_status, progress_note, contributed_minutes}`.
+  static String participantUpdate(String linkId) => '$_base/session/participant/update/$linkId/';
+
+  /// `GET` — REQUESTED sessions in the mentor's scopes.
+  static const String studentRequests = '$_base/session/student-requests/';
+
+  /// `PATCH {status: APPROVED|REJECTED, starts_at?, ends_at?, mode?, meeting_link?, venue?}` (POST is 405).
+  static String studentRequestVerify(String sessionId) => '$_base/session/student-requests/$sessionId/verify/';
+  static const String availability = '$_base/availability/';
+  static String availabilitySlot(String id) => '$_base/availability/$id/';
+
+  /// `GET` → `[{id, name}]`: the interest groups the mentor can use.
+  static const String igDropdown = '$_base/tasks/ig-dropdown/';
+}
+
+// --- Campus workspace — `api/dashboard/campus/urls.py` (Plan 4) ---
+
+/// Campus endpoints: `campus_staff_required` (Campus Lead, Lead Enabler,
+/// Enabler). `student-list/` and the `igs|learning-circles/<id>/members/`
+/// endpoints return 500 on dev and are not used.
+abstract final class CampusPaths {
+  const CampusPaths._();
+
+  static const String _base = '/api/v1/dashboard/campus';
+
+  /// `{campus, stat_cards, member_funnel, circle_health, recent_activity}`.
+  static const String homeSummary = '$_base/home-summary/';
+
+  /// `{college_name, "YYYY-MM-DD": karma, …}` for the last 7 days.
+  static const String weeklyKarma = '$_base/weekly-karma/';
+
+  /// `GET ?search&sortBy&is_alumni&ig&pageIndex&perPage` — what the dashboard uses.
+  static const String students = '$_base/student-details/';
+  static String studentActivity(String muid) => '$_base/students/${Uri.encodeComponent(muid)}/activity/';
+  static const String circles = '$_base/learning-circles/';
+  static const String igs = '$_base/igs/';
+
+  /// `GET ?status=pending_campus_approval`.
+  static const String events = '$_base/events/';
+
+  /// Campus Lead (and Admin) only.
+  static const String orgLinks = '/api/v1/dashboard/user/unverified-org-links/';
+  static String orgLink(String id) => '/api/v1/dashboard/user/unverified-org-links/$id/';
+  static String eventApprove(String id) => '/api/v1/dashboard/events/campus/$id/approve/';
+  static String eventReject(String id) => '/api/v1/dashboard/events/campus/$id/reject/';
+  static const String myInvites = '/api/v1/dashboard/events/my-invites/';
+  static String inviteAccept(String eventId, String id) =>
+      '/api/v1/dashboard/events/manage/$eventId/collaborators/$id/accept/';
+  static String inviteReject(String eventId, String id) =>
+      '/api/v1/dashboard/events/manage/$eventId/collaborators/$id/reject/';
+}
+
+/// Enabler endpoints (`api/dashboard/enabler/urls.py`): Enabler / Lead Enabler.
+abstract final class EnablerPaths {
+  const EnablerPaths._();
+
+  static const String _base = '/api/v1/dashboard/enabler';
+  static const String homeSummary = '$_base/home-summary/';
+  static const String campuses = '$_base/campuses/';
+  static String campusReview(String id) => '$_base/campuses/$id/review/';
+  static String campusNotes(String id) => '$_base/campuses/$id/notes/';
 }
 
 /// Per-request option flags read by the interceptors.

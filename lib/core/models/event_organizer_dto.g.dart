@@ -9,11 +9,19 @@ part of 'event_organizer_dto.dart';
 _EventOrganizerDto _$EventOrganizerDtoFromJson(Map<String, dynamic> json) =>
     _EventOrganizerDto(
       organiserType: json['organiser_type'] as String,
-      organiserIg: json['organiser_ig'] as String?,
-      organiserCampus: json['organiser_campus'] as String?,
+      organiserIg: json['organiser_ig'] == null
+          ? null
+          : EventOrganizerIgDto.fromJson(
+              json['organiser_ig'] as Map<String, dynamic>,
+            ),
+      organiserCampus: json['organiser_campus'] == null
+          ? null
+          : EventOrganizerOrgDto.fromJson(
+              json['organiser_campus'] as Map<String, dynamic>,
+            ),
       organiserCompany: json['organiser_company'] == null
           ? null
-          : EventOrganizerCompanyDto.fromJson(
+          : EventOrganizerOrgDto.fromJson(
               json['organiser_company'] as Map<String, dynamic>,
             ),
       organiserCiId: json['organiser_ci_id'] as String?,

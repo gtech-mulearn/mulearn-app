@@ -1,0 +1,53 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/profile/get-user-levels/",
+    "account": "student",
+    "status": 200,
+    "recorded_at": "2026-11-13T05:54:08.573687Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": [
+      {
+        "name": "lvl1",
+        "tasks": [],
+        "karma": 20
+      },
+      {
+        "name": "lvl2",
+        "tasks": [],
+        "karma": 200
+      },
+      {
+        "name": "lvl3",
+        "tasks": [],
+        "karma": 800
+      },
+      {
+        "name": "lvl4",
+        "tasks": [],
+        "karma": 1600
+      },
+      {
+        "name": "lvl5",
+        "tasks": [],
+        "karma": 1600
+      },
+      {
+        "name": "lvl6",
+        "tasks": [],
+        "karma": 1600
+      },
+      {
+        "name": "lvl7",
+        "tasks": [],
+        "karma": 1600
+      }
+    ]
+  }
+}

@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 ///
 /// 2026-09 redesign palette (Phase 1 of the Claude Design import): calm blue
 /// foundation (`#2E85FE`) with a karma/reward purple energy accent
-/// (`#AF2EE6`), replacing the previous lime accent family. Never hardcode a
+/// (`#8F44ED`, the dashboard's `--brand-purple` since 2026-11-12), replacing the
+/// previous lime accent family. Status colours follow the dashboard too. Never hardcode a
 /// hex value inline in a widget; reference these constants.
 abstract final class MuColors {
   const MuColors._();
@@ -34,11 +35,11 @@ abstract final class MuColors {
   // --- Karma / energy accent (purple — replaces the retired lime family) ---
 
   /// Karma icon, "NEW" badge, streak marks, energy/reward CTA accents.
-  static const Color karmaAccent = Color(0xFFAF2EE6);
+  static const Color karmaAccent = Color(0xFF8F44ED); // dashboard --brand-purple
 
   /// Light tint of [karmaAccent] for pill/badge backgrounds — same
   /// saturation profile as [primaryTint].
-  static const Color karmaAccentTint = Color(0xFFF6E7FC);
+  static const Color karmaAccentTint = Color(0xFFF3EBFD);
 
   // --- Neutrals ---
 
@@ -72,23 +73,57 @@ abstract final class MuColors {
 
   // --- Semantic (success / warning / danger) ---
 
+  // The dashboard's fills (--success, --warning, --destructive) are too light
+  // for text on white, so text uses darker shades of the same hues (each
+  // ≥ 4.5:1 on white and on its tint; test/core/theme/contrast_test.dart).
+
   /// Success text/icon fg — approved/completed/positive state.
-  static const Color success = Color(0xFF0F7A4A);
+  static const Color success = Color(0xFF2E7D32);
 
   /// Success tinted container bg.
-  static const Color successBg = Color(0xFFE4F7E9);
+  static const Color successBg = Color(0xFFE8F5E9);
+
+  /// Solid success fill (badges, check marks on their own) — dashboard --success.
+  static const Color successFill = Color(0xFF4CAF50);
 
   /// Warning text/icon fg.
-  static const Color warning = Color(0xFF9A6412);
+  static const Color warning = Color(0xFFB45309);
 
   /// Warning tinted container bg.
-  static const Color warningBg = Color(0xFFFFF2DC);
+  static const Color warningBg = Color(0xFFFFF3E0);
+
+  /// Solid warning fill — dashboard --warning.
+  static const Color warningFill = Color(0xFFFF8D0C);
 
   /// Semantic error/danger fg — declined/negative/validation-error state.
-  static const Color error = Color(0xFFC0362B);
+  static const Color error = Color(0xFFC62828);
 
   /// Error/danger tinted container bg.
-  static const Color errorBg = Color(0xFFFDE7E4);
+  static const Color errorBg = Color(0xFFFEEBEE);
+
+  /// Solid danger fill — dashboard --destructive.
+  static const Color errorFill = Color(0xFFF44336);
+
+  // --- On-colour and overlay tokens ---
+
+  /// Text, icons and borders on brand, dark or image surfaces.
+  static const Color onBrand = Color(0xFFFFFFFF);
+
+  /// Muted text/icons on dark surfaces (e.g. the IG detail header meta).
+  static const Color onBrandMuted = Color(0xFFB9B9C2);
+
+  /// Pure white fills (sheets, chips, overlays drawn on photos).
+  static const Color paper = Color(0xFFFFFFFF);
+
+  /// Long-form body text (task descriptions rendered from markdown).
+  static const Color inkBody = Color(0xFF33333A);
+
+  /// Darkening scrim over images so overlaid text stays readable.
+  static const Color imageScrim = Color(0x52000000);
+
+  /// Top-to-bottom scrim over cover photos (light at the top, dark at the
+  /// bottom where the name sits).
+  static const List<Color> coverScrim = [Color(0x1A000000), Color(0x99000000)];
 
   // --- Leaderboard medal colors (not brand tokens — universal medal hues) ---
 

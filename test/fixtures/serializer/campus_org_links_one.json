@@ -1,0 +1,41 @@
+{
+  "_meta": {
+    "source": "serializer",
+    "endpoint": "GET /api/v1/dashboard/user/unverified-org-links/?pageIndex=1&perPage=50 (as a Campus Lead)",
+    "backend_ref": "mulearnbackend origin/dev api/dashboard/user/dash_user_views.py:729 UnverifiedOrgLinkUsersAPI; dash_user_serializer.py:740 UnverifiedOrgLinkUsersSerializer",
+    "note": "Linking a college through /dashboard/user/organization/ is verified on dev, so a pending link can't be seeded with the QA accounts. email and mobile are present to prove the app drops them."
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "data": [
+        {
+          "id": "link-1",
+          "user_id": "u-1",
+          "full_name": "QA Pending Link",
+          "muid": "qapendinglink@mulearn",
+          "email": "user@example.com",
+          "mobile": "9999999999",
+          "joined": "2026-11-13T13:20:00Z",
+          "org_id": "ad3a3793-d780-4ec1-b03e-fac92e0faa0d",
+          "org_title": "St. Josephs Colege of Engineering and Technology",
+          "org_type": "College",
+          "graduation_year": "2028",
+          "is_alumni": false,
+          "link_created_at": "2026-11-13T13:20:00Z"
+        }
+      ],
+      "pagination": {
+        "count": 1,
+        "totalPages": 1,
+        "isNext": false,
+        "isPrev": false,
+        "nextPage": null
+      }
+    }
+  }
+}

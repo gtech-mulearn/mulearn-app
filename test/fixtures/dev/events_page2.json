@@ -1,0 +1,111 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/events/?pageIndex=2&perPage=20",
+    "account": "student",
+    "status": 200,
+    "recorded_at": "2026-11-12T15:31:36.724770Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "data": [
+        {
+          "id": "3d2eba4f-915d-40b9-bc28-dc04c98ed4a9",
+          "title": "Women in Tech Networking Evening",
+          "slug": "women-in-tech-networking-evening",
+          "cover_image": null,
+          "status": "published",
+          "scope": "global",
+          "event_scope": "manager",
+          "event_type": "networking_event",
+          "start_datetime": "2026-12-12T11:30:00Z",
+          "end_datetime": "2026-12-12T14:30:00Z",
+          "venue": {
+            "venue_type": "physical",
+            "venue_address": "Technopark Phase 1, Kazhakkoottam",
+            "venue_city": "Thiruvananthapuram",
+            "venue_maps_url": "https://maps.google.com/?q=Technopark+Trivandrum",
+            "venue_online_link": null,
+            "venue_platform": null
+          },
+          "organizer": {
+            "organiser_type": "admin",
+            "organiser_ig": null,
+            "organiser_campus": null,
+            "organiser_company": null,
+            "organiser_ci_id": null
+          },
+          "is_featured": false,
+          "is_collaboration": false,
+          "interest_count": 0,
+          "min_karma": null,
+          "tags": [
+            "women-in-tech",
+            "networking"
+          ],
+          "user_limit": 0,
+          "category_id": null,
+          "category_name": null,
+          "viewer_interest_status": "none"
+        },
+        {
+          "id": "93c6859b-63bc-4054-9a4b-eeca8b42341e",
+          "title": "Game Jam: 48 Hours, One Theme",
+          "slug": "game-jam-48-hours-one-theme",
+          "cover_image": null,
+          "status": "published",
+          "scope": "global",
+          "event_scope": "creative",
+          "event_type": "hackathon",
+          "start_datetime": "2027-01-09T12:30:00Z",
+          "end_datetime": "2027-01-11T12:30:00Z",
+          "venue": {
+            "venue_type": "online",
+            "venue_address": null,
+            "venue_city": null,
+            "venue_maps_url": null,
+            "venue_online_link": "https://meet.google.com/gam-e-ja-eme",
+            "venue_platform": "Google Meet"
+          },
+          "organizer": {
+            "organiser_type": "global_ig",
+            "organiser_ig": {
+              "id": "6897a65c-7e4b-4412-90b6-3a08ef2255f2",
+              "name": "Game Dev",
+              "icon": null,
+              "cover_image": null,
+              "icon_image": null
+            },
+            "organiser_campus": null,
+            "organiser_company": null,
+            "organiser_ci_id": null
+          },
+          "is_featured": false,
+          "is_collaboration": false,
+          "interest_count": 0,
+          "min_karma": null,
+          "tags": [
+            "gamedev",
+            "game-jam"
+          ],
+          "user_limit": 0,
+          "category_id": null,
+          "category_name": null,
+          "viewer_interest_status": "none"
+        }
+      ],
+      "pagination": {
+        "count": 22,
+        "totalPages": 2,
+        "isNext": false,
+        "isPrev": true,
+        "nextPage": null
+      }
+    }
+  }
+}

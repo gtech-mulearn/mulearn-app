@@ -1,0 +1,31 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/achievement/eligible/",
+    "account": "student",
+    "status": 200,
+    "recorded_at": "2026-11-13T06:01:33.798672+00:00",
+    "note": "QA-only achievements seeded for Plan 3 Task 7 and removed afterwards"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": [
+      {
+        "achievement_id": "f98238dc-b660-4dcf-aa63-e765fadeb4a3",
+        "achievement_name": "QA Starter Badge",
+        "eligible": true,
+        "reason": "total_karma: 0/0",
+        "progress": {
+          "current": 0,
+          "required": 0,
+          "percentage": 100,
+          "milestone_type": "total_karma"
+        }
+      }
+    ]
+  }
+}

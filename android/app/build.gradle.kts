@@ -18,6 +18,13 @@ if (hasReleaseKeystore) {
     keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
 
+// A prod release must never silently fall back to debug signing (that APK
+// can't update a store install). Dev/debug builds keep the fallback above.
+val isProdRelease = gradle.startParameter.taskNames.any { it.contains("ProdRelease", ignoreCase = true) }
+if (isProdRelease && !hasReleaseKeystore) {
+    throw GradleException("Prod release builds need android/key.properties — see docs/releases.md.")
+}
+
 android {
     namespace = "org.mulearn.muapp"
     compileSdk = flutter.compileSdkVersion
@@ -50,10 +57,14 @@ android {
             dimension = "env"
             applicationIdSuffix = ".dev"
             resValue("string", "app_name", "Mulearn Dev")
+            // Host Discord redirects to after OAuth (the dev dashboard's
+            // DISCORD_AUTH_URL redirect_uri, see .env.dev).
+            manifestPlaceholders["discordRedirectHost"] = "mulearn-dev.vercel.app"
         }
         create("prod") {
             dimension = "env"
             resValue("string", "app_name", "Mulearn")
+            manifestPlaceholders["discordRedirectHost"] = "app.mulearn.org"
         }
     }
 
@@ -68,20 +79,8 @@ android {
         }
     }
 
-    signingConfigs {
-        if (keystorePropertiesFile.exists()) {
-            create("release") {
-                keyAlias = keystoreProperties["keyAlias"] as String?
-                keyPassword = keystoreProperties["keyPassword"] as String?
-                storeFile = keystoreProperties["storeFile"]?.let { file(it) }
-                storePassword = keystoreProperties["storePassword"] as String?
-            }
-        }
-    }
-
     buildTypes {
         release {
-
             signingConfig = if (hasReleaseKeystore) {
                 signingConfigs.getByName("release")
             } else {

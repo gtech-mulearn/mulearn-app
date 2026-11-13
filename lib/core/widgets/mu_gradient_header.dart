@@ -105,7 +105,7 @@ class _HeaderContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final titleColor = light ? MuColors.ink : MuColors.surface;
-    final subtitleColor = light ? MuColors.inkSecondary : Colors.white.withValues(alpha: 0.7);
+    final subtitleColor = light ? MuColors.inkSecondary : MuColors.onBrand.withValues(alpha: 0.7);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -155,8 +155,8 @@ class _HeaderDecoration extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tint = light ? MuColors.primary : Colors.white;
-    final sparkleTint = light ? MuColors.primary.withValues(alpha: 0.35) : Colors.white;
+    final tint = light ? MuColors.primary : MuColors.onBrand;
+    final sparkleTint = light ? MuColors.primary.withValues(alpha: 0.35) : MuColors.onBrand;
     return IgnorePointer(
       child: Stack(
         clipBehavior: Clip.none,

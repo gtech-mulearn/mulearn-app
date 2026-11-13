@@ -16,6 +16,9 @@ CacheStore cacheStore(Ref ref) => throw UnimplementedError(
       'HiveCacheStore (or a MemCacheStore in tests).',
     );
 
+/// The Hive box that holds cached HTTP responses.
+const String httpCacheBoxName = 'mulearn_http_cache';
+
 /// Builds the Hive-backed store for a resolved on-disk [directoryPath].
 CacheStore buildHiveCacheStore(String directoryPath) =>
-    HiveCacheStore(directoryPath, hiveBoxName: 'mulearn_http_cache');
+    HiveCacheStore(directoryPath, hiveBoxName: httpCacheBoxName);

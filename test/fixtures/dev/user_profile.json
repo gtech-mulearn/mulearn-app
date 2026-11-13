@@ -1,0 +1,85 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/profile/user-profile/",
+    "account": "student",
+    "status": 200,
+    "recorded_at": "2026-11-12T15:31:36.724770Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "id": "04afe242-e329-4491-af58-d555abd82e5f",
+      "joined": "2026-11-12T10:41:44Z",
+      "full_name": "Fixture User",
+      "gender": null,
+      "muid": "qastudentone@mulearn",
+      "roles": [
+        "Student"
+      ],
+      "role_verification": [
+        {
+          "role": "Student",
+          "is_verified": true
+        }
+      ],
+      "lead_enabler_verified": false,
+      "college_id": "ad3a3793-d780-4ec1-b03e-fac92e0faa0d",
+      "college_code": "SJC",
+      "org_district_id": "ac9927a2-c1ea-4b50-8eef-2b702dc232b4",
+      "karma": 0,
+      "rank": 15,
+      "karma_distribution": {
+        "events": [],
+        "ig": [],
+        "intern": {
+          "karma": 0
+        },
+        "general": [],
+        "level": []
+      },
+      "level": "lvl1",
+      "grit": 100,
+      "profile_pic": null,
+      "cover_pic": null,
+      "interest_groups": [
+        {
+          "id": "22ac542c-c849-428e-a91c-77e6b4c2c1aa",
+          "name": "Ui Ux",
+          "karma": 0,
+          "selected": true,
+          "level": {
+            "count": 1,
+            "unit": "level"
+          }
+        },
+        {
+          "id": "4ff0a5e5-d1ef-44dd-ac13-9a2f9e7717e3",
+          "name": "Web Development",
+          "karma": 0,
+          "selected": true,
+          "level": {
+            "count": 1,
+            "unit": "level"
+          }
+        },
+        {
+          "id": "b434ea03-908f-4078-8d02-26ebc3575d36",
+          "name": "AI",
+          "karma": 0,
+          "selected": true,
+          "level": {
+            "count": 1,
+            "unit": "level"
+          }
+        }
+      ],
+      "is_public": false,
+      "percentile": 100.0
+    }
+  }
+}

@@ -42,13 +42,14 @@ class SearchController extends _$SearchController {
       return;
     }
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       final page = await ref
           .read(searchRepositoryProvider)
           .searchUsers(query: query, role: role, pageIndex: _pageIndex);
       _hasMore = page.hasMore;
       return page.results;
     });
+    if (ref.mounted) state = result;
   }
 
   /// Appends the next page of results for the current query/role.

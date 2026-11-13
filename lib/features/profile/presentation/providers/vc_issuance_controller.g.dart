@@ -43,7 +43,7 @@ final class VcIssuanceControllerProvider
 }
 
 String _$vcIssuanceControllerHash() =>
-    r'd3d82067b1f4f96aaad4d4a3e9a5b568371e2bff';
+    r'89f993e56d9aaf3492610f122b5657a18625296a';
 
 /// Issues a Verifiable Credential via QSeverse, then persists the resulting
 /// URL against the achievement — the two-step flow the reference dashboard's

@@ -226,7 +226,7 @@ class _FormatTag extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
-        color: Colors.black.withValues(alpha: 0.32),
+        color: MuColors.imageScrim,
         borderRadius: BorderRadius.circular(MuRadius.chip),
       ),
       child: Text(label, style: MuType.tag.copyWith(color: MuColors.surface)),

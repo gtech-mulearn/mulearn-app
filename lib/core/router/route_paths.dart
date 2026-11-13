@@ -16,9 +16,39 @@ abstract final class RoutePaths {
   static const String taskDetail = '/tasks/:id';
   static String taskDetailPath(String id) => '/tasks/$id';
   static const String journey = '/journey';
+
+  /// The bottom-bar tab roots, in the shell's branch order (`app_router.dart`).
+  /// Open them with `context.openTab`, never `push`.
+  static const List<String> tabRoots = [home, tasks, journey, leaderboard, profile];
   static const String leaderboard = '/leaderboard';
   static const String profile = '/profile';
   static const String notifications = '/notifications';
+  static const String settings = '/settings';
+  static const String settingsPassword = '/settings/password';
+
+  /// Discord's OAuth redirect, opened as an App Link (same path as the
+  /// dashboard's page). Query: `code`.
+  static const String connectDiscord = '/dashboard/connect-discord';
+
+  // --- Role workspaces (Plan 4), opened from Home and Profile ---
+  static const String mentor = '/mentor';
+  static const String campus = '/campus';
+  static const String campusStudents = '/campus/students';
+  static const String campusGroups = '/campus/groups';
+  static const String campusApprovals = '/campus/approvals';
+  static const String enablerCampuses = '/enabler/campuses';
+  static const String enablerCampus = '/enabler/campuses/:id';
+  static String enablerCampusPath(String id) => '/enabler/campuses/$id';
+  static const String campusStudent = '/campus/students/:muid';
+  static String campusStudentPath(String muid) => '/campus/students/${Uri.encodeComponent(muid)}';
+  static const String mentorSessions = '/mentor/sessions';
+  static const String mentorSessionNew = '/mentor/sessions/new';
+  static const String mentorSessionEdit = '/mentor/sessions/:id/edit';
+  static String mentorSessionEditPath(String id) => '/mentor/sessions/$id/edit';
+  static const String mentorRequests = '/mentor/requests';
+  static const String mentorAvailability = '/mentor/availability';
+  static const String mentorSessionDetail = '/mentor/sessions/:id';
+  static String mentorSessionDetailPath(String id) => '/mentor/sessions/$id';
 
   /// Read-only view of another user's profile by muid.
   static const String publicProfile = '/u/:muid';

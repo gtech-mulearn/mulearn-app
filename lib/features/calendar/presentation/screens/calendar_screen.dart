@@ -46,6 +46,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
         title: const Text('Calendar'),
         actions: [
           MuIconButton(
+            tooltip: 'Go to today',
             icon: LucideIcons.calendarCheck,
             onPressed: () {
               ref.read(calendarMonthControllerProvider.notifier).jumpToToday();
@@ -82,6 +83,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                 child: Row(
                   children: [
                     MuIconButton(
+                      tooltip: 'Previous month',
                       icon: LucideIcons.chevronLeft,
                       onPressed: () => ref
                           .read(calendarMonthControllerProvider.notifier)
@@ -95,6 +97,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                       ),
                     ),
                     MuIconButton(
+                      tooltip: 'Next month',
                       icon: LucideIcons.chevronRight,
                       onPressed: () => ref
                           .read(calendarMonthControllerProvider.notifier)

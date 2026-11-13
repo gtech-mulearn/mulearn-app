@@ -23,7 +23,7 @@ class VcIssuanceController extends _$VcIssuanceController {
     required String templateId,
   }) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       final repo = ref.read(profileRepositoryProvider);
       final issued = await repo.issueVc(
         subjectInfo: subjectInfo,
@@ -41,5 +41,6 @@ class VcIssuanceController extends _$VcIssuanceController {
       ref.invalidate(userAchievementsProvider(muid));
       return issued;
     });
+    if (ref.mounted) state = result;
   }
 }

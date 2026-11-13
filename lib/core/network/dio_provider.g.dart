@@ -61,23 +61,26 @@ String _$refreshDioHash() => r'c79cc2e3b15c2c16b24a16632f3e92e5349af292';
 
 /// The app's main Dio client.
 ///
-/// Interceptor order matters (rules.md §3): cache is added **before** auth, so a
-/// cache hit short-circuits before any token attach/refresh runs.
+/// Interceptor order matters (rules.md §3): the cache scope tags the request
+/// with the user, then the cache, then auth — a cache hit short-circuits
+/// before any token attach/refresh runs, and entries never cross users.
 
 @ProviderFor(dio)
 const dioProvider = DioProvider._();
 
 /// The app's main Dio client.
 ///
-/// Interceptor order matters (rules.md §3): cache is added **before** auth, so a
-/// cache hit short-circuits before any token attach/refresh runs.
+/// Interceptor order matters (rules.md §3): the cache scope tags the request
+/// with the user, then the cache, then auth — a cache hit short-circuits
+/// before any token attach/refresh runs, and entries never cross users.
 
 final class DioProvider extends $FunctionalProvider<Dio, Dio, Dio>
     with $Provider<Dio> {
   /// The app's main Dio client.
   ///
-  /// Interceptor order matters (rules.md §3): cache is added **before** auth, so a
-  /// cache hit short-circuits before any token attach/refresh runs.
+  /// Interceptor order matters (rules.md §3): the cache scope tags the request
+  /// with the user, then the cache, then auth — a cache hit short-circuits
+  /// before any token attach/refresh runs, and entries never cross users.
   const DioProvider._()
     : super(
         from: null,
@@ -111,4 +114,4 @@ final class DioProvider extends $FunctionalProvider<Dio, Dio, Dio>
   }
 }
 
-String _$dioHash() => r'681b8c3b6652ac2a54b483facaa0755602be1d7f';
+String _$dioHash() => r'acd407e4f738d8db1cb89904b7dee9cf1d04ef40';

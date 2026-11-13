@@ -1,0 +1,42 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/mentor/availability/?pageIndex=1&perPage=100",
+    "account": "mentor",
+    "status": 200,
+    "recorded_at": "2026-11-13T09:31:06.882042Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "data": [
+        {
+          "id": "e5f98e0b-6605-46ab-9fe0-f264424ce104",
+          "mentor_user_id": "a1865006-6d7a-482c-8a66-e76663e3ec49",
+          "ig_id": "4ff0a5e5-d1ef-44dd-ac13-9a2f9e7717e3",
+          "ig_name": "Web Development",
+          "weekday": 3,
+          "start_time": "18:00:00",
+          "end_time": "19:00:00",
+          "timezone": "Asia/Kolkata",
+          "is_active": true,
+          "valid_from": null,
+          "valid_to": null,
+          "created_at": "2026-11-13T09:31:01Z",
+          "updated_at": "2026-11-13T09:31:01Z"
+        }
+      ],
+      "pagination": {
+        "count": 1,
+        "totalPages": 1,
+        "isNext": false,
+        "isPrev": false,
+        "nextPage": null
+      }
+    }
+  }
+}

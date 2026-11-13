@@ -104,26 +104,26 @@ final class ProfileRepositoryProvider
 
 String _$profileRepositoryHash() => r'babcceef764de52b2a40ee0a629c88f5298829a1';
 
-/// Loads the current user's profile once on screen load and caches it for the
-/// session (Riverpod's built-in caching — build prompt §5). Call [refresh] to
-/// refetch, e.g. from the error-state retry button.
+/// The current user's profile, mapped from the shared `user-profile` payload
+/// (one request for every reader). Call [refresh] to refetch, e.g. from the
+/// error-state retry button.
 
 @ProviderFor(ProfileController)
 const profileControllerProvider = ProfileControllerProvider._();
 
-/// Loads the current user's profile once on screen load and caches it for the
-/// session (Riverpod's built-in caching — build prompt §5). Call [refresh] to
-/// refetch, e.g. from the error-state retry button.
+/// The current user's profile, mapped from the shared `user-profile` payload
+/// (one request for every reader). Call [refresh] to refetch, e.g. from the
+/// error-state retry button.
 final class ProfileControllerProvider
     extends $AsyncNotifierProvider<ProfileController, UserProfile> {
-  /// Loads the current user's profile once on screen load and caches it for the
-  /// session (Riverpod's built-in caching — build prompt §5). Call [refresh] to
-  /// refetch, e.g. from the error-state retry button.
+  /// The current user's profile, mapped from the shared `user-profile` payload
+  /// (one request for every reader). Call [refresh] to refetch, e.g. from the
+  /// error-state retry button.
   const ProfileControllerProvider._()
     : super(
         from: null,
         argument: null,
-        retry: null,
+        retry: noRetry,
         name: r'profileControllerProvider',
         isAutoDispose: true,
         dependencies: null,
@@ -138,11 +138,11 @@ final class ProfileControllerProvider
   ProfileController create() => ProfileController();
 }
 
-String _$profileControllerHash() => r'1b317c6c23bb8bc9cb4774fb3e9fcdcd4c5ae70e';
+String _$profileControllerHash() => r'79060a71ac83c4d552afd50a30e3c3bbc25663d3';
 
-/// Loads the current user's profile once on screen load and caches it for the
-/// session (Riverpod's built-in caching — build prompt §5). Call [refresh] to
-/// refetch, e.g. from the error-state retry button.
+/// The current user's profile, mapped from the shared `user-profile` payload
+/// (one request for every reader). Call [refresh] to refetch, e.g. from the
+/// error-state retry button.
 
 abstract class _$ProfileController extends $AsyncNotifier<UserProfile> {
   FutureOr<UserProfile> build();

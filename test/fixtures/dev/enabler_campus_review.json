@@ -1,0 +1,23 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/enabler/campuses/ad3a3793-d780-4ec1-b03e-fac92e0faa0d/review/",
+    "account": "enabler",
+    "status": 200,
+    "recorded_at": "2026-11-13T13:32:29.048290Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "id": "ad3a3793-d780-4ec1-b03e-fac92e0faa0d",
+      "college_name": "St. Josephs Colege of Engineering and Technology",
+      "campus_code": "SJC",
+      "zone": "Central Zone",
+      "org_type": "College"
+    }
+  }
+}

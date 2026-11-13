@@ -14,10 +14,12 @@ import 'package:mulearn_app/core/widgets/mu_card.dart';
 import 'package:mulearn_app/core/widgets/mu_checklist.dart';
 import 'package:mulearn_app/core/widgets/mu_chip.dart';
 import 'package:mulearn_app/core/widgets/mu_icon_button.dart';
+import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/core/widgets/mu_section_header.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/meeting_detail.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/meeting_report_attendee.dart';
 import 'package:mulearn_app/features/learning_circles/presentation/providers/meetings_controller.dart';
+import 'package:mulearn_app/features/learning_circles/presentation/widgets/circle_membership_widgets.dart';
 
 class MeetingDetailScreen extends ConsumerWidget {
   const MeetingDetailScreen({required this.meetingId, super.key, this.circleId});
@@ -48,11 +50,13 @@ class MeetingDetailScreen extends ConsumerWidget {
         actions: [
           if (isCreator) ...[
             MuIconButton(
+              tooltip: 'Edit meeting',
               icon: LucideIcons.pencil,
               onPressed: () => context.push(RoutePaths.editMeetingPath(meetingId)),
             ),
             const SizedBox(width: MuSpace.s),
             MuIconButton(
+              tooltip: 'Delete meeting',
               icon: LucideIcons.trash2,
               onPressed: () => _confirmDelete(context, ref),
             ),
@@ -61,6 +65,7 @@ class MeetingDetailScreen extends ConsumerWidget {
         ],
       ),
       body: detailState.when(
+        skipError: true,
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => ErrorRetryView(
           error: error,
@@ -106,12 +111,10 @@ class _MeetingBody extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final actionsState = ref.watch(meetingActionsControllerProvider);
     final isCreator = meeting.meetCode != null;
-    final isBusy = actionsState.isLoading;
 
-    return RefreshIndicator(
-      onRefresh: () async => ref.invalidate(meetingDetailProvider(meetingId)),
+    return MuRefresh(
+      onRefresh: () => ref.refresh(meetingDetailProvider(meetingId).future),
       child: ListView(
         padding: const EdgeInsets.all(MuSpace.screenH),
         children: [
@@ -175,33 +178,11 @@ class _MeetingBody extends ConsumerWidget {
             ),
           ],
           const SizedBox(height: MuSpace.xxl),
-          if (meeting.isMember)
-            Row(
-              children: [
-                Expanded(
-                  child: MuGhostButton(
-                    label: 'RSVP',
-                    onPressed: isBusy
-                        ? null
-                        : () => ref.read(meetingActionsControllerProvider.notifier).rsvp(meetingId),
-                  ),
-                ),
-                const SizedBox(width: MuSpace.s),
-                Expanded(
-                  child: MuGhostButton(
-                    label: 'Leave meeting',
-                    onPressed: isBusy
-                        ? null
-                        : () => ref.read(meetingActionsControllerProvider.notifier).leave(meetingId),
-                  ),
-                ),
-              ],
-            )
-          else
-            MuPrimaryButton(
-              label: 'Join with code',
-              onPressed: isBusy ? null : () => _showJoinCodeDialog(context, ref),
-            ),
+          MeetingActionsBar(
+            meetingId: meetingId,
+            meeting: meeting,
+            onJoinWithCode: () => _showJoinCodeDialog(context, ref),
+          ),
           if (meeting.isReportNeeded) ...[
             const SizedBox(height: MuSpace.xxl),
             _AttendeeReportSection(meetingId: meetingId),

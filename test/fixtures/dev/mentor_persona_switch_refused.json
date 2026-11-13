@@ -1,0 +1,19 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "POST /api/v1/dashboard/mentor/persona/switch/",
+    "account": "mentor",
+    "status": 400,
+    "recorded_at": "2026-11-13T09:41:00.756196Z"
+  },
+  "body": {
+    "hasError": true,
+    "statusCode": 403,
+    "message": {
+      "general": [
+        "You do not hold an active mentor grant for the requested scope."
+      ]
+    },
+    "response": {}
+  }
+}

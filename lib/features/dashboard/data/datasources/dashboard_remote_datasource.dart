@@ -9,25 +9,24 @@ class DashboardRemoteDataSource {
 
   final Dio _dio;
 
-  /// `GET /api/v1/dashboard/profile/karma-feed/`.
-  Future<Map<String, dynamic>> fetchKarmaFeed() async {
-    final response = await _dio.get<dynamic>(ApiPaths.karmaFeed);
-    return ApiEnvelope.unwrapObject(response);
-  }
 
   /// `GET /api/v1/dashboard/events/featured/` — items live under
   /// `response.data`, a `pagination` sibling key sits alongside it.
+  /// `GET mentor/overview/` — Home reads only the upcoming-session counts.
+  Future<Map<String, dynamic>> fetchMentorOverview() async =>
+      ApiEnvelope.unwrapObject(await _dio.get<dynamic>(MentorPaths.overview));
+
+  /// `GET campus/home-summary/` — Home reads the campus and its first stat.
+  Future<Map<String, dynamic>> fetchCampusSummary() async =>
+      ApiEnvelope.unwrapObject(await _dio.get<dynamic>(CampusPaths.homeSummary));
+
+  Future<Map<String, dynamic>> fetchLearnerSummary() async =>
+      ApiEnvelope.unwrapObject(await _dio.get<dynamic>(ApiPaths.learnerSummary));
+
   Future<List<dynamic>> fetchFeaturedEvents() async {
     final response = await _dio.get<dynamic>(ApiPaths.featuredEvents);
     final payload = ApiEnvelope.unwrapObject(response);
     return payload['data'] as List<dynamic>;
   }
 
-  /// `GET /api/v1/dashboard/profile/user-profile/` — reused as-is; this
-  /// feature only projects a few fields out of it (see
-  /// [MyProgressSummaryDto]).
-  Future<Map<String, dynamic>> fetchMyProgressSummary() async {
-    final response = await _dio.get<dynamic>(ApiPaths.userProfile);
-    return ApiEnvelope.unwrapObject(response);
-  }
 }

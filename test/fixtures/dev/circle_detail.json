@@ -1,0 +1,57 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/learningcircle/info/463e9e4a-7255-431d-95f9-5bd181a48d12/",
+    "account": "student",
+    "status": 200,
+    "recorded_at": "2026-11-13T06:18:35.052558Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": [
+        "Learning Circle fetched successfully"
+      ]
+    },
+    "response": {
+      "id": "463e9e4a-7255-431d-95f9-5bd181a48d12",
+      "ig": "Ui Ux",
+      "title": "Figma to Production",
+      "description": "From wireframe to shipped UI: auto layout, design tokens, handoff and accessibility reviews with developers.",
+      "org": "St. Josephs Colege of Engineering and Technology",
+      "created_by": {
+        "id": "7580336f-0198-4d8b-b015-ad64f2a4abb1",
+        "full_name": "Fixture User",
+        "profile_pic": null,
+        "muid": "fixture-user@mulearn"
+      },
+      "total_members": 3,
+      "rank": 0,
+      "total_karma": 0,
+      "next_meetup": {
+        "id": "dfa4952c-a4d3-4d78-bb08-11a52dca30d3",
+        "circle": "463e9e4a-7255-431d-95f9-5bd181a48d12",
+        "meet_code": "NTOTH8",
+        "title": "Design tokens deep-dive",
+        "description": "Setting up colour and type tokens in Figma variables and exporting them to code.",
+        "mode": "online",
+        "is_recurring": false,
+        "recurrence_type": null,
+        "recurrence": null,
+        "is_report_needed": false,
+        "report_description": null,
+        "coord_x": 0.0,
+        "coord_y": 0.0,
+        "meet_place": "Google Meet",
+        "meet_link": "https://meet.google.com/bkd-wqpe-zrt",
+        "meet_time": "2026-11-18T12:30:00Z",
+        "duration": 1,
+        "is_started": false,
+        "is_ended": false,
+        "is_report_submitted": false,
+        "is_scheduled": true
+      }
+    }
+  }
+}

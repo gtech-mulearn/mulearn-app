@@ -1,0 +1,67 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/public/ig/4ff0a5e5-d1ef-44dd-ac13-9a2f9e7717e3/",
+    "account": "student",
+    "status": 200,
+    "recorded_at": "2026-11-13T06:44:03.992962+00:00"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "interestGroup": {
+        "id": "4ff0a5e5-d1ef-44dd-ac13-9a2f9e7717e3",
+        "name": "Web Development",
+        "resource": null,
+        "about": null,
+        "prerequisites": null,
+        "career_opportunities": null,
+        "top_blogs": null,
+        "people_to_follow": null,
+        "leads": null,
+        "mentors": [
+          {
+            "muid": "qamentorone@mulearn",
+            "full_name": "QA Mentor One",
+            "profile_pic": null,
+            "company": null,
+            "socials": {
+              "github": null,
+              "facebook": null,
+              "instagram": null,
+              "linkedin": null,
+              "dribble": null,
+              "behance": null,
+              "stackoverflow": null,
+              "medium": null,
+              "hackerrank": null
+            }
+          }
+        ],
+        "thinktank": null,
+        "office_hours": null,
+        "icon": null,
+        "icon_image": null,
+        "cover_image": null,
+        "code": "WEBDEV",
+        "category": "coder",
+        "status": "active",
+        "members": 7,
+        "media_content_links": [],
+        "is_sponsored": false,
+        "sponsor_company_name": null,
+        "sponsor_company_logo": null,
+        "community_partners": [],
+        "updated_by": "Dev Admin",
+        "updated_at": "2026-11-12T14:45:58Z",
+        "created_by": "Dev Admin",
+        "created_at": "2026-11-12T14:45:58Z",
+        "impact_projects": []
+      }
+    }
+  }
+}

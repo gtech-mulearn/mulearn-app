@@ -1,0 +1,21 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/enabler/home-summary/",
+    "account": "enabler",
+    "status": 200,
+    "recorded_at": "2026-11-13T13:32:29.048290Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "total_campuses": 1,
+      "total_students": 23,
+      "total_karma": 0
+    }
+  }
+}

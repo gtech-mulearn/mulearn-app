@@ -1,5 +1,6 @@
 import 'package:mulearn_app/core/models/location_option.dart';
 import 'package:mulearn_app/core/models/reference_option.dart';
+import 'package:mulearn_app/features/profile/domain/entities/achievement_progress.dart';
 import 'package:mulearn_app/features/profile/domain/entities/badges_data.dart';
 import 'package:mulearn_app/features/profile/domain/entities/editable_profile.dart';
 import 'package:mulearn_app/features/profile/domain/entities/interest_group_list_item.dart';
@@ -16,8 +17,8 @@ import 'package:mulearn_app/features/profile/domain/entities/vc_subject_info.dar
 /// Profile repository contract (rules.md §2/§5). Every method throws
 /// [ApiException] on failure.
 abstract interface class ProfileRepository {
-  /// `GET /api/v1/dashboard/profile/user-profile/`.
-  Future<UserProfile> getCurrentUserProfile();
+  /// Maps the shared `user-profile` payload (`myProfilePayloadProvider`).
+  UserProfile profileFromPayload(Map<String, dynamic> payload);
 
   /// `GET /api/v1/dashboard/profile/user-profile/{muid}/`.
   Future<UserProfile> getPublicUserProfile(String muid);
@@ -77,6 +78,21 @@ abstract interface class ProfileRepository {
 
   /// `PUT /api/v1/dashboard/profile/share-user-profile/` `{"is_public"}`.
   Future<void> togglePublicProfile({required bool isPublic});
+
+  /// Achievements the signed-in user can claim now.
+  Future<List<AchievementProgress>> getEligibleAchievements();
+
+  /// Progress towards every achievement.
+  Future<List<AchievementProgress>> getAchievementProgress();
+
+  /// Descriptions from the catalog, by achievement id.
+  Future<Map<String, String>> getAchievementDescriptions();
+
+  /// Claims [id]; throws `ApiException` with the backend's reason when refused.
+  Future<ClaimResult> claimAchievement(String id);
+
+  /// Changes the signed-in user's password.
+  Future<void> changePassword({required String current, required String next});
 
   /// `GET /api/v1/dashboard/profile/cover-pic/` — null if none uploaded.
   Future<String?> getCoverPic();

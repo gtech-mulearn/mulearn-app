@@ -1,0 +1,54 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/profile/user-profile/",
+    "account": "mentor",
+    "status": 200,
+    "recorded_at": "2026-11-13T07:46:15.390749Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "id": "a1865006-6d7a-482c-8a66-e76663e3ec49",
+      "joined": "2026-11-12T10:48:39Z",
+      "full_name": "Fixture User",
+      "gender": null,
+      "muid": "qamentorone@mulearn",
+      "roles": [
+        "Mentor"
+      ],
+      "role_verification": [
+        {
+          "role": "Mentor",
+          "is_verified": false
+        }
+      ],
+      "lead_enabler_verified": false,
+      "college_id": null,
+      "college_code": null,
+      "org_district_id": null,
+      "karma": 0,
+      "rank": null,
+      "karma_distribution": {
+        "events": [],
+        "ig": [],
+        "intern": {
+          "karma": 0
+        },
+        "general": [],
+        "level": []
+      },
+      "level": "lvl1",
+      "grit": 100,
+      "profile_pic": null,
+      "cover_pic": null,
+      "interest_groups": [],
+      "is_public": true,
+      "percentile": 100.0
+    }
+  }
+}

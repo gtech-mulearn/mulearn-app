@@ -1,0 +1,20 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "DELETE /api/v1/dashboard/learningcircle/leave/463e9e4a-7255-431d-95f9-5bd181a48d12/",
+    "account": "student",
+    "status": 200,
+    "recorded_at": "2026-11-13T06:24:02.572545+00:00",
+    "note": "Plan 3 Task 8 live check; the change was undone afterwards"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": [
+        "You have left the circle successfully"
+      ]
+    },
+    "response": {}
+  }
+}

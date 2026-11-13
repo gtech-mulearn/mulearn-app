@@ -1,18 +1,21 @@
 import 'package:dio/dio.dart';
 import 'package:mulearn_app/core/network/api_envelope.dart';
 import 'package:mulearn_app/core/network/api_paths.dart';
+import 'package:mulearn_app/core/network/paging.dart';
+import 'package:mulearn_app/features/events/domain/entities/event_filter.dart';
 
 class EventsRemoteDataSource {
   EventsRemoteDataSource(this._dio);
 
   final Dio _dio;
 
-  /// `GET /api/v1/dashboard/events/?page=` — `{data: [...], pagination:
-  /// {count, totalPages, isNext, isPrev, nextPage}}`.
-  Future<Map<String, dynamic>> fetchEvents({int page = 1}) async {
+  /// `GET /api/v1/dashboard/events/?pageIndex=&perPage=` — `{data: [...],
+  /// pagination: {count, totalPages, isNext, isPrev, nextPage}}`. The backend
+  /// ignores a `page` parameter (`utils/utils.py:73`).
+  Future<Map<String, dynamic>> fetchEvents({required int pageIndex, EventFilter filter = const EventFilter()}) async {
     final response = await _dio.get<dynamic>(
       ApiPaths.events,
-      queryParameters: {'page': page},
+      queryParameters: {...PageIndexPaging.query(pageIndex), ...filter.query},
     );
     return ApiEnvelope.unwrapObject(response);
   }

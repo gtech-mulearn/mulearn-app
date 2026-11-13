@@ -9,11 +9,6 @@ class ProfileRemoteDataSource {
 
   final Dio _dio;
 
-  /// `GET /api/v1/dashboard/profile/user-profile/`.
-  Future<Map<String, dynamic>> fetchCurrentUserProfile() async {
-    final response = await _dio.get<dynamic>(ApiPaths.userProfile);
-    return ApiEnvelope.unwrapObject(response);
-  }
 
   /// `GET /api/v1/dashboard/profile/`.
   Future<Map<String, dynamic>> fetchEditableProfile() async {
@@ -111,6 +106,15 @@ class ProfileRemoteDataSource {
     ApiEnvelope.unwrapObject(response);
   }
 
+  /// `POST /api/v1/dashboard/profile/change-password/`.
+  Future<void> changePassword({required String current, required String next}) async {
+    final response = await _dio.post<dynamic>(
+      ApiPaths.changePassword,
+      data: {'current_password': current, 'password': next},
+    );
+    ApiEnvelope.unwrapObject(response);
+  }
+
   /// `PUT /api/v1/dashboard/profile/share-user-profile/` `{"is_public"}`.
   Future<void> togglePublicProfile({required bool isPublic}) async {
     final response = await _dio.put<dynamic>(
@@ -176,6 +180,24 @@ class ProfileRemoteDataSource {
   }
 
   /// `GET` connected QSeverse DIDs for [muid], under `response.dids`.
+  Future<List<dynamic>> fetchEligibleAchievements() async =>
+      ApiEnvelope.unwrapList(await _dio.get<dynamic>(ApiPaths.achievementEligible));
+
+  Future<List<dynamic>> fetchAchievementProgress() async =>
+      ApiEnvelope.unwrapList(await _dio.get<dynamic>(ApiPaths.achievementProgress));
+
+  Future<List<dynamic>> fetchAchievementCatalog() async =>
+      ApiEnvelope.unwrapList(await _dio.get<dynamic>(ApiPaths.achievementCatalog));
+
+  /// The claim's `response` plus the backend's own message under `message`.
+  Future<Map<String, dynamic>> claimAchievement(String id) async {
+    final response = await _dio.post<dynamic>(ApiPaths.achievementClaim(id), data: <String, dynamic>{});
+    final body = ApiEnvelope.unwrapObject(response);
+    final general = ((response.data as Map<String, dynamic>?)?['message'] as Map<String, dynamic>?)?['general'];
+    final message = general is List && general.isNotEmpty ? '${general.first}' : 'Achievement claimed';
+    return {...body, 'message': message};
+  }
+
   Future<List<dynamic>> fetchConnectedDids(String muid) async {
     final response =
         await _dio.get<dynamic>(ApiPaths.qseverseConnectedUsers(muid));

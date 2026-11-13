@@ -1,8 +1,11 @@
 import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mulearn_app/app/app_redirect.dart';
 import 'package:mulearn_app/app/widgets/main_shell.dart';
+import 'package:mulearn_app/app/widgets/not_found_screen.dart';
 import 'package:mulearn_app/core/auth/app_auth_controller.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
+import 'package:mulearn_app/core/widgets/workspace_gate.dart';
 import 'package:mulearn_app/features/auth/presentation/screens/forgot_password_screen.dart';
 import 'package:mulearn_app/features/auth/presentation/screens/onboarding_interests_screen.dart';
 import 'package:mulearn_app/features/auth/presentation/screens/register_basic_info_screen.dart';
@@ -11,6 +14,14 @@ import 'package:mulearn_app/features/auth/presentation/screens/register_role_sel
 import 'package:mulearn_app/features/auth/presentation/screens/reset_password_screen.dart';
 import 'package:mulearn_app/features/auth/presentation/screens/sign_in_screen.dart';
 import 'package:mulearn_app/features/calendar/presentation/screens/calendar_screen.dart';
+import 'package:mulearn_app/features/campus/domain/entities/campus_student.dart';
+import 'package:mulearn_app/features/campus/presentation/screens/campus_approvals_screen.dart';
+import 'package:mulearn_app/features/campus/presentation/screens/campus_groups_screen.dart';
+import 'package:mulearn_app/features/campus/presentation/screens/campus_overview_screen.dart';
+import 'package:mulearn_app/features/campus/presentation/screens/campus_student_screen.dart';
+import 'package:mulearn_app/features/campus/presentation/screens/campus_students_screen.dart';
+import 'package:mulearn_app/features/campus/presentation/screens/enabler_campus_screen.dart';
+import 'package:mulearn_app/features/campus/presentation/screens/enabler_campuses_screen.dart';
 import 'package:mulearn_app/features/dashboard/presentation/screens/home_screen.dart';
 import 'package:mulearn_app/features/events/presentation/screens/event_detail_screen.dart';
 import 'package:mulearn_app/features/events/presentation/screens/events_screen.dart';
@@ -23,10 +34,19 @@ import 'package:mulearn_app/features/learning_circles/presentation/screens/edit_
 import 'package:mulearn_app/features/learning_circles/presentation/screens/learning_circle_detail_screen.dart';
 import 'package:mulearn_app/features/learning_circles/presentation/screens/learning_circles_screen.dart';
 import 'package:mulearn_app/features/learning_circles/presentation/screens/meeting_detail_screen.dart';
+import 'package:mulearn_app/features/mentor/presentation/screens/availability_screen.dart';
+import 'package:mulearn_app/features/mentor/presentation/screens/mentor_hub_screen.dart';
+import 'package:mulearn_app/features/mentor/presentation/screens/mentor_session_detail_screen.dart';
+import 'package:mulearn_app/features/mentor/presentation/screens/mentor_sessions_screen.dart';
+import 'package:mulearn_app/features/mentor/presentation/screens/session_form_screen.dart';
+import 'package:mulearn_app/features/mentor/presentation/screens/student_requests_screen.dart';
 import 'package:mulearn_app/features/notifications/presentation/screens/notifications_screen.dart';
+import 'package:mulearn_app/features/profile/presentation/screens/change_password_screen.dart';
+import 'package:mulearn_app/features/profile/presentation/screens/connect_discord_screen.dart';
 import 'package:mulearn_app/features/profile/presentation/screens/journey_screen.dart';
 import 'package:mulearn_app/features/profile/presentation/screens/profile_screen.dart';
 import 'package:mulearn_app/features/profile/presentation/screens/public_profile_screen.dart';
+import 'package:mulearn_app/features/profile/presentation/screens/settings_screen.dart';
 import 'package:mulearn_app/features/search/presentation/screens/search_screen.dart';
 import 'package:mulearn_app/features/splash/presentation/screens/splash_screen.dart';
 import 'package:mulearn_app/features/tasks/presentation/screens/task_detail_screen.dart';
@@ -61,68 +81,9 @@ GoRouter goRouter(Ref ref) {
     initialLocation: RoutePaths.splash,
     refreshListenable: refresh,
     debugLogDiagnostics: kDebugMode,
-    redirect: (context, state) {
-      final auth = ref.read(appAuthControllerProvider);
-      final location = state.matchedLocation;
-
-      // Session still being resolved from secure storage.
-      if (auth.isLoading || !auth.hasValue) {
-        return location == RoutePaths.splash ? null : RoutePaths.splash;
-      }
-
-      final loggedIn = auth.value ?? false;
-
-      // Reachable while signed out — registration itself signs the user in
-      // partway through, so `/register/details` must tolerate both states.
-      const allowedSignedOut = {
-        RoutePaths.signIn,
-        RoutePaths.forgotPassword,
-        RoutePaths.resetPassword,
-        RoutePaths.registerBasicInfo,
-        RoutePaths.registerRoleSelection,
-        RoutePaths.registerDetails,
-      };
-      // Reachable while signed in without bouncing to `/home` — the
-      // registration-details screen (mid-submission), the interests
-      // onboarding step that follows it, and the five bottom-nav tabs.
-      const allowedSignedIn = {
-        RoutePaths.registerDetails,
-        RoutePaths.onboardingInterests,
-        RoutePaths.home,
-        RoutePaths.tasks,
-        RoutePaths.journey,
-        RoutePaths.leaderboard,
-        RoutePaths.profile,
-      };
-      // Routes reachable while signed in, outside the bottom-nav shell —
-      // pushed on top rather than switched to, so they're exempt from the
-      // "must be one of the five tabs" redirect below. Learning circles
-      // moved here (was a tab) — it's now reached only by pushing from
-      // Home's quick-link tile, matching the redesign.
-      const allowedSignedInExtra = {
-        RoutePaths.search,
-        RoutePaths.interestGroups,
-        RoutePaths.events,
-        RoutePaths.calendar,
-        RoutePaths.createLearningCircle,
-        RoutePaths.learningCircles,
-        RoutePaths.notifications,
-      };
-
-      if (!loggedIn) {
-        return allowedSignedOut.contains(location) ? null : RoutePaths.signIn;
-      }
-      if (allowedSignedInExtra.contains(location) ||
-          location.startsWith('/u/') ||
-          location.startsWith('/interest-groups/') ||
-          location.startsWith('/events/') ||
-          location.startsWith('/circles/') ||
-          location.startsWith('/meetings/') ||
-          (location.startsWith('/tasks/') && location != RoutePaths.tasks)) {
-        return null;
-      }
-      return allowedSignedIn.contains(location) ? null : RoutePaths.home;
-    },
+    redirect: (context, state) => appRedirect(auth: ref.read(appAuthControllerProvider), uri: state.uri),
+    // A path the app doesn't know (e.g. an old link): the dashboard's 404.
+    errorBuilder: (_, __) => const NotFoundScreen(),
     routes: [
       GoRoute(
         path: RoutePaths.splash,
@@ -199,6 +160,134 @@ GoRouter goRouter(Ref ref) {
       GoRoute(
         path: RoutePaths.notifications,
         builder: (_, __) => const NotificationsScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.settings,
+        builder: (_, __) => const SettingsScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.settingsPassword,
+        builder: (_, __) => const ChangePasswordScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.mentor,
+        builder: (_, __) => WorkspaceGate(
+          select: (a) => a.mentor,
+          role: 'Mentor',
+          builder: (_) => const MentorHubScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.campus,
+        builder: (_, __) => WorkspaceGate(
+          select: (a) => a.campus,
+          role: 'Campus',
+          builder: (_) => const CampusOverviewScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.enablerCampuses,
+        builder: (_, __) => WorkspaceGate(
+          select: (a) => a.enablerCampuses,
+          role: 'Enabler',
+          builder: (_) => const EnablerCampusesScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.enablerCampus,
+        builder: (_, state) => WorkspaceGate(
+          select: (a) => a.enablerCampuses,
+          role: 'Enabler',
+          builder: (_) => EnablerCampusScreen(campusId: state.pathParameters['id']!),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.campusApprovals,
+        builder: (_, __) => WorkspaceGate(
+          select: (a) => a.campus,
+          role: 'Campus',
+          builder: (_) => const CampusApprovalsScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.campusGroups,
+        builder: (_, __) => WorkspaceGate(
+          select: (a) => a.campus,
+          role: 'Campus',
+          builder: (_) => const CampusGroupsScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.campusStudents,
+        builder: (_, __) => WorkspaceGate(
+          select: (a) => a.campus,
+          role: 'Campus',
+          builder: (_) => const CampusStudentsScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.campusStudent,
+        builder: (_, state) => WorkspaceGate(
+          select: (a) => a.campus,
+          role: 'Campus',
+          builder: (_) => CampusStudentScreen(
+            muid: state.pathParameters['muid']!,
+            student: state.extra is CampusStudent ? state.extra! as CampusStudent : null,
+          ),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.mentorSessions,
+        builder: (_, __) => WorkspaceGate(
+          select: (a) => a.mentor,
+          role: 'Mentor',
+          builder: (_) => const MentorSessionsScreen(),
+        ),
+      ),
+      // Before `:id` routes, so "new" isn't read as an id.
+      GoRoute(
+        path: RoutePaths.mentorSessionNew,
+        builder: (_, __) => WorkspaceGate(
+          select: (a) => a.mentor,
+          role: 'Mentor',
+          builder: (_) => const SessionFormScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.mentorSessionEdit,
+        builder: (_, state) => WorkspaceGate(
+          select: (a) => a.mentor,
+          role: 'Mentor',
+          builder: (_) => SessionFormScreen(sessionId: state.pathParameters['id']),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.mentorAvailability,
+        builder: (_, __) => WorkspaceGate(
+          select: (a) => a.mentor,
+          role: 'Mentor',
+          builder: (_) => const AvailabilityScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.mentorRequests,
+        builder: (_, __) => WorkspaceGate(
+          select: (a) => a.mentor,
+          role: 'Mentor',
+          builder: (_) => const StudentRequestsScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.mentorSessionDetail,
+        builder: (_, state) => WorkspaceGate(
+          select: (a) => a.mentor,
+          role: 'Mentor',
+          builder: (_) => MentorSessionDetailScreen(sessionId: state.pathParameters['id']!),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.connectDiscord,
+        builder: (_, state) => ConnectDiscordScreen(code: state.uri.queryParameters['code']),
       ),
       GoRoute(
         path: RoutePaths.taskDetail,

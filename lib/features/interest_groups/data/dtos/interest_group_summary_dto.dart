@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:mulearn_app/features/interest_groups/data/dtos/ig_person_ref_dto.dart';
+import 'package:mulearn_app/features/interest_groups/domain/entities/ig_impact_project.dart';
 import 'package:mulearn_app/features/interest_groups/domain/entities/interest_group_summary.dart';
 
 part 'interest_group_summary_dto.freezed.dart';
@@ -45,6 +46,10 @@ abstract class InterestGroupSummaryDto with _$InterestGroupSummaryDto {
     @JsonKey(fromJson: _stringListFromJson) List<String>? prerequisites,
     @JsonKey(fromJson: _stringListFromJson)
     List<String>? careerOpportunities,
+    String? iconImage,
+    String? coverImage,
+    String? officeHours,
+    List<Map<String, dynamic>>? impactProjects,
   }) = _InterestGroupSummaryDto;
 
   const InterestGroupSummaryDto._();
@@ -65,5 +70,22 @@ abstract class InterestGroupSummaryDto with _$InterestGroupSummaryDto {
         code: code,
         prerequisites: prerequisites ?? const [],
         careerOpportunities: careerOpportunities ?? const [],
+        iconImage: (iconImage?.isEmpty ?? true) ? null : iconImage,
+        coverImage: (coverImage?.isEmpty ?? true) ? null : coverImage,
+        officeHours: (officeHours?.trim().isEmpty ?? true) ? null : officeHours!.trim(),
+        impactProjects: [
+          for (final p in impactProjects ?? const <Map<String, dynamic>>[])
+            if (p['id'] != null)
+              IgImpactProject(
+                id: '${p['id']}',
+                title: p['title'] as String? ?? '',
+                description: p['description'] as String?,
+                image: p['image'] as String?,
+                links: [
+                  for (final l in (p['links'] as List<dynamic>? ?? const []).whereType<Map<String, dynamic>>())
+                    if (l['url'] is String) IgProjectLink(label: l['label'] as String? ?? 'Link', url: l['url'] as String),
+                ],
+              ),
+        ],
       );
 }

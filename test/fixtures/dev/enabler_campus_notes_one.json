@@ -1,0 +1,37 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/enabler/campuses/ad3a3793-d780-4ec1-b03e-fac92e0faa0d/notes/?pageIndex=1&perPage=20",
+    "account": "enabler",
+    "status": 200,
+    "recorded_at": "2026-11-13T13:32:53.497748Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "data": [
+        {
+          "id": "5006a41f-2072-4eec-9ae4-ece76cdc9caf",
+          "enabler_name": "Fixture User",
+          "note": "[QA] app plan 4 check: met the campus lead about the Flutter Builders circle.",
+          "status": "open",
+          "priority": "medium",
+          "follow_up_date": "2026-11-27",
+          "created_at": "2026-11-13T13:32:46Z",
+          "updated_at": "2026-11-13T13:32:46Z"
+        }
+      ],
+      "pagination": {
+        "count": 1,
+        "totalPages": 1,
+        "isNext": false,
+        "isPrev": false,
+        "nextPage": null
+      }
+    }
+  }
+}

@@ -1,12 +1,16 @@
 import 'package:mulearn_app/core/network/dio_provider.dart';
+import 'package:mulearn_app/core/network/paging.dart';
+import 'package:mulearn_app/core/utils/app_logger.dart';
 import 'package:mulearn_app/core/widgets/searchable_select_field.dart';
 import 'package:mulearn_app/features/learning_circles/data/datasources/learning_circles_remote_datasource.dart';
 import 'package:mulearn_app/features/learning_circles/data/repositories/learning_circles_repository_impl.dart';
+import 'package:mulearn_app/features/learning_circles/domain/entities/circle_filter.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/circle_invite.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/circle_members.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/join_request.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/learning_circle.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/learning_circle_detail.dart';
+import 'package:mulearn_app/features/learning_circles/domain/entities/received_circle_invite.dart';
 import 'package:mulearn_app/features/learning_circles/domain/repositories/learning_circles_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -43,7 +47,7 @@ Future<List<CircleInvite>> circleSentInvites(Ref ref, String id) =>
     ref.watch(learningCirclesRepositoryProvider).getSentInvites(id);
 
 @riverpod
-Future<List<CircleInvite>> myPendingCircleInvites(Ref ref) =>
+Future<List<ReceivedCircleInvite>> myPendingCircleInvites(Ref ref) =>
     ref.watch(learningCirclesRepositoryProvider).getMyPendingInvites();
 
 /// IG options for the create-circle picker — `{id, name}` only (rules.md
@@ -62,47 +66,49 @@ Future<List<SelectOption>> circleIgOptions(Ref ref) async {
       .toList();
 }
 
-/// Accumulates circle catalog pages across "load more" — mirrors
-/// [EventsListController]'s infinite-scroll pattern.
+/// Accumulates circle catalog pages across "load more", one list per
+/// [CircleFilter] (a new filter starts again at page 1). A failed page keeps
+/// the circles already shown and records the error for an inline retry.
 @riverpod
 class CirclesListController extends _$CirclesListController {
-  int _page = 1;
-  bool _hasMore = false;
-  bool _loadingMore = false;
-
-  bool get hasMore => _hasMore;
+  int _pageIndex = 1;
+  Future<void>? _inFlight;
 
   @override
-  Future<List<LearningCircle>> build() async {
-    _page = 1;
-    _loadingMore = false;
-    final page =
-        await ref.watch(learningCirclesRepositoryProvider).getCircles();
-    _hasMore = page.hasNext;
-    return page.circles;
+  Future<PagedState<LearningCircle>> build(CircleFilter filter) async {
+    _pageIndex = 1;
+    _inFlight = null;
+    final page = await ref
+        .watch(learningCirclesRepositoryProvider)
+        .getCircles(pageIndex: 1, filter: filter);
+    return PagedState(items: page.circles, hasMore: page.hasNext);
   }
 
-  Future<void> loadMore() async {
-    // Guards against a scroll listener re-firing (e.g. near-bottom on every
-    // frame for a short list — such as when "Circles near you" filters out
-    // owned circles and stays short) before the in-flight page request
-    // settles, which would otherwise dispatch the same page repeatedly.
-    if (!_hasMore || _loadingMore) return;
-    _loadingMore = true;
-    final current = state.value ?? [];
-    final nextPage = _page + 1;
+  /// Loads the next page, or retries it after a failure. Calls made while a
+  /// page is in flight (a scroll listener firing every frame, for example
+  /// when "Circles near you" filters the list short) share that one request.
+  Future<void> loadMore() =>
+      _inFlight ??= _loadNextPage().whenComplete(() => _inFlight = null);
+
+  Future<void> _loadNextPage() async {
+    final current = state.value;
+    if (current == null || !current.hasMore) return;
+    state = AsyncData(current.copyWith(isLoadingMore: true, loadMoreError: null));
+    final next = _pageIndex + 1;
     try {
       final page = await ref
           .read(learningCirclesRepositoryProvider)
-          .getCircles(page: nextPage);
+          .getCircles(pageIndex: next, filter: filter);
       if (!ref.mounted) return;
-      _page = nextPage;
-      _hasMore = page.hasNext;
-      state = AsyncData([...current, ...page.circles]);
+      _pageIndex = next;
+      state = AsyncData(PagedState(
+        items: mergeUniqueBy(current.items, page.circles, (c) => c.id),
+        hasMore: page.hasNext,
+      ));
     } on Object catch (e, st) {
-      state = AsyncError(e, st);
-    } finally {
-      _loadingMore = false;
+      appLogger.w('Loading more circles failed', error: e, stackTrace: st);
+      if (!ref.mounted) return;
+      state = AsyncData(current.copyWith(isLoadingMore: false, loadMoreError: e));
     }
   }
 }
@@ -123,7 +129,7 @@ class CircleActionsController extends _$CircleActionsController {
   }) async {
     state = const AsyncLoading();
     String? circleId;
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       circleId = await ref.read(learningCirclesRepositoryProvider).createCircle(
             igId: igId,
             orgId: orgId,
@@ -131,6 +137,7 @@ class CircleActionsController extends _$CircleActionsController {
             description: description,
           );
     });
+    if (ref.mounted) state = result;
     return circleId;
   }
 
@@ -141,8 +148,9 @@ class CircleActionsController extends _$CircleActionsController {
     String? title,
     String? description,
   }) async {
+    final link = ref.keepAlive(); // finish the follow-up refresh even if the screen closes
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       await ref.read(learningCirclesRepositoryProvider).editCircle(
             id,
             igId: igId,
@@ -152,42 +160,32 @@ class CircleActionsController extends _$CircleActionsController {
           );
       ref.invalidate(circleDetailProvider(id));
     });
+    if (ref.mounted) state = result;
+    link.close();
   }
 
   Future<bool> deleteCircle(String id) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(
+    final result = await AsyncValue.guard(
       () => ref.read(learningCirclesRepositoryProvider).deleteCircle(id),
     );
-    return !state.hasError;
+    if (ref.mounted) state = result;
+    return !result.hasError;
   }
 
   Future<void> requestToJoin(String id) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(
+    final result = await AsyncValue.guard(
       () => ref.read(learningCirclesRepositoryProvider).requestToJoin(id),
     );
+    if (ref.mounted) state = result;
   }
 
-  Future<void> approveMember(
-    String circleId, {
-    required String muid,
-    required bool accept,
-  }) async {
-    state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
-      await ref
-          .read(learningCirclesRepositoryProvider)
-          .approveMember(circleId, muid: muid, accept: accept);
-      ref
-        ..invalidate(circleMembersProvider(circleId))
-        ..invalidate(circleJoinRequestsProvider(circleId));
-    });
-  }
 
   Future<void> transferLead(String circleId, {required String muid}) async {
+    final link = ref.keepAlive(); // finish the follow-up refresh even if the screen closes
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       await ref
           .read(learningCirclesRepositoryProvider)
           .transferLead(circleId, muid: muid);
@@ -195,6 +193,8 @@ class CircleActionsController extends _$CircleActionsController {
         ..invalidate(circleMembersProvider(circleId))
         ..invalidate(circleDetailProvider(circleId));
     });
+    if (ref.mounted) state = result;
+    link.close();
   }
 
   Future<void> respondToJoinRequest(
@@ -202,8 +202,9 @@ class CircleActionsController extends _$CircleActionsController {
     required String linkId,
     required bool accept,
   }) async {
+    final link = ref.keepAlive(); // finish the follow-up refresh even if the screen closes
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       await ref
           .read(learningCirclesRepositoryProvider)
           .respondToJoinRequest(circleId, linkId: linkId, accept: accept);
@@ -211,21 +212,66 @@ class CircleActionsController extends _$CircleActionsController {
         ..invalidate(circleJoinRequestsProvider(circleId))
         ..invalidate(circleMembersProvider(circleId));
     });
+    if (ref.mounted) state = result;
+    link.close();
   }
 
-  Future<void> sendInvite(String circleId, {required String muid}) async {
+  Future<void> sendInvite(String circleId, {required String muid, bool asLead = false}) async {
+    final link = ref.keepAlive(); // finish the follow-up refresh even if the screen closes
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       await ref
           .read(learningCirclesRepositoryProvider)
-          .sendInvite(circleId, muid: muid);
+          .sendInvite(circleId, muid: muid, asLead: asLead);
       ref.invalidate(circleSentInvitesProvider(circleId));
     });
+    if (ref.mounted) state = result;
+    link.close();
+  }
+
+  /// Leaves [circleId]; true on success. The user's circle list refreshes
+  /// even if the screen closes meanwhile.
+  Future<bool> leaveCircle(String circleId) async {
+    final repository = ref.read(learningCirclesRepositoryProvider);
+    final link = ref.keepAlive();
+    state = const AsyncLoading();
+    try {
+      final result = await AsyncValue.guard(() => repository.leaveCircle(circleId));
+      if (!result.hasError) {
+        ref
+          ..invalidate(myCirclesProvider)
+          ..invalidate(circleMembersProvider(circleId))
+          ..invalidate(circleDetailProvider(circleId));
+      }
+      if (ref.mounted) state = result;
+      return !result.hasError;
+    } finally {
+      link.close();
+    }
+  }
+
+  /// The lead or creator removes [muid] from [circleId].
+  Future<void> removeMember(String circleId, {required String muid}) async {
+    final repository = ref.read(learningCirclesRepositoryProvider);
+    final link = ref.keepAlive();
+    state = const AsyncLoading();
+    try {
+      final result = await AsyncValue.guard(() => repository.removeMember(circleId, muid: muid));
+      if (!result.hasError) {
+        ref
+          ..invalidate(circleMembersProvider(circleId))
+          ..invalidate(circleDetailProvider(circleId));
+      }
+      if (ref.mounted) state = result;
+    } finally {
+      link.close();
+    }
   }
 
   Future<void> respondToInvite(String linkId, {required bool accept}) async {
+    final link = ref.keepAlive(); // finish the follow-up refresh even if the screen closes
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       await ref
           .read(learningCirclesRepositoryProvider)
           .respondToInvite(linkId, accept: accept);
@@ -233,5 +279,7 @@ class CircleActionsController extends _$CircleActionsController {
         ..invalidate(myPendingCircleInvitesProvider)
         ..invalidate(myCirclesProvider);
     });
+    if (ref.mounted) state = result;
+    link.close();
   }
 }

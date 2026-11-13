@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$EventOrganizerDto {
 
- String get organiserType; String? get organiserIg; String? get organiserCampus; EventOrganizerCompanyDto? get organiserCompany; String? get organiserCiId;
+ String get organiserType; EventOrganizerIgDto? get organiserIg; EventOrganizerOrgDto? get organiserCampus; EventOrganizerOrgDto? get organiserCompany; String? get organiserCiId;
 /// Create a copy of EventOrganizerDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,11 +48,11 @@ abstract mixin class $EventOrganizerDtoCopyWith<$Res>  {
   factory $EventOrganizerDtoCopyWith(EventOrganizerDto value, $Res Function(EventOrganizerDto) _then) = _$EventOrganizerDtoCopyWithImpl;
 @useResult
 $Res call({
- String organiserType, String? organiserIg, String? organiserCampus, EventOrganizerCompanyDto? organiserCompany, String? organiserCiId
+ String organiserType, EventOrganizerIgDto? organiserIg, EventOrganizerOrgDto? organiserCampus, EventOrganizerOrgDto? organiserCompany, String? organiserCiId
 });
 
 
-$EventOrganizerCompanyDtoCopyWith<$Res>? get organiserCompany;
+$EventOrganizerIgDtoCopyWith<$Res>? get organiserIg;$EventOrganizerOrgDtoCopyWith<$Res>? get organiserCampus;$EventOrganizerOrgDtoCopyWith<$Res>? get organiserCompany;
 
 }
 /// @nodoc
@@ -69,9 +69,9 @@ class _$EventOrganizerDtoCopyWithImpl<$Res>
   return _then(_self.copyWith(
 organiserType: null == organiserType ? _self.organiserType : organiserType // ignore: cast_nullable_to_non_nullable
 as String,organiserIg: freezed == organiserIg ? _self.organiserIg : organiserIg // ignore: cast_nullable_to_non_nullable
-as String?,organiserCampus: freezed == organiserCampus ? _self.organiserCampus : organiserCampus // ignore: cast_nullable_to_non_nullable
-as String?,organiserCompany: freezed == organiserCompany ? _self.organiserCompany : organiserCompany // ignore: cast_nullable_to_non_nullable
-as EventOrganizerCompanyDto?,organiserCiId: freezed == organiserCiId ? _self.organiserCiId : organiserCiId // ignore: cast_nullable_to_non_nullable
+as EventOrganizerIgDto?,organiserCampus: freezed == organiserCampus ? _self.organiserCampus : organiserCampus // ignore: cast_nullable_to_non_nullable
+as EventOrganizerOrgDto?,organiserCompany: freezed == organiserCompany ? _self.organiserCompany : organiserCompany // ignore: cast_nullable_to_non_nullable
+as EventOrganizerOrgDto?,organiserCiId: freezed == organiserCiId ? _self.organiserCiId : organiserCiId // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -79,12 +79,36 @@ as String?,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$EventOrganizerCompanyDtoCopyWith<$Res>? get organiserCompany {
+$EventOrganizerIgDtoCopyWith<$Res>? get organiserIg {
+    if (_self.organiserIg == null) {
+    return null;
+  }
+
+  return $EventOrganizerIgDtoCopyWith<$Res>(_self.organiserIg!, (value) {
+    return _then(_self.copyWith(organiserIg: value));
+  });
+}/// Create a copy of EventOrganizerDto
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$EventOrganizerOrgDtoCopyWith<$Res>? get organiserCampus {
+    if (_self.organiserCampus == null) {
+    return null;
+  }
+
+  return $EventOrganizerOrgDtoCopyWith<$Res>(_self.organiserCampus!, (value) {
+    return _then(_self.copyWith(organiserCampus: value));
+  });
+}/// Create a copy of EventOrganizerDto
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$EventOrganizerOrgDtoCopyWith<$Res>? get organiserCompany {
     if (_self.organiserCompany == null) {
     return null;
   }
 
-  return $EventOrganizerCompanyDtoCopyWith<$Res>(_self.organiserCompany!, (value) {
+  return $EventOrganizerOrgDtoCopyWith<$Res>(_self.organiserCompany!, (value) {
     return _then(_self.copyWith(organiserCompany: value));
   });
 }
@@ -169,7 +193,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String organiserType,  String? organiserIg,  String? organiserCampus,  EventOrganizerCompanyDto? organiserCompany,  String? organiserCiId)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String organiserType,  EventOrganizerIgDto? organiserIg,  EventOrganizerOrgDto? organiserCampus,  EventOrganizerOrgDto? organiserCompany,  String? organiserCiId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EventOrganizerDto() when $default != null:
 return $default(_that.organiserType,_that.organiserIg,_that.organiserCampus,_that.organiserCompany,_that.organiserCiId);case _:
@@ -190,7 +214,7 @@ return $default(_that.organiserType,_that.organiserIg,_that.organiserCampus,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String organiserType,  String? organiserIg,  String? organiserCampus,  EventOrganizerCompanyDto? organiserCompany,  String? organiserCiId)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String organiserType,  EventOrganizerIgDto? organiserIg,  EventOrganizerOrgDto? organiserCampus,  EventOrganizerOrgDto? organiserCompany,  String? organiserCiId)  $default,) {final _that = this;
 switch (_that) {
 case _EventOrganizerDto():
 return $default(_that.organiserType,_that.organiserIg,_that.organiserCampus,_that.organiserCompany,_that.organiserCiId);case _:
@@ -210,7 +234,7 @@ return $default(_that.organiserType,_that.organiserIg,_that.organiserCampus,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String organiserType,  String? organiserIg,  String? organiserCampus,  EventOrganizerCompanyDto? organiserCompany,  String? organiserCiId)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String organiserType,  EventOrganizerIgDto? organiserIg,  EventOrganizerOrgDto? organiserCampus,  EventOrganizerOrgDto? organiserCompany,  String? organiserCiId)?  $default,) {final _that = this;
 switch (_that) {
 case _EventOrganizerDto() when $default != null:
 return $default(_that.organiserType,_that.organiserIg,_that.organiserCampus,_that.organiserCompany,_that.organiserCiId);case _:
@@ -229,9 +253,9 @@ class _EventOrganizerDto extends EventOrganizerDto {
   factory _EventOrganizerDto.fromJson(Map<String, dynamic> json) => _$EventOrganizerDtoFromJson(json);
 
 @override final  String organiserType;
-@override final  String? organiserIg;
-@override final  String? organiserCampus;
-@override final  EventOrganizerCompanyDto? organiserCompany;
+@override final  EventOrganizerIgDto? organiserIg;
+@override final  EventOrganizerOrgDto? organiserCampus;
+@override final  EventOrganizerOrgDto? organiserCompany;
 @override final  String? organiserCiId;
 
 /// Create a copy of EventOrganizerDto
@@ -267,11 +291,11 @@ abstract mixin class _$EventOrganizerDtoCopyWith<$Res> implements $EventOrganize
   factory _$EventOrganizerDtoCopyWith(_EventOrganizerDto value, $Res Function(_EventOrganizerDto) _then) = __$EventOrganizerDtoCopyWithImpl;
 @override @useResult
 $Res call({
- String organiserType, String? organiserIg, String? organiserCampus, EventOrganizerCompanyDto? organiserCompany, String? organiserCiId
+ String organiserType, EventOrganizerIgDto? organiserIg, EventOrganizerOrgDto? organiserCampus, EventOrganizerOrgDto? organiserCompany, String? organiserCiId
 });
 
 
-@override $EventOrganizerCompanyDtoCopyWith<$Res>? get organiserCompany;
+@override $EventOrganizerIgDtoCopyWith<$Res>? get organiserIg;@override $EventOrganizerOrgDtoCopyWith<$Res>? get organiserCampus;@override $EventOrganizerOrgDtoCopyWith<$Res>? get organiserCompany;
 
 }
 /// @nodoc
@@ -288,9 +312,9 @@ class __$EventOrganizerDtoCopyWithImpl<$Res>
   return _then(_EventOrganizerDto(
 organiserType: null == organiserType ? _self.organiserType : organiserType // ignore: cast_nullable_to_non_nullable
 as String,organiserIg: freezed == organiserIg ? _self.organiserIg : organiserIg // ignore: cast_nullable_to_non_nullable
-as String?,organiserCampus: freezed == organiserCampus ? _self.organiserCampus : organiserCampus // ignore: cast_nullable_to_non_nullable
-as String?,organiserCompany: freezed == organiserCompany ? _self.organiserCompany : organiserCompany // ignore: cast_nullable_to_non_nullable
-as EventOrganizerCompanyDto?,organiserCiId: freezed == organiserCiId ? _self.organiserCiId : organiserCiId // ignore: cast_nullable_to_non_nullable
+as EventOrganizerIgDto?,organiserCampus: freezed == organiserCampus ? _self.organiserCampus : organiserCampus // ignore: cast_nullable_to_non_nullable
+as EventOrganizerOrgDto?,organiserCompany: freezed == organiserCompany ? _self.organiserCompany : organiserCompany // ignore: cast_nullable_to_non_nullable
+as EventOrganizerOrgDto?,organiserCiId: freezed == organiserCiId ? _self.organiserCiId : organiserCiId // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -299,12 +323,36 @@ as String?,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$EventOrganizerCompanyDtoCopyWith<$Res>? get organiserCompany {
+$EventOrganizerIgDtoCopyWith<$Res>? get organiserIg {
+    if (_self.organiserIg == null) {
+    return null;
+  }
+
+  return $EventOrganizerIgDtoCopyWith<$Res>(_self.organiserIg!, (value) {
+    return _then(_self.copyWith(organiserIg: value));
+  });
+}/// Create a copy of EventOrganizerDto
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$EventOrganizerOrgDtoCopyWith<$Res>? get organiserCampus {
+    if (_self.organiserCampus == null) {
+    return null;
+  }
+
+  return $EventOrganizerOrgDtoCopyWith<$Res>(_self.organiserCampus!, (value) {
+    return _then(_self.copyWith(organiserCampus: value));
+  });
+}/// Create a copy of EventOrganizerDto
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$EventOrganizerOrgDtoCopyWith<$Res>? get organiserCompany {
     if (_self.organiserCompany == null) {
     return null;
   }
 
-  return $EventOrganizerCompanyDtoCopyWith<$Res>(_self.organiserCompany!, (value) {
+  return $EventOrganizerOrgDtoCopyWith<$Res>(_self.organiserCompany!, (value) {
     return _then(_self.copyWith(organiserCompany: value));
   });
 }

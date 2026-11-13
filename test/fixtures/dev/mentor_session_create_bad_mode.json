@@ -1,0 +1,20 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "POST /api/v1/dashboard/mentor/session/create/",
+    "account": "mentor",
+    "status": 400,
+    "recorded_at": "2026-11-13T08:56:34.049543Z"
+  },
+  "body": {
+    "hasError": true,
+    "statusCode": 400,
+    "message": {
+      "general": [],
+      "meeting_link": [
+        "Meeting link must not be provided for an offline session."
+      ]
+    },
+    "response": {}
+  }
+}

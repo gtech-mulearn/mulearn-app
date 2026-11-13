@@ -1,0 +1,187 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/calendar/events/?start_date=2026-11-01&end_date=2026-11-30",
+    "account": "student",
+    "status": 200,
+    "recorded_at": "2026-11-12T15:31:36.724770Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "events": {
+        "upcoming": [
+          {
+            "id": "d18e6dda-2274-4b0a-b08f-63c761feaa75",
+            "title": "Git & GitHub Crash Course",
+            "slug": "git-github-crash-course",
+            "status": "published",
+            "start": "2026-11-17T08:30:00Z",
+            "end": "2026-11-17T11:00:00Z",
+            "venue_type": "physical",
+            "organiser_name": "St. Josephs Colege of Engineering and Technology",
+            "category_name": null,
+            "is_featured": false
+          },
+          {
+            "id": "1d7b5f15-f3b5-4fba-bfe6-713c824684ec",
+            "title": "Your First Open Source PR",
+            "slug": "your-first-open-source-pr",
+            "status": "published",
+            "start": "2026-11-18T13:30:00Z",
+            "end": "2026-11-18T15:00:00Z",
+            "venue_type": "online",
+            "organiser_name": "muLearn",
+            "category_name": null,
+            "is_featured": false
+          },
+          {
+            "id": "20717a82-1e04-4cd1-84d7-9298520101bb",
+            "title": "UI/UX Portfolio Review Session",
+            "slug": "uiux-portfolio-review-session",
+            "status": "published",
+            "start": "2026-11-20T13:00:00Z",
+            "end": "2026-11-20T14:30:00Z",
+            "venue_type": "online",
+            "organiser_name": "Ui Ux",
+            "category_name": null,
+            "is_featured": false
+          },
+          {
+            "id": "7289955e-8e05-485b-9d31-c32671a38eb2",
+            "title": "Product Teardown Live: How UPI Works",
+            "slug": "product-teardown-live-how-upi-works",
+            "status": "published",
+            "start": "2026-11-21T12:30:00Z",
+            "end": "2026-11-21T13:30:00Z",
+            "venue_type": "online",
+            "organiser_name": "Project Management",
+            "category_name": null,
+            "is_featured": false
+          },
+          {
+            "id": "05a5e4a5-a8e4-42f6-bbe1-5448e6a50308",
+            "title": "Build with Flutter: Mobile Dev Bootcamp",
+            "slug": "build-with-flutter-mobile-dev-bootcamp",
+            "status": "published",
+            "start": "2026-11-22T04:30:00Z",
+            "end": "2026-11-23T11:30:00Z",
+            "venue_type": "online",
+            "organiser_name": "Web Development",
+            "category_name": null,
+            "is_featured": true
+          },
+          {
+            "id": "06a9c979-a87a-4818-b61c-fc27fab390dd",
+            "title": "Space Tech Talk: India's Next Moon Mission",
+            "slug": "space-tech-talk-indias-next-moon-mission",
+            "status": "published",
+            "start": "2026-11-25T13:30:00Z",
+            "end": "2026-11-25T14:30:00Z",
+            "venue_type": "online",
+            "organiser_name": "Space",
+            "category_name": null,
+            "is_featured": false
+          },
+          {
+            "id": "3f5bc624-4df6-4a2a-8379-2136da672988",
+            "title": "Tech Talk: Scaling Postgres to Millions of Rows",
+            "slug": "tech-talk-scaling-postgres-to-millions-of-rows",
+            "status": "published",
+            "start": "2026-11-26T13:30:00Z",
+            "end": "2026-11-26T14:30:00Z",
+            "venue_type": "online",
+            "organiser_name": "muLearn",
+            "category_name": null,
+            "is_featured": false
+          },
+          {
+            "id": "863bb614-2744-4418-88a4-13d225840641",
+            "title": "Blender Basics: Model Your First Scene",
+            "slug": "blender-basics-model-your-first-scene",
+            "status": "published",
+            "start": "2026-11-28T08:30:00Z",
+            "end": "2026-11-28T11:30:00Z",
+            "venue_type": "hybrid",
+            "organiser_name": "St. Josephs Colege of Engineering and Technology",
+            "category_name": null,
+            "is_featured": false
+          },
+          {
+            "id": "6b8d3967-d648-4816-9664-f58f9a657f6f",
+            "title": "CTF Night: Capture the Flag",
+            "slug": "ctf-night-capture-the-flag",
+            "status": "published",
+            "start": "2026-11-29T14:30:00Z",
+            "end": "2026-11-29T20:30:00Z",
+            "venue_type": "online",
+            "organiser_name": "Cyber Security",
+            "category_name": null,
+            "is_featured": false
+          },
+          {
+            "id": "28f40671-06e6-4acd-a9eb-9923aca610b0",
+            "title": "DevOps Day: CI/CD with GitHub Actions",
+            "slug": "devops-day-cicd-with-github-actions",
+            "status": "published",
+            "start": "2026-11-30T04:30:00Z",
+            "end": "2026-11-30T07:30:00Z",
+            "venue_type": "online",
+            "organiser_name": "Devops",
+            "category_name": null,
+            "is_featured": false
+          }
+        ],
+        "ongoing": [
+          {
+            "id": "c642e480-e1c4-4be9-ae82-949f8f1e9f95",
+            "title": "30 Days of Code: November Sprint",
+            "slug": "30-days-of-code-november-sprint",
+            "status": "ongoing",
+            "start": "2026-11-01T03:30:00Z",
+            "end": "2026-11-30T15:30:00Z",
+            "venue_type": "online",
+            "organiser_name": "muLearn",
+            "category_name": null,
+            "is_featured": true
+          },
+          {
+            "id": "c8707170-7808-43b7-8e83-1844680f5cd1",
+            "title": "Campus Lead Onboarding Week",
+            "slug": "campus-lead-onboarding-week",
+            "status": "ongoing",
+            "start": "2026-11-10T04:30:00Z",
+            "end": "2026-11-16T12:30:00Z",
+            "venue_type": "online",
+            "organiser_name": "muLearn",
+            "category_name": null,
+            "is_featured": false
+          }
+        ],
+        "completed": [
+          {
+            "id": "4d710eb6-da43-437e-9f5c-9aec9a7a0921",
+            "title": "AI for Everyone: Build Your First Chatbot",
+            "slug": "ai-for-everyone-build-your-first-chatbot",
+            "status": "completed",
+            "start": "2026-11-05T09:30:00Z",
+            "end": "2026-11-05T11:30:00Z",
+            "venue_type": "online",
+            "organiser_name": "muLearn",
+            "category_name": null,
+            "is_featured": false
+          }
+        ]
+      },
+      "sessions": {
+        "upcoming": [],
+        "ongoing": [],
+        "completed": []
+      }
+    }
+  }
+}

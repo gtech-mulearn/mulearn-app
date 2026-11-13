@@ -1,0 +1,18 @@
+{
+  "_meta": {
+    "source": "serializer",
+    "endpoint": "GET /api/v1/leaderboard/students/",
+    "backend_ref": "mulearnbackend@87f7f80a mu_celery/leaderboard_cron.py:56-60 (_build_students_leaderboard)",
+    "note": "Dev leaderboard is empty (2026-11-12). Third row has no college link, so institution is null."
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {"general": []},
+    "response": [
+      {"muid": "fixture-a@mulearn", "full_name": "Fixture User", "total_karma": 3100, "institution": "St. Josephs Colege of Engineering and Technology", "profile_pic": null},
+      {"muid": "fixture-b@mulearn", "full_name": "Fixture User", "total_karma": 2400, "institution": "St. Josephs Colege of Engineering and Technology", "profile_pic": null},
+      {"muid": "fixture-c@mulearn", "full_name": "Fixture User", "total_karma": 1800, "institution": null, "profile_pic": null}
+    ]
+  }
+}

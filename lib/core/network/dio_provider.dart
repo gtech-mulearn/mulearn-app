@@ -3,6 +3,7 @@ import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
 import 'package:mulearn_app/core/config/flavor_config.dart';
 import 'package:mulearn_app/core/network/auth_interceptor.dart';
 import 'package:mulearn_app/core/network/cache_config.dart';
+import 'package:mulearn_app/core/network/cache_scope_interceptor.dart';
 import 'package:mulearn_app/core/network/session_event_bus.dart';
 import 'package:mulearn_app/core/storage/cache_store_provider.dart';
 import 'package:mulearn_app/core/storage/secure_storage_provider.dart';
@@ -38,21 +39,23 @@ Dio refreshDio(Ref ref) {
 
 /// The app's main Dio client.
 ///
-/// Interceptor order matters (rules.md §3): cache is added **before** auth, so a
-/// cache hit short-circuits before any token attach/refresh runs.
+/// Interceptor order matters (rules.md §3): the cache scope tags the request
+/// with the user, then the cache, then auth — a cache hit short-circuits
+/// before any token attach/refresh runs, and entries never cross users.
 @Riverpod(keepAlive: true)
 Dio dio(Ref ref) {
   final dio = Dio(_baseOptions());
   final store = ref.watch(cacheStoreProvider);
 
-  dio.interceptors.add(
-    DioCacheInterceptor(options: CacheConfig.base(store)),
-  );
+  dio.interceptors
+    ..add(CacheScopeInterceptor(ref.watch(tokenStorageProvider)))
+    ..add(DioCacheInterceptor(options: CacheConfig.base(store)));
   dio.interceptors.add(
     AuthInterceptor(
       refreshDio: ref.watch(refreshDioProvider),
       tokenStorage: ref.watch(tokenStorageProvider),
       sessionEventBus: ref.watch(sessionEventBusProvider),
+      cacheStore: store,
     ),
   );
   if (FlavorConfig.instance.isDev) dio.interceptors.add(_logInterceptor());

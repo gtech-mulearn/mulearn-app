@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:mulearn_app/core/leaderboard/domain/entities/college_leaderboard_entry.dart';
+import 'package:mulearn_app/core/leaderboard/leaderboard_providers.dart';
+import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/theme/mu_radius.dart';
 import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
@@ -8,8 +12,8 @@ import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/core/widgets/mu_card.dart';
 import 'package:mulearn_app/core/widgets/mu_gradient_header.dart';
-import 'package:mulearn_app/features/leaderboard/domain/entities/college_leaderboard_entry.dart';
-import 'package:mulearn_app/features/leaderboard/presentation/providers/leaderboard_controller.dart';
+import 'package:mulearn_app/core/widgets/mu_refresh.dart';
+import 'package:mulearn_app/core/widgets/mu_state_display.dart';
 import 'package:mulearn_app/features/leaderboard/presentation/widgets/leaderboard_list_tile.dart';
 import 'package:mulearn_app/features/leaderboard/presentation/widgets/leaderboard_podium.dart';
 
@@ -25,14 +29,14 @@ String _collegeDisplayName(CollegeLeaderboardEntry entry) =>
 /// (Learners, Colleges) rather than the mock's 3 — there is no
 /// interest-group leaderboard endpoint, so that segment is omitted rather
 /// than shown empty or faked (per the approved plan).
-class LeaderboardScreen extends StatefulWidget {
+class LeaderboardScreen extends ConsumerStatefulWidget {
   const LeaderboardScreen({super.key});
 
   @override
-  State<LeaderboardScreen> createState() => _LeaderboardScreenState();
+  ConsumerState<LeaderboardScreen> createState() => _LeaderboardScreenState();
 }
 
-class _LeaderboardScreenState extends State<LeaderboardScreen> {
+class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
   bool _monthly = false;
   bool _students = true;
 
@@ -40,7 +44,11 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: MuColors.canvas,
-      body: CustomScrollView(
+      body: MuRefresh(
+        onRefresh: () => _students
+            ? ref.refresh(studentLeaderboardProvider(monthly: _monthly).future)
+            : ref.refresh(collegeLeaderboardProvider(monthly: _monthly).future),
+        child: CustomScrollView(
         physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
         slivers: [
           SliverToBoxAdapter(
@@ -68,6 +76,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
             _CollegeLeaderboardSliver(monthly: _monthly),
         ],
       ),
+      ),
     );
   }
 }
@@ -86,7 +95,7 @@ class _SegmentedControl extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.14),
+        color: MuColors.onBrand.withValues(alpha: 0.14),
         borderRadius: BorderRadius.circular(MuRadius.chip),
       ),
       child: Row(
@@ -147,7 +156,7 @@ class _MonthlyToggle extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.14),
+          color: MuColors.onBrand.withValues(alpha: 0.14),
           borderRadius: BorderRadius.circular(MuRadius.chip),
         ),
         child: Row(
@@ -191,7 +200,7 @@ class _StudentLeaderboardSliver extends ConsumerWidget {
       ),
       data: (entries) {
         if (entries.isEmpty) {
-          return const SliverFillRemaining(child: Center(child: Text('No students yet.')));
+          return const SliverToBoxAdapter(child: MuStateDisplay(variant: MuStateVariant.noResults, size: MuStateSize.sm));
         }
         final podium = entries
             .take(3)
@@ -199,6 +208,7 @@ class _StudentLeaderboardSliver extends ConsumerWidget {
                   name: e.fullName,
                   karma: e.totalKarma,
                   avatarUrl: e.profilePic,
+                  onTap: _openProfile(context, e.muid),
                 ))
             .toList();
         final rest = entries.skip(3).toList();
@@ -221,6 +231,7 @@ class _StudentLeaderboardSliver extends ConsumerWidget {
                           karma: rest[i].totalKarma,
                           avatarUrl: rest[i].profilePic,
                           showDivider: i < rest.length - 1,
+                          onTap: _openProfile(context, rest[i].muid),
                         ),
                     ],
                   ),
@@ -256,7 +267,7 @@ class _CollegeLeaderboardSliver extends ConsumerWidget {
       ),
       data: (entries) {
         if (entries.isEmpty) {
-          return const SliverFillRemaining(child: Center(child: Text('No colleges yet.')));
+          return const SliverToBoxAdapter(child: MuStateDisplay(variant: MuStateVariant.noResults, size: MuStateSize.sm));
         }
         final podium = entries
             .take(3)
@@ -297,3 +308,7 @@ class _CollegeLeaderboardSliver extends ConsumerWidget {
     );
   }
 }
+
+/// Opens a student's public profile, or nothing when the row has no muid.
+VoidCallback? _openProfile(BuildContext context, String? muid) =>
+    muid == null ? null : () => context.push(RoutePaths.publicProfilePath(muid));

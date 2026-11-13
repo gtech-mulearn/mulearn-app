@@ -5,7 +5,6 @@ import 'package:mulearn_app/core/auth/app_auth_controller.dart';
 import 'package:mulearn_app/core/models/reference_option.dart';
 import 'package:mulearn_app/core/storage/secure_storage_provider.dart';
 import 'package:mulearn_app/features/auth/domain/entities/auth_session.dart';
-import 'package:mulearn_app/features/auth/domain/entities/company_details.dart';
 import 'package:mulearn_app/features/auth/domain/entities/registration_role.dart';
 import 'package:mulearn_app/features/auth/domain/repositories/register_repository.dart';
 import 'package:mulearn_app/features/auth/presentation/providers/register_providers.dart';
@@ -28,12 +27,6 @@ void main() {
   ];
 
   const session = AuthSession(accessToken: 'a', refreshToken: 'r');
-
-  setUpAll(() {
-    registerFallbackValue(
-      const CompanyDetails(companyName: '', companyDescription: ''),
-    );
-  });
 
   setUp(() {
     repository = MockRegisterRepository();
@@ -71,6 +64,51 @@ void main() {
         );
     return container;
   }
+
+  group('submitGeneric — Google sign-up', () {
+    test('registers with the tempToken and needs no password', () async {
+      when(
+        () => repository.registerWithGoogle(
+          tempToken: any(named: 'tempToken'),
+          fullName: any(named: 'fullName'),
+          roleId: any(named: 'roleId'),
+        ),
+      ).thenAnswer((_) async => session);
+      when(
+        () => repository.selectOrganization(
+          organization: any(named: 'organization'),
+          isStudent: any(named: 'isStudent'),
+          department: any(named: 'department'),
+          graduationYear: any(named: 'graduationYear'),
+        ),
+      ).thenAnswer((_) async {});
+
+      final container = makeContainer();
+      container.read(registerWizardControllerProvider.notifier)
+        ..setGoogleSignUp(tempToken: 't', email: 'ada@gmail.com', fullName: 'Ada')
+        ..setBasicInfo(fullName: 'Ada Lovelace', email: 'ada@gmail.com');
+      await container.read(appAuthControllerProvider.future);
+
+      await container.read(registerSubmitControllerProvider.notifier).submitGeneric(
+            role: RegistrationRole.student,
+            college: 'college-1',
+          );
+
+      expect(container.read(registerSubmitControllerProvider).hasError, isFalse);
+      verify(
+        () => repository.registerWithGoogle(tempToken: 't', fullName: 'Ada Lovelace', roleId: 'role-student'),
+      ).called(1);
+      verifyNever(
+        () => repository.registerUser(
+          fullName: any(named: 'fullName'),
+          email: any(named: 'email'),
+          password: any(named: 'password'),
+          roleId: any(named: 'roleId'),
+        ),
+      );
+      expect(container.read(appAuthControllerProvider).value, isTrue);
+    });
+  });
 
   group('submitGeneric — student', () {
     test('College branch selects an existing college', () async {
@@ -289,30 +327,4 @@ void main() {
     expect(container.read(appAuthControllerProvider).value, isFalse);
   });
 
-  test('submitCompany registers the POC user then creates the company', () async {
-    when(() => repository.registerCompany(any())).thenAnswer((_) async {});
-
-    final container = containerWithBasicInfo();
-    await container.read(appAuthControllerProvider.future);
-
-    const details = CompanyDetails(
-      companyName: 'Acme Inc',
-      companyDescription: 'We build things.',
-    );
-
-    await container
-        .read(registerSubmitControllerProvider.notifier)
-        .submitCompany(details);
-
-    verify(
-      () => repository.registerUser(
-        fullName: 'Ada Lovelace',
-        email: 'ada@mulearn.org',
-        password: 'supersecret',
-        roleId: 'role-company',
-      ),
-    ).called(1);
-    verify(() => repository.registerCompany(details)).called(1);
-    expect(container.read(appAuthControllerProvider).value, isTrue);
-  });
 }

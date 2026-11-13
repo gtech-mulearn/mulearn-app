@@ -13,6 +13,8 @@ import 'package:mulearn_app/core/widgets/mu_buttons.dart';
 import 'package:mulearn_app/core/widgets/mu_card.dart';
 import 'package:mulearn_app/core/widgets/mu_chip.dart';
 import 'package:mulearn_app/core/widgets/mu_icon_button.dart';
+import 'package:mulearn_app/core/widgets/mu_load_more_footer.dart';
+import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/core/widgets/mu_section_header.dart';
 import 'package:mulearn_app/core/widgets/mu_stat_block.dart';
 import 'package:mulearn_app/core/widgets/mu_task_tile.dart';
@@ -22,8 +24,10 @@ import 'package:mulearn_app/features/learning_circles/domain/entities/circle_mem
 import 'package:mulearn_app/features/learning_circles/domain/entities/join_request.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/learning_circle_detail.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/meeting.dart';
+import 'package:mulearn_app/features/learning_circles/domain/membership_rules.dart';
 import 'package:mulearn_app/features/learning_circles/presentation/providers/learning_circles_controller.dart';
 import 'package:mulearn_app/features/learning_circles/presentation/providers/meetings_controller.dart';
+import 'package:mulearn_app/features/learning_circles/presentation/widgets/circle_membership_widgets.dart';
 
 class LearningCircleDetailScreen extends ConsumerWidget {
   const LearningCircleDetailScreen({required this.circleId, super.key});
@@ -45,6 +49,7 @@ class LearningCircleDetailScreen extends ConsumerWidget {
         ),
       ),
       body: detailState.when(
+        skipError: true,
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => ErrorRetryView(
           error: error,
@@ -73,13 +78,13 @@ class _CircleDetailBody extends ConsumerWidget {
     final isMember = members.any((m) => m.muid == myMuid);
     final isLead = detail.createdBy.muid == myMuid ||
         members.any((m) => m.muid == myMuid && m.isLeader);
+    final role = circleRole(myMuid: myMuid, creatorMuid: detail.createdBy.muid, members: members);
 
-    return RefreshIndicator(
-      onRefresh: () async {
-        ref
-          ..invalidate(circleDetailProvider(circleId))
-          ..invalidate(circleMembersProvider(circleId));
-      },
+    return MuRefresh(
+      onRefresh: () => Future.wait([
+        ref.refresh(circleDetailProvider(circleId).future),
+        ref.refresh(circleMembersProvider(circleId).future),
+      ]),
       child: ListView(
         padding: const EdgeInsets.all(MuSpace.screenH),
         children: [
@@ -155,7 +160,17 @@ class _CircleDetailBody extends ConsumerWidget {
               children: [
                 for (var i = 0; i < members.length; i++) ...[
                   if (i > 0) const Divider(height: MuSpace.l),
-                  _MemberTile(member: members[i], isLead: isLead, circleId: circleId),
+                  _MemberTile(
+                    member: members[i],
+                    isLead: isLead,
+                    circleId: circleId,
+                    canRemove: canRemoveMember(
+                      viewer: role,
+                      member: members[i],
+                      myMuid: myMuid,
+                      creatorMuid: detail.createdBy.muid,
+                    ),
+                  ),
                 ],
               ],
             ),
@@ -168,6 +183,8 @@ class _CircleDetailBody extends ConsumerWidget {
           ],
           const SizedBox(height: MuSpace.xxl),
           _MeetingsSection(circleId: circleId, isLead: isLead),
+          const SizedBox(height: MuSpace.xxl),
+          CircleLeaveSection(circleId: circleId, circleTitle: detail.title, role: role),
         ],
       ),
     );
@@ -267,11 +284,16 @@ class _MemberTile extends ConsumerWidget {
     required this.member,
     required this.isLead,
     required this.circleId,
+    required this.canRemove,
   });
 
   final CircleMember member;
   final bool isLead;
   final String circleId;
+
+  /// The viewer leads or created the circle, and this isn't them or the
+  /// creator.
+  final bool canRemove;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -319,9 +341,41 @@ class _MemberTile extends ConsumerWidget {
                 ),
               ),
             ],
+            if (canRemove) ...[
+              const SizedBox(height: MuSpace.xs),
+              GestureDetector(
+                onTap: () => _confirmRemove(context, ref),
+                child: Text(
+                  'Remove',
+                  style: MuType.caption.copyWith(color: MuColors.error),
+                ),
+              ),
+            ],
           ],
         ),
       ],
+    );
+  }
+
+  Future<void> _confirmRemove(BuildContext context, WidgetRef ref) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text('Remove ${member.fullName} from the circle?'),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(dialogContext).pop(false), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.of(dialogContext).pop(true), child: const Text('Remove')),
+        ],
+      ),
+    );
+    if (!(confirmed ?? false) || !context.mounted) return;
+    await ref.read(circleActionsControllerProvider.notifier).removeMember(circleId, muid: member.muid);
+    if (!context.mounted) return;
+    final error = ref.read(circleActionsControllerProvider).error;
+    MuToast.show(
+      context,
+      message: error == null ? '${member.fullName} was removed' : ApiException.messageFor(error),
+      type: error == null ? MuToastType.success : MuToastType.error,
     );
   }
 
@@ -426,6 +480,7 @@ class _JoinRequestTile extends ConsumerWidget {
           ),
         ),
         MuIconButton(
+          tooltip: 'Accept join request',
           icon: LucideIcons.check,
           onPressed: () => ref
               .read(circleActionsControllerProvider.notifier)
@@ -433,6 +488,7 @@ class _JoinRequestTile extends ConsumerWidget {
         ),
         const SizedBox(width: MuSpace.s),
         MuIconButton(
+          tooltip: 'Decline join request',
           icon: LucideIcons.x,
           onPressed: () => ref
               .read(circleActionsControllerProvider.notifier)
@@ -458,6 +514,7 @@ class _InvitesSection extends ConsumerWidget {
           children: [
             const Expanded(child: MuSectionHeader(title: 'Invites')),
             MuIconButton(
+              tooltip: 'Invite someone',
               icon: LucideIcons.userPlus,
               onPressed: () => _showInviteDialog(context, ref, circleId),
             ),
@@ -527,13 +584,27 @@ Future<void> _showInviteDialog(
   String circleId,
 ) async {
   final muidController = TextEditingController();
+  var asLead = false;
   final send = await showDialog<bool>(
     context: context,
     builder: (context) => AlertDialog(
       title: const Text('Invite a user'),
-      content: TextField(
-        controller: muidController,
-        decoration: const InputDecoration(labelText: 'MUID'),
+      content: StatefulBuilder(
+        builder: (context, setState) => Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: muidController,
+              decoration: const InputDecoration(labelText: 'MUID'),
+            ),
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              title: const Text('Invite as co-lead'),
+              value: asLead,
+              onChanged: (v) => setState(() => asLead = v),
+            ),
+          ],
+        ),
       ),
       actions: [
         TextButton(
@@ -550,7 +621,7 @@ Future<void> _showInviteDialog(
   if ((send ?? false) && muidController.text.trim().isNotEmpty) {
     await ref
         .read(circleActionsControllerProvider.notifier)
-        .sendInvite(circleId, muid: muidController.text.trim());
+        .sendInvite(circleId, muid: muidController.text.trim(), asLead: asLead);
   }
 }
 
@@ -562,7 +633,7 @@ class _MeetingsSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final meetingsState = ref.watch(circleMeetingsProvider(circleId));
+    final meetingsState = ref.watch(circleMeetingsControllerProvider(circleId));
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -571,6 +642,7 @@ class _MeetingsSection extends ConsumerWidget {
             const Expanded(child: MuSectionHeader(title: 'Meetings')),
             if (isLead)
               MuIconButton(
+                tooltip: 'New meeting',
                 icon: LucideIcons.plus,
                 onPressed: () => context.push(RoutePaths.createMeetingPath(circleId)),
               ),
@@ -580,7 +652,8 @@ class _MeetingsSection extends ConsumerWidget {
         meetingsState.when(
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (error, _) => Text(ApiException.messageFor(error)),
-          data: (meetings) {
+          data: (paged) {
+            final meetings = paged.items;
             if (meetings.isEmpty) {
               return Text('No meetings scheduled.', style: MuType.body.copyWith(color: MuColors.inkSecondary));
             }
@@ -624,6 +697,19 @@ class _MeetingsSection extends ConsumerWidget {
                         extra: circleId,
                       ),
                     ),
+                  ),
+                if (paged.hasMore && (paged.isLoadingMore || paged.loadMoreError != null))
+                  MuLoadMoreFooter(
+                    isLoading: paged.isLoadingMore,
+                    error: paged.loadMoreError,
+                    onRetry: () =>
+                        ref.read(circleMeetingsControllerProvider(circleId).notifier).loadMore(),
+                  )
+                else if (paged.hasMore)
+                  MuGhostButton(
+                    label: 'Show more meetings',
+                    onPressed: () =>
+                        ref.read(circleMeetingsControllerProvider(circleId).notifier).loadMore(),
                   ),
               ],
             );
@@ -677,7 +763,7 @@ class _NextMeetingCard extends ConsumerWidget {
                           await ref
                               .read(meetingActionsControllerProvider.notifier)
                               .rsvp(meeting.id);
-                          ref.invalidate(circleMeetingsProvider(circleId));
+                          ref.invalidate(circleMeetingsControllerProvider(circleId));
                         },
                 ),
             ],

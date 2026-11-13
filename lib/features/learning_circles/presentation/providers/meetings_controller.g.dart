@@ -8,54 +8,51 @@ part of 'meetings_controller.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
+/// A circle's meetings, one page at a time — the same paging behaviour as
+/// [CirclesListController]: keep-on-error, de-duplicated by id, and
+/// concurrent [loadMore] calls share one request.
 
-@ProviderFor(circleMeetings)
-const circleMeetingsProvider = CircleMeetingsFamily._();
+@ProviderFor(CircleMeetingsController)
+const circleMeetingsControllerProvider = CircleMeetingsControllerFamily._();
 
-final class CircleMeetingsProvider
+/// A circle's meetings, one page at a time — the same paging behaviour as
+/// [CirclesListController]: keep-on-error, de-duplicated by id, and
+/// concurrent [loadMore] calls share one request.
+final class CircleMeetingsControllerProvider
     extends
-        $FunctionalProvider<
-          AsyncValue<List<Meeting>>,
-          List<Meeting>,
-          FutureOr<List<Meeting>>
-        >
-    with $FutureModifier<List<Meeting>>, $FutureProvider<List<Meeting>> {
-  const CircleMeetingsProvider._({
-    required CircleMeetingsFamily super.from,
+        $AsyncNotifierProvider<CircleMeetingsController, PagedState<Meeting>> {
+  /// A circle's meetings, one page at a time — the same paging behaviour as
+  /// [CirclesListController]: keep-on-error, de-duplicated by id, and
+  /// concurrent [loadMore] calls share one request.
+  const CircleMeetingsControllerProvider._({
+    required CircleMeetingsControllerFamily super.from,
     required String super.argument,
   }) : super(
          retry: null,
-         name: r'circleMeetingsProvider',
+         name: r'circleMeetingsControllerProvider',
          isAutoDispose: true,
          dependencies: null,
          $allTransitiveDependencies: null,
        );
 
   @override
-  String debugGetCreateSourceHash() => _$circleMeetingsHash();
+  String debugGetCreateSourceHash() => _$circleMeetingsControllerHash();
 
   @override
   String toString() {
-    return r'circleMeetingsProvider'
+    return r'circleMeetingsControllerProvider'
         ''
         '($argument)';
   }
 
   @$internal
   @override
-  $FutureProviderElement<List<Meeting>> $createElement(
-    $ProviderPointer pointer,
-  ) => $FutureProviderElement(pointer);
-
-  @override
-  FutureOr<List<Meeting>> create(Ref ref) {
-    final argument = this.argument as String;
-    return circleMeetings(ref, argument);
-  }
+  CircleMeetingsController create() => CircleMeetingsController();
 
   @override
   bool operator ==(Object other) {
-    return other is CircleMeetingsProvider && other.argument == argument;
+    return other is CircleMeetingsControllerProvider &&
+        other.argument == argument;
   }
 
   @override
@@ -64,24 +61,68 @@ final class CircleMeetingsProvider
   }
 }
 
-String _$circleMeetingsHash() => r'a9e522f029608bae8b5c884cbc630a243d568e61';
+String _$circleMeetingsControllerHash() =>
+    r'365afd6146d6b09f3780b2474b873797f9270916';
 
-final class CircleMeetingsFamily extends $Family
-    with $FunctionalFamilyOverride<FutureOr<List<Meeting>>, String> {
-  const CircleMeetingsFamily._()
+/// A circle's meetings, one page at a time — the same paging behaviour as
+/// [CirclesListController]: keep-on-error, de-duplicated by id, and
+/// concurrent [loadMore] calls share one request.
+
+final class CircleMeetingsControllerFamily extends $Family
+    with
+        $ClassFamilyOverride<
+          CircleMeetingsController,
+          AsyncValue<PagedState<Meeting>>,
+          PagedState<Meeting>,
+          FutureOr<PagedState<Meeting>>,
+          String
+        > {
+  const CircleMeetingsControllerFamily._()
     : super(
         retry: null,
-        name: r'circleMeetingsProvider',
+        name: r'circleMeetingsControllerProvider',
         dependencies: null,
         $allTransitiveDependencies: null,
         isAutoDispose: true,
       );
 
-  CircleMeetingsProvider call(String circleId) =>
-      CircleMeetingsProvider._(argument: circleId, from: this);
+  /// A circle's meetings, one page at a time — the same paging behaviour as
+  /// [CirclesListController]: keep-on-error, de-duplicated by id, and
+  /// concurrent [loadMore] calls share one request.
+
+  CircleMeetingsControllerProvider call(String circleId) =>
+      CircleMeetingsControllerProvider._(argument: circleId, from: this);
 
   @override
-  String toString() => r'circleMeetingsProvider';
+  String toString() => r'circleMeetingsControllerProvider';
+}
+
+/// A circle's meetings, one page at a time — the same paging behaviour as
+/// [CirclesListController]: keep-on-error, de-duplicated by id, and
+/// concurrent [loadMore] calls share one request.
+
+abstract class _$CircleMeetingsController
+    extends $AsyncNotifier<PagedState<Meeting>> {
+  late final _$args = ref.$arg as String;
+  String get circleId => _$args;
+
+  FutureOr<PagedState<Meeting>> build(String circleId);
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build(_$args);
+    final ref =
+        this.ref as $Ref<AsyncValue<PagedState<Meeting>>, PagedState<Meeting>>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<PagedState<Meeting>>, PagedState<Meeting>>,
+              AsyncValue<PagedState<Meeting>>,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
 }
 
 @ProviderFor(meetingDetail)
@@ -341,7 +382,7 @@ final class MeetingActionsControllerProvider
 }
 
 String _$meetingActionsControllerHash() =>
-    r'fee6140dedac8d43b2ad19e72ea4217f426c5c19';
+    r'7ad9741a4a8035b8f83185a86dff914d615c785b';
 
 /// Every meeting action (create/edit/delete/RSVP/join-by-code/leave/
 /// reports) — a single notifier, mirroring [CircleActionsController].

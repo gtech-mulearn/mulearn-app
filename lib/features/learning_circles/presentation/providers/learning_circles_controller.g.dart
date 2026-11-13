@@ -470,13 +470,13 @@ const myPendingCircleInvitesProvider = MyPendingCircleInvitesProvider._();
 final class MyPendingCircleInvitesProvider
     extends
         $FunctionalProvider<
-          AsyncValue<List<CircleInvite>>,
-          List<CircleInvite>,
-          FutureOr<List<CircleInvite>>
+          AsyncValue<List<ReceivedCircleInvite>>,
+          List<ReceivedCircleInvite>,
+          FutureOr<List<ReceivedCircleInvite>>
         >
     with
-        $FutureModifier<List<CircleInvite>>,
-        $FutureProvider<List<CircleInvite>> {
+        $FutureModifier<List<ReceivedCircleInvite>>,
+        $FutureProvider<List<ReceivedCircleInvite>> {
   const MyPendingCircleInvitesProvider._()
     : super(
         from: null,
@@ -493,18 +493,18 @@ final class MyPendingCircleInvitesProvider
 
   @$internal
   @override
-  $FutureProviderElement<List<CircleInvite>> $createElement(
+  $FutureProviderElement<List<ReceivedCircleInvite>> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<List<CircleInvite>> create(Ref ref) {
+  FutureOr<List<ReceivedCircleInvite>> create(Ref ref) {
     return myPendingCircleInvites(ref);
   }
 }
 
 String _$myPendingCircleInvitesHash() =>
-    r'd75b493fc82a437eef366ce68dc7903cd59d0121';
+    r'39f134bc9cd21e1614cf523a7edc6d40b7edddd6';
 
 /// IG options for the create-circle picker — `{id, name}` only (rules.md
 /// §2: fetched independently rather than importing the `interest_groups`
@@ -558,62 +558,125 @@ final class CircleIgOptionsProvider
 
 String _$circleIgOptionsHash() => r'b0089f447a4e2bc35866de0b8d41304bb9a5b09a';
 
-/// Accumulates circle catalog pages across "load more" — mirrors
-/// [EventsListController]'s infinite-scroll pattern.
+/// Accumulates circle catalog pages across "load more", one list per
+/// [CircleFilter] (a new filter starts again at page 1). A failed page keeps
+/// the circles already shown and records the error for an inline retry.
 
 @ProviderFor(CirclesListController)
-const circlesListControllerProvider = CirclesListControllerProvider._();
+const circlesListControllerProvider = CirclesListControllerFamily._();
 
-/// Accumulates circle catalog pages across "load more" — mirrors
-/// [EventsListController]'s infinite-scroll pattern.
+/// Accumulates circle catalog pages across "load more", one list per
+/// [CircleFilter] (a new filter starts again at page 1). A failed page keeps
+/// the circles already shown and records the error for an inline retry.
 final class CirclesListControllerProvider
     extends
-        $AsyncNotifierProvider<CirclesListController, List<LearningCircle>> {
-  /// Accumulates circle catalog pages across "load more" — mirrors
-  /// [EventsListController]'s infinite-scroll pattern.
-  const CirclesListControllerProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'circlesListControllerProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
+        $AsyncNotifierProvider<
+          CirclesListController,
+          PagedState<LearningCircle>
+        > {
+  /// Accumulates circle catalog pages across "load more", one list per
+  /// [CircleFilter] (a new filter starts again at page 1). A failed page keeps
+  /// the circles already shown and records the error for an inline retry.
+  const CirclesListControllerProvider._({
+    required CirclesListControllerFamily super.from,
+    required CircleFilter super.argument,
+  }) : super(
+         retry: null,
+         name: r'circlesListControllerProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
   @override
   String debugGetCreateSourceHash() => _$circlesListControllerHash();
 
+  @override
+  String toString() {
+    return r'circlesListControllerProvider'
+        ''
+        '($argument)';
+  }
+
   @$internal
   @override
   CirclesListController create() => CirclesListController();
+
+  @override
+  bool operator ==(Object other) {
+    return other is CirclesListControllerProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
 }
 
 String _$circlesListControllerHash() =>
-    r'3342d1c4b75c7aad4413bc261a85fa4a05a69dad';
+    r'02f11afaf2fb6027c84fc4e51264fd0ba5110193';
 
-/// Accumulates circle catalog pages across "load more" — mirrors
-/// [EventsListController]'s infinite-scroll pattern.
+/// Accumulates circle catalog pages across "load more", one list per
+/// [CircleFilter] (a new filter starts again at page 1). A failed page keeps
+/// the circles already shown and records the error for an inline retry.
+
+final class CirclesListControllerFamily extends $Family
+    with
+        $ClassFamilyOverride<
+          CirclesListController,
+          AsyncValue<PagedState<LearningCircle>>,
+          PagedState<LearningCircle>,
+          FutureOr<PagedState<LearningCircle>>,
+          CircleFilter
+        > {
+  const CirclesListControllerFamily._()
+    : super(
+        retry: null,
+        name: r'circlesListControllerProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// Accumulates circle catalog pages across "load more", one list per
+  /// [CircleFilter] (a new filter starts again at page 1). A failed page keeps
+  /// the circles already shown and records the error for an inline retry.
+
+  CirclesListControllerProvider call(CircleFilter filter) =>
+      CirclesListControllerProvider._(argument: filter, from: this);
+
+  @override
+  String toString() => r'circlesListControllerProvider';
+}
+
+/// Accumulates circle catalog pages across "load more", one list per
+/// [CircleFilter] (a new filter starts again at page 1). A failed page keeps
+/// the circles already shown and records the error for an inline retry.
 
 abstract class _$CirclesListController
-    extends $AsyncNotifier<List<LearningCircle>> {
-  FutureOr<List<LearningCircle>> build();
+    extends $AsyncNotifier<PagedState<LearningCircle>> {
+  late final _$args = ref.$arg as CircleFilter;
+  CircleFilter get filter => _$args;
+
+  FutureOr<PagedState<LearningCircle>> build(CircleFilter filter);
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
+    final created = build(_$args);
     final ref =
         this.ref
-            as $Ref<AsyncValue<List<LearningCircle>>, List<LearningCircle>>;
+            as $Ref<
+              AsyncValue<PagedState<LearningCircle>>,
+              PagedState<LearningCircle>
+            >;
     final element =
         ref.element
             as $ClassProviderElement<
               AnyNotifier<
-                AsyncValue<List<LearningCircle>>,
-                List<LearningCircle>
+                AsyncValue<PagedState<LearningCircle>>,
+                PagedState<LearningCircle>
               >,
-              AsyncValue<List<LearningCircle>>,
+              AsyncValue<PagedState<LearningCircle>>,
               Object?,
               Object?
             >;
@@ -656,7 +719,7 @@ final class CircleActionsControllerProvider
 }
 
 String _$circleActionsControllerHash() =>
-    r'15c69d17767b38e2d0e16cf0ee4749321d2efaad';
+    r'2bd3bda31a44fdb8700110ac52906fc14031fdb2';
 
 /// Every mutating circle action (create/edit/delete/join/membership/
 /// invites) — a single notifier so screens show one consistent busy/error

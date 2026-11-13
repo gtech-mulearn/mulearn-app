@@ -1,5 +1,6 @@
 import 'package:mulearn_app/core/models/location_option.dart';
 import 'package:mulearn_app/core/models/reference_option.dart';
+import 'package:mulearn_app/core/session/my_profile_payload.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/profile_controller.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -45,13 +46,16 @@ class ChangeCollegeController extends _$ChangeCollegeController {
     required String orgId,
     required String departmentId,
   }) async {
+    final link = ref.keepAlive(); // finish the follow-up refresh even if the screen closes
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       await ref.read(profileRepositoryProvider).changeCollege(
             orgId: orgId,
             departmentId: departmentId,
           );
-      ref.invalidate(profileControllerProvider);
+      ref.invalidate(myProfilePayloadProvider);
     });
+    if (ref.mounted) state = result;
+    link.close();
   }
 }

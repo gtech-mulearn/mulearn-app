@@ -1,0 +1,42 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/home/learner/summary/",
+    "account": "student",
+    "status": 200,
+    "recorded_at": "2026-11-13T05:39:05.720576Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": [
+        "Learner dashboard summary fetched successfully"
+      ]
+    },
+    "response": {
+      "stats": {
+        "weekly_karma": 0,
+        "total_karma": 0,
+        "rank": 2,
+        "active_circles": 4,
+        "streak_days": 0
+      },
+      "next_meeting": {
+        "id": "d3510fbd-acc6-4c11-8833-dc159c61b6f7",
+        "circle_id": "40a52b79-a820-4dfa-9a12-0bb960567a55",
+        "circle_name": "Full-Stack Fridays",
+        "title": "Deploying Django on Render",
+        "starts_at": "2026-11-13T13:00:00+00:00",
+        "duration_minutes": 2,
+        "meeting_link": "https://teams.microsoft.com/l/meetup-join/seed-fullstack",
+        "rsvp_status": "joined"
+      },
+      "quick_action_counts": {
+        "circles": 4,
+        "leaderboard_rank": 2,
+        "job_openings": 0
+      }
+    }
+  }
+}

@@ -1,6 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:mulearn_app/core/notifications/unread_notifications.dart';
+import 'package:mulearn_app/core/notifications/unread_refresh_triggers.dart';
+import 'package:mulearn_app/core/session/discord_resume_check.dart';
 import 'package:mulearn_app/core/widgets/mu_bottom_nav.dart';
 
 /// Bottom-navigation shell for the five signed-in top-level destinations
@@ -9,7 +15,11 @@ import 'package:mulearn_app/core/widgets/mu_bottom_nav.dart';
 /// navigation/scroll state when switching tabs. Circles was demoted from a
 /// tab to a pushed route (reached from Home) and Journey was promoted from a
 /// Profile-internal tab to a top-level destination, matching the redesign.
-class MainShell extends StatelessWidget {
+///
+/// Also where the unread badge's refresh triggers live: app resume
+/// ([UnreadRefreshTriggers]) and selecting the Home tab, both only when the
+/// count is stale — nothing polls.
+class MainShell extends ConsumerWidget {
   const MainShell({required this.navigationShell, super.key});
 
   final StatefulNavigationShell navigationShell;
@@ -23,17 +33,20 @@ class MainShell extends StatelessWidget {
   ];
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       extendBody: true,
-      body: navigationShell,
+      body: UnreadRefreshTriggers(child: DiscordResumeCheck(child: navigationShell)),
       bottomNavigationBar: MuBottomNav(
         items: _items,
         currentIndex: navigationShell.currentIndex,
-        onTap: (index) => navigationShell.goBranch(
-          index,
-          initialLocation: index == navigationShell.currentIndex,
-        ),
+        onTap: (index) {
+          if (index == 0) unawaited(ref.read(unreadNotificationsProvider.notifier).refreshIfStale());
+          navigationShell.goBranch(
+            index,
+            initialLocation: index == navigationShell.currentIndex,
+          );
+        },
       ),
     );
   }

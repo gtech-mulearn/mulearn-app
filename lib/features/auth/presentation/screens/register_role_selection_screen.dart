@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:mulearn_app/core/config/flavor_config.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/theme/mu_radius.dart';
 import 'package:mulearn_app/core/theme/mu_space.dart';
@@ -85,15 +86,16 @@ class _RegisterRoleSelectionScreenState
                 selected: _selected == RegistrationRole.enabler,
                 onTap: () => setState(() => _selected = RegistrationRole.enabler),
               ),
-              const SizedBox(height: MuSpace.m),
-              _RoleOptionCard(
-                emoji: '🏢',
-                label: 'Company',
-                description: "I'm registering my company for the first time "
-                    'as the Point of Contact (POC). Employees should choose '
-                    'Mentor.',
-                selected: _selected == RegistrationRole.company,
-                onTap: () => setState(() => _selected = RegistrationRole.company),
+              const SizedBox(height: MuSpace.l),
+              Text(
+                'Representing a company? Company accounts are created on the '
+                'μLearn dashboard.',
+                style: MuType.caption.copyWith(color: MuColors.inkSecondary),
+              ),
+              const SizedBox(height: 2),
+              SelectableText(
+                FlavorConfig.instance.dashboardUrl,
+                style: MuType.caption.copyWith(color: MuColors.primary),
               ),
               const SizedBox(height: MuSpace.xl),
               MuPrimaryButton(

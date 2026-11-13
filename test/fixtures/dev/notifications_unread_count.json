@@ -1,0 +1,19 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/notification/unread-count/",
+    "account": "student",
+    "status": 200,
+    "recorded_at": "2026-11-12T19:00:50.485300Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "unread_count": 21
+    }
+  }
+}

@@ -32,6 +32,18 @@ abstract final class ApiEnvelope {
     );
   }
 
+  /// Checks the envelope (throwing on `hasError`) and returns its first
+  /// `message.general` line, if any: for writes whose `response` the app
+  /// doesn't use.
+  static String? unwrapMessage(Response<dynamic> response) {
+    _unwrap(response);
+    final message = (response.data as Map<String, dynamic>)['message'];
+    final general = message is Map ? message['general'] : null;
+    if (general is List && general.isNotEmpty) return '${general.first}';
+    if (general is String && general.isNotEmpty) return general;
+    return null;
+  }
+
   static dynamic _unwrap(Response<dynamic> response) {
     final data = response.data;
     if (data is! Map<String, dynamic>) {

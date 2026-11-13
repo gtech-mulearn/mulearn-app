@@ -1,0 +1,80 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/profile/user-profile/",
+    "account": "campuslead",
+    "status": 200,
+    "recorded_at": "2026-11-13T07:46:15.390749Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "id": "f67beaee-73f4-45e6-a290-709999f7e58e",
+      "joined": "2026-11-12T10:48:44Z",
+      "full_name": "Fixture User",
+      "gender": null,
+      "muid": "qacampusleadone@mulearn",
+      "roles": [
+        "Student",
+        "Campus Lead"
+      ],
+      "role_verification": [
+        {
+          "role": "Student",
+          "is_verified": true
+        },
+        {
+          "role": "Campus Lead",
+          "is_verified": true
+        }
+      ],
+      "lead_enabler_verified": false,
+      "college_id": "ad3a3793-d780-4ec1-b03e-fac92e0faa0d",
+      "college_code": "SJC",
+      "org_district_id": "ac9927a2-c1ea-4b50-8eef-2b702dc232b4",
+      "karma": 0,
+      "rank": 14,
+      "karma_distribution": {
+        "events": [],
+        "ig": [],
+        "intern": {
+          "karma": 0
+        },
+        "general": [],
+        "level": []
+      },
+      "level": "lvl1",
+      "grit": 100,
+      "profile_pic": null,
+      "cover_pic": null,
+      "interest_groups": [
+        {
+          "id": "4ff0a5e5-d1ef-44dd-ac13-9a2f9e7717e3",
+          "name": "Web Development",
+          "karma": 0,
+          "selected": true,
+          "level": {
+            "count": 1,
+            "unit": "level"
+          }
+        },
+        {
+          "id": "662370ae-bfa6-41c6-8962-60a3476f8143",
+          "name": "Data Structures and Algorithm",
+          "karma": 0,
+          "selected": true,
+          "level": {
+            "count": 1,
+            "unit": "level"
+          }
+        }
+      ],
+      "is_public": false,
+      "percentile": 100.0
+    }
+  }
+}

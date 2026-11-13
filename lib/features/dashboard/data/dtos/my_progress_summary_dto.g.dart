@@ -16,6 +16,8 @@ _MyProgressSummaryDto _$MyProgressSummaryDtoFromJson(
   profilePic: json['profile_pic'] as String?,
   rank: json['rank'] as num?,
   percentile: json['percentile'] as num?,
+  interestGroups:
+      json['interest_groups'] as List<dynamic>? ?? const <dynamic>[],
 );
 
 Map<String, dynamic> _$MyProgressSummaryDtoToJson(
@@ -28,4 +30,5 @@ Map<String, dynamic> _$MyProgressSummaryDtoToJson(
   'profile_pic': instance.profilePic,
   'rank': instance.rank,
   'percentile': instance.percentile,
+  'interest_groups': instance.interestGroups,
 };

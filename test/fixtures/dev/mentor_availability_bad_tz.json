@@ -1,0 +1,20 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "POST /api/v1/dashboard/mentor/availability/",
+    "account": "mentor",
+    "status": 400,
+    "recorded_at": "2026-11-13T09:31:06.882042Z"
+  },
+  "body": {
+    "hasError": true,
+    "statusCode": 400,
+    "message": {
+      "general": [],
+      "timezone": [
+        "Enter a valid IANA timezone name (e.g. Asia/Kolkata)."
+      ]
+    },
+    "response": {}
+  }
+}

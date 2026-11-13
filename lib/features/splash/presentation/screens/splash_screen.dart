@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mulearn_app/core/theme/mu_radius.dart';
 import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
 import 'package:mulearn_app/core/theme/mulearn_typography.dart';
+import 'package:mulearn_app/core/widgets/mu_logo.dart';
 
 /// Branded loading screen shown while the initial session is resolved from
 /// secure storage. The router redirects away from here once auth state
@@ -17,7 +17,7 @@ import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 /// thud right as the logo lands) sells the "impact" moment.
 ///
 /// Brand mark matches DESIGN_SPEC.md §2 "01 — Login"'s logo block: a 74×74
-/// rounded-square [MuColors.primary] tile with a white "μ" glyph, the
+/// white rounded tile with the μLearn mark (the app icon), the
 /// "μLearn" wordmark below it, and the "a GTech initiative" caption — all of
 /// the loading/redirect logic below is unchanged, only the mark itself
 /// swapped from the flat logo asset to this tile treatment.
@@ -107,23 +107,8 @@ class _SplashScreenState extends State<SplashScreen>
                     opacity: _logoOpacity,
                     child: ScaleTransition(
                       scale: _logoScale,
-                      child: Container(
-                        height: 74,
-                        width: 74,
-                        decoration: BoxDecoration(
-                          color: MuColors.primary,
-                          borderRadius: BorderRadius.circular(MuRadius.inner + 6),
-                        ),
-                        alignment: Alignment.center,
-                        child: Text(
-                          'μ',
-                          style: MuType.display.copyWith(
-                            color: Colors.white,
-                            fontSize: 36,
-                            height: 1,
-                          ),
-                        ),
-                      ),
+                      // The app icon's mark on its white tile.
+                      child: const MuLogo.mark(size: 74, tile: true),
                     ),
                   ),
                 ],
@@ -134,15 +119,12 @@ class _SplashScreenState extends State<SplashScreen>
               opacity: _logoOpacity,
               child: Column(
                 children: [
-                  Text(
-                    'μLearn',
-                    style: MuType.headline.copyWith(color: Colors.white),
-                  ),
+                  const MuLogo.wordmarkOnBrand(height: 30),
                   const SizedBox(height: MuSpace.xs),
                   Text(
                     'a GTech initiative',
                     style: MuType.caption.copyWith(
-                      color: Colors.white.withValues(alpha: 0.5),
+                      color: MuColors.onBrand.withValues(alpha: 0.5),
                       letterSpacing: 0.4,
                     ),
                   ),
@@ -157,7 +139,7 @@ class _SplashScreenState extends State<SplashScreen>
                 height: 24,
                 child: CircularProgressIndicator(
                   strokeWidth: 2.5,
-                  valueColor: AlwaysStoppedAnimation(Colors.white),
+                  valueColor: AlwaysStoppedAnimation(MuColors.onBrand),
                 ),
               ),
             ),

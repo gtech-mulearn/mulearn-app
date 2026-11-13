@@ -4,6 +4,7 @@ import 'package:mulearn_app/core/network/auth_token_parser.dart';
 import 'package:mulearn_app/core/storage/secure_storage_provider.dart';
 import 'package:mulearn_app/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:mulearn_app/features/auth/domain/entities/auth_session.dart';
+import 'package:mulearn_app/features/auth/domain/entities/social_sign_in_outcome.dart';
 import 'package:mulearn_app/features/auth/domain/repositories/auth_repository.dart';
 
 /// [AuthRepository] implementation.
@@ -20,6 +21,7 @@ class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource _remote;
   final TokenStorage _tokenStorage;
 
+
   @override
   Future<AuthSession> signInWithPassword({
     required String emailOrMuid,
@@ -30,7 +32,7 @@ class AuthRepositoryImpl implements AuthRepository {
         emailOrMuid: emailOrMuid,
         password: password,
       );
-      return _completeSignIn(payload);
+      return await _completeSignIn(payload);
     } on DioException catch (e) {
       throw ApiException.fromDioException(e);
     }
@@ -46,7 +48,7 @@ class AuthRepositoryImpl implements AuthRepository {
         emailOrMuid: emailOrMuid,
         otp: otp,
       );
-      return _completeSignIn(payload);
+      return await _completeSignIn(payload);
     } on DioException catch (e) {
       throw ApiException.fromDioException(e);
     }
@@ -92,26 +94,29 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<AuthSession> signInWithGoogle({required String idToken}) async {
+  Future<SocialSignInOutcome> signInWithGoogle({required String idToken}) async {
     try {
       final payload = await _remote.authenticateWithGoogle(idToken: idToken);
-      return _completeSignIn(payload);
+      final tempToken = payload['tempToken'];
+      if (payload['isNewUser'] == true && tempToken is String && tempToken.isNotEmpty) {
+        return SocialNeedsRegistration(
+          tempToken: tempToken,
+          email: payload['email'] as String? ?? '',
+          fullName: payload['fullName'] as String? ?? '',
+        );
+      }
+      await _completeSignIn(payload);
+      return const SocialSignedIn();
     } on DioException catch (e) {
       throw ApiException.fromDioException(e);
     }
   }
 
   @override
-  Future<AuthSession> signInWithApple({
-    required String identityToken,
-    String? email,
-  }) async {
+  Future<AuthSession> signInWithApple({required String identityToken}) async {
     try {
-      final payload = await _remote.authenticateWithApple(
-        identityToken: identityToken,
-        email: email,
-      );
-      return _completeSignIn(payload);
+      final payload = await _remote.authenticateWithApple(identityToken: identityToken);
+      return await _completeSignIn(payload);
     } on DioException catch (e) {
       throw ApiException.fromDioException(e);
     }
@@ -145,8 +150,6 @@ class AuthRepositoryImpl implements AuthRepository {
     return currentSession();
   }
 
-  @override
-  Future<void> signOut() => _tokenStorage.clear();
 
   @override
   Future<AuthSession?> currentSession() async {

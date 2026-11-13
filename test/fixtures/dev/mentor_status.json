@@ -1,0 +1,29 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/mentor/status/",
+    "account": "mentor",
+    "status": 200,
+    "recorded_at": "2026-11-12T17:08:57.985995Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": [
+        "Successfully retrieved all mentor application statuses."
+      ]
+    },
+    "response": [
+      {
+        "id": "c8dabef6-668f-4451-9ce8-21c985acfe83",
+        "status": "APPROVED",
+        "mentor_tier": "IG_MENTOR",
+        "organization": null,
+        "verified_by": "Dev Admin",
+        "verified_at": "2026-11-12T16:05:55Z",
+        "created_at": "2026-11-12T16:05:55Z"
+      }
+    ]
+  }
+}

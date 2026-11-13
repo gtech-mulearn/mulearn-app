@@ -1,0 +1,41 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/campus/student-details/?sortBy=-karma&search=Ananya&pageIndex=1&perPage=20",
+    "account": "campuslead",
+    "status": 200,
+    "recorded_at": "2026-11-13T13:03:29.732124Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "data": [
+        {
+          "full_name": "Fixture User",
+          "muid": "fixture-user@mulearn",
+          "karma": 0,
+          "rank": 7,
+          "level": "lvl1",
+          "join_date": "2026-11-12 15:18:39+00:00",
+          "last_karma_gained": "2026-11-12 15:18:37+00:00",
+          "graduation_year": "2027",
+          "department": "Management",
+          "is_alumni": false,
+          "ig_count": 3,
+          "lc_count": 1
+        }
+      ],
+      "pagination": {
+        "count": 1,
+        "totalPages": 1,
+        "isNext": false,
+        "isPrev": false,
+        "nextPage": null
+      }
+    }
+  }
+}

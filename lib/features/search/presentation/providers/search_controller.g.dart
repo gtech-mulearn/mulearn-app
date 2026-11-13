@@ -142,7 +142,7 @@ final class SearchControllerProvider
   SearchController create() => SearchController();
 }
 
-String _$searchControllerHash() => r'1dbe1273b6ae4eb11d96569322eb076f44adf296';
+String _$searchControllerHash() => r'f8ccb3c6a0b64cb0ebb963b90cabd916f2f780ff';
 
 /// Accumulates search results across pages ("load more") for a given query
 /// + role filter — matches the reference dashboard's infinite-scroll search

@@ -1,11 +1,14 @@
 import 'package:mulearn_app/core/auth/app_auth_controller.dart';
+import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/network/dio_provider.dart';
+import 'package:mulearn_app/core/session/session_actions.dart';
 import 'package:mulearn_app/core/storage/secure_storage_provider.dart';
 import 'package:mulearn_app/core/utils/app_logger.dart';
 import 'package:mulearn_app/features/auth/data/datasources/apple_native_signin_datasource.dart';
 import 'package:mulearn_app/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:mulearn_app/features/auth/data/datasources/google_native_signin_datasource.dart';
 import 'package:mulearn_app/features/auth/data/repositories/auth_repository_impl.dart';
+import 'package:mulearn_app/features/auth/domain/entities/social_sign_in_outcome.dart';
 import 'package:mulearn_app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -96,49 +99,54 @@ class AuthController extends _$AuthController {
       );
 
   /// Triggers the native Google account picker, then exchanges the resulting
-  /// ID token for an app session.
-  Future<void> signInWithGoogle() => _guard(() async {
-        final idToken = await ref.read(googleNativeSignInDataSourceProvider).signIn();
-        await ref.read(authRepositoryProvider).signInWithGoogle(idToken: idToken);
+  /// ID token. Signs in for a known account; for an unknown email returns
+  /// [SocialNeedsRegistration] so the screen can start Google sign-up.
+  Future<SocialSignInOutcome> signInWithGoogle() async {
+    late SocialSignInOutcome outcome;
+    await _guard(() async {
+      final idToken = await ref.read(googleNativeSignInDataSourceProvider).signIn();
+      outcome = await ref.read(authRepositoryProvider).signInWithGoogle(idToken: idToken);
+      if (outcome is SocialSignedIn) {
         ref.read(appAuthControllerProvider.notifier).setSignedIn();
-      });
+      }
+    });
+    return outcome;
+  }
 
   /// Triggers the native Sign in with Apple flow, then exchanges the
-  /// resulting identity token for an app session.
+  /// resulting identity token for an app session. Throws
+  /// [AppleAccountNotFound] when no account uses the Apple ID's email.
   Future<void> signInWithApple() => _guard(() async {
         final credential = await ref.read(appleNativeSignInDataSourceProvider).signIn();
-        await ref.read(authRepositoryProvider).signInWithApple(
-              identityToken: credential.identityToken,
-              email: credential.email,
-            );
+        try {
+          await ref.read(authRepositoryProvider).signInWithApple(
+                identityToken: credential.identityToken,
+              );
+        } on ApiException catch (e) {
+          if (e.message == _appleNoAccountMessage) throw const AppleAccountNotFound();
+          rethrow;
+        }
         ref.read(appAuthControllerProvider.notifier).setSignedIn();
       });
 
-  Future<void> signOut() async {
-    // Flip the app to signed-out FIRST, synchronously — the router redirect
-    // must fire immediately. Clearing local storage happens after: even if
-    // that Keychain/storage call hangs or throws, it must never trap the
-    // user on the screen they just tried to leave (an `await` before this
-    // line would do exactly that on a stuck platform call, since neither a
-    // `catch` nor a `finally` runs until the `await` itself resolves).
-    ref.read(appAuthControllerProvider.notifier).setSignedOut();
-    try {
-      await ref.read(authRepositoryProvider).signOut();
-    } on Object catch (e, st) {
-      appLogger.e('Failed to clear local session on sign-out', error: e, stackTrace: st);
-    }
-  }
+  /// The authserver's exact reply when no account uses the Apple email.
+  static const _appleNoAccountMessage = 'No account found with this email';
+
+  /// Signs out through the core session (router state first, then the
+  /// server-side revoke, tokens and cache).
+  Future<void> signOut() => ref.read(sessionActionsProvider.notifier).signOut();
 
   Future<void> _guard(Future<void> Function() action) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(action);
-    final error = state.error;
+    final result = await AsyncValue.guard(action);
+    if (ref.mounted) state = result;
+    final error = result.error;
     if (error != null) {
       // Logged regardless of type so a non-ApiException (parsing bug,
       // platform-channel failure, etc.) is never silently reduced to the
       // screen's generic "Something went wrong." with no trace of why.
-      appLogger.e('Auth action failed', error: error, stackTrace: state.stackTrace);
-      Error.throwWithStackTrace(error, state.stackTrace ?? StackTrace.current);
+      appLogger.e('Auth action failed', error: error, stackTrace: result.stackTrace);
+      Error.throwWithStackTrace(error, result.stackTrace ?? StackTrace.current);
     }
   }
 }
