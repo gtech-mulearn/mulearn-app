@@ -8,6 +8,7 @@ import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
 import 'package:mulearn_app/core/theme/mulearn_typography.dart';
+import 'package:mulearn_app/core/utils/clock.dart';
 import 'package:mulearn_app/core/utils/date_format.dart';
 import 'package:mulearn_app/core/utils/external_links.dart';
 import 'package:mulearn_app/core/widgets/mu_buttons.dart';
@@ -22,6 +23,7 @@ import 'package:mulearn_app/features/mentor/domain/entities/mentor_scope.dart';
 import 'package:mulearn_app/features/mentor/domain/entities/mentor_session.dart';
 import 'package:mulearn_app/features/mentor/presentation/providers/mentor_hub_providers.dart';
 import 'package:mulearn_app/features/mentor/presentation/providers/mentor_sessions_controller.dart';
+import 'package:mulearn_app/features/mentor/presentation/widgets/meeting_actions.dart';
 import 'package:mulearn_app/features/mentor/presentation/widgets/session_labels.dart';
 
 /// The mentor workspace's home (audit 06 "M1 Mentor home"): next sessions,
@@ -72,7 +74,12 @@ class MentorHubScreen extends ConsumerWidget {
                   error: (e, _) => _SectionError(e, () => ref.invalidate(mentorNextSessionsProvider)),
                   data: (sessions) => sessions.isEmpty
                       ? Text('No upcoming sessions.', style: MuType.body.copyWith(color: MuColors.inkSecondary))
-                      : Column(children: [for (final s in sessions.take(3)) _SessionRow(session: s)]),
+                      : Column(
+                          children: [
+                            _SessionRow(session: sessions.first, highlight: true),
+                            for (final s in sessions.skip(1).take(2)) _SessionRow(session: s),
+                          ],
+                        ),
                 ),
             const SizedBox(height: MuSpace.xl),
             _RequestsRow(count: ref.watch(mentorRequestCountProvider).value),
@@ -140,40 +147,51 @@ class _SectionError extends StatelessWidget {
       );
 }
 
-class _SessionRow extends StatelessWidget {
-  const _SessionRow({required this.session});
+/// A coming session; the soonest is [highlight]ed with Join when it's time.
+/// The whole card opens the session.
+class _SessionRow extends ConsumerWidget {
+  const _SessionRow({required this.session, this.highlight = false});
 
   final MentorSession session;
+  final bool highlight;
 
   @override
-  Widget build(BuildContext context) {
-    final starts = session.startsAt.toLocal();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final now = ref.watch(clockProvider)().toLocal();
+    final when = formatWhen(starts: session.startsAt.toLocal(), ends: session.endsAt.toLocal(), now: now);
     return Padding(
       padding: const EdgeInsets.only(bottom: MuSpace.s),
       child: MuCard(
+        variant: highlight ? MuCardVariant.tinted : MuCardVariant.surface,
         onTap: () => context.push(RoutePaths.mentorSessionDetailPath(session.id)),
         padding: const EdgeInsets.all(MuSpace.l),
-        child: Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Icon(LucideIcons.calendarDays, size: 20, color: MuColors.primary),
-            const SizedBox(width: MuSpace.m),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(session.title, style: MuType.bodyMed, maxLines: 2, overflow: TextOverflow.ellipsis),
-                  const SizedBox(height: 2),
-                  Text(
-                    '${formatDayTime(starts)} · ${sessionModeLabel(session.mode)}',
-                    style: MuType.caption,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+            Row(
+              children: [
+                const Icon(LucideIcons.calendarDays, size: 20, color: MuColors.primary),
+                const SizedBox(width: MuSpace.m),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(when, style: highlight ? MuType.bodyMed.copyWith(color: MuColors.primary) : MuType.caption),
+                      const SizedBox(height: 2),
+                      Text(session.title, style: MuType.bodyMed, maxLines: 2, overflow: TextOverflow.ellipsis),
+                      Text(
+                        [sessionModeLabel(session.mode), if (session.entityName.isNotEmpty) session.entityName].join(' · '),
+                        style: MuType.caption,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
                   ),
-                  if (session.entityName.isNotEmpty)
-                    Text(session.entityName, style: MuType.caption, maxLines: 1, overflow: TextOverflow.ellipsis),
-                ],
-              ),
+                ),
+                const Icon(LucideIcons.chevronRight, size: 18, color: MuColors.inkSecondary),
+              ],
             ),
+            if (highlight) MeetingLinkActions(session: session, compact: true),
           ],
         ),
       ),

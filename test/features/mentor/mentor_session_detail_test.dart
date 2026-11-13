@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
@@ -149,6 +150,93 @@ void main() {
 
     expect(bodyOf('POST', '$mentorBase/session/participant/add/$_id/'), {'muid': 'learner@mulearn'});
     await drainToast(tester);
+  });
+
+  testWidgets('the meeting link can be copied without editing', (tester) async {
+    final copied = captureClipboard(tester);
+    await pumpMentor(tester, adapter, '/mentor/sessions/$_id');
+
+    expect(find.textContaining('meet.google.com/'), findsOneWidget);
+    await tester.tap(find.byTooltip('Copy link'));
+    await settleMentor(tester);
+
+    expect(copied.single, startsWith('https://meet.google.com/'));
+    expect(find.text('Link copied'), findsOneWidget);
+    await drainToast(tester);
+  });
+
+  testWidgets('Join is the primary action once the session is about to start', (tester) async {
+    final opened = <Uri>[];
+    await pumpMentor(tester, adapter, '/mentor/sessions/$_id',
+        opened: opened, now: recordedStart.subtract(const Duration(minutes: 10)));
+
+    expect(find.text('Starts in 10 min'), findsOneWidget);
+    await tester.tap(find.text('Join session'));
+    await settleMentor(tester);
+    expect(opened.single.toString(), startsWith('https://meet.google.com/'));
+  });
+
+  testWidgets('before then, the link opens from Open link', (tester) async {
+    final opened = <Uri>[];
+    await pumpMentor(tester, adapter, '/mentor/sessions/$_id', opened: opened);
+
+    expect(find.text('Join session'), findsNothing);
+    await tester.tap(find.text('Open link'));
+    await settleMentor(tester);
+    expect(opened, hasLength(1));
+  });
+
+  testWidgets('a venue opens directions', (tester) async {
+    adapter.routes['GET $_detail'] =
+        (_) => FakeResponse(200, okEnvelope(recordedSession({'mode': 'OFFLINE', 'meeting_link': null, 'venue': 'CET Main Hall'})));
+    final opened = <Uri>[];
+    await pumpMentor(tester, adapter, '/mentor/sessions/$_id', opened: opened);
+
+    await tester.tap(find.text('Directions'));
+    await settleMentor(tester);
+    expect(opened.single.queryParameters['query'], 'CET Main Hall');
+  });
+
+  testWidgets('Edit sits in the app bar', (tester) async {
+    await pumpMentor(tester, adapter, '/mentor/sessions/$_id');
+
+    await tester.tap(find.byTooltip('Edit session'));
+    await settleMentor(tester);
+    expect(find.text('Save changes'), findsOneWidget);
+  });
+
+  testWidgets('delete asks first, then leaves the deleted session', (tester) async {
+    adapter.routes['DELETE $mentorBase/session/update/$_id/'] =
+        (_) => FakeResponse(200, okEnvelope(<String, dynamic>{}, message: 'Session deleted successfully.'));
+    final router = await pumpMentor(tester, adapter, '/mentor/sessions');
+    unawaited(router.push('/mentor/sessions/$_id'));
+    await settleMentor(tester);
+
+    await tester.tap(find.byTooltip('More'));
+    await settleMentor(tester);
+    await tester.tap(find.text('Delete session'));
+    await settleMentor(tester);
+    expect(find.text('Delete this session?'), findsOneWidget);
+    await tester.tap(find.widgetWithText(TextButton, 'Delete'));
+    await settleMentor(tester);
+
+    await tester.pump(const Duration(milliseconds: 600)); // the detail finishes leaving
+    expect(adapter.requests.where((RequestOptions r) => r.method == 'DELETE'), hasLength(1));
+    expect(find.byType(MentorSessionDetailScreen), findsNothing);
+    await drainToast(tester);
+  });
+
+  testWidgets('completing before the start says so first', (tester) async {
+    await pumpMentor(tester, adapter, '/mentor/sessions/$_id');
+
+    await tester.tap(find.text('Mark as completed'));
+    await settleMentor(tester);
+    expect(find.textContaining("hasn't started yet"), findsOneWidget);
+  });
+
+  testWidgets("the mentor's own row reads You", (tester) async {
+    await pumpMentor(tester, adapter, '/mentor/sessions/$_id');
+    expect(find.text('You'), findsOneWidget);
   });
 
   testWidgets('a session in the list opens its detail', (tester) async {

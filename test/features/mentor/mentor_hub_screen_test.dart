@@ -34,13 +34,13 @@ void main() {
     });
   });
 
-  Future<void> pumpHub(WidgetTester tester) async {
+  Future<void> pumpHub(WidgetTester tester, {DateTime? now}) async {
     final tokens = TokenStorage(FakeSecureStorage());
     await tokens.saveTokens(accessToken: 'a', refreshToken: 'r');
     final container = ProviderContainer(retry: (_, __) => null, overrides: [
       dioProvider.overrideWithValue(fakeDio(adapter)),
       tokenStorageProvider.overrideWithValue(tokens),
-      clockProvider.overrideWithValue(() => DateTime.utc(2026, 11, 13, 9)),
+      clockProvider.overrideWithValue(() => now ?? DateTime.utc(2026, 11, 13, 9)),
       openExternalProvider.overrideWithValue((uri) async {
         opened.add(uri);
         return true;
@@ -103,6 +103,15 @@ void main() {
     await tester.pump();
 
     expect(opened.single.toString(), '${FlavorConfig.instance.dashboardUrl}/dashboard/profile');
+  });
+
+  testWidgets('the next session can be joined from the hub when it is about to start', (tester) async {
+    await pumpHub(tester, now: DateTime.utc(2026, 11, 20, 12, 20));
+
+    expect(find.text('Starts in 10 min'), findsOneWidget);
+    await tester.tap(find.text('Join session'));
+    await tester.pump();
+    expect(opened.single.toString(), startsWith('https://meet.google.com/'));
   });
 
   testWidgets('a mentor with no scope is told so', (tester) async {

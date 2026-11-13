@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/theme/mu_space.dart';
@@ -172,14 +174,26 @@ class _SessionFormState extends ConsumerState<_SessionForm> {
     final actions = ref.read(sessionActionsProvider.notifier);
     try {
       final editing = widget.editing;
-      final message = editing == null ? await actions.create(draft) : await actions.update(editing.id, draft);
+      if (editing != null) {
+        final message = await actions.update(editing.id, draft);
+        if (!mounted) return;
+        MuToast.show(context, message: message.isEmpty ? 'Session updated' : message, type: MuToastType.success);
+        context.canPop() ? context.pop() : context.go(RoutePaths.mentorSessionDetailPath(editing.id));
+        return;
+      }
+      final created = await actions.create(draft);
       if (!mounted) return;
       MuToast.show(
         context,
-        message: message.isEmpty ? (_isEdit ? 'Session updated' : 'Session created') : message,
+        message: created.message.isEmpty ? 'Session created' : created.message,
         type: MuToastType.success,
       );
-      context.canPop() ? context.pop() : context.go(RoutePaths.mentorSessions);
+      // Show what was just created, in place of the form.
+      if (created.id.isEmpty) {
+        context.canPop() ? context.pop() : context.go(RoutePaths.mentorSessions);
+      } else {
+        context.pushReplacement(RoutePaths.mentorSessionDetailPath(created.id));
+      }
     } on Object catch (e) {
       if (!mounted) return;
       setState(() {
@@ -252,6 +266,7 @@ class _SessionFormState extends ConsumerState<_SessionForm> {
           controller: _title,
           decoration: InputDecoration(labelText: 'Title', errorText: _errorFor('title')),
           textCapitalization: TextCapitalization.sentences,
+          textInputAction: TextInputAction.next,
         ),
         const SizedBox(height: MuSpace.m),
         TextFormField(
@@ -274,7 +289,18 @@ class _SessionFormState extends ConsumerState<_SessionForm> {
         if (mode != SessionMode.offline)
           TextFormField(
             controller: _link,
-            decoration: InputDecoration(labelText: 'Meeting link', errorText: _errorFor('meeting_link')),
+            decoration: InputDecoration(
+              labelText: 'Meeting link',
+              errorText: _errorFor('meeting_link'),
+              suffixIcon: IconButton(
+                tooltip: 'Paste link',
+                icon: const Icon(LucideIcons.clipboardPaste, size: 18),
+                onPressed: () async {
+                  final text = (await Clipboard.getData(Clipboard.kTextPlain))?.text?.trim();
+                  if (text != null && text.isNotEmpty && mounted) setState(() => _link.text = text);
+                },
+              ),
+            ),
             keyboardType: TextInputType.url,
           ),
         if (mode != SessionMode.online) ...[
@@ -375,6 +401,7 @@ class _PickerRow extends StatelessWidget {
             if (error != null) Text(error!, style: MuType.caption.copyWith(color: MuColors.error)),
           ],
         ),
+        trailing: const Icon(LucideIcons.chevronRight, size: 18, color: MuColors.inkSecondary),
         onTap: onTap,
       );
 }

@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mulearn_app/core/widgets/mu_buttons.dart';
+import 'package:mulearn_app/features/mentor/presentation/screens/mentor_session_detail_screen.dart';
 
 import '../../support/fake_http_adapter.dart';
 import '../../support/fixtures.dart';
@@ -19,7 +20,11 @@ void main() {
 
   setUp(() {
     adapter = mentorAdapter();
-    adapter.routes['POST $_create'] = (_) => FakeResponse(201, okEnvelope(<String, dynamic>{}, message: 'Session created'));
+    adapter.routes['POST $_create'] =
+        (_) => FakeResponse(200, okEnvelope({'id': 'new-session'}, message: 'Session created successfully.'));
+    adapter.routes['GET $mentorBase/session/list/new-session/'] =
+        (_) => FakeResponse(200, okEnvelope(recordedSession({'id': 'new-session', 'title': 'Career clinic'})));
+    adapter.routes['GET $mentorBase/session/participant/list/new-session/'] = (_) => FakeResponse(200, pagedEnvelope(const []));
   });
 
   Map<String, dynamic> bodyOf(String method, String path) {
@@ -27,7 +32,7 @@ void main() {
     return (r.data is String ? jsonDecode(r.data as String) : r.data) as Map<String, dynamic>;
   }
 
-  testWidgets('a new session posts its scope, mode and UTC times, then goes back', (tester) async {
+  testWidgets('a new session posts its scope, mode and UTC times, then opens it', (tester) async {
     final router = await pumpMentor(tester, adapter, '/mentor/sessions');
     // push() completes only when the route pops; don't wait on it.
     unawaited(router.push('/mentor/sessions/new'));
@@ -46,8 +51,21 @@ void main() {
     expect(body['venue'], '');
     expect(body['meeting_link'], 'https://meet.example/c');
     expect(DateTime.parse(body['starts_at'] as String).isUtc, isTrue);
-    expect(router.routerDelegate.currentConfiguration.uri.path, '/mentor/sessions');
+    await tester.pump(const Duration(milliseconds: 600)); // the form's route finishes leaving
+    expect(find.byType(MentorSessionDetailScreen), findsOneWidget);
+    expect(find.text('Career clinic'), findsOneWidget);
+    expect(find.text('New session'), findsNothing, reason: 'the form was replaced, not stacked');
     await tester.pump(const Duration(seconds: 4)); // let the toast go
+  });
+
+  testWidgets('a copied meeting link can be pasted in one tap', (tester) async {
+    final copied = captureClipboard(tester)..add('https://meet.example/pasted');
+    await pumpMentor(tester, adapter, '/mentor/sessions/new');
+
+    await tester.tap(find.byTooltip('Paste link'));
+    await settleMentor(tester);
+    expect(find.text('https://meet.example/pasted'), findsOneWidget);
+    expect(copied, hasLength(1));
   });
 
   testWidgets("the backend's field error shows under its field", (tester) async {

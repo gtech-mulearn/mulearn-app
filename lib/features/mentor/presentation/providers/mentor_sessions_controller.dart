@@ -78,7 +78,15 @@ class SessionActions extends _$SessionActions {
   @override
   void build() {}
 
-  Future<String> create(SessionDraft draft) => _run((r) => r.createSession(draft));
+  /// Returns the new session's id and the backend's message.
+  Future<({String id, String message})> create(SessionDraft draft) async {
+    var created = (id: '', message: '');
+    await _run((r) async {
+      created = await r.createSession(draft);
+      return created.message;
+    });
+    return created;
+  }
 
   Future<String> update(String id, SessionDraft draft) => _run((r) => r.updateSession(id, draft), sessionId: id);
 

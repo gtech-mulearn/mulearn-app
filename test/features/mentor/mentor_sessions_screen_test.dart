@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mulearn_app/core/widgets/mu_state_display.dart';
@@ -8,7 +7,6 @@ import '../../support/fixtures.dart';
 import 'mentor_test_support.dart';
 
 const _list = '$mentorBase/session/list/';
-const _sessionId = '282426eb-7650-45da-bbf1-905fe1835115';
 
 /// Plan 4, Task 3 (M2): the mentor's sessions with filters, paging, delete.
 void main() {
@@ -71,22 +69,23 @@ void main() {
     expect(find.text('Nothing here. Yet.'), findsOneWidget);
   });
 
-  testWidgets('delete asks first, then removes the session', (tester) async {
-    adapter.routes['DELETE $mentorBase/session/update/$_sessionId/'] =
-        (_) => FakeResponse(200, okEnvelope(<String, dynamic>{}, message: 'Session deleted successfully.'));
+  testWidgets('a session about to start can be joined from its row', (tester) async {
+    final opened = <Uri>[];
+    await pumpMentor(tester, adapter, '/mentor/sessions',
+        opened: opened, now: recordedStart.subtract(const Duration(minutes: 10)));
+
+    expect(find.text('TODAY'), findsOneWidget, reason: 'the 20 Nov session is today on the 20th');
+    await tester.tap(find.text('Join'));
+    await settleMentor(tester);
+
+    expect(opened.single.toString(), startsWith('https://meet.google.com/'));
+    expect(find.text('PARTICIPANTS (1)'), findsNothing, reason: 'Join opens the link, not the detail');
+  });
+
+  testWidgets('rows show no menu; edit and delete live in the detail', (tester) async {
     await pumpMentor(tester, adapter, '/mentor/sessions');
-    final before = queriesTo(adapter, _list).length;
 
-    await tester.tap(find.byTooltip('Session actions').first);
-    await settleMentor(tester);
-    await tester.tap(find.text('Delete'));
-    await settleMentor(tester);
-    expect(find.text('Delete this session?'), findsOneWidget);
-    await tester.tap(find.widgetWithText(TextButton, 'Delete'));
-    await settleMentor(tester);
-
-    expect(adapter.requests.where((RequestOptions r) => r.method == 'DELETE'), hasLength(1));
-    expect(queriesTo(adapter, _list).length, greaterThan(before), reason: 'the list refetches');
-    await tester.pump(const Duration(seconds: 4)); // let the toast go
+    expect(find.byTooltip('Session actions'), findsNothing);
+    expect(find.text('Join'), findsNothing, reason: 'a week away: not joinable yet');
   });
 }

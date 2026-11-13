@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
@@ -46,14 +47,20 @@ FakeHttpAdapter mentorAdapter() => FakeHttpAdapter({
     });
 
 /// Pumps the mentor routes at [location] and returns the router.
-Future<GoRouter> pumpMentor(WidgetTester tester, FakeHttpAdapter adapter, String location, {List<Uri>? opened}) async {
+Future<GoRouter> pumpMentor(
+  WidgetTester tester,
+  FakeHttpAdapter adapter,
+  String location, {
+  List<Uri>? opened,
+  DateTime? now,
+}) async {
   FlavorConfig.initialize(Flavor.dev);
   final tokens = TokenStorage(FakeSecureStorage());
   await tokens.saveTokens(accessToken: 'a', refreshToken: 'r');
   final container = ProviderContainer(retry: (_, __) => null, overrides: [
     dioProvider.overrideWithValue(fakeDio(adapter)),
     tokenStorageProvider.overrideWithValue(tokens),
-    clockProvider.overrideWithValue(() => mentorTestNow),
+    clockProvider.overrideWithValue(() => now ?? mentorTestNow),
     openExternalProvider.overrideWithValue((uri) async {
       opened?.add(uri);
       return true;
@@ -85,3 +92,24 @@ List<Map<String, dynamic>> queriesTo(FakeHttpAdapter adapter, String path) => [
       for (final r in adapter.requests)
         if (r.method == 'GET' && r.uri.path == path) Map.of(r.uri.queryParameters),
     ];
+
+/// The recorded session (20 Nov 12:30–13:30 UTC) with [changes] applied.
+Map<String, dynamic> recordedSession([Map<String, dynamic> changes = const {}]) {
+  final body = loadFixture('dev/mentor_session_detail');
+  return {...body['response'] as Map<String, dynamic>, ...changes};
+}
+
+/// The recorded session's start, for clocks relative to it.
+final recordedStart = DateTime.utc(2026, 11, 20, 12, 30);
+
+/// Records clipboard writes made through `Clipboard.setData`.
+List<String> captureClipboard(WidgetTester tester) {
+  final copied = <String>[];
+  tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(SystemChannels.platform, (call) async {
+    if (call.method == 'Clipboard.setData') copied.add((call.arguments as Map)['text'] as String);
+    if (call.method == 'Clipboard.getData') return {'text': copied.isEmpty ? null : copied.last};
+    return null;
+  });
+  addTearDown(() => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(SystemChannels.platform, null));
+  return copied;
+}

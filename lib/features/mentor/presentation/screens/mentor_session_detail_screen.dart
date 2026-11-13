@@ -9,10 +9,9 @@ import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
 import 'package:mulearn_app/core/theme/mulearn_typography.dart';
+import 'package:mulearn_app/core/utils/clock.dart';
 import 'package:mulearn_app/core/utils/date_format.dart';
-import 'package:mulearn_app/core/utils/external_links.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
-import 'package:mulearn_app/core/widgets/mu_buttons.dart';
 import 'package:mulearn_app/core/widgets/mu_card.dart';
 import 'package:mulearn_app/core/widgets/mu_chip.dart';
 import 'package:mulearn_app/core/widgets/mu_refresh.dart';
@@ -20,14 +19,18 @@ import 'package:mulearn_app/core/widgets/mu_toast.dart';
 import 'package:mulearn_app/features/mentor/domain/entities/mentor_session.dart';
 import 'package:mulearn_app/features/mentor/domain/entities/session_enums.dart';
 import 'package:mulearn_app/features/mentor/domain/entities/session_participant.dart';
+import 'package:mulearn_app/features/mentor/domain/session_rules.dart';
 import 'package:mulearn_app/features/mentor/presentation/providers/mentor_sessions_controller.dart';
 import 'package:mulearn_app/features/mentor/presentation/providers/session_detail_providers.dart';
 import 'package:mulearn_app/features/mentor/presentation/screens/mentor_sessions_screen.dart';
 import 'package:mulearn_app/features/mentor/presentation/widgets/attendance_sheet.dart';
+import 'package:mulearn_app/features/mentor/presentation/widgets/meeting_actions.dart';
 import 'package:mulearn_app/features/mentor/presentation/widgets/session_labels.dart';
 
-/// One session (M3): details, participants with attendance, add a learner,
-/// mark completed, edit.
+/// One session (M3). What the mentor came for is on top: when it is, the
+/// meeting link (Join from 15 minutes before, Copy, Open) or the venue with
+/// Directions. Edit and Delete sit in the app bar; participants are rows
+/// you tap to record attendance.
 class MentorSessionDetailScreen extends ConsumerWidget {
   const MentorSessionDetailScreen({required this.sessionId, super.key});
 
@@ -36,9 +39,29 @@ class MentorSessionDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final session = ref.watch(mentorSessionProvider(sessionId));
+    final loaded = session.value;
     return Scaffold(
       backgroundColor: MuColors.canvas,
-      appBar: AppBar(backgroundColor: MuColors.canvas, elevation: 0, title: const Text('Session')),
+      appBar: AppBar(
+        backgroundColor: MuColors.canvas,
+        elevation: 0,
+        title: const Text('Session'),
+        actions: [
+          if (loaded != null && editableStatuses.contains(loaded.status))
+            IconButton(
+              tooltip: 'Edit session',
+              icon: const Icon(LucideIcons.pencil, size: 20),
+              onPressed: () => context.push(RoutePaths.mentorSessionEditPath(sessionId)),
+            ),
+          if (loaded != null)
+            PopupMenuButton<String>(
+              tooltip: 'More',
+              icon: const Icon(LucideIcons.moreVertical, size: 20),
+              onSelected: (_) => unawaited(_delete(context, ref, loaded)),
+              itemBuilder: (_) => const [PopupMenuItem(value: 'delete', child: Text('Delete session'))],
+            ),
+        ],
+      ),
       body: session.when(
         skipError: true,
         skipLoadingOnReload: true,
@@ -54,26 +77,15 @@ class MentorSessionDetailScreen extends ConsumerWidget {
             padding: const EdgeInsets.fromLTRB(MuSpace.screenH, MuSpace.m, MuSpace.screenH, MuSpace.xxl),
             children: [
               _Header(session: s),
-              const SizedBox(height: MuSpace.l),
               if (s.status == SessionStatus.scheduled) ...[
-                MuPrimaryButton(
-                  label: 'Mark as completed',
-                  icon: LucideIcons.checkCircle,
-                  onPressed: () => unawaited(_complete(context, ref)),
+                const SizedBox(height: MuSpace.l),
+                OutlinedButton.icon(
+                  onPressed: () => unawaited(_complete(context, ref, s)),
+                  icon: const Icon(LucideIcons.checkCircle, size: 18),
+                  label: const Text('Mark as completed'),
                 ),
-                const SizedBox(height: MuSpace.s),
               ],
-              if (const {SessionStatus.scheduled, SessionStatus.pendingApproval, SessionStatus.requested}
-                  .contains(s.status))
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: TextButton.icon(
-                    onPressed: () => context.push(RoutePaths.mentorSessionEditPath(s.id)),
-                    icon: const Icon(LucideIcons.pencil, size: 16),
-                    label: const Text('Edit session'),
-                  ),
-                ),
-              const SizedBox(height: MuSpace.l),
+              const SizedBox(height: MuSpace.xl),
               _Participants(session: s),
             ],
           ),
@@ -82,13 +94,42 @@ class MentorSessionDetailScreen extends ConsumerWidget {
     );
   }
 
-  Future<void> _complete(BuildContext context, WidgetRef ref) async {
+  Future<void> _delete(BuildContext context, WidgetRef ref, MentorSession s) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Delete this session?'),
+        content: Text('“${s.title}” will be removed for everyone.'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(dialogContext, false), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.pop(dialogContext, true), child: const Text('Delete')),
+        ],
+      ),
+    );
+    if (confirmed != true || !context.mounted) return;
+    try {
+      final message = await ref.read(sessionActionsProvider.notifier).delete(s.id);
+      if (!context.mounted) return;
+      MuToast.show(context, message: message.isEmpty ? 'Session deleted' : message, type: MuToastType.success);
+      context.canPop() ? context.pop() : context.go(RoutePaths.mentorSessions);
+    } on Object catch (e) {
+      if (context.mounted) MuToast.show(context, message: ApiException.messageFor(e), type: MuToastType.error);
+    }
+  }
+
+  Future<void> _complete(BuildContext context, WidgetRef ref, MentorSession s) async {
+    final now = ref.read(clockProvider)();
+    final early = !hasStarted(s, now);
     final ok = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
         // The dashboard's dialog title.
         title: const Text('Mark Session as Completed'),
-        content: const Text('Your time is recorded as contributed minutes and you are marked attended.'),
+        content: Text(
+          early
+              ? "This session hasn't started yet (${formatDayTime(s.startsAt.toLocal())}). Mark it completed anyway?"
+              : 'Your time is recorded as contributed minutes and you are marked attended.',
+        ),
         actions: [
           TextButton(onPressed: () => Navigator.pop(dialogContext, false), child: const Text('Cancel')),
           TextButton(onPressed: () => Navigator.pop(dialogContext, true), child: const Text('Complete')),
@@ -115,36 +156,42 @@ class _Header extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = session;
+    final now = ref.watch(clockProvider)();
     final starts = s.startsAt.toLocal();
     final ends = s.endsAt.toLocal();
-    final link = s.meetingLink;
+    final scheduled = s.status == SessionStatus.scheduled;
     return MuCard(
       padding: const EdgeInsets.all(MuSpace.l),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          MuTagChip(label: statusLabel(s.status)),
+          Row(
+            children: [
+              MuTagChip(label: statusLabel(s.status)),
+              const SizedBox(width: MuSpace.s),
+              Flexible(
+                child: Text(sessionModeLabel(s.mode), style: MuType.caption, overflow: TextOverflow.ellipsis),
+              ),
+            ],
+          ),
           const SizedBox(height: MuSpace.s),
           Text(s.title, style: MuType.title),
           if (s.entityName.isNotEmpty) Text(s.entityName, style: MuType.caption),
           const SizedBox(height: MuSpace.m),
-          Text('${formatDayTime(starts)} – ${formatTime(ends)}', style: MuType.bodyMed),
-          Text(sessionModeLabel(s.mode), style: MuType.caption),
-          if (s.venue != null) Text(s.venue!, style: MuType.body),
-          if (link != null)
-            Align(
-              alignment: Alignment.centerLeft,
-              child: TextButton.icon(
-                onPressed: () {
-                  final uri = Uri.tryParse(link);
-                  if (uri != null && uri.scheme == 'https') unawaited(ref.read(openExternalProvider)(uri));
-                },
-                icon: const Icon(LucideIcons.video, size: 16),
-                label: const Text('Open meeting link'),
-              ),
-            ),
-          if (s.description.isNotEmpty) ...[
+          // Relative first ("Starts in 10 min", "Live now"), then the exact time.
+          if (scheduled)
+            Text(formatWhen(starts: starts, ends: ends, now: now.toLocal()), style: MuType.bodyMed),
+          Text(formatRange(starts, ends), style: scheduled ? MuType.caption : MuType.bodyMed),
+          if (s.meetingLink != null) ...[
+            const SizedBox(height: MuSpace.m),
+            MeetingLinkActions(session: s),
+          ],
+          if (s.venue != null) ...[
             const SizedBox(height: MuSpace.s),
+            VenueRow(venue: s.venue!),
+          ],
+          if (s.description.isNotEmpty) ...[
+            const SizedBox(height: MuSpace.m),
             Text(s.description, style: MuType.body.copyWith(color: MuColors.inkSecondary)),
           ],
         ],
@@ -206,14 +253,27 @@ class _Participants extends ConsumerWidget {
             error: e,
             onRetry: () => ref.invalidate(sessionParticipantsControllerProvider(session.id)),
           ),
-          data: (data) => data.items.isEmpty
-              ? Text('No participants yet.', style: MuType.body.copyWith(color: MuColors.inkSecondary))
-              : Column(children: [for (final p in data.items) _ParticipantRow(sessionId: session.id, participant: p)]),
+          data: (data) {
+            // Learners first; the mentor's own row last.
+            final rows = [
+              ...data.items.where((p) => !_isMentor(p)),
+              ...data.items.where(_isMentor),
+            ];
+            if (rows.isEmpty) {
+              return Text(
+                'No participants yet. Learners who join appear here.',
+                style: MuType.body.copyWith(color: MuColors.inkSecondary),
+              );
+            }
+            return Column(children: [for (final p in rows) _ParticipantRow(sessionId: session.id, participant: p)]);
+          },
         ),
       ],
     );
   }
 }
+
+bool _isMentor(SessionParticipant p) => p.role.toUpperCase() == 'MENTOR';
 
 /// Asks for a learner's muID. Owns its text controller so it outlives the
 /// dialog's closing animation.
@@ -239,7 +299,10 @@ class _MuidDialogState extends State<_MuidDialog> {
         content: TextFormField(
           controller: _controller,
           autofocus: true,
+          autocorrect: false,
+          keyboardType: TextInputType.emailAddress,
           decoration: const InputDecoration(labelText: 'muID', hintText: 'name@mulearn'),
+          onFieldSubmitted: (v) => Navigator.pop(context, v.trim()),
         ),
         actions: [
           TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
@@ -248,6 +311,7 @@ class _MuidDialogState extends State<_MuidDialog> {
       );
 }
 
+/// A participant. The whole row opens the attendance sheet.
 class _ParticipantRow extends ConsumerWidget {
   const _ParticipantRow({required this.sessionId, required this.participant});
 
@@ -275,6 +339,7 @@ class _ParticipantRow extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final p = participant;
+    final mentor = _isMentor(p);
     final style = switch (p.attendance) {
       AttendanceStatus.attended => MuTagStyle.success,
       AttendanceStatus.absent => MuTagStyle.warning,
@@ -283,23 +348,22 @@ class _ParticipantRow extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.only(top: MuSpace.s),
       child: MuCard(
+        onTap: () => unawaited(_edit(context, ref)),
         padding: const EdgeInsets.fromLTRB(MuSpace.l, MuSpace.m, MuSpace.xs, MuSpace.m),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(p.fullName.isEmpty ? p.muid : p.fullName, style: MuType.bodyMed),
-                  if (p.muid.isNotEmpty) Text(p.muid, style: MuType.caption),
+                  Text(mentor ? 'You' : (p.fullName.isEmpty ? p.muid : p.fullName), style: MuType.bodyMed),
+                  if (!mentor && p.muid.isNotEmpty) Text(p.muid, style: MuType.caption),
                   const SizedBox(height: MuSpace.xs),
                   Wrap(
                     spacing: MuSpace.s,
                     crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
                       MuTagChip(label: p.attendance.label, style: style),
-                      if (p.role.toUpperCase() == 'MENTOR') const MuTagChip(label: 'Mentor'),
                       if (p.contributedMinutes != null) Text('${p.contributedMinutes}m', style: MuType.caption),
                     ],
                   ),
@@ -310,7 +374,7 @@ class _ParticipantRow extends ConsumerWidget {
             ),
             IconButton(
               tooltip: 'Edit attendance',
-              icon: const Icon(LucideIcons.clipboardCheck, size: 20, color: MuColors.inkSecondary),
+              icon: const Icon(LucideIcons.chevronRight, size: 18, color: MuColors.inkSecondary),
               onPressed: () => unawaited(_edit(context, ref)),
             ),
           ],

@@ -32,8 +32,9 @@ abstract interface class MentorRepository {
   /// How many student requests wait in the mentor's scopes.
   Future<int> getStudentRequestCount();
 
-  /// `session/create/`; returns the backend's confirmation message.
-  Future<String> createSession(SessionDraft draft);
+  /// `session/create/`: the new session's id (the series' first, when it
+  /// repeats) and the backend's confirmation message.
+  Future<({String id, String message})> createSession(SessionDraft draft);
 
   /// `session/update/<id>/` (PATCH).
   Future<String> updateSession(String id, SessionDraft draft);

@@ -74,8 +74,12 @@ class MentorRepositoryImpl implements MentorRepository {
       });
 
   @override
-  Future<String> createSession(SessionDraft draft) =>
-      _guard(() async => _message(await _remote.createSession(draft.toCreateJson())));
+  Future<({String id, String message})> createSession(SessionDraft draft) => _guard(() async {
+        final response = await _remote.createSession(draft.toCreateJson());
+        final message = _message(response);
+        final body = ApiEnvelope.unwrapObject(response);
+        return (id: '${body['id'] ?? ''}', message: message);
+      });
 
   @override
   Future<String> updateSession(String id, SessionDraft draft) =>
