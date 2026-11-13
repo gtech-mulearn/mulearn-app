@@ -51,7 +51,9 @@ class WorkspaceGate extends ConsumerWidget {
                     // A campus gate names the role actually held (Campus
                     // Lead, Lead Enabler or Enabler).
                     child: RolePendingBanner(
-                      role: role == 'Mentor' ? role : (access?.pendingCampusRole ?? role),
+                      role: role == 'Mentor' || access == null
+                          ? role
+                          : (pendingRoleFor(access, enablerWorkspace: role == 'Enabler') ?? role),
                     ),
                   ),
                 ),

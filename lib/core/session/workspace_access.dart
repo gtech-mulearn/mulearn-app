@@ -26,8 +26,10 @@ abstract class WorkspaceAccess with _$WorkspaceAccess {
     /// collaboration invites (backend `role_required([Admin, Campus Lead])`).
     required bool campusLead,
 
-    /// The campus role the pending banner names, when [campus] is pending.
-    String? pendingCampusRole,
+    /// Every campus role held but not verified yet, in naming order. Each
+    /// gets its own banner, even when another held role opens the campus
+    /// (the dashboard checks Enabler verification on its own).
+    @Default(<String>[]) List<String> pendingCampusRoles,
   }) = _WorkspaceAccess;
 }
 
@@ -65,14 +67,23 @@ WorkspaceAccess deriveWorkspaceAccess({
     return WorkspaceState.hidden;
   }
 
-  final campus = roleState(_campusRoles);
   return WorkspaceAccess(
     mentor: mentor(),
-    campus: campus,
+    campus: roleState(_campusRoles),
     enablerCampuses: roleState(_enablerRoles),
     campusLead: roles.contains(RoleTitles.campusLead) && verified(RoleTitles.campusLead),
-    pendingCampusRole: campus == WorkspaceState.pending ? _campusRoles.firstWhere(roles.contains) : null,
+    pendingCampusRoles: [
+      for (final role in _campusRoles)
+        if (roles.contains(role) && !verified(role)) role,
+    ],
   );
+}
+
+/// The pending role a pending workspace names: for an Enabler workspace an
+/// enabler role, otherwise the first pending campus role. Null when none.
+String? pendingRoleFor(WorkspaceAccess access, {required bool enablerWorkspace}) {
+  final candidates = enablerWorkspace ? _enablerRoles : _campusRoles;
+  return candidates.where(access.pendingCampusRoles.contains).firstOrNull;
 }
 
 /// The profile's `role_verification: [{role, is_verified}]` as lower-case

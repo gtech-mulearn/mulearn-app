@@ -32,10 +32,12 @@ void main() {
     required String userInfo,
     required WidgetBuilder builder,
     Map<String, dynamic>? profile,
+    Map<String, dynamic>? userInfoBody,
     WorkspaceState Function(WorkspaceAccess a)? select,
+    String role = 'Enabler',
   }) async {
     final adapter = FakeHttpAdapter({
-      'GET /api/v1/dashboard/user/info/': (_) => FakeResponse(200, loadFixture(userInfo)),
+      'GET /api/v1/dashboard/user/info/': (_) => FakeResponse(200, userInfoBody ?? loadFixture(userInfo)),
       'GET /api/v1/dashboard/mentor/status/': (_) => FakeResponse(200, loadFixture('dev/mentor_status')),
       if (profile != null) 'GET /api/v1/dashboard/profile/user-profile/': (_) => FakeResponse(200, profile),
     });
@@ -49,7 +51,7 @@ void main() {
     await tester.pumpWidget(UncontrolledProviderScope(
       container: container,
       child: MaterialApp(
-        home: WorkspaceGate(select: select ?? (a) => a.campus, role: 'Enabler', builder: builder),
+        home: WorkspaceGate(select: select ?? (a) => a.campus, role: role, builder: builder),
       ),
     ));
     for (var i = 0; i < 6; i++) {
@@ -101,6 +103,37 @@ void main() {
     }
     expect(find.text('workspace'), findsOneWidget);
     expect(calls, 2);
+  });
+
+  // Final review, Minor 10 → Important: with Campus Lead and Enabler both
+  // unverified, "My campuses" (an Enabler workspace) named Campus Lead.
+  testWidgets('a pending enabler workspace names the Enabler role, not another held one', (tester) async {
+    final info = loadFixture('dev/user_info_enabler');
+    final profile = enablerProfile(verified: false);
+    final response = Map<String, dynamic>.of(profile['response'] as Map<String, dynamic>);
+    response['role_verification'] = [
+      {'role': 'Student', 'is_verified': true},
+      {'role': 'Campus Lead', 'is_verified': false},
+      {'role': 'Enabler', 'is_verified': false},
+    ];
+    await pumpGate(
+      tester,
+      userInfo: 'dev/user_info_enabler',
+      userInfoBody: {
+        ...info,
+        'response': {
+          ...info['response'] as Map<String, dynamic>,
+          'roles': ['Student', 'Campus Lead', 'Enabler'],
+        },
+      },
+      profile: {...profile, 'response': response},
+      select: (a) => a.enablerCampuses,
+      builder: (_) => throw StateError('the workspace must not be built'),
+    );
+
+    expect(find.text('Enabler account pending verification'), findsOneWidget);
+    expect(find.text('Campus Lead account pending verification'), findsNothing);
+    expect(tester.takeException(), isNull);
   });
 
   testWidgets('a verified role builds the workspace', (tester) async {

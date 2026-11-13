@@ -73,7 +73,7 @@ class PendingRoleBanners extends ConsumerWidget {
     if (access == null) return const SizedBox.shrink();
     final roles = [
       if (access.mentor == WorkspaceState.pending) 'Mentor',
-      if (access.campus == WorkspaceState.pending) access.pendingCampusRole ?? 'Enabler',
+      ...access.pendingCampusRoles,
     ];
     if (roles.isEmpty) return const SizedBox.shrink();
     return Column(

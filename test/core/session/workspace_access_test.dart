@@ -30,7 +30,7 @@ void main() {
       final a = derive(['Student'], verified: {'student': true});
       expect([a.mentor, a.campus, a.enablerCampuses], everyElement(WorkspaceState.hidden));
       expect(a.campusLead, isFalse);
-      expect(a.pendingCampusRole, isNull);
+      expect(a.pendingCampusRoles, isEmpty);
     });
 
     test('mentor: approved opens, pending waits, rejected and revoked show nothing', () {
@@ -50,7 +50,7 @@ void main() {
       final a = derive(['Student', 'Enabler'], verified: {'student': true, 'enabler': false});
       expect(a.campus, WorkspaceState.pending);
       expect(a.enablerCampuses, WorkspaceState.pending);
-      expect(a.pendingCampusRole, 'Enabler');
+      expect(a.pendingCampusRoles, ['Enabler']);
     });
 
     test('a campus role with no verification row is pending', () {
@@ -96,7 +96,7 @@ void main() {
       final b = derive(['Mentor', 'Enabler'], apps: ['APPROVED'], verified: {'enabler': false});
       expect(b.mentor, WorkspaceState.open);
       expect(b.campus, WorkspaceState.pending);
-      expect(b.pendingCampusRole, 'Enabler');
+      expect(b.pendingCampusRoles, ['Enabler']);
     });
 
     test('a campus role verified while another is not still opens the campus', () {
@@ -104,13 +104,15 @@ void main() {
       expect(a.campus, WorkspaceState.open);
       expect(a.campusLead, isTrue);
       expect(a.enablerCampuses, WorkspaceState.pending);
+      expect(a.pendingCampusRoles, ['Enabler'], reason: 'announced although the campus is open');
+      expect(pendingRoleFor(a, enablerWorkspace: true), 'Enabler');
     });
 
     test('an unverified Campus Lead gets no approvals', () {
       final a = derive(['Campus Lead'], verified: {'campus lead': false});
       expect(a.campus, WorkspaceState.pending);
       expect(a.campusLead, isFalse);
-      expect(a.pendingCampusRole, 'Campus Lead');
+      expect(a.pendingCampusRoles, ['Campus Lead']);
     });
   });
 

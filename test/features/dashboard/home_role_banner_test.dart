@@ -61,6 +61,54 @@ void main() {
     }
   }
 
+  // Final review, Minor 10 → Important (user: "a user can have multiple
+  // roles"): each held campus role is announced on its own, as the dashboard
+  // checks Enabler verification on its own.
+  Map<String, dynamic> withRoles(String fixture, List<String> roles, {Map<String, bool>? verified}) {
+    final body = loadFixture(fixture);
+    return {
+      ...body,
+      'response': {
+        ...body['response'] as Map<String, dynamic>,
+        'roles': roles,
+        if (verified != null)
+          'role_verification': [
+            for (final e in verified.entries) {'role': e.key, 'is_verified': e.value},
+          ],
+      },
+    };
+  }
+
+  testWidgets('Home names an unverified Enabler even when Campus Lead is verified', (tester) async {
+    const roles = ['Student', 'Campus Lead', 'Enabler'];
+    final adapter = adapterFor(userInfo: 'dev/user_info_campuslead', profile: 'dev/user_profile_campuslead');
+    adapter.routes['GET /api/v1/dashboard/user/info/'] = (_) => FakeResponse(200, withRoles('dev/user_info_campuslead', roles));
+    adapter.routes['GET /api/v1/dashboard/profile/user-profile/'] = (_) => FakeResponse(
+          200,
+          withRoles('dev/user_profile_campuslead', roles, verified: {'Student': true, 'Campus Lead': true, 'Enabler': false}),
+        );
+    adapter.routes['GET /api/v1/dashboard/campus/home-summary/'] =
+        (_) => FakeResponse(200, loadFixture('dev/campus_home_summary'));
+    await pump(tester, adapter, const HomeScreen());
+
+    expect(find.text('Enabler account pending verification'), findsOneWidget);
+    expect(find.text('Campus Lead account pending verification'), findsNothing);
+  });
+
+  testWidgets('Home names each unverified campus role', (tester) async {
+    const roles = ['Student', 'Campus Lead', 'Enabler'];
+    final adapter = adapterFor(userInfo: 'dev/user_info_campuslead', profile: 'dev/user_profile_campuslead');
+    adapter.routes['GET /api/v1/dashboard/user/info/'] = (_) => FakeResponse(200, withRoles('dev/user_info_campuslead', roles));
+    adapter.routes['GET /api/v1/dashboard/profile/user-profile/'] = (_) => FakeResponse(
+          200,
+          withRoles('dev/user_profile_campuslead', roles, verified: {'Student': true, 'Campus Lead': false, 'Enabler': false}),
+        );
+    await pump(tester, adapter, const HomeScreen());
+
+    expect(find.text('Campus Lead account pending verification'), findsOneWidget);
+    expect(find.text('Enabler account pending verification'), findsOneWidget);
+  });
+
   testWidgets('Home announces a pending mentor', (tester) async {
     await pump(
       tester,
