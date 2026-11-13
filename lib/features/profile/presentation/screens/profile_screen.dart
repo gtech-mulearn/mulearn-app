@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mulearn_app/core/session/session_providers.dart';
 import 'package:mulearn_app/core/theme/mu_radius.dart';
 import 'package:mulearn_app/core/theme/mu_shadow.dart';
 import 'package:mulearn_app/core/theme/mu_space.dart';
@@ -52,7 +53,10 @@ class ProfileScreen extends ConsumerWidget {
                 ref.read(profileControllerProvider.notifier).refresh(),
           ),
           data: (profile) => MuRefresh(
-            onRefresh: () => ref.read(profileControllerProvider.notifier).refresh(),
+            onRefresh: () {
+              invalidateSessionState(ref.invalidate);
+              return ref.read(profileControllerProvider.notifier).refresh();
+            },
             child: _ProfileBody(profile: profile),
           ),
         ),

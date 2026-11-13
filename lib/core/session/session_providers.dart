@@ -55,6 +55,16 @@ Future<Capabilities?> capabilities(Ref ref) async {
   return Capabilities.derive(user, applications);
 }
 
+/// Fetches the user's roles and mentor applications again; capabilities and
+/// workspace access follow. Both are kept alive and never auto-retried, so
+/// without this a failed load (or an approval since launch) lasts until
+/// sign-out. Pass `ref.invalidate`. A workspace's Retry and pull-to-refresh
+/// on Home and Profile call it.
+void invalidateSessionState(void Function(ProviderOrFamily provider) invalidate) {
+  invalidate(currentUserProvider);
+  invalidate(mentorApplicationsProvider);
+}
+
 Future<T> _guard<T>(Future<T> Function() action) async {
   try {
     return await action();

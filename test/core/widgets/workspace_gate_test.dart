@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mulearn_app/core/network/dio_provider.dart';
+import 'package:mulearn_app/core/session/session_providers.dart';
 import 'package:mulearn_app/core/session/workspace_access.dart';
 import 'package:mulearn_app/core/storage/secure_storage_provider.dart';
 import 'package:mulearn_app/core/widgets/mu_state_display.dart';
@@ -73,6 +74,33 @@ void main() {
     );
     expect(adapter.requests.where((r) => r.path.startsWith('/api/v1/dashboard/campus/')), isEmpty);
     expect(tester.takeException(), isNull);
+  });
+
+  // Final review, Important 4: the session providers are kept alive and never
+  // auto-retried, so Retry has to fetch them again, not re-read the failure.
+  testWidgets('Retry recovers when user info failed once', (tester) async {
+    var calls = 0;
+    final adapter = await pumpGate(
+      tester,
+      userInfo: 'dev/user_info_enabler',
+      profile: enablerProfile(verified: true),
+      builder: (_) => const Text('workspace'),
+    );
+    adapter.routes['GET /api/v1/dashboard/user/info/'] =
+        (_) => ++calls == 1 ? const FakeResponse(-1, null) : FakeResponse(200, loadFixture('dev/user_info_enabler'));
+    // The first load in pumpGate succeeded; fail it as if at launch.
+    ProviderScope.containerOf(tester.element(find.byType(WorkspaceGate))).invalidate(currentUserProvider);
+    for (var i = 0; i < 6; i++) {
+      await tester.pump(const Duration(milliseconds: 50));
+    }
+    expect(find.text('workspace'), findsNothing);
+
+    await tester.tap(find.text('Retry'));
+    for (var i = 0; i < 6; i++) {
+      await tester.pump(const Duration(milliseconds: 50));
+    }
+    expect(find.text('workspace'), findsOneWidget);
+    expect(calls, 2);
   });
 
   testWidgets('a verified role builds the workspace', (tester) async {

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
+import 'package:mulearn_app/core/session/my_profile_payload.dart';
+import 'package:mulearn_app/core/session/session_providers.dart';
 import 'package:mulearn_app/core/session/workspace_access.dart';
 import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
@@ -29,7 +31,15 @@ class WorkspaceGate extends ConsumerWidget {
             body: Center(child: CircularProgressIndicator()),
           ),
           error: (error, _) => _Shell(
-            child: ErrorRetryView(error: error, onRetry: () => ref.invalidate(workspaceAccessProvider)),
+            child: ErrorRetryView(
+              error: error,
+              // Retry the sources, not just the derived value: they keep a
+              // failure until fetched again.
+              onRetry: () {
+                invalidateSessionState(ref.invalidate);
+                ref.invalidate(myProfilePayloadProvider);
+              },
+            ),
           ),
           data: (access) {
             final state = access == null ? WorkspaceState.hidden : select(access);

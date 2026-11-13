@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -81,6 +83,34 @@ void main() {
 
     expect(find.text('Mentor workspace'), findsOneWidget);
     expect(find.text('Sessions, requests and availability'), findsOneWidget);
+  });
+
+  // Final review, Important 4: approval mid-session reached Home only after
+  // a cold start — pull-to-refresh never fetched the applications again.
+  testWidgets('pull-to-refresh shows a mentor approved since the app opened', (tester) async {
+    adapter = adapterFor(userInfo: 'dev/user_info_mentor', profile: 'dev/user_profile_mentor');
+    final approved = loadFixture('dev/mentor_status');
+    final rows = (approved['response'] as List).cast<Map<String, dynamic>>();
+    final pending = {
+      ...approved,
+      'response': [for (final r in rows) {...r, 'status': 'PENDING'}],
+    };
+    var statusCalls = 0;
+    adapter.routes['GET /api/v1/dashboard/mentor/status/'] =
+        (_) => FakeResponse(200, ++statusCalls == 1 ? pending : approved);
+    await pump(tester, const HomeScreen());
+    expect(find.text('Mentor workspace'), findsNothing);
+    expect(find.text('Mentor account pending verification'), findsOneWidget);
+
+    // The refresh completes on its own; awaiting it here would block the pumps.
+    unawaited(tester.widget<RefreshIndicator>(find.byType(RefreshIndicator)).onRefresh());
+    for (var i = 0; i < 8; i++) {
+      await tester.pump(const Duration(milliseconds: 50));
+    }
+
+    expect(find.text('Mentor workspace'), findsOneWidget);
+    expect(find.text('Mentor account pending verification'), findsNothing);
+    expect(statusCalls, 2);
   });
 
   testWidgets('a learner has no workspace card and Home makes no mentor call', (tester) async {

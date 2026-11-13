@@ -43,11 +43,15 @@ import 'package:mulearn_app/features/dashboard/presentation/widgets/workspace_ca
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
-  Future<void> _refreshAll(WidgetRef ref) => Future.wait([
-        ref.read(myProgressSummaryControllerProvider.notifier).refresh(),
-        ref.read(featuredEventsControllerProvider.notifier).refresh(),
-        ref.refresh(learnerSummaryProvider.future),
-      ]);
+  Future<void> _refreshAll(WidgetRef ref) {
+    // Roles and mentor applications too: an approval since launch shows.
+    invalidateSessionState(ref.invalidate);
+    return Future.wait([
+      ref.read(myProgressSummaryControllerProvider.notifier).refresh(),
+      ref.read(featuredEventsControllerProvider.notifier).refresh(),
+      ref.refresh(learnerSummaryProvider.future),
+    ]);
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
