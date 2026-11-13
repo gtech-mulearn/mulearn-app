@@ -47,6 +47,8 @@ List<_Target> _targets() {
     const _Target('user_info_campuslead', '/api/v1/dashboard/user/info/', account: 'campuslead'),
     const _Target('mentor_status', '/api/v1/dashboard/mentor/status/', account: 'mentor'),
     const _Target('user_profile', '/api/v1/dashboard/profile/user-profile/'),
+    // lvl1…lvl7; every level has 0 tasks on dev (2026-11-13).
+    const _Target('get_user_levels', '/api/v1/dashboard/profile/get-user-levels/'),
     const _Target('editable_profile', '/api/v1/dashboard/profile/'),
     const _Target('task_list', '/api/v1/dashboard/task/list/'),
     const _Target('events_page1', '/api/v1/dashboard/events/?pageIndex=1&perPage=20'),

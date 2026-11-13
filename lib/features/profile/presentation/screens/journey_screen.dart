@@ -6,12 +6,13 @@ import 'package:mulearn_app/core/theme/mu_shadow.dart';
 import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
 import 'package:mulearn_app/core/theme/mulearn_typography.dart';
+import 'package:mulearn_app/core/utils/level_label.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/core/widgets/mu_progress_bars.dart';
 import 'package:mulearn_app/features/profile/domain/entities/user_level.dart';
+import 'package:mulearn_app/features/profile/domain/level_status.dart';
+import 'package:mulearn_app/features/profile/presentation/providers/profile_controller.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/user_levels_controller.dart';
-
-enum _LevelStatus { cleared, current, locked }
 
 /// The 7-level progression path as its own top-level tab (promoted from
 /// Profile's "Mu Voyage" tab, which stays and links here via "See the map").
@@ -27,39 +28,54 @@ class JourneyScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final levelsState = ref.watch(userLevelsProvider);
+    // The user's own level decides where they are (spec §13).
+    final profileState = ref.watch(profileControllerProvider);
+    final levels = levelsState.value;
+    final profile = profileState.value;
+
+    final Widget body;
+    if (levelsState.hasError && levels == null) {
+      body = ErrorRetryView(
+        error: levelsState.error!,
+        onRetry: () => ref.invalidate(userLevelsProvider),
+      );
+    } else if (profileState.hasError && profile == null) {
+      body = ErrorRetryView(
+        error: profileState.error!,
+        onRetry: () => ref.read(profileControllerProvider.notifier).refresh(),
+      );
+    } else if (levels == null || profile == null) {
+      body = const Center(child: CircularProgressIndicator());
+    } else {
+      body = _JourneyBody(levels: levels, userLevel: profile.level);
+    }
 
     return Scaffold(
       backgroundColor: MuColors.canvas,
-      body: SafeArea(
-        child: levelsState.when(
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, _) => ErrorRetryView(
-            error: error,
-            onRetry: () => ref.invalidate(userLevelsProvider),
-          ),
-          data: (levels) => _JourneyBody(levels: levels),
-        ),
-      ),
+      body: SafeArea(child: body),
     );
   }
 }
 
 class _JourneyBody extends StatelessWidget {
-  const _JourneyBody({required this.levels});
+  _JourneyBody({required List<UserLevel> levels, required this.userLevel})
+    : levels = [...levels]
+        ..sort((a, b) => levelNumber(a.name).compareTo(levelNumber(b.name)));
 
   final List<UserLevel> levels;
 
-  bool _isCleared(UserLevel level) => level.tasks.every((t) => t.completed);
+  /// The user's level from user-profile, e.g. "lvl1".
+  final String? userLevel;
 
   @override
   Widget build(BuildContext context) {
     if (levels.isEmpty) {
-      return Center(
-        child: Text('No levels yet.', style: MuType.body),
-      );
+      return Center(child: Text('No levels yet.', style: MuType.body));
     }
 
-    var currentIndex = levels.indexWhere((l) => !_isCleared(l));
+    final statuses = levelStatuses(levels, currentLevel: userLevel);
+    var currentIndex = statuses.indexOf(LevelStatus.current);
+    // Beyond the last listed level: everything is cleared; show the top one.
     if (currentIndex == -1) currentIndex = levels.length - 1;
 
     final currentLevel = levels[currentIndex];
@@ -68,7 +84,7 @@ class _JourneyBody extends StatelessWidget {
         .fold<num>(0, (sum, t) => sum + t.karma);
     final totalTasks = currentLevel.tasks.length;
     final doneTasks = currentLevel.tasks.where((t) => t.completed).length;
-    final ringValue = totalTasks == 0 ? 1.0 : doneTasks / totalTasks;
+    final ringValue = totalTasks == 0 ? 0.0 : doneTasks / totalTasks;
     final hasNext = currentIndex + 1 < levels.length;
     final nextLevel = hasNext ? levels[currentIndex + 1] : null;
 
@@ -88,23 +104,16 @@ class _JourneyBody extends StatelessWidget {
         ),
         const SizedBox(height: MuSpace.xl),
         _JourneyHeaderCard(
-          levelNumber: currentIndex + 1,
-          levelName: currentLevel.name,
+          levelNumber: levelNumber(currentLevel.name),
+          levelName: levelLabel(currentLevel.name),
+          hasTasks: totalTasks > 0,
           ringValue: ringValue,
           remaining: remaining,
           nextLevel: nextLevel,
         ),
         const SizedBox(height: MuSpace.xxl),
         for (var i = 0; i < levels.length; i++)
-          _LevelCard(
-            index: i,
-            level: levels[i],
-            status: i < currentIndex
-                ? _LevelStatus.cleared
-                : i == currentIndex
-                    ? _LevelStatus.current
-                    : _LevelStatus.locked,
-          ),
+          _LevelCard(index: i, level: levels[i], status: statuses[i]),
       ],
     );
   }
@@ -117,6 +126,7 @@ class _JourneyHeaderCard extends StatelessWidget {
     required this.ringValue,
     required this.remaining,
     required this.nextLevel,
+    required this.hasTasks,
   });
 
   final int levelNumber;
@@ -124,6 +134,7 @@ class _JourneyHeaderCard extends StatelessWidget {
   final double ringValue;
   final num remaining;
   final UserLevel? nextLevel;
+  final bool hasTasks;
 
   @override
   Widget build(BuildContext context) {
@@ -143,7 +154,10 @@ class _JourneyHeaderCard extends StatelessWidget {
             trackColor: MuColors.onBrand.withValues(alpha: 0.14),
             child: Text(
               '$levelNumber',
-              style: MuType.stat.copyWith(color: MuColors.surface, fontSize: 26),
+              style: MuType.stat.copyWith(
+                color: MuColors.surface,
+                fontSize: 26,
+              ),
             ),
           ),
           const SizedBox(width: MuSpace.l),
@@ -157,10 +171,14 @@ class _JourneyHeaderCard extends StatelessWidget {
                 ),
                 const SizedBox(height: MuSpace.xs),
                 Text(
-                  nextLevel == null
+                  !hasTasks
+                      ? 'No tasks in this level yet'
+                      : nextLevel == null
                       ? "You've cleared every level so far."
-                      : '$remaining more karma unlocks Level ${levelNumber + 1} · ${nextLevel!.name}',
-                  style: MuType.caption.copyWith(color: MuColors.onBrand.withValues(alpha: 0.7)),
+                      : '$remaining more karma unlocks ${levelLabel(nextLevel!.name)}',
+                  style: MuType.caption.copyWith(
+                    color: MuColors.onBrand.withValues(alpha: 0.7),
+                  ),
                 ),
               ],
             ),
@@ -172,11 +190,15 @@ class _JourneyHeaderCard extends StatelessWidget {
 }
 
 class _LevelCard extends StatelessWidget {
-  const _LevelCard({required this.index, required this.level, required this.status});
+  const _LevelCard({
+    required this.index,
+    required this.level,
+    required this.status,
+  });
 
   final int index;
   final UserLevel level;
-  final _LevelStatus status;
+  final LevelStatus status;
 
   @override
   Widget build(BuildContext context) {
@@ -184,15 +206,19 @@ class _LevelCard extends StatelessWidget {
     final doneTasks = level.tasks.where((t) => t.completed).length;
 
     final (bg, fg) = switch (status) {
-      _LevelStatus.current => (MuColors.ink, MuColors.surface),
-      _LevelStatus.cleared => (MuColors.surface, MuColors.ink),
-      _LevelStatus.locked => (MuColors.hairline, MuColors.inkFaint),
+      LevelStatus.current => (MuColors.ink, MuColors.surface),
+      LevelStatus.cleared => (MuColors.surface, MuColors.ink),
+      LevelStatus.locked => (MuColors.hairline, MuColors.inkFaint),
     };
 
     final (pillBg, pillFg, pillLabel) = switch (status) {
-      _LevelStatus.current => (MuColors.karmaAccentTint, MuColors.karmaAccent, 'YOU ARE HERE'),
-      _LevelStatus.cleared => (MuColors.successBg, MuColors.success, 'CLEARED'),
-      _LevelStatus.locked => (MuColors.hairline, MuColors.inkFaint, 'LOCKED'),
+      LevelStatus.current => (
+        MuColors.karmaAccentTint,
+        MuColors.karmaAccent,
+        'YOU ARE HERE',
+      ),
+      LevelStatus.cleared => (MuColors.successBg, MuColors.success, 'CLEARED'),
+      LevelStatus.locked => (MuColors.hairline, MuColors.inkFaint, 'LOCKED'),
     };
 
     return Padding(
@@ -206,7 +232,9 @@ class _LevelCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: bg,
           borderRadius: BorderRadius.circular(MuRadius.card),
-          boxShadow: status == _LevelStatus.current ? MuShadow.hero : MuShadow.card,
+          boxShadow: status == LevelStatus.current
+              ? MuShadow.hero
+              : MuShadow.card,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -218,29 +246,40 @@ class _LevelCard extends StatelessWidget {
                   height: 36,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: status == _LevelStatus.current
+                    color: status == LevelStatus.current
                         ? MuColors.onBrand.withValues(alpha: 0.12)
                         : MuColors.primaryTint,
                     shape: BoxShape.circle,
                   ),
                   child: Text(
-                    '${index + 1}',
+                    '${levelNumber(level.name)}',
                     style: MuType.statSmall.copyWith(
-                      color: status == _LevelStatus.locked ? MuColors.inkFaint : MuColors.primary,
+                      color: status == LevelStatus.locked
+                          ? MuColors.inkFaint
+                          : MuColors.primary,
                     ),
                   ),
                 ),
                 const SizedBox(width: MuSpace.m),
                 Expanded(
-                  child: Text(level.name, style: MuType.title.copyWith(color: fg)),
+                  child: Text(
+                    levelLabel(level.name),
+                    style: MuType.title.copyWith(color: fg),
+                  ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 5,
+                  ),
                   decoration: BoxDecoration(
                     color: pillBg,
                     borderRadius: BorderRadius.circular(MuRadius.chip),
                   ),
-                  child: Text(pillLabel, style: MuType.tag.copyWith(color: pillFg)),
+                  child: Text(
+                    pillLabel,
+                    style: MuType.tag.copyWith(color: pillFg),
+                  ),
                 ),
               ],
             ),
@@ -250,24 +289,32 @@ class _LevelCard extends StatelessWidget {
                 Icon(
                   LucideIcons.zap,
                   size: 15,
-                  color: status == _LevelStatus.locked ? MuColors.inkFaint : MuColors.karmaAccent,
+                  color: status == LevelStatus.locked
+                      ? MuColors.inkFaint
+                      : MuColors.karmaAccent,
                 ),
                 const SizedBox(width: 4),
                 Text(
                   '${level.karma} karma',
                   style: MuType.caption.copyWith(
-                    color: status == _LevelStatus.current
+                    color: status == LevelStatus.current
                         ? MuColors.onBrand.withValues(alpha: 0.7)
                         : MuColors.inkSecondary,
                   ),
                 ),
                 const SizedBox(width: MuSpace.m),
-                Text(
-                  '$doneTasks/${level.tasks.length} tasks',
-                  style: MuType.caption.copyWith(
-                    color: status == _LevelStatus.current
-                        ? MuColors.onBrand.withValues(alpha: 0.7)
-                        : MuColors.inkSecondary,
+                Flexible(
+                  child: Text(
+                    level.tasks.isEmpty
+                        ? 'No tasks yet'
+                        : '$doneTasks/${level.tasks.length} tasks',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: MuType.caption.copyWith(
+                      color: status == LevelStatus.current
+                          ? MuColors.onBrand.withValues(alpha: 0.7)
+                          : MuColors.inkSecondary,
+                    ),
                   ),
                 ),
               ],
