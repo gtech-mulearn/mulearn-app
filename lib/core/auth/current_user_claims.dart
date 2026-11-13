@@ -21,3 +21,12 @@ Future<String?> currentUserMuid(Ref ref) async {
   final token = await ref.watch(tokenStorageProvider).readAccessToken();
   return token == null ? null : jwtClaim(token, 'muid');
 }
+
+/// The signed-in user's id (the JWT `id` claim) — the id meeting attendees
+/// are listed by (`attendees[].user_id`).
+@riverpod
+Future<String?> currentUserId(Ref ref) async {
+  if (!await ref.watch(appAuthControllerProvider.future)) return null;
+  final token = await ref.watch(tokenStorageProvider).readAccessToken();
+  return token == null ? null : jwtClaim(token, 'id');
+}

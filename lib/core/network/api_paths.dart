@@ -328,6 +328,12 @@ abstract final class ApiPaths {
   static String circleJoin(String id) =>
       '/api/v1/dashboard/learningcircle/join/$id/';
 
+  /// `DELETE` — leave (members only; leads transfer first, creators delete).
+  static String circleLeave(String id) => '/api/v1/dashboard/learningcircle/leave/$id/';
+
+  /// `DELETE {"muid"}` — the lead or creator removes a member.
+  static String circleMemberRemove(String id) => '/api/v1/dashboard/learningcircle/members/remove/$id/';
+
   static String circleInvite(String id) =>
       '/api/v1/dashboard/learningcircle/invite/$id/';
   static String circleInviteSent(String id) =>

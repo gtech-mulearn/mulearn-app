@@ -118,6 +118,15 @@ class MeetingActionsController extends _$MeetingActionsController {
     if (ref.mounted) state = result;
   }
 
+  Future<void> cancelRsvp(String id) async {
+    state = const AsyncLoading();
+    final result = await AsyncValue.guard(() async {
+      await ref.read(learningCirclesRepositoryProvider).cancelRsvp(id);
+      ref.invalidate(meetingDetailProvider(id));
+    });
+    if (ref.mounted) state = result;
+  }
+
   Future<void> joinWithCode(String id, String code) async {
     state = const AsyncLoading();
     final result = await AsyncValue.guard(() async {

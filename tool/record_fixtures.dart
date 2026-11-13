@@ -56,6 +56,11 @@ List<_Target> _targets() {
     const _Target('events_featured', '/api/v1/dashboard/events/featured/'),
     const _Target('circles_page1', '/api/v1/dashboard/learningcircle/list/?pageIndex=1&perPage=20'),
     const _Target('user_circles', '/api/v1/dashboard/learningcircle/user-circles/'),
+    // A seeded circle the QA student belongs to as a plain member.
+    const _Target('circle_detail', '/api/v1/dashboard/learningcircle/info/463e9e4a-7255-431d-95f9-5bd181a48d12/'),
+    const _Target('circle_members', '/api/v1/dashboard/learningcircle/members/463e9e4a-7255-431d-95f9-5bd181a48d12/'),
+    // An upcoming meeting in another of the student's circles.
+    const _Target('meeting_detail', '/api/v1/dashboard/learningcircle/meeting/info/d3510fbd-acc6-4c11-8833-dc159c61b6f7/'),
     const _Target('my_invites', '/api/v1/dashboard/learningcircle/invite/status/'),
     _Target('calendar_student', calendar),
     _Target('calendar_mentor', calendar, account: 'mentor'),

@@ -23,8 +23,10 @@ import 'package:mulearn_app/features/learning_circles/domain/entities/circle_mem
 import 'package:mulearn_app/features/learning_circles/domain/entities/join_request.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/learning_circle_detail.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/meeting.dart';
+import 'package:mulearn_app/features/learning_circles/domain/membership_rules.dart';
 import 'package:mulearn_app/features/learning_circles/presentation/providers/learning_circles_controller.dart';
 import 'package:mulearn_app/features/learning_circles/presentation/providers/meetings_controller.dart';
+import 'package:mulearn_app/features/learning_circles/presentation/widgets/circle_membership_widgets.dart';
 
 class LearningCircleDetailScreen extends ConsumerWidget {
   const LearningCircleDetailScreen({required this.circleId, super.key});
@@ -74,6 +76,7 @@ class _CircleDetailBody extends ConsumerWidget {
     final isMember = members.any((m) => m.muid == myMuid);
     final isLead = detail.createdBy.muid == myMuid ||
         members.any((m) => m.muid == myMuid && m.isLeader);
+    final role = circleRole(myMuid: myMuid, creatorMuid: detail.createdBy.muid, members: members);
 
     return RefreshIndicator(
       onRefresh: () async {
@@ -156,7 +159,17 @@ class _CircleDetailBody extends ConsumerWidget {
               children: [
                 for (var i = 0; i < members.length; i++) ...[
                   if (i > 0) const Divider(height: MuSpace.l),
-                  _MemberTile(member: members[i], isLead: isLead, circleId: circleId),
+                  _MemberTile(
+                    member: members[i],
+                    isLead: isLead,
+                    circleId: circleId,
+                    canRemove: canRemoveMember(
+                      viewer: role,
+                      member: members[i],
+                      myMuid: myMuid,
+                      creatorMuid: detail.createdBy.muid,
+                    ),
+                  ),
                 ],
               ],
             ),
@@ -169,6 +182,8 @@ class _CircleDetailBody extends ConsumerWidget {
           ],
           const SizedBox(height: MuSpace.xxl),
           _MeetingsSection(circleId: circleId, isLead: isLead),
+          const SizedBox(height: MuSpace.xxl),
+          CircleLeaveSection(circleId: circleId, circleTitle: detail.title, role: role),
         ],
       ),
     );
@@ -268,11 +283,16 @@ class _MemberTile extends ConsumerWidget {
     required this.member,
     required this.isLead,
     required this.circleId,
+    required this.canRemove,
   });
 
   final CircleMember member;
   final bool isLead;
   final String circleId;
+
+  /// The viewer leads or created the circle, and this isn't them or the
+  /// creator.
+  final bool canRemove;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -320,9 +340,41 @@ class _MemberTile extends ConsumerWidget {
                 ),
               ),
             ],
+            if (canRemove) ...[
+              const SizedBox(height: MuSpace.xs),
+              GestureDetector(
+                onTap: () => _confirmRemove(context, ref),
+                child: Text(
+                  'Remove',
+                  style: MuType.caption.copyWith(color: MuColors.error),
+                ),
+              ),
+            ],
           ],
         ),
       ],
+    );
+  }
+
+  Future<void> _confirmRemove(BuildContext context, WidgetRef ref) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text('Remove ${member.fullName} from the circle?'),
+        actions: [
+          TextButton(onPressed: () => Navigator.of(dialogContext).pop(false), child: const Text('Cancel')),
+          TextButton(onPressed: () => Navigator.of(dialogContext).pop(true), child: const Text('Remove')),
+        ],
+      ),
+    );
+    if (!(confirmed ?? false) || !context.mounted) return;
+    await ref.read(circleActionsControllerProvider.notifier).removeMember(circleId, muid: member.muid);
+    if (!context.mounted) return;
+    final error = ref.read(circleActionsControllerProvider).error;
+    MuToast.show(
+      context,
+      message: error == null ? '${member.fullName} was removed' : ApiException.messageFor(error),
+      type: error == null ? MuToastType.success : MuToastType.error,
     );
   }
 
@@ -528,13 +580,27 @@ Future<void> _showInviteDialog(
   String circleId,
 ) async {
   final muidController = TextEditingController();
+  var asLead = false;
   final send = await showDialog<bool>(
     context: context,
     builder: (context) => AlertDialog(
       title: const Text('Invite a user'),
-      content: TextField(
-        controller: muidController,
-        decoration: const InputDecoration(labelText: 'MUID'),
+      content: StatefulBuilder(
+        builder: (context, setState) => Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: muidController,
+              decoration: const InputDecoration(labelText: 'MUID'),
+            ),
+            SwitchListTile(
+              contentPadding: EdgeInsets.zero,
+              title: const Text('Invite as co-lead'),
+              value: asLead,
+              onChanged: (v) => setState(() => asLead = v),
+            ),
+          ],
+        ),
       ),
       actions: [
         TextButton(
@@ -551,7 +617,7 @@ Future<void> _showInviteDialog(
   if ((send ?? false) && muidController.text.trim().isNotEmpty) {
     await ref
         .read(circleActionsControllerProvider.notifier)
-        .sendInvite(circleId, muid: muidController.text.trim());
+        .sendInvite(circleId, muid: muidController.text.trim(), asLead: asLead);
   }
 }
 

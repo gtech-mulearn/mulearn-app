@@ -143,13 +143,26 @@ class LearningCirclesRemoteDataSource {
 
   // --- Invites ---
 
-  Future<void> sendInvite(String id, {required String muid}) async {
+  /// `POST invite/<id>/ {muid, lead}` — `lead: true` invites a co-lead
+  /// (CircleInviteSerializer).
+  Future<void> sendInvite(String id, {required String muid, bool asLead = false}) async {
     final response = await _dio.post<dynamic>(
       ApiPaths.circleInvite(id),
-      data: {'muid': muid},
+      data: {'muid': muid, 'lead': asLead},
     );
     ApiEnvelope.unwrapObject(response);
   }
+
+  Future<void> leaveCircle(String id) async =>
+      ApiEnvelope.unwrapObject(await _dio.delete<dynamic>(ApiPaths.circleLeave(id)));
+
+  Future<void> removeMember(String id, {required String muid}) async =>
+      ApiEnvelope.unwrapObject(await _dio.delete<dynamic>(ApiPaths.circleMemberRemove(id), data: {'muid': muid}));
+
+  /// `DELETE meeting/rsvp/<id>/` — refused after joining or within 30
+  /// minutes of the start.
+  Future<void> cancelRsvp(String meetingId) async =>
+      ApiEnvelope.unwrapObject(await _dio.delete<dynamic>(ApiPaths.meetingRsvp(meetingId)));
 
   Future<List<dynamic>> fetchSentInvites(String id) async {
     final response = await _dio.get<dynamic>(ApiPaths.circleInviteSent(id));

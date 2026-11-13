@@ -206,15 +206,54 @@ class CircleActionsController extends _$CircleActionsController {
     if (ref.mounted) state = result;
   }
 
-  Future<void> sendInvite(String circleId, {required String muid}) async {
+  Future<void> sendInvite(String circleId, {required String muid, bool asLead = false}) async {
     state = const AsyncLoading();
     final result = await AsyncValue.guard(() async {
       await ref
           .read(learningCirclesRepositoryProvider)
-          .sendInvite(circleId, muid: muid);
+          .sendInvite(circleId, muid: muid, asLead: asLead);
       ref.invalidate(circleSentInvitesProvider(circleId));
     });
     if (ref.mounted) state = result;
+  }
+
+  /// Leaves [circleId]; true on success. The user's circle list refreshes
+  /// even if the screen closes meanwhile.
+  Future<bool> leaveCircle(String circleId) async {
+    final repository = ref.read(learningCirclesRepositoryProvider);
+    final link = ref.keepAlive();
+    state = const AsyncLoading();
+    try {
+      final result = await AsyncValue.guard(() => repository.leaveCircle(circleId));
+      if (!result.hasError) {
+        ref
+          ..invalidate(myCirclesProvider)
+          ..invalidate(circleMembersProvider(circleId))
+          ..invalidate(circleDetailProvider(circleId));
+      }
+      if (ref.mounted) state = result;
+      return !result.hasError;
+    } finally {
+      link.close();
+    }
+  }
+
+  /// The lead or creator removes [muid] from [circleId].
+  Future<void> removeMember(String circleId, {required String muid}) async {
+    final repository = ref.read(learningCirclesRepositoryProvider);
+    final link = ref.keepAlive();
+    state = const AsyncLoading();
+    try {
+      final result = await AsyncValue.guard(() => repository.removeMember(circleId, muid: muid));
+      if (!result.hasError) {
+        ref
+          ..invalidate(circleMembersProvider(circleId))
+          ..invalidate(circleDetailProvider(circleId));
+      }
+      if (ref.mounted) state = result;
+    } finally {
+      link.close();
+    }
   }
 
   Future<void> respondToInvite(String linkId, {required bool accept}) async {

@@ -129,8 +129,17 @@ class LearningCirclesRepositoryImpl implements LearningCirclesRepository {
           _remote.respondToJoinRequest(id, linkId: linkId, accept: accept));
 
   @override
-  Future<void> sendInvite(String id, {required String muid}) =>
-      _guard(() => _remote.sendInvite(id, muid: muid));
+  Future<void> sendInvite(String id, {required String muid, bool asLead = false}) =>
+      _guard(() => _remote.sendInvite(id, muid: muid, asLead: asLead));
+
+  @override
+  Future<void> leaveCircle(String id) => _guard(() => _remote.leaveCircle(id));
+
+  @override
+  Future<void> removeMember(String id, {required String muid}) => _guard(() => _remote.removeMember(id, muid: muid));
+
+  @override
+  Future<void> cancelRsvp(String meetingId) => _guard(() => _remote.cancelRsvp(meetingId));
 
   @override
   Future<List<CircleInvite>> getSentInvites(String id) => _guard(() async {

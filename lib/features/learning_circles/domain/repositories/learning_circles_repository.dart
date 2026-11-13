@@ -45,7 +45,10 @@ abstract interface class LearningCirclesRepository {
   });
 
   // --- Invites ---
-  Future<void> sendInvite(String id, {required String muid});
+  Future<void> sendInvite(String id, {required String muid, bool asLead = false});
+  Future<void> leaveCircle(String id);
+  Future<void> removeMember(String id, {required String muid});
+  Future<void> cancelRsvp(String meetingId);
   Future<List<CircleInvite>> getSentInvites(String id);
   Future<List<ReceivedCircleInvite>> getMyPendingInvites();
   Future<void> respondToInvite(String linkId, {required bool accept});

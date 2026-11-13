@@ -69,3 +69,44 @@ final class CurrentUserMuidProvider
 }
 
 String _$currentUserMuidHash() => r'0007585e118fe0de0bd4cfe73b707c7eec4b45f2';
+
+/// The signed-in user's id (the JWT `id` claim) — the id meeting attendees
+/// are listed by (`attendees[].user_id`).
+
+@ProviderFor(currentUserId)
+const currentUserIdProvider = CurrentUserIdProvider._();
+
+/// The signed-in user's id (the JWT `id` claim) — the id meeting attendees
+/// are listed by (`attendees[].user_id`).
+
+final class CurrentUserIdProvider
+    extends $FunctionalProvider<AsyncValue<String?>, String?, FutureOr<String?>>
+    with $FutureModifier<String?>, $FutureProvider<String?> {
+  /// The signed-in user's id (the JWT `id` claim) — the id meeting attendees
+  /// are listed by (`attendees[].user_id`).
+  const CurrentUserIdProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'currentUserIdProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$currentUserIdHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<String?> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<String?> create(Ref ref) {
+    return currentUserId(ref);
+  }
+}
+
+String _$currentUserIdHash() => r'fc0229965c3fec9e74ec6fbbe84e9dd5625c5283';

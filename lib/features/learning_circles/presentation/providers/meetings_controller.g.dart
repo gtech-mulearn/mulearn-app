@@ -382,7 +382,7 @@ final class MeetingActionsControllerProvider
 }
 
 String _$meetingActionsControllerHash() =>
-    r'269d95555c711efa8aa99668ec95b41ae01bd1ed';
+    r'd3f89d9650f7efc13132815ac4190d0bf152921f';
 
 /// Every meeting action (create/edit/delete/RSVP/join-by-code/leave/
 /// reports) — a single notifier, mirroring [CircleActionsController].
