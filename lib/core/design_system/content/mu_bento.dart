@@ -20,6 +20,18 @@ enum MuTileSize {
   wide,
 }
 
+/// A fill for tiles not tied to an Interest Group.
+enum MuTileFill {
+  /// Karma-earning actions (find a task).
+  volt,
+
+  /// Commitments and meetings.
+  cobalt,
+
+  /// Everything else that needs weight.
+  night,
+}
+
 /// One bento tile, coloured by the Interest Group category it belongs to so
 /// the board reads by colour before words.
 class MuTile extends StatelessWidget {
@@ -32,8 +44,12 @@ class MuTile extends StatelessWidget {
     this.meta,
     this.footer,
     this.onTap,
+    this.fill,
     super.key,
   });
+
+  /// Overrides [category] for tiles not tied to an Interest Group.
+  final MuTileFill? fill;
 
   /// Two lines at most.
   final String title;
@@ -60,7 +76,12 @@ class MuTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final mu = context.mu;
     final c = mu.colors;
-    final ink = c.inkPrint;
+    final (bg, ink) = switch (fill) {
+      MuTileFill.volt => (c.volt, c.onVolt),
+      MuTileFill.cobalt => (c.cobalt, c.onCobalt),
+      MuTileFill.night => (c.night, c.onNight),
+      null => (MuTones.forIgCategory(c, category), c.inkPrint),
+    };
     final minHeight = switch (size) {
       MuTileSize.tall => 252.0,
       MuTileSize.square => 120.0,
@@ -69,10 +90,7 @@ class MuTile extends StatelessWidget {
     final tile = Container(
       constraints: BoxConstraints(minHeight: minHeight),
       padding: const EdgeInsets.all(MuSpacing.space4),
-      decoration: BoxDecoration(
-        color: MuTones.forIgCategory(c, category),
-        borderRadius: BorderRadius.circular(MuRadii.card),
-      ),
+      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(MuRadii.card)),
       child: Stack(
         children: [
           Column(
@@ -113,8 +131,15 @@ class MuTile extends StatelessWidget {
                 child: Container(
                   width: 32,
                   height: 32,
-                  decoration: BoxDecoration(color: c.night.withValues(alpha: 0.9), shape: BoxShape.circle),
-                  child: Icon(LucideIcons.arrowUpRight, size: MuSizes.iconSm, color: c.onNight),
+                  decoration: BoxDecoration(
+                    color: fill == MuTileFill.night ? c.volt : c.night.withValues(alpha: 0.9),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    LucideIcons.arrowUpRight,
+                    size: MuSizes.iconSm,
+                    color: fill == MuTileFill.night ? c.onVolt : c.onNight,
+                  ),
                 ),
               ),
             ),

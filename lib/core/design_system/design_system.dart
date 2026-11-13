@@ -17,6 +17,7 @@ export 'input/mu_icon_button.dart';
 export 'input/mu_pill.dart';
 export 'motion/mu_pressable.dart';
 export 'motion/mu_spring.dart';
+export 'mulearn/mu_karma_meter.dart';
 export 'mulearn/mu_leaderboard.dart';
 export 'mulearn/mu_level_path.dart';
 export 'mulearn/mu_voice_bubble.dart';

@@ -100,7 +100,7 @@ void main() {
     final meeting = (summary['response'] as Map<String, dynamic>)['next_meeting'] as Map<String, dynamic>;
     await pumpHome(tester);
 
-    expect(find.text('NEXT UP'), findsOneWidget);
+    expect(find.text('Up next'), findsOneWidget);
     expect(find.text(meeting['title'] as String), findsOneWidget);
     expect(find.textContaining(meeting['circle_name'] as String), findsOneWidget);
 
@@ -113,13 +113,13 @@ void main() {
     summary = loadFixture('serializer/learner_summary_no_meeting');
     await pumpHome(tester);
 
-    expect(find.text('NEXT UP'), findsNothing);
+    expect(find.text('Up next'), findsNothing);
   });
 
   testWidgets('setup lists only what is left: Discord here, interest groups already joined', (tester) async {
     await pumpHome(tester); // dev/user_info: not in the server; dev/user_profile: 3 groups
 
-    expect(find.text('GET SET UP'), findsOneWidget);
+    expect(find.text('Get set up'), findsOneWidget);
     expect(find.text('Connect Discord'), findsOneWidget);
     expect(find.text('Join interest groups'), findsNothing);
 
