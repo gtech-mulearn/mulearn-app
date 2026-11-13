@@ -186,6 +186,32 @@ void main() {
     expect(opened, hasLength(1));
   });
 
+  // Final review, Minor 6 → Important: meeting_link is free text (the form
+  // accepts "meet.google.com/…"), and Join/Open did nothing for it.
+  testWidgets('a link typed without https:// still opens', (tester) async {
+    adapter.routes['GET $_detail'] =
+        (_) => FakeResponse(200, okEnvelope(recordedSession({'meeting_link': 'meet.google.com/abc-defg-hij'})));
+    final opened = <Uri>[];
+    await pumpMentor(tester, adapter, '/mentor/sessions/$_id', opened: opened);
+
+    await tester.tap(find.text('Open link'));
+    await settleMentor(tester);
+    expect(opened.single.toString(), 'https://meet.google.com/abc-defg-hij');
+  });
+
+  testWidgets('something that is not a web link says so instead of doing nothing', (tester) async {
+    adapter.routes['GET $_detail'] =
+        (_) => FakeResponse(200, okEnvelope(recordedSession({'meeting_link': 'javascript:alert(1)'})));
+    final opened = <Uri>[];
+    await pumpMentor(tester, adapter, '/mentor/sessions/$_id', opened: opened);
+
+    await tester.tap(find.text('Open link'));
+    await settleMentor(tester);
+    expect(opened, isEmpty);
+    expect(find.text("This link can't be opened. Copy it instead."), findsOneWidget);
+    await drainToast(tester);
+  });
+
   testWidgets('a venue opens directions', (tester) async {
     adapter.routes['GET $_detail'] =
         (_) => FakeResponse(200, okEnvelope(recordedSession({'mode': 'OFFLINE', 'meeting_link': null, 'venue': 'CET Main Hall'})));

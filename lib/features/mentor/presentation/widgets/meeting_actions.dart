@@ -14,10 +14,26 @@ import 'package:mulearn_app/core/widgets/mu_toast.dart';
 import 'package:mulearn_app/features/mentor/domain/entities/mentor_session.dart';
 import 'package:mulearn_app/features/mentor/domain/session_rules.dart';
 
-/// Opens an https link; other schemes are never launched.
-void openLink(WidgetRef ref, String link) {
-  final uri = Uri.tryParse(link);
-  if (uri != null && uri.scheme == 'https') unawaited(ref.read(openExternalProvider)(uri));
+/// A meeting link as a browser can open it. `meeting_link` is free text, so
+/// "meet.google.com/abc" gets `https://`; only http(s) to a real host is
+/// ever launched. Null when it isn't a web link.
+Uri? launchableLink(String link) {
+  final text = link.trim();
+  if (text.isEmpty) return null;
+  final hasScheme = RegExp('^[a-zA-Z][a-zA-Z0-9+.-]*:').hasMatch(text);
+  final uri = Uri.tryParse(hasScheme ? text : 'https://$text');
+  if (uri == null || (uri.scheme != 'https' && uri.scheme != 'http') || !uri.host.contains('.')) return null;
+  return uri;
+}
+
+/// Opens a meeting link, or says it can't (never a silent no-op).
+void openLink(BuildContext context, WidgetRef ref, String link) {
+  final uri = launchableLink(link);
+  if (uri == null) {
+    MuToast.show(context, message: "This link can't be opened. Copy it instead.", type: MuToastType.error);
+    return;
+  }
+  unawaited(ref.read(openExternalProvider)(uri));
 }
 
 /// The link without its scheme, for display: "meet.google.com/abc-defg".
@@ -48,7 +64,7 @@ class MeetingLinkActions extends ConsumerWidget {
       return joinable
           ? Padding(
               padding: const EdgeInsets.only(top: MuSpace.m),
-              child: MuPrimaryButton(label: 'Join session', icon: LucideIcons.video, onPressed: () => openLink(ref, link)),
+              child: MuPrimaryButton(label: 'Join session', icon: LucideIcons.video, onPressed: () => openLink(context, ref, link)),
             )
           : const SizedBox.shrink();
     }
@@ -70,12 +86,12 @@ class MeetingLinkActions extends ConsumerWidget {
           ],
         ),
         if (joinable)
-          MuPrimaryButton(label: 'Join session', icon: LucideIcons.video, onPressed: () => openLink(ref, link))
+          MuPrimaryButton(label: 'Join session', icon: LucideIcons.video, onPressed: () => openLink(context, ref, link))
         else
           Align(
             alignment: Alignment.centerLeft,
             child: TextButton.icon(
-              onPressed: () => openLink(ref, link),
+              onPressed: () => openLink(context, ref, link),
               icon: const Icon(LucideIcons.externalLink, size: 16),
               label: const Text('Open link'),
             ),

@@ -195,7 +195,7 @@ class _SessionTile extends ConsumerWidget {
             ),
             if (joinable)
               FilledButton(
-                onPressed: () => openLink(ref, session.meetingLink!),
+                onPressed: () => openLink(context, ref, session.meetingLink!),
                 style: FilledButton.styleFrom(backgroundColor: MuColors.primary, visualDensity: VisualDensity.compact),
                 child: const Text('Join'),
               )
