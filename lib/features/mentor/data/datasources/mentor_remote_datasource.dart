@@ -48,6 +48,17 @@ class MentorRemoteDataSource {
   Future<Response<dynamic>> verifyRequest(String id, Map<String, Object?> body) =>
       _dio.patch<dynamic>(MentorPaths.studentRequestVerify(id), data: body);
 
+  Future<Map<String, dynamic>> fetchAvailability() async => ApiEnvelope.unwrapObject(
+        await _dio.get<dynamic>(MentorPaths.availability, queryParameters: {'pageIndex': 1, 'perPage': 100}),
+      );
+
+  Future<Response<dynamic>> createSlot(Map<String, Object?> body) => _dio.post<dynamic>(MentorPaths.availability, data: body);
+
+  Future<Response<dynamic>> updateSlot(String id, Map<String, Object?> body) =>
+      _dio.patch<dynamic>(MentorPaths.availabilitySlot(id), data: body);
+
+  Future<Response<dynamic>> deleteSlot(String id) => _dio.delete<dynamic>(MentorPaths.availabilitySlot(id));
+
   /// `[{id, name}]`.
   Future<List<dynamic>> fetchIgDropdown() async => ApiEnvelope.unwrapList(await _dio.get<dynamic>(MentorPaths.igDropdown));
 

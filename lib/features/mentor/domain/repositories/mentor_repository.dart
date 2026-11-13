@@ -1,3 +1,5 @@
+import 'package:mulearn_app/features/mentor/domain/availability_rules.dart';
+import 'package:mulearn_app/features/mentor/domain/entities/availability_slot.dart';
 import 'package:mulearn_app/features/mentor/domain/entities/mentor_analytics.dart';
 import 'package:mulearn_app/features/mentor/domain/entities/mentor_profile_completion.dart';
 import 'package:mulearn_app/features/mentor/domain/entities/mentor_scope.dart';
@@ -71,4 +73,14 @@ abstract interface class MentorRepository {
 
   /// Approves or rejects a request with [body] (see `verifyBody`).
   Future<String> answerRequest(String id, Map<String, Object?> body);
+
+  /// Every weekly slot (`availability/`, up to 100).
+  Future<List<AvailabilitySlot>> getAvailability();
+
+  Future<String> createSlot(SlotInput input);
+
+  /// PATCH with [changes] only (e.g. `{is_active: false}`).
+  Future<String> updateSlot(String id, Map<String, Object?> changes);
+
+  Future<String> deleteSlot(String id);
 }

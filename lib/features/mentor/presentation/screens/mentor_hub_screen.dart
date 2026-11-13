@@ -83,6 +83,19 @@ class MentorHubScreen extends ConsumerWidget {
                 ),
             const SizedBox(height: MuSpace.xl),
             _RequestsRow(count: ref.watch(mentorRequestCountProvider).value),
+            const SizedBox(height: MuSpace.s),
+            MuCard(
+              onTap: () => context.push(RoutePaths.mentorAvailability),
+              padding: const EdgeInsets.all(MuSpace.l),
+              child: Row(
+                children: [
+                  const Icon(LucideIcons.clock, size: 20, color: MuColors.primary),
+                  const SizedBox(width: MuSpace.m),
+                  Expanded(child: Text('Weekly availability', style: MuType.bodyMed)),
+                  const Icon(LucideIcons.chevronRight, size: 18, color: MuColors.inkSecondary),
+                ],
+              ),
+            ),
             const SizedBox(height: MuSpace.m),
             ref.watch(mentorProfileCompletionProvider).when(
                   skipError: true,

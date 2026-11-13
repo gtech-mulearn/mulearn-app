@@ -61,6 +61,14 @@ List<_Target> _targets() {
     const _Target('mentor_student_requests',
         '/api/v1/dashboard/mentor/session/student-requests/?pageIndex=1&perPage=1', account: 'mentor'),
     const _Target('mentor_ig_dropdown', '/api/v1/dashboard/mentor/tasks/ig-dropdown/', account: 'mentor'),
+    // Holds the QA mentor's slot while recording (Plan 4 Task 6).
+    const _Target('mentor_availability_list', '/api/v1/dashboard/mentor/availability/?pageIndex=1&perPage=100',
+        account: 'mentor'),
+    // Refused (unknown zone), so nothing is created.
+    const _Target('mentor_availability_bad_tz', '/api/v1/dashboard/mentor/availability/',
+        account: 'mentor',
+        method: 'POST',
+        data: {'weekday': 3, 'start_time': '18:00', 'end_time': '19:00', 'timezone': 'Mars/Base'}),
     // One request seeded by the QA student (Plan 4 Task 5, scratch p4t5_seed.py).
     const _Target('mentor_student_requests_one',
         '/api/v1/dashboard/mentor/session/student-requests/?pageIndex=1&perPage=20', account: 'mentor'),

@@ -4,12 +4,15 @@ import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/network/paging.dart';
 import 'package:mulearn_app/core/network/tolerant_parse.dart';
 import 'package:mulearn_app/features/mentor/data/datasources/mentor_remote_datasource.dart';
+import 'package:mulearn_app/features/mentor/data/dtos/availability_slot_dto.dart';
 import 'package:mulearn_app/features/mentor/data/dtos/mentor_analytics_dto.dart';
 import 'package:mulearn_app/features/mentor/data/dtos/mentor_profile_completion_dto.dart';
 import 'package:mulearn_app/features/mentor/data/dtos/mentor_scope_dto.dart';
 import 'package:mulearn_app/features/mentor/data/dtos/mentor_session_dto.dart';
 import 'package:mulearn_app/features/mentor/data/dtos/session_participant_dto.dart';
 import 'package:mulearn_app/features/mentor/data/dtos/student_request_dto.dart';
+import 'package:mulearn_app/features/mentor/domain/availability_rules.dart';
+import 'package:mulearn_app/features/mentor/domain/entities/availability_slot.dart';
 import 'package:mulearn_app/features/mentor/domain/entities/mentor_analytics.dart';
 import 'package:mulearn_app/features/mentor/domain/entities/mentor_profile_completion.dart';
 import 'package:mulearn_app/features/mentor/domain/entities/mentor_scope.dart';
@@ -154,6 +157,26 @@ class MentorRepositoryImpl implements MentorRepository {
   @override
   Future<String> answerRequest(String id, Map<String, Object?> body) =>
       _guard(() async => _message(await _remote.verifyRequest(id, body)));
+
+  @override
+  Future<List<AvailabilitySlot>> getAvailability() => _guard(() async {
+        final body = await _remote.fetchAvailability();
+        return parseEachOrReport(
+          body['data'] as List<dynamic>? ?? const [],
+          (json) => AvailabilitySlotDto.fromJson(json).toDomain(),
+          what: 'AvailabilitySlotDto',
+        );
+      });
+
+  @override
+  Future<String> createSlot(SlotInput input) => _guard(() async => _message(await _remote.createSlot(input.toJson())));
+
+  @override
+  Future<String> updateSlot(String id, Map<String, Object?> changes) =>
+      _guard(() async => _message(await _remote.updateSlot(id, changes)));
+
+  @override
+  Future<String> deleteSlot(String id) => _guard(() async => _message(await _remote.deleteSlot(id)));
 
   /// Unwraps the envelope (throwing on `hasError`) and returns its message.
   String _message(Response<dynamic> response) => ApiEnvelope.unwrapMessage(response) ?? '';
