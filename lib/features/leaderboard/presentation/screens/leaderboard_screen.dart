@@ -1,34 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/leaderboard/domain/entities/college_leaderboard_entry.dart';
 import 'package:mulearn_app/core/leaderboard/leaderboard_providers.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
-import 'package:mulearn_app/core/theme/mu_radius.dart';
-import 'package:mulearn_app/core/theme/mu_space.dart';
-import 'package:mulearn_app/core/theme/mulearn_colors.dart';
-import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
-import 'package:mulearn_app/core/widgets/mu_card.dart';
-import 'package:mulearn_app/core/widgets/mu_gradient_header.dart';
 import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/core/widgets/mu_state_display.dart';
-import 'package:mulearn_app/features/leaderboard/presentation/widgets/leaderboard_list_tile.dart';
-import 'package:mulearn_app/features/leaderboard/presentation/widgets/leaderboard_podium.dart';
 
 /// The monthly college-leaderboard endpoint doesn't return a `title` at
-/// all (confirmed live — see `CollegeLeaderboardEntryDto`'s doc comment),
-/// so fall back to the college's short `code` (e.g. "MBT") rather than a
-/// generic placeholder when the full name isn't available.
-String _collegeDisplayName(CollegeLeaderboardEntry entry) =>
-    entry.title ?? entry.code ?? 'Unknown college';
+/// all (only the all-time one does), so fall back to the college's short
+/// `code` (e.g. "MBT") rather than a blank row.
+String _collegeDisplayName(CollegeLeaderboardEntry entry) => entry.title ?? entry.code ?? 'Unknown college';
 
-/// Student + college leaderboards with an all-time/this-month toggle —
-/// DESIGN_SPEC.md §2 "09 — Leaderboard", shipped with **2 segments**
-/// (Learners, Colleges) rather than the mock's 3 — there is no
-/// interest-group leaderboard endpoint, so that segment is omitted rather
-/// than shown empty or faked (per the approved plan).
+enum _Board { students, colleges }
+
+/// Students and colleges, all time or this month (artifact: Leaderboard,
+/// Screen patterns → Leaderboards): the top three on podium blocks, everyone
+/// else as rows with a karma bar scaled to #1.
 class LeaderboardScreen extends ConsumerStatefulWidget {
   const LeaderboardScreen({super.key});
 
@@ -38,277 +28,194 @@ class LeaderboardScreen extends ConsumerStatefulWidget {
 
 class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
   bool _monthly = false;
-  bool _students = true;
+  _Board _board = _Board.students;
 
   @override
   Widget build(BuildContext context) {
+    final mu = context.mu;
     return Scaffold(
-      backgroundColor: MuColors.canvas,
-      body: MuRefresh(
-        onRefresh: () => _students
-            ? ref.refresh(studentLeaderboardProvider(monthly: _monthly).future)
-            : ref.refresh(collegeLeaderboardProvider(monthly: _monthly).future),
-        child: CustomScrollView(
-        physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-        slivers: [
-          SliverToBoxAdapter(
-            child: MuGradientHeader(
-              title: 'Leaderboard',
-              subtitle: 'See where you rank against learners and colleges.',
-              bottom: Row(
+      backgroundColor: mu.colors.chalk,
+      body: SafeArea(
+        bottom: false,
+        child: MuRefresh(
+          onRefresh: () => _board == _Board.students
+              ? ref.refresh(studentLeaderboardProvider(monthly: _monthly).future)
+              : ref.refresh(collegeLeaderboardProvider(monthly: _monthly).future),
+          child: CustomScrollView(
+            physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+            slivers: [
+              SliverPadding(
+                padding: const EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space4, MuSpacing.space5, 0),
+                sliver: SliverList.list(
+                  children: [
+                    Semantics(
+                      header: true,
+                      child: Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(text: "Who's ", style: mu.text.displayLight.copyWith(fontSize: 34)),
+                            TextSpan(text: 'leading', style: mu.text.display.copyWith(fontSize: 34)),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: MuSpacing.space4),
+                    MuSegmented<_Board>(
+                      values: _Board.values,
+                      selected: _board,
+                      label: (b) => b == _Board.students ? 'Students' : 'Colleges',
+                      onChanged: (b) => setState(() => _board = b),
+                    ),
+                    const SizedBox(height: MuSpacing.space2),
+                    Row(
+                      children: [
+                        MuFilterChip(
+                          label: 'All time',
+                          selected: !_monthly,
+                          onTap: () => setState(() => _monthly = false),
+                        ),
+                        const SizedBox(width: MuSpacing.space2),
+                        MuFilterChip(
+                          label: 'This month',
+                          selected: _monthly,
+                          onTap: () => setState(() => _monthly = true),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: MuSpacing.space5),
+                  ],
+                ),
+              ),
+              if (_board == _Board.students) _StudentBoard(monthly: _monthly) else _CollegeBoard(monthly: _monthly),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Podium + rows for any board.
+class _BoardView extends StatelessWidget {
+  const _BoardView({required this.entries, this.open});
+
+  final List<MuRankEntry> entries;
+
+  /// Opens the entry at an index, or null when it can't open.
+  final VoidCallback? Function(int index)? open;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.mu.colors;
+    final hasPodium = entries.length >= 3;
+    final rest = hasPodium ? entries.skip(3).toList() : entries;
+    final offset = hasPodium ? 3 : 0;
+    final max = entries.first.karma;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(MuSpacing.space5, 0, MuSpacing.space5, MuSpacing.navClearance),
+      child: Column(
+        children: [
+          if (hasPodium) MuPodium(top: entries.take(3).toList(), onOpen: (e) => open?.call(entries.indexOf(e))?.call()),
+          if (rest.isNotEmpty) ...[
+            const SizedBox(height: MuSpacing.space3),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: MuSpacing.space4, vertical: MuSpacing.space1),
+              decoration: BoxDecoration(color: c.surface, borderRadius: BorderRadius.circular(MuRadii.card)),
+              child: Column(
                 children: [
-                  _SegmentedControl(
-                    students: _students,
-                    onChanged: (value) => setState(() => _students = value),
-                  ),
-                  const Spacer(),
-                  _MonthlyToggle(
-                    monthly: _monthly,
-                    onTap: () => setState(() => _monthly = !_monthly),
-                  ),
+                  for (var i = 0; i < rest.length; i++)
+                    MuRankRow(rank: i + offset + 1, entry: rest[i], maxKarma: max, onTap: open?.call(i + offset)),
                 ],
               ),
             ),
-          ),
-          if (_students)
-            _StudentLeaderboardSliver(monthly: _monthly)
-          else
-            _CollegeLeaderboardSliver(monthly: _monthly),
-        ],
-      ),
-      ),
-    );
-  }
-}
-
-/// Glass pill segmented control (Students / Colleges) sitting on the
-/// gradient header — the design's 2-segment version (Groups omitted, no
-/// backing endpoint).
-class _SegmentedControl extends StatelessWidget {
-  const _SegmentedControl({required this.students, required this.onChanged});
-
-  final bool students;
-  final ValueChanged<bool> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(
-        color: MuColors.onBrand.withValues(alpha: 0.14),
-        borderRadius: BorderRadius.circular(MuRadius.chip),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _SegmentItem(label: 'Students', selected: students, onTap: () => onChanged(true)),
-          _SegmentItem(label: 'Colleges', selected: !students, onTap: () => onChanged(false)),
+          ],
         ],
       ),
     );
   }
 }
 
-class _SegmentItem extends StatelessWidget {
-  const _SegmentItem({required this.label, required this.selected, required this.onTap});
+class _StudentBoard extends ConsumerWidget {
+  const _StudentBoard({required this.monthly});
 
-  final String label;
-  final bool selected;
-  final VoidCallback onTap;
+  final bool monthly;
 
   @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 180),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
-          color: selected ? MuColors.surface : Colors.transparent,
-          borderRadius: BorderRadius.circular(MuRadius.chip - 4),
-        ),
-        child: Text(
-          label,
-          style: MuType.chip.copyWith(
-            color: selected ? MuColors.ink : MuColors.surface.withValues(alpha: 0.8),
-            fontSize: 13,
+  Widget build(BuildContext context, WidgetRef ref) {
+    return ref
+        .watch(studentLeaderboardProvider(monthly: monthly))
+        .when(
+          loading: () => const SliverFillRemaining(child: Center(child: CircularProgressIndicator())),
+          error: (error, _) => SliverFillRemaining(
+            child: ErrorRetryView(
+              error: error,
+              onRetry: () => ref.invalidate(studentLeaderboardProvider(monthly: monthly)),
+            ),
           ),
-        ),
-      ),
-    );
+          data: (entries) {
+            if (entries.isEmpty) {
+              return const SliverToBoxAdapter(
+                child: MuStateDisplay(variant: MuStateVariant.noResults, size: MuStateSize.sm),
+              );
+            }
+            return SliverToBoxAdapter(
+              child: _BoardView(
+                entries: [
+                  for (final e in entries)
+                    MuRankEntry(
+                      name: e.fullName,
+                      karma: e.totalKarma.toInt(),
+                      subtitle: e.institution,
+                      photoUrl: e.profilePic,
+                    ),
+                ],
+                open: (i) {
+                  final muid = entries[i].muid;
+                  return muid == null ? null : () => context.push(RoutePaths.publicProfilePath(muid));
+                },
+              ),
+            );
+          },
+        );
   }
 }
 
-/// Small secondary toggle for the real monthly/all-time functionality — kept
-/// (per the plan) but styled as a lighter-weight control than the main
-/// Students/Colleges segmented control, since the mock itself doesn't show
-/// this control at all.
-class _MonthlyToggle extends StatelessWidget {
-  const _MonthlyToggle({required this.monthly, required this.onTap});
-
-  final bool monthly;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        decoration: BoxDecoration(
-          color: MuColors.onBrand.withValues(alpha: 0.14),
-          borderRadius: BorderRadius.circular(MuRadius.chip),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              LucideIcons.calendarClock,
-              size: 13,
-              color: MuColors.surface.withValues(alpha: 0.85),
-            ),
-            const SizedBox(width: 5),
-            Text(
-              monthly ? 'This month' : 'All time',
-              style: MuType.chip.copyWith(color: MuColors.surface.withValues(alpha: 0.9), fontSize: 12),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _StudentLeaderboardSliver extends ConsumerWidget {
-  const _StudentLeaderboardSliver({required this.monthly});
+class _CollegeBoard extends ConsumerWidget {
+  const _CollegeBoard({required this.monthly});
 
   final bool monthly;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final entriesState = ref.watch(studentLeaderboardProvider(monthly: monthly));
-
-    return entriesState.when(
-      loading: () => const SliverFillRemaining(
-        child: Center(child: CircularProgressIndicator()),
-      ),
-      error: (error, _) => SliverFillRemaining(
-        child: ErrorRetryView(
-          error: error,
-          onRetry: () => ref.invalidate(studentLeaderboardProvider(monthly: monthly)),
-        ),
-      ),
-      data: (entries) {
-        if (entries.isEmpty) {
-          return const SliverToBoxAdapter(child: MuStateDisplay(variant: MuStateVariant.noResults, size: MuStateSize.sm));
-        }
-        final podium = entries
-            .take(3)
-            .map((e) => LeaderboardPodiumEntry(
-                  name: e.fullName,
-                  karma: e.totalKarma,
-                  avatarUrl: e.profilePic,
-                  onTap: _openProfile(context, e.muid),
-                ))
-            .toList();
-        final rest = entries.skip(3).toList();
-        return SliverList.list(
-          children: [
-            LeaderboardPodium(top3: podium),
-            if (rest.isNotEmpty) ...[
-              const SizedBox(height: MuSpace.s),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: MuSpace.screenH),
-                child: MuCard(
-                  padding: const EdgeInsets.symmetric(horizontal: MuSpace.l),
-                  child: Column(
-                    children: [
-                      for (var i = 0; i < rest.length; i++)
-                        LeaderboardListTile(
-                          rank: i + 4,
-                          title: rest[i].fullName,
-                          subtitle: rest[i].institution,
-                          karma: rest[i].totalKarma,
-                          avatarUrl: rest[i].profilePic,
-                          showDivider: i < rest.length - 1,
-                          onTap: _openProfile(context, rest[i].muid),
-                        ),
-                    ],
-                  ),
-                ),
+    return ref
+        .watch(collegeLeaderboardProvider(monthly: monthly))
+        .when(
+          loading: () => const SliverFillRemaining(child: Center(child: CircularProgressIndicator())),
+          error: (error, _) => SliverFillRemaining(
+            child: ErrorRetryView(
+              error: error,
+              onRetry: () => ref.invalidate(collegeLeaderboardProvider(monthly: monthly)),
+            ),
+          ),
+          data: (entries) {
+            if (entries.isEmpty) {
+              return const SliverToBoxAdapter(
+                child: MuStateDisplay(variant: MuStateVariant.noResults, size: MuStateSize.sm),
+              );
+            }
+            return SliverToBoxAdapter(
+              child: _BoardView(
+                entries: [
+                  for (final e in entries)
+                    MuRankEntry(
+                      name: _collegeDisplayName(e),
+                      karma: e.totalKarma.toInt(),
+                      subtitle: '${muGrouped(e.totalStudents)} students',
+                    ),
+                ],
               ),
-            ],
-            const SizedBox(height: MuSpace.navClearance),
-          ],
+            );
+          },
         );
-      },
-    );
   }
 }
-
-class _CollegeLeaderboardSliver extends ConsumerWidget {
-  const _CollegeLeaderboardSliver({required this.monthly});
-
-  final bool monthly;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final entriesState = ref.watch(collegeLeaderboardProvider(monthly: monthly));
-
-    return entriesState.when(
-      loading: () => const SliverFillRemaining(
-        child: Center(child: CircularProgressIndicator()),
-      ),
-      error: (error, _) => SliverFillRemaining(
-        child: ErrorRetryView(
-          error: error,
-          onRetry: () => ref.invalidate(collegeLeaderboardProvider(monthly: monthly)),
-        ),
-      ),
-      data: (entries) {
-        if (entries.isEmpty) {
-          return const SliverToBoxAdapter(child: MuStateDisplay(variant: MuStateVariant.noResults, size: MuStateSize.sm));
-        }
-        final podium = entries
-            .take(3)
-            .map((e) => LeaderboardPodiumEntry(
-                  name: _collegeDisplayName(e),
-                  karma: e.totalKarma,
-                ))
-            .toList();
-        final rest = entries.skip(3).toList();
-        return SliverList.list(
-          children: [
-            LeaderboardPodium(top3: podium),
-            if (rest.isNotEmpty) ...[
-              const SizedBox(height: MuSpace.s),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: MuSpace.screenH),
-                child: MuCard(
-                  padding: const EdgeInsets.symmetric(horizontal: MuSpace.l),
-                  child: Column(
-                    children: [
-                      for (var i = 0; i < rest.length; i++)
-                        LeaderboardListTile(
-                          rank: i + 4,
-                          title: _collegeDisplayName(rest[i]),
-                          subtitle: '${rest[i].totalStudents} students',
-                          karma: rest[i].totalKarma,
-                          showDivider: i < rest.length - 1,
-                        ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-            const SizedBox(height: MuSpace.navClearance),
-          ],
-        );
-      },
-    );
-  }
-}
-
-/// Opens a student's public profile, or nothing when the row has no muid.
-VoidCallback? _openProfile(BuildContext context, String? muid) =>
-    muid == null ? null : () => context.push(RoutePaths.publicProfilePath(muid));

@@ -24,6 +24,7 @@ export 'mulearn/mu_leaderboard.dart';
 export 'mulearn/mu_level_path.dart';
 export 'mulearn/mu_voice_bubble.dart';
 export 'navigation/mu_nav_capsule.dart';
+export 'navigation/mu_segmented.dart';
 export 'navigation/mu_switchboard.dart';
 export 'navigation/mu_top_bar.dart';
 export 'theme/mu_text_styles.dart';
