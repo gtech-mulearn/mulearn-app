@@ -13,6 +13,7 @@ import 'package:mulearn_app/core/utils/date_format.dart';
 import 'package:mulearn_app/core/utils/external_links.dart';
 import 'package:mulearn_app/core/widgets/mu_buttons.dart';
 import 'package:mulearn_app/core/widgets/mu_card.dart';
+import 'package:mulearn_app/core/widgets/mu_chip.dart';
 import 'package:mulearn_app/core/widgets/mu_progress_bars.dart';
 import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/core/widgets/mu_skeleton.dart';
@@ -23,6 +24,8 @@ import 'package:mulearn_app/features/mentor/domain/entities/mentor_scope.dart';
 import 'package:mulearn_app/features/mentor/domain/entities/mentor_session.dart';
 import 'package:mulearn_app/features/mentor/presentation/providers/mentor_hub_providers.dart';
 import 'package:mulearn_app/features/mentor/presentation/providers/mentor_sessions_controller.dart';
+import 'package:mulearn_app/features/mentor/presentation/providers/persona_controller.dart';
+import 'package:mulearn_app/features/mentor/presentation/widgets/acting_as_menu.dart';
 import 'package:mulearn_app/features/mentor/presentation/widgets/meeting_actions.dart';
 import 'package:mulearn_app/features/mentor/presentation/widgets/session_labels.dart';
 
@@ -36,7 +39,14 @@ class MentorHubScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       backgroundColor: MuColors.canvas,
-      appBar: AppBar(backgroundColor: MuColors.canvas, elevation: 0, title: const Text('Mentor workspace')),
+      appBar: AppBar(
+        backgroundColor: MuColors.canvas,
+        elevation: 0,
+        title: const Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [Text('Mentor workspace'), ActingAsMenu()],
+        ),
+      ),
       body: MuRefresh(
         onRefresh: () => Future.wait([
           ref.refresh(mentorNextSessionsProvider.future),
@@ -44,6 +54,7 @@ class MentorHubScreen extends ConsumerWidget {
           ref.refresh(mentorProfileCompletionProvider.future),
           ref.refresh(mentorAnalyticsProvider.future),
           ref.refresh(mentorOverviewProvider.future),
+          ref.refresh(personaControllerProvider.future),
         ]),
         child: ListView(
           physics: const AlwaysScrollableScrollPhysics(),
@@ -122,7 +133,18 @@ class MentorHubScreen extends ConsumerWidget {
                   error: (e, _) => _SectionError(e, () => ref.invalidate(mentorOverviewProvider)),
                   data: (scopes) => scopes.isEmpty
                       ? const _NoScope()
-                      : Column(children: [for (final s in scopes) _ScopeCard(scope: s)]),
+                      : Builder(builder: (_) {
+                          // The scope you act in comes first.
+                          final active = ref.watch(personaControllerProvider).value;
+                          final activeId = active != null && active.isMentor ? active.scopeId : null;
+                          final ordered = [
+                            ...scopes.where((s) => s.id == activeId),
+                            ...scopes.where((s) => s.id != activeId),
+                          ];
+                          return Column(children: [
+                            for (final s in ordered) _ScopeCard(scope: s, active: s.id == activeId),
+                          ]);
+                        }),
                 ),
           ],
         ),
@@ -315,9 +337,10 @@ class _Totals extends StatelessWidget {
 }
 
 class _ScopeCard extends StatelessWidget {
-  const _ScopeCard({required this.scope});
+  const _ScopeCard({required this.scope, this.active = false});
 
   final MentorScope scope;
+  final bool active;
 
   @override
   Widget build(BuildContext context) {
@@ -329,7 +352,12 @@ class _ScopeCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(scope.name, style: MuType.bodyMed),
+            Row(
+              children: [
+                Expanded(child: Text(scope.name, style: MuType.bodyMed)),
+                if (active) const MuTagChip(label: 'Acting in', style: MuTagStyle.success),
+              ],
+            ),
             Text(scopeTypeLabel(scope.type), style: MuType.caption),
             const SizedBox(height: MuSpace.s),
             Text(

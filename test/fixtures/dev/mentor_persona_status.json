@@ -1,0 +1,22 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/mentor/persona/status/",
+    "account": "mentor",
+    "status": 200,
+    "recorded_at": "2026-11-13T09:41:00.756196Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "active_persona": "learner",
+      "active_scope_type": null,
+      "active_scope_id": null,
+      "active_scope_name": null
+    }
+  }
+}

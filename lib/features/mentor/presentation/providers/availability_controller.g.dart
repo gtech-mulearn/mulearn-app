@@ -41,7 +41,7 @@ final class AvailabilityControllerProvider
 }
 
 String _$availabilityControllerHash() =>
-    r'df813c71f9e48fe70291eb39164e4b3ffd2a8d62';
+    r'e50f9122845b306e893b349d58ebdd96ab9797a0';
 
 /// The mentor's weekly slots, Monday first, earliest first. Errors from the
 /// actions are rethrown for the screen to show.

@@ -46,6 +46,7 @@ FakeHttpAdapter mentorAdapter() => FakeHttpAdapter({
           FakeResponse(200, loadFixture('dev/mentor_session_detail')),
       'GET $mentorBase/session/student-requests/': (_) => FakeResponse(200, loadFixture('dev/mentor_student_requests')),
       'GET $mentorBase/tasks/ig-dropdown/': (_) => FakeResponse(200, loadFixture('dev/mentor_ig_dropdown')),
+      'GET $mentorBase/persona/status/': (_) => FakeResponse(200, loadFixture('dev/mentor_persona_status')),
     });
 
 /// Pumps the mentor routes at [location] and returns the router.

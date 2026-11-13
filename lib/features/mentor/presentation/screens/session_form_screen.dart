@@ -18,6 +18,7 @@ import 'package:mulearn_app/features/mentor/domain/entities/mentor_session.dart'
 import 'package:mulearn_app/features/mentor/domain/entities/session_draft.dart';
 import 'package:mulearn_app/features/mentor/domain/entities/session_enums.dart';
 import 'package:mulearn_app/features/mentor/presentation/providers/mentor_sessions_controller.dart';
+import 'package:mulearn_app/features/mentor/presentation/providers/persona_controller.dart';
 
 /// Create a session, or edit one when [sessionId] is given. An edit changes
 /// title, description, mode, times, link and venue only — what the backend's
@@ -41,7 +42,19 @@ class SessionFormScreen extends ConsumerWidget {
           ? ref.watch(sessionTargetsProvider).when(
                 loading: () => const Center(child: CircularProgressIndicator()),
                 error: (e, _) => ErrorRetryView(error: e, onRetry: () => ref.invalidate(sessionTargetsProvider)),
-                data: (targets) => _SessionForm(targets: targets),
+                data: (targets) {
+                  // Wait for who the mentor acts as (its scope is the
+                  // default); a failure just means no default.
+                  final persona = ref.watch(personaControllerProvider);
+                  if (persona.isLoading && !persona.hasValue) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  final acting = persona.value;
+                  return _SessionForm(
+                    targets: targets,
+                    preferredEntityId: acting != null && acting.isMentor ? acting.scopeId : null,
+                  );
+                },
               )
           : ref.watch(mentorSessionProvider(id)).when(
                 loading: () => const Center(child: CircularProgressIndicator()),
@@ -53,10 +66,13 @@ class SessionFormScreen extends ConsumerWidget {
 }
 
 class _SessionForm extends ConsumerStatefulWidget {
-  const _SessionForm({this.targets = const [], this.editing});
+  const _SessionForm({this.targets = const [], this.editing, this.preferredEntityId});
 
   final List<SessionTarget> targets;
   final MentorSession? editing;
+
+  /// The scope the mentor acts in; preselected when it's a target.
+  final String? preferredEntityId;
 
   @override
   ConsumerState<_SessionForm> createState() => _SessionFormState();
@@ -96,7 +112,8 @@ class _SessionFormState extends ConsumerState<_SessionForm> {
       final now = ref.read(clockProvider)().toLocal();
       final starts = DateTime(now.year, now.month, now.day + 1, 10);
       _draft = SessionDraft(
-        target: widget.targets.length == 1 ? widget.targets.single : null,
+        target: widget.targets.where((t) => t.entityId == widget.preferredEntityId).firstOrNull ??
+            (widget.targets.length == 1 ? widget.targets.single : null),
         title: '',
         description: '',
         mode: SessionMode.online,

@@ -61,6 +61,13 @@ List<_Target> _targets() {
     const _Target('mentor_student_requests',
         '/api/v1/dashboard/mentor/session/student-requests/?pageIndex=1&perPage=1', account: 'mentor'),
     const _Target('mentor_ig_dropdown', '/api/v1/dashboard/mentor/tasks/ig-dropdown/', account: 'mentor'),
+    const _Target('mentor_persona_status', '/api/v1/dashboard/mentor/persona/status/', account: 'mentor'),
+    const _Target('mentor_persona_current', '/api/v1/dashboard/mentor/persona/current/', account: 'mentor'),
+    // Refused (a scope the QA mentor doesn't hold), so nothing changes.
+    const _Target('mentor_persona_switch_refused', '/api/v1/dashboard/mentor/persona/switch/',
+        account: 'mentor',
+        method: 'POST',
+        data: {'persona': 'mentor', 'scope_type': 'CAMPUS_MENTOR', 'scope_id': '00000000-0000-0000-0000-000000000000'}),
     // Holds the QA mentor's slot while recording (Plan 4 Task 6).
     const _Target('mentor_availability_list', '/api/v1/dashboard/mentor/availability/?pageIndex=1&perPage=100',
         account: 'mentor'),

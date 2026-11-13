@@ -59,6 +59,12 @@ class MentorRemoteDataSource {
 
   Future<Response<dynamic>> deleteSlot(String id) => _dio.delete<dynamic>(MentorPaths.availabilitySlot(id));
 
+  Future<Map<String, dynamic>> fetchPersona() async =>
+      ApiEnvelope.unwrapObject(await _dio.get<dynamic>(MentorPaths.personaStatus));
+
+  Future<Response<dynamic>> switchPersona(Map<String, Object?> body) =>
+      _dio.post<dynamic>(MentorPaths.personaSwitch, data: body);
+
   /// `[{id, name}]`.
   Future<List<dynamic>> fetchIgDropdown() async => ApiEnvelope.unwrapList(await _dio.get<dynamic>(MentorPaths.igDropdown));
 

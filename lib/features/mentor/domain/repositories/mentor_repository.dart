@@ -4,6 +4,7 @@ import 'package:mulearn_app/features/mentor/domain/entities/mentor_analytics.dar
 import 'package:mulearn_app/features/mentor/domain/entities/mentor_profile_completion.dart';
 import 'package:mulearn_app/features/mentor/domain/entities/mentor_scope.dart';
 import 'package:mulearn_app/features/mentor/domain/entities/mentor_session.dart';
+import 'package:mulearn_app/features/mentor/domain/entities/persona.dart';
 import 'package:mulearn_app/features/mentor/domain/entities/session_draft.dart';
 import 'package:mulearn_app/features/mentor/domain/entities/session_enums.dart';
 import 'package:mulearn_app/features/mentor/domain/entities/session_participant.dart';
@@ -83,4 +84,10 @@ abstract interface class MentorRepository {
   Future<String> updateSlot(String id, Map<String, Object?> changes);
 
   Future<String> deleteSlot(String id);
+
+  /// `persona/status/`.
+  Future<Persona> getPersona();
+
+  /// `persona/switch/`: a learner when [scope] is null, else a mentor in it.
+  Future<String> switchPersona(MentorScope? scope);
 }

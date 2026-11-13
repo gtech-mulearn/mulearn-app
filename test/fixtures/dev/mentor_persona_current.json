@@ -1,0 +1,27 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/mentor/persona/current/",
+    "account": "mentor",
+    "status": 200,
+    "recorded_at": "2026-11-13T09:41:00.756196Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "active_persona": "learner",
+      "active_scope_type": null,
+      "active_scope_id": null,
+      "available_scopes": [
+        {
+          "scope_type": "IG_MENTOR",
+          "scope_id": "4ff0a5e5-d1ef-44dd-ac13-9a2f9e7717e3"
+        }
+      ]
+    }
+  }
+}
