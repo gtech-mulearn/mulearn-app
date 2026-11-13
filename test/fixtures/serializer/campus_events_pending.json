@@ -1,0 +1,43 @@
+{
+  "_meta": {
+    "source": "serializer",
+    "endpoint": "GET /api/v1/dashboard/campus/events/?status=pending_campus_approval&pageIndex=1&perPage=50",
+    "backend_ref": "mulearnbackend origin/dev api/dashboard/campus/events_views.py CampusEventsAPI (row shape recorded in dev/campus_events via probe); publish_policy.py:58 CAMPUS organiser without campus authority \u2192 pending_campus_approval",
+    "note": "Only a campus-event organiser without campus authority but allowed to create events reaches this status; no QA account is both, so the row is built from the recorded row shape."
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "data": [
+        {
+          "id": "ev-1",
+          "title": "Robotics club open day",
+          "status": "pending_campus_approval",
+          "scope": "campus",
+          "organiser_type": "campus",
+          "start_datetime": "2026-11-20T04:30:00Z",
+          "end_datetime": "2026-11-20T08:30:00Z",
+          "venue_type": "physical",
+          "venue_city": "Kochi",
+          "interest_count": 3,
+          "cover_image": null,
+          "tags": [
+            "robotics",
+            "open-day"
+          ]
+        }
+      ],
+      "pagination": {
+        "count": 1,
+        "totalPages": 1,
+        "isNext": false,
+        "isPrev": false,
+        "nextPage": null
+      }
+    }
+  }
+}

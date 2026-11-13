@@ -35,6 +35,7 @@ abstract final class RoutePaths {
   static const String campus = '/campus';
   static const String campusStudents = '/campus/students';
   static const String campusGroups = '/campus/groups';
+  static const String campusApprovals = '/campus/approvals';
   static const String campusStudent = '/campus/students/:muid';
   static String campusStudentPath(String muid) => '/campus/students/${Uri.encodeComponent(muid)}';
   static const String mentorSessions = '/mentor/sessions';

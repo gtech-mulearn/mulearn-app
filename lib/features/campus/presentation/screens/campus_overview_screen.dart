@@ -52,6 +52,19 @@ class CampusOverviewScreen extends ConsumerWidget {
               Text([s.campusCode, s.zone].where((x) => x.isNotEmpty).join(' · '), style: MuType.caption),
               const SizedBox(height: MuSpace.l),
               _Stats(stats: s.stats),
+              const SizedBox(height: MuSpace.m),
+              MuCard(
+                onTap: () => context.push(RoutePaths.campusApprovals),
+                padding: const EdgeInsets.all(MuSpace.l),
+                child: Row(
+                  children: [
+                    const Icon(LucideIcons.checkSquare, size: 20, color: MuColors.primary),
+                    const SizedBox(width: MuSpace.m),
+                    Expanded(child: Text('Review approvals', style: MuType.bodyMed)),
+                    const Icon(LucideIcons.chevronRight, size: 18, color: MuColors.inkSecondary),
+                  ],
+                ),
+              ),
               const SizedBox(height: MuSpace.xl),
               if (s.funnel.isNotEmpty) ...[
                 const _Heading('Members'),

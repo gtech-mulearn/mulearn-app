@@ -1,9 +1,12 @@
 import 'package:dio/dio.dart';
+import 'package:mulearn_app/core/network/api_envelope.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/network/paging.dart';
 import 'package:mulearn_app/core/network/tolerant_parse.dart';
 import 'package:mulearn_app/features/campus/data/datasources/campus_remote_datasource.dart';
+import 'package:mulearn_app/features/campus/data/dtos/approval_dtos.dart';
 import 'package:mulearn_app/features/campus/data/dtos/campus_dtos.dart';
+import 'package:mulearn_app/features/campus/domain/entities/approvals.dart';
 import 'package:mulearn_app/features/campus/domain/entities/campus_groups.dart';
 import 'package:mulearn_app/features/campus/domain/entities/campus_summary.dart';
 import 'package:mulearn_app/features/campus/domain/entities/student_activity.dart';
@@ -85,6 +88,43 @@ class CampusRepositoryImpl implements CampusRepository {
         );
         return (items: items, hasNext: PageIndexPaging.parse(body['pagination'] as Map<String, dynamic>?).hasNext);
       });
+
+  List<T> _rows<T>(Object? data, T Function(Map<String, dynamic>) parse, String what) =>
+      parseEachOrReport(data is List ? data : const [], parse, what: what);
+
+  String _message(Response<dynamic> response) => ApiEnvelope.unwrapMessage(response) ?? '';
+
+  @override
+  Future<List<OrgLinkRequest>> getOrgLinks() => _guard(() async =>
+      _rows((await _remote.fetchOrgLinks())['data'], (j) => OrgLinkRequestDto.fromJson(j).toDomain(), 'OrgLinkRequestDto'));
+
+  @override
+  Future<String> verifyOrgLink(String id) => _guard(() async => _message(await _remote.verifyOrgLink(id)));
+
+  @override
+  Future<List<PendingCampusEvent>> getPendingEvents() => _guard(() async => _rows(
+        (await _remote.fetchPendingEvents())['data'],
+        (j) => PendingCampusEventDto.fromJson(j).toDomain(),
+        'PendingCampusEventDto',
+      ));
+
+  @override
+  Future<String> approveEvent(String id) => _guard(() async => _message(await _remote.approveEvent(id)));
+
+  @override
+  Future<String> rejectEvent(String id, String reason) => _guard(() async => _message(await _remote.rejectEvent(id, reason)));
+
+  @override
+  Future<List<CollabInvite>> getInvites() => _guard(() async =>
+      _rows(await _remote.fetchInvites(), (j) => CollabInviteDto.fromJson(j).toDomain(), 'CollabInviteDto'));
+
+  @override
+  Future<String> acceptInvite(String eventId, String id) =>
+      _guard(() async => _message(await _remote.acceptInvite(eventId, id)));
+
+  @override
+  Future<String> rejectInvite(String eventId, String id, String reason) =>
+      _guard(() async => _message(await _remote.rejectInvite(eventId, id, reason)));
 
   Future<T> _guard<T>(Future<T> Function() action) async {
     try {

@@ -1,0 +1,39 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/events/my-invites/",
+    "account": "campuslead",
+    "status": 200,
+    "recorded_at": "2026-11-13T13:22:48.754941Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": [
+        "Pending invites retrieved."
+      ]
+    },
+    "response": [
+      {
+        "id": "c8496edd-ee2a-4f1c-9f11-8c0cc4cedc94",
+        "entity_type": "collab_campus",
+        "entity_id": "ad3a3793-d780-4ec1-b03e-fac92e0faa0d",
+        "entity_detail": {
+          "id": "ad3a3793-d780-4ec1-b03e-fac92e0faa0d",
+          "title": "St. Josephs Colege of Engineering and Technology",
+          "org_type": "College"
+        },
+        "role_label": "Co-host",
+        "invite_status": "pending",
+        "rejection_reason": null,
+        "responded_at": null,
+        "created_at": "2026-11-13T13:22:28Z",
+        "event_id": "9923c2fd-56a4-426d-bfd5-694d3b532a32",
+        "event_title": "[QA] Collaboration invite check",
+        "event_start_datetime": "2026-11-19T10:00:00Z",
+        "event_cover_image": null
+      }
+    ]
+  }
+}

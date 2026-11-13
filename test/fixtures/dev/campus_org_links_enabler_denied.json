@@ -1,0 +1,19 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/user/unverified-org-links/?pageIndex=1&perPage=20",
+    "account": "enabler",
+    "status": 400,
+    "recorded_at": "2026-11-13T13:22:48.754941Z"
+  },
+  "body": {
+    "hasError": true,
+    "statusCode": 400,
+    "message": {
+      "general": [
+        "You do not have the required role to access this page."
+      ]
+    },
+    "response": {}
+  }
+}
