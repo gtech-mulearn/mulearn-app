@@ -211,21 +211,24 @@ final class EnablerCampusFamily extends $Family
   String toString() => r'enablerCampusProvider';
 }
 
-/// A campus's notes. [add], [setStatus] and [delete] reload the list
-/// afterwards, success or refusal (the backend returns only a message, and
-/// the usual refusal is a note already gone).
+/// A campus's notes. [add] and [delete] reload the list afterwards (the
+/// backend returns only a message; the usual delete refusal is a note
+/// already gone). Notes can't be closed from the app: the backend's PATCH
+/// rejects its own `note_id` ("Unknown field.", dev 2026-11-13).
 
 @ProviderFor(CampusNotesController)
 const campusNotesControllerProvider = CampusNotesControllerFamily._();
 
-/// A campus's notes. [add], [setStatus] and [delete] reload the list
-/// afterwards, success or refusal (the backend returns only a message, and
-/// the usual refusal is a note already gone).
+/// A campus's notes. [add] and [delete] reload the list afterwards (the
+/// backend returns only a message; the usual delete refusal is a note
+/// already gone). Notes can't be closed from the app: the backend's PATCH
+/// rejects its own `note_id` ("Unknown field.", dev 2026-11-13).
 final class CampusNotesControllerProvider
     extends $AsyncNotifierProvider<CampusNotesController, List<CampusNote>> {
-  /// A campus's notes. [add], [setStatus] and [delete] reload the list
-  /// afterwards, success or refusal (the backend returns only a message, and
-  /// the usual refusal is a note already gone).
+  /// A campus's notes. [add] and [delete] reload the list afterwards (the
+  /// backend returns only a message; the usual delete refusal is a note
+  /// already gone). Notes can't be closed from the app: the backend's PATCH
+  /// rejects its own `note_id` ("Unknown field.", dev 2026-11-13).
   const CampusNotesControllerProvider._({
     required CampusNotesControllerFamily super.from,
     required String super.argument,
@@ -263,11 +266,12 @@ final class CampusNotesControllerProvider
 }
 
 String _$campusNotesControllerHash() =>
-    r'68b40f9d27a5d8f007f510b07d9629be297fb9f8';
+    r'd784f66e65b29c8cbced8d9c0300aaf7966c9a77';
 
-/// A campus's notes. [add], [setStatus] and [delete] reload the list
-/// afterwards, success or refusal (the backend returns only a message, and
-/// the usual refusal is a note already gone).
+/// A campus's notes. [add] and [delete] reload the list afterwards (the
+/// backend returns only a message; the usual delete refusal is a note
+/// already gone). Notes can't be closed from the app: the backend's PATCH
+/// rejects its own `note_id` ("Unknown field.", dev 2026-11-13).
 
 final class CampusNotesControllerFamily extends $Family
     with
@@ -287,9 +291,10 @@ final class CampusNotesControllerFamily extends $Family
         isAutoDispose: true,
       );
 
-  /// A campus's notes. [add], [setStatus] and [delete] reload the list
-  /// afterwards, success or refusal (the backend returns only a message, and
-  /// the usual refusal is a note already gone).
+  /// A campus's notes. [add] and [delete] reload the list afterwards (the
+  /// backend returns only a message; the usual delete refusal is a note
+  /// already gone). Notes can't be closed from the app: the backend's PATCH
+  /// rejects its own `note_id` ("Unknown field.", dev 2026-11-13).
 
   CampusNotesControllerProvider call(String campusId) =>
       CampusNotesControllerProvider._(argument: campusId, from: this);
@@ -298,9 +303,10 @@ final class CampusNotesControllerFamily extends $Family
   String toString() => r'campusNotesControllerProvider';
 }
 
-/// A campus's notes. [add], [setStatus] and [delete] reload the list
-/// afterwards, success or refusal (the backend returns only a message, and
-/// the usual refusal is a note already gone).
+/// A campus's notes. [add] and [delete] reload the list afterwards (the
+/// backend returns only a message; the usual delete refusal is a note
+/// already gone). Notes can't be closed from the app: the backend's PATCH
+/// rejects its own `note_id` ("Unknown field.", dev 2026-11-13).
 
 abstract class _$CampusNotesController
     extends $AsyncNotifier<List<CampusNote>> {
