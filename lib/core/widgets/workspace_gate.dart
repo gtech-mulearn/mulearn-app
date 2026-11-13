@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/session/workspace_access.dart';
 import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
-import 'package:mulearn_app/core/widgets/mu_empty_state.dart';
+import 'package:mulearn_app/core/widgets/mu_state_display.dart';
 import 'package:mulearn_app/core/widgets/role_pending_banner.dart';
 
 /// Wraps a role workspace route. [builder] runs only when the selected
@@ -47,12 +46,16 @@ class WorkspaceGate extends ConsumerWidget {
                   ),
                 ),
               WorkspaceState.hidden => _Shell(
-                  child: MuEmptyState(
-                    icon: LucideIcons.lock,
-                    title: 'Not available',
-                    message: "This workspace isn't available for your account.",
-                    actionLabel: 'Back',
-                    onAction: () => context.canPop() ? context.pop() : context.go(RoutePaths.home),
+                  child: SingleChildScrollView(
+                    child: MuStateDisplay(
+                      variant: MuStateVariant.notFound,
+                      title: 'Not available',
+                      description: "This workspace isn't available for your account.",
+                      action: TextButton(
+                        onPressed: () => context.canPop() ? context.pop() : context.go(RoutePaths.home),
+                        child: const Text('Back'),
+                      ),
+                    ),
                   ),
                 ),
             };

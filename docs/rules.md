@@ -102,6 +102,7 @@ lib/
 - Brand tokens live in `core/theme/mulearn_colors.dart` and `core/theme/mulearn_theme.dart` — this is the single source of truth, ported from the landing page's CSS custom properties. Never hardcode a hex color inline in a widget; reference `MulearnColors.primary` etc.
 - Primary blue `#0961F5`; brand gradient 135° `#2E85FE → #8F44ED` (karma purple aligned to the dashboard's `--brand-purple`, 2026-11-12); supporting neutrals greyish `#C4C4C4`, blackish `#1A1A1A`, whitish `#FEFEFE`, gray-600 `#666771`.
 - Match heading weight hierarchy from the web app (h1 heaviest/black down to h5 medium) rather than inventing a new scale.
+- **Empty lists and not-found pages use `MuStateDisplay`** (`core/widgets/mu_state_display.dart`), the dashboard's StateDisplay: the same three illustrations (`assets/illustrations/`) and the same default copy. Use the dashboard's own wording for the equivalent screen when it overrides the defaults. `noTasks` is only for genuinely empty task lists, `noResults` for search/filter misses and empty content lists, and `notFound` for things that don't exist. Compact UI (sheets, small cards, tabs inside a profile) keeps plain text, as on the dashboard.
 - **Every icon-only button is labelled:** `MuIconButton.tooltip` is required and `IconButton` must pass `tooltip:` — it is the screen-reader label (UX-08; enforced by `test/architecture/labelled_controls_test.dart`).
 - Text in rows that can get narrow (buttons, pills, list rows) uses `Flexible` + `TextOverflow.ellipsis`; widget tests run at 360 dp and catch overflows.
 

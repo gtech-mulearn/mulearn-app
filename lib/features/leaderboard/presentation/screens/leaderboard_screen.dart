@@ -13,6 +13,7 @@ import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/core/widgets/mu_card.dart';
 import 'package:mulearn_app/core/widgets/mu_gradient_header.dart';
 import 'package:mulearn_app/core/widgets/mu_refresh.dart';
+import 'package:mulearn_app/core/widgets/mu_state_display.dart';
 import 'package:mulearn_app/features/leaderboard/presentation/widgets/leaderboard_list_tile.dart';
 import 'package:mulearn_app/features/leaderboard/presentation/widgets/leaderboard_podium.dart';
 
@@ -199,7 +200,7 @@ class _StudentLeaderboardSliver extends ConsumerWidget {
       ),
       data: (entries) {
         if (entries.isEmpty) {
-          return const SliverFillRemaining(child: Center(child: Text('No students yet.')));
+          return const SliverToBoxAdapter(child: MuStateDisplay(variant: MuStateVariant.noResults, size: MuStateSize.sm));
         }
         final podium = entries
             .take(3)
@@ -266,7 +267,7 @@ class _CollegeLeaderboardSliver extends ConsumerWidget {
       ),
       data: (entries) {
         if (entries.isEmpty) {
-          return const SliverFillRemaining(child: Center(child: Text('No colleges yet.')));
+          return const SliverToBoxAdapter(child: MuStateDisplay(variant: MuStateVariant.noResults, size: MuStateSize.sm));
         }
         final podium = entries
             .take(3)

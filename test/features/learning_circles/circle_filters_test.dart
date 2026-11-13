@@ -133,6 +133,14 @@ void main() {
     expect(listQueries().last['status'], 'pending');
   });
 
+  testWidgets('nothing to discover uses the dashboard circle-list copy', (tester) async {
+    adapter.routes['GET $_list'] = (_) => empty();
+    await pumpScreen(tester);
+
+    expect(find.text('No Learning Circles Yet'), findsOneWidget);
+    expect(find.text('Be the first to create a Learning Circle and start collaborating with peers!'), findsOneWidget);
+  });
+
   testWidgets('no match says so and offers to clear the filters', (tester) async {
     await pumpScreen(tester);
 
@@ -141,8 +149,11 @@ void main() {
     for (var i = 0; i < 6; i++) {
       await tester.pump(const Duration(milliseconds: 50));
     }
-    expect(find.text('No circles match these filters'), findsOneWidget);
+    // The dashboard's circle-list: a search miss shows StateDisplay's default copy.
+    expect(find.text('Nothing here. Yet.'), findsOneWidget);
 
+    await tester.ensureVisible(find.text('Clear filters'));
+    await tester.pump();
     await tester.tap(find.text('Clear filters'));
     for (var i = 0; i < 6; i++) {
       await tester.pump(const Duration(milliseconds: 50));

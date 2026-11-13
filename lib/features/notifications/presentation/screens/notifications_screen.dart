@@ -13,8 +13,8 @@ import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
 import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
-import 'package:mulearn_app/core/widgets/mu_empty_state.dart';
 import 'package:mulearn_app/core/widgets/mu_load_more_footer.dart';
+import 'package:mulearn_app/core/widgets/mu_state_display.dart';
 import 'package:mulearn_app/core/widgets/mu_toast.dart';
 import 'package:mulearn_app/features/notifications/domain/entities/app_notification.dart';
 import 'package:mulearn_app/features/notifications/domain/notification_target.dart';
@@ -134,11 +134,11 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                 ? ListView(
                     physics: const AlwaysScrollableScrollPhysics(),
                     children: const [
-                      SizedBox(height: MuSpace.xxl),
-                      MuEmptyState(
-                        icon: LucideIcons.bell,
-                        title: "You're all caught up",
-                        message: 'Notifications will show up here.',
+                      // The dashboard's notification list says "No notifications".
+                      MuStateDisplay(
+                        variant: MuStateVariant.noResults,
+                        title: 'No notifications',
+                        description: 'Notifications will show up here.',
                       ),
                     ],
                   )

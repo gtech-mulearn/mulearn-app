@@ -7,6 +7,7 @@ import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
 import 'package:mulearn_app/core/widgets/mu_empty_state.dart';
+import 'package:mulearn_app/core/widgets/mu_state_display.dart';
 import 'package:mulearn_app/features/search/presentation/providers/search_controller.dart';
 import 'package:mulearn_app/features/search/presentation/widgets/user_search_result_tile.dart';
 
@@ -105,10 +106,14 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
                   );
                 }
                 if (results.isEmpty) {
-                  return const MuEmptyState(
-                    icon: LucideIcons.userX,
-                    title: 'No results found',
-                    message: 'Try a different name or MUID.',
+                  // The dashboard's SearchResults copy.
+                  return SingleChildScrollView(
+                    child: MuStateDisplay(
+                      variant: MuStateVariant.noResults,
+                      size: MuStateSize.sm,
+                      description:
+                          'No members match "${_queryController.text.trim()}". Try a different path and keep exploring.',
+                    ),
                   );
                 }
                 final hasMore =

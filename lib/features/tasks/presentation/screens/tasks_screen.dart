@@ -9,8 +9,8 @@ import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/core/widgets/mu_card.dart';
 import 'package:mulearn_app/core/widgets/mu_chip.dart';
-import 'package:mulearn_app/core/widgets/mu_empty_state.dart';
 import 'package:mulearn_app/core/widgets/mu_refresh.dart';
+import 'package:mulearn_app/core/widgets/mu_state_display.dart';
 import 'package:mulearn_app/features/tasks/domain/entities/task_catalog_item.dart';
 import 'package:mulearn_app/features/tasks/presentation/providers/tasks_controller.dart';
 
@@ -124,20 +124,16 @@ class _TasksList extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(sectionLabel, style: MuType.eyebrow),
+            Flexible(child: Text(sectionLabel, style: MuType.eyebrow, overflow: TextOverflow.ellipsis)),
+            const SizedBox(width: MuSpace.s),
             Text('${filtered.length} shown', style: MuType.caption),
           ],
         ),
         const SizedBox(height: MuSpace.m),
         if (filtered.isEmpty)
-          const Padding(
-            padding: EdgeInsets.only(top: MuSpace.xxl),
-            child: MuEmptyState(
-              icon: LucideIcons.search,
-              title: 'Nothing here yet',
-              message: 'Nothing here yet — try another filter.',
-            ),
-          )
+          // The dashboard's μJourney tabs: "no-tasks" when there are none,
+          // "no-results" when a filter left nothing.
+          MuStateDisplay(variant: filter == null ? MuStateVariant.noTasks : MuStateVariant.noResults)
         else
           for (final task in filtered) ...[
             _TaskCard(task: task),

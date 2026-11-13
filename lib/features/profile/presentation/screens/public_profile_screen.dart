@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
-import 'package:mulearn_app/core/widgets/mu_empty_state.dart';
 import 'package:mulearn_app/core/widgets/mu_qr_card.dart';
 import 'package:mulearn_app/core/widgets/mu_refresh.dart';
+import 'package:mulearn_app/core/widgets/mu_state_display.dart';
 import 'package:mulearn_app/features/profile/domain/entities/user_profile.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/public_profile_controller.dart';
 import 'package:mulearn_app/features/profile/presentation/screens/profile_screen.dart';
@@ -55,10 +54,14 @@ class PublicProfileScreen extends ConsumerWidget {
         skipError: true,
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => _isPrivateProfileError(error)
-            ? const MuEmptyState(
-                icon: LucideIcons.lock,
-                title: 'This profile is private',
-                message: 'Only the account owner can view this profile.',
+            ? const Center(
+                child: SingleChildScrollView(
+                  child: MuStateDisplay(
+                    variant: MuStateVariant.notFound,
+                    title: 'Profile not found',
+                    description: 'The requested profile could not be found or is private.',
+                  ),
+                ),
               )
             : ErrorRetryView(
                 error: error,

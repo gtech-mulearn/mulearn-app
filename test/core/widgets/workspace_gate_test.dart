@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mulearn_app/core/network/dio_provider.dart';
 import 'package:mulearn_app/core/session/workspace_access.dart';
 import 'package:mulearn_app/core/storage/secure_storage_provider.dart';
+import 'package:mulearn_app/core/widgets/mu_state_display.dart';
 import 'package:mulearn_app/core/widgets/role_pending_banner.dart';
 import 'package:mulearn_app/core/widgets/workspace_gate.dart';
 
@@ -96,6 +97,7 @@ void main() {
     );
 
     expect(find.text("This workspace isn't available for your account."), findsOneWidget);
+    expect(tester.widget<MuStateDisplay>(find.byType(MuStateDisplay)).variant, MuStateVariant.notFound);
     expect(tester.takeException(), isNull);
   });
 

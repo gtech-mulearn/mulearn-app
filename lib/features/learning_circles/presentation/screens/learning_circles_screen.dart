@@ -18,6 +18,7 @@ import 'package:mulearn_app/core/widgets/mu_icon_button.dart';
 import 'package:mulearn_app/core/widgets/mu_load_more_footer.dart';
 import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/core/widgets/mu_section_header.dart';
+import 'package:mulearn_app/core/widgets/mu_state_display.dart';
 import 'package:mulearn_app/core/widgets/mu_toast.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/circle_filter.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/circle_member.dart';
@@ -320,19 +321,15 @@ class _LearningCirclesScreenState extends ConsumerState<LearningCirclesScreen> {
                 data: (_) {
                   if (nearYou.isEmpty) {
                     final filtered = _filter != CircleFilter.discover;
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: MuSpace.screenH),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            filtered ? 'No circles match these filters' : 'No other circles to discover right now.',
-                            style: MuType.body.copyWith(color: MuColors.inkSecondary),
-                          ),
-                          if (filtered)
-                            TextButton(onPressed: _clearFilters, child: const Text('Clear filters')),
-                        ],
-                      ),
+                    // The dashboard's circle-list: StateDisplay "no-results";
+                    // its own copy when nothing is filtered.
+                    return MuStateDisplay(
+                      variant: MuStateVariant.noResults,
+                      size: MuStateSize.sm,
+                      title: filtered ? null : 'No Learning Circles Yet',
+                      description:
+                          filtered ? null : 'Be the first to create a Learning Circle and start collaborating with peers!',
+                      action: filtered ? TextButton(onPressed: _clearFilters, child: const Text('Clear filters')) : null,
                     );
                   }
                   return Padding(

@@ -13,7 +13,7 @@ import 'package:mulearn_app/core/widgets/connect_discord_prompt.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/core/widgets/mu_buttons.dart';
 import 'package:mulearn_app/core/widgets/mu_chip.dart';
-import 'package:mulearn_app/core/widgets/mu_empty_state.dart';
+import 'package:mulearn_app/core/widgets/mu_state_display.dart';
 import 'package:mulearn_app/core/widgets/mu_toast.dart';
 import 'package:mulearn_app/features/tasks/domain/entities/task_catalog_item.dart';
 import 'package:mulearn_app/features/tasks/presentation/providers/tasks_controller.dart';
@@ -63,10 +63,14 @@ class TaskDetailScreen extends ConsumerWidget {
               }
             }
             if (task == null) {
-              return const MuEmptyState(
-                icon: LucideIcons.search,
-                title: 'Task not found',
-                message: "This task isn't available anymore.",
+              return const Center(
+                child: SingleChildScrollView(
+                  child: MuStateDisplay(
+                    variant: MuStateVariant.notFound,
+                    title: 'Task not found',
+                    description: "This task isn't available anymore.",
+                  ),
+                ),
               );
             }
             return _TaskDetailBody(task: task);

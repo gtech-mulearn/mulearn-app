@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mulearn_app/app/app_redirect.dart';
 import 'package:mulearn_app/app/widgets/main_shell.dart';
+import 'package:mulearn_app/app/widgets/not_found_screen.dart';
 import 'package:mulearn_app/core/auth/app_auth_controller.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/features/auth/presentation/screens/forgot_password_screen.dart';
@@ -66,6 +67,8 @@ GoRouter goRouter(Ref ref) {
     refreshListenable: refresh,
     debugLogDiagnostics: kDebugMode,
     redirect: (context, state) => appRedirect(auth: ref.read(appAuthControllerProvider), uri: state.uri),
+    // A path the app doesn't know (e.g. an old link): the dashboard's 404.
+    errorBuilder: (_, __) => const NotFoundScreen(),
     routes: [
       GoRoute(
         path: RoutePaths.splash,

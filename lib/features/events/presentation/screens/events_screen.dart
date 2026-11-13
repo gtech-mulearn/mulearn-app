@@ -11,10 +11,10 @@ import 'package:mulearn_app/core/theme/mulearn_colors.dart';
 import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/core/widgets/mu_buttons.dart';
-import 'package:mulearn_app/core/widgets/mu_empty_state.dart';
 import 'package:mulearn_app/core/widgets/mu_icon_button.dart';
 import 'package:mulearn_app/core/widgets/mu_load_more_footer.dart';
 import 'package:mulearn_app/core/widgets/mu_refresh.dart';
+import 'package:mulearn_app/core/widgets/mu_state_display.dart';
 import 'package:mulearn_app/features/events/domain/entities/event_filter.dart';
 import 'package:mulearn_app/features/events/presentation/providers/events_controller.dart';
 import 'package:mulearn_app/features/events/presentation/widgets/event_list_tile.dart';
@@ -140,16 +140,17 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
                 final events = paged.items;
                 if (events.isEmpty) {
                   final filtered = _filter != const EventFilter();
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      MuEmptyState(
-                        icon: LucideIcons.calendarDays,
-                        title: filtered ? 'No events match these filters' : 'No events yet',
-                        message: filtered ? 'Try fewer filters or another search.' : 'Check back soon for upcoming events.',
+                  // The dashboard's events grid: StateDisplay "no-results",
+                  // default copy.
+                  return Center(
+                    child: SingleChildScrollView(
+                      child: MuStateDisplay(
+                        variant: MuStateVariant.noResults,
+                        action: filtered
+                            ? TextButton(onPressed: _clearFilters, child: const Text('Clear filters'))
+                            : null,
                       ),
-                      if (filtered) TextButton(onPressed: _clearFilters, child: const Text('Clear filters')),
-                    ],
+                    ),
                   );
                 }
                 final hasMore = paged.hasMore;

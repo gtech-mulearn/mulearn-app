@@ -82,6 +82,7 @@ dependencies:
   url_launcher: ^6.3.1
   lucide_icons: ^0.257.0
   flutter_markdown_plus: ^1.0.12
+  flutter_svg: ^2.4.0
 
 dev_dependencies:
   flutter_test:
@@ -129,6 +130,9 @@ flutter:
 
   assets:
     - assets/images/logo.png
+    # The dashboard's StateDisplay illustrations (mulearn-dashboard
+    # public/images/illustrations/), copied unchanged.
+    - assets/illustrations/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

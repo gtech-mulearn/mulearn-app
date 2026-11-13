@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mulearn_app/core/widgets/mu_state_display.dart';
 import 'package:mulearn_app/features/events/domain/entities/event_filter.dart';
 import 'package:mulearn_app/features/events/presentation/providers/events_controller.dart';
 import 'package:mulearn_app/features/events/presentation/screens/events_screen.dart';
@@ -61,6 +62,24 @@ void main() {
     await tester.pumpWidget(UncontrolledProviderScope(container: c, child: const MaterialApp(home: EventsScreen())));
     await settle(tester);
   }
+
+  // The dashboard's learner events grid: StateDisplay "no-results", default copy.
+  testWidgets('no events shows the illustrated no-results state', (tester) async {
+    adapter.routes['GET $_events'] = (_) => const FakeResponse(200, {
+          'hasError': false,
+          'statusCode': 200,
+          'message': {'general': <String>[]},
+          'response': {
+            'data': <Object>[],
+            'pagination': {'count': 0, 'totalPages': 1, 'isNext': false, 'isPrev': false, 'nextPage': null},
+          },
+        });
+    await pumpScreen(tester);
+
+    expect(tester.widget<MuStateDisplay>(find.byType(MuStateDisplay)).variant, MuStateVariant.noResults);
+    expect(find.text('Nothing here. Yet.'), findsOneWidget);
+    expect(find.text('Clear filters'), findsNothing);
+  });
 
   testWidgets('typing searches once, after a pause', (tester) async {
     await pumpScreen(tester);

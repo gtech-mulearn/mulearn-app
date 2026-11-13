@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mulearn_app/core/config/flavor_config.dart';
 import 'package:mulearn_app/core/notifications/unread_notifications.dart';
+import 'package:mulearn_app/core/widgets/mu_state_display.dart';
 import 'package:mulearn_app/features/notifications/presentation/screens/notifications_screen.dart';
 
 import '../../support/fake_http_adapter.dart';
@@ -109,11 +110,12 @@ void main() {
     await tester.pumpAndSettle();
   });
 
-  testWidgets("an empty inbox says you're all caught up", (tester) async {
+  testWidgets('an empty inbox shows the illustrated state with the dashboard label', (tester) async {
     items = [];
     await pumpInbox(tester);
 
-    expect(find.text("You're all caught up"), findsOneWidget);
+    expect(find.byType(MuStateDisplay), findsOneWidget);
+    expect(find.text('No notifications'), findsOneWidget);
   });
 
   testWidgets('a failed first load offers retry', (tester) async {

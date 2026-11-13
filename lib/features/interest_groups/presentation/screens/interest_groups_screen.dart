@@ -10,6 +10,7 @@ import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/core/widgets/mu_icon_button.dart';
 import 'package:mulearn_app/core/widgets/mu_refresh.dart';
+import 'package:mulearn_app/core/widgets/mu_state_display.dart';
 import 'package:mulearn_app/features/interest_groups/presentation/providers/interest_groups_controller.dart';
 import 'package:mulearn_app/features/interest_groups/presentation/widgets/interest_group_card.dart';
 
@@ -46,6 +47,15 @@ class InterestGroupsScreen extends ConsumerWidget {
               physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
               slivers: [
                 const SliverToBoxAdapter(child: _Header()),
+                // The dashboard's interest-groups grid: StateDisplay
+                // "no-results" with its own description.
+                if (groups.isEmpty)
+                  const SliverToBoxAdapter(
+                    child: MuStateDisplay(
+                      variant: MuStateVariant.noResults,
+                      description: 'Check back later for new groups',
+                    ),
+                  ),
                 SliverPadding(
                   padding: const EdgeInsets.fromLTRB(
                     MuSpace.screenH,
