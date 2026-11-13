@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mulearn_app/app/app_router.dart';
 import 'package:mulearn_app/core/config/flavor_config.dart';
+import 'package:mulearn_app/core/design_system/theme/mu_theme.dart';
 import 'package:mulearn_app/core/theme/mulearn_theme.dart';
 
 /// Root widget. `MaterialApp.router` is driven by the go_router provider; theme
@@ -16,7 +17,11 @@ class MulearnApp extends ConsumerWidget {
     return MaterialApp.router(
       title: 'Mulearn',
       debugShowCheckedModeBanner: FlavorConfig.instance.isDev,
-      theme: MulearnTheme.light(),
+      // The design system (core/design_system) rides on the current theme
+      // as an extension, so migrated widgets read context.mu while screens
+      // not yet migrated keep their look. MuThemeData replaces this once the
+      // last screen moves over (plan 5).
+      theme: MulearnTheme.light().copyWith(extensions: [MuTheme.light()]),
       // The 2026-07 redesign's Mu* component library hardcodes light-theme
       // color literals (MuColors.canvas/surface, etc.) rather than resolving
       // through Theme.of(context), so it isn't dark-mode-aware. Left on
