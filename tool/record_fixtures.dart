@@ -59,6 +59,21 @@ List<_Target> _targets() {
     const _Target('mentor_student_requests',
         '/api/v1/dashboard/mentor/session/student-requests/?pageIndex=1&perPage=1', account: 'mentor'),
     const _Target('mentor_ig_dropdown', '/api/v1/dashboard/mentor/tasks/ig-dropdown/', account: 'mentor'),
+    // Refused by the backend (offline with a link), so nothing is created.
+    const _Target('mentor_session_create_bad_mode', '/api/v1/dashboard/mentor/session/create/',
+        account: 'mentor',
+        method: 'POST',
+        data: {
+          'session_type': 'IG_SESSION',
+          'entity_id': '4ff0a5e5-d1ef-44dd-ac13-9a2f9e7717e3',
+          'title': '[QA] refused',
+          'mode': 'OFFLINE',
+          'venue': 'Hall A',
+          'meeting_link': 'https://meet.example/x',
+          'starts_at': '2030-01-01T10:00:00Z',
+          'ends_at': '2030-01-01T11:00:00Z',
+          'is_recurring': false,
+        }),
     const _Target('user_profile', '/api/v1/dashboard/profile/user-profile/'),
     // Plan 4: `role_verification` per role account (workspace access).
     const _Target('user_profile_mentor', '/api/v1/dashboard/profile/user-profile/', account: 'mentor'),

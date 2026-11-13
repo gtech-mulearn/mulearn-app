@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:mulearn_app/core/network/api_envelope.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/network/paging.dart';
 import 'package:mulearn_app/core/network/tolerant_parse.dart';
@@ -11,6 +12,7 @@ import 'package:mulearn_app/features/mentor/domain/entities/mentor_analytics.dar
 import 'package:mulearn_app/features/mentor/domain/entities/mentor_profile_completion.dart';
 import 'package:mulearn_app/features/mentor/domain/entities/mentor_scope.dart';
 import 'package:mulearn_app/features/mentor/domain/entities/mentor_session.dart';
+import 'package:mulearn_app/features/mentor/domain/entities/session_draft.dart';
 import 'package:mulearn_app/features/mentor/domain/entities/session_enums.dart';
 import 'package:mulearn_app/features/mentor/domain/repositories/mentor_repository.dart';
 
@@ -68,6 +70,29 @@ class MentorRepositoryImpl implements MentorRepository {
         final body = await _remote.fetchStudentRequests(PageIndexPaging.query(1, perPage: 1));
         return PageIndexPaging.parse(body['pagination'] as Map<String, dynamic>?).count;
       });
+
+  @override
+  Future<String> createSession(SessionDraft draft) =>
+      _guard(() async => _message(await _remote.createSession(draft.toCreateJson())));
+
+  @override
+  Future<String> updateSession(String id, SessionDraft draft) =>
+      _guard(() async => _message(await _remote.updateSession(id, draft.toUpdateJson())));
+
+  @override
+  Future<String> deleteSession(String id) => _guard(() async => _message(await _remote.deleteSession(id)));
+
+  @override
+  Future<List<IgOption>> getMentorIgs() => _guard(() async {
+        final rows = await _remote.fetchIgDropdown();
+        return [
+          for (final row in rows)
+            if (row is Map && row['id'] is String) IgOption(id: row['id'] as String, name: '${row['name'] ?? ''}'),
+        ];
+      });
+
+  /// Unwraps the envelope (throwing on `hasError`) and returns its message.
+  String _message(Response<dynamic> response) => ApiEnvelope.unwrapMessage(response) ?? '';
 
   Future<T> _guard<T>(Future<T> Function() action) async {
     try {

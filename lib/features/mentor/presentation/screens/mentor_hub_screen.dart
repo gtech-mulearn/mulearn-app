@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/config/flavor_config.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
+import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
 import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 import 'package:mulearn_app/core/utils/date_format.dart';
 import 'package:mulearn_app/core/utils/external_links.dart';
+import 'package:mulearn_app/core/widgets/mu_buttons.dart';
 import 'package:mulearn_app/core/widgets/mu_card.dart';
 import 'package:mulearn_app/core/widgets/mu_progress_bars.dart';
 import 'package:mulearn_app/core/widgets/mu_refresh.dart';
@@ -18,6 +21,7 @@ import 'package:mulearn_app/features/mentor/domain/entities/mentor_profile_compl
 import 'package:mulearn_app/features/mentor/domain/entities/mentor_scope.dart';
 import 'package:mulearn_app/features/mentor/domain/entities/mentor_session.dart';
 import 'package:mulearn_app/features/mentor/presentation/providers/mentor_hub_providers.dart';
+import 'package:mulearn_app/features/mentor/presentation/providers/mentor_sessions_controller.dart';
 import 'package:mulearn_app/features/mentor/presentation/widgets/session_labels.dart';
 
 /// The mentor workspace's home (audit 06 "M1 Mentor home"): next sessions,
@@ -43,6 +47,23 @@ class MentorHubScreen extends ConsumerWidget {
           physics: const AlwaysScrollableScrollPhysics(),
           padding: const EdgeInsets.fromLTRB(MuSpace.screenH, MuSpace.m, MuSpace.screenH, MuSpace.xxl),
           children: [
+            Row(
+              children: [
+                Expanded(
+                  child: MuPrimaryButton(
+                    label: 'New session',
+                    icon: LucideIcons.plus,
+                    // Disabled until the mentor has somewhere to create one.
+                    onPressed: (ref.watch(sessionTargetsProvider).value?.isNotEmpty ?? false)
+                        ? () => context.push(RoutePaths.mentorSessionNew)
+                        : null,
+                  ),
+                ),
+                const SizedBox(width: MuSpace.m),
+                TextButton(onPressed: () => context.push(RoutePaths.mentorSessions), child: const Text('All sessions')),
+              ],
+            ),
+            const SizedBox(height: MuSpace.xl),
             const _Heading('Next up'),
             ref.watch(mentorNextSessionsProvider).when(
                   skipError: true,

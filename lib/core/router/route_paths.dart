@@ -32,6 +32,10 @@ abstract final class RoutePaths {
 
   // --- Role workspaces (Plan 4), opened from Home and Profile ---
   static const String mentor = '/mentor';
+  static const String mentorSessions = '/mentor/sessions';
+  static const String mentorSessionNew = '/mentor/sessions/new';
+  static const String mentorSessionEdit = '/mentor/sessions/:id/edit';
+  static String mentorSessionEditPath(String id) => '/mentor/sessions/$id/edit';
 
   /// Read-only view of another user's profile by muid.
   static const String publicProfile = '/u/:muid';
