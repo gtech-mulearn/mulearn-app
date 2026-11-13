@@ -33,6 +33,9 @@ abstract final class RoutePaths {
   // --- Role workspaces (Plan 4), opened from Home and Profile ---
   static const String mentor = '/mentor';
   static const String campus = '/campus';
+  static const String campusStudents = '/campus/students';
+  static const String campusStudent = '/campus/students/:muid';
+  static String campusStudentPath(String muid) => '/campus/students/${Uri.encodeComponent(muid)}';
   static const String mentorSessions = '/mentor/sessions';
   static const String mentorSessionNew = '/mentor/sessions/new';
   static const String mentorSessionEdit = '/mentor/sessions/:id/edit';

@@ -1,0 +1,50 @@
+{
+  "_meta": {
+    "source": "serializer",
+    "endpoint": "GET /api/v1/dashboard/campus/students/<muid>/activity/?pageIndex=1&perPage=20",
+    "backend_ref": "mulearnbackend origin/dev api/dashboard/campus/campus_views.py CampusStudentActivityAPI; api/dashboard/campus/serializers.py:896 StudentActivityTimelineSerializer (status: Approved / Rejected / Pending)",
+    "note": "No student at the QA campus has karma on dev, and karma can't be undone through the API, so this page is built from the serializer. The third row's task has no interest group (ig_name null)."
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "data": [
+        {
+          "id": "kal-1",
+          "task_name": "Build your first Flutter screen",
+          "ig_name": "Web Development",
+          "karma": 50,
+          "status": "Approved",
+          "created_at": "2026-11-12T10:15:00Z"
+        },
+        {
+          "id": "kal-2",
+          "task_name": "Share a learning log",
+          "ig_name": "Web Development",
+          "karma": 10,
+          "status": "Pending",
+          "created_at": "2026-11-11T08:00:00Z"
+        },
+        {
+          "id": "kal-3",
+          "task_name": "Joined a circle meetup",
+          "ig_name": null,
+          "karma": 5,
+          "status": "Rejected",
+          "created_at": "2026-11-02T18:30:00Z"
+        }
+      ],
+      "pagination": {
+        "count": 3,
+        "totalPages": 1,
+        "isNext": false,
+        "isPrev": false,
+        "nextPage": null
+      }
+    }
+  }
+}

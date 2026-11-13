@@ -5,6 +5,7 @@ import 'package:mulearn_app/core/network/tolerant_parse.dart';
 import 'package:mulearn_app/features/campus/data/datasources/campus_remote_datasource.dart';
 import 'package:mulearn_app/features/campus/data/dtos/campus_dtos.dart';
 import 'package:mulearn_app/features/campus/domain/entities/campus_summary.dart';
+import 'package:mulearn_app/features/campus/domain/entities/student_activity.dart';
 import 'package:mulearn_app/features/campus/domain/repositories/campus_repository.dart';
 
 class CampusRepositoryImpl implements CampusRepository {
@@ -40,6 +41,18 @@ class CampusRepositoryImpl implements CampusRepository {
           what: 'CampusStudentDto',
         );
         return (items: items, hasNext: page.hasNext, count: page.count);
+      });
+
+  @override
+  Future<({List<StudentActivity> items, bool hasNext})> getStudentActivity(String muid, {required int pageIndex}) =>
+      _guard(() async {
+        final body = await _remote.fetchStudentActivity(muid, PageIndexPaging.query(pageIndex));
+        final items = parseEachOrReport(
+          body['data'] as List<dynamic>? ?? const [],
+          (json) => StudentActivityDto.fromJson(json).toDomain(),
+          what: 'StudentActivityDto',
+        );
+        return (items: items, hasNext: PageIndexPaging.parse(body['pagination'] as Map<String, dynamic>?).hasNext);
       });
 
   Future<T> _guard<T>(Future<T> Function() action) async {

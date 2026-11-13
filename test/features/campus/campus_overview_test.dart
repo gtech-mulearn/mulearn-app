@@ -42,6 +42,7 @@ void main() {
       GoRoute(path: '/campus', builder: (_, __) => const CampusOverviewScreen()),
       GoRoute(path: '/circles/:id', builder: (_, s) => Text('circle ${s.pathParameters['id']}')),
       GoRoute(path: '/u/:muid', builder: (_, s) => Text('profile ${s.pathParameters['muid']}')),
+      GoRoute(path: '/campus/students/:muid', builder: (_, s) => Text('student ${s.pathParameters['muid']}')),
     ]);
     addTearDown(router.dispose);
     tester.view.physicalSize = const Size(1080, 6000);
@@ -120,7 +121,7 @@ void main() {
     expect(find.text('circle 217cd8ca-d6a3-4e75-9621-036c057f7ecd'), findsOneWidget);
   });
 
-  testWidgets('a top student opens their profile', (tester) async {
+  testWidgets('a top student opens their campus page', (tester) async {
     await pump(tester);
 
     await tester.scrollUntilVisible(find.text('qastudentone@mulearn'), 400);
@@ -128,6 +129,6 @@ void main() {
     await tester.pump(const Duration(seconds: 1));
     await tester.tap(find.text('qastudentone@mulearn'));
     await tester.pumpAndSettle();
-    expect(find.text('profile qastudentone@mulearn'), findsOneWidget);
+    expect(find.text('student qastudentone@mulearn'), findsOneWidget);
   });
 }

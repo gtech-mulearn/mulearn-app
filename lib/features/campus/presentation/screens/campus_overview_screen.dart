@@ -69,7 +69,15 @@ class CampusOverviewScreen extends ConsumerWidget {
                 for (final a in s.recentActivity) _ActivityRow(activity: a),
                 const SizedBox(height: MuSpace.xl),
               ],
-              const _Heading('Top students'),
+              Row(
+                children: [
+                  const Expanded(child: _Heading('Top students')),
+                  TextButton(
+                    onPressed: () => context.push(RoutePaths.campusStudents),
+                    child: const Text('All students'),
+                  ),
+                ],
+              ),
               const _TopStudents(),
             ],
           ),
@@ -386,7 +394,7 @@ class _StudentRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final s = student;
     return InkWell(
-      onTap: s.muid.isEmpty ? null : () => context.push(RoutePaths.publicProfilePath(s.muid)),
+      onTap: s.muid.isEmpty ? null : () => context.push(RoutePaths.campusStudentPath(s.muid)),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: MuSpace.l, vertical: MuSpace.m),
         child: Row(

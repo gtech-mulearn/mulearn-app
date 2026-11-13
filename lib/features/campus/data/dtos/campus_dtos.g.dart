@@ -6,6 +6,26 @@ part of 'campus_dtos.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+_StudentActivityDto _$StudentActivityDtoFromJson(Map<String, dynamic> json) =>
+    _StudentActivityDto(
+      id: json['id'] as String,
+      createdAt: json['created_at'] as String,
+      taskName: json['task_name'] as String? ?? '',
+      igName: json['ig_name'] as String?,
+      karma: (json['karma'] as num?)?.toInt() ?? 0,
+      status: json['status'] as String? ?? 'Pending',
+    );
+
+Map<String, dynamic> _$StudentActivityDtoToJson(_StudentActivityDto instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'created_at': instance.createdAt,
+      'task_name': instance.taskName,
+      'ig_name': instance.igName,
+      'karma': instance.karma,
+      'status': instance.status,
+    };
+
 _CampusStudentDto _$CampusStudentDtoFromJson(Map<String, dynamic> json) =>
     _CampusStudentDto(
       fullName: json['full_name'] as String? ?? '',

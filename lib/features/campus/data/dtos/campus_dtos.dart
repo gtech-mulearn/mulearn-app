@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:mulearn_app/features/campus/domain/entities/campus_student.dart';
 import 'package:mulearn_app/features/campus/domain/entities/campus_summary.dart';
+import 'package:mulearn_app/features/campus/domain/entities/student_activity.dart';
 
 part 'campus_dtos.freezed.dart';
 part 'campus_dtos.g.dart';
@@ -84,6 +85,32 @@ List<KarmaDay> parseWeeklyKarma(Map<String, dynamic> json) {
   }
   days.sort((a, b) => a.day.compareTo(b.day));
   return days;
+}
+
+/// One row of `campus/students/<muid>/activity/` (`StudentActivityTimelineSerializer`).
+@freezed
+abstract class StudentActivityDto with _$StudentActivityDto {
+  const factory StudentActivityDto({
+    required String id,
+    required String createdAt,
+    @Default('') String taskName,
+    String? igName,
+    @Default(0) int karma,
+    @Default('Pending') String status,
+  }) = _StudentActivityDto;
+
+  const StudentActivityDto._();
+
+  factory StudentActivityDto.fromJson(Map<String, dynamic> json) => _$StudentActivityDtoFromJson(json);
+
+  StudentActivity toDomain() => StudentActivity(
+        id: id,
+        taskName: taskName,
+        igName: (igName ?? '').isEmpty ? null : igName,
+        karma: karma,
+        status: status,
+        createdAt: DateTime.parse(createdAt).toUtc(),
+      );
 }
 
 /// One row of `campus/student-details/` (`CampusStudentDetailsSerializer`).

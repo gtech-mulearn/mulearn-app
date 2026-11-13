@@ -15,6 +15,8 @@ import 'package:mulearn_app/features/auth/presentation/screens/reset_password_sc
 import 'package:mulearn_app/features/auth/presentation/screens/sign_in_screen.dart';
 import 'package:mulearn_app/features/calendar/presentation/screens/calendar_screen.dart';
 import 'package:mulearn_app/features/campus/presentation/screens/campus_overview_screen.dart';
+import 'package:mulearn_app/features/campus/presentation/screens/campus_student_screen.dart';
+import 'package:mulearn_app/features/campus/presentation/screens/campus_students_screen.dart';
 import 'package:mulearn_app/features/dashboard/presentation/screens/home_screen.dart';
 import 'package:mulearn_app/features/events/presentation/screens/event_detail_screen.dart';
 import 'package:mulearn_app/features/events/presentation/screens/events_screen.dart';
@@ -176,6 +178,22 @@ GoRouter goRouter(Ref ref) {
           select: (a) => a.campus,
           role: 'Campus',
           builder: (_) => const CampusOverviewScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.campusStudents,
+        builder: (_, __) => WorkspaceGate(
+          select: (a) => a.campus,
+          role: 'Campus',
+          builder: (_) => const CampusStudentsScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.campusStudent,
+        builder: (_, state) => WorkspaceGate(
+          select: (a) => a.campus,
+          role: 'Campus',
+          builder: (_) => CampusStudentScreen(muid: state.pathParameters['muid']!),
         ),
       ),
       GoRoute(

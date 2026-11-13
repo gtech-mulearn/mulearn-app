@@ -67,6 +67,15 @@ List<_Target> _targets() {
     const _Target('campus_students_top',
         '/api/v1/dashboard/campus/student-details/?sortBy=-karma&pageIndex=1&perPage=5', account: 'campuslead'),
     const _Target('campus_home_summary_enabler', '/api/v1/dashboard/campus/home-summary/', account: 'enabler'),
+    const _Target('campus_students_page1',
+        '/api/v1/dashboard/campus/student-details/?sortBy=-karma&pageIndex=1&perPage=20', account: 'campuslead'),
+    const _Target('campus_students_search',
+        '/api/v1/dashboard/campus/student-details/?sortBy=-karma&search=Ananya&pageIndex=1&perPage=20',
+        account: 'campuslead'),
+    // Nobody at the campus has karma on dev (2026-11-13): the empty shape.
+    const _Target('campus_student_activity_empty',
+        '/api/v1/dashboard/campus/students/qastudentone%40mulearn/activity/?pageIndex=1&perPage=20',
+        account: 'campuslead'),
     const _Target('mentor_persona_status', '/api/v1/dashboard/mentor/persona/status/', account: 'mentor'),
     const _Target('mentor_persona_current', '/api/v1/dashboard/mentor/persona/current/', account: 'mentor'),
     // Refused (a scope the QA mentor doesn't hold), so nothing changes.
