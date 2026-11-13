@@ -166,11 +166,13 @@ void main() {
 
       expect(adapter.requests.where((RequestOptions r) => r.method == 'POST'), hasLength(1));
       expect(find.text('Achievement claimed successfully!'), findsOneWidget);
+      // Toasts drop in from the top; in this bare harness the tabs sit at
+      // the very top, so let the toast leave before tapping one.
+      await tester.pump(const Duration(seconds: 4));
+      await tester.pumpAndSettle();
       await tester.tap(find.text('Earned'));
       await settle(tester);
       expect(find.text('QA Starter Badge'), findsOneWidget);
-      await tester.pump(const Duration(seconds: 4));
-      await tester.pumpAndSettle();
     });
 
     testWidgets("someone else's profile shows only what they earned", (tester) async {

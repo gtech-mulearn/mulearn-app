@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mulearn_app/core/design_system/feedback/mu_toast.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
-import 'package:mulearn_app/core/widgets/mu_toast.dart';
 import 'package:mulearn_app/features/auth/domain/entities/registration_role.dart';
 import 'package:mulearn_app/features/auth/presentation/providers/register_submit_controller.dart';
 import 'package:mulearn_app/features/auth/presentation/providers/register_wizard_controller.dart';

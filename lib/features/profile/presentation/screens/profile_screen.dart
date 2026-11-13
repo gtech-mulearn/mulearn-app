@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mulearn_app/core/design_system/feedback/mu_toast.dart';
 import 'package:mulearn_app/core/session/session_providers.dart';
 import 'package:mulearn_app/core/theme/mu_radius.dart';
 import 'package:mulearn_app/core/theme/mu_shadow.dart';
@@ -10,7 +11,6 @@ import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/core/widgets/mu_qr_card.dart';
 import 'package:mulearn_app/core/widgets/mu_refresh.dart';
-import 'package:mulearn_app/core/widgets/mu_toast.dart';
 import 'package:mulearn_app/core/widgets/role_pending_banner.dart';
 import 'package:mulearn_app/core/widgets/workspace_links.dart';
 import 'package:mulearn_app/features/profile/domain/entities/user_profile.dart';

@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:mulearn_app/core/design_system/feedback/mu_toast.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
 import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 import 'package:mulearn_app/core/widgets/mu_buttons.dart';
-import 'package:mulearn_app/core/widgets/mu_toast.dart';
 import 'package:mulearn_app/features/profile/domain/password_rules.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/change_password_controller.dart';
 

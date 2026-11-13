@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/config/app_links.dart';
+import 'package:mulearn_app/core/design_system/feedback/mu_toast.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/session/discord_connect.dart';
@@ -17,7 +18,6 @@ import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 import 'package:mulearn_app/core/utils/external_links.dart';
 import 'package:mulearn_app/core/widgets/mu_buttons.dart';
 import 'package:mulearn_app/core/widgets/mu_card.dart';
-import 'package:mulearn_app/core/widgets/mu_toast.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/profile_controller.dart';
 
 /// Account settings (UX-03, SEC-14; L19): password, connected accounts,

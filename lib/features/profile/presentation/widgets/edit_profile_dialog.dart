@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mulearn_app/core/design_system/feedback/mu_toast.dart';
 import 'package:mulearn_app/core/models/location_option.dart';
 import 'package:mulearn_app/core/models/reference_option.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
-import 'package:mulearn_app/core/widgets/mu_toast.dart';
 import 'package:mulearn_app/core/widgets/searchable_select_field.dart';
 import 'package:mulearn_app/features/profile/domain/entities/editable_profile.dart';
 import 'package:mulearn_app/features/profile/domain/entities/user_profile.dart';

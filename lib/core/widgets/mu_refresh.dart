@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mulearn_app/core/design_system/feedback/mu_toast.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
-import 'package:mulearn_app/core/widgets/mu_toast.dart';
 
 /// Pull-to-refresh, the same on every screen (UX-05): the indicator stays
 /// until [onRefresh]'s refetch finishes, and a failure is a toast with the

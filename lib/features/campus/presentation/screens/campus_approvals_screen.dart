@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mulearn_app/core/design_system/feedback/mu_toast.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/session/workspace_access.dart';
 import 'package:mulearn_app/core/theme/mu_space.dart';
@@ -12,7 +13,6 @@ import 'package:mulearn_app/core/utils/date_format.dart';
 import 'package:mulearn_app/core/widgets/mu_card.dart';
 import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/core/widgets/mu_state_display.dart';
-import 'package:mulearn_app/core/widgets/mu_toast.dart';
 import 'package:mulearn_app/features/campus/domain/entities/approvals.dart';
 import 'package:mulearn_app/features/campus/presentation/providers/approvals_providers.dart';
 

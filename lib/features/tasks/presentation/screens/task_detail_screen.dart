@@ -4,6 +4,7 @@ import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:mulearn_app/core/design_system/feedback/mu_toast.dart';
 import 'package:mulearn_app/core/theme/mu_radius.dart';
 import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
@@ -14,7 +15,6 @@ import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/core/widgets/mu_buttons.dart';
 import 'package:mulearn_app/core/widgets/mu_chip.dart';
 import 'package:mulearn_app/core/widgets/mu_state_display.dart';
-import 'package:mulearn_app/core/widgets/mu_toast.dart';
 import 'package:mulearn_app/features/tasks/domain/entities/task_catalog_item.dart';
 import 'package:mulearn_app/features/tasks/presentation/providers/tasks_controller.dart';
 
