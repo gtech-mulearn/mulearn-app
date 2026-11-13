@@ -1,0 +1,22 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "POST /api/v1/dashboard/achievement/claim/f98238dc-b660-4dcf-aa63-e765fadeb4a3/",
+    "account": "student",
+    "status": 400,
+    "recorded_at": "2026-11-13T06:01:35.323565+00:00",
+    "note": "QA-only achievements seeded for Plan 3 Task 7 and removed afterwards"
+  },
+  "body": {
+    "hasError": true,
+    "statusCode": 400,
+    "message": {
+      "general": [
+        "Achievement already claimed"
+      ]
+    },
+    "response": {
+      "progress": null
+    }
+  }
+}

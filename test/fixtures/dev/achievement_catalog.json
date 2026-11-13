@@ -1,0 +1,135 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/achievement/list/",
+    "account": "student",
+    "status": 200,
+    "recorded_at": "2026-11-13T06:01:34.564626+00:00",
+    "note": "QA-only achievements seeded for Plan 3 Task 7 and removed afterwards"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": [
+      {
+        "id": "1b52fcb3-f8bb-4bcd-97df-bd91d0db37b2",
+        "icon_url": null,
+        "has_achievement": false,
+        "name": "Level 6 Badge",
+        "description": "Karma level 6 badge",
+        "icon": "",
+        "has_vc": true,
+        "tags": [
+          "Level 6 skill",
+          "Verifiable credential"
+        ],
+        "type": "Badge",
+        "template_id": "1fb87344-fdf4-408a-83f2-4c09bca5b752",
+        "updated_at": "2026-11-07T14:54:55Z",
+        "created_at": "2026-11-07T14:54:55Z",
+        "level_id": "737659f5-f8b2-495f-81b6-53fe728a97dd",
+        "updated_by": "77d83f99-bf37-11f1-9f2a-062e965e7537",
+        "created_by": "77d83f99-bf37-11f1-9f2a-062e965e7537"
+      },
+      {
+        "id": "2abd6c8b-67d5-409e-8af7-da55eace8be2",
+        "icon_url": null,
+        "has_achievement": false,
+        "name": "Level 5 Badge",
+        "description": "Karma level 5 badge",
+        "icon": "",
+        "has_vc": true,
+        "tags": [
+          "Level 5 skill"
+        ],
+        "type": "Badge",
+        "template_id": "e555c17e-2f39-4085-b7f2-787d50ddd63d",
+        "updated_at": "2026-11-07T14:54:34Z",
+        "created_at": "2026-11-07T14:54:34Z",
+        "level_id": "822c7b52-faf0-4395-9e85-ba856ad64ea0",
+        "updated_by": "77d83f99-bf37-11f1-9f2a-062e965e7537",
+        "created_by": "77d83f99-bf37-11f1-9f2a-062e965e7537"
+      },
+      {
+        "id": "3067defe-ecf6-4ec8-948d-8f1962f7f980",
+        "icon_url": null,
+        "has_achievement": false,
+        "name": "Level 7 Badge",
+        "description": "Karma level 7 badge",
+        "icon": "",
+        "has_vc": true,
+        "tags": [
+          "Level 7 skill"
+        ],
+        "type": "Badge",
+        "template_id": "3f70cadf-2ad2-4cf7-bd0e-d5ba5e02bf09",
+        "updated_at": "2026-11-07T14:55:10Z",
+        "created_at": "2026-11-07T14:55:10Z",
+        "level_id": "422754e6-fced-4abf-af7b-1397cad97307",
+        "updated_by": "77d83f99-bf37-11f1-9f2a-062e965e7537",
+        "created_by": "77d83f99-bf37-11f1-9f2a-062e965e7537"
+      },
+      {
+        "id": "85a312f6-cae3-40a1-a56f-9d067f2d593c",
+        "icon_url": null,
+        "has_achievement": false,
+        "name": "Level 4 Badge",
+        "description": "Karma level 4 badge",
+        "icon": "",
+        "has_vc": true,
+        "tags": [
+          "Level 4 skill",
+          "Verifiable credential"
+        ],
+        "type": "Badge",
+        "template_id": "c25cb9e9-c0ee-4132-acca-f0843a90fdfc",
+        "updated_at": "2026-11-07T14:54:16Z",
+        "created_at": "2026-11-07T14:54:16Z",
+        "level_id": "9820b6b2-5931-474c-b98b-a30faf378b84",
+        "updated_by": "77d83f99-bf37-11f1-9f2a-062e965e7537",
+        "created_by": "77d83f99-bf37-11f1-9f2a-062e965e7537"
+      },
+      {
+        "id": "d129b439-cc78-408c-b080-d1d1cd703682",
+        "icon_url": null,
+        "has_achievement": false,
+        "name": "QA Rising Badge",
+        "description": "QA test badge (Plan 3) — total karma ≥ 500",
+        "icon": "",
+        "has_vc": false,
+        "tags": [
+          "qa"
+        ],
+        "type": "Badge",
+        "template_id": null,
+        "updated_at": "2026-11-13T06:01:33Z",
+        "created_at": "2026-11-13T06:01:33Z",
+        "level_id": null,
+        "updated_by": "77d83f99-bf37-11f1-9f2a-062e965e7537",
+        "created_by": "77d83f99-bf37-11f1-9f2a-062e965e7537"
+      },
+      {
+        "id": "f98238dc-b660-4dcf-aa63-e765fadeb4a3",
+        "icon_url": null,
+        "has_achievement": false,
+        "name": "QA Starter Badge",
+        "description": "QA test badge (Plan 3) — total karma ≥ 0",
+        "icon": "",
+        "has_vc": false,
+        "tags": [
+          "qa"
+        ],
+        "type": "Badge",
+        "template_id": null,
+        "updated_at": "2026-11-13T06:01:31Z",
+        "created_at": "2026-11-13T06:01:31Z",
+        "level_id": null,
+        "updated_by": "77d83f99-bf37-11f1-9f2a-062e965e7537",
+        "created_by": "77d83f99-bf37-11f1-9f2a-062e965e7537"
+      }
+    ]
+  }
+}

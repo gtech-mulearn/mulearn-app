@@ -3,7 +3,9 @@ import 'package:mulearn_app/core/data/location_remote_datasource.dart';
 import 'package:mulearn_app/core/models/location_option.dart';
 import 'package:mulearn_app/core/models/reference_option.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
+import 'package:mulearn_app/core/network/tolerant_parse.dart';
 import 'package:mulearn_app/features/profile/data/datasources/profile_remote_datasource.dart';
+import 'package:mulearn_app/features/profile/data/dtos/achievement_progress_dto.dart';
 import 'package:mulearn_app/features/profile/data/dtos/badges_data_dto.dart';
 import 'package:mulearn_app/features/profile/data/dtos/editable_profile_dto.dart';
 import 'package:mulearn_app/features/profile/data/dtos/interest_group_list_item_dto.dart';
@@ -14,6 +16,7 @@ import 'package:mulearn_app/features/profile/data/dtos/user_level_dto.dart';
 import 'package:mulearn_app/features/profile/data/dtos/user_log_entry_dto.dart';
 import 'package:mulearn_app/features/profile/data/dtos/user_preferences_dto.dart';
 import 'package:mulearn_app/features/profile/data/dtos/user_profile_dto.dart';
+import 'package:mulearn_app/features/profile/domain/entities/achievement_progress.dart';
 import 'package:mulearn_app/features/profile/domain/entities/badges_data.dart';
 import 'package:mulearn_app/features/profile/domain/entities/editable_profile.dart';
 import 'package:mulearn_app/features/profile/domain/entities/interest_group_list_item.dart';
@@ -175,6 +178,37 @@ class ProfileRepositoryImpl implements ProfileRepository {
   @override
   Future<void> togglePublicProfile({required bool isPublic}) =>
       _guard(() => _remote.togglePublicProfile(isPublic: isPublic));
+
+  @override
+  Future<List<AchievementProgress>> getEligibleAchievements() => _guard(() async => parseEachOrReport(
+        await _remote.fetchEligibleAchievements(),
+        (j) => AchievementProgressDto.fromJson(j).toDomain(),
+        what: 'AchievementProgressDto',
+      ));
+
+  @override
+  Future<List<AchievementProgress>> getAchievementProgress() => _guard(() async => parseEachOrReport(
+        await _remote.fetchAchievementProgress(),
+        (j) => AchievementProgressDto.fromJson(j).toDomain(),
+        what: 'AchievementProgressDto',
+      ));
+
+  @override
+  Future<Map<String, String>> getAchievementDescriptions() => _guard(() async => {
+        for (final item in (await _remote.fetchAchievementCatalog()).whereType<Map<String, dynamic>>())
+          if (item['id'] is String && (item['description'] as String? ?? '').isNotEmpty)
+            item['id'] as String: item['description'] as String,
+      });
+
+  @override
+  Future<ClaimResult> claimAchievement(String id) => _guard(() async {
+        final body = await _remote.claimAchievement(id);
+        return ClaimResult(
+          achievementName: body['achievement_name'] as String? ?? '',
+          vcPending: body['vc_pending'] as bool? ?? false,
+          message: body['message'] as String,
+        );
+      });
 
   @override
   Future<void> changePassword({required String current, required String next}) =>

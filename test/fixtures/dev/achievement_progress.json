@@ -1,0 +1,45 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/achievement/progress/",
+    "account": "student",
+    "status": 200,
+    "recorded_at": "2026-11-13T06:01:34.154246+00:00",
+    "note": "QA-only achievements seeded for Plan 3 Task 7 and removed afterwards"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": [
+      {
+        "achievement_id": "d129b439-cc78-408c-b080-d1d1cd703682",
+        "achievement_name": "QA Rising Badge",
+        "eligible": false,
+        "claimed": false,
+        "reason": "total_karma: 0/500",
+        "progress": {
+          "current": 0,
+          "required": 500,
+          "percentage": 0,
+          "milestone_type": "total_karma"
+        }
+      },
+      {
+        "achievement_id": "f98238dc-b660-4dcf-aa63-e765fadeb4a3",
+        "achievement_name": "QA Starter Badge",
+        "eligible": true,
+        "claimed": false,
+        "reason": "total_karma: 0/0",
+        "progress": {
+          "current": 0,
+          "required": 0,
+          "percentage": 100,
+          "milestone_type": "total_karma"
+        }
+      }
+    ]
+  }
+}

@@ -180,6 +180,24 @@ class ProfileRemoteDataSource {
   }
 
   /// `GET` connected QSeverse DIDs for [muid], under `response.dids`.
+  Future<List<dynamic>> fetchEligibleAchievements() async =>
+      ApiEnvelope.unwrapList(await _dio.get<dynamic>(ApiPaths.achievementEligible));
+
+  Future<List<dynamic>> fetchAchievementProgress() async =>
+      ApiEnvelope.unwrapList(await _dio.get<dynamic>(ApiPaths.achievementProgress));
+
+  Future<List<dynamic>> fetchAchievementCatalog() async =>
+      ApiEnvelope.unwrapList(await _dio.get<dynamic>(ApiPaths.achievementCatalog));
+
+  /// The claim's `response` plus the backend's own message under `message`.
+  Future<Map<String, dynamic>> claimAchievement(String id) async {
+    final response = await _dio.post<dynamic>(ApiPaths.achievementClaim(id), data: <String, dynamic>{});
+    final body = ApiEnvelope.unwrapObject(response);
+    final general = ((response.data as Map<String, dynamic>?)?['message'] as Map<String, dynamic>?)?['general'];
+    final message = general is List && general.isNotEmpty ? '${general.first}' : 'Achievement claimed';
+    return {...body, 'message': message};
+  }
+
   Future<List<dynamic>> fetchConnectedDids(String muid) async {
     final response =
         await _dio.get<dynamic>(ApiPaths.qseverseConnectedUsers(muid));

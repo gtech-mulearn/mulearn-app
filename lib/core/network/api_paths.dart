@@ -153,6 +153,19 @@ abstract final class ApiPaths {
   static String userAchievements(String muid) =>
       '/api/v1/dashboard/achievement/list/user/$muid/';
 
+  /// `GET` — achievements the signed-in user can claim now.
+  static const String achievementEligible = '/api/v1/dashboard/achievement/eligible/';
+
+  /// `GET` — the rule engine's progress towards every achievement.
+  static const String achievementProgress = '/api/v1/dashboard/achievement/progress/';
+
+  /// `GET` — the achievement catalog (name, description, icon).
+  static const String achievementCatalog = '/api/v1/dashboard/achievement/list/';
+
+  /// `POST {}` — claim [id]; 400 "Achievement already claimed" or
+  /// "Not eligible: …" otherwise.
+  static String achievementClaim(String id) => '/api/v1/dashboard/achievement/claim/$id/';
+
   /// `POST {"achievement_id", "vc_url"}` — save the VC URL after a
   /// successful QSeverse issuance (confusingly named `issueVC` in the
   /// reference client; it only persists a URL, the actual issuance is
