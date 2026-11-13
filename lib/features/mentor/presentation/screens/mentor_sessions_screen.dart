@@ -173,6 +173,7 @@ class _SessionTile extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: MuSpace.s),
       child: MuCard(
+        onTap: () => context.push(RoutePaths.mentorSessionDetailPath(session.id)),
         padding: const EdgeInsets.fromLTRB(MuSpace.l, MuSpace.m, MuSpace.xs, MuSpace.m),
         child: Row(
           children: [

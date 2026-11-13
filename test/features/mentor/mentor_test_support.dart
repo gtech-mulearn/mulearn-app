@@ -8,6 +8,7 @@ import 'package:mulearn_app/core/storage/secure_storage_provider.dart';
 import 'package:mulearn_app/core/utils/clock.dart';
 import 'package:mulearn_app/core/utils/external_links.dart';
 import 'package:mulearn_app/features/mentor/presentation/screens/mentor_hub_screen.dart';
+import 'package:mulearn_app/features/mentor/presentation/screens/mentor_session_detail_screen.dart';
 import 'package:mulearn_app/features/mentor/presentation/screens/mentor_sessions_screen.dart';
 import 'package:mulearn_app/features/mentor/presentation/screens/session_form_screen.dart';
 
@@ -64,7 +65,7 @@ Future<GoRouter> pumpMentor(WidgetTester tester, FakeHttpAdapter adapter, String
     GoRoute(path: '/mentor/sessions', builder: (_, __) => const MentorSessionsScreen()),
     GoRoute(path: '/mentor/sessions/new', builder: (_, __) => const SessionFormScreen()),
     GoRoute(path: '/mentor/sessions/:id/edit', builder: (_, s) => SessionFormScreen(sessionId: s.pathParameters['id'])),
-    GoRoute(path: '/mentor/sessions/:id', builder: (_, s) => Text('detail ${s.pathParameters['id']}')),
+    GoRoute(path: '/mentor/sessions/:id', builder: (_, s) => MentorSessionDetailScreen(sessionId: s.pathParameters['id']!)),
   ]);
   addTearDown(router.dispose);
   tester.view.physicalSize = const Size(1080, 4200);

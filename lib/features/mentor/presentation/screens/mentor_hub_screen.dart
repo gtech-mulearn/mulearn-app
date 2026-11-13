@@ -151,6 +151,7 @@ class _SessionRow extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: MuSpace.s),
       child: MuCard(
+        onTap: () => context.push(RoutePaths.mentorSessionDetailPath(session.id)),
         padding: const EdgeInsets.all(MuSpace.l),
         child: Row(
           children: [

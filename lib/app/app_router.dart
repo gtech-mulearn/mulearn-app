@@ -27,6 +27,7 @@ import 'package:mulearn_app/features/learning_circles/presentation/screens/learn
 import 'package:mulearn_app/features/learning_circles/presentation/screens/learning_circles_screen.dart';
 import 'package:mulearn_app/features/learning_circles/presentation/screens/meeting_detail_screen.dart';
 import 'package:mulearn_app/features/mentor/presentation/screens/mentor_hub_screen.dart';
+import 'package:mulearn_app/features/mentor/presentation/screens/mentor_session_detail_screen.dart';
 import 'package:mulearn_app/features/mentor/presentation/screens/mentor_sessions_screen.dart';
 import 'package:mulearn_app/features/mentor/presentation/screens/session_form_screen.dart';
 import 'package:mulearn_app/features/notifications/presentation/screens/notifications_screen.dart';
@@ -189,6 +190,14 @@ GoRouter goRouter(Ref ref) {
           select: (a) => a.mentor,
           role: 'Mentor',
           builder: (_) => SessionFormScreen(sessionId: state.pathParameters['id']),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.mentorSessionDetail,
+        builder: (_, state) => WorkspaceGate(
+          select: (a) => a.mentor,
+          role: 'Mentor',
+          builder: (_) => MentorSessionDetailScreen(sessionId: state.pathParameters['id']!),
         ),
       ),
       GoRoute(

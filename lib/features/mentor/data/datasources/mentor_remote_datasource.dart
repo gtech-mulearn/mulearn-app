@@ -31,6 +31,19 @@ class MentorRemoteDataSource {
 
   Future<Response<dynamic>> deleteSession(String id) => _dio.delete<dynamic>(MentorPaths.sessionUpdate(id));
 
+  /// `{data, pagination}`.
+  Future<Map<String, dynamic>> fetchParticipants(String sessionId, Map<String, Object> query) async =>
+      ApiEnvelope.unwrapObject(await _dio.get<dynamic>(MentorPaths.participants(sessionId), queryParameters: query));
+
+  Future<Response<dynamic>> updateParticipant(String linkId, Map<String, Object?> body) =>
+      _dio.patch<dynamic>(MentorPaths.participantUpdate(linkId), data: body);
+
+  Future<Response<dynamic>> addParticipant(String sessionId, String muid) =>
+      _dio.post<dynamic>(MentorPaths.participantAdd(sessionId), data: {'muid': muid});
+
+  Future<Response<dynamic>> completeSession(String id) =>
+      _dio.post<dynamic>(MentorPaths.sessionComplete(id), data: <String, dynamic>{});
+
   /// `[{id, name}]`.
   Future<List<dynamic>> fetchIgDropdown() async => ApiEnvelope.unwrapList(await _dio.get<dynamic>(MentorPaths.igDropdown));
 

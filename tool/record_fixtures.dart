@@ -56,6 +56,8 @@ List<_Target> _targets() {
     // The QA mentor's seeded session on dev (2026-11-13).
     const _Target('mentor_session_detail',
         '/api/v1/dashboard/mentor/session/list/282426eb-7650-45da-bbf1-905fe1835115/', account: 'mentor'),
+    const _Target('mentor_session_participants',
+        '/api/v1/dashboard/mentor/session/participant/list/282426eb-7650-45da-bbf1-905fe1835115/', account: 'mentor'),
     const _Target('mentor_student_requests',
         '/api/v1/dashboard/mentor/session/student-requests/?pageIndex=1&perPage=1', account: 'mentor'),
     const _Target('mentor_ig_dropdown', '/api/v1/dashboard/mentor/tasks/ig-dropdown/', account: 'mentor'),
