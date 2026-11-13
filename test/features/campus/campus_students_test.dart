@@ -6,6 +6,7 @@ import 'package:mulearn_app/core/network/dio_provider.dart';
 import 'package:mulearn_app/core/storage/secure_storage_provider.dart';
 import 'package:mulearn_app/core/utils/clock.dart';
 import 'package:mulearn_app/core/widgets/mu_state_display.dart';
+import 'package:mulearn_app/features/campus/domain/entities/campus_student.dart';
 import 'package:mulearn_app/features/campus/domain/student_filter.dart';
 import 'package:mulearn_app/features/campus/presentation/screens/campus_overview_screen.dart';
 import 'package:mulearn_app/features/campus/presentation/screens/campus_student_screen.dart';
@@ -59,7 +60,13 @@ void main() {
     final router = GoRouter(initialLocation: location, routes: [
       GoRoute(path: '/campus', builder: (_, __) => const CampusOverviewScreen()),
       GoRoute(path: '/campus/students', builder: (_, __) => const CampusStudentsScreen()),
-      GoRoute(path: '/campus/students/:muid', builder: (_, s) => CampusStudentScreen(muid: s.pathParameters['muid']!)),
+      GoRoute(
+        path: '/campus/students/:muid',
+        builder: (_, s) => CampusStudentScreen(
+          muid: s.pathParameters['muid']!,
+          student: s.extra is CampusStudent ? s.extra! as CampusStudent : null,
+        ),
+      ),
       GoRoute(path: '/u/:muid', builder: (_, s) => Text('profile ${s.pathParameters['muid']}')),
     ]);
     addTearDown(router.dispose);
@@ -160,6 +167,42 @@ void main() {
     await tester.tap(find.text('View public profile'));
     await settle(tester);
     expect(find.text('profile $_qa'), findsOneWidget);
+  });
+
+  // Final review, Critical 1: `student-details` searches full_name and level
+  // only (CampusStudentDetailsAPI), never muIDs — as the backend does here.
+  void searchLikeTheBackend() => adapter.routes['GET $_students'] = (o) {
+        final search = o.queryParameters['search'] as String?;
+        if (search == null) return FakeResponse(200, loadFixture('dev/campus_students_page1'));
+        return FakeResponse(200, loadFixture(search.contains('@') ? 'dev/campus_students_none' : 'dev/campus_students_search'));
+      };
+
+  testWidgets('a tapped student shows who they are, never "not at your campus"', (tester) async {
+    searchLikeTheBackend();
+    await pump(tester, '/campus/students');
+
+    await tester.tap(find.text(_qa));
+    await settle(tester);
+
+    expect(find.textContaining('not at your campus'), findsNothing);
+    expect(find.text('Computer Science · Class of 2027'), findsOneWidget);
+    expect(queries().where((q) => q['search'] == _qa), isEmpty, reason: 'student-details cannot find a muID');
+  });
+
+  testWidgets('a cold link to a student shows the muID and activity, not a false "not found"', (tester) async {
+    searchLikeTheBackend();
+    await pump(tester, '/campus/students/$_qa');
+
+    expect(find.textContaining('not at your campus'), findsNothing);
+    expect(find.text(_qa), findsWidgets);
+    expect(find.text('Build your first Flutter screen'), findsOneWidget);
+    expect(queries(), isEmpty);
+  });
+
+  testWidgets('the search hint promises only what the backend searches', (tester) async {
+    await pump(tester, '/campus/students');
+
+    expect(find.text('Search by name'), findsOneWidget);
   });
 
   testWidgets('the overview opens all students and a top student', (tester) async {

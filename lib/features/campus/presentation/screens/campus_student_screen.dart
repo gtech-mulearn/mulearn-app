@@ -17,30 +17,30 @@ import 'package:mulearn_app/core/widgets/mu_chip.dart';
 import 'package:mulearn_app/core/widgets/mu_load_more_footer.dart';
 import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/core/widgets/mu_stat_block.dart';
-import 'package:mulearn_app/core/widgets/mu_state_display.dart';
 import 'package:mulearn_app/features/campus/domain/entities/campus_student.dart';
 import 'package:mulearn_app/features/campus/domain/entities/student_activity.dart';
 import 'package:mulearn_app/features/campus/presentation/providers/campus_students_controller.dart';
 
 /// One student at the campus: who they are, their numbers and their karma
 /// activity, with their public profile one tap away.
+///
+/// The row the lead tapped arrives as [student] (route `extra`):
+/// `student-details` searches names only, so a muID can't be looked up. A
+/// cold link without it shows the muID and the activity.
 class CampusStudentScreen extends ConsumerWidget {
-  const CampusStudentScreen({required this.muid, super.key});
+  const CampusStudentScreen({required this.muid, this.student, super.key});
 
   final String muid;
+  final CampusStudent? student;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final student = ref.watch(campusStudentProvider(muid));
     final activity = ref.watch(studentActivityControllerProvider(muid));
     return Scaffold(
       backgroundColor: MuColors.canvas,
       appBar: AppBar(backgroundColor: MuColors.canvas, elevation: 0, title: const Text('Student')),
       body: MuRefresh(
-        onRefresh: () => Future.wait([
-          ref.refresh(campusStudentProvider(muid).future),
-          ref.refresh(studentActivityControllerProvider(muid).future),
-        ]),
+        onRefresh: () => ref.refresh(studentActivityControllerProvider(muid).future),
         child: NotificationListener<ScrollNotification>(
           onNotification: (n) {
             final paged = activity.value;
@@ -53,20 +53,7 @@ class CampusStudentScreen extends ConsumerWidget {
             physics: const AlwaysScrollableScrollPhysics(),
             padding: const EdgeInsets.fromLTRB(MuSpace.screenH, MuSpace.s, MuSpace.screenH, MuSpace.xxl),
             children: [
-              student.when(
-                skipError: true,
-                skipLoadingOnReload: true,
-                loading: () => const SizedBox(height: 120, child: Center(child: CircularProgressIndicator())),
-                error: (e, _) => ErrorRetryView(error: e, onRetry: () => ref.invalidate(campusStudentProvider(muid))),
-                data: (s) => s == null
-                    ? const MuStateDisplay(
-                        variant: MuStateVariant.notFound,
-                        size: MuStateSize.sm,
-                        title: 'Student not found',
-                        description: 'This learner is not at your campus.',
-                      )
-                    : _Header(student: s),
-              ),
+              if (student case final s?) _Header(student: s) else _MuidHeader(muid: muid),
               const SizedBox(height: MuSpace.s),
               Align(
                 alignment: Alignment.centerLeft,
@@ -110,6 +97,26 @@ class CampusStudentScreen extends ConsumerWidget {
       ),
     );
   }
+}
+
+/// Opened from a link, not a row: the muID, and where the numbers are.
+class _MuidHeader extends StatelessWidget {
+  const _MuidHeader({required this.muid});
+
+  final String muid;
+
+  @override
+  Widget build(BuildContext context) => MuCard(
+        padding: const EdgeInsets.all(MuSpace.l),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(muid, style: MuType.title),
+            const SizedBox(height: MuSpace.xs),
+            Text('Open them from Students to see their karma, level and rank.', style: MuType.caption),
+          ],
+        ),
+      );
 }
 
 class _Header extends ConsumerWidget {

@@ -53,14 +53,6 @@ class CampusStudentsController extends _$CampusStudentsController {
   }
 }
 
-/// One student, found by muID (`student-details` searches muIDs too), so a
-/// deep link works without the list. Null when not at this campus.
-@Riverpod(retry: noRetry)
-Future<CampusStudent?> campusStudent(Ref ref, String muid) async {
-  final page = await ref.watch(campusRepositoryProvider).getStudents(pageIndex: 1, search: muid, perPage: 10);
-  return page.items.where((s) => s.muid == muid).firstOrNull;
-}
-
 /// A student's karma entries, page by page.
 @Riverpod(retry: noRetry)
 class StudentActivityController extends _$StudentActivityController {

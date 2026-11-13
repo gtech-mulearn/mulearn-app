@@ -419,7 +419,7 @@ class _StudentRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final s = student;
     return InkWell(
-      onTap: s.muid.isEmpty ? null : () => context.push(RoutePaths.campusStudentPath(s.muid)),
+      onTap: s.muid.isEmpty ? null : () => context.push(RoutePaths.campusStudentPath(s.muid), extra: s),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: MuSpace.l, vertical: MuSpace.m),
         child: Row(

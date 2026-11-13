@@ -14,6 +14,7 @@ import 'package:mulearn_app/features/auth/presentation/screens/register_role_sel
 import 'package:mulearn_app/features/auth/presentation/screens/reset_password_screen.dart';
 import 'package:mulearn_app/features/auth/presentation/screens/sign_in_screen.dart';
 import 'package:mulearn_app/features/calendar/presentation/screens/calendar_screen.dart';
+import 'package:mulearn_app/features/campus/domain/entities/campus_student.dart';
 import 'package:mulearn_app/features/campus/presentation/screens/campus_approvals_screen.dart';
 import 'package:mulearn_app/features/campus/presentation/screens/campus_groups_screen.dart';
 import 'package:mulearn_app/features/campus/presentation/screens/campus_overview_screen.dart';
@@ -229,7 +230,10 @@ GoRouter goRouter(Ref ref) {
         builder: (_, state) => WorkspaceGate(
           select: (a) => a.campus,
           role: 'Campus',
-          builder: (_) => CampusStudentScreen(muid: state.pathParameters['muid']!),
+          builder: (_) => CampusStudentScreen(
+            muid: state.pathParameters['muid']!,
+            student: state.extra is CampusStudent ? state.extra! as CampusStudent : null,
+          ),
         ),
       ),
       GoRoute(

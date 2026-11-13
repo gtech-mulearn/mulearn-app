@@ -1,0 +1,27 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/campus/student-details/?sortBy=-karma&pageIndex=1&perPage=20",
+    "account": "campuslead",
+    "status": 200,
+    "recorded_at": "2026-11-13T13:03:29.732124Z",
+    "note": "Derived from campus_students_page1: what student-details returns for a search it cannot match (it searches full_name and level only, never muid)."
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "data": [],
+      "pagination": {
+        "count": 0,
+        "totalPages": 1,
+        "isNext": false,
+        "isPrev": false,
+        "nextPage": null
+      }
+    }
+  }
+}

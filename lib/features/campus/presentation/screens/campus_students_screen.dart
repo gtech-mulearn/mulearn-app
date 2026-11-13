@@ -61,7 +61,7 @@ class _CampusStudentsScreenState extends ConsumerState<CampusStudentsScreen> {
               onChanged: _onSearch,
               textInputAction: TextInputAction.search,
               decoration: const InputDecoration(
-                hintText: 'Search by name or muID',
+                hintText: 'Search by name',
                 prefixIcon: Icon(LucideIcons.search, size: 18),
               ),
             ),
@@ -158,7 +158,7 @@ class _StudentTile extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: MuSpace.s),
       child: MuCard(
-        onTap: () => context.push(RoutePaths.campusStudentPath(s.muid)),
+        onTap: () => context.push(RoutePaths.campusStudentPath(s.muid), extra: s),
         padding: const EdgeInsets.fromLTRB(MuSpace.l, MuSpace.m, MuSpace.s, MuSpace.m),
         child: Row(
           children: [
