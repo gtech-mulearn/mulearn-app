@@ -2,7 +2,8 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 
-/// docs/rules.md §8: colours come from MuColors/MuShadow, never literals in
+/// docs/rules.md §8: colours come from the token files (core/theme and the
+/// generated core/design_system/tokens), never literals in
 /// widgets. Colors.transparent is allowed (it is not a colour choice).
 void main() {
   test('no colour literals outside the theme', () {
@@ -15,7 +16,8 @@ void main() {
       if (!path.endsWith('.dart') ||
           path.endsWith('.g.dart') ||
           path.endsWith('.freezed.dart') ||
-          path.startsWith('lib/core/theme/')) {
+          path.startsWith('lib/core/theme/') ||
+          path.startsWith('lib/core/design_system/tokens/')) {
         continue;
       }
       final lines = file.readAsLinesSync();
