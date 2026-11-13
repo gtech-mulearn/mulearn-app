@@ -15,6 +15,7 @@ import 'package:mulearn_app/features/learning_circles/data/dtos/meeting_dto.dart
 import 'package:mulearn_app/features/learning_circles/data/dtos/meeting_report_dto.dart';
 import 'package:mulearn_app/features/learning_circles/data/dtos/received_circle_invite_dto.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/attendee_report.dart';
+import 'package:mulearn_app/features/learning_circles/domain/entities/circle_filter.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/circle_invite.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/circle_members.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/join_request.dart';
@@ -34,8 +35,9 @@ class LearningCirclesRepositoryImpl implements LearningCirclesRepository {
   final LearningCirclesRemoteDataSource _remote;
 
   @override
-  Future<LearningCirclePage> getCircles({required int pageIndex}) => _guard(() async {
-        final payload = await _remote.fetchCircles(pageIndex: pageIndex);
+  Future<LearningCirclePage> getCircles({required int pageIndex, CircleFilter filter = const CircleFilter()}) =>
+      _guard(() async {
+        final payload = await _remote.fetchCircles(pageIndex: pageIndex, filter: filter);
         final items = payload['data'] as List<dynamic>? ?? [];
         return LearningCirclePage(
           circles: parseEachOrReport(

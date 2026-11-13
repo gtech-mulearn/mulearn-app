@@ -1,4 +1,5 @@
 import 'package:mulearn_app/features/learning_circles/domain/entities/attendee_report.dart';
+import 'package:mulearn_app/features/learning_circles/domain/entities/circle_filter.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/circle_invite.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/circle_members.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/join_request.dart';
@@ -13,7 +14,7 @@ import 'package:mulearn_app/features/learning_circles/domain/entities/received_c
 
 abstract interface class LearningCirclesRepository {
   // --- Circles ---
-  Future<LearningCirclePage> getCircles({required int pageIndex});
+  Future<LearningCirclePage> getCircles({required int pageIndex, CircleFilter filter = const CircleFilter()});
   Future<List<LearningCircle>> getMyCircles();
   Future<LearningCircleDetail> getCircleDetail(String id);
   Future<String> createCircle({

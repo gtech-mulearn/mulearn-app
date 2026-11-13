@@ -56,6 +56,8 @@ List<_Target> _targets() {
     const _Target('events_featured', '/api/v1/dashboard/events/featured/'),
     const _Target('circles_page1', '/api/v1/dashboard/learningcircle/list/?pageIndex=1&perPage=20'),
     const _Target('user_circles', '/api/v1/dashboard/learningcircle/user-circles/'),
+    // Discover filters: circles the student hasn't joined, titled like "Club".
+    const _Target('circles_filtered', '/api/v1/dashboard/learningcircle/list/?status=not_joined&search=Club&pageIndex=1&perPage=20'),
     // A seeded circle the QA student belongs to as a plain member.
     const _Target('circle_detail', '/api/v1/dashboard/learningcircle/info/463e9e4a-7255-431d-95f9-5bd181a48d12/'),
     const _Target('circle_members', '/api/v1/dashboard/learningcircle/members/463e9e4a-7255-431d-95f9-5bd181a48d12/'),

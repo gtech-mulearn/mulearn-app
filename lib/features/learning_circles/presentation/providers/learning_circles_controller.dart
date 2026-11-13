@@ -4,6 +4,7 @@ import 'package:mulearn_app/core/utils/app_logger.dart';
 import 'package:mulearn_app/core/widgets/searchable_select_field.dart';
 import 'package:mulearn_app/features/learning_circles/data/datasources/learning_circles_remote_datasource.dart';
 import 'package:mulearn_app/features/learning_circles/data/repositories/learning_circles_repository_impl.dart';
+import 'package:mulearn_app/features/learning_circles/domain/entities/circle_filter.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/circle_invite.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/circle_members.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/join_request.dart';
@@ -65,7 +66,8 @@ Future<List<SelectOption>> circleIgOptions(Ref ref) async {
       .toList();
 }
 
-/// Accumulates circle catalog pages across "load more". A failed page keeps
+/// Accumulates circle catalog pages across "load more", one list per
+/// [CircleFilter] (a new filter starts again at page 1). A failed page keeps
 /// the circles already shown and records the error for an inline retry.
 @riverpod
 class CirclesListController extends _$CirclesListController {
@@ -73,11 +75,12 @@ class CirclesListController extends _$CirclesListController {
   Future<void>? _inFlight;
 
   @override
-  Future<PagedState<LearningCircle>> build() async {
+  Future<PagedState<LearningCircle>> build(CircleFilter filter) async {
     _pageIndex = 1;
     _inFlight = null;
-    final page =
-        await ref.watch(learningCirclesRepositoryProvider).getCircles(pageIndex: 1);
+    final page = await ref
+        .watch(learningCirclesRepositoryProvider)
+        .getCircles(pageIndex: 1, filter: filter);
     return PagedState(items: page.circles, hasMore: page.hasNext);
   }
 
@@ -93,8 +96,9 @@ class CirclesListController extends _$CirclesListController {
     state = AsyncData(current.copyWith(isLoadingMore: true, loadMoreError: null));
     final next = _pageIndex + 1;
     try {
-      final page =
-          await ref.read(learningCirclesRepositoryProvider).getCircles(pageIndex: next);
+      final page = await ref
+          .read(learningCirclesRepositoryProvider)
+          .getCircles(pageIndex: next, filter: filter);
       if (!ref.mounted) return;
       _pageIndex = next;
       state = AsyncData(PagedState(

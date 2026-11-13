@@ -558,13 +558,15 @@ final class CircleIgOptionsProvider
 
 String _$circleIgOptionsHash() => r'b0089f447a4e2bc35866de0b8d41304bb9a5b09a';
 
-/// Accumulates circle catalog pages across "load more". A failed page keeps
+/// Accumulates circle catalog pages across "load more", one list per
+/// [CircleFilter] (a new filter starts again at page 1). A failed page keeps
 /// the circles already shown and records the error for an inline retry.
 
 @ProviderFor(CirclesListController)
-const circlesListControllerProvider = CirclesListControllerProvider._();
+const circlesListControllerProvider = CirclesListControllerFamily._();
 
-/// Accumulates circle catalog pages across "load more". A failed page keeps
+/// Accumulates circle catalog pages across "load more", one list per
+/// [CircleFilter] (a new filter starts again at page 1). A failed page keeps
 /// the circles already shown and records the error for an inline retry.
 final class CirclesListControllerProvider
     extends
@@ -572,40 +574,95 @@ final class CirclesListControllerProvider
           CirclesListController,
           PagedState<LearningCircle>
         > {
-  /// Accumulates circle catalog pages across "load more". A failed page keeps
+  /// Accumulates circle catalog pages across "load more", one list per
+  /// [CircleFilter] (a new filter starts again at page 1). A failed page keeps
   /// the circles already shown and records the error for an inline retry.
-  const CirclesListControllerProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'circlesListControllerProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
+  const CirclesListControllerProvider._({
+    required CirclesListControllerFamily super.from,
+    required CircleFilter super.argument,
+  }) : super(
+         retry: null,
+         name: r'circlesListControllerProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
   @override
   String debugGetCreateSourceHash() => _$circlesListControllerHash();
 
+  @override
+  String toString() {
+    return r'circlesListControllerProvider'
+        ''
+        '($argument)';
+  }
+
   @$internal
   @override
   CirclesListController create() => CirclesListController();
+
+  @override
+  bool operator ==(Object other) {
+    return other is CirclesListControllerProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
 }
 
 String _$circlesListControllerHash() =>
-    r'ceb23ab9cbfa178f919dff6d5314376e0969e8a6';
+    r'02f11afaf2fb6027c84fc4e51264fd0ba5110193';
 
-/// Accumulates circle catalog pages across "load more". A failed page keeps
+/// Accumulates circle catalog pages across "load more", one list per
+/// [CircleFilter] (a new filter starts again at page 1). A failed page keeps
+/// the circles already shown and records the error for an inline retry.
+
+final class CirclesListControllerFamily extends $Family
+    with
+        $ClassFamilyOverride<
+          CirclesListController,
+          AsyncValue<PagedState<LearningCircle>>,
+          PagedState<LearningCircle>,
+          FutureOr<PagedState<LearningCircle>>,
+          CircleFilter
+        > {
+  const CirclesListControllerFamily._()
+    : super(
+        retry: null,
+        name: r'circlesListControllerProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// Accumulates circle catalog pages across "load more", one list per
+  /// [CircleFilter] (a new filter starts again at page 1). A failed page keeps
+  /// the circles already shown and records the error for an inline retry.
+
+  CirclesListControllerProvider call(CircleFilter filter) =>
+      CirclesListControllerProvider._(argument: filter, from: this);
+
+  @override
+  String toString() => r'circlesListControllerProvider';
+}
+
+/// Accumulates circle catalog pages across "load more", one list per
+/// [CircleFilter] (a new filter starts again at page 1). A failed page keeps
 /// the circles already shown and records the error for an inline retry.
 
 abstract class _$CirclesListController
     extends $AsyncNotifier<PagedState<LearningCircle>> {
-  FutureOr<PagedState<LearningCircle>> build();
+  late final _$args = ref.$arg as CircleFilter;
+  CircleFilter get filter => _$args;
+
+  FutureOr<PagedState<LearningCircle>> build(CircleFilter filter);
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
+    final created = build(_$args);
     final ref =
         this.ref
             as $Ref<

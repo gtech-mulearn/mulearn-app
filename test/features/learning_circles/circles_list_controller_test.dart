@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:mulearn_app/features/learning_circles/domain/entities/circle_filter.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/learning_circle.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/learning_circle_page.dart';
 import 'package:mulearn_app/features/learning_circles/domain/repositories/learning_circles_repository.dart';
@@ -27,19 +28,19 @@ void main() {
       overrides: [learningCirclesRepositoryProvider.overrideWithValue(repo)],
     );
     addTearDown(container.dispose);
-    container.listen(circlesListControllerProvider, (_, __) {});
+    container.listen(circlesListControllerProvider(const CircleFilter()), (_, __) {});
     return container;
   }
 
   List<String> ids(ProviderContainer c) =>
-      c.read(circlesListControllerProvider).requireValue.items.map((e) => e.id).toList();
+      c.read(circlesListControllerProvider(const CircleFilter())).requireValue.items.map((e) => e.id).toList();
 
   test('build loads page 1', () async {
     when(() => repo.getCircles(pageIndex: 1))
         .thenAnswer((_) async => page(['a', 'b'], hasNext: true));
     final c = makeContainer();
 
-    final state = await c.read(circlesListControllerProvider.future);
+    final state = await c.read(circlesListControllerProvider(const CircleFilter()).future);
 
     expect(state.items.map((e) => e.id), ['a', 'b']);
     expect(state.hasMore, isTrue);
@@ -51,9 +52,9 @@ void main() {
     when(() => repo.getCircles(pageIndex: 2))
         .thenAnswer((_) async => page(['b', 'c'], hasNext: false));
     final c = makeContainer();
-    await c.read(circlesListControllerProvider.future);
+    await c.read(circlesListControllerProvider(const CircleFilter()).future);
 
-    await c.read(circlesListControllerProvider.notifier).loadMore();
+    await c.read(circlesListControllerProvider(const CircleFilter()).notifier).loadMore();
 
     expect(ids(c), ['a', 'b', 'c']);
   });
@@ -63,11 +64,11 @@ void main() {
         .thenAnswer((_) async => page(['a'], hasNext: true));
     when(() => repo.getCircles(pageIndex: 2)).thenThrow(Exception('offline'));
     final c = makeContainer();
-    await c.read(circlesListControllerProvider.future);
+    await c.read(circlesListControllerProvider(const CircleFilter()).future);
 
-    await c.read(circlesListControllerProvider.notifier).loadMore();
+    await c.read(circlesListControllerProvider(const CircleFilter()).notifier).loadMore();
 
-    final state = c.read(circlesListControllerProvider).requireValue;
+    final state = c.read(circlesListControllerProvider(const CircleFilter())).requireValue;
     expect(ids(c), ['a']);
     expect(state.loadMoreError, isNotNull);
   });
@@ -78,9 +79,9 @@ void main() {
         .thenAnswer((_) async => page(['a'], hasNext: true));
     when(() => repo.getCircles(pageIndex: 2)).thenAnswer((_) => pending.future);
     final c = makeContainer();
-    await c.read(circlesListControllerProvider.future);
+    await c.read(circlesListControllerProvider(const CircleFilter()).future);
 
-    final notifier = c.read(circlesListControllerProvider.notifier);
+    final notifier = c.read(circlesListControllerProvider(const CircleFilter()).notifier);
     final first = notifier.loadMore();
     final second = notifier.loadMore();
     pending.complete(page(['b'], hasNext: false));
@@ -93,9 +94,9 @@ void main() {
     when(() => repo.getCircles(pageIndex: 1))
         .thenAnswer((_) async => const LearningCirclePage(circles: [], hasNext: false));
     final c = makeContainer();
-    await c.read(circlesListControllerProvider.future);
+    await c.read(circlesListControllerProvider(const CircleFilter()).future);
 
-    await c.read(circlesListControllerProvider.notifier).loadMore();
+    await c.read(circlesListControllerProvider(const CircleFilter()).notifier).loadMore();
 
     expect(ids(c), isEmpty);
     verifyNever(() => repo.getCircles(pageIndex: 2));
