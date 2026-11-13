@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CircleInvite {
 
- String get linkId; String get fullName; String get muid; String get status; String? get userId; String? get profilePicUrl; String? get invitedAt; String? get circleId; String? get circleTitle; bool get isLeadInvite;
+ String get linkId; String get fullName; String get muid; String get status; String? get userId; String? get profilePicUrl; String? get invitedAt; bool get isLeadInvite;
 /// Create a copy of CircleInvite
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $CircleInviteCopyWith<CircleInvite> get copyWith => _$CircleInviteCopyWithImpl<C
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CircleInvite&&(identical(other.linkId, linkId) || other.linkId == linkId)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.status, status) || other.status == status)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.profilePicUrl, profilePicUrl) || other.profilePicUrl == profilePicUrl)&&(identical(other.invitedAt, invitedAt) || other.invitedAt == invitedAt)&&(identical(other.circleId, circleId) || other.circleId == circleId)&&(identical(other.circleTitle, circleTitle) || other.circleTitle == circleTitle)&&(identical(other.isLeadInvite, isLeadInvite) || other.isLeadInvite == isLeadInvite));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CircleInvite&&(identical(other.linkId, linkId) || other.linkId == linkId)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.status, status) || other.status == status)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.profilePicUrl, profilePicUrl) || other.profilePicUrl == profilePicUrl)&&(identical(other.invitedAt, invitedAt) || other.invitedAt == invitedAt)&&(identical(other.isLeadInvite, isLeadInvite) || other.isLeadInvite == isLeadInvite));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,linkId,fullName,muid,status,userId,profilePicUrl,invitedAt,circleId,circleTitle,isLeadInvite);
+int get hashCode => Object.hash(runtimeType,linkId,fullName,muid,status,userId,profilePicUrl,invitedAt,isLeadInvite);
 
 @override
 String toString() {
-  return 'CircleInvite(linkId: $linkId, fullName: $fullName, muid: $muid, status: $status, userId: $userId, profilePicUrl: $profilePicUrl, invitedAt: $invitedAt, circleId: $circleId, circleTitle: $circleTitle, isLeadInvite: $isLeadInvite)';
+  return 'CircleInvite(linkId: $linkId, fullName: $fullName, muid: $muid, status: $status, userId: $userId, profilePicUrl: $profilePicUrl, invitedAt: $invitedAt, isLeadInvite: $isLeadInvite)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $CircleInviteCopyWith<$Res>  {
   factory $CircleInviteCopyWith(CircleInvite value, $Res Function(CircleInvite) _then) = _$CircleInviteCopyWithImpl;
 @useResult
 $Res call({
- String linkId, String fullName, String muid, String status, String? userId, String? profilePicUrl, String? invitedAt, String? circleId, String? circleTitle, bool isLeadInvite
+ String linkId, String fullName, String muid, String status, String? userId, String? profilePicUrl, String? invitedAt, bool isLeadInvite
 });
 
 
@@ -62,7 +62,7 @@ class _$CircleInviteCopyWithImpl<$Res>
 
 /// Create a copy of CircleInvite
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? linkId = null,Object? fullName = null,Object? muid = null,Object? status = null,Object? userId = freezed,Object? profilePicUrl = freezed,Object? invitedAt = freezed,Object? circleId = freezed,Object? circleTitle = freezed,Object? isLeadInvite = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? linkId = null,Object? fullName = null,Object? muid = null,Object? status = null,Object? userId = freezed,Object? profilePicUrl = freezed,Object? invitedAt = freezed,Object? isLeadInvite = null,}) {
   return _then(_self.copyWith(
 linkId: null == linkId ? _self.linkId : linkId // ignore: cast_nullable_to_non_nullable
 as String,fullName: null == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
@@ -71,8 +71,6 @@ as String,status: null == status ? _self.status : status // ignore: cast_nullabl
 as String,userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String?,profilePicUrl: freezed == profilePicUrl ? _self.profilePicUrl : profilePicUrl // ignore: cast_nullable_to_non_nullable
 as String?,invitedAt: freezed == invitedAt ? _self.invitedAt : invitedAt // ignore: cast_nullable_to_non_nullable
-as String?,circleId: freezed == circleId ? _self.circleId : circleId // ignore: cast_nullable_to_non_nullable
-as String?,circleTitle: freezed == circleTitle ? _self.circleTitle : circleTitle // ignore: cast_nullable_to_non_nullable
 as String?,isLeadInvite: null == isLeadInvite ? _self.isLeadInvite : isLeadInvite // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
@@ -159,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String linkId,  String fullName,  String muid,  String status,  String? userId,  String? profilePicUrl,  String? invitedAt,  String? circleId,  String? circleTitle,  bool isLeadInvite)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String linkId,  String fullName,  String muid,  String status,  String? userId,  String? profilePicUrl,  String? invitedAt,  bool isLeadInvite)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CircleInvite() when $default != null:
-return $default(_that.linkId,_that.fullName,_that.muid,_that.status,_that.userId,_that.profilePicUrl,_that.invitedAt,_that.circleId,_that.circleTitle,_that.isLeadInvite);case _:
+return $default(_that.linkId,_that.fullName,_that.muid,_that.status,_that.userId,_that.profilePicUrl,_that.invitedAt,_that.isLeadInvite);case _:
   return orElse();
 
 }
@@ -180,10 +178,10 @@ return $default(_that.linkId,_that.fullName,_that.muid,_that.status,_that.userId
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String linkId,  String fullName,  String muid,  String status,  String? userId,  String? profilePicUrl,  String? invitedAt,  String? circleId,  String? circleTitle,  bool isLeadInvite)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String linkId,  String fullName,  String muid,  String status,  String? userId,  String? profilePicUrl,  String? invitedAt,  bool isLeadInvite)  $default,) {final _that = this;
 switch (_that) {
 case _CircleInvite():
-return $default(_that.linkId,_that.fullName,_that.muid,_that.status,_that.userId,_that.profilePicUrl,_that.invitedAt,_that.circleId,_that.circleTitle,_that.isLeadInvite);case _:
+return $default(_that.linkId,_that.fullName,_that.muid,_that.status,_that.userId,_that.profilePicUrl,_that.invitedAt,_that.isLeadInvite);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -200,10 +198,10 @@ return $default(_that.linkId,_that.fullName,_that.muid,_that.status,_that.userId
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String linkId,  String fullName,  String muid,  String status,  String? userId,  String? profilePicUrl,  String? invitedAt,  String? circleId,  String? circleTitle,  bool isLeadInvite)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String linkId,  String fullName,  String muid,  String status,  String? userId,  String? profilePicUrl,  String? invitedAt,  bool isLeadInvite)?  $default,) {final _that = this;
 switch (_that) {
 case _CircleInvite() when $default != null:
-return $default(_that.linkId,_that.fullName,_that.muid,_that.status,_that.userId,_that.profilePicUrl,_that.invitedAt,_that.circleId,_that.circleTitle,_that.isLeadInvite);case _:
+return $default(_that.linkId,_that.fullName,_that.muid,_that.status,_that.userId,_that.profilePicUrl,_that.invitedAt,_that.isLeadInvite);case _:
   return null;
 
 }
@@ -215,7 +213,7 @@ return $default(_that.linkId,_that.fullName,_that.muid,_that.status,_that.userId
 
 
 class _CircleInvite implements CircleInvite {
-  const _CircleInvite({required this.linkId, required this.fullName, required this.muid, required this.status, this.userId, this.profilePicUrl, this.invitedAt, this.circleId, this.circleTitle, this.isLeadInvite = false});
+  const _CircleInvite({required this.linkId, required this.fullName, required this.muid, required this.status, this.userId, this.profilePicUrl, this.invitedAt, this.isLeadInvite = false});
   
 
 @override final  String linkId;
@@ -225,8 +223,6 @@ class _CircleInvite implements CircleInvite {
 @override final  String? userId;
 @override final  String? profilePicUrl;
 @override final  String? invitedAt;
-@override final  String? circleId;
-@override final  String? circleTitle;
 @override@JsonKey() final  bool isLeadInvite;
 
 /// Create a copy of CircleInvite
@@ -239,16 +235,16 @@ _$CircleInviteCopyWith<_CircleInvite> get copyWith => __$CircleInviteCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CircleInvite&&(identical(other.linkId, linkId) || other.linkId == linkId)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.status, status) || other.status == status)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.profilePicUrl, profilePicUrl) || other.profilePicUrl == profilePicUrl)&&(identical(other.invitedAt, invitedAt) || other.invitedAt == invitedAt)&&(identical(other.circleId, circleId) || other.circleId == circleId)&&(identical(other.circleTitle, circleTitle) || other.circleTitle == circleTitle)&&(identical(other.isLeadInvite, isLeadInvite) || other.isLeadInvite == isLeadInvite));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CircleInvite&&(identical(other.linkId, linkId) || other.linkId == linkId)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.status, status) || other.status == status)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.profilePicUrl, profilePicUrl) || other.profilePicUrl == profilePicUrl)&&(identical(other.invitedAt, invitedAt) || other.invitedAt == invitedAt)&&(identical(other.isLeadInvite, isLeadInvite) || other.isLeadInvite == isLeadInvite));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,linkId,fullName,muid,status,userId,profilePicUrl,invitedAt,circleId,circleTitle,isLeadInvite);
+int get hashCode => Object.hash(runtimeType,linkId,fullName,muid,status,userId,profilePicUrl,invitedAt,isLeadInvite);
 
 @override
 String toString() {
-  return 'CircleInvite(linkId: $linkId, fullName: $fullName, muid: $muid, status: $status, userId: $userId, profilePicUrl: $profilePicUrl, invitedAt: $invitedAt, circleId: $circleId, circleTitle: $circleTitle, isLeadInvite: $isLeadInvite)';
+  return 'CircleInvite(linkId: $linkId, fullName: $fullName, muid: $muid, status: $status, userId: $userId, profilePicUrl: $profilePicUrl, invitedAt: $invitedAt, isLeadInvite: $isLeadInvite)';
 }
 
 
@@ -259,7 +255,7 @@ abstract mixin class _$CircleInviteCopyWith<$Res> implements $CircleInviteCopyWi
   factory _$CircleInviteCopyWith(_CircleInvite value, $Res Function(_CircleInvite) _then) = __$CircleInviteCopyWithImpl;
 @override @useResult
 $Res call({
- String linkId, String fullName, String muid, String status, String? userId, String? profilePicUrl, String? invitedAt, String? circleId, String? circleTitle, bool isLeadInvite
+ String linkId, String fullName, String muid, String status, String? userId, String? profilePicUrl, String? invitedAt, bool isLeadInvite
 });
 
 
@@ -276,7 +272,7 @@ class __$CircleInviteCopyWithImpl<$Res>
 
 /// Create a copy of CircleInvite
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? linkId = null,Object? fullName = null,Object? muid = null,Object? status = null,Object? userId = freezed,Object? profilePicUrl = freezed,Object? invitedAt = freezed,Object? circleId = freezed,Object? circleTitle = freezed,Object? isLeadInvite = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? linkId = null,Object? fullName = null,Object? muid = null,Object? status = null,Object? userId = freezed,Object? profilePicUrl = freezed,Object? invitedAt = freezed,Object? isLeadInvite = null,}) {
   return _then(_CircleInvite(
 linkId: null == linkId ? _self.linkId : linkId // ignore: cast_nullable_to_non_nullable
 as String,fullName: null == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
@@ -285,8 +281,6 @@ as String,status: null == status ? _self.status : status // ignore: cast_nullabl
 as String,userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String?,profilePicUrl: freezed == profilePicUrl ? _self.profilePicUrl : profilePicUrl // ignore: cast_nullable_to_non_nullable
 as String?,invitedAt: freezed == invitedAt ? _self.invitedAt : invitedAt // ignore: cast_nullable_to_non_nullable
-as String?,circleId: freezed == circleId ? _self.circleId : circleId // ignore: cast_nullable_to_non_nullable
-as String?,circleTitle: freezed == circleTitle ? _self.circleTitle : circleTitle // ignore: cast_nullable_to_non_nullable
 as String?,isLeadInvite: null == isLeadInvite ? _self.isLeadInvite : isLeadInvite // ignore: cast_nullable_to_non_nullable
 as bool,
   ));

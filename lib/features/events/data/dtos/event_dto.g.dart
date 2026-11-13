@@ -34,6 +34,14 @@ _EventDto _$EventDtoFromJson(Map<String, dynamic> json) => _EventDto(
   registrationDeadline: json['registration_deadline'] as String?,
   minKarma: (json['min_karma'] as num?)?.toInt(),
   userLimit: (json['user_limit'] as num?)?.toInt(),
+  viewerCanAccessRegistration:
+      json['viewer_can_access_registration'] as bool? ?? true,
+  viewerAccessBlockedReason: json['viewer_access_blocked_reason'] as String?,
+  linkedTasks:
+      (json['linked_tasks'] as List<dynamic>?)
+          ?.map((e) => EventLinkedTaskDto.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      const [],
 );
 
 Map<String, dynamic> _$EventDtoToJson(_EventDto instance) => <String, dynamic>{
@@ -60,4 +68,7 @@ Map<String, dynamic> _$EventDtoToJson(_EventDto instance) => <String, dynamic>{
   'registration_deadline': instance.registrationDeadline,
   'min_karma': instance.minKarma,
   'user_limit': instance.userLimit,
+  'viewer_can_access_registration': instance.viewerCanAccessRegistration,
+  'viewer_access_blocked_reason': instance.viewerAccessBlockedReason,
+  'linked_tasks': instance.linkedTasks,
 };

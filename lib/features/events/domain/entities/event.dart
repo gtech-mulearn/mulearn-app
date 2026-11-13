@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:mulearn_app/core/models/event_organizer.dart';
 import 'package:mulearn_app/core/models/event_venue.dart';
+import 'package:mulearn_app/features/events/domain/entities/event_linked_task.dart';
 
 part 'event.freezed.dart';
 
@@ -34,6 +35,15 @@ abstract class Event with _$Event {
     String? registrationDeadline,
     int? minKarma,
     int? userLimit,
+
+    /// From the event detail: whether this viewer may register
+    /// (`viewer_can_access_registration`) and why not
+    /// (`viewer_access_blocked_reason`). List items don't carry them.
+    @Default(true) bool canRegister,
+    String? blockedReason,
+
+    /// Live (approved) tasks linked to the event.
+    @Default([]) List<EventLinkedTask> linkedTasks,
   }) = _Event;
 
   const Event._();

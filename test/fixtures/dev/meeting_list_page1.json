@@ -1,0 +1,79 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/learningcircle/meeting/list/<circle_id>/?pageIndex=1&perPage=20",
+    "account": "student",
+    "status": 200,
+    "recorded_at": "2026-11-12T15:46:53.289178+00:00"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "data": [
+        {
+          "id": "ca60c70d-587f-477b-b374-fa69231014e9",
+          "title": "Code review night",
+          "description": "Bring your open PRs - we review them together on the projector.",
+          "org": "St. Josephs Colege of Engineering and Technology",
+          "ig_id": "4ff0a5e5-d1ef-44dd-ac13-9a2f9e7717e3",
+          "ig_name": "Web Development",
+          "mode": "offline",
+          "is_recurring": false,
+          "recurrence_type": null,
+          "recurrence": null,
+          "meet_place": "St. Joseph's College of Engineering and Technology, Choondacherry, Palai",
+          "is_rsvp": true,
+          "can_remove_rsvp": false,
+          "circle_id": "4cfd3477-08c7-421e-9137-fd6cbc412465",
+          "coord_x": 9.7268,
+          "coord_y": 76.7266,
+          "meet_time": "2026-11-22T12:00:00Z",
+          "meet_link": null,
+          "is_started": false,
+          "is_ended": false,
+          "is_joined": true,
+          "attendees_count": 1,
+          "created_by": "QA Student One",
+          "created_by_id": "04afe242-e329-4491-af58-d555abd82e5f"
+        },
+        {
+          "id": "91020acb-8f26-4de4-a70e-5db1f64b7834",
+          "title": "Sprint 3 kickoff: Riverpod state management",
+          "description": "We pick this sprint's app and split the screens. Read the Riverpod docs intro before joining.",
+          "org": "St. Josephs Colege of Engineering and Technology",
+          "ig_id": "4ff0a5e5-d1ef-44dd-ac13-9a2f9e7717e3",
+          "ig_name": "Web Development",
+          "mode": "online",
+          "is_recurring": false,
+          "recurrence_type": null,
+          "recurrence": null,
+          "meet_place": "Google Meet",
+          "is_rsvp": true,
+          "can_remove_rsvp": false,
+          "circle_id": "4cfd3477-08c7-421e-9137-fd6cbc412465",
+          "coord_x": 0.0,
+          "coord_y": 0.0,
+          "meet_time": "2026-11-15T13:30:00Z",
+          "meet_link": "https://meet.google.com/xqp-rtvz-kmn",
+          "is_started": false,
+          "is_ended": false,
+          "is_joined": true,
+          "attendees_count": 1,
+          "created_by": "QA Student One",
+          "created_by_id": "04afe242-e329-4491-af58-d555abd82e5f"
+        }
+      ],
+      "pagination": {
+        "count": 2,
+        "totalPages": 1,
+        "isNext": false,
+        "isPrev": false,
+        "nextPage": null
+      }
+    }
+  }
+}

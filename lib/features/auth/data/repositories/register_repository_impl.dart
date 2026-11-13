@@ -8,7 +8,6 @@ import 'package:mulearn_app/core/network/auth_token_parser.dart';
 import 'package:mulearn_app/core/storage/secure_storage_provider.dart';
 import 'package:mulearn_app/features/auth/data/datasources/register_remote_datasource.dart';
 import 'package:mulearn_app/features/auth/domain/entities/auth_session.dart';
-import 'package:mulearn_app/features/auth/domain/entities/company_details.dart';
 import 'package:mulearn_app/features/auth/domain/repositories/register_repository.dart';
 
 class RegisterRepositoryImpl implements RegisterRepository {
@@ -97,36 +96,50 @@ class RegisterRepositoryImpl implements RegisterRepository {
         roleId: roleId,
         referralMuid: referralMuid,
       );
-
-      final tokens = AuthTokenParser.tryParse(payload);
-      if (tokens == null) {
-        throw const ApiException(
-          message: 'Registered, but could not read the auth tokens from the '
-              'response.',
-        );
-      }
-
-      await _tokenStorage.saveTokens(
-        accessToken: tokens.accessToken,
-        refreshToken: tokens.refreshToken,
-      );
-      return AuthSession(
-        accessToken: tokens.accessToken,
-        refreshToken: tokens.refreshToken,
-      );
+      return await _storeSession(payload);
     } on DioException catch (e) {
       throw ApiException.fromDioException(e);
     }
   }
 
   @override
-  Future<void> registerCompany(CompanyDetails details) async {
+  Future<AuthSession> registerWithGoogle({
+    required String tempToken,
+    required String fullName,
+    required String roleId,
+    String? referralMuid,
+  }) async {
     try {
-      await _remote.registerCompany(details);
+      final payload = await _remote.registerWithGoogle(
+        tempToken: tempToken,
+        fullName: fullName,
+        roleId: roleId,
+        referralMuid: referralMuid,
+      );
+      return await _storeSession(payload);
     } on DioException catch (e) {
       throw ApiException.fromDioException(e);
     }
   }
+
+  Future<AuthSession> _storeSession(Map<String, dynamic> payload) async {
+    final tokens = AuthTokenParser.tryParse(payload);
+    if (tokens == null) {
+      throw const ApiException(
+        message: 'Registered, but could not read the auth tokens from the '
+            'response.',
+      );
+    }
+    await _tokenStorage.saveTokens(
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
+    );
+    return AuthSession(
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
+    );
+  }
+
 
   @override
   Future<void> selectOrganization({

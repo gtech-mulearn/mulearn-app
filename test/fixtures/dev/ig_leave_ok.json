@@ -1,0 +1,20 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "DELETE /api/v1/dashboard/ig/<id>/leave/",
+    "account": "student",
+    "status": 200,
+    "recorded_at": "2026-11-13T06:44:02.331029+00:00",
+    "note": "rejoined right after"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": [
+        "Left Interest Group successfully"
+      ]
+    },
+    "response": {}
+  }
+}

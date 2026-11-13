@@ -8,26 +8,20 @@ import 'package:mulearn_app/core/widgets/mu_toast.dart';
 import 'package:mulearn_app/features/auth/domain/entities/registration_role.dart';
 import 'package:mulearn_app/features/auth/presentation/providers/register_submit_controller.dart';
 import 'package:mulearn_app/features/auth/presentation/providers/register_wizard_controller.dart';
-import 'package:mulearn_app/features/auth/presentation/widgets/company_details_form.dart';
 import 'package:mulearn_app/features/auth/presentation/widgets/enabler_details_form.dart';
 import 'package:mulearn_app/features/auth/presentation/widgets/mentor_details_form.dart';
 import 'package:mulearn_app/features/auth/presentation/widgets/student_details_form.dart';
 
 /// Registration step 3 — role-specific details, matching the reference
 /// dashboard's step 3 of 3. Renders a different form per [RegistrationRole]
-/// (set in step 2). On success, resets the wizard and navigates onward:
-/// Company → profile (the reference goes to its dashboard); Student/Mentor/
-/// Enabler → the interests onboarding step.
+/// (set in step 2). On success, resets the wizard and moves on to the
+/// interests onboarding step.
 class RegisterDetailsScreen extends ConsumerWidget {
   const RegisterDetailsScreen({super.key});
 
-  void _onSubmitted(BuildContext context, WidgetRef ref, RegistrationRole role) {
+  void _onSubmitted(BuildContext context, WidgetRef ref) {
     ref.read(registerWizardControllerProvider.notifier).reset();
-    if (role == RegistrationRole.company) {
-      context.go(RoutePaths.home);
-    } else {
-      context.go(RoutePaths.onboardingInterests);
-    }
+    context.go(RoutePaths.onboardingInterests);
   }
 
   @override
@@ -58,16 +52,13 @@ class RegisterDetailsScreen extends ConsumerWidget {
           padding: const EdgeInsets.symmetric(horizontal: 26),
           child: switch (role) {
             RegistrationRole.student => StudentDetailsForm(
-                onSubmitted: () => _onSubmitted(context, ref, role),
+                onSubmitted: () => _onSubmitted(context, ref),
               ),
             RegistrationRole.enabler => EnablerDetailsForm(
-                onSubmitted: () => _onSubmitted(context, ref, role),
+                onSubmitted: () => _onSubmitted(context, ref),
               ),
             RegistrationRole.mentor => MentorDetailsForm(
-                onSubmitted: () => _onSubmitted(context, ref, role),
-              ),
-            RegistrationRole.company => CompanyDetailsForm(
-                onSubmitted: () => _onSubmitted(context, ref, role),
+                onSubmitted: () => _onSubmitted(context, ref),
               ),
           },
         ),

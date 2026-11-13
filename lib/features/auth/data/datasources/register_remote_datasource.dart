@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:mulearn_app/core/network/api_envelope.dart';
 import 'package:mulearn_app/core/network/api_paths.dart';
-import 'package:mulearn_app/features/auth/domain/entities/company_details.dart';
 
 /// Raw Dio calls for registration + onboarding-lookup endpoints. Returns
 /// already-unwrapped `response` payloads; DTO parsing happens in the
@@ -64,36 +63,27 @@ class RegisterRemoteDataSource {
     return ApiEnvelope.unwrapObject(response);
   }
 
-  /// `POST /api/v1/dashboard/company/register/` — authenticated; called after
-  /// [register] for the Company role. Blank optional fields are omitted,
-  /// mirroring the reference client.
-  Future<void> registerCompany(CompanyDetails details) async {
-    final body = <String, dynamic>{
-      'name': details.companyName,
-      'description': details.companyDescription,
-      'logo': details.logo,
-      'short_pitch': details.shortPitch,
-      'industry_sector': details.industrySector,
-      'website_link': details.websiteLink,
-      'email': details.email,
-      'location': details.location,
-      'district_id': details.districtId,
-      'state_id': details.stateId,
-      'country_id': details.countryId,
-      'legal_name': details.legalName,
-      'registration_number': details.registrationNumber,
-      'tax_id': details.taxId,
-      'company_size': details.companySize,
-      'linkedin_url': details.linkedinUrl,
-      'founded_year': details.foundedYear,
-      'remote_policy': details.remotePolicy,
-      'culture_text': details.cultureText,
-    }..removeWhere((_, value) => value == null || value == '');
-
-    final response =
-        await _dio.post<dynamic>(ApiPaths.companyRegister, data: body);
-    ApiEnvelope.unwrapObject(response);
+  /// `POST /api/v1/register/` with the authserver's Google `tempToken`. The
+  /// backend takes the email from the token (any client email is ignored)
+  /// and creates the account without a password, so neither is sent.
+  Future<Map<String, dynamic>> registerWithGoogle({
+    required String tempToken,
+    required String fullName,
+    required String roleId,
+    String? referralMuid,
+  }) async {
+    final response = await _dio.post<dynamic>(
+      ApiPaths.register,
+      data: {
+        'tempToken': tempToken,
+        'user': {'full_name': fullName, 'role': roleId},
+        if (referralMuid != null) 'referral': {'muid': referralMuid},
+      },
+      options: Options(headers: {RequestFlags.skipAuth: true}),
+    );
+    return ApiEnvelope.unwrapObject(response);
   }
+
 
   /// `POST /api/v1/dashboard/user/organization/` — authenticated.
   Future<void> selectOrganization({

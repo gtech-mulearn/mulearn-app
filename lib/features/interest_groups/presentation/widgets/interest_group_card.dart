@@ -100,7 +100,7 @@ class InterestGroupCard extends StatelessWidget {
                         shape: BoxShape.circle,
                         border: Border.all(color: MuColors.ink, width: 2),
                       ),
-                      child: const Icon(LucideIcons.check, size: 12, color: Colors.white),
+                      child: const Icon(LucideIcons.check, size: 12, color: MuColors.onBrand),
                     ),
                   ),
               ],
@@ -150,7 +150,7 @@ class _GroupIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     final squareBg = isJoined ? MuColors.surface : MuColors.primaryTint;
     final squareFg = isJoined ? MuColors.ink : MuColors.primary;
-    final icon = group.icon;
+    final icon = group.iconImage ?? group.icon;
 
     Widget content;
     if (icon != null && icon.isNotEmpty) {

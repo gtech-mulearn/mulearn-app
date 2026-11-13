@@ -1,0 +1,59 @@
+{
+  "_meta": {
+    "source": "serializer",
+    "endpoint": "GET /api/v1/dashboard/calendar/events/?start_date=&end_date= (as a verified mentor)",
+    "backend_ref": "mulearnbackend@87f7f80a api/calendar/dashboard_calendar_view.py (sessions block); api/calendar/serializers.py:7-41 MentorshipSessionCalendarSerializer; api/dashboard/events/serializers.py:291-302 EventCalendarItemSerializer",
+    "note": "Third session is deliberately malformed (no starts_at) to test per-item tolerance. Enum values lowercase as stored in the dev DB."
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {"general": []},
+    "response": {
+      "events": {
+        "upcoming": [
+          {
+            "id": "e1",
+            "title": "Flutter Forward Meetup",
+            "slug": "flutter-forward-meetup",
+            "status": "published",
+            "start": "2026-11-21T10:00:00+05:30",
+            "end": "2026-11-21T13:00:00+05:30",
+            "venue_type": "physical",
+            "organiser_name": "Mobile Development",
+            "category_name": "Meetup",
+            "is_featured": false
+          }
+        ],
+        "ongoing": [],
+        "completed": []
+      },
+      "sessions": {
+        "upcoming": [
+          {
+            "id": "s1",
+            "title": "Career clinic",
+            "description": "Open office hours for resume reviews.",
+            "mode": "online",
+            "starts_at": "2026-11-18T16:00:00+05:30",
+            "ends_at": "2026-11-18T17:00:00+05:30",
+            "status": "scheduled",
+            "meeting_link": "https://meet.google.com/xyz-abcd-efg",
+            "venue": null,
+            "mentor_name": "Fixture User",
+            "mentee_count": 6
+          },
+          {
+            "id": "s-bad",
+            "title": "Missing start time",
+            "mode": "online",
+            "ends_at": "2026-11-19T17:00:00+05:30",
+            "status": "scheduled"
+          }
+        ],
+        "ongoing": [],
+        "completed": []
+      }
+    }
+  }
+}

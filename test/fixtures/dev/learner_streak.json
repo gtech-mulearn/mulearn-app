@@ -1,0 +1,23 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/home/learner/streak/",
+    "account": "student",
+    "status": 200,
+    "recorded_at": "2026-11-12T15:31:36.724770Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": [
+        "Learner streak fetched successfully"
+      ]
+    },
+    "response": {
+      "streak_days": 0,
+      "last_activity_at": null,
+      "activity_dates": []
+    }
+  }
+}

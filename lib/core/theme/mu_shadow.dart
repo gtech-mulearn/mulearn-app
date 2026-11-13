@@ -27,6 +27,11 @@ abstract final class MuShadow {
   ];
 
   /// Primary button glow. CSS: `0 14px 28px -14px rgba(46,133,254,.9)`.
+  /// Under the leaderboard's first-place podium bar.
+  static const List<BoxShadow> podium = [
+    BoxShadow(color: Color(0x991A1A1A), blurRadius: 20, offset: Offset(0, 8)),
+  ];
+
   static const List<BoxShadow> buttonGlow = [
     BoxShadow(color: Color(0xE62E85FE), blurRadius: 28, offset: Offset(0, 14), spreadRadius: -14),
   ];

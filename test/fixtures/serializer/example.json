@@ -1,0 +1,1 @@
+{"_meta": {"source": "serializer", "note": "Minimal envelope used by test/support/fixtures_test.dart"}, "body": {"hasError": false, "statusCode": 200, "message": {"general": []}, "response": {}}}

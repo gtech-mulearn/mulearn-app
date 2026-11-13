@@ -1,0 +1,31 @@
+{
+  "_meta": {
+    "source": "serializer",
+    "built_from": "mulearnbackend origin/dev api/dashboard/home/views.py LearnerDashboardSummaryAPIView (next_meeting_data stays None when the user has no upcoming circle meeting)",
+    "based_on": "dev/learner_summary"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": [
+        "Learner dashboard summary fetched successfully"
+      ]
+    },
+    "response": {
+      "stats": {
+        "weekly_karma": 0,
+        "total_karma": 0,
+        "rank": 2,
+        "active_circles": 4,
+        "streak_days": 0
+      },
+      "next_meeting": null,
+      "quick_action_counts": {
+        "circles": 4,
+        "leaderboard_rank": 2,
+        "job_openings": 0
+      }
+    }
+  }
+}

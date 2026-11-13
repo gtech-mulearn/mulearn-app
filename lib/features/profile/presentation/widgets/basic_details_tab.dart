@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
+import 'package:mulearn_app/core/session/session_actions.dart';
 import 'package:mulearn_app/core/theme/mu_radius.dart';
 import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
@@ -13,11 +14,11 @@ import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 import 'package:mulearn_app/core/widgets/mu_card.dart';
 import 'package:mulearn_app/core/widgets/mu_chip.dart';
 import 'package:mulearn_app/core/widgets/mu_toast.dart';
-import 'package:mulearn_app/features/auth/presentation/providers/auth_controller.dart';
 import 'package:mulearn_app/features/profile/domain/entities/karma_distribution_entry.dart';
 import 'package:mulearn_app/features/profile/domain/entities/socials.dart';
 import 'package:mulearn_app/features/profile/domain/entities/user_log_entry.dart';
 import 'package:mulearn_app/features/profile/domain/entities/user_profile.dart';
+import 'package:mulearn_app/features/profile/presentation/providers/editable_profile_controller.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/public_profile_controller.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/socials_controller.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/user_log_controller.dart';
@@ -40,6 +41,11 @@ class BasicDetailsTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Only GET /dashboard/profile/ returns the department, and only for the
+    // signed-in user; a public profile shows the college alone.
+    final department = publicMuid == null
+        ? ref.watch(editableProfileControllerProvider).value?.department?.title
+        : null;
     final isOwnProfile = publicMuid == null;
     final socialsState = isOwnProfile
         ? ref.watch(socialsControllerProvider)
@@ -163,8 +169,7 @@ class BasicDetailsTab extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(profile.collegeCode ?? '—', style: MuType.bodyMed),
-              if (profile.departmentName != null)
-                Text(profile.departmentName!, style: MuType.caption),
+              if (department != null) Text(department, style: MuType.caption),
             ],
           ),
         ),
@@ -591,7 +596,7 @@ class _QuickActionsList extends ConsumerWidget {
       ),
     );
     if (confirmed ?? false) {
-      await ref.read(authControllerProvider.notifier).signOut();
+      await ref.read(sessionActionsProvider.notifier).signOut();
     }
   }
 
@@ -604,10 +609,7 @@ class _QuickActionsList extends ConsumerWidget {
           _QuickActionRow(
             icon: LucideIcons.settings,
             label: 'Account settings',
-            onTap: () => MuToast.show(
-              context,
-              message: 'Account settings — coming next.',
-            ),
+            onTap: () => context.push(RoutePaths.settings),
           ),
           _QuickActionRow(
             icon: LucideIcons.zap,

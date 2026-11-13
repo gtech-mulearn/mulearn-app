@@ -75,11 +75,8 @@ class _EditProfileDialogState extends ConsumerState<EditProfileDialog> {
     _fullName.text = editable.fullName.isNotEmpty
         ? editable.fullName
         : widget.profile.fullName;
-    _email.text =
-        editable.email.isNotEmpty ? editable.email : (widget.profile.email ?? '');
-    _mobile.text = editable.mobile.isNotEmpty
-        ? editable.mobile
-        : (widget.profile.mobile ?? '');
+    _email.text = editable.email;
+    _mobile.text = editable.mobile;
     _gender = _normalizeGender(
       editable.gender.isNotEmpty ? editable.gender : widget.profile.gender,
     );
@@ -199,7 +196,7 @@ class _EditProfileDialogState extends ConsumerState<EditProfileDialog> {
                     const SizedBox(height: 4),
                     Text(
                       'Current: ${widget.profile.collegeCode ?? '—'}'
-                      '${widget.profile.departmentName != null ? ' · ${widget.profile.departmentName}' : ''}',
+                      '${editableState.value?.department != null ? ' · ${editableState.value!.department!.title}' : ''}',
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
                     const SizedBox(height: 8),

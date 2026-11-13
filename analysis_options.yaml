@@ -13,6 +13,13 @@ analyzer:
     # Vendored third-party package (patched lucide_icons fork) — not our
     # code to style-fix; see third_party/lucide_icons/pubspec.yaml.
     - "third_party/**"
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
   errors:
     # False positive: `@JsonKey(fromJson: ...)` on a freezed factory
     # constructor parameter (rather than a plain field) is valid and
@@ -20,6 +27,12 @@ analyzer:
     # generated `.g.dart` output — but the analyzer doesn't know freezed
     # constructor params count as "fields" for this check.
     invalid_annotation_target: ignore
+    # riverpod_lint 3.0.x only runs through the legacy custom_lint plugin
+    # entry above, which Dart 3.13 reports as deprecated. riverpod_lint
+    # >= 3.1.9 uses the new plugin system but requires riverpod_generator
+    # >= 4.0.1 (analyzer_buffer ^0.3.0 vs riverpod_generator 3.x's ^0.1.9).
+    # Remove this line when riverpod_generator is upgraded to 4.x.
+    analysis_options_deprecated_plugins: ignore
 
 linter:
   rules:

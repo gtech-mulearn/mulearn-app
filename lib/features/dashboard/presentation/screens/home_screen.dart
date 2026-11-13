@@ -1,23 +1,31 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:mulearn_app/core/leaderboard/leaderboard_providers.dart';
+import 'package:mulearn_app/core/notifications/unread_notifications.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
+import 'package:mulearn_app/core/router/tab_navigation.dart';
+import 'package:mulearn_app/core/session/discord_connect.dart';
+import 'package:mulearn_app/core/session/session_providers.dart';
 import 'package:mulearn_app/core/theme/mu_radius.dart';
 import 'package:mulearn_app/core/theme/mu_shadow.dart';
 import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
 import 'package:mulearn_app/core/theme/mulearn_typography.dart';
+import 'package:mulearn_app/core/utils/level_label.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/core/widgets/mu_card.dart';
 import 'package:mulearn_app/core/widgets/mu_icon_button.dart';
+import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/core/widgets/mu_section_header.dart';
 import 'package:mulearn_app/core/widgets/mu_skeleton.dart';
 import 'package:mulearn_app/core/widgets/profile_avatar.dart';
 import 'package:mulearn_app/features/dashboard/domain/entities/my_progress_summary.dart';
 import 'package:mulearn_app/features/dashboard/presentation/providers/dashboard_controller.dart';
 import 'package:mulearn_app/features/dashboard/presentation/widgets/featured_events_list.dart';
-import 'package:mulearn_app/features/leaderboard/presentation/providers/leaderboard_controller.dart';
 
 /// Home dashboard — the landing screen after sign-in (DESIGN_SPEC.md §2 "03 —
 /// Home"). Greeting header, a dark karma "hero" card, quick links into Tasks
@@ -36,6 +44,7 @@ class HomeScreen extends ConsumerWidget {
   Future<void> _refreshAll(WidgetRef ref) => Future.wait([
         ref.read(myProgressSummaryControllerProvider.notifier).refresh(),
         ref.read(featuredEventsControllerProvider.notifier).refresh(),
+        ref.refresh(learnerSummaryProvider.future),
       ]);
 
   @override
@@ -46,7 +55,7 @@ class HomeScreen extends ConsumerWidget {
       backgroundColor: MuColors.canvas,
       body: SafeArea(
         bottom: false,
-        child: RefreshIndicator(
+        child: MuRefresh(
           onRefresh: () => _refreshAll(ref),
           child: CustomScrollView(
             physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
@@ -61,12 +70,16 @@ class HomeScreen extends ConsumerWidget {
                 sliver: SliverList.list(
                   children: [
                     summaryState.when(
+                      skipError: true,
+                      skipLoadingOnReload: true,
                       loading: () => const _HomeHeader(),
                       error: (error, _) => const _HomeHeader(),
                       data: (summary) => _HomeHeader(summary: summary),
                     ),
                     const SizedBox(height: MuSpace.xxl),
                     summaryState.when(
+                      skipError: true,
+                      skipLoadingOnReload: true,
                       loading: () => const MuSkeleton(height: 220, radius: MuRadius.hero),
                       error: (error, _) => ErrorRetryView(
                         error: error,
@@ -76,6 +89,8 @@ class HomeScreen extends ConsumerWidget {
                       ),
                       data: (summary) => _KarmaHeroCard(summary: summary),
                     ),
+                    const _LearnerWeek(),
+                    const _SetupChecklist(),
                     const SizedBox(height: MuSpace.xxl),
                     Row(
                       children: [
@@ -84,7 +99,7 @@ class HomeScreen extends ConsumerWidget {
                             icon: LucideIcons.listTodo,
                             title: 'Find a task',
                             subtitle: "Browse what's open",
-                            onTap: () => context.push(RoutePaths.tasks),
+                            onTap: () => context.openTab(RoutePaths.tasks),
                           ),
                         ),
                         const SizedBox(width: MuSpace.m),
@@ -101,7 +116,7 @@ class HomeScreen extends ConsumerWidget {
                     const SizedBox(height: MuSpace.xxl),
                     MuSectionHeader(
                       title: 'Top performers',
-                      onViewAll: () => context.push(RoutePaths.leaderboard),
+                      onViewAll: () => context.openTab(RoutePaths.leaderboard),
                     ),
                     const SizedBox(height: MuSpace.m),
                     Consumer(
@@ -122,6 +137,11 @@ class HomeScreen extends ConsumerWidget {
                                       rank: i + 1,
                                       name: top[i].fullName,
                                       meta: top[i].institution,
+                                      onTap: top[i].muid == null
+                                          ? null
+                                          : () => context.push(
+                                                RoutePaths.publicProfilePath(top[i].muid!),
+                                              ),
                                       karma: top[i].totalKarma.toInt(),
                                       avatarUrl: top[i].profilePic,
                                       showDivider: i != top.length - 1,
@@ -210,7 +230,7 @@ class _HomeHeader extends StatelessWidget {
     final subtitle = s == null
         ? 'Keep learning, keep building.'
         : (s.level != null
-            ? 'Level ${s.level} · ${_formatKarma(s.karma)} karma so far.'
+            ? '${levelLabel(s.level)} · ${_formatKarma(s.karma)} karma so far.'
             : '${_formatKarma(s.karma)} karma so far — keep going.');
 
     return Row(
@@ -229,13 +249,20 @@ class _HomeHeader extends StatelessWidget {
           ),
         ),
         const SizedBox(width: MuSpace.m),
-        MuIconButton(
-          icon: LucideIcons.bell,
-          onPressed: () => context.push(RoutePaths.notifications),
+        Consumer(
+          builder: (context, ref, _) {
+            final unread = ref.watch(unreadNotificationsProvider).value ?? 0;
+            return MuIconButton(
+              icon: LucideIcons.bell,
+              badgeCount: unread,
+              tooltip: unread == 0 ? 'Notifications' : 'Notifications, $unread unread',
+              onPressed: () => context.push(RoutePaths.notifications),
+            );
+          },
         ),
         const SizedBox(width: MuSpace.s),
         GestureDetector(
-          onTap: () => context.push(RoutePaths.profile),
+          onTap: () => context.openTab(RoutePaths.profile),
           child: ProfileAvatar(url: s?.profilePicUrl, name: s?.fullName ?? '', size: 44),
         ),
       ],
@@ -266,7 +293,7 @@ class _KarmaHeroCard extends StatelessWidget {
     final hasRank = summary.rank != null && summary.percentile != null;
 
     return GestureDetector(
-      onTap: () => context.push(RoutePaths.journey),
+      onTap: () => context.openTab(RoutePaths.journey),
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(MuRadius.hero),
@@ -307,42 +334,52 @@ class _KarmaHeroCard extends StatelessWidget {
                           Text(
                             'TOTAL KARMA',
                             style: MuType.eyebrow.copyWith(
-                              color: Colors.white.withValues(alpha: 0.55),
+                              color: MuColors.onBrand.withValues(alpha: 0.55),
                             ),
                           ),
-                          const Spacer(),
-                          if (hasRank)
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: MuSpace.s,
-                                vertical: 4,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.12),
-                                borderRadius: BorderRadius.circular(MuRadius.chip),
-                              ),
-                              child: Text(
-                                'Rank #${summary.rank} · Top ${summary.percentile!.round()}%',
-                                style: MuType.chip.copyWith(color: Colors.white, fontSize: 11),
-                              ),
-                            ),
+                          const SizedBox(width: MuSpace.s),
+                          // Shrinks (ellipsis) on narrow phones instead of
+                          // overflowing the row (360 dp: 117 px over).
+                          Expanded(
+                            child: hasRank
+                                ? Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: MuSpace.s,
+                                        vertical: 4,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: MuColors.onBrand.withValues(alpha: 0.12),
+                                        borderRadius: BorderRadius.circular(MuRadius.chip),
+                                      ),
+                                      child: Text(
+                                        'Rank #${summary.rank} · Top ${summary.percentile!.round()}%',
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: MuType.chip.copyWith(color: MuColors.onBrand, fontSize: 11),
+                                      ),
+                                    ),
+                                  )
+                                : const SizedBox.shrink(),
+                          ),
                         ],
                       ),
                       const SizedBox(height: MuSpace.l),
                       Text(
                         _formatKarma(summary.karma),
-                        style: MuType.stat.copyWith(fontSize: 50, color: Colors.white, height: 1),
+                        style: MuType.stat.copyWith(fontSize: 50, color: MuColors.onBrand, height: 1),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         'karma earned',
-                        style: MuType.caption.copyWith(color: Colors.white.withValues(alpha: 0.5)),
+                        style: MuType.caption.copyWith(color: MuColors.onBrand.withValues(alpha: 0.5)),
                       ),
                       if (summary.level != null) ...[
                         const SizedBox(height: MuSpace.l),
                         Text(
-                          'Level ${summary.level}',
-                          style: MuType.bodyMed.copyWith(color: Colors.white),
+                          levelLabel(summary.level),
+                          style: MuType.bodyMed.copyWith(color: MuColors.onBrand),
                         ),
                       ],
                       const SizedBox(height: MuSpace.l),
@@ -352,14 +389,14 @@ class _KarmaHeroCard extends StatelessWidget {
                           Text(
                             'View your journey',
                             style: MuType.caption.copyWith(
-                              color: Colors.white.withValues(alpha: 0.6),
+                              color: MuColors.onBrand.withValues(alpha: 0.6),
                             ),
                           ),
                           const SizedBox(width: 4),
                           Icon(
                             LucideIcons.arrowRight,
                             size: 12,
-                            color: Colors.white.withValues(alpha: 0.6),
+                            color: MuColors.onBrand.withValues(alpha: 0.6),
                           ),
                         ],
                       ),
@@ -432,22 +469,24 @@ class _MoverRow extends StatelessWidget {
   const _MoverRow({
     required this.rank,
     required this.name,
-    required this.meta,
     required this.karma,
     required this.showDivider,
+    this.meta,
     this.avatarUrl,
+    this.onTap,
   });
 
   final int rank;
   final String name;
-  final String meta;
+  final String? meta;
   final int karma;
   final String? avatarUrl;
   final bool showDivider;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    final row = Container(
       padding: const EdgeInsets.symmetric(vertical: MuSpace.m),
       decoration: BoxDecoration(
         border: showDivider
@@ -472,7 +511,8 @@ class _MoverRow extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(name, style: MuType.bodyMed, maxLines: 1, overflow: TextOverflow.ellipsis),
-                Text(meta, style: MuType.caption, maxLines: 1, overflow: TextOverflow.ellipsis),
+                if (meta != null)
+                  Text(meta!, style: MuType.caption, maxLines: 1, overflow: TextOverflow.ellipsis),
               ],
             ),
           ),
@@ -487,5 +527,204 @@ class _MoverRow extends StatelessWidget {
         ],
       ),
     );
+    return onTap == null ? row : InkWell(onTap: onTap, child: row);
   }
+}
+
+/// The learner's week under the hero (FEAT-05): karma this week, the
+/// streak, and the next meetup in one of their circles. Its own retry when
+/// the summary fails — the rest of Home stays.
+class _LearnerWeek extends ConsumerWidget {
+  const _LearnerWeek();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return ref.watch(learnerSummaryProvider).when(
+          skipError: true,
+          loading: () => const SizedBox.shrink(),
+          error: (_, __) => Padding(
+            padding: const EdgeInsets.only(top: MuSpace.m),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    "Couldn't load your week",
+                    style: MuType.caption.copyWith(color: MuColors.inkSecondary),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () => ref.invalidate(learnerSummaryProvider),
+                  child: const Text('Retry'),
+                ),
+              ],
+            ),
+          ),
+          data: (week) => Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const SizedBox(height: MuSpace.m),
+              Wrap(
+                spacing: MuSpace.s,
+                runSpacing: MuSpace.s,
+                children: [
+                  _WeekChip(icon: LucideIcons.trendingUp, label: '+${_formatKarma(week.weeklyKarma)} this week'),
+                  if (week.streakDays > 0)
+                    _WeekChip(icon: LucideIcons.flame, label: '${week.streakDays}-day streak'),
+                ],
+              ),
+              if (week.nextMeeting case final meeting?) ...[
+                const SizedBox(height: MuSpace.xxl),
+                const MuSectionHeader(title: 'Next up'),
+                const SizedBox(height: MuSpace.m),
+                MuCard(
+                  onTap: () => context.push(RoutePaths.meetingDetailPath(meeting.id)),
+                  child: Row(
+                    children: [
+                      Container(
+                        height: 44,
+                        width: 44,
+                        decoration: BoxDecoration(
+                          color: MuColors.primaryTint,
+                          borderRadius: BorderRadius.circular(MuRadius.inner),
+                        ),
+                        alignment: Alignment.center,
+                        child: const Icon(LucideIcons.calendarClock, size: 20, color: MuColors.primary),
+                      ),
+                      const SizedBox(width: MuSpace.m),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(meeting.title, style: MuType.bodyMed, maxLines: 1, overflow: TextOverflow.ellipsis),
+                            const SizedBox(height: 2),
+                            Text(
+                              '${meeting.circleName} · ${_meetingTime(meeting.startsAt.toLocal())}',
+                              style: MuType.caption.copyWith(color: MuColors.inkSecondary),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Icon(LucideIcons.chevronRight, size: 18, color: MuColors.inkTertiary),
+                    ],
+                  ),
+                ),
+              ],
+            ],
+          ),
+        );
+  }
+}
+
+class _WeekChip extends StatelessWidget {
+  const _WeekChip({required this.icon, required this.label});
+
+  final IconData icon;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: MuSpace.m, vertical: MuSpace.xs),
+        decoration: BoxDecoration(
+          color: MuColors.karmaAccentTint,
+          borderRadius: BorderRadius.circular(MuRadius.chip),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 14, color: MuColors.karmaAccent),
+            const SizedBox(width: 6),
+            Text(label, style: MuType.chip.copyWith(color: MuColors.ink)),
+          ],
+        ),
+      );
+}
+
+/// "Get set up" (L1): only what's still to do — connect Discord (task
+/// karma is counted there) and join interest groups. Gone once both are done.
+class _SetupChecklist extends ConsumerWidget {
+  const _SetupChecklist();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final needsDiscord = (ref.watch(capabilitiesProvider).value?.needsDiscord ?? false) &&
+        ref.watch(discordAuthUriProvider) != null;
+    final summary = ref.watch(myProgressSummaryControllerProvider).value;
+    final needsGroups = summary != null && summary.interestGroupCount == 0;
+    if (!needsDiscord && !needsGroups) return const SizedBox.shrink();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const SizedBox(height: MuSpace.xxl),
+        const MuSectionHeader(title: 'Get set up'),
+        const SizedBox(height: MuSpace.m),
+        MuCard(
+          padding: const EdgeInsets.symmetric(vertical: MuSpace.xs),
+          child: Column(
+            children: [
+              if (needsDiscord)
+                _SetupRow(
+                  icon: LucideIcons.messageCircle,
+                  label: 'Connect Discord',
+                  hint: 'Task karma is counted in the μLearn server',
+                  onTap: () => unawaited(ref.read(discordConnectFlowProvider.notifier).start()),
+                ),
+              if (needsGroups)
+                _SetupRow(
+                  icon: LucideIcons.layers,
+                  label: 'Join interest groups',
+                  hint: 'Pick up to three to see their tasks and events',
+                  onTap: () => context.push(RoutePaths.interestGroups),
+                ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _SetupRow extends StatelessWidget {
+  const _SetupRow({required this.icon, required this.label, required this.hint, required this.onTap});
+
+  final IconData icon;
+  final String label;
+  final String hint;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) => InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: MuSpace.l, vertical: MuSpace.m),
+          child: Row(
+            children: [
+              const Icon(LucideIcons.circle, size: 20, color: MuColors.inkTertiary),
+              const SizedBox(width: MuSpace.m),
+              Icon(icon, size: 18, color: MuColors.primary),
+              const SizedBox(width: MuSpace.s),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(label, style: MuType.bodyMed),
+                    Text(hint, style: MuType.caption.copyWith(color: MuColors.inkSecondary)),
+                  ],
+                ),
+              ),
+              const Icon(LucideIcons.chevronRight, size: 18, color: MuColors.inkTertiary),
+            ],
+          ),
+        ),
+      );
+}
+
+/// "Fri 13 Nov · 6:30 PM" in local time.
+String _meetingTime(DateTime t) {
+  const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  final hour = t.hour % 12 == 0 ? 12 : t.hour % 12;
+  final minute = t.minute.toString().padLeft(2, '0');
+  return '${days[t.weekday - 1]} ${t.day} ${months[t.month - 1]} · $hour:$minute ${t.hour < 12 ? 'AM' : 'PM'}';
 }

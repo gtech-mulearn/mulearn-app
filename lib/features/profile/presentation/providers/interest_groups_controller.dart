@@ -1,3 +1,4 @@
+import 'package:mulearn_app/core/session/my_profile_payload.dart';
 import 'package:mulearn_app/features/profile/domain/entities/interest_group_list_item.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/profile_controller.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -19,9 +20,10 @@ class InterestGroupsEditController extends _$InterestGroupsEditController {
 
   Future<void> save(List<String> groupIds) async {
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       await ref.read(profileRepositoryProvider).updateInterestGroups(groupIds);
-      ref.invalidate(profileControllerProvider);
+      ref.invalidate(myProfilePayloadProvider);
     });
+    if (ref.mounted) state = result;
   }
 }

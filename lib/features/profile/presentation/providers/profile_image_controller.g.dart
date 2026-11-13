@@ -34,7 +34,7 @@ final class ProfileImageControllerProvider
 }
 
 String _$profileImageControllerHash() =>
-    r'641b85da832609daa4e0f8ccd2b9260427161e89';
+    r'2a1bb56f079bcb77a3859e0cbf06206633238edc';
 
 abstract class _$ProfileImageController extends $AsyncNotifier<void> {
   FutureOr<void> build();

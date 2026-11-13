@@ -16,12 +16,26 @@ class RegisterWizardController extends _$RegisterWizardController {
   @override
   RegisterWizardState build() => const RegisterWizardState();
 
+  /// [password] is null only in Google sign-up, where the account has none.
   void setBasicInfo({
     required String fullName,
     required String email,
-    required String password,
+    String? password,
   }) {
     state = state.copyWith(fullName: fullName, email: email, password: password);
+  }
+
+  /// Starts sign-up from a Google account that has no μLearn account yet.
+  void setGoogleSignUp({
+    required String tempToken,
+    required String email,
+    required String fullName,
+  }) {
+    state = RegisterWizardState(
+      googleTempToken: tempToken,
+      email: email,
+      fullName: fullName,
+    );
   }
 
   void setRole(RegistrationRole role) {

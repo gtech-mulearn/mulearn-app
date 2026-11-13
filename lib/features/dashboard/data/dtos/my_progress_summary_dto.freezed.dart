@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MyProgressSummaryDto {
 
- String get fullName; String get muid; num? get karma; String? get level; String? get profilePic; num? get rank; num? get percentile;
+ String get fullName; String get muid; num? get karma; String? get level; String? get profilePic; num? get rank; num? get percentile; List<dynamic> get interestGroups;
 /// Create a copy of MyProgressSummaryDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $MyProgressSummaryDtoCopyWith<MyProgressSummaryDto> get copyWith => _$MyProgress
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MyProgressSummaryDto&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.level, level) || other.level == level)&&(identical(other.profilePic, profilePic) || other.profilePic == profilePic)&&(identical(other.rank, rank) || other.rank == rank)&&(identical(other.percentile, percentile) || other.percentile == percentile));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MyProgressSummaryDto&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.level, level) || other.level == level)&&(identical(other.profilePic, profilePic) || other.profilePic == profilePic)&&(identical(other.rank, rank) || other.rank == rank)&&(identical(other.percentile, percentile) || other.percentile == percentile)&&const DeepCollectionEquality().equals(other.interestGroups, interestGroups));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,fullName,muid,karma,level,profilePic,rank,percentile);
+int get hashCode => Object.hash(runtimeType,fullName,muid,karma,level,profilePic,rank,percentile,const DeepCollectionEquality().hash(interestGroups));
 
 @override
 String toString() {
-  return 'MyProgressSummaryDto(fullName: $fullName, muid: $muid, karma: $karma, level: $level, profilePic: $profilePic, rank: $rank, percentile: $percentile)';
+  return 'MyProgressSummaryDto(fullName: $fullName, muid: $muid, karma: $karma, level: $level, profilePic: $profilePic, rank: $rank, percentile: $percentile, interestGroups: $interestGroups)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $MyProgressSummaryDtoCopyWith<$Res>  {
   factory $MyProgressSummaryDtoCopyWith(MyProgressSummaryDto value, $Res Function(MyProgressSummaryDto) _then) = _$MyProgressSummaryDtoCopyWithImpl;
 @useResult
 $Res call({
- String fullName, String muid, num? karma, String? level, String? profilePic, num? rank, num? percentile
+ String fullName, String muid, num? karma, String? level, String? profilePic, num? rank, num? percentile, List<dynamic> interestGroups
 });
 
 
@@ -65,7 +65,7 @@ class _$MyProgressSummaryDtoCopyWithImpl<$Res>
 
 /// Create a copy of MyProgressSummaryDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? fullName = null,Object? muid = null,Object? karma = freezed,Object? level = freezed,Object? profilePic = freezed,Object? rank = freezed,Object? percentile = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? fullName = null,Object? muid = null,Object? karma = freezed,Object? level = freezed,Object? profilePic = freezed,Object? rank = freezed,Object? percentile = freezed,Object? interestGroups = null,}) {
   return _then(_self.copyWith(
 fullName: null == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
 as String,muid: null == muid ? _self.muid : muid // ignore: cast_nullable_to_non_nullable
@@ -74,7 +74,8 @@ as num?,level: freezed == level ? _self.level : level // ignore: cast_nullable_t
 as String?,profilePic: freezed == profilePic ? _self.profilePic : profilePic // ignore: cast_nullable_to_non_nullable
 as String?,rank: freezed == rank ? _self.rank : rank // ignore: cast_nullable_to_non_nullable
 as num?,percentile: freezed == percentile ? _self.percentile : percentile // ignore: cast_nullable_to_non_nullable
-as num?,
+as num?,interestGroups: null == interestGroups ? _self.interestGroups : interestGroups // ignore: cast_nullable_to_non_nullable
+as List<dynamic>,
   ));
 }
 
@@ -159,10 +160,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String fullName,  String muid,  num? karma,  String? level,  String? profilePic,  num? rank,  num? percentile)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String fullName,  String muid,  num? karma,  String? level,  String? profilePic,  num? rank,  num? percentile,  List<dynamic> interestGroups)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MyProgressSummaryDto() when $default != null:
-return $default(_that.fullName,_that.muid,_that.karma,_that.level,_that.profilePic,_that.rank,_that.percentile);case _:
+return $default(_that.fullName,_that.muid,_that.karma,_that.level,_that.profilePic,_that.rank,_that.percentile,_that.interestGroups);case _:
   return orElse();
 
 }
@@ -180,10 +181,10 @@ return $default(_that.fullName,_that.muid,_that.karma,_that.level,_that.profileP
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String fullName,  String muid,  num? karma,  String? level,  String? profilePic,  num? rank,  num? percentile)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String fullName,  String muid,  num? karma,  String? level,  String? profilePic,  num? rank,  num? percentile,  List<dynamic> interestGroups)  $default,) {final _that = this;
 switch (_that) {
 case _MyProgressSummaryDto():
-return $default(_that.fullName,_that.muid,_that.karma,_that.level,_that.profilePic,_that.rank,_that.percentile);case _:
+return $default(_that.fullName,_that.muid,_that.karma,_that.level,_that.profilePic,_that.rank,_that.percentile,_that.interestGroups);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -200,10 +201,10 @@ return $default(_that.fullName,_that.muid,_that.karma,_that.level,_that.profileP
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String fullName,  String muid,  num? karma,  String? level,  String? profilePic,  num? rank,  num? percentile)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String fullName,  String muid,  num? karma,  String? level,  String? profilePic,  num? rank,  num? percentile,  List<dynamic> interestGroups)?  $default,) {final _that = this;
 switch (_that) {
 case _MyProgressSummaryDto() when $default != null:
-return $default(_that.fullName,_that.muid,_that.karma,_that.level,_that.profilePic,_that.rank,_that.percentile);case _:
+return $default(_that.fullName,_that.muid,_that.karma,_that.level,_that.profilePic,_that.rank,_that.percentile,_that.interestGroups);case _:
   return null;
 
 }
@@ -215,7 +216,7 @@ return $default(_that.fullName,_that.muid,_that.karma,_that.level,_that.profileP
 @JsonSerializable()
 
 class _MyProgressSummaryDto extends MyProgressSummaryDto {
-  const _MyProgressSummaryDto({required this.fullName, required this.muid, this.karma, this.level, this.profilePic, this.rank, this.percentile}): super._();
+  const _MyProgressSummaryDto({required this.fullName, required this.muid, this.karma, this.level, this.profilePic, this.rank, this.percentile, final  List<dynamic> interestGroups = const <dynamic>[]}): _interestGroups = interestGroups,super._();
   factory _MyProgressSummaryDto.fromJson(Map<String, dynamic> json) => _$MyProgressSummaryDtoFromJson(json);
 
 @override final  String fullName;
@@ -225,6 +226,13 @@ class _MyProgressSummaryDto extends MyProgressSummaryDto {
 @override final  String? profilePic;
 @override final  num? rank;
 @override final  num? percentile;
+ final  List<dynamic> _interestGroups;
+@override@JsonKey() List<dynamic> get interestGroups {
+  if (_interestGroups is EqualUnmodifiableListView) return _interestGroups;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_interestGroups);
+}
+
 
 /// Create a copy of MyProgressSummaryDto
 /// with the given fields replaced by the non-null parameter values.
@@ -239,16 +247,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MyProgressSummaryDto&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.level, level) || other.level == level)&&(identical(other.profilePic, profilePic) || other.profilePic == profilePic)&&(identical(other.rank, rank) || other.rank == rank)&&(identical(other.percentile, percentile) || other.percentile == percentile));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MyProgressSummaryDto&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.level, level) || other.level == level)&&(identical(other.profilePic, profilePic) || other.profilePic == profilePic)&&(identical(other.rank, rank) || other.rank == rank)&&(identical(other.percentile, percentile) || other.percentile == percentile)&&const DeepCollectionEquality().equals(other._interestGroups, _interestGroups));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,fullName,muid,karma,level,profilePic,rank,percentile);
+int get hashCode => Object.hash(runtimeType,fullName,muid,karma,level,profilePic,rank,percentile,const DeepCollectionEquality().hash(_interestGroups));
 
 @override
 String toString() {
-  return 'MyProgressSummaryDto(fullName: $fullName, muid: $muid, karma: $karma, level: $level, profilePic: $profilePic, rank: $rank, percentile: $percentile)';
+  return 'MyProgressSummaryDto(fullName: $fullName, muid: $muid, karma: $karma, level: $level, profilePic: $profilePic, rank: $rank, percentile: $percentile, interestGroups: $interestGroups)';
 }
 
 
@@ -259,7 +267,7 @@ abstract mixin class _$MyProgressSummaryDtoCopyWith<$Res> implements $MyProgress
   factory _$MyProgressSummaryDtoCopyWith(_MyProgressSummaryDto value, $Res Function(_MyProgressSummaryDto) _then) = __$MyProgressSummaryDtoCopyWithImpl;
 @override @useResult
 $Res call({
- String fullName, String muid, num? karma, String? level, String? profilePic, num? rank, num? percentile
+ String fullName, String muid, num? karma, String? level, String? profilePic, num? rank, num? percentile, List<dynamic> interestGroups
 });
 
 
@@ -276,7 +284,7 @@ class __$MyProgressSummaryDtoCopyWithImpl<$Res>
 
 /// Create a copy of MyProgressSummaryDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? fullName = null,Object? muid = null,Object? karma = freezed,Object? level = freezed,Object? profilePic = freezed,Object? rank = freezed,Object? percentile = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? fullName = null,Object? muid = null,Object? karma = freezed,Object? level = freezed,Object? profilePic = freezed,Object? rank = freezed,Object? percentile = freezed,Object? interestGroups = null,}) {
   return _then(_MyProgressSummaryDto(
 fullName: null == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
 as String,muid: null == muid ? _self.muid : muid // ignore: cast_nullable_to_non_nullable
@@ -285,7 +293,8 @@ as num?,level: freezed == level ? _self.level : level // ignore: cast_nullable_t
 as String?,profilePic: freezed == profilePic ? _self.profilePic : profilePic // ignore: cast_nullable_to_non_nullable
 as String?,rank: freezed == rank ? _self.rank : rank // ignore: cast_nullable_to_non_nullable
 as num?,percentile: freezed == percentile ? _self.percentile : percentile // ignore: cast_nullable_to_non_nullable
-as num?,
+as num?,interestGroups: null == interestGroups ? _self._interestGroups : interestGroups // ignore: cast_nullable_to_non_nullable
+as List<dynamic>,
   ));
 }
 

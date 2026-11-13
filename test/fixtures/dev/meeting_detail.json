@@ -1,0 +1,49 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/learningcircle/meeting/info/d3510fbd-acc6-4c11-8833-dc159c61b6f7/",
+    "account": "student",
+    "status": 200,
+    "recorded_at": "2026-11-13T06:18:35.052558Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": [
+        "Meeting fetched successfully"
+      ]
+    },
+    "response": {
+      "id": "d3510fbd-acc6-4c11-8833-dc159c61b6f7",
+      "title": "Deploying Django on Render",
+      "description": "From a local Django app to a live URL with Postgres and env vars.",
+      "mode": "online",
+      "meet_place": "Microsoft Teams",
+      "meet_link": "https://teams.microsoft.com/l/meetup-join/seed-fullstack",
+      "meet_time": "2026-11-13T13:00:00Z",
+      "ig": "Web Development",
+      "is_report_needed": false,
+      "report_description": null,
+      "coord_x": 0.0,
+      "coord_y": 0.0,
+      "duration": 2,
+      "is_started": false,
+      "is_ended": false,
+      "attendees": [
+        {
+          "user_id": "f67beaee-73f4-45e6-a290-709999f7e58e",
+          "full_name": "Fixture User",
+          "is_joined": true,
+          "is_creator": true,
+          "is_report_submitted": false,
+          "profile_pic": null,
+          "is_same_org": true
+        }
+      ],
+      "is_member": true,
+      "meet_code": null,
+      "created_by_id": "f67beaee-73f4-45e6-a290-709999f7e58e"
+    }
+  }
+}

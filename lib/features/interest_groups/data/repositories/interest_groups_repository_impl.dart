@@ -3,6 +3,7 @@ import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/utils/app_logger.dart';
 import 'package:mulearn_app/features/interest_groups/data/datasources/interest_groups_remote_datasource.dart';
 import 'package:mulearn_app/features/interest_groups/data/dtos/interest_group_summary_dto.dart';
+import 'package:mulearn_app/features/interest_groups/domain/entities/ig_related.dart';
 import 'package:mulearn_app/features/interest_groups/domain/entities/interest_group_summary.dart';
 import 'package:mulearn_app/features/interest_groups/domain/repositories/interest_groups_repository.dart';
 
@@ -41,11 +42,40 @@ class InterestGroupsRepositoryImpl implements InterestGroupsRepository {
       });
 
   @override
-  Future<List<String>> getMyGroupIds() => _guard(_remote.fetchMyGroupIds);
+  List<String> groupIdsFromPayload(Map<String, dynamic> payload) =>
+      (payload['interest_groups'] as List<dynamic>? ?? const [])
+          .cast<Map<String, dynamic>>()
+          .map((g) => g['id'] as String)
+          .toList();
 
   @override
-  Future<void> setMyGroupIds(List<String> groupIds) =>
-      _guard(() => _remote.setMyGroupIds(groupIds));
+  Future<void> join(String id) => _guard(() => _remote.join(id));
+
+  @override
+  Future<void> leave(String id) => _guard(() => _remote.leave(id));
+
+  @override
+  Future<List<IgCircleRef>> getCirclesInGroup(String igId) => _guard(() async => [
+        for (final c in (await _remote.fetchCirclesInGroup(igId)).whereType<Map<String, dynamic>>())
+          if (c['id'] is String)
+            IgCircleRef(
+              id: c['id'] as String,
+              title: c['title'] as String? ?? '',
+              totalMembers: (c['total_members'] as num?)?.toInt(),
+            ),
+      ]);
+
+  @override
+  Future<List<IgEventRef>> getEventsInGroup(String igId) => _guard(() async => [
+        for (final e in (await _remote.fetchEventsInGroup(igId)).whereType<Map<String, dynamic>>())
+          if (e['id'] is String)
+            IgEventRef(
+              id: e['id'] as String,
+              title: e['title'] as String? ?? '',
+              startsAt: DateTime.tryParse(e['start_datetime'] as String? ?? '')?.toUtc(),
+            ),
+      ]);
+
 
   Future<T> _guard<T>(Future<T> Function() action) async {
     try {

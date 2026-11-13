@@ -14,5 +14,10 @@ abstract class RegisterWizardState with _$RegisterWizardState {
     String? email,
     String? password,
     RegistrationRole? role,
+
+    /// Set when sign-up started from "Continue with Google" for an unknown
+    /// email: the account is created from this authserver token, with the
+    /// token's email and no password.
+    String? googleTempToken,
   }) = _RegisterWizardState;
 }

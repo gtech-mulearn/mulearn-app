@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:mulearn_app/core/models/event_organizer_dto.dart';
 import 'package:mulearn_app/core/models/event_venue_dto.dart';
+import 'package:mulearn_app/features/events/data/dtos/event_linked_task_dto.dart';
 import 'package:mulearn_app/features/events/domain/entities/event.dart';
 
 part 'event_dto.freezed.dart';
@@ -36,6 +37,9 @@ abstract class EventDto with _$EventDto {
     String? registrationDeadline,
     int? minKarma,
     int? userLimit,
+    @Default(true) bool viewerCanAccessRegistration,
+    String? viewerAccessBlockedReason,
+    @Default([]) List<EventLinkedTaskDto> linkedTasks,
   }) = _EventDto;
 
   const EventDto._();
@@ -67,5 +71,11 @@ abstract class EventDto with _$EventDto {
         registrationDeadline: registrationDeadline,
         minKarma: minKarma,
         userLimit: userLimit,
+        canRegister: viewerCanAccessRegistration,
+        blockedReason: viewerAccessBlockedReason,
+        linkedTasks: [
+          for (final t in linkedTasks)
+            if (t.active) t.toDomain(),
+        ],
       );
 }

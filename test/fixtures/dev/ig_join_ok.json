@@ -1,0 +1,19 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "POST /api/v1/dashboard/ig/<id>/join/",
+    "account": "student",
+    "status": 200,
+    "recorded_at": "2026-11-13T06:44:02.790713+00:00"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": [
+        "Joined Interest Group successfully"
+      ]
+    },
+    "response": {}
+  }
+}

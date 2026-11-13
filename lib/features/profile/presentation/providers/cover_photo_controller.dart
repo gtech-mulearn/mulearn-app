@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:mulearn_app/core/session/my_profile_payload.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/profile_controller.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -22,27 +23,33 @@ class CoverPhotoController extends _$CoverPhotoController {
     // look "stuck" despite the upload having succeeded. Evicting the
     // previous URL from cache forces a real re-fetch regardless.
     final previousUrl = ref.read(profileControllerProvider).value?.coverPicUrl;
+    final link = ref.keepAlive(); // finish the follow-up refresh even if the screen closes
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       await ref
           .read(profileRepositoryProvider)
           .uploadCoverPic(bytes, filename);
       if (previousUrl != null && previousUrl.isNotEmpty) {
         await CachedNetworkImage.evictFromCache(previousUrl);
       }
-      ref.invalidate(profileControllerProvider);
+      ref.invalidate(myProfilePayloadProvider);
     });
+    if (ref.mounted) state = result;
+    link.close();
   }
 
   Future<void> delete() async {
     final previousUrl = ref.read(profileControllerProvider).value?.coverPicUrl;
+    final link = ref.keepAlive(); // finish the follow-up refresh even if the screen closes
     state = const AsyncLoading();
-    state = await AsyncValue.guard(() async {
+    final result = await AsyncValue.guard(() async {
       await ref.read(profileRepositoryProvider).deleteCoverPic();
       if (previousUrl != null && previousUrl.isNotEmpty) {
         await CachedNetworkImage.evictFromCache(previousUrl);
       }
-      ref.invalidate(profileControllerProvider);
+      ref.invalidate(myProfilePayloadProvider);
     });
+    if (ref.mounted) state = result;
+    link.close();
   }
 }

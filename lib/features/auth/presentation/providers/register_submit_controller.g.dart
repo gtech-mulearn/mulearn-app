@@ -52,7 +52,7 @@ final class RegisterSubmitControllerProvider
 }
 
 String _$registerSubmitControllerHash() =>
-    r'2bb11afb9ae1504b4481fcf3f95bb80441fd6696';
+    r'd6683b995eb0a0241f0b4a71a8894dab3bfaca53';
 
 /// Performs the actual registration submission — the same multi-call
 /// sequence as the reference `register-client.tsx`'s `handleGenericSignup`/

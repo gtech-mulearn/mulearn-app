@@ -13,10 +13,22 @@ class FlavorConfig {
   const FlavorConfig._({
     required this.flavor,
     required this.apiBaseUrl,
+    required this.googleServerClientId,
+    required this.dashboardUrl,
+    required this.discordAuthUrl,
   });
 
   final Flavor flavor;
   final String apiBaseUrl;
+
+  /// Google OAuth web client id for Android's `serverClientId`; may be empty.
+  final String googleServerClientId;
+
+  /// The μLearn web dashboard for this environment.
+  final String dashboardUrl;
+
+  /// Discord OAuth authorize URL; empty when Connect Discord is unavailable.
+  final String discordAuthUrl;
 
   static FlavorConfig? _instance;
 
@@ -39,6 +51,18 @@ class FlavorConfig {
       apiBaseUrl: switch (flavor) {
         Flavor.dev => EnvDev.apiBaseUrl,
         Flavor.prod => EnvProd.apiBaseUrl,
+      },
+      googleServerClientId: switch (flavor) {
+        Flavor.dev => EnvDev.googleServerClientId,
+        Flavor.prod => EnvProd.googleServerClientId,
+      },
+      dashboardUrl: switch (flavor) {
+        Flavor.dev => EnvDev.dashboardUrl,
+        Flavor.prod => EnvProd.dashboardUrl,
+      },
+      discordAuthUrl: switch (flavor) {
+        Flavor.dev => EnvDev.discordAuthUrl,
+        Flavor.prod => EnvProd.discordAuthUrl,
       },
     );
     return _instance = config;

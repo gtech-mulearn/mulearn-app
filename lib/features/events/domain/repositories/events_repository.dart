@@ -1,8 +1,9 @@
 import 'package:mulearn_app/features/events/domain/entities/event.dart';
+import 'package:mulearn_app/features/events/domain/entities/event_filter.dart';
 import 'package:mulearn_app/features/events/domain/entities/event_page.dart';
 
 abstract interface class EventsRepository {
-  Future<EventPage> getEvents({int page = 1});
+  Future<EventPage> getEvents({required int pageIndex, EventFilter filter = const EventFilter()});
 
   Future<Event> getEventDetail(String id);
 

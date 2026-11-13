@@ -1,0 +1,63 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/learningcircle/user-circles/",
+    "account": "student",
+    "status": 200,
+    "recorded_at": "2026-11-12T15:31:36.724770Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "data": [
+        {
+          "circle_id": "463e9e4a-7255-431d-95f9-5bd181a48d12",
+          "title": "Figma to Production",
+          "ig": "Ui Ux",
+          "org": "St. Josephs Colege of Engineering and Technology",
+          "is_lead": false,
+          "total_members": 3,
+          "joined_at": "2026-11-12T15:20:13Z"
+        },
+        {
+          "circle_id": "40a52b79-a820-4dfa-9a12-0bb960567a55",
+          "title": "Full-Stack Fridays",
+          "ig": "Web Development",
+          "org": "St. Josephs Colege of Engineering and Technology",
+          "is_lead": false,
+          "total_members": 4,
+          "joined_at": "2026-11-12T15:20:07Z"
+        },
+        {
+          "circle_id": "526bb1c7-3398-43b4-9484-cb188f2aa34f",
+          "title": "Prompt Engineering Lab",
+          "ig": "AI",
+          "org": "St. Josephs Colege of Engineering and Technology",
+          "is_lead": true,
+          "total_members": 3,
+          "joined_at": "2026-11-12T15:20:00Z"
+        },
+        {
+          "circle_id": "4cfd3477-08c7-421e-9137-fd6cbc412465",
+          "title": "Flutter Builders",
+          "ig": "Web Development",
+          "org": "St. Josephs Colege of Engineering and Technology",
+          "is_lead": true,
+          "total_members": 4,
+          "joined_at": "2026-11-12T15:19:53Z"
+        }
+      ],
+      "pagination": {
+        "count": 4,
+        "totalPages": 1,
+        "isNext": false,
+        "isPrev": false,
+        "nextPage": null
+      }
+    }
+  }
+}

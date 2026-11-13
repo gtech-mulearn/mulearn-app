@@ -9,6 +9,7 @@ import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
 import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 import 'package:mulearn_app/core/utils/unescape_literal_unicode.dart';
+import 'package:mulearn_app/core/widgets/connect_discord_prompt.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/core/widgets/mu_buttons.dart';
 import 'package:mulearn_app/core/widgets/mu_chip.dart';
@@ -40,6 +41,7 @@ class TaskDetailScreen extends ConsumerWidget {
         backgroundColor: MuColors.canvas,
         elevation: 0,
         leading: IconButton(
+          tooltip: 'Back',
           icon: const Icon(LucideIcons.arrowLeft, color: MuColors.ink),
           onPressed: () => context.pop(),
         ),
@@ -127,20 +129,20 @@ class _TaskDetailBody extends StatelessWidget {
           MarkdownBody(
             data: unescapeLiteralUnicode(task.description!),
             styleSheet: MarkdownStyleSheet(
-              p: MuType.body.copyWith(color: const Color(0xFF33333A)),
+              p: MuType.body.copyWith(color: MuColors.inkBody),
               h1: MuType.headline,
               h2: MuType.title,
               h3: MuType.bodyMed,
-              strong: MuType.bodyMed.copyWith(color: const Color(0xFF33333A)),
+              strong: MuType.bodyMed.copyWith(color: MuColors.inkBody),
               em: MuType.body.copyWith(
-                color: const Color(0xFF33333A),
+                color: MuColors.inkBody,
                 fontStyle: FontStyle.italic,
               ),
               a: MuType.body.copyWith(
                 color: MuColors.primary,
                 decoration: TextDecoration.underline,
               ),
-              listBullet: MuType.body.copyWith(color: const Color(0xFF33333A)),
+              listBullet: MuType.body.copyWith(color: MuColors.inkBody),
               blockquote: MuType.body.copyWith(color: MuColors.inkSecondary),
               blockquoteDecoration: BoxDecoration(
                 color: MuColors.canvas,
@@ -151,7 +153,7 @@ class _TaskDetailBody extends StatelessWidget {
               ),
               blockquotePadding: const EdgeInsets.all(MuSpace.m),
               code: MuType.body.copyWith(
-                color: const Color(0xFF33333A),
+                color: MuColors.inkBody,
                 backgroundColor: MuColors.canvas,
                 fontFamily: 'monospace',
               ),
@@ -166,10 +168,12 @@ class _TaskDetailBody extends StatelessWidget {
         Text('SUBMIT YOUR PROOF', style: MuType.eyebrow),
         const SizedBox(height: MuSpace.m),
         if (hasChannel) ...[
-          MuPrimaryButton(
-            label: 'Copy submission info',
-            icon: LucideIcons.copy,
-            onPressed: () => _copySubmissionInfo(context),
+          ConnectDiscordPrompt(
+            orElse: MuPrimaryButton(
+              label: 'Copy submission info',
+              icon: LucideIcons.copy,
+              onPressed: () => _copySubmissionInfo(context),
+            ),
           ),
           const SizedBox(height: MuSpace.m),
           Text(
@@ -211,7 +215,7 @@ class _RewardTile extends StatelessWidget {
             children: [
               Text(
                 'REWARD',
-                style: MuType.eyebrow.copyWith(color: Colors.white.withValues(alpha: 0.6)),
+                style: MuType.eyebrow.copyWith(color: MuColors.onBrand.withValues(alpha: 0.6)),
               ),
               Text(
                 '$karma',

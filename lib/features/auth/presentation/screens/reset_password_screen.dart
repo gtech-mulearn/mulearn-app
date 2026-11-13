@@ -228,6 +228,7 @@ class _NewPasswordStep extends StatelessWidget {
                 decoration: InputDecoration(
                   labelText: 'New password',
                   suffixIcon: IconButton(
+                    tooltip: obscure ? 'Show password' : 'Hide password',
                     icon: Icon(
                       obscure ? LucideIcons.eye : LucideIcons.eyeOff,
                       color: MuColors.inkSecondary,
@@ -252,6 +253,7 @@ class _NewPasswordStep extends StatelessWidget {
                 decoration: InputDecoration(
                   labelText: 'Confirm new password',
                   suffixIcon: IconButton(
+                    tooltip: obscureConfirm ? 'Show password' : 'Hide password',
                     icon: Icon(
                       obscureConfirm ? LucideIcons.eye : LucideIcons.eyeOff,
                       color: MuColors.inkSecondary,

@@ -1,0 +1,37 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/learningcircle/list/?status=not_joined&search=Club&pageIndex=1&perPage=20",
+    "account": "student",
+    "status": 200,
+    "recorded_at": "2026-11-13T06:27:36.291321Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "data": [
+        {
+          "id": "38bf7bfa-9c94-4bdc-bf78-a7246106912d",
+          "ig": "Generative AI",
+          "title": "LLM Paper Reading Club",
+          "org": "St. Josephs Colege of Engineering and Technology",
+          "total_members": 2,
+          "is_joined": false,
+          "is_creator": false,
+          "status": "not_joined"
+        }
+      ],
+      "pagination": {
+        "count": 1,
+        "totalPages": 1,
+        "isNext": false,
+        "isPrev": false,
+        "nextPage": null
+      }
+    }
+  }
+}

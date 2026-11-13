@@ -20,5 +20,6 @@ abstract class MyProgressSummary with _$MyProgressSummary {
     String? profilePicUrl,
     int? rank,
     double? percentile,
+    @Default(0) int interestGroupCount,
   }) = _MyProgressSummary;
 }

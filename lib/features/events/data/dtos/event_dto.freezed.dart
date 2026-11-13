@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$EventDto {
 
- String get id; String get title; String get slug; String get status; String get eventScope; String get eventType; String get startDatetime; String get endDatetime; EventVenueDto get venue; EventOrganizerDto get organizer; bool get isFeatured; bool get isCollaboration; int get interestCount; String get viewerInterestStatus; List<String> get tags; String? get coverImage; String? get bannerImage; String? get description; String? get categoryName; String? get registrationUrl; String? get registrationDeadline; int? get minKarma; int? get userLimit;
+ String get id; String get title; String get slug; String get status; String get eventScope; String get eventType; String get startDatetime; String get endDatetime; EventVenueDto get venue; EventOrganizerDto get organizer; bool get isFeatured; bool get isCollaboration; int get interestCount; String get viewerInterestStatus; List<String> get tags; String? get coverImage; String? get bannerImage; String? get description; String? get categoryName; String? get registrationUrl; String? get registrationDeadline; int? get minKarma; int? get userLimit; bool get viewerCanAccessRegistration; String? get viewerAccessBlockedReason; List<EventLinkedTaskDto> get linkedTasks;
 /// Create a copy of EventDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $EventDtoCopyWith<EventDto> get copyWith => _$EventDtoCopyWithImpl<EventDto>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EventDto&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.slug, slug) || other.slug == slug)&&(identical(other.status, status) || other.status == status)&&(identical(other.eventScope, eventScope) || other.eventScope == eventScope)&&(identical(other.eventType, eventType) || other.eventType == eventType)&&(identical(other.startDatetime, startDatetime) || other.startDatetime == startDatetime)&&(identical(other.endDatetime, endDatetime) || other.endDatetime == endDatetime)&&(identical(other.venue, venue) || other.venue == venue)&&(identical(other.organizer, organizer) || other.organizer == organizer)&&(identical(other.isFeatured, isFeatured) || other.isFeatured == isFeatured)&&(identical(other.isCollaboration, isCollaboration) || other.isCollaboration == isCollaboration)&&(identical(other.interestCount, interestCount) || other.interestCount == interestCount)&&(identical(other.viewerInterestStatus, viewerInterestStatus) || other.viewerInterestStatus == viewerInterestStatus)&&const DeepCollectionEquality().equals(other.tags, tags)&&(identical(other.coverImage, coverImage) || other.coverImage == coverImage)&&(identical(other.bannerImage, bannerImage) || other.bannerImage == bannerImage)&&(identical(other.description, description) || other.description == description)&&(identical(other.categoryName, categoryName) || other.categoryName == categoryName)&&(identical(other.registrationUrl, registrationUrl) || other.registrationUrl == registrationUrl)&&(identical(other.registrationDeadline, registrationDeadline) || other.registrationDeadline == registrationDeadline)&&(identical(other.minKarma, minKarma) || other.minKarma == minKarma)&&(identical(other.userLimit, userLimit) || other.userLimit == userLimit));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EventDto&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.slug, slug) || other.slug == slug)&&(identical(other.status, status) || other.status == status)&&(identical(other.eventScope, eventScope) || other.eventScope == eventScope)&&(identical(other.eventType, eventType) || other.eventType == eventType)&&(identical(other.startDatetime, startDatetime) || other.startDatetime == startDatetime)&&(identical(other.endDatetime, endDatetime) || other.endDatetime == endDatetime)&&(identical(other.venue, venue) || other.venue == venue)&&(identical(other.organizer, organizer) || other.organizer == organizer)&&(identical(other.isFeatured, isFeatured) || other.isFeatured == isFeatured)&&(identical(other.isCollaboration, isCollaboration) || other.isCollaboration == isCollaboration)&&(identical(other.interestCount, interestCount) || other.interestCount == interestCount)&&(identical(other.viewerInterestStatus, viewerInterestStatus) || other.viewerInterestStatus == viewerInterestStatus)&&const DeepCollectionEquality().equals(other.tags, tags)&&(identical(other.coverImage, coverImage) || other.coverImage == coverImage)&&(identical(other.bannerImage, bannerImage) || other.bannerImage == bannerImage)&&(identical(other.description, description) || other.description == description)&&(identical(other.categoryName, categoryName) || other.categoryName == categoryName)&&(identical(other.registrationUrl, registrationUrl) || other.registrationUrl == registrationUrl)&&(identical(other.registrationDeadline, registrationDeadline) || other.registrationDeadline == registrationDeadline)&&(identical(other.minKarma, minKarma) || other.minKarma == minKarma)&&(identical(other.userLimit, userLimit) || other.userLimit == userLimit)&&(identical(other.viewerCanAccessRegistration, viewerCanAccessRegistration) || other.viewerCanAccessRegistration == viewerCanAccessRegistration)&&(identical(other.viewerAccessBlockedReason, viewerAccessBlockedReason) || other.viewerAccessBlockedReason == viewerAccessBlockedReason)&&const DeepCollectionEquality().equals(other.linkedTasks, linkedTasks));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,id,title,slug,status,eventScope,eventType,startDatetime,endDatetime,venue,organizer,isFeatured,isCollaboration,interestCount,viewerInterestStatus,const DeepCollectionEquality().hash(tags),coverImage,bannerImage,description,categoryName,registrationUrl,registrationDeadline,minKarma,userLimit]);
+int get hashCode => Object.hashAll([runtimeType,id,title,slug,status,eventScope,eventType,startDatetime,endDatetime,venue,organizer,isFeatured,isCollaboration,interestCount,viewerInterestStatus,const DeepCollectionEquality().hash(tags),coverImage,bannerImage,description,categoryName,registrationUrl,registrationDeadline,minKarma,userLimit,viewerCanAccessRegistration,viewerAccessBlockedReason,const DeepCollectionEquality().hash(linkedTasks)]);
 
 @override
 String toString() {
-  return 'EventDto(id: $id, title: $title, slug: $slug, status: $status, eventScope: $eventScope, eventType: $eventType, startDatetime: $startDatetime, endDatetime: $endDatetime, venue: $venue, organizer: $organizer, isFeatured: $isFeatured, isCollaboration: $isCollaboration, interestCount: $interestCount, viewerInterestStatus: $viewerInterestStatus, tags: $tags, coverImage: $coverImage, bannerImage: $bannerImage, description: $description, categoryName: $categoryName, registrationUrl: $registrationUrl, registrationDeadline: $registrationDeadline, minKarma: $minKarma, userLimit: $userLimit)';
+  return 'EventDto(id: $id, title: $title, slug: $slug, status: $status, eventScope: $eventScope, eventType: $eventType, startDatetime: $startDatetime, endDatetime: $endDatetime, venue: $venue, organizer: $organizer, isFeatured: $isFeatured, isCollaboration: $isCollaboration, interestCount: $interestCount, viewerInterestStatus: $viewerInterestStatus, tags: $tags, coverImage: $coverImage, bannerImage: $bannerImage, description: $description, categoryName: $categoryName, registrationUrl: $registrationUrl, registrationDeadline: $registrationDeadline, minKarma: $minKarma, userLimit: $userLimit, viewerCanAccessRegistration: $viewerCanAccessRegistration, viewerAccessBlockedReason: $viewerAccessBlockedReason, linkedTasks: $linkedTasks)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $EventDtoCopyWith<$Res>  {
   factory $EventDtoCopyWith(EventDto value, $Res Function(EventDto) _then) = _$EventDtoCopyWithImpl;
 @useResult
 $Res call({
- String id, String title, String slug, String status, String eventScope, String eventType, String startDatetime, String endDatetime, EventVenueDto venue, EventOrganizerDto organizer, bool isFeatured, bool isCollaboration, int interestCount, String viewerInterestStatus, List<String> tags, String? coverImage, String? bannerImage, String? description, String? categoryName, String? registrationUrl, String? registrationDeadline, int? minKarma, int? userLimit
+ String id, String title, String slug, String status, String eventScope, String eventType, String startDatetime, String endDatetime, EventVenueDto venue, EventOrganizerDto organizer, bool isFeatured, bool isCollaboration, int interestCount, String viewerInterestStatus, List<String> tags, String? coverImage, String? bannerImage, String? description, String? categoryName, String? registrationUrl, String? registrationDeadline, int? minKarma, int? userLimit, bool viewerCanAccessRegistration, String? viewerAccessBlockedReason, List<EventLinkedTaskDto> linkedTasks
 });
 
 
@@ -65,7 +65,7 @@ class _$EventDtoCopyWithImpl<$Res>
 
 /// Create a copy of EventDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? slug = null,Object? status = null,Object? eventScope = null,Object? eventType = null,Object? startDatetime = null,Object? endDatetime = null,Object? venue = null,Object? organizer = null,Object? isFeatured = null,Object? isCollaboration = null,Object? interestCount = null,Object? viewerInterestStatus = null,Object? tags = null,Object? coverImage = freezed,Object? bannerImage = freezed,Object? description = freezed,Object? categoryName = freezed,Object? registrationUrl = freezed,Object? registrationDeadline = freezed,Object? minKarma = freezed,Object? userLimit = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? slug = null,Object? status = null,Object? eventScope = null,Object? eventType = null,Object? startDatetime = null,Object? endDatetime = null,Object? venue = null,Object? organizer = null,Object? isFeatured = null,Object? isCollaboration = null,Object? interestCount = null,Object? viewerInterestStatus = null,Object? tags = null,Object? coverImage = freezed,Object? bannerImage = freezed,Object? description = freezed,Object? categoryName = freezed,Object? registrationUrl = freezed,Object? registrationDeadline = freezed,Object? minKarma = freezed,Object? userLimit = freezed,Object? viewerCanAccessRegistration = null,Object? viewerAccessBlockedReason = freezed,Object? linkedTasks = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -90,7 +90,10 @@ as String?,registrationUrl: freezed == registrationUrl ? _self.registrationUrl :
 as String?,registrationDeadline: freezed == registrationDeadline ? _self.registrationDeadline : registrationDeadline // ignore: cast_nullable_to_non_nullable
 as String?,minKarma: freezed == minKarma ? _self.minKarma : minKarma // ignore: cast_nullable_to_non_nullable
 as int?,userLimit: freezed == userLimit ? _self.userLimit : userLimit // ignore: cast_nullable_to_non_nullable
-as int?,
+as int?,viewerCanAccessRegistration: null == viewerCanAccessRegistration ? _self.viewerCanAccessRegistration : viewerCanAccessRegistration // ignore: cast_nullable_to_non_nullable
+as bool,viewerAccessBlockedReason: freezed == viewerAccessBlockedReason ? _self.viewerAccessBlockedReason : viewerAccessBlockedReason // ignore: cast_nullable_to_non_nullable
+as String?,linkedTasks: null == linkedTasks ? _self.linkedTasks : linkedTasks // ignore: cast_nullable_to_non_nullable
+as List<EventLinkedTaskDto>,
   ));
 }
 /// Create a copy of EventDto
@@ -193,10 +196,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String slug,  String status,  String eventScope,  String eventType,  String startDatetime,  String endDatetime,  EventVenueDto venue,  EventOrganizerDto organizer,  bool isFeatured,  bool isCollaboration,  int interestCount,  String viewerInterestStatus,  List<String> tags,  String? coverImage,  String? bannerImage,  String? description,  String? categoryName,  String? registrationUrl,  String? registrationDeadline,  int? minKarma,  int? userLimit)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String slug,  String status,  String eventScope,  String eventType,  String startDatetime,  String endDatetime,  EventVenueDto venue,  EventOrganizerDto organizer,  bool isFeatured,  bool isCollaboration,  int interestCount,  String viewerInterestStatus,  List<String> tags,  String? coverImage,  String? bannerImage,  String? description,  String? categoryName,  String? registrationUrl,  String? registrationDeadline,  int? minKarma,  int? userLimit,  bool viewerCanAccessRegistration,  String? viewerAccessBlockedReason,  List<EventLinkedTaskDto> linkedTasks)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _EventDto() when $default != null:
-return $default(_that.id,_that.title,_that.slug,_that.status,_that.eventScope,_that.eventType,_that.startDatetime,_that.endDatetime,_that.venue,_that.organizer,_that.isFeatured,_that.isCollaboration,_that.interestCount,_that.viewerInterestStatus,_that.tags,_that.coverImage,_that.bannerImage,_that.description,_that.categoryName,_that.registrationUrl,_that.registrationDeadline,_that.minKarma,_that.userLimit);case _:
+return $default(_that.id,_that.title,_that.slug,_that.status,_that.eventScope,_that.eventType,_that.startDatetime,_that.endDatetime,_that.venue,_that.organizer,_that.isFeatured,_that.isCollaboration,_that.interestCount,_that.viewerInterestStatus,_that.tags,_that.coverImage,_that.bannerImage,_that.description,_that.categoryName,_that.registrationUrl,_that.registrationDeadline,_that.minKarma,_that.userLimit,_that.viewerCanAccessRegistration,_that.viewerAccessBlockedReason,_that.linkedTasks);case _:
   return orElse();
 
 }
@@ -214,10 +217,10 @@ return $default(_that.id,_that.title,_that.slug,_that.status,_that.eventScope,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String slug,  String status,  String eventScope,  String eventType,  String startDatetime,  String endDatetime,  EventVenueDto venue,  EventOrganizerDto organizer,  bool isFeatured,  bool isCollaboration,  int interestCount,  String viewerInterestStatus,  List<String> tags,  String? coverImage,  String? bannerImage,  String? description,  String? categoryName,  String? registrationUrl,  String? registrationDeadline,  int? minKarma,  int? userLimit)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String slug,  String status,  String eventScope,  String eventType,  String startDatetime,  String endDatetime,  EventVenueDto venue,  EventOrganizerDto organizer,  bool isFeatured,  bool isCollaboration,  int interestCount,  String viewerInterestStatus,  List<String> tags,  String? coverImage,  String? bannerImage,  String? description,  String? categoryName,  String? registrationUrl,  String? registrationDeadline,  int? minKarma,  int? userLimit,  bool viewerCanAccessRegistration,  String? viewerAccessBlockedReason,  List<EventLinkedTaskDto> linkedTasks)  $default,) {final _that = this;
 switch (_that) {
 case _EventDto():
-return $default(_that.id,_that.title,_that.slug,_that.status,_that.eventScope,_that.eventType,_that.startDatetime,_that.endDatetime,_that.venue,_that.organizer,_that.isFeatured,_that.isCollaboration,_that.interestCount,_that.viewerInterestStatus,_that.tags,_that.coverImage,_that.bannerImage,_that.description,_that.categoryName,_that.registrationUrl,_that.registrationDeadline,_that.minKarma,_that.userLimit);case _:
+return $default(_that.id,_that.title,_that.slug,_that.status,_that.eventScope,_that.eventType,_that.startDatetime,_that.endDatetime,_that.venue,_that.organizer,_that.isFeatured,_that.isCollaboration,_that.interestCount,_that.viewerInterestStatus,_that.tags,_that.coverImage,_that.bannerImage,_that.description,_that.categoryName,_that.registrationUrl,_that.registrationDeadline,_that.minKarma,_that.userLimit,_that.viewerCanAccessRegistration,_that.viewerAccessBlockedReason,_that.linkedTasks);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -234,10 +237,10 @@ return $default(_that.id,_that.title,_that.slug,_that.status,_that.eventScope,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String slug,  String status,  String eventScope,  String eventType,  String startDatetime,  String endDatetime,  EventVenueDto venue,  EventOrganizerDto organizer,  bool isFeatured,  bool isCollaboration,  int interestCount,  String viewerInterestStatus,  List<String> tags,  String? coverImage,  String? bannerImage,  String? description,  String? categoryName,  String? registrationUrl,  String? registrationDeadline,  int? minKarma,  int? userLimit)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String slug,  String status,  String eventScope,  String eventType,  String startDatetime,  String endDatetime,  EventVenueDto venue,  EventOrganizerDto organizer,  bool isFeatured,  bool isCollaboration,  int interestCount,  String viewerInterestStatus,  List<String> tags,  String? coverImage,  String? bannerImage,  String? description,  String? categoryName,  String? registrationUrl,  String? registrationDeadline,  int? minKarma,  int? userLimit,  bool viewerCanAccessRegistration,  String? viewerAccessBlockedReason,  List<EventLinkedTaskDto> linkedTasks)?  $default,) {final _that = this;
 switch (_that) {
 case _EventDto() when $default != null:
-return $default(_that.id,_that.title,_that.slug,_that.status,_that.eventScope,_that.eventType,_that.startDatetime,_that.endDatetime,_that.venue,_that.organizer,_that.isFeatured,_that.isCollaboration,_that.interestCount,_that.viewerInterestStatus,_that.tags,_that.coverImage,_that.bannerImage,_that.description,_that.categoryName,_that.registrationUrl,_that.registrationDeadline,_that.minKarma,_that.userLimit);case _:
+return $default(_that.id,_that.title,_that.slug,_that.status,_that.eventScope,_that.eventType,_that.startDatetime,_that.endDatetime,_that.venue,_that.organizer,_that.isFeatured,_that.isCollaboration,_that.interestCount,_that.viewerInterestStatus,_that.tags,_that.coverImage,_that.bannerImage,_that.description,_that.categoryName,_that.registrationUrl,_that.registrationDeadline,_that.minKarma,_that.userLimit,_that.viewerCanAccessRegistration,_that.viewerAccessBlockedReason,_that.linkedTasks);case _:
   return null;
 
 }
@@ -249,7 +252,7 @@ return $default(_that.id,_that.title,_that.slug,_that.status,_that.eventScope,_t
 @JsonSerializable()
 
 class _EventDto extends EventDto {
-  const _EventDto({required this.id, required this.title, required this.slug, required this.status, required this.eventScope, required this.eventType, required this.startDatetime, required this.endDatetime, required this.venue, required this.organizer, this.isFeatured = false, this.isCollaboration = false, this.interestCount = 0, this.viewerInterestStatus = 'none', final  List<String> tags = const [], this.coverImage, this.bannerImage, this.description, this.categoryName, this.registrationUrl, this.registrationDeadline, this.minKarma, this.userLimit}): _tags = tags,super._();
+  const _EventDto({required this.id, required this.title, required this.slug, required this.status, required this.eventScope, required this.eventType, required this.startDatetime, required this.endDatetime, required this.venue, required this.organizer, this.isFeatured = false, this.isCollaboration = false, this.interestCount = 0, this.viewerInterestStatus = 'none', final  List<String> tags = const [], this.coverImage, this.bannerImage, this.description, this.categoryName, this.registrationUrl, this.registrationDeadline, this.minKarma, this.userLimit, this.viewerCanAccessRegistration = true, this.viewerAccessBlockedReason, final  List<EventLinkedTaskDto> linkedTasks = const []}): _tags = tags,_linkedTasks = linkedTasks,super._();
   factory _EventDto.fromJson(Map<String, dynamic> json) => _$EventDtoFromJson(json);
 
 @override final  String id;
@@ -281,6 +284,15 @@ class _EventDto extends EventDto {
 @override final  String? registrationDeadline;
 @override final  int? minKarma;
 @override final  int? userLimit;
+@override@JsonKey() final  bool viewerCanAccessRegistration;
+@override final  String? viewerAccessBlockedReason;
+ final  List<EventLinkedTaskDto> _linkedTasks;
+@override@JsonKey() List<EventLinkedTaskDto> get linkedTasks {
+  if (_linkedTasks is EqualUnmodifiableListView) return _linkedTasks;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_linkedTasks);
+}
+
 
 /// Create a copy of EventDto
 /// with the given fields replaced by the non-null parameter values.
@@ -295,16 +307,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EventDto&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.slug, slug) || other.slug == slug)&&(identical(other.status, status) || other.status == status)&&(identical(other.eventScope, eventScope) || other.eventScope == eventScope)&&(identical(other.eventType, eventType) || other.eventType == eventType)&&(identical(other.startDatetime, startDatetime) || other.startDatetime == startDatetime)&&(identical(other.endDatetime, endDatetime) || other.endDatetime == endDatetime)&&(identical(other.venue, venue) || other.venue == venue)&&(identical(other.organizer, organizer) || other.organizer == organizer)&&(identical(other.isFeatured, isFeatured) || other.isFeatured == isFeatured)&&(identical(other.isCollaboration, isCollaboration) || other.isCollaboration == isCollaboration)&&(identical(other.interestCount, interestCount) || other.interestCount == interestCount)&&(identical(other.viewerInterestStatus, viewerInterestStatus) || other.viewerInterestStatus == viewerInterestStatus)&&const DeepCollectionEquality().equals(other._tags, _tags)&&(identical(other.coverImage, coverImage) || other.coverImage == coverImage)&&(identical(other.bannerImage, bannerImage) || other.bannerImage == bannerImage)&&(identical(other.description, description) || other.description == description)&&(identical(other.categoryName, categoryName) || other.categoryName == categoryName)&&(identical(other.registrationUrl, registrationUrl) || other.registrationUrl == registrationUrl)&&(identical(other.registrationDeadline, registrationDeadline) || other.registrationDeadline == registrationDeadline)&&(identical(other.minKarma, minKarma) || other.minKarma == minKarma)&&(identical(other.userLimit, userLimit) || other.userLimit == userLimit));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EventDto&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.slug, slug) || other.slug == slug)&&(identical(other.status, status) || other.status == status)&&(identical(other.eventScope, eventScope) || other.eventScope == eventScope)&&(identical(other.eventType, eventType) || other.eventType == eventType)&&(identical(other.startDatetime, startDatetime) || other.startDatetime == startDatetime)&&(identical(other.endDatetime, endDatetime) || other.endDatetime == endDatetime)&&(identical(other.venue, venue) || other.venue == venue)&&(identical(other.organizer, organizer) || other.organizer == organizer)&&(identical(other.isFeatured, isFeatured) || other.isFeatured == isFeatured)&&(identical(other.isCollaboration, isCollaboration) || other.isCollaboration == isCollaboration)&&(identical(other.interestCount, interestCount) || other.interestCount == interestCount)&&(identical(other.viewerInterestStatus, viewerInterestStatus) || other.viewerInterestStatus == viewerInterestStatus)&&const DeepCollectionEquality().equals(other._tags, _tags)&&(identical(other.coverImage, coverImage) || other.coverImage == coverImage)&&(identical(other.bannerImage, bannerImage) || other.bannerImage == bannerImage)&&(identical(other.description, description) || other.description == description)&&(identical(other.categoryName, categoryName) || other.categoryName == categoryName)&&(identical(other.registrationUrl, registrationUrl) || other.registrationUrl == registrationUrl)&&(identical(other.registrationDeadline, registrationDeadline) || other.registrationDeadline == registrationDeadline)&&(identical(other.minKarma, minKarma) || other.minKarma == minKarma)&&(identical(other.userLimit, userLimit) || other.userLimit == userLimit)&&(identical(other.viewerCanAccessRegistration, viewerCanAccessRegistration) || other.viewerCanAccessRegistration == viewerCanAccessRegistration)&&(identical(other.viewerAccessBlockedReason, viewerAccessBlockedReason) || other.viewerAccessBlockedReason == viewerAccessBlockedReason)&&const DeepCollectionEquality().equals(other._linkedTasks, _linkedTasks));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,id,title,slug,status,eventScope,eventType,startDatetime,endDatetime,venue,organizer,isFeatured,isCollaboration,interestCount,viewerInterestStatus,const DeepCollectionEquality().hash(_tags),coverImage,bannerImage,description,categoryName,registrationUrl,registrationDeadline,minKarma,userLimit]);
+int get hashCode => Object.hashAll([runtimeType,id,title,slug,status,eventScope,eventType,startDatetime,endDatetime,venue,organizer,isFeatured,isCollaboration,interestCount,viewerInterestStatus,const DeepCollectionEquality().hash(_tags),coverImage,bannerImage,description,categoryName,registrationUrl,registrationDeadline,minKarma,userLimit,viewerCanAccessRegistration,viewerAccessBlockedReason,const DeepCollectionEquality().hash(_linkedTasks)]);
 
 @override
 String toString() {
-  return 'EventDto(id: $id, title: $title, slug: $slug, status: $status, eventScope: $eventScope, eventType: $eventType, startDatetime: $startDatetime, endDatetime: $endDatetime, venue: $venue, organizer: $organizer, isFeatured: $isFeatured, isCollaboration: $isCollaboration, interestCount: $interestCount, viewerInterestStatus: $viewerInterestStatus, tags: $tags, coverImage: $coverImage, bannerImage: $bannerImage, description: $description, categoryName: $categoryName, registrationUrl: $registrationUrl, registrationDeadline: $registrationDeadline, minKarma: $minKarma, userLimit: $userLimit)';
+  return 'EventDto(id: $id, title: $title, slug: $slug, status: $status, eventScope: $eventScope, eventType: $eventType, startDatetime: $startDatetime, endDatetime: $endDatetime, venue: $venue, organizer: $organizer, isFeatured: $isFeatured, isCollaboration: $isCollaboration, interestCount: $interestCount, viewerInterestStatus: $viewerInterestStatus, tags: $tags, coverImage: $coverImage, bannerImage: $bannerImage, description: $description, categoryName: $categoryName, registrationUrl: $registrationUrl, registrationDeadline: $registrationDeadline, minKarma: $minKarma, userLimit: $userLimit, viewerCanAccessRegistration: $viewerCanAccessRegistration, viewerAccessBlockedReason: $viewerAccessBlockedReason, linkedTasks: $linkedTasks)';
 }
 
 
@@ -315,7 +327,7 @@ abstract mixin class _$EventDtoCopyWith<$Res> implements $EventDtoCopyWith<$Res>
   factory _$EventDtoCopyWith(_EventDto value, $Res Function(_EventDto) _then) = __$EventDtoCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String title, String slug, String status, String eventScope, String eventType, String startDatetime, String endDatetime, EventVenueDto venue, EventOrganizerDto organizer, bool isFeatured, bool isCollaboration, int interestCount, String viewerInterestStatus, List<String> tags, String? coverImage, String? bannerImage, String? description, String? categoryName, String? registrationUrl, String? registrationDeadline, int? minKarma, int? userLimit
+ String id, String title, String slug, String status, String eventScope, String eventType, String startDatetime, String endDatetime, EventVenueDto venue, EventOrganizerDto organizer, bool isFeatured, bool isCollaboration, int interestCount, String viewerInterestStatus, List<String> tags, String? coverImage, String? bannerImage, String? description, String? categoryName, String? registrationUrl, String? registrationDeadline, int? minKarma, int? userLimit, bool viewerCanAccessRegistration, String? viewerAccessBlockedReason, List<EventLinkedTaskDto> linkedTasks
 });
 
 
@@ -332,7 +344,7 @@ class __$EventDtoCopyWithImpl<$Res>
 
 /// Create a copy of EventDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? slug = null,Object? status = null,Object? eventScope = null,Object? eventType = null,Object? startDatetime = null,Object? endDatetime = null,Object? venue = null,Object? organizer = null,Object? isFeatured = null,Object? isCollaboration = null,Object? interestCount = null,Object? viewerInterestStatus = null,Object? tags = null,Object? coverImage = freezed,Object? bannerImage = freezed,Object? description = freezed,Object? categoryName = freezed,Object? registrationUrl = freezed,Object? registrationDeadline = freezed,Object? minKarma = freezed,Object? userLimit = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? slug = null,Object? status = null,Object? eventScope = null,Object? eventType = null,Object? startDatetime = null,Object? endDatetime = null,Object? venue = null,Object? organizer = null,Object? isFeatured = null,Object? isCollaboration = null,Object? interestCount = null,Object? viewerInterestStatus = null,Object? tags = null,Object? coverImage = freezed,Object? bannerImage = freezed,Object? description = freezed,Object? categoryName = freezed,Object? registrationUrl = freezed,Object? registrationDeadline = freezed,Object? minKarma = freezed,Object? userLimit = freezed,Object? viewerCanAccessRegistration = null,Object? viewerAccessBlockedReason = freezed,Object? linkedTasks = null,}) {
   return _then(_EventDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -357,7 +369,10 @@ as String?,registrationUrl: freezed == registrationUrl ? _self.registrationUrl :
 as String?,registrationDeadline: freezed == registrationDeadline ? _self.registrationDeadline : registrationDeadline // ignore: cast_nullable_to_non_nullable
 as String?,minKarma: freezed == minKarma ? _self.minKarma : minKarma // ignore: cast_nullable_to_non_nullable
 as int?,userLimit: freezed == userLimit ? _self.userLimit : userLimit // ignore: cast_nullable_to_non_nullable
-as int?,
+as int?,viewerCanAccessRegistration: null == viewerCanAccessRegistration ? _self.viewerCanAccessRegistration : viewerCanAccessRegistration // ignore: cast_nullable_to_non_nullable
+as bool,viewerAccessBlockedReason: freezed == viewerAccessBlockedReason ? _self.viewerAccessBlockedReason : viewerAccessBlockedReason // ignore: cast_nullable_to_non_nullable
+as String?,linkedTasks: null == linkedTasks ? _self._linkedTasks : linkedTasks // ignore: cast_nullable_to_non_nullable
+as List<EventLinkedTaskDto>,
   ));
 }
 

@@ -1,0 +1,37 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/achievement/list/user/qastudentone@mulearn/",
+    "account": "student",
+    "status": 200,
+    "recorded_at": "2026-11-13T06:01:36.076250+00:00",
+    "note": "QA-only achievements seeded for Plan 3 Task 7 and removed afterwards"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": [
+      {
+        "id": "5bb5095d-ecaa-4a18-8208-37f0927d78c2",
+        "user_id": "04afe242-e329-4491-af58-d555abd82e5f",
+        "achievement": {
+          "id": "f98238dc-b660-4dcf-aa63-e765fadeb4a3",
+          "achievement_name": "QA Starter Badge",
+          "description": "QA test badge (Plan 3) — total karma ≥ 0",
+          "icon": "",
+          "icon_url": null,
+          "level_id": null,
+          "tags": [
+            "qa"
+          ],
+          "template_id": null
+        },
+        "is_issued": true,
+        "vc_url": ""
+      }
+    ]
+  }
+}

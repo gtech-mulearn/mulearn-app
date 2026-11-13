@@ -16,9 +16,19 @@ abstract final class RoutePaths {
   static const String taskDetail = '/tasks/:id';
   static String taskDetailPath(String id) => '/tasks/$id';
   static const String journey = '/journey';
+
+  /// The bottom-bar tab roots, in the shell's branch order (`app_router.dart`).
+  /// Open them with `context.openTab`, never `push`.
+  static const List<String> tabRoots = [home, tasks, journey, leaderboard, profile];
   static const String leaderboard = '/leaderboard';
   static const String profile = '/profile';
   static const String notifications = '/notifications';
+  static const String settings = '/settings';
+  static const String settingsPassword = '/settings/password';
+
+  /// Discord's OAuth redirect, opened as an App Link (same path as the
+  /// dashboard's page). Query: `code`.
+  static const String connectDiscord = '/dashboard/connect-discord';
 
   /// Read-only view of another user's profile by muid.
   static const String publicProfile = '/u/:muid';

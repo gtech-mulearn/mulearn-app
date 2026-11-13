@@ -71,7 +71,7 @@ class FeaturedEventCard extends StatelessWidget {
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: MuSpace.s, vertical: 3),
                         decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.92),
+                          color: MuColors.paper.withValues(alpha: 0.92),
                           borderRadius: BorderRadius.circular(MuRadius.chip),
                         ),
                         child: Text(

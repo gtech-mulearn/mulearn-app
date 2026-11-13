@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -13,11 +15,14 @@ import 'package:mulearn_app/core/widgets/mu_avatar_stack.dart';
 import 'package:mulearn_app/core/widgets/mu_card.dart';
 import 'package:mulearn_app/core/widgets/mu_chip.dart';
 import 'package:mulearn_app/core/widgets/mu_icon_button.dart';
+import 'package:mulearn_app/core/widgets/mu_load_more_footer.dart';
+import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/core/widgets/mu_section_header.dart';
 import 'package:mulearn_app/core/widgets/mu_toast.dart';
-import 'package:mulearn_app/features/learning_circles/domain/entities/circle_invite.dart';
+import 'package:mulearn_app/features/learning_circles/domain/entities/circle_filter.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/circle_member.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/learning_circle.dart';
+import 'package:mulearn_app/features/learning_circles/domain/entities/received_circle_invite.dart';
 import 'package:mulearn_app/features/learning_circles/presentation/providers/learning_circles_controller.dart';
 import 'package:mulearn_app/features/learning_circles/presentation/widgets/learning_circle_tile.dart';
 
@@ -39,6 +44,63 @@ class LearningCirclesScreen extends ConsumerStatefulWidget {
 
 class _LearningCirclesScreenState extends ConsumerState<LearningCirclesScreen> {
   final _scrollController = ScrollController();
+  final _searchController = TextEditingController();
+  Timer? _searchDebounce;
+  CircleFilter _filter = CircleFilter.discover;
+
+  void _setFilter(CircleFilter filter) => setState(() => _filter = filter);
+
+  /// Typing searches once, 300 ms after the last keystroke.
+  void _onSearchChanged(String text) {
+    _searchDebounce?.cancel();
+    _searchDebounce = Timer(const Duration(milliseconds: 300), () {
+      if (mounted) _setFilter(_filter.copyWith(search: text));
+    });
+  }
+
+  void _clearFilters() {
+    _searchDebounce?.cancel();
+    _searchController.clear();
+    _setFilter(CircleFilter.discover);
+  }
+
+  Future<void> _pickInterestGroup() async {
+    final picked = await showModalBottomSheet<({String? id})>(
+      context: context,
+      showDragHandle: true,
+      backgroundColor: MuColors.surface,
+      builder: (sheetContext) => Consumer(
+        builder: (context, ref, _) => ref.watch(circleIgOptionsProvider).when(
+              loading: () => const Padding(
+                padding: EdgeInsets.all(MuSpace.xl),
+                child: Center(child: CircularProgressIndicator()),
+              ),
+              error: (error, _) => Padding(
+                padding: const EdgeInsets.all(MuSpace.xl),
+                child: Text(ApiException.messageFor(error)),
+              ),
+              data: (options) => ListView(
+                shrinkWrap: true,
+                children: [
+                  ListTile(
+                    title: const Text('Any interest group'),
+                    onTap: () => Navigator.of(sheetContext).pop((id: null)),
+                  ),
+                  for (final o in options)
+                    ListTile(
+                      title: Text(o.label),
+                      selected: o.id == _filter.igId,
+                      onTap: () => Navigator.of(sheetContext).pop((id: o.id)),
+                    ),
+                ],
+              ),
+            ),
+      ),
+    );
+    if (picked != null && mounted) {
+      _setFilter(CircleFilter(status: _filter.status, igId: picked.id, search: _filter.search));
+    }
+  }
 
   @override
   void initState() {
@@ -47,14 +109,20 @@ class _LearningCirclesScreenState extends ConsumerState<LearningCirclesScreen> {
   }
 
   void _onScroll() {
+    final paged = ref.read(circlesListControllerProvider(_filter)).value;
+    // After a failed page, only the explicit "Try again" retries — otherwise
+    // every scroll frame would fire another request while offline.
+    if (paged == null || paged.loadMoreError != null) return;
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 200) {
-      ref.read(circlesListControllerProvider.notifier).loadMore();
+      ref.read(circlesListControllerProvider(_filter).notifier).loadMore();
     }
   }
 
   @override
   void dispose() {
+    _searchDebounce?.cancel();
+    _searchController.dispose();
     _scrollController.dispose();
     super.dispose();
   }
@@ -75,28 +143,29 @@ class _LearningCirclesScreenState extends ConsumerState<LearningCirclesScreen> {
   @override
   Widget build(BuildContext context) {
     final myCirclesState = ref.watch(myCirclesProvider);
-    final circlesState = ref.watch(circlesListControllerProvider);
+    final circlesState = ref.watch(circlesListControllerProvider(_filter));
     final invitesState = ref.watch(myPendingCircleInvitesProvider);
     final actionState = ref.watch(circleActionsControllerProvider);
 
-    final myCircleIds =
-        myCirclesState.value?.map((c) => c.id).toSet() ?? const <String>{};
-    final nearYou =
-        (circlesState.value ?? const <LearningCircle>[])
-            .where((c) => !myCircleIds.contains(c.id))
-            .toList();
-    final hasMore = ref.read(circlesListControllerProvider.notifier).hasMore;
+    final paged = circlesState.value;
+    // The server filters by status; "Not joined" already excludes the
+    // user's circles.
+    final nearYou = paged?.items ?? const <LearningCircle>[];
+    final igLabel = _filter.igId == null
+        ? 'Interest group'
+        : ref.watch(circleIgOptionsProvider).value?.where((o) => o.id == _filter.igId).firstOrNull?.label ??
+            'Interest group';
+    final hasMore = paged?.hasMore ?? false;
 
     return Scaffold(
       backgroundColor: MuColors.canvas,
       body: SafeArea(
-        child: RefreshIndicator(
-          onRefresh: () async {
-            ref
-              ..invalidate(myCirclesProvider)
-              ..invalidate(circlesListControllerProvider)
-              ..invalidate(myPendingCircleInvitesProvider);
-          },
+        child: MuRefresh(
+          onRefresh: () => Future.wait([
+            ref.refresh(myCirclesProvider.future),
+            ref.refresh(circlesListControllerProvider(_filter).future),
+            ref.refresh(myPendingCircleInvitesProvider.future),
+          ]),
           child: ListView(
             controller: _scrollController,
             padding: const EdgeInsets.symmetric(vertical: MuSpace.l),
@@ -190,10 +259,53 @@ class _LearningCirclesScreenState extends ConsumerState<LearningCirclesScreen> {
                 },
               ),
 
-              // -- Circles near you.
-              const MuSectionHeader(title: 'Circles near you'),
+              // -- Discover: search and filters (L7).
+              const MuSectionHeader(title: 'Discover circles'),
+              const SizedBox(height: MuSpace.m),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: MuSpace.screenH),
+                child: TextField(
+                  controller: _searchController,
+                  onChanged: _onSearchChanged,
+                  textInputAction: TextInputAction.search,
+                  decoration: const InputDecoration(
+                    hintText: 'Search circles',
+                    prefixIcon: Icon(LucideIcons.search, size: 18),
+                  ),
+                ),
+              ),
+              const SizedBox(height: MuSpace.m),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: MuSpace.screenH),
+                child: Row(
+                  children: [
+                    for (final (status, label) in const [
+                      ('not_joined', 'Not joined'),
+                      (null, 'All'),
+                      ('joined', 'Joined'),
+                      ('pending', 'Pending'),
+                    ]) ...[
+                      MuFilterChip(
+                        label: label,
+                        selected: _filter.status == status,
+                        onTap: () => _setFilter(
+                          CircleFilter(status: status, igId: _filter.igId, search: _filter.search),
+                        ),
+                      ),
+                      const SizedBox(width: MuSpace.s),
+                    ],
+                    MuFilterChip(
+                      label: '$igLabel ▾',
+                      selected: _filter.igId != null,
+                      onTap: _pickInterestGroup,
+                    ),
+                  ],
+                ),
+              ),
               const SizedBox(height: MuSpace.m),
               circlesState.when(
+                skipError: true,
                 loading: () => const Padding(
                   padding: EdgeInsets.symmetric(vertical: MuSpace.l),
                   child: Center(child: CircularProgressIndicator()),
@@ -207,11 +319,19 @@ class _LearningCirclesScreenState extends ConsumerState<LearningCirclesScreen> {
                 ),
                 data: (_) {
                   if (nearYou.isEmpty) {
+                    final filtered = _filter != CircleFilter.discover;
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: MuSpace.screenH),
-                      child: Text(
-                        'No other circles to discover right now.',
-                        style: MuType.body.copyWith(color: MuColors.inkSecondary),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            filtered ? 'No circles match these filters' : 'No other circles to discover right now.',
+                            style: MuType.body.copyWith(color: MuColors.inkSecondary),
+                          ),
+                          if (filtered)
+                            TextButton(onPressed: _clearFilters, child: const Text('Clear filters')),
+                        ],
                       ),
                     );
                   }
@@ -228,9 +348,12 @@ class _LearningCirclesScreenState extends ConsumerState<LearningCirclesScreen> {
                             onJoinTap: () => _requestToJoin(circle.id),
                           ),
                         if (hasMore)
-                          const Padding(
-                            padding: EdgeInsets.symmetric(vertical: MuSpace.m),
-                            child: Center(child: CircularProgressIndicator()),
+                          MuLoadMoreFooter(
+                            isLoading: paged?.isLoadingMore ?? false,
+                            error: paged?.loadMoreError,
+                            onRetry: () => ref
+                                .read(circlesListControllerProvider(_filter).notifier)
+                                .loadMore(),
                           ),
                       ],
                     ),
@@ -250,7 +373,7 @@ class _LearningCirclesScreenState extends ConsumerState<LearningCirclesScreen> {
 class _InvitesSection extends StatelessWidget {
   const _InvitesSection({required this.invites, required this.isBusy});
 
-  final List<CircleInvite> invites;
+  final List<ReceivedCircleInvite> invites;
   final bool isBusy;
 
   @override
@@ -281,7 +404,7 @@ class _InvitesSection extends StatelessWidget {
 class _InviteTile extends ConsumerWidget {
   const _InviteTile({required this.invite, required this.isBusy});
 
-  final CircleInvite invite;
+  final ReceivedCircleInvite invite;
   final bool isBusy;
 
   Future<void> _respond(
@@ -323,21 +446,24 @@ class _InviteTile extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  invite.circleTitle ?? 'You were invited to a circle',
-                  style: MuType.bodyMed,
-                ),
+                Text(invite.circleTitle, style: MuType.bodyMed),
+                if (invite.igName != null)
+                  Text(invite.igName!, style: MuType.caption),
+                if (invite.invitedByName != null)
+                  Text('Invited by ${invite.invitedByName}', style: MuType.caption),
                 if (invite.isLeadInvite)
                   Text('Invited as lead', style: MuType.caption),
               ],
             ),
           ),
           MuIconButton(
+            tooltip: 'Accept invitation',
             icon: LucideIcons.check,
             onPressed: isBusy ? null : () => _respond(context, ref, accept: true),
           ),
           const SizedBox(width: MuSpace.s),
           MuIconButton(
+            tooltip: 'Decline invitation',
             icon: LucideIcons.x,
             onPressed: isBusy ? null : () => _respond(context, ref, accept: false),
           ),

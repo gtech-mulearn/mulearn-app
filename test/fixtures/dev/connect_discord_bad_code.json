@@ -1,0 +1,19 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/register/connect-discord/?code=not-a-real-code",
+    "account": "student",
+    "status": 400,
+    "recorded_at": "2026-11-12T19:43:59.621155Z"
+  },
+  "body": {
+    "hasError": true,
+    "statusCode": 400,
+    "message": {
+      "general": [
+        "Failed to get access token"
+      ]
+    },
+    "response": {}
+  }
+}

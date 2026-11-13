@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mulearn_app/core/theme/mu_radius.dart';
+import 'package:mulearn_app/core/theme/mu_shadow.dart';
 import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
 import 'package:mulearn_app/core/theme/mulearn_typography.dart';
@@ -10,11 +11,15 @@ class LeaderboardPodiumEntry {
     required this.name,
     required this.karma,
     this.avatarUrl,
+    this.onTap,
   });
 
   final String name;
   final num karma;
   final String? avatarUrl;
+
+  /// Opens the student's profile; the slot isn't tappable when null.
+  final VoidCallback? onTap;
 }
 
 /// Top-3 podium row (DESIGN_SPEC.md §2 "09 — Leaderboard") — medal-ring
@@ -68,7 +73,7 @@ class _PodiumSlot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    final slot = Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         Container(
@@ -103,18 +108,13 @@ class _PodiumSlot extends StatelessWidget {
             color: _barColor,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(MuRadius.inner)),
             boxShadow: rank == 1
-                ? [
-                    const BoxShadow(
-                      color: Color(0x991A1A1A),
-                      blurRadius: 20,
-                      offset: Offset(0, 8),
-                    ),
-                  ]
+                ? MuShadow.podium
                 : null,
           ),
           child: Text('$rank', style: MuType.stat.copyWith(color: _rankTextColor, fontSize: 20)),
         ),
       ],
     );
+    return entry.onTap == null ? slot : InkWell(onTap: entry.onTap, child: slot);
   }
 }

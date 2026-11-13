@@ -1,17 +1,14 @@
 import 'package:mulearn_app/features/notifications/domain/entities/app_notification.dart';
 
-/// Notifications repository contract (rules.md §2/§5).
-///
-/// There is no backend `notifications` endpoint yet — see
-/// [NotificationsRemoteDataSource] for the placeholder implementation this
-/// contract is currently backed by. The contract itself is real and stable
-/// so the presentation layer never has to change when a backend lands.
+/// Notifications repository contract (rules.md §2/§5). Failures throw
+/// `ApiException` with the backend's message.
 abstract interface class NotificationsRepository {
-  /// All notifications for the current user, newest first.
-  Future<List<AppNotification>> getNotifications();
+  /// One page of the merged feed, newest first. [page] starts at 1.
+  Future<NotificationPage> getPage(int page);
 
-  /// Marks every notification read. With no backend to persist read-state
-  /// to, implementations may treat this as a local/no-op operation until a
-  /// backend endpoint exists.
+  Future<void> markRead(String id);
+
   Future<void> markAllRead();
+
+  Future<void> archive(String id);
 }

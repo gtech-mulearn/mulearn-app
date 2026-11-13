@@ -113,51 +113,52 @@ final class DashboardRepositoryProvider
 String _$dashboardRepositoryHash() =>
     r'7b8de6e77090b445fd69facc27796ecb670a7ec1';
 
-@ProviderFor(KarmaFeedController)
-const karmaFeedControllerProvider = KarmaFeedControllerProvider._();
+/// The learner's week for Home (weekly karma, streak, next meetup). Fetched
+/// when Home is shown and on pull-to-refresh; a failure shows its own retry.
 
-final class KarmaFeedControllerProvider
-    extends $AsyncNotifierProvider<KarmaFeedController, KarmaFeed> {
-  const KarmaFeedControllerProvider._()
+@ProviderFor(learnerSummary)
+const learnerSummaryProvider = LearnerSummaryProvider._();
+
+/// The learner's week for Home (weekly karma, streak, next meetup). Fetched
+/// when Home is shown and on pull-to-refresh; a failure shows its own retry.
+
+final class LearnerSummaryProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<LearnerSummary>,
+          LearnerSummary,
+          FutureOr<LearnerSummary>
+        >
+    with $FutureModifier<LearnerSummary>, $FutureProvider<LearnerSummary> {
+  /// The learner's week for Home (weekly karma, streak, next meetup). Fetched
+  /// when Home is shown and on pull-to-refresh; a failure shows its own retry.
+  const LearnerSummaryProvider._()
     : super(
         from: null,
         argument: null,
-        retry: null,
-        name: r'karmaFeedControllerProvider',
+        retry: noRetry,
+        name: r'learnerSummaryProvider',
         isAutoDispose: true,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
 
   @override
-  String debugGetCreateSourceHash() => _$karmaFeedControllerHash();
+  String debugGetCreateSourceHash() => _$learnerSummaryHash();
 
   @$internal
   @override
-  KarmaFeedController create() => KarmaFeedController();
-}
+  $FutureProviderElement<LearnerSummary> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
 
-String _$karmaFeedControllerHash() =>
-    r'd7062589ea7ef0af238b36b131869262a58845d0';
-
-abstract class _$KarmaFeedController extends $AsyncNotifier<KarmaFeed> {
-  FutureOr<KarmaFeed> build();
-  @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
-    final ref = this.ref as $Ref<AsyncValue<KarmaFeed>, KarmaFeed>;
-    final element =
-        ref.element
-            as $ClassProviderElement<
-              AnyNotifier<AsyncValue<KarmaFeed>, KarmaFeed>,
-              AsyncValue<KarmaFeed>,
-              Object?,
-              Object?
-            >;
-    element.handleValue(ref, created);
+  FutureOr<LearnerSummary> create(Ref ref) {
+    return learnerSummary(ref);
   }
 }
+
+String _$learnerSummaryHash() => r'd06bf252a93faa62a77a14570221ac77d5e8da34';
 
 @ProviderFor(FeaturedEventsController)
 const featuredEventsControllerProvider = FeaturedEventsControllerProvider._();
@@ -185,7 +186,7 @@ final class FeaturedEventsControllerProvider
 }
 
 String _$featuredEventsControllerHash() =>
-    r'f54578ca25cbeccb5716c6754c9e39b900e51097';
+    r'0cb74784882d43da34f2d3050c7b94989ca64131';
 
 abstract class _$FeaturedEventsController
     extends $AsyncNotifier<List<FeaturedEvent>> {
@@ -219,7 +220,7 @@ final class MyProgressSummaryControllerProvider
     : super(
         from: null,
         argument: null,
-        retry: null,
+        retry: noRetry,
         name: r'myProgressSummaryControllerProvider',
         isAutoDispose: true,
         dependencies: null,
@@ -235,7 +236,7 @@ final class MyProgressSummaryControllerProvider
 }
 
 String _$myProgressSummaryControllerHash() =>
-    r'fcf6657634609d618a14c84d6f590e52c495475a';
+    r'26cab38835ff8a435fa5739f1b8ea8cdcf62260c';
 
 abstract class _$MyProgressSummaryController
     extends $AsyncNotifier<MyProgressSummary> {

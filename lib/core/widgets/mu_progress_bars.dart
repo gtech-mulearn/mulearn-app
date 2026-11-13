@@ -108,7 +108,7 @@ class MuLinearProgress extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final track = trackColor ?? (gradient ? Colors.white.withValues(alpha: 0.14) : MuColors.hairline);
+    final track = trackColor ?? (gradient ? MuColors.onBrand.withValues(alpha: 0.14) : MuColors.hairline);
     final clamped = value.clamp(0.0, 1.0);
     return ClipRRect(
       borderRadius: BorderRadius.circular(99),

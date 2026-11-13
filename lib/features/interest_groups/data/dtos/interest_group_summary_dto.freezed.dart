@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$InterestGroupSummaryDto {
 
- String get id; String get name; String? get category; int? get members; List<IgPersonRefDto>? get leads; List<IgPersonRefDto>? get mentors; String? get about; String? get resource; String? get icon; String? get code;@JsonKey(fromJson: _stringListFromJson) List<String>? get prerequisites;@JsonKey(fromJson: _stringListFromJson) List<String>? get careerOpportunities;
+ String get id; String get name; String? get category; int? get members; List<IgPersonRefDto>? get leads; List<IgPersonRefDto>? get mentors; String? get about; String? get resource; String? get icon; String? get code;@JsonKey(fromJson: _stringListFromJson) List<String>? get prerequisites;@JsonKey(fromJson: _stringListFromJson) List<String>? get careerOpportunities; String? get iconImage; String? get coverImage; String? get officeHours; List<Map<String, dynamic>>? get impactProjects;
 /// Create a copy of InterestGroupSummaryDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $InterestGroupSummaryDtoCopyWith<InterestGroupSummaryDto> get copyWith => _$Inte
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is InterestGroupSummaryDto&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.category, category) || other.category == category)&&(identical(other.members, members) || other.members == members)&&const DeepCollectionEquality().equals(other.leads, leads)&&const DeepCollectionEquality().equals(other.mentors, mentors)&&(identical(other.about, about) || other.about == about)&&(identical(other.resource, resource) || other.resource == resource)&&(identical(other.icon, icon) || other.icon == icon)&&(identical(other.code, code) || other.code == code)&&const DeepCollectionEquality().equals(other.prerequisites, prerequisites)&&const DeepCollectionEquality().equals(other.careerOpportunities, careerOpportunities));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is InterestGroupSummaryDto&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.category, category) || other.category == category)&&(identical(other.members, members) || other.members == members)&&const DeepCollectionEquality().equals(other.leads, leads)&&const DeepCollectionEquality().equals(other.mentors, mentors)&&(identical(other.about, about) || other.about == about)&&(identical(other.resource, resource) || other.resource == resource)&&(identical(other.icon, icon) || other.icon == icon)&&(identical(other.code, code) || other.code == code)&&const DeepCollectionEquality().equals(other.prerequisites, prerequisites)&&const DeepCollectionEquality().equals(other.careerOpportunities, careerOpportunities)&&(identical(other.iconImage, iconImage) || other.iconImage == iconImage)&&(identical(other.coverImage, coverImage) || other.coverImage == coverImage)&&(identical(other.officeHours, officeHours) || other.officeHours == officeHours)&&const DeepCollectionEquality().equals(other.impactProjects, impactProjects));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,category,members,const DeepCollectionEquality().hash(leads),const DeepCollectionEquality().hash(mentors),about,resource,icon,code,const DeepCollectionEquality().hash(prerequisites),const DeepCollectionEquality().hash(careerOpportunities));
+int get hashCode => Object.hash(runtimeType,id,name,category,members,const DeepCollectionEquality().hash(leads),const DeepCollectionEquality().hash(mentors),about,resource,icon,code,const DeepCollectionEquality().hash(prerequisites),const DeepCollectionEquality().hash(careerOpportunities),iconImage,coverImage,officeHours,const DeepCollectionEquality().hash(impactProjects));
 
 @override
 String toString() {
-  return 'InterestGroupSummaryDto(id: $id, name: $name, category: $category, members: $members, leads: $leads, mentors: $mentors, about: $about, resource: $resource, icon: $icon, code: $code, prerequisites: $prerequisites, careerOpportunities: $careerOpportunities)';
+  return 'InterestGroupSummaryDto(id: $id, name: $name, category: $category, members: $members, leads: $leads, mentors: $mentors, about: $about, resource: $resource, icon: $icon, code: $code, prerequisites: $prerequisites, careerOpportunities: $careerOpportunities, iconImage: $iconImage, coverImage: $coverImage, officeHours: $officeHours, impactProjects: $impactProjects)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $InterestGroupSummaryDtoCopyWith<$Res>  {
   factory $InterestGroupSummaryDtoCopyWith(InterestGroupSummaryDto value, $Res Function(InterestGroupSummaryDto) _then) = _$InterestGroupSummaryDtoCopyWithImpl;
 @useResult
 $Res call({
- String id, String name, String? category, int? members, List<IgPersonRefDto>? leads, List<IgPersonRefDto>? mentors, String? about, String? resource, String? icon, String? code,@JsonKey(fromJson: _stringListFromJson) List<String>? prerequisites,@JsonKey(fromJson: _stringListFromJson) List<String>? careerOpportunities
+ String id, String name, String? category, int? members, List<IgPersonRefDto>? leads, List<IgPersonRefDto>? mentors, String? about, String? resource, String? icon, String? code,@JsonKey(fromJson: _stringListFromJson) List<String>? prerequisites,@JsonKey(fromJson: _stringListFromJson) List<String>? careerOpportunities, String? iconImage, String? coverImage, String? officeHours, List<Map<String, dynamic>>? impactProjects
 });
 
 
@@ -65,7 +65,7 @@ class _$InterestGroupSummaryDtoCopyWithImpl<$Res>
 
 /// Create a copy of InterestGroupSummaryDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? category = freezed,Object? members = freezed,Object? leads = freezed,Object? mentors = freezed,Object? about = freezed,Object? resource = freezed,Object? icon = freezed,Object? code = freezed,Object? prerequisites = freezed,Object? careerOpportunities = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? category = freezed,Object? members = freezed,Object? leads = freezed,Object? mentors = freezed,Object? about = freezed,Object? resource = freezed,Object? icon = freezed,Object? code = freezed,Object? prerequisites = freezed,Object? careerOpportunities = freezed,Object? iconImage = freezed,Object? coverImage = freezed,Object? officeHours = freezed,Object? impactProjects = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -79,7 +79,11 @@ as String?,icon: freezed == icon ? _self.icon : icon // ignore: cast_nullable_to
 as String?,code: freezed == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String?,prerequisites: freezed == prerequisites ? _self.prerequisites : prerequisites // ignore: cast_nullable_to_non_nullable
 as List<String>?,careerOpportunities: freezed == careerOpportunities ? _self.careerOpportunities : careerOpportunities // ignore: cast_nullable_to_non_nullable
-as List<String>?,
+as List<String>?,iconImage: freezed == iconImage ? _self.iconImage : iconImage // ignore: cast_nullable_to_non_nullable
+as String?,coverImage: freezed == coverImage ? _self.coverImage : coverImage // ignore: cast_nullable_to_non_nullable
+as String?,officeHours: freezed == officeHours ? _self.officeHours : officeHours // ignore: cast_nullable_to_non_nullable
+as String?,impactProjects: freezed == impactProjects ? _self.impactProjects : impactProjects // ignore: cast_nullable_to_non_nullable
+as List<Map<String, dynamic>>?,
   ));
 }
 
@@ -164,10 +168,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  String? category,  int? members,  List<IgPersonRefDto>? leads,  List<IgPersonRefDto>? mentors,  String? about,  String? resource,  String? icon,  String? code, @JsonKey(fromJson: _stringListFromJson)  List<String>? prerequisites, @JsonKey(fromJson: _stringListFromJson)  List<String>? careerOpportunities)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name,  String? category,  int? members,  List<IgPersonRefDto>? leads,  List<IgPersonRefDto>? mentors,  String? about,  String? resource,  String? icon,  String? code, @JsonKey(fromJson: _stringListFromJson)  List<String>? prerequisites, @JsonKey(fromJson: _stringListFromJson)  List<String>? careerOpportunities,  String? iconImage,  String? coverImage,  String? officeHours,  List<Map<String, dynamic>>? impactProjects)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _InterestGroupSummaryDto() when $default != null:
-return $default(_that.id,_that.name,_that.category,_that.members,_that.leads,_that.mentors,_that.about,_that.resource,_that.icon,_that.code,_that.prerequisites,_that.careerOpportunities);case _:
+return $default(_that.id,_that.name,_that.category,_that.members,_that.leads,_that.mentors,_that.about,_that.resource,_that.icon,_that.code,_that.prerequisites,_that.careerOpportunities,_that.iconImage,_that.coverImage,_that.officeHours,_that.impactProjects);case _:
   return orElse();
 
 }
@@ -185,10 +189,10 @@ return $default(_that.id,_that.name,_that.category,_that.members,_that.leads,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  String? category,  int? members,  List<IgPersonRefDto>? leads,  List<IgPersonRefDto>? mentors,  String? about,  String? resource,  String? icon,  String? code, @JsonKey(fromJson: _stringListFromJson)  List<String>? prerequisites, @JsonKey(fromJson: _stringListFromJson)  List<String>? careerOpportunities)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name,  String? category,  int? members,  List<IgPersonRefDto>? leads,  List<IgPersonRefDto>? mentors,  String? about,  String? resource,  String? icon,  String? code, @JsonKey(fromJson: _stringListFromJson)  List<String>? prerequisites, @JsonKey(fromJson: _stringListFromJson)  List<String>? careerOpportunities,  String? iconImage,  String? coverImage,  String? officeHours,  List<Map<String, dynamic>>? impactProjects)  $default,) {final _that = this;
 switch (_that) {
 case _InterestGroupSummaryDto():
-return $default(_that.id,_that.name,_that.category,_that.members,_that.leads,_that.mentors,_that.about,_that.resource,_that.icon,_that.code,_that.prerequisites,_that.careerOpportunities);case _:
+return $default(_that.id,_that.name,_that.category,_that.members,_that.leads,_that.mentors,_that.about,_that.resource,_that.icon,_that.code,_that.prerequisites,_that.careerOpportunities,_that.iconImage,_that.coverImage,_that.officeHours,_that.impactProjects);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -205,10 +209,10 @@ return $default(_that.id,_that.name,_that.category,_that.members,_that.leads,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  String? category,  int? members,  List<IgPersonRefDto>? leads,  List<IgPersonRefDto>? mentors,  String? about,  String? resource,  String? icon,  String? code, @JsonKey(fromJson: _stringListFromJson)  List<String>? prerequisites, @JsonKey(fromJson: _stringListFromJson)  List<String>? careerOpportunities)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name,  String? category,  int? members,  List<IgPersonRefDto>? leads,  List<IgPersonRefDto>? mentors,  String? about,  String? resource,  String? icon,  String? code, @JsonKey(fromJson: _stringListFromJson)  List<String>? prerequisites, @JsonKey(fromJson: _stringListFromJson)  List<String>? careerOpportunities,  String? iconImage,  String? coverImage,  String? officeHours,  List<Map<String, dynamic>>? impactProjects)?  $default,) {final _that = this;
 switch (_that) {
 case _InterestGroupSummaryDto() when $default != null:
-return $default(_that.id,_that.name,_that.category,_that.members,_that.leads,_that.mentors,_that.about,_that.resource,_that.icon,_that.code,_that.prerequisites,_that.careerOpportunities);case _:
+return $default(_that.id,_that.name,_that.category,_that.members,_that.leads,_that.mentors,_that.about,_that.resource,_that.icon,_that.code,_that.prerequisites,_that.careerOpportunities,_that.iconImage,_that.coverImage,_that.officeHours,_that.impactProjects);case _:
   return null;
 
 }
@@ -220,7 +224,7 @@ return $default(_that.id,_that.name,_that.category,_that.members,_that.leads,_th
 @JsonSerializable()
 
 class _InterestGroupSummaryDto extends InterestGroupSummaryDto {
-  const _InterestGroupSummaryDto({required this.id, required this.name, this.category, this.members, final  List<IgPersonRefDto>? leads, final  List<IgPersonRefDto>? mentors, this.about, this.resource, this.icon, this.code, @JsonKey(fromJson: _stringListFromJson) final  List<String>? prerequisites, @JsonKey(fromJson: _stringListFromJson) final  List<String>? careerOpportunities}): _leads = leads,_mentors = mentors,_prerequisites = prerequisites,_careerOpportunities = careerOpportunities,super._();
+  const _InterestGroupSummaryDto({required this.id, required this.name, this.category, this.members, final  List<IgPersonRefDto>? leads, final  List<IgPersonRefDto>? mentors, this.about, this.resource, this.icon, this.code, @JsonKey(fromJson: _stringListFromJson) final  List<String>? prerequisites, @JsonKey(fromJson: _stringListFromJson) final  List<String>? careerOpportunities, this.iconImage, this.coverImage, this.officeHours, final  List<Map<String, dynamic>>? impactProjects}): _leads = leads,_mentors = mentors,_prerequisites = prerequisites,_careerOpportunities = careerOpportunities,_impactProjects = impactProjects,super._();
   factory _InterestGroupSummaryDto.fromJson(Map<String, dynamic> json) => _$InterestGroupSummaryDtoFromJson(json);
 
 @override final  String id;
@@ -267,6 +271,18 @@ class _InterestGroupSummaryDto extends InterestGroupSummaryDto {
   return EqualUnmodifiableListView(value);
 }
 
+@override final  String? iconImage;
+@override final  String? coverImage;
+@override final  String? officeHours;
+ final  List<Map<String, dynamic>>? _impactProjects;
+@override List<Map<String, dynamic>>? get impactProjects {
+  final value = _impactProjects;
+  if (value == null) return null;
+  if (_impactProjects is EqualUnmodifiableListView) return _impactProjects;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
 
 /// Create a copy of InterestGroupSummaryDto
 /// with the given fields replaced by the non-null parameter values.
@@ -281,16 +297,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _InterestGroupSummaryDto&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.category, category) || other.category == category)&&(identical(other.members, members) || other.members == members)&&const DeepCollectionEquality().equals(other._leads, _leads)&&const DeepCollectionEquality().equals(other._mentors, _mentors)&&(identical(other.about, about) || other.about == about)&&(identical(other.resource, resource) || other.resource == resource)&&(identical(other.icon, icon) || other.icon == icon)&&(identical(other.code, code) || other.code == code)&&const DeepCollectionEquality().equals(other._prerequisites, _prerequisites)&&const DeepCollectionEquality().equals(other._careerOpportunities, _careerOpportunities));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _InterestGroupSummaryDto&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.category, category) || other.category == category)&&(identical(other.members, members) || other.members == members)&&const DeepCollectionEquality().equals(other._leads, _leads)&&const DeepCollectionEquality().equals(other._mentors, _mentors)&&(identical(other.about, about) || other.about == about)&&(identical(other.resource, resource) || other.resource == resource)&&(identical(other.icon, icon) || other.icon == icon)&&(identical(other.code, code) || other.code == code)&&const DeepCollectionEquality().equals(other._prerequisites, _prerequisites)&&const DeepCollectionEquality().equals(other._careerOpportunities, _careerOpportunities)&&(identical(other.iconImage, iconImage) || other.iconImage == iconImage)&&(identical(other.coverImage, coverImage) || other.coverImage == coverImage)&&(identical(other.officeHours, officeHours) || other.officeHours == officeHours)&&const DeepCollectionEquality().equals(other._impactProjects, _impactProjects));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,category,members,const DeepCollectionEquality().hash(_leads),const DeepCollectionEquality().hash(_mentors),about,resource,icon,code,const DeepCollectionEquality().hash(_prerequisites),const DeepCollectionEquality().hash(_careerOpportunities));
+int get hashCode => Object.hash(runtimeType,id,name,category,members,const DeepCollectionEquality().hash(_leads),const DeepCollectionEquality().hash(_mentors),about,resource,icon,code,const DeepCollectionEquality().hash(_prerequisites),const DeepCollectionEquality().hash(_careerOpportunities),iconImage,coverImage,officeHours,const DeepCollectionEquality().hash(_impactProjects));
 
 @override
 String toString() {
-  return 'InterestGroupSummaryDto(id: $id, name: $name, category: $category, members: $members, leads: $leads, mentors: $mentors, about: $about, resource: $resource, icon: $icon, code: $code, prerequisites: $prerequisites, careerOpportunities: $careerOpportunities)';
+  return 'InterestGroupSummaryDto(id: $id, name: $name, category: $category, members: $members, leads: $leads, mentors: $mentors, about: $about, resource: $resource, icon: $icon, code: $code, prerequisites: $prerequisites, careerOpportunities: $careerOpportunities, iconImage: $iconImage, coverImage: $coverImage, officeHours: $officeHours, impactProjects: $impactProjects)';
 }
 
 
@@ -301,7 +317,7 @@ abstract mixin class _$InterestGroupSummaryDtoCopyWith<$Res> implements $Interes
   factory _$InterestGroupSummaryDtoCopyWith(_InterestGroupSummaryDto value, $Res Function(_InterestGroupSummaryDto) _then) = __$InterestGroupSummaryDtoCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String name, String? category, int? members, List<IgPersonRefDto>? leads, List<IgPersonRefDto>? mentors, String? about, String? resource, String? icon, String? code,@JsonKey(fromJson: _stringListFromJson) List<String>? prerequisites,@JsonKey(fromJson: _stringListFromJson) List<String>? careerOpportunities
+ String id, String name, String? category, int? members, List<IgPersonRefDto>? leads, List<IgPersonRefDto>? mentors, String? about, String? resource, String? icon, String? code,@JsonKey(fromJson: _stringListFromJson) List<String>? prerequisites,@JsonKey(fromJson: _stringListFromJson) List<String>? careerOpportunities, String? iconImage, String? coverImage, String? officeHours, List<Map<String, dynamic>>? impactProjects
 });
 
 
@@ -318,7 +334,7 @@ class __$InterestGroupSummaryDtoCopyWithImpl<$Res>
 
 /// Create a copy of InterestGroupSummaryDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? category = freezed,Object? members = freezed,Object? leads = freezed,Object? mentors = freezed,Object? about = freezed,Object? resource = freezed,Object? icon = freezed,Object? code = freezed,Object? prerequisites = freezed,Object? careerOpportunities = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? category = freezed,Object? members = freezed,Object? leads = freezed,Object? mentors = freezed,Object? about = freezed,Object? resource = freezed,Object? icon = freezed,Object? code = freezed,Object? prerequisites = freezed,Object? careerOpportunities = freezed,Object? iconImage = freezed,Object? coverImage = freezed,Object? officeHours = freezed,Object? impactProjects = freezed,}) {
   return _then(_InterestGroupSummaryDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -332,7 +348,11 @@ as String?,icon: freezed == icon ? _self.icon : icon // ignore: cast_nullable_to
 as String?,code: freezed == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String?,prerequisites: freezed == prerequisites ? _self._prerequisites : prerequisites // ignore: cast_nullable_to_non_nullable
 as List<String>?,careerOpportunities: freezed == careerOpportunities ? _self._careerOpportunities : careerOpportunities // ignore: cast_nullable_to_non_nullable
-as List<String>?,
+as List<String>?,iconImage: freezed == iconImage ? _self.iconImage : iconImage // ignore: cast_nullable_to_non_nullable
+as String?,coverImage: freezed == coverImage ? _self.coverImage : coverImage // ignore: cast_nullable_to_non_nullable
+as String?,officeHours: freezed == officeHours ? _self.officeHours : officeHours // ignore: cast_nullable_to_non_nullable
+as String?,impactProjects: freezed == impactProjects ? _self._impactProjects : impactProjects // ignore: cast_nullable_to_non_nullable
+as List<Map<String, dynamic>>?,
   ));
 }
 

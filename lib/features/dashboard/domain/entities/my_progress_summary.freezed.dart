@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MyProgressSummary {
 
- String get fullName; String get muid; int get karma; String? get level; String? get profilePicUrl; int? get rank; double? get percentile;
+ String get fullName; String get muid; int get karma; String? get level; String? get profilePicUrl; int? get rank; double? get percentile; int get interestGroupCount;
 /// Create a copy of MyProgressSummary
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $MyProgressSummaryCopyWith<MyProgressSummary> get copyWith => _$MyProgressSummar
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MyProgressSummary&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.level, level) || other.level == level)&&(identical(other.profilePicUrl, profilePicUrl) || other.profilePicUrl == profilePicUrl)&&(identical(other.rank, rank) || other.rank == rank)&&(identical(other.percentile, percentile) || other.percentile == percentile));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MyProgressSummary&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.level, level) || other.level == level)&&(identical(other.profilePicUrl, profilePicUrl) || other.profilePicUrl == profilePicUrl)&&(identical(other.rank, rank) || other.rank == rank)&&(identical(other.percentile, percentile) || other.percentile == percentile)&&(identical(other.interestGroupCount, interestGroupCount) || other.interestGroupCount == interestGroupCount));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,fullName,muid,karma,level,profilePicUrl,rank,percentile);
+int get hashCode => Object.hash(runtimeType,fullName,muid,karma,level,profilePicUrl,rank,percentile,interestGroupCount);
 
 @override
 String toString() {
-  return 'MyProgressSummary(fullName: $fullName, muid: $muid, karma: $karma, level: $level, profilePicUrl: $profilePicUrl, rank: $rank, percentile: $percentile)';
+  return 'MyProgressSummary(fullName: $fullName, muid: $muid, karma: $karma, level: $level, profilePicUrl: $profilePicUrl, rank: $rank, percentile: $percentile, interestGroupCount: $interestGroupCount)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $MyProgressSummaryCopyWith<$Res>  {
   factory $MyProgressSummaryCopyWith(MyProgressSummary value, $Res Function(MyProgressSummary) _then) = _$MyProgressSummaryCopyWithImpl;
 @useResult
 $Res call({
- String fullName, String muid, int karma, String? level, String? profilePicUrl, int? rank, double? percentile
+ String fullName, String muid, int karma, String? level, String? profilePicUrl, int? rank, double? percentile, int interestGroupCount
 });
 
 
@@ -62,7 +62,7 @@ class _$MyProgressSummaryCopyWithImpl<$Res>
 
 /// Create a copy of MyProgressSummary
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? fullName = null,Object? muid = null,Object? karma = null,Object? level = freezed,Object? profilePicUrl = freezed,Object? rank = freezed,Object? percentile = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? fullName = null,Object? muid = null,Object? karma = null,Object? level = freezed,Object? profilePicUrl = freezed,Object? rank = freezed,Object? percentile = freezed,Object? interestGroupCount = null,}) {
   return _then(_self.copyWith(
 fullName: null == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
 as String,muid: null == muid ? _self.muid : muid // ignore: cast_nullable_to_non_nullable
@@ -71,7 +71,8 @@ as int,level: freezed == level ? _self.level : level // ignore: cast_nullable_to
 as String?,profilePicUrl: freezed == profilePicUrl ? _self.profilePicUrl : profilePicUrl // ignore: cast_nullable_to_non_nullable
 as String?,rank: freezed == rank ? _self.rank : rank // ignore: cast_nullable_to_non_nullable
 as int?,percentile: freezed == percentile ? _self.percentile : percentile // ignore: cast_nullable_to_non_nullable
-as double?,
+as double?,interestGroupCount: null == interestGroupCount ? _self.interestGroupCount : interestGroupCount // ignore: cast_nullable_to_non_nullable
+as int,
   ));
 }
 
@@ -156,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String fullName,  String muid,  int karma,  String? level,  String? profilePicUrl,  int? rank,  double? percentile)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String fullName,  String muid,  int karma,  String? level,  String? profilePicUrl,  int? rank,  double? percentile,  int interestGroupCount)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MyProgressSummary() when $default != null:
-return $default(_that.fullName,_that.muid,_that.karma,_that.level,_that.profilePicUrl,_that.rank,_that.percentile);case _:
+return $default(_that.fullName,_that.muid,_that.karma,_that.level,_that.profilePicUrl,_that.rank,_that.percentile,_that.interestGroupCount);case _:
   return orElse();
 
 }
@@ -177,10 +178,10 @@ return $default(_that.fullName,_that.muid,_that.karma,_that.level,_that.profileP
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String fullName,  String muid,  int karma,  String? level,  String? profilePicUrl,  int? rank,  double? percentile)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String fullName,  String muid,  int karma,  String? level,  String? profilePicUrl,  int? rank,  double? percentile,  int interestGroupCount)  $default,) {final _that = this;
 switch (_that) {
 case _MyProgressSummary():
-return $default(_that.fullName,_that.muid,_that.karma,_that.level,_that.profilePicUrl,_that.rank,_that.percentile);case _:
+return $default(_that.fullName,_that.muid,_that.karma,_that.level,_that.profilePicUrl,_that.rank,_that.percentile,_that.interestGroupCount);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -197,10 +198,10 @@ return $default(_that.fullName,_that.muid,_that.karma,_that.level,_that.profileP
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String fullName,  String muid,  int karma,  String? level,  String? profilePicUrl,  int? rank,  double? percentile)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String fullName,  String muid,  int karma,  String? level,  String? profilePicUrl,  int? rank,  double? percentile,  int interestGroupCount)?  $default,) {final _that = this;
 switch (_that) {
 case _MyProgressSummary() when $default != null:
-return $default(_that.fullName,_that.muid,_that.karma,_that.level,_that.profilePicUrl,_that.rank,_that.percentile);case _:
+return $default(_that.fullName,_that.muid,_that.karma,_that.level,_that.profilePicUrl,_that.rank,_that.percentile,_that.interestGroupCount);case _:
   return null;
 
 }
@@ -212,7 +213,7 @@ return $default(_that.fullName,_that.muid,_that.karma,_that.level,_that.profileP
 
 
 class _MyProgressSummary implements MyProgressSummary {
-  const _MyProgressSummary({required this.fullName, required this.muid, required this.karma, this.level, this.profilePicUrl, this.rank, this.percentile});
+  const _MyProgressSummary({required this.fullName, required this.muid, required this.karma, this.level, this.profilePicUrl, this.rank, this.percentile, this.interestGroupCount = 0});
   
 
 @override final  String fullName;
@@ -222,6 +223,7 @@ class _MyProgressSummary implements MyProgressSummary {
 @override final  String? profilePicUrl;
 @override final  int? rank;
 @override final  double? percentile;
+@override@JsonKey() final  int interestGroupCount;
 
 /// Create a copy of MyProgressSummary
 /// with the given fields replaced by the non-null parameter values.
@@ -233,16 +235,16 @@ _$MyProgressSummaryCopyWith<_MyProgressSummary> get copyWith => __$MyProgressSum
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MyProgressSummary&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.level, level) || other.level == level)&&(identical(other.profilePicUrl, profilePicUrl) || other.profilePicUrl == profilePicUrl)&&(identical(other.rank, rank) || other.rank == rank)&&(identical(other.percentile, percentile) || other.percentile == percentile));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MyProgressSummary&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.level, level) || other.level == level)&&(identical(other.profilePicUrl, profilePicUrl) || other.profilePicUrl == profilePicUrl)&&(identical(other.rank, rank) || other.rank == rank)&&(identical(other.percentile, percentile) || other.percentile == percentile)&&(identical(other.interestGroupCount, interestGroupCount) || other.interestGroupCount == interestGroupCount));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,fullName,muid,karma,level,profilePicUrl,rank,percentile);
+int get hashCode => Object.hash(runtimeType,fullName,muid,karma,level,profilePicUrl,rank,percentile,interestGroupCount);
 
 @override
 String toString() {
-  return 'MyProgressSummary(fullName: $fullName, muid: $muid, karma: $karma, level: $level, profilePicUrl: $profilePicUrl, rank: $rank, percentile: $percentile)';
+  return 'MyProgressSummary(fullName: $fullName, muid: $muid, karma: $karma, level: $level, profilePicUrl: $profilePicUrl, rank: $rank, percentile: $percentile, interestGroupCount: $interestGroupCount)';
 }
 
 
@@ -253,7 +255,7 @@ abstract mixin class _$MyProgressSummaryCopyWith<$Res> implements $MyProgressSum
   factory _$MyProgressSummaryCopyWith(_MyProgressSummary value, $Res Function(_MyProgressSummary) _then) = __$MyProgressSummaryCopyWithImpl;
 @override @useResult
 $Res call({
- String fullName, String muid, int karma, String? level, String? profilePicUrl, int? rank, double? percentile
+ String fullName, String muid, int karma, String? level, String? profilePicUrl, int? rank, double? percentile, int interestGroupCount
 });
 
 
@@ -270,7 +272,7 @@ class __$MyProgressSummaryCopyWithImpl<$Res>
 
 /// Create a copy of MyProgressSummary
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? fullName = null,Object? muid = null,Object? karma = null,Object? level = freezed,Object? profilePicUrl = freezed,Object? rank = freezed,Object? percentile = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? fullName = null,Object? muid = null,Object? karma = null,Object? level = freezed,Object? profilePicUrl = freezed,Object? rank = freezed,Object? percentile = freezed,Object? interestGroupCount = null,}) {
   return _then(_MyProgressSummary(
 fullName: null == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
 as String,muid: null == muid ? _self.muid : muid // ignore: cast_nullable_to_non_nullable
@@ -279,7 +281,8 @@ as int,level: freezed == level ? _self.level : level // ignore: cast_nullable_to
 as String?,profilePicUrl: freezed == profilePicUrl ? _self.profilePicUrl : profilePicUrl // ignore: cast_nullable_to_non_nullable
 as String?,rank: freezed == rank ? _self.rank : rank // ignore: cast_nullable_to_non_nullable
 as int?,percentile: freezed == percentile ? _self.percentile : percentile // ignore: cast_nullable_to_non_nullable
-as double?,
+as double?,interestGroupCount: null == interestGroupCount ? _self.interestGroupCount : interestGroupCount // ignore: cast_nullable_to_non_nullable
+as int,
   ));
 }
 

@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:mulearn_app/core/network/api_envelope.dart';
 import 'package:mulearn_app/core/network/api_paths.dart';
+import 'package:mulearn_app/core/network/paging.dart';
+import 'package:mulearn_app/features/learning_circles/domain/entities/circle_filter.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/meeting_form.dart';
 
 class LearningCirclesRemoteDataSource {
@@ -21,10 +23,16 @@ class LearningCirclesRemoteDataSource {
 
   // --- Circles ---
 
-  Future<Map<String, dynamic>> fetchCircles({int page = 1}) async {
+  /// `GET /api/v1/dashboard/learningcircle/list/?pageIndex=&perPage=`. The
+  /// backend pages with `pageIndex` and ignores `page`
+  /// (`learningcircle_views.py:102-138`).
+  Future<Map<String, dynamic>> fetchCircles({
+    required int pageIndex,
+    CircleFilter filter = const CircleFilter(),
+  }) async {
     final response = await _dio.get<dynamic>(
       ApiPaths.circlesList,
-      queryParameters: {'page': page},
+      queryParameters: {...PageIndexPaging.query(pageIndex), ...filter.query},
     );
     return ApiEnvelope.unwrapObject(response);
   }
@@ -104,17 +112,6 @@ class LearningCirclesRemoteDataSource {
     return ApiEnvelope.unwrapObject(response);
   }
 
-  Future<void> approveMember(
-    String id, {
-    required String muid,
-    required bool accept,
-  }) async {
-    final response = await _dio.post<dynamic>(
-      ApiPaths.circleMembersAdd(id),
-      data: {'muid': muid, 'flag': accept},
-    );
-    ApiEnvelope.unwrapObject(response);
-  }
 
   Future<void> transferLead(String id, {required String muid}) async {
     final response = await _dio.post<dynamic>(
@@ -150,13 +147,26 @@ class LearningCirclesRemoteDataSource {
 
   // --- Invites ---
 
-  Future<void> sendInvite(String id, {required String muid}) async {
+  /// `POST invite/<id>/ {muid, lead}` — `lead: true` invites a co-lead
+  /// (CircleInviteSerializer).
+  Future<void> sendInvite(String id, {required String muid, bool asLead = false}) async {
     final response = await _dio.post<dynamic>(
       ApiPaths.circleInvite(id),
-      data: {'muid': muid},
+      data: {'muid': muid, 'lead': asLead},
     );
     ApiEnvelope.unwrapObject(response);
   }
+
+  Future<void> leaveCircle(String id) async =>
+      ApiEnvelope.unwrapObject(await _dio.delete<dynamic>(ApiPaths.circleLeave(id)));
+
+  Future<void> removeMember(String id, {required String muid}) async =>
+      ApiEnvelope.unwrapObject(await _dio.delete<dynamic>(ApiPaths.circleMemberRemove(id), data: {'muid': muid}));
+
+  /// `DELETE meeting/rsvp/<id>/` — refused after joining or within 30
+  /// minutes of the start.
+  Future<void> cancelRsvp(String meetingId) async =>
+      ApiEnvelope.unwrapObject(await _dio.delete<dynamic>(ApiPaths.meetingRsvp(meetingId)));
 
   Future<List<dynamic>> fetchSentInvites(String id) async {
     final response = await _dio.get<dynamic>(ApiPaths.circleInviteSent(id));
@@ -168,19 +178,29 @@ class LearningCirclesRemoteDataSource {
     return ApiEnvelope.unwrapList(response);
   }
 
+  /// `POST learningcircle/invite/status/<linkId>/` — the backend requires
+  /// `action` ∈ {accept, reject} (CircleInviteStatusAPI.post).
   Future<void> respondToInvite(String linkId, {required bool accept}) async {
     final response = await _dio.post<dynamic>(
       ApiPaths.circleInviteRespond(linkId),
-      data: {'is_accepted': accept},
+      data: {'action': accept ? 'accept' : 'reject'},
     );
     ApiEnvelope.unwrapObject(response);
   }
 
   // --- Meetings ---
 
-  Future<List<dynamic>> fetchCircleMeetings(String circleId) async {
-    final response = await _dio.get<dynamic>(ApiPaths.meetingList(circleId));
-    return ApiEnvelope.unwrapList(response);
+  /// `GET .../meeting/list/<circle_id>/` — paginated (`{data, pagination}`)
+  /// since backend 5dd14fa0.
+  Future<Map<String, dynamic>> fetchCircleMeetings(
+    String circleId, {
+    required int pageIndex,
+  }) async {
+    final response = await _dio.get<dynamic>(
+      ApiPaths.meetingList(circleId),
+      queryParameters: PageIndexPaging.query(pageIndex),
+    );
+    return ApiEnvelope.unwrapObject(response);
   }
 
   Future<Map<String, dynamic>> fetchMeetingDetail(String id) async {

@@ -93,20 +93,21 @@ class AuthRemoteDataSource {
   }
 
   /// `POST /api/v1/auth/apple-mobile/` — exchanges a native Sign in with
-  /// Apple identity token for an app session.
+  /// Apple identity token for an app session. Only the token is sent: the
+  /// authserver takes the email from the verified token, and an older
+  /// deployment trusted a client-supplied `email`, so the app never sends one.
   Future<Map<String, dynamic>> authenticateWithApple({
     required String identityToken,
-    String? email,
   }) async {
     final response = await _dio.post<dynamic>(
       ApiPaths.appleMobileLogin,
       data: {
         'identity_token': identityToken,
         'identityToken': identityToken,
-        if (email != null) 'email': email,
       },
       options: Options(headers: {RequestFlags.skipAuth: true}),
     );
     return ApiEnvelope.unwrapObject(response);
   }
+
 }

@@ -1,0 +1,23 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "POST /api/v1/dashboard/achievement/claim/f98238dc-b660-4dcf-aa63-e765fadeb4a3/",
+    "account": "student",
+    "status": 200,
+    "recorded_at": "2026-11-13T06:01:34.984357+00:00",
+    "note": "QA-only achievements seeded for Plan 3 Task 7 and removed afterwards"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": [
+        "Achievement claimed successfully!"
+      ]
+    },
+    "response": {
+      "achievement_name": "QA Starter Badge",
+      "vc_pending": false
+    }
+  }
+}

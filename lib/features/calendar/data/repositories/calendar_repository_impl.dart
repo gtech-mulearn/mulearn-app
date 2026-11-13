@@ -1,7 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
+import 'package:mulearn_app/core/network/tolerant_parse.dart';
 import 'package:mulearn_app/features/calendar/data/datasources/calendar_remote_datasource.dart';
 import 'package:mulearn_app/features/calendar/data/dtos/calendar_entry_dto.dart';
+import 'package:mulearn_app/features/calendar/data/dtos/calendar_session_dto.dart';
 import 'package:mulearn_app/features/calendar/domain/entities/calendar_entry.dart';
 import 'package:mulearn_app/features/calendar/domain/entities/calendar_entry_kind.dart';
 import 'package:mulearn_app/features/calendar/domain/repositories/calendar_repository.dart';
@@ -24,22 +26,23 @@ class CalendarRepositoryImpl implements CalendarRepository {
         final events = payload['events'] as Map<String, dynamic>? ?? {};
         final sessions = payload['sessions'] as Map<String, dynamic>? ?? {};
         return [
-          ..._flatten(events, CalendarEntryKind.event),
-          ..._flatten(sessions, CalendarEntryKind.session),
+          ...parseEachOrReport(
+            _bucketItems(events),
+            (json) => CalendarEntryDto.fromJson(json).toDomain(CalendarEntryKind.event),
+            what: 'CalendarEntryDto',
+          ),
+          ...parseEachOrReport(
+            _bucketItems(sessions),
+            (json) => CalendarSessionDto.fromJson(json).toDomain(),
+            what: 'CalendarSessionDto',
+          ),
         ];
       });
 
-  List<CalendarEntry> _flatten(
-    Map<String, dynamic> buckets,
-    CalendarEntryKind kind,
-  ) {
-    const bucketKeys = ['upcoming', 'ongoing', 'completed'];
-    return bucketKeys
-        .expand((key) => buckets[key] as List<dynamic>? ?? [])
-        .cast<Map<String, dynamic>>()
-        .map((json) => CalendarEntryDto.fromJson(json).toDomain(kind))
-        .toList();
-  }
+  /// Items from the `upcoming`, `ongoing` and `completed` buckets, in order.
+  Iterable<dynamic> _bucketItems(Map<String, dynamic> buckets) =>
+      const ['upcoming', 'ongoing', 'completed']
+          .expand((key) => buckets[key] as List<dynamic>? ?? const []);
 
   String _isoDate(DateTime date) =>
       '${date.year.toString().padLeft(4, '0')}-'

@@ -63,7 +63,7 @@ final class RegisterWizardControllerProvider
 }
 
 String _$registerWizardControllerHash() =>
-    r'4636b5af091828c381989cbb251271af8fc0238d';
+    r'bd68c88e2e9f496d710d32e24b578fa4b0254b02';
 
 /// Holds steps 1–2's data (basic info + role) across the separate screens
 /// that make up the registration flow.

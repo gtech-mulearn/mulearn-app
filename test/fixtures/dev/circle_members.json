@@ -1,0 +1,52 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/learningcircle/members/463e9e4a-7255-431d-95f9-5bd181a48d12/",
+    "account": "student",
+    "status": 200,
+    "recorded_at": "2026-11-13T06:18:35.052558Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": [
+        "Learning Circle member details fetched successfully"
+      ]
+    },
+    "response": {
+      "owner": {
+        "id": "7580336f-0198-4d8b-b015-ad64f2a4abb1",
+        "full_name": "Fixture User",
+        "profile_pic": null,
+        "muid": "fixture-user@mulearn"
+      },
+      "members": [
+        {
+          "id": "04afe242-e329-4491-af58-d555abd82e5f",
+          "full_name": "Fixture User",
+          "profile_pic": null,
+          "muid": "qastudentone@mulearn",
+          "ig_karma": 0,
+          "is_leader": false
+        },
+        {
+          "id": "6b18a0a4-61ba-4a18-92af-540a33166eb2",
+          "full_name": "Fixture User",
+          "profile_pic": null,
+          "muid": "fixture-user@mulearn",
+          "ig_karma": 0,
+          "is_leader": false
+        },
+        {
+          "id": "7580336f-0198-4d8b-b015-ad64f2a4abb1",
+          "full_name": "Fixture User",
+          "profile_pic": null,
+          "muid": "fixture-user@mulearn",
+          "ig_karma": 0,
+          "is_leader": true
+        }
+      ]
+    }
+  }
+}

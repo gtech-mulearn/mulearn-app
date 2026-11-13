@@ -18,6 +18,7 @@ abstract class MyProgressSummaryDto with _$MyProgressSummaryDto {
     String? profilePic,
     num? rank,
     num? percentile,
+    @Default(<dynamic>[]) List<dynamic> interestGroups,
   }) = _MyProgressSummaryDto;
 
   const MyProgressSummaryDto._();
@@ -33,5 +34,6 @@ abstract class MyProgressSummaryDto with _$MyProgressSummaryDto {
         profilePicUrl: profilePic,
         rank: rank?.toInt(),
         percentile: percentile?.toDouble(),
+        interestGroupCount: interestGroups.length,
       );
 }

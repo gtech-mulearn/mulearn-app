@@ -393,7 +393,7 @@ final class ChangeCollegeControllerProvider
 }
 
 String _$changeCollegeControllerHash() =>
-    r'8cb9ae311586e17b9d68118a2ae9d0e3abad26ce';
+    r'a6a5ff24d76af138553fb413970e531f84df7dfc';
 
 /// Submits the college-change request, then refreshes the main profile so
 /// the sidebar reflects the new college/department.

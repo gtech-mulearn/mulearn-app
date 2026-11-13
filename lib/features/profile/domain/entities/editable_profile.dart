@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:mulearn_app/core/models/reference_option.dart';
 import 'package:mulearn_app/features/profile/domain/entities/district_location.dart';
 
 part 'editable_profile.freezed.dart';
@@ -16,5 +17,6 @@ abstract class EditableProfile with _$EditableProfile {
     required String dob,
     DistrictLocation? district,
     @Default([]) List<String> communities,
+    ReferenceOption? department,
   }) = _EditableProfile;
 }

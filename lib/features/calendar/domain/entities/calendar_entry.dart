@@ -3,11 +3,10 @@ import 'package:mulearn_app/features/calendar/domain/entities/calendar_entry_kin
 
 part 'calendar_entry.freezed.dart';
 
-/// A single row on the calendar — either an event or a learning-circle
-/// session, both flattened from `calendar/events/`'s
-/// `{events,sessions}.{upcoming,ongoing,completed}` buckets into one list;
-/// [kind] records which top-level bucket it came from since the entry shape
-/// itself doesn't distinguish them.
+/// A single row on the calendar — an event or, for mentors, a mentorship
+/// session — flattened from `calendar/events/`'s
+/// `{events,sessions}.{upcoming,ongoing,completed}` buckets into one list.
+/// [kind] records which top-level bucket it came from.
 @freezed
 abstract class CalendarEntry with _$CalendarEntry {
   const factory CalendarEntry({

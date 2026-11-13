@@ -118,7 +118,7 @@ class _SplashScreenState extends State<SplashScreen>
                         child: Text(
                           'μ',
                           style: MuType.display.copyWith(
-                            color: Colors.white,
+                            color: MuColors.onBrand,
                             fontSize: 36,
                             height: 1,
                           ),
@@ -136,13 +136,13 @@ class _SplashScreenState extends State<SplashScreen>
                 children: [
                   Text(
                     'μLearn',
-                    style: MuType.headline.copyWith(color: Colors.white),
+                    style: MuType.headline.copyWith(color: MuColors.onBrand),
                   ),
                   const SizedBox(height: MuSpace.xs),
                   Text(
                     'a GTech initiative',
                     style: MuType.caption.copyWith(
-                      color: Colors.white.withValues(alpha: 0.5),
+                      color: MuColors.onBrand.withValues(alpha: 0.5),
                       letterSpacing: 0.4,
                     ),
                   ),
@@ -157,7 +157,7 @@ class _SplashScreenState extends State<SplashScreen>
                 height: 24,
                 child: CircularProgressIndicator(
                   strokeWidth: 2.5,
-                  valueColor: AlwaysStoppedAnimation(Colors.white),
+                  valueColor: AlwaysStoppedAnimation(MuColors.onBrand),
                 ),
               ),
             ),
