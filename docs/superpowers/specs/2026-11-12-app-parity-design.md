@@ -195,3 +195,31 @@ Findings for later plans:
 - `lib/core/config/env.g.dart` is committed and bakes `.env.prod` values (only public hosts today) — revisit in hardening.
 - Profile's `InterestGroupsEditController` (ig-edit) is dead code.
 - Received circle invites carry `is_lead_invite`; the inbox could say "as co-lead".
+
+## 15. Gap status after Plan 4 (2026-11-13)
+
+Plan 4 (`docs/superpowers/plans/2026-11-13-plan-4-role-workspaces.md`) ran inline on `feat/app-parity`; every commit passed analyze + the full suite on its own (498 tests at the end). Before Task 2 the Plan 3 final review's three Important findings were fixed (`bfd9240`), and two user requests were done in between: illustrated empty states as on the dashboard (`bb4fd0b`) and the dashboard's logo instead of a typed μ (`2c83bec`). After phone feedback ("rows are not clickable … think about all these little things like an apple ux engineer") the mentor screens got a UX pass (`8d86440`); that standard now applies to every screen.
+
+| Item | Status | Evidence / what is pending |
+|---|---|---|
+| ROLE-02 pending-role banner | Done | `e104897`: `core/session/workspace_access.dart` decides each workspace from roles, mentor applications and `role_verification`; the dashboard's "<Role> account pending verification" banner on Home and Profile; `WorkspaceGate` never builds a workspace for a pending or foreign role. A person can hold several roles; each is decided on its own (`4df801a`). |
+| UX-01 role-aware Home | Done | Home cards and Profile rows per open workspace (`bbea9a7`, `e553d37`, `03915e3`); not new tabs (§8.2 item 5). |
+| FEAT-10 M1 mentor hub | Done — phone: seen | `bbea9a7`, `8d86440`: next session (Join from 15 min before), requests, profile completion, totals, scopes. |
+| FEAT-10 M2 sessions | Done — phone: seen | `e247234`, `8d86440`: filters, Today/Tomorrow, create (scope or IG, mode rules, UTC, repeat), edit, delete; after create the session opens. Live: create/edit/refusal/delete. |
+| FEAT-10 M3 session detail | Done | `9d6d066`, `8d86440`: link with Copy/Open/Join, Directions, attendance (rollback), add participant, complete (warns before the start). Live: attendance, complete, second complete refused. |
+| FEAT-10 M4 requests | Done | `e4834e2`: approve as proposed or with changes, reject; **verify is PATCH** (the plan said POST; dev 405). Live: approve with a link, raced answer, reject. |
+| FEAT-10 M5 availability | Done | `0a4dc83`: slots by weekday, pause switch, add/edit/delete, overlap hint. Live: create, pause/resume, refusals. |
+| FEAT-10 M6 persona | Done | `0ed151c`: "Acting as …" sheet (scopes + Learner); default scope for new sessions. Live: switch and back. |
+| FEAT-11 K1 campus overview | Done | `e553d37`: headline numbers, funnel, circle health (slow/inactive open the circle), weekly karma, activity, top students. |
+| FEAT-11 K2 students | Done | `e10b453`: search, sort, alumni; student page with activity (serializer fixture — no karma on dev). |
+| FEAT-11 K3 circles and groups | Done | `8bc88d8`: rows open the existing pages; the `<id>/members/` endpoints (500 on dev) are never called. |
+| FEAT-11 K4 approvals | Done | `2b3b604`: college links + invites (Campus Lead), campus events (all campus roles). Live: invite declined, repeat refused. Pending links/events built from serializers (not seedable with QA accounts). |
+| FEAT-11 K5 enabler campuses | Done | `03915e3`: campuses with totals, notes with priority/follow-up; one [QA] note left on dev (no delete API). |
+
+Device checks still pending (HyperOS blocks adb taps): the campus and enabler screens as the QA campus lead / enabler; requests, availability and persona as the QA mentor; the splash and sign-in logos; the Leaderboard header at 360 dp.
+
+Residue on dev (QA only): one Wednesday availability slot and one seeded student request for the phone check (scratch `p4t5_seed.py cleanup` removes the request); one enabler note; one cancelled [QA] admin event; the QA user "QA Pending Link".
+
+Findings for later plans:
+- Relative labels ("Starts in 10 min", Join) refresh on rebuild or pull, not on a local ticking clock; a 1-minute UI ticker (no backend calls) belongs in hardening.
+- `campus-details` and `home-summary` count active members over different windows (22 vs 16 on dev); the app shows home-summary only.

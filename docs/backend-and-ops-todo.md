@@ -56,6 +56,13 @@ Work the app needs but can't do itself: this round changes no backend, authserve
 | 13 | No `ETag`/`Last-Modified` on read endpoints | Refetches full bodies on refresh | Conditional GETs (`304`) for the profile, summary, feed and catalogs |
 | 14 | Two rank definitions: the learner summary's `stats.rank` (wallets with more karma + 1) vs the profile's rank (2 vs 15 for the same user, dev 2026-11-13) | Home and Profile show the profile's rank | One rank definition, or name them differently |
 | 15 | Event-linked tasks are created `active: false` ("Pending admin approval") | Lists only active linked tasks | Nothing, if approval is intended; otherwise document who approves |
+| 16 | `campus/student-list/`, `campus/igs/<id>/members/`, `campus/learning-circles/<id>/members/` and `mentor/activity/` return 500 on dev (2026-11-13) | Uses `student-details` (as the dashboard); circle/group rows open the public pages; mentor activity not shown | Fix the four views, or remove them |
+| 17 | A Mentor's `role_verification` row stays `is_verified: false` after the application is APPROVED | Mentor access follows the application, as the dashboard does | Verify the role when the application is approved |
+| 18 | A self-registered Enabler or Campus Lead is served campus data: the JWT ignores `verified` | The app gates on `role_verification` and shows "pending verification" | Check role verification in `campus_staff_required` and the enabler views |
+| 19 | Enabler campus notes have no edit or delete, and `POST` returns only a message (no note) | Notes are add-only; the list reloads after adding | PATCH/DELETE for notes; return the created note |
+| 20 | `POST mentor/session/student-requests/<id>/verify/` is 405 — the view is PATCH only, while some docs say POST | Uses PATCH | Align the docs (or accept both) |
+| 21 | Deleting an event through `DELETE events/manage/<id>/` cancels it ("Event has been cancelled.") rather than deleting | — | Document it, or add a hard delete for drafts |
+| 22 | `campus-details` and `campus/home-summary` count active members over different windows (22 vs 16 for the same campus) | Shows home-summary only | One definition, or label the window |
 
 ## Dashboard (web) findings
 
