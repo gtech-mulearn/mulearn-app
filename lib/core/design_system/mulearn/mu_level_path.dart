@@ -125,8 +125,10 @@ class _Stop extends StatelessWidget {
 
     final trailing = switch (stop.state) {
       MuStopState.done => const MuPill('', tone: MuPillTone.success, icon: LucideIcons.check),
-      MuStopState.now when stop.progress != null => MuPill('${(stop.progress! * 100).round()}%', tone: MuPillTone.volt),
-      MuStopState.now => null,
+      MuStopState.now => MuPill(
+        stop.progress == null ? "You're here" : "You're here · ${(stop.progress! * 100).round()}%",
+        tone: MuPillTone.volt,
+      ),
       MuStopState.locked => Icon(LucideIcons.lock, size: MuSizes.iconSm, color: c.ink3),
     };
 
@@ -166,7 +168,7 @@ class _Stop extends StatelessWidget {
                   ],
                 ),
               ),
-              ?trailing,
+              trailing,
             ],
           ),
         ],

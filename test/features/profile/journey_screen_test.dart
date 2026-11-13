@@ -33,11 +33,12 @@ void main() {
   testWidgets('the recorded lvl1 learner is at Level 1 and has cleared nothing', (tester) async {
     await pumpJourney(tester); // dev/user_profile: level lvl1
 
-    expect(find.text('YOU ARE HERE'), findsOneWidget);
-    expect(find.text('CLEARED'), findsNothing);
+    expect(find.text("You're here"), findsOneWidget);
+    // Nothing cleared: no level announces itself as done.
+    expect(find.bySemanticsLabel(RegExp(r'^Level \d, done')), findsNothing);
     // The pill sits in the same row as the level's name.
-    final current = find.ancestor(of: find.text('YOU ARE HERE'), matching: find.byType(Row));
-    expect(find.descendant(of: current.first, matching: find.text('Level 1')), findsOneWidget);
+    final current = find.ancestor(of: find.text("You're here"), matching: find.byType(Row));
+    expect(find.descendant(of: current, matching: find.text('Level 1')), findsOneWidget);
   });
 
   testWidgets('no raw level names and no full ring for an empty level', (tester) async {

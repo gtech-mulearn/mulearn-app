@@ -34,7 +34,7 @@ void main() {
     );
     expect(find.bySemanticsLabel("Level 4, you're here, 264 tasks"), findsOneWidget);
     expect(find.bySemanticsLabel('Level 5, locked, 108 tasks'), findsOneWidget);
-    expect(find.text('68%'), findsOneWidget);
+    expect(find.text("You're here · 68%"), findsOneWidget);
     await tester.tap(find.bySemanticsLabel("Level 4, you're here, 264 tasks"));
     expect(opened?.number, 4);
   });
