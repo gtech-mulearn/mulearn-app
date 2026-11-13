@@ -5,6 +5,7 @@ import 'package:mulearn_app/core/network/tolerant_parse.dart';
 import 'package:mulearn_app/features/events/data/datasources/events_remote_datasource.dart';
 import 'package:mulearn_app/features/events/data/dtos/event_dto.dart';
 import 'package:mulearn_app/features/events/domain/entities/event.dart';
+import 'package:mulearn_app/features/events/domain/entities/event_filter.dart';
 import 'package:mulearn_app/features/events/domain/entities/event_page.dart';
 import 'package:mulearn_app/features/events/domain/repositories/events_repository.dart';
 
@@ -14,8 +15,9 @@ class EventsRepositoryImpl implements EventsRepository {
   final EventsRemoteDataSource _remote;
 
   @override
-  Future<EventPage> getEvents({required int pageIndex}) => _guard(() async {
-        final payload = await _remote.fetchEvents(pageIndex: pageIndex);
+  Future<EventPage> getEvents({required int pageIndex, EventFilter filter = const EventFilter()}) =>
+      _guard(() async {
+        final payload = await _remote.fetchEvents(pageIndex: pageIndex, filter: filter);
         final items = payload['data'] as List<dynamic>? ?? [];
         final info = PageIndexPaging.parse(payload['pagination'] as Map<String, dynamic>?);
         return EventPage(

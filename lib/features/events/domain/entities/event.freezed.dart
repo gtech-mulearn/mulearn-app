@@ -14,7 +14,11 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Event {
 
- String get id; String get title; String get slug; String get status; String get eventScope; String get eventType; String get startDatetime; String get endDatetime; EventVenue get venue; EventOrganizer get organizer; bool get isFeatured; bool get isCollaboration; int get interestCount; String get viewerInterestStatus; List<String> get tags; String? get coverImage; String? get bannerImage; String? get description; String? get categoryName; String? get registrationUrl; String? get registrationDeadline; int? get minKarma; int? get userLimit;
+ String get id; String get title; String get slug; String get status; String get eventScope; String get eventType; String get startDatetime; String get endDatetime; EventVenue get venue; EventOrganizer get organizer; bool get isFeatured; bool get isCollaboration; int get interestCount; String get viewerInterestStatus; List<String> get tags; String? get coverImage; String? get bannerImage; String? get description; String? get categoryName; String? get registrationUrl; String? get registrationDeadline; int? get minKarma; int? get userLimit;/// From the event detail: whether this viewer may register
+/// (`viewer_can_access_registration`) and why not
+/// (`viewer_access_blocked_reason`). List items don't carry them.
+ bool get canRegister; String? get blockedReason;/// Live (approved) tasks linked to the event.
+ List<EventLinkedTask> get linkedTasks;
 /// Create a copy of Event
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +29,16 @@ $EventCopyWith<Event> get copyWith => _$EventCopyWithImpl<Event>(this as Event, 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Event&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.slug, slug) || other.slug == slug)&&(identical(other.status, status) || other.status == status)&&(identical(other.eventScope, eventScope) || other.eventScope == eventScope)&&(identical(other.eventType, eventType) || other.eventType == eventType)&&(identical(other.startDatetime, startDatetime) || other.startDatetime == startDatetime)&&(identical(other.endDatetime, endDatetime) || other.endDatetime == endDatetime)&&(identical(other.venue, venue) || other.venue == venue)&&(identical(other.organizer, organizer) || other.organizer == organizer)&&(identical(other.isFeatured, isFeatured) || other.isFeatured == isFeatured)&&(identical(other.isCollaboration, isCollaboration) || other.isCollaboration == isCollaboration)&&(identical(other.interestCount, interestCount) || other.interestCount == interestCount)&&(identical(other.viewerInterestStatus, viewerInterestStatus) || other.viewerInterestStatus == viewerInterestStatus)&&const DeepCollectionEquality().equals(other.tags, tags)&&(identical(other.coverImage, coverImage) || other.coverImage == coverImage)&&(identical(other.bannerImage, bannerImage) || other.bannerImage == bannerImage)&&(identical(other.description, description) || other.description == description)&&(identical(other.categoryName, categoryName) || other.categoryName == categoryName)&&(identical(other.registrationUrl, registrationUrl) || other.registrationUrl == registrationUrl)&&(identical(other.registrationDeadline, registrationDeadline) || other.registrationDeadline == registrationDeadline)&&(identical(other.minKarma, minKarma) || other.minKarma == minKarma)&&(identical(other.userLimit, userLimit) || other.userLimit == userLimit));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Event&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.slug, slug) || other.slug == slug)&&(identical(other.status, status) || other.status == status)&&(identical(other.eventScope, eventScope) || other.eventScope == eventScope)&&(identical(other.eventType, eventType) || other.eventType == eventType)&&(identical(other.startDatetime, startDatetime) || other.startDatetime == startDatetime)&&(identical(other.endDatetime, endDatetime) || other.endDatetime == endDatetime)&&(identical(other.venue, venue) || other.venue == venue)&&(identical(other.organizer, organizer) || other.organizer == organizer)&&(identical(other.isFeatured, isFeatured) || other.isFeatured == isFeatured)&&(identical(other.isCollaboration, isCollaboration) || other.isCollaboration == isCollaboration)&&(identical(other.interestCount, interestCount) || other.interestCount == interestCount)&&(identical(other.viewerInterestStatus, viewerInterestStatus) || other.viewerInterestStatus == viewerInterestStatus)&&const DeepCollectionEquality().equals(other.tags, tags)&&(identical(other.coverImage, coverImage) || other.coverImage == coverImage)&&(identical(other.bannerImage, bannerImage) || other.bannerImage == bannerImage)&&(identical(other.description, description) || other.description == description)&&(identical(other.categoryName, categoryName) || other.categoryName == categoryName)&&(identical(other.registrationUrl, registrationUrl) || other.registrationUrl == registrationUrl)&&(identical(other.registrationDeadline, registrationDeadline) || other.registrationDeadline == registrationDeadline)&&(identical(other.minKarma, minKarma) || other.minKarma == minKarma)&&(identical(other.userLimit, userLimit) || other.userLimit == userLimit)&&(identical(other.canRegister, canRegister) || other.canRegister == canRegister)&&(identical(other.blockedReason, blockedReason) || other.blockedReason == blockedReason)&&const DeepCollectionEquality().equals(other.linkedTasks, linkedTasks));
 }
 
 
 @override
-int get hashCode => Object.hashAll([runtimeType,id,title,slug,status,eventScope,eventType,startDatetime,endDatetime,venue,organizer,isFeatured,isCollaboration,interestCount,viewerInterestStatus,const DeepCollectionEquality().hash(tags),coverImage,bannerImage,description,categoryName,registrationUrl,registrationDeadline,minKarma,userLimit]);
+int get hashCode => Object.hashAll([runtimeType,id,title,slug,status,eventScope,eventType,startDatetime,endDatetime,venue,organizer,isFeatured,isCollaboration,interestCount,viewerInterestStatus,const DeepCollectionEquality().hash(tags),coverImage,bannerImage,description,categoryName,registrationUrl,registrationDeadline,minKarma,userLimit,canRegister,blockedReason,const DeepCollectionEquality().hash(linkedTasks)]);
 
 @override
 String toString() {
-  return 'Event(id: $id, title: $title, slug: $slug, status: $status, eventScope: $eventScope, eventType: $eventType, startDatetime: $startDatetime, endDatetime: $endDatetime, venue: $venue, organizer: $organizer, isFeatured: $isFeatured, isCollaboration: $isCollaboration, interestCount: $interestCount, viewerInterestStatus: $viewerInterestStatus, tags: $tags, coverImage: $coverImage, bannerImage: $bannerImage, description: $description, categoryName: $categoryName, registrationUrl: $registrationUrl, registrationDeadline: $registrationDeadline, minKarma: $minKarma, userLimit: $userLimit)';
+  return 'Event(id: $id, title: $title, slug: $slug, status: $status, eventScope: $eventScope, eventType: $eventType, startDatetime: $startDatetime, endDatetime: $endDatetime, venue: $venue, organizer: $organizer, isFeatured: $isFeatured, isCollaboration: $isCollaboration, interestCount: $interestCount, viewerInterestStatus: $viewerInterestStatus, tags: $tags, coverImage: $coverImage, bannerImage: $bannerImage, description: $description, categoryName: $categoryName, registrationUrl: $registrationUrl, registrationDeadline: $registrationDeadline, minKarma: $minKarma, userLimit: $userLimit, canRegister: $canRegister, blockedReason: $blockedReason, linkedTasks: $linkedTasks)';
 }
 
 
@@ -45,7 +49,7 @@ abstract mixin class $EventCopyWith<$Res>  {
   factory $EventCopyWith(Event value, $Res Function(Event) _then) = _$EventCopyWithImpl;
 @useResult
 $Res call({
- String id, String title, String slug, String status, String eventScope, String eventType, String startDatetime, String endDatetime, EventVenue venue, EventOrganizer organizer, bool isFeatured, bool isCollaboration, int interestCount, String viewerInterestStatus, List<String> tags, String? coverImage, String? bannerImage, String? description, String? categoryName, String? registrationUrl, String? registrationDeadline, int? minKarma, int? userLimit
+ String id, String title, String slug, String status, String eventScope, String eventType, String startDatetime, String endDatetime, EventVenue venue, EventOrganizer organizer, bool isFeatured, bool isCollaboration, int interestCount, String viewerInterestStatus, List<String> tags, String? coverImage, String? bannerImage, String? description, String? categoryName, String? registrationUrl, String? registrationDeadline, int? minKarma, int? userLimit, bool canRegister, String? blockedReason, List<EventLinkedTask> linkedTasks
 });
 
 
@@ -62,7 +66,7 @@ class _$EventCopyWithImpl<$Res>
 
 /// Create a copy of Event
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? slug = null,Object? status = null,Object? eventScope = null,Object? eventType = null,Object? startDatetime = null,Object? endDatetime = null,Object? venue = null,Object? organizer = null,Object? isFeatured = null,Object? isCollaboration = null,Object? interestCount = null,Object? viewerInterestStatus = null,Object? tags = null,Object? coverImage = freezed,Object? bannerImage = freezed,Object? description = freezed,Object? categoryName = freezed,Object? registrationUrl = freezed,Object? registrationDeadline = freezed,Object? minKarma = freezed,Object? userLimit = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? slug = null,Object? status = null,Object? eventScope = null,Object? eventType = null,Object? startDatetime = null,Object? endDatetime = null,Object? venue = null,Object? organizer = null,Object? isFeatured = null,Object? isCollaboration = null,Object? interestCount = null,Object? viewerInterestStatus = null,Object? tags = null,Object? coverImage = freezed,Object? bannerImage = freezed,Object? description = freezed,Object? categoryName = freezed,Object? registrationUrl = freezed,Object? registrationDeadline = freezed,Object? minKarma = freezed,Object? userLimit = freezed,Object? canRegister = null,Object? blockedReason = freezed,Object? linkedTasks = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -87,7 +91,10 @@ as String?,registrationUrl: freezed == registrationUrl ? _self.registrationUrl :
 as String?,registrationDeadline: freezed == registrationDeadline ? _self.registrationDeadline : registrationDeadline // ignore: cast_nullable_to_non_nullable
 as String?,minKarma: freezed == minKarma ? _self.minKarma : minKarma // ignore: cast_nullable_to_non_nullable
 as int?,userLimit: freezed == userLimit ? _self.userLimit : userLimit // ignore: cast_nullable_to_non_nullable
-as int?,
+as int?,canRegister: null == canRegister ? _self.canRegister : canRegister // ignore: cast_nullable_to_non_nullable
+as bool,blockedReason: freezed == blockedReason ? _self.blockedReason : blockedReason // ignore: cast_nullable_to_non_nullable
+as String?,linkedTasks: null == linkedTasks ? _self.linkedTasks : linkedTasks // ignore: cast_nullable_to_non_nullable
+as List<EventLinkedTask>,
   ));
 }
 /// Create a copy of Event
@@ -190,10 +197,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String slug,  String status,  String eventScope,  String eventType,  String startDatetime,  String endDatetime,  EventVenue venue,  EventOrganizer organizer,  bool isFeatured,  bool isCollaboration,  int interestCount,  String viewerInterestStatus,  List<String> tags,  String? coverImage,  String? bannerImage,  String? description,  String? categoryName,  String? registrationUrl,  String? registrationDeadline,  int? minKarma,  int? userLimit)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String slug,  String status,  String eventScope,  String eventType,  String startDatetime,  String endDatetime,  EventVenue venue,  EventOrganizer organizer,  bool isFeatured,  bool isCollaboration,  int interestCount,  String viewerInterestStatus,  List<String> tags,  String? coverImage,  String? bannerImage,  String? description,  String? categoryName,  String? registrationUrl,  String? registrationDeadline,  int? minKarma,  int? userLimit,  bool canRegister,  String? blockedReason,  List<EventLinkedTask> linkedTasks)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Event() when $default != null:
-return $default(_that.id,_that.title,_that.slug,_that.status,_that.eventScope,_that.eventType,_that.startDatetime,_that.endDatetime,_that.venue,_that.organizer,_that.isFeatured,_that.isCollaboration,_that.interestCount,_that.viewerInterestStatus,_that.tags,_that.coverImage,_that.bannerImage,_that.description,_that.categoryName,_that.registrationUrl,_that.registrationDeadline,_that.minKarma,_that.userLimit);case _:
+return $default(_that.id,_that.title,_that.slug,_that.status,_that.eventScope,_that.eventType,_that.startDatetime,_that.endDatetime,_that.venue,_that.organizer,_that.isFeatured,_that.isCollaboration,_that.interestCount,_that.viewerInterestStatus,_that.tags,_that.coverImage,_that.bannerImage,_that.description,_that.categoryName,_that.registrationUrl,_that.registrationDeadline,_that.minKarma,_that.userLimit,_that.canRegister,_that.blockedReason,_that.linkedTasks);case _:
   return orElse();
 
 }
@@ -211,10 +218,10 @@ return $default(_that.id,_that.title,_that.slug,_that.status,_that.eventScope,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String slug,  String status,  String eventScope,  String eventType,  String startDatetime,  String endDatetime,  EventVenue venue,  EventOrganizer organizer,  bool isFeatured,  bool isCollaboration,  int interestCount,  String viewerInterestStatus,  List<String> tags,  String? coverImage,  String? bannerImage,  String? description,  String? categoryName,  String? registrationUrl,  String? registrationDeadline,  int? minKarma,  int? userLimit)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String slug,  String status,  String eventScope,  String eventType,  String startDatetime,  String endDatetime,  EventVenue venue,  EventOrganizer organizer,  bool isFeatured,  bool isCollaboration,  int interestCount,  String viewerInterestStatus,  List<String> tags,  String? coverImage,  String? bannerImage,  String? description,  String? categoryName,  String? registrationUrl,  String? registrationDeadline,  int? minKarma,  int? userLimit,  bool canRegister,  String? blockedReason,  List<EventLinkedTask> linkedTasks)  $default,) {final _that = this;
 switch (_that) {
 case _Event():
-return $default(_that.id,_that.title,_that.slug,_that.status,_that.eventScope,_that.eventType,_that.startDatetime,_that.endDatetime,_that.venue,_that.organizer,_that.isFeatured,_that.isCollaboration,_that.interestCount,_that.viewerInterestStatus,_that.tags,_that.coverImage,_that.bannerImage,_that.description,_that.categoryName,_that.registrationUrl,_that.registrationDeadline,_that.minKarma,_that.userLimit);case _:
+return $default(_that.id,_that.title,_that.slug,_that.status,_that.eventScope,_that.eventType,_that.startDatetime,_that.endDatetime,_that.venue,_that.organizer,_that.isFeatured,_that.isCollaboration,_that.interestCount,_that.viewerInterestStatus,_that.tags,_that.coverImage,_that.bannerImage,_that.description,_that.categoryName,_that.registrationUrl,_that.registrationDeadline,_that.minKarma,_that.userLimit,_that.canRegister,_that.blockedReason,_that.linkedTasks);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -231,10 +238,10 @@ return $default(_that.id,_that.title,_that.slug,_that.status,_that.eventScope,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String slug,  String status,  String eventScope,  String eventType,  String startDatetime,  String endDatetime,  EventVenue venue,  EventOrganizer organizer,  bool isFeatured,  bool isCollaboration,  int interestCount,  String viewerInterestStatus,  List<String> tags,  String? coverImage,  String? bannerImage,  String? description,  String? categoryName,  String? registrationUrl,  String? registrationDeadline,  int? minKarma,  int? userLimit)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String slug,  String status,  String eventScope,  String eventType,  String startDatetime,  String endDatetime,  EventVenue venue,  EventOrganizer organizer,  bool isFeatured,  bool isCollaboration,  int interestCount,  String viewerInterestStatus,  List<String> tags,  String? coverImage,  String? bannerImage,  String? description,  String? categoryName,  String? registrationUrl,  String? registrationDeadline,  int? minKarma,  int? userLimit,  bool canRegister,  String? blockedReason,  List<EventLinkedTask> linkedTasks)?  $default,) {final _that = this;
 switch (_that) {
 case _Event() when $default != null:
-return $default(_that.id,_that.title,_that.slug,_that.status,_that.eventScope,_that.eventType,_that.startDatetime,_that.endDatetime,_that.venue,_that.organizer,_that.isFeatured,_that.isCollaboration,_that.interestCount,_that.viewerInterestStatus,_that.tags,_that.coverImage,_that.bannerImage,_that.description,_that.categoryName,_that.registrationUrl,_that.registrationDeadline,_that.minKarma,_that.userLimit);case _:
+return $default(_that.id,_that.title,_that.slug,_that.status,_that.eventScope,_that.eventType,_that.startDatetime,_that.endDatetime,_that.venue,_that.organizer,_that.isFeatured,_that.isCollaboration,_that.interestCount,_that.viewerInterestStatus,_that.tags,_that.coverImage,_that.bannerImage,_that.description,_that.categoryName,_that.registrationUrl,_that.registrationDeadline,_that.minKarma,_that.userLimit,_that.canRegister,_that.blockedReason,_that.linkedTasks);case _:
   return null;
 
 }
@@ -246,7 +253,7 @@ return $default(_that.id,_that.title,_that.slug,_that.status,_that.eventScope,_t
 
 
 class _Event extends Event {
-  const _Event({required this.id, required this.title, required this.slug, required this.status, required this.eventScope, required this.eventType, required this.startDatetime, required this.endDatetime, required this.venue, required this.organizer, required this.isFeatured, required this.isCollaboration, required this.interestCount, required this.viewerInterestStatus, final  List<String> tags = const [], this.coverImage, this.bannerImage, this.description, this.categoryName, this.registrationUrl, this.registrationDeadline, this.minKarma, this.userLimit}): _tags = tags,super._();
+  const _Event({required this.id, required this.title, required this.slug, required this.status, required this.eventScope, required this.eventType, required this.startDatetime, required this.endDatetime, required this.venue, required this.organizer, required this.isFeatured, required this.isCollaboration, required this.interestCount, required this.viewerInterestStatus, final  List<String> tags = const [], this.coverImage, this.bannerImage, this.description, this.categoryName, this.registrationUrl, this.registrationDeadline, this.minKarma, this.userLimit, this.canRegister = true, this.blockedReason, final  List<EventLinkedTask> linkedTasks = const []}): _tags = tags,_linkedTasks = linkedTasks,super._();
   
 
 @override final  String id;
@@ -278,6 +285,20 @@ class _Event extends Event {
 @override final  String? registrationDeadline;
 @override final  int? minKarma;
 @override final  int? userLimit;
+/// From the event detail: whether this viewer may register
+/// (`viewer_can_access_registration`) and why not
+/// (`viewer_access_blocked_reason`). List items don't carry them.
+@override@JsonKey() final  bool canRegister;
+@override final  String? blockedReason;
+/// Live (approved) tasks linked to the event.
+ final  List<EventLinkedTask> _linkedTasks;
+/// Live (approved) tasks linked to the event.
+@override@JsonKey() List<EventLinkedTask> get linkedTasks {
+  if (_linkedTasks is EqualUnmodifiableListView) return _linkedTasks;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_linkedTasks);
+}
+
 
 /// Create a copy of Event
 /// with the given fields replaced by the non-null parameter values.
@@ -289,16 +310,16 @@ _$EventCopyWith<_Event> get copyWith => __$EventCopyWithImpl<_Event>(this, _$ide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Event&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.slug, slug) || other.slug == slug)&&(identical(other.status, status) || other.status == status)&&(identical(other.eventScope, eventScope) || other.eventScope == eventScope)&&(identical(other.eventType, eventType) || other.eventType == eventType)&&(identical(other.startDatetime, startDatetime) || other.startDatetime == startDatetime)&&(identical(other.endDatetime, endDatetime) || other.endDatetime == endDatetime)&&(identical(other.venue, venue) || other.venue == venue)&&(identical(other.organizer, organizer) || other.organizer == organizer)&&(identical(other.isFeatured, isFeatured) || other.isFeatured == isFeatured)&&(identical(other.isCollaboration, isCollaboration) || other.isCollaboration == isCollaboration)&&(identical(other.interestCount, interestCount) || other.interestCount == interestCount)&&(identical(other.viewerInterestStatus, viewerInterestStatus) || other.viewerInterestStatus == viewerInterestStatus)&&const DeepCollectionEquality().equals(other._tags, _tags)&&(identical(other.coverImage, coverImage) || other.coverImage == coverImage)&&(identical(other.bannerImage, bannerImage) || other.bannerImage == bannerImage)&&(identical(other.description, description) || other.description == description)&&(identical(other.categoryName, categoryName) || other.categoryName == categoryName)&&(identical(other.registrationUrl, registrationUrl) || other.registrationUrl == registrationUrl)&&(identical(other.registrationDeadline, registrationDeadline) || other.registrationDeadline == registrationDeadline)&&(identical(other.minKarma, minKarma) || other.minKarma == minKarma)&&(identical(other.userLimit, userLimit) || other.userLimit == userLimit));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Event&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.slug, slug) || other.slug == slug)&&(identical(other.status, status) || other.status == status)&&(identical(other.eventScope, eventScope) || other.eventScope == eventScope)&&(identical(other.eventType, eventType) || other.eventType == eventType)&&(identical(other.startDatetime, startDatetime) || other.startDatetime == startDatetime)&&(identical(other.endDatetime, endDatetime) || other.endDatetime == endDatetime)&&(identical(other.venue, venue) || other.venue == venue)&&(identical(other.organizer, organizer) || other.organizer == organizer)&&(identical(other.isFeatured, isFeatured) || other.isFeatured == isFeatured)&&(identical(other.isCollaboration, isCollaboration) || other.isCollaboration == isCollaboration)&&(identical(other.interestCount, interestCount) || other.interestCount == interestCount)&&(identical(other.viewerInterestStatus, viewerInterestStatus) || other.viewerInterestStatus == viewerInterestStatus)&&const DeepCollectionEquality().equals(other._tags, _tags)&&(identical(other.coverImage, coverImage) || other.coverImage == coverImage)&&(identical(other.bannerImage, bannerImage) || other.bannerImage == bannerImage)&&(identical(other.description, description) || other.description == description)&&(identical(other.categoryName, categoryName) || other.categoryName == categoryName)&&(identical(other.registrationUrl, registrationUrl) || other.registrationUrl == registrationUrl)&&(identical(other.registrationDeadline, registrationDeadline) || other.registrationDeadline == registrationDeadline)&&(identical(other.minKarma, minKarma) || other.minKarma == minKarma)&&(identical(other.userLimit, userLimit) || other.userLimit == userLimit)&&(identical(other.canRegister, canRegister) || other.canRegister == canRegister)&&(identical(other.blockedReason, blockedReason) || other.blockedReason == blockedReason)&&const DeepCollectionEquality().equals(other._linkedTasks, _linkedTasks));
 }
 
 
 @override
-int get hashCode => Object.hashAll([runtimeType,id,title,slug,status,eventScope,eventType,startDatetime,endDatetime,venue,organizer,isFeatured,isCollaboration,interestCount,viewerInterestStatus,const DeepCollectionEquality().hash(_tags),coverImage,bannerImage,description,categoryName,registrationUrl,registrationDeadline,minKarma,userLimit]);
+int get hashCode => Object.hashAll([runtimeType,id,title,slug,status,eventScope,eventType,startDatetime,endDatetime,venue,organizer,isFeatured,isCollaboration,interestCount,viewerInterestStatus,const DeepCollectionEquality().hash(_tags),coverImage,bannerImage,description,categoryName,registrationUrl,registrationDeadline,minKarma,userLimit,canRegister,blockedReason,const DeepCollectionEquality().hash(_linkedTasks)]);
 
 @override
 String toString() {
-  return 'Event(id: $id, title: $title, slug: $slug, status: $status, eventScope: $eventScope, eventType: $eventType, startDatetime: $startDatetime, endDatetime: $endDatetime, venue: $venue, organizer: $organizer, isFeatured: $isFeatured, isCollaboration: $isCollaboration, interestCount: $interestCount, viewerInterestStatus: $viewerInterestStatus, tags: $tags, coverImage: $coverImage, bannerImage: $bannerImage, description: $description, categoryName: $categoryName, registrationUrl: $registrationUrl, registrationDeadline: $registrationDeadline, minKarma: $minKarma, userLimit: $userLimit)';
+  return 'Event(id: $id, title: $title, slug: $slug, status: $status, eventScope: $eventScope, eventType: $eventType, startDatetime: $startDatetime, endDatetime: $endDatetime, venue: $venue, organizer: $organizer, isFeatured: $isFeatured, isCollaboration: $isCollaboration, interestCount: $interestCount, viewerInterestStatus: $viewerInterestStatus, tags: $tags, coverImage: $coverImage, bannerImage: $bannerImage, description: $description, categoryName: $categoryName, registrationUrl: $registrationUrl, registrationDeadline: $registrationDeadline, minKarma: $minKarma, userLimit: $userLimit, canRegister: $canRegister, blockedReason: $blockedReason, linkedTasks: $linkedTasks)';
 }
 
 
@@ -309,7 +330,7 @@ abstract mixin class _$EventCopyWith<$Res> implements $EventCopyWith<$Res> {
   factory _$EventCopyWith(_Event value, $Res Function(_Event) _then) = __$EventCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String title, String slug, String status, String eventScope, String eventType, String startDatetime, String endDatetime, EventVenue venue, EventOrganizer organizer, bool isFeatured, bool isCollaboration, int interestCount, String viewerInterestStatus, List<String> tags, String? coverImage, String? bannerImage, String? description, String? categoryName, String? registrationUrl, String? registrationDeadline, int? minKarma, int? userLimit
+ String id, String title, String slug, String status, String eventScope, String eventType, String startDatetime, String endDatetime, EventVenue venue, EventOrganizer organizer, bool isFeatured, bool isCollaboration, int interestCount, String viewerInterestStatus, List<String> tags, String? coverImage, String? bannerImage, String? description, String? categoryName, String? registrationUrl, String? registrationDeadline, int? minKarma, int? userLimit, bool canRegister, String? blockedReason, List<EventLinkedTask> linkedTasks
 });
 
 
@@ -326,7 +347,7 @@ class __$EventCopyWithImpl<$Res>
 
 /// Create a copy of Event
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? slug = null,Object? status = null,Object? eventScope = null,Object? eventType = null,Object? startDatetime = null,Object? endDatetime = null,Object? venue = null,Object? organizer = null,Object? isFeatured = null,Object? isCollaboration = null,Object? interestCount = null,Object? viewerInterestStatus = null,Object? tags = null,Object? coverImage = freezed,Object? bannerImage = freezed,Object? description = freezed,Object? categoryName = freezed,Object? registrationUrl = freezed,Object? registrationDeadline = freezed,Object? minKarma = freezed,Object? userLimit = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? slug = null,Object? status = null,Object? eventScope = null,Object? eventType = null,Object? startDatetime = null,Object? endDatetime = null,Object? venue = null,Object? organizer = null,Object? isFeatured = null,Object? isCollaboration = null,Object? interestCount = null,Object? viewerInterestStatus = null,Object? tags = null,Object? coverImage = freezed,Object? bannerImage = freezed,Object? description = freezed,Object? categoryName = freezed,Object? registrationUrl = freezed,Object? registrationDeadline = freezed,Object? minKarma = freezed,Object? userLimit = freezed,Object? canRegister = null,Object? blockedReason = freezed,Object? linkedTasks = null,}) {
   return _then(_Event(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -351,7 +372,10 @@ as String?,registrationUrl: freezed == registrationUrl ? _self.registrationUrl :
 as String?,registrationDeadline: freezed == registrationDeadline ? _self.registrationDeadline : registrationDeadline // ignore: cast_nullable_to_non_nullable
 as String?,minKarma: freezed == minKarma ? _self.minKarma : minKarma // ignore: cast_nullable_to_non_nullable
 as int?,userLimit: freezed == userLimit ? _self.userLimit : userLimit // ignore: cast_nullable_to_non_nullable
-as int?,
+as int?,canRegister: null == canRegister ? _self.canRegister : canRegister // ignore: cast_nullable_to_non_nullable
+as bool,blockedReason: freezed == blockedReason ? _self.blockedReason : blockedReason // ignore: cast_nullable_to_non_nullable
+as String?,linkedTasks: null == linkedTasks ? _self._linkedTasks : linkedTasks // ignore: cast_nullable_to_non_nullable
+as List<EventLinkedTask>,
   ));
 }
 

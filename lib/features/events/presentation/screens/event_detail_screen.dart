@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
@@ -9,8 +10,11 @@ import 'package:mulearn_app/core/theme/mulearn_colors.dart';
 import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/core/widgets/mu_buttons.dart';
+import 'package:mulearn_app/core/widgets/mu_card.dart';
 import 'package:mulearn_app/core/widgets/mu_chip.dart';
 import 'package:mulearn_app/core/widgets/mu_section_header.dart';
+import 'package:mulearn_app/core/widgets/mu_toast.dart';
+import 'package:mulearn_app/features/events/domain/entities/event_linked_task.dart';
 import 'package:mulearn_app/features/events/presentation/providers/events_controller.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -143,6 +147,28 @@ class EventDetailScreen extends ConsumerWidget {
                     ),
                   ],
                   const SizedBox(height: MuSpace.l),
+                  // Eligibility up front (UX-07): the backend's own reason,
+                  // before any tap, with the actions disabled.
+                  if (!event.canRegister && event.blockedReason != null) ...[
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(MuSpace.m),
+                      decoration: BoxDecoration(
+                        color: MuColors.warningBg,
+                        borderRadius: BorderRadius.circular(MuRadius.inner),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(LucideIcons.info, size: 18, color: MuColors.warning),
+                          const SizedBox(width: MuSpace.s),
+                          Expanded(
+                            child: Text(event.blockedReason!, style: MuType.body.copyWith(color: MuColors.warning)),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: MuSpace.m),
+                  ],
                   Row(
                     children: [
                       Expanded(
@@ -151,7 +177,7 @@ class EventDetailScreen extends ConsumerWidget {
                               ? 'Please wait…'
                               : (event.isInterested ? 'Interested' : "I'm interested"),
                           icon: event.isInterested ? LucideIcons.check : LucideIcons.star,
-                          onPressed: isBusy
+                          onPressed: isBusy || !event.canRegister
                               ? null
                               : () => ref
                                   .read(eventInterestControllerProvider.notifier)
@@ -164,10 +190,12 @@ class EventDetailScreen extends ConsumerWidget {
                         Expanded(
                           child: MuGhostButton(
                             label: 'Register',
-                            onPressed: () => launchUrl(
-                              Uri.parse(event.registrationUrl!),
-                              mode: LaunchMode.externalApplication,
-                            ),
+                            onPressed: event.canRegister
+                                ? () => launchUrl(
+                                      Uri.parse(event.registrationUrl!),
+                                      mode: LaunchMode.externalApplication,
+                                    )
+                                : null,
                           ),
                         ),
                       ],
@@ -186,11 +214,65 @@ class EventDetailScreen extends ConsumerWidget {
                     const SizedBox(height: MuSpace.m),
                     Text(event.description!, style: MuType.body),
                   ],
+                  if (event.linkedTasks.isNotEmpty) ...[
+                    const SizedBox(height: MuSpace.xxl),
+                    const MuSectionHeader(title: 'Tasks for this event'),
+                    const SizedBox(height: MuSpace.m),
+                    for (final task in event.linkedTasks) ...[
+                      _LinkedTaskTile(task: task),
+                      const SizedBox(height: MuSpace.s),
+                    ],
+                  ],
                 ],
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// A task linked to the event: title, hashtag (copy it into the Discord
+/// post) and karma.
+class _LinkedTaskTile extends StatelessWidget {
+  const _LinkedTaskTile({required this.task});
+
+  final EventLinkedTask task;
+
+  @override
+  Widget build(BuildContext context) {
+    final hashtag = task.hashtag;
+    final karma = task.karma;
+    return MuCard(
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(task.title, style: MuType.bodyMed),
+                if (hashtag != null && hashtag.isNotEmpty) ...[
+                  const SizedBox(height: 2),
+                  Text(hashtag, style: MuType.caption.copyWith(color: MuColors.primary)),
+                ],
+                if (karma != null) ...[
+                  const SizedBox(height: 2),
+                  Text('+${karma.toInt()} karma', style: MuType.caption.copyWith(color: MuColors.karmaAccent)),
+                ],
+              ],
+            ),
+          ),
+          if (hashtag != null && hashtag.isNotEmpty)
+            IconButton(
+              tooltip: 'Copy hashtag',
+              icon: const Icon(LucideIcons.copy, size: 18),
+              onPressed: () async {
+                await Clipboard.setData(ClipboardData(text: hashtag));
+                if (context.mounted) MuToast.show(context, message: 'Copied $hashtag', type: MuToastType.success);
+              },
+            ),
+        ],
       ),
     );
   }

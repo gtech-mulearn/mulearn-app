@@ -177,50 +177,107 @@ final class EventDetailFamily extends $Family
   String toString() => r'eventDetailProvider';
 }
 
-/// Accumulates event pages across "load more". A failed page keeps the events
+/// Accumulates event pages across "load more", one list per [EventFilter]
+/// (a new filter starts again at page 1). A failed page keeps the events
 /// already shown and records the error for an inline retry.
 
 @ProviderFor(EventsListController)
-const eventsListControllerProvider = EventsListControllerProvider._();
+const eventsListControllerProvider = EventsListControllerFamily._();
 
-/// Accumulates event pages across "load more". A failed page keeps the events
+/// Accumulates event pages across "load more", one list per [EventFilter]
+/// (a new filter starts again at page 1). A failed page keeps the events
 /// already shown and records the error for an inline retry.
 final class EventsListControllerProvider
     extends $AsyncNotifierProvider<EventsListController, PagedState<Event>> {
-  /// Accumulates event pages across "load more". A failed page keeps the events
+  /// Accumulates event pages across "load more", one list per [EventFilter]
+  /// (a new filter starts again at page 1). A failed page keeps the events
   /// already shown and records the error for an inline retry.
-  const EventsListControllerProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'eventsListControllerProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
+  const EventsListControllerProvider._({
+    required EventsListControllerFamily super.from,
+    required EventFilter super.argument,
+  }) : super(
+         retry: null,
+         name: r'eventsListControllerProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
   @override
   String debugGetCreateSourceHash() => _$eventsListControllerHash();
 
+  @override
+  String toString() {
+    return r'eventsListControllerProvider'
+        ''
+        '($argument)';
+  }
+
   @$internal
   @override
   EventsListController create() => EventsListController();
+
+  @override
+  bool operator ==(Object other) {
+    return other is EventsListControllerProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
 }
 
 String _$eventsListControllerHash() =>
-    r'f9a2c9d971a79d75da515bab5c9f0f9403aa4da7';
+    r'4a497f5742a9ebcac8069adefd874ceb156d62e0';
 
-/// Accumulates event pages across "load more". A failed page keeps the events
+/// Accumulates event pages across "load more", one list per [EventFilter]
+/// (a new filter starts again at page 1). A failed page keeps the events
+/// already shown and records the error for an inline retry.
+
+final class EventsListControllerFamily extends $Family
+    with
+        $ClassFamilyOverride<
+          EventsListController,
+          AsyncValue<PagedState<Event>>,
+          PagedState<Event>,
+          FutureOr<PagedState<Event>>,
+          EventFilter
+        > {
+  const EventsListControllerFamily._()
+    : super(
+        retry: null,
+        name: r'eventsListControllerProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// Accumulates event pages across "load more", one list per [EventFilter]
+  /// (a new filter starts again at page 1). A failed page keeps the events
+  /// already shown and records the error for an inline retry.
+
+  EventsListControllerProvider call(EventFilter filter) =>
+      EventsListControllerProvider._(argument: filter, from: this);
+
+  @override
+  String toString() => r'eventsListControllerProvider';
+}
+
+/// Accumulates event pages across "load more", one list per [EventFilter]
+/// (a new filter starts again at page 1). A failed page keeps the events
 /// already shown and records the error for an inline retry.
 
 abstract class _$EventsListController
     extends $AsyncNotifier<PagedState<Event>> {
-  FutureOr<PagedState<Event>> build();
+  late final _$args = ref.$arg as EventFilter;
+  EventFilter get filter => _$args;
+
+  FutureOr<PagedState<Event>> build(EventFilter filter);
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
+    final created = build(_$args);
     final ref =
         this.ref as $Ref<AsyncValue<PagedState<Event>>, PagedState<Event>>;
     final element =

@@ -4,6 +4,7 @@ import 'package:mulearn_app/core/utils/app_logger.dart';
 import 'package:mulearn_app/features/events/data/datasources/events_remote_datasource.dart';
 import 'package:mulearn_app/features/events/data/repositories/events_repository_impl.dart';
 import 'package:mulearn_app/features/events/domain/entities/event.dart';
+import 'package:mulearn_app/features/events/domain/entities/event_filter.dart';
 import 'package:mulearn_app/features/events/domain/repositories/events_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -22,7 +23,8 @@ EventsRepository eventsRepository(Ref ref) =>
 Future<Event> eventDetail(Ref ref, String id) =>
     ref.watch(eventsRepositoryProvider).getEventDetail(id);
 
-/// Accumulates event pages across "load more". A failed page keeps the events
+/// Accumulates event pages across "load more", one list per [EventFilter]
+/// (a new filter starts again at page 1). A failed page keeps the events
 /// already shown and records the error for an inline retry.
 @riverpod
 class EventsListController extends _$EventsListController {
@@ -30,10 +32,10 @@ class EventsListController extends _$EventsListController {
   Future<void>? _inFlight;
 
   @override
-  Future<PagedState<Event>> build() async {
+  Future<PagedState<Event>> build(EventFilter filter) async {
     _pageIndex = 1;
     _inFlight = null;
-    final page = await ref.watch(eventsRepositoryProvider).getEvents(pageIndex: 1);
+    final page = await ref.watch(eventsRepositoryProvider).getEvents(pageIndex: 1, filter: filter);
     return PagedState(items: page.events, hasMore: page.hasNext);
   }
 
@@ -49,7 +51,7 @@ class EventsListController extends _$EventsListController {
     state = AsyncData(current.copyWith(isLoadingMore: true, loadMoreError: null));
     final next = _pageIndex + 1;
     try {
-      final page = await ref.read(eventsRepositoryProvider).getEvents(pageIndex: next);
+      final page = await ref.read(eventsRepositoryProvider).getEvents(pageIndex: next, filter: filter);
       if (!ref.mounted) return;
       _pageIndex = next;
       state = AsyncData(PagedState(

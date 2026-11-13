@@ -76,8 +76,8 @@ class MuPrimaryButton extends StatelessWidget {
           color: disabled
               ? MuColors.primary.withValues(alpha: 0.4)
               : pressed
-                  ? MuColors.primaryHover
-                  : MuColors.primary,
+              ? MuColors.primaryHover
+              : MuColors.primary,
           borderRadius: BorderRadius.circular(MuRadius.chip),
           boxShadow: disabled ? null : MuShadow.buttonGlow,
         ),
@@ -89,12 +89,16 @@ class MuPrimaryButton extends StatelessWidget {
               Icon(icon, size: 20, color: MuColors.surface),
               const SizedBox(width: MuSpace.s),
             ],
-            Text(
-              label,
-              style: MuType.bodyMed.copyWith(
-                color: MuColors.surface,
-                fontSize: 15.5,
-                fontWeight: FontWeight.w700,
+            Flexible(
+              child: Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: MuType.bodyMed.copyWith(
+                  color: MuColors.surface,
+                  fontSize: 15.5,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
           ],
@@ -133,7 +137,9 @@ class MuKarmaButton extends StatelessWidget {
         width: expand ? double.infinity : null,
         padding: const EdgeInsets.symmetric(horizontal: 24),
         decoration: BoxDecoration(
-          color: disabled ? MuColors.karmaAccent.withValues(alpha: 0.4) : MuColors.karmaAccent,
+          color: disabled
+              ? MuColors.karmaAccent.withValues(alpha: 0.4)
+              : MuColors.karmaAccent,
           borderRadius: BorderRadius.circular(MuRadius.chip),
         ),
         alignment: Alignment.center,
@@ -144,9 +150,15 @@ class MuKarmaButton extends StatelessWidget {
               Icon(icon, size: compact ? 16 : 20, color: MuColors.surface),
               const SizedBox(width: MuSpace.s),
             ],
-            Text(
-              label,
-              style: (compact ? MuType.chip : MuType.bodyMed).copyWith(color: MuColors.surface),
+            Flexible(
+              child: Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: (compact ? MuType.chip : MuType.bodyMed).copyWith(
+                  color: MuColors.surface,
+                ),
+              ),
             ),
           ],
         ),
@@ -187,7 +199,9 @@ class MuGhostButton extends StatelessWidget {
         decoration: BoxDecoration(
           color: light
               ? Colors.transparent
-              : (pressed ? MuColors.surface : MuColors.surface.withValues(alpha: 0.7)),
+              : (pressed
+                    ? MuColors.surface
+                    : MuColors.surface.withValues(alpha: 0.7)),
           border: Border.all(
             color: light
                 ? MuColors.onBrand.withValues(alpha: pressed ? 0.9 : 0.6)
@@ -204,9 +218,17 @@ class MuGhostButton extends StatelessWidget {
               Icon(icon, size: 18, color: color),
               const SizedBox(width: MuSpace.s),
             ],
-            Text(
-              label,
-              style: MuType.bodyMed.copyWith(color: color, fontSize: 14.5, fontWeight: FontWeight.w700),
+            Flexible(
+              child: Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: MuType.bodyMed.copyWith(
+                  color: color,
+                  fontSize: 14.5,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
             ),
           ],
         ),
@@ -252,7 +274,10 @@ class MuDarkButton extends StatelessWidget {
               Icon(icon, size: 20, color: MuColors.surface),
               const SizedBox(width: MuSpace.s),
             ],
-            Text(label, style: MuType.bodyMed.copyWith(color: MuColors.surface)),
+            Text(
+              label,
+              style: MuType.bodyMed.copyWith(color: MuColors.surface),
+            ),
           ],
         ),
       ),
