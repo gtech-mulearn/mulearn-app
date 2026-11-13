@@ -40,6 +40,37 @@ void main() {
       expect(e.statusCode, 400);
     });
 
+    // Final review, Important 2: a ValidationError raised inside a
+    // serializer's create() (MentorAddParticipantSerializer) reaches DRF's
+    // default handler, which answers with a bare list of strings.
+    test('a bare DRF list body becomes the message', () {
+      final e = ApiException.fromDioException(
+        DioException(
+          requestOptions: req(),
+          type: DioExceptionType.badResponse,
+          response: Response<dynamic>(
+            requestOptions: req(),
+            statusCode: 400,
+            data: ['User with this muid not found or is suspended.'],
+          ),
+        ),
+      );
+      expect(e.message, 'User with this muid not found or is suspended.');
+      expect(e.statusCode, 400);
+      expect(e.kind, ApiErrorKind.validation);
+    });
+
+    test('several list messages are kept, one per line', () {
+      final e = ApiException.fromDioException(
+        DioException(
+          requestOptions: req(),
+          type: DioExceptionType.badResponse,
+          response: Response<dynamic>(requestOptions: req(), statusCode: 400, data: ['First.', 'Second.']),
+        ),
+      );
+      expect(e.message, 'First.\nSecond.');
+    });
+
     test('parses DRF field-keyed validation errors', () {
       final e = ApiException.fromDioException(
         DioException(

@@ -80,6 +80,14 @@ class ApiException implements Exception {
         if (data is Map<String, dynamic>) {
           return ApiException.fromEnvelopeBody(data, statusCode: e.response?.statusCode);
         }
+        // DRF's default handler: a ValidationError raised outside
+        // is_valid() (e.g. in a serializer's create()) is a bare list.
+        if (data is List) {
+          final messages = [for (final m in data) if (m is String && m.trim().isNotEmpty) m.trim()];
+          if (messages.isNotEmpty) {
+            return ApiException(message: messages.join('\n'), statusCode: e.response?.statusCode);
+          }
+        }
         return ApiException(
           message: 'Request failed'
               '${e.response?.statusCode != null ? ' (${e.response?.statusCode})' : ''}.',
