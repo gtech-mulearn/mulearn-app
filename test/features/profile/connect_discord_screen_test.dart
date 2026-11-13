@@ -71,4 +71,13 @@ void main() {
     expect(find.byType(ConnectDiscordScreen), findsOneWidget);
     expect(connectCalls(), 1);
   });
+
+  testWidgets('a screen opened from the link has a way home', (tester) async {
+    await pumpAt(tester, '/dashboard/connect-discord?code=bad');
+
+    await tester.tap(find.text('Not now'));
+    await settle(tester);
+
+    expect(find.text('home'), findsOneWidget);
+  });
 }

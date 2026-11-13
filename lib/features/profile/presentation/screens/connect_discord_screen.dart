@@ -40,6 +40,11 @@ class _ConnectDiscordScreenState extends ConsumerState<ConnectDiscordScreen> {
 
   void _startFlow() => unawaited(ref.read(discordConnectFlowProvider.notifier).start());
 
+  /// Opened from a link, the screen is the whole stack: leave to Home.
+  void _leave() => context.canPop() ? context.pop() : context.go(RoutePaths.home);
+
+  Widget get _notNow => TextButton(onPressed: _leave, child: const Text('Not now'));
+
   @override
   Widget build(BuildContext context) {
     final available = ref.watch(discordAuthUriProvider) != null;
@@ -49,7 +54,11 @@ class _ConnectDiscordScreenState extends ConsumerState<ConnectDiscordScreen> {
         icon: LucideIcons.messageCircle,
         title: 'Join the μLearn Discord',
         message: 'Link your Discord account to join the server, where task proof is posted and karma is counted.',
-        actions: [if (available) MuPrimaryButton(label: 'Connect Discord', onPressed: _startFlow)],
+        actions: [
+          if (available) MuPrimaryButton(label: 'Connect Discord', onPressed: _startFlow),
+          const SizedBox(height: MuSpace.m),
+          _notNow,
+        ],
       );
     } else {
       final state = ref.watch(discordConnectControllerProvider);
@@ -60,7 +69,11 @@ class _ConnectDiscordScreenState extends ConsumerState<ConnectDiscordScreen> {
           iconColor: MuColors.error,
           title: "Couldn't connect Discord",
           message: ApiException.messageFor(error),
-          actions: [if (available) MuPrimaryButton(label: 'Try again', onPressed: _startFlow)],
+          actions: [
+            if (available) MuPrimaryButton(label: 'Try again', onPressed: _startFlow),
+            const SizedBox(height: MuSpace.m),
+            _notNow,
+          ],
         ),
         data: (message) => message == null
             ? const _Connecting()
@@ -75,14 +88,20 @@ class _ConnectDiscordScreenState extends ConsumerState<ConnectDiscordScreen> {
                     onPressed: () => unawaited(ref.read(openExternalProvider)(discordServerInvite)),
                   ),
                   const SizedBox(height: MuSpace.m),
-                  TextButton(onPressed: () => context.go(RoutePaths.home), child: const Text('Done')),
+                  TextButton(onPressed: _leave, child: const Text('Done')),
                 ],
               ),
       );
     }
     return Scaffold(
       backgroundColor: MuColors.canvas,
-      appBar: AppBar(backgroundColor: MuColors.canvas, title: Text('Discord', style: MuType.headline)),
+      appBar: AppBar(
+        backgroundColor: MuColors.canvas,
+        title: Text('Discord', style: MuType.headline),
+        leading: context.canPop()
+            ? null
+            : IconButton(tooltip: 'Close', icon: const Icon(LucideIcons.x), onPressed: _leave),
+      ),
       body: SafeArea(child: Padding(padding: const EdgeInsets.all(MuSpace.screenH), child: body)),
     );
   }
