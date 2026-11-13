@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:mulearn_app/core/design_system/navigation/mu_nav_capsule.dart';
 import 'package:mulearn_app/core/notifications/unread_notifications.dart';
 import 'package:mulearn_app/core/notifications/unread_refresh_triggers.dart';
 import 'package:mulearn_app/core/session/discord_resume_check.dart';
-import 'package:mulearn_app/core/widgets/mu_bottom_nav.dart';
 
 /// Bottom-navigation shell for the five signed-in top-level destinations
 /// (Home, Tasks, Journey, Ranks, You) — the `builder` for the router's
@@ -26,8 +26,8 @@ class MainShell extends ConsumerWidget {
 
   static const _items = [
     MuNavItem(icon: LucideIcons.home, label: 'Home'),
-    MuNavItem(icon: LucideIcons.listTodo, label: 'Tasks'),
-    MuNavItem(icon: LucideIcons.flag, label: 'Journey'),
+    MuNavItem(icon: LucideIcons.checkSquare, label: 'Tasks'),
+    MuNavItem(icon: LucideIcons.milestone, label: 'Journey'),
     MuNavItem(icon: LucideIcons.trophy, label: 'Ranks'),
     MuNavItem(icon: LucideIcons.user, label: 'You'),
   ];
@@ -37,10 +37,10 @@ class MainShell extends ConsumerWidget {
     return Scaffold(
       extendBody: true,
       body: UnreadRefreshTriggers(child: DiscordResumeCheck(child: navigationShell)),
-      bottomNavigationBar: MuBottomNav(
+      bottomNavigationBar: MuNavCapsule(
         items: _items,
         currentIndex: navigationShell.currentIndex,
-        onTap: (index) {
+        onSelect: (index) {
           if (index == 0) unawaited(ref.read(unreadNotificationsProvider.notifier).refreshIfStale());
           navigationShell.goBranch(
             index,
