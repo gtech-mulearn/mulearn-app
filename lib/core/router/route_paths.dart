@@ -30,6 +30,9 @@ abstract final class RoutePaths {
   /// dashboard's page). Query: `code`.
   static const String connectDiscord = '/dashboard/connect-discord';
 
+  // --- Role workspaces (Plan 4), opened from Home and Profile ---
+  static const String mentor = '/mentor';
+
   /// Read-only view of another user's profile by muid.
   static const String publicProfile = '/u/:muid';
   static String publicProfilePath(String muid) => '/u/$muid';

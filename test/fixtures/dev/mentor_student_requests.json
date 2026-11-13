@@ -1,0 +1,26 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/mentor/session/student-requests/?pageIndex=1&perPage=1",
+    "account": "mentor",
+    "status": 200,
+    "recorded_at": "2026-11-13T08:05:17.298320Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "data": [],
+      "pagination": {
+        "count": 0,
+        "totalPages": 1,
+        "isNext": false,
+        "isPrev": false,
+        "nextPage": null
+      }
+    }
+  }
+}

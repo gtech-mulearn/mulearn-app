@@ -417,6 +417,55 @@ abstract final class NotificationPaths {
   static String archive(String id) => '/api/v1/notification/$id/archive/';
 }
 
+// --- Mentor workspace — `api/dashboard/mentor/urls.py` (Plan 4) ---
+
+/// Mentor endpoints. Sessions, participants, availability and requests are
+/// `role_required([Mentor])`; writes also need an active mentor account.
+abstract final class MentorPaths {
+  const MentorPaths._();
+
+  static const String _base = '/api/v1/dashboard/mentor';
+
+  /// `GET` → `{scopes: [{scope_type, scope_id, scope_name, metrics}]}`.
+  static const String overview = '$_base/overview/';
+  static const String analyticsPersonal = '$_base/analytics/personal/';
+  static const String profileCompletion = '$_base/profile/completion/';
+  static const String personaStatus = '$_base/persona/status/';
+  static const String personaCurrent = '$_base/persona/current/';
+
+  /// `POST {persona: learner|mentor, scope_type?, scope_id?}`.
+  static const String personaSwitch = '$_base/persona/switch/';
+
+  /// `GET ?status=&sortBy=&pageIndex&perPage` — the caller's own sessions.
+  static const String sessions = '$_base/session/list/';
+  static String session(String id) => '$_base/session/list/$id/';
+  static const String sessionCreate = '$_base/session/create/';
+
+  /// `PATCH` edits, `DELETE` soft-deletes.
+  static String sessionUpdate(String id) => '$_base/session/update/$id/';
+
+  /// `POST` — only a SCHEDULED session.
+  static String sessionComplete(String id) => '$_base/session/complete/$id/';
+  static String participants(String sessionId) => '$_base/session/participant/list/$sessionId/';
+
+  /// `POST {muid}`.
+  static String participantAdd(String sessionId) => '$_base/session/participant/add/$sessionId/';
+
+  /// `PATCH {attendance_status, progress_note, contributed_minutes}`.
+  static String participantUpdate(String linkId) => '$_base/session/participant/update/$linkId/';
+
+  /// `GET` — REQUESTED sessions in the mentor's scopes.
+  static const String studentRequests = '$_base/session/student-requests/';
+
+  /// `POST {status: APPROVED|REJECTED, starts_at?, ends_at?, mode?, meeting_link?, venue?}`.
+  static String studentRequestVerify(String sessionId) => '$_base/session/student-requests/$sessionId/verify/';
+  static const String availability = '$_base/availability/';
+  static String availabilitySlot(String id) => '$_base/availability/$id/';
+
+  /// `GET` → `[{id, name}]`: the interest groups the mentor can use.
+  static const String igDropdown = '$_base/tasks/ig-dropdown/';
+}
+
 /// Per-request option flags read by the interceptors.
 abstract final class RequestFlags {
   const RequestFlags._();

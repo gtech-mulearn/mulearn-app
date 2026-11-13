@@ -9,6 +9,10 @@ abstract interface class DashboardRepository {
   /// `GET /api/v1/dashboard/events/featured/`.
   Future<List<FeaturedEvent>> getFeaturedEvents();
 
+  /// An approved mentor's upcoming sessions across their scopes, for the
+  /// Home workspace card (the mentor feature has the full overview).
+  Future<int> getMentorUpcomingCount();
+
   /// The learner's week: weekly karma, streak, next circle meeting.
   Future<LearnerSummary> getLearnerSummary();
 

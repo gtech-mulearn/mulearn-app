@@ -1,0 +1,30 @@
+import 'package:dio/dio.dart';
+import 'package:mulearn_app/core/network/api_envelope.dart';
+import 'package:mulearn_app/core/network/api_paths.dart';
+
+/// The mentor workspace endpoints (`api/dashboard/mentor/urls.py`).
+class MentorRemoteDataSource {
+  const MentorRemoteDataSource(this._dio);
+
+  final Dio _dio;
+
+  Future<Map<String, dynamic>> fetchOverview() async =>
+      ApiEnvelope.unwrapObject(await _dio.get<dynamic>(MentorPaths.overview));
+
+  Future<Map<String, dynamic>> fetchAnalytics() async =>
+      ApiEnvelope.unwrapObject(await _dio.get<dynamic>(MentorPaths.analyticsPersonal));
+
+  Future<Map<String, dynamic>> fetchProfileCompletion() async =>
+      ApiEnvelope.unwrapObject(await _dio.get<dynamic>(MentorPaths.profileCompletion));
+
+  /// `{data, pagination}`.
+  Future<Map<String, dynamic>> fetchSessions(Map<String, Object> query) async =>
+      ApiEnvelope.unwrapObject(await _dio.get<dynamic>(MentorPaths.sessions, queryParameters: query));
+
+  Future<Map<String, dynamic>> fetchSession(String id) async =>
+      ApiEnvelope.unwrapObject(await _dio.get<dynamic>(MentorPaths.session(id)));
+
+  /// `{data, pagination}` of REQUESTED sessions in the mentor's scopes.
+  Future<Map<String, dynamic>> fetchStudentRequests(Map<String, Object> query) async =>
+      ApiEnvelope.unwrapObject(await _dio.get<dynamic>(MentorPaths.studentRequests, queryParameters: query));
+}

@@ -1,0 +1,25 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/mentor/profile/completion/",
+    "account": "mentor",
+    "status": 200,
+    "recorded_at": "2026-11-13T08:05:17.298320Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "percentage": 75,
+      "checklist": {
+        "about": true,
+        "expertise": true,
+        "linkedin": false,
+        "preferred_igs": true
+      }
+    }
+  }
+}

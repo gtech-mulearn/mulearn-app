@@ -12,6 +12,10 @@ class DashboardRemoteDataSource {
 
   /// `GET /api/v1/dashboard/events/featured/` — items live under
   /// `response.data`, a `pagination` sibling key sits alongside it.
+  /// `GET mentor/overview/` — Home reads only the upcoming-session counts.
+  Future<Map<String, dynamic>> fetchMentorOverview() async =>
+      ApiEnvelope.unwrapObject(await _dio.get<dynamic>(MentorPaths.overview));
+
   Future<Map<String, dynamic>> fetchLearnerSummary() async =>
       ApiEnvelope.unwrapObject(await _dio.get<dynamic>(ApiPaths.learnerSummary));
 

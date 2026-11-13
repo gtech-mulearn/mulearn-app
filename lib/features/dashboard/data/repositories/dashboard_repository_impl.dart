@@ -32,6 +32,17 @@ class DashboardRepositoryImpl implements DashboardRepository {
   Future<LearnerSummary> getLearnerSummary() =>
       _guard(() async => LearnerSummaryDto.fromJson(await _remote.fetchLearnerSummary()).toDomain());
 
+  @override
+  Future<int> getMentorUpcomingCount() => _guard(() async {
+        final body = await _remote.fetchMentorOverview();
+        var total = 0;
+        for (final scope in body['scopes'] as List<dynamic>? ?? const []) {
+          final metrics = (scope as Map<String, dynamic>)['metrics'] as Map<String, dynamic>?;
+          total += (metrics?['upcoming_sessions'] as num?)?.toInt() ?? 0;
+        }
+        return total;
+      });
+
   Future<T> _guard<T>(Future<T> Function() action) async {
     try {
       return await action();

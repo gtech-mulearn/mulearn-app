@@ -1,0 +1,38 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/mentor/overview/",
+    "account": "mentor",
+    "status": 200,
+    "recorded_at": "2026-11-13T08:05:17.298320Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": [
+        "Mentor dashboard fetched successfully."
+      ]
+    },
+    "response": {
+      "scopes": [
+        {
+          "scope_type": "IG_MENTOR",
+          "scope_id": "4ff0a5e5-d1ef-44dd-ac13-9a2f9e7717e3",
+          "scope_name": "Web Development",
+          "metrics": {
+            "total_ig_learners": 6,
+            "active_ig_learners": 6,
+            "inactive_ig_learners": 0,
+            "upcoming_sessions": 2,
+            "completed_sessions": 0,
+            "pending_tasks": 0,
+            "ig_learning_circles": 3,
+            "open_opportunities": 0,
+            "ig_tasks": 0
+          }
+        }
+      ]
+    }
+  }
+}

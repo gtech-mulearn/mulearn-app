@@ -27,6 +27,7 @@ import 'package:mulearn_app/core/widgets/role_pending_banner.dart';
 import 'package:mulearn_app/features/dashboard/domain/entities/my_progress_summary.dart';
 import 'package:mulearn_app/features/dashboard/presentation/providers/dashboard_controller.dart';
 import 'package:mulearn_app/features/dashboard/presentation/widgets/featured_events_list.dart';
+import 'package:mulearn_app/features/dashboard/presentation/widgets/workspace_cards.dart';
 
 /// Home dashboard — the landing screen after sign-in (DESIGN_SPEC.md §2 "03 —
 /// Home"). Greeting header, a dark karma "hero" card, quick links into Tasks
@@ -79,6 +80,8 @@ class HomeScreen extends ConsumerWidget {
                     ),
                     // A role awaiting verification (ROLE-02).
                     const PendingRoleBanners(),
+                    // Role workspaces open from Home (spec §8.2 item 5).
+                    const WorkspaceCards(),
                     const SizedBox(height: MuSpace.xxl),
                     summaryState.when(
                       skipError: true,

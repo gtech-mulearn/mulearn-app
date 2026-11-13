@@ -5,6 +5,7 @@ import 'package:mulearn_app/app/widgets/main_shell.dart';
 import 'package:mulearn_app/app/widgets/not_found_screen.dart';
 import 'package:mulearn_app/core/auth/app_auth_controller.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
+import 'package:mulearn_app/core/widgets/workspace_gate.dart';
 import 'package:mulearn_app/features/auth/presentation/screens/forgot_password_screen.dart';
 import 'package:mulearn_app/features/auth/presentation/screens/onboarding_interests_screen.dart';
 import 'package:mulearn_app/features/auth/presentation/screens/register_basic_info_screen.dart';
@@ -25,6 +26,7 @@ import 'package:mulearn_app/features/learning_circles/presentation/screens/edit_
 import 'package:mulearn_app/features/learning_circles/presentation/screens/learning_circle_detail_screen.dart';
 import 'package:mulearn_app/features/learning_circles/presentation/screens/learning_circles_screen.dart';
 import 'package:mulearn_app/features/learning_circles/presentation/screens/meeting_detail_screen.dart';
+import 'package:mulearn_app/features/mentor/presentation/screens/mentor_hub_screen.dart';
 import 'package:mulearn_app/features/notifications/presentation/screens/notifications_screen.dart';
 import 'package:mulearn_app/features/profile/presentation/screens/change_password_screen.dart';
 import 'package:mulearn_app/features/profile/presentation/screens/connect_discord_screen.dart';
@@ -153,6 +155,14 @@ GoRouter goRouter(Ref ref) {
       GoRoute(
         path: RoutePaths.settingsPassword,
         builder: (_, __) => const ChangePasswordScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.mentor,
+        builder: (_, __) => WorkspaceGate(
+          select: (a) => a.mentor,
+          role: 'Mentor',
+          builder: (_) => const MentorHubScreen(),
+        ),
       ),
       GoRoute(
         path: RoutePaths.connectDiscord,

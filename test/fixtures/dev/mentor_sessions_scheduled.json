@@ -1,0 +1,73 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/mentor/session/list/?status=SCHEDULED&sortBy=starts_at&pageIndex=1&perPage=20",
+    "account": "mentor",
+    "status": 200,
+    "recorded_at": "2026-11-13T08:05:17.298320Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "data": [
+        {
+          "id": "282426eb-7650-45da-bbf1-905fe1835115",
+          "entity_id": "4ff0a5e5-d1ef-44dd-ac13-9a2f9e7717e3",
+          "entity_name": "Web Development",
+          "session_type": "IG_SESSION",
+          "title": "Office hours: debugging your first Flutter app",
+          "description": "Bring a bug or a half-built screen; we fix it together.",
+          "mode": "ONLINE",
+          "starts_at": "2026-11-20T12:30:00Z",
+          "ends_at": "2026-11-20T13:30:00Z",
+          "status": "SCHEDULED",
+          "created_by_id": "a1865006-6d7a-482c-8a66-e76663e3ec49",
+          "created_by_name": "Fixture User",
+          "created_at": "2026-11-12T16:06:23Z",
+          "max_participants": 30,
+          "meeting_link": "https://meet.google.com/qmn-ofhr-flt",
+          "venue": null,
+          "is_recurring": false,
+          "parent_session_id": null,
+          "recurrence_type": null,
+          "recurrence_interval": null,
+          "recurrence_end_date": null
+        },
+        {
+          "id": "2b297567-a555-40ca-ab32-20d355996c59",
+          "entity_id": "4ff0a5e5-d1ef-44dd-ac13-9a2f9e7717e3",
+          "entity_name": "Web Development",
+          "session_type": "IG_SESSION",
+          "title": "Portfolio review: web projects",
+          "description": "Five-minute walkthroughs of your best project with feedback on structure and deployment.",
+          "mode": "OFFLINE",
+          "starts_at": "2026-11-27T09:30:00Z",
+          "ends_at": "2026-11-27T11:30:00Z",
+          "status": "SCHEDULED",
+          "created_by_id": "a1865006-6d7a-482c-8a66-e76663e3ec49",
+          "created_by_name": "Fixture User",
+          "created_at": "2026-11-12T16:06:23Z",
+          "max_participants": 30,
+          "meeting_link": null,
+          "venue": "Seminar Hall 2, St. Joseph's College of Engineering and Technology",
+          "is_recurring": false,
+          "parent_session_id": null,
+          "recurrence_type": null,
+          "recurrence_interval": null,
+          "recurrence_end_date": null
+        }
+      ],
+      "pagination": {
+        "count": 2,
+        "totalPages": 1,
+        "isNext": false,
+        "isPrev": false,
+        "nextPage": null
+      }
+    }
+  }
+}

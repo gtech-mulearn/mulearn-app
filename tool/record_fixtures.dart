@@ -46,6 +46,19 @@ List<_Target> _targets() {
     const _Target('user_info_enabler', '/api/v1/dashboard/user/info/', account: 'enabler'),
     const _Target('user_info_campuslead', '/api/v1/dashboard/user/info/', account: 'campuslead'),
     const _Target('mentor_status', '/api/v1/dashboard/mentor/status/', account: 'mentor'),
+    // Plan 4: mentor workspace (QA mentor).
+    const _Target('mentor_overview', '/api/v1/dashboard/mentor/overview/', account: 'mentor'),
+    const _Target('mentor_analytics', '/api/v1/dashboard/mentor/analytics/personal/', account: 'mentor'),
+    const _Target('mentor_profile_completion', '/api/v1/dashboard/mentor/profile/completion/', account: 'mentor'),
+    const _Target('mentor_sessions_scheduled',
+        '/api/v1/dashboard/mentor/session/list/?status=SCHEDULED&sortBy=starts_at&pageIndex=1&perPage=20',
+        account: 'mentor'),
+    // The QA mentor's seeded session on dev (2026-11-13).
+    const _Target('mentor_session_detail',
+        '/api/v1/dashboard/mentor/session/list/282426eb-7650-45da-bbf1-905fe1835115/', account: 'mentor'),
+    const _Target('mentor_student_requests',
+        '/api/v1/dashboard/mentor/session/student-requests/?pageIndex=1&perPage=1', account: 'mentor'),
+    const _Target('mentor_ig_dropdown', '/api/v1/dashboard/mentor/tasks/ig-dropdown/', account: 'mentor'),
     const _Target('user_profile', '/api/v1/dashboard/profile/user-profile/'),
     // Plan 4: `role_verification` per role account (workspace access).
     const _Target('user_profile_mentor', '/api/v1/dashboard/profile/user-profile/', account: 'mentor'),

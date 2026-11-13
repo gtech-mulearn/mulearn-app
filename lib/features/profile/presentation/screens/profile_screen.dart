@@ -11,6 +11,7 @@ import 'package:mulearn_app/core/widgets/mu_qr_card.dart';
 import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/core/widgets/mu_toast.dart';
 import 'package:mulearn_app/core/widgets/role_pending_banner.dart';
+import 'package:mulearn_app/core/widgets/workspace_links.dart';
 import 'package:mulearn_app/features/profile/domain/entities/user_profile.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/editable_profile_controller.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/profile_controller.dart';
@@ -111,6 +112,8 @@ class _ProfileBodyState extends State<_ProfileBody>
                 ),
                 // A role awaiting verification (ROLE-02).
                 const PendingRoleBanners(),
+                // Open role workspaces (spec §8.2 item 5).
+                const WorkspaceLinks(),
                 const SizedBox(height: MuSpace.l),
                 ProfileStatsRow(profile: profile),
                 const SizedBox(height: MuSpace.l),
