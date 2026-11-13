@@ -169,3 +169,29 @@ New findings for Plan 3:
 - Home shows the raw level name ("Level lvl1"); the dashboard formats it.
 - Journey marks lvl2–lvl6 "CLEARED" and lvl7 "YOU ARE HERE" for a 0-karma lvl1 student — the level status logic disagrees with `/profile/user-profile/`'s `level`.
 - Riverpod 3 auto-retries failing providers app-wide; only the shared profile opts out. Decide a global retry policy (hardening plan).
+
+## 14. Gap status after Plan 3 (2026-11-13)
+
+Plan 3 (`docs/superpowers/plans/2026-11-13-plan-3-learner-features.md`) ran inline on `feat/app-parity`; each commit passed analyze + the full suite on its own (310 tests at the end). The Plan 2 final review's four Important findings were fixed first (`5765707`).
+
+| Item | Status | Evidence / what is pending |
+|---|---|---|
+| API-10 notifications | Done — phone: badge seen | `1aef1d6` feed/read/archive/unread, `d9bc607` inbox + tap-through + Home badge. Live: mark read lowered unread-count 21 → 20. **No polling** (user, 2026-11-13): the badge refreshes on sign-in, app resume and the Home tab (5-minute staleness window) and is adjusted locally by the inbox's own actions. |
+| UX-03 / SEC-14 Settings | Done | `4bd5966`: password (the dashboard's rules), privacy switch, legal links, sign out, deletion = email to info@mulearn.org (no hard delete). Live: a password changed here signs in through the authserver (changed, verified, restored). |
+| UX-02 Discord connect | Done in the app — host file pending | `b47ab5f`, `bb2339b`. Uses the dev dashboard's (`mulearn-dashboard.vercel.app`) Discord URL; the redirect host is `mulearn-dev.vercel.app`. Phone: the App Link opens the app's connect screen and shows the backend's reply. Verified App Links need `assetlinks.json` on that host (ops; see `docs/backend-and-ops-todo.md`). Dev `DASHBOARD_URL` corrected to the Vercel dashboard. |
+| FEAT-05 Home summary | Done — phone: seen | `4561807`: week chips, next meetup, setup checklist, "Level 1". Rank stays the profile's (the summary's rank is a different definition). |
+| Journey level status (spec §13) | Done | `273a1cd`: status from the user's level; reproduced first by a widget test on the recorded dev levels (6× CLEARED). |
+| FEAT-06 achievements / SEC-04 | Done | `8635154`: Earned / Eligible (claim) / In Progress; VC issuance hidden. Live: two QA-only badges seeded, claimed, then revoked and deleted. |
+| FEAT-07 circles | Done | `6a50974` leave / remove / cancel RSVP / co-lead invite (all live, undone); `48613fe` discovery filters (status, IG, search). |
+| FEAT-09 / UX-07 events | Done | `9a23ec8`: search + filters, the backend's blocked reason up front with actions disabled, live linked tasks. A seeded linked task awaits admin approval on dev. |
+| FEAT-08 / API-13 / UX-07 interest groups | Done | `a815b4d`: dedicated join/leave (live: 4th join refused; leave + rejoin unchanged), the 3-group cap shown up front, office hours, circles/events/impact projects, `icon_image`. |
+| UX-05 / UX-08 states and labels | Done | `72e1846`: `MuRefresh` everywhere, data kept on failed refresh, Profile tab no longer resets, keep-alive for mutations, every icon button labelled (architecture test). |
+
+Device checks still pending (HyperOS blocks adb taps; the user can tap): the inbox tap-through, Settings, Journey after the fix, TalkBack labels.
+
+Findings for later plans:
+- The dashboard links `EVENT_PUBLISHED` notifications to the organiser's manage page, but the backend sends them to everyone in the event's scope; the app opens the public event page.
+- Two rank definitions: the learner summary counts wallets with more karma; the profile's rank differs (2 vs 15 for the QA student).
+- `lib/core/config/env.g.dart` is committed and bakes `.env.prod` values (only public hosts today) — revisit in hardening.
+- Profile's `InterestGroupsEditController` (ig-edit) is dead code.
+- Received circle invites carry `is_lead_invite`; the inbox could say "as co-lead".

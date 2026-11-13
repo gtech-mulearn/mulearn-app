@@ -47,7 +47,6 @@ Work the app needs but can't do itself: this round changes no backend, authserve
 
 | # | Gap | What the app does today | Ask |
 |---|---|---|---|
-| 6 | Changing the password via `/dashboard/profile/change-password/` may not reach authserver logins (to be verified in Plan 3, Task 3) | Hides "Change password" if the new password can't sign in | Make password change and login use the same credential store |
 | 7 | Account deletion: `DELETE /dashboard/profile/` hard-deletes with cascade (SEC-14) | "Delete account" emails support (`info@mulearn.org`) | A soft-delete request endpoint with a grace period, then deletion |
 | 8 | Verifiable credentials can only be issued through the unauthenticated QSeverse proxy with client-chosen content (SEC-04) | "Issue" is hidden (`FeatureFlags.vcIssuance = false`) | A server-side issue endpoint that builds the credential itself |
 | 9 | Email verification isn't deployed on dev (AUTH-04) | Not built | Deploy it to dev so it can be verified |
@@ -55,3 +54,13 @@ Work the app needs but can't do itself: this round changes no backend, authserve
 | 11 | Interest-group join cap: `InterestGroupMembershipAPI.post` checks the 3-group cap only when no link exists, so reactivating an old inactive link can exceed 3 (`dash_ig_view.py:1275`) | Enforces 3 in the UI (Plan 3, Task 11) | Apply the cap on reactivation too |
 | 12 | `unread-count` counts personal notifications only, while the feed also has unread broadcasts | Badge = `unread_count`, like the dashboard | Include unread broadcasts, or document the rule |
 | 13 | No `ETag`/`Last-Modified` on read endpoints | Refetches full bodies on refresh | Conditional GETs (`304`) for the profile, summary, feed and catalogs |
+| 14 | Two rank definitions: the learner summary's `stats.rank` (wallets with more karma + 1) vs the profile's rank (2 vs 15 for the same user, dev 2026-11-13) | Home and Profile show the profile's rank | One rank definition, or name them differently |
+| 15 | Event-linked tasks are created `active: false` ("Pending admin approval") | Lists only active linked tasks | Nothing, if approval is intended; otherwise document who approves |
+
+## Dashboard (web) findings
+
+- `notification-href.ts` sends `EVENT_PUBLISHED` to `/dashboard/manage-events/<id>`, but the backend dispatches it to `Audience.event_scope` (every learner in scope), who can't use the manage page. The app opens the public event page.
+- The dev dashboard's Discord redirect points at `mulearn-dev.vercel.app` (an old build), not at the dashboard itself (see item 3).
+
+Resolved:
+- (was 6) A password changed through `/dashboard/profile/change-password/` does sign in through the authserver — verified live 2026-11-13 (Plan 3, Task 3).
