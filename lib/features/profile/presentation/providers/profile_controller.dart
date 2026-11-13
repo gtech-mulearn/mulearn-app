@@ -31,7 +31,9 @@ class ProfileController extends _$ProfileController {
   }
 
   /// Refetches the shared profile; every reader of it refreshes.
-  Future<void> refresh() async => ref.invalidate(myProfilePayloadProvider);
+  /// Refetches the shared profile and waits for it (pull-to-refresh keeps
+  /// its indicator until then); every reader refreshes.
+  Future<void> refresh() async => ref.refresh(myProfilePayloadProvider.future);
 
   /// Toggles profile visibility: shown at once, then the shared profile is
   /// refetched so every reader (and a later rebuild) agrees with the server.

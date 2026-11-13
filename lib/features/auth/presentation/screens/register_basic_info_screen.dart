@@ -136,6 +136,7 @@ class _RegisterBasicInfoScreenState
                         labelText: 'Password',
                         hintText: 'Create password',
                         suffixIcon: IconButton(
+                          tooltip: _obscurePassword ? 'Show password' : 'Hide password',
                           icon: Icon(
                             _obscurePassword ? LucideIcons.eye : LucideIcons.eyeOff,
                             color: MuColors.inkSecondary,
@@ -166,6 +167,7 @@ class _RegisterBasicInfoScreenState
                         labelText: 'Confirm Password',
                         hintText: 'Re-enter password',
                         suffixIcon: IconButton(
+                          tooltip: _obscureConfirm ? 'Show password' : 'Hide password',
                           icon: Icon(
                             _obscureConfirm ? LucideIcons.eye : LucideIcons.eyeOff,
                             color: MuColors.inkSecondary,

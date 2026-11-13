@@ -23,6 +23,7 @@ class CoverPhotoController extends _$CoverPhotoController {
     // look "stuck" despite the upload having succeeded. Evicting the
     // previous URL from cache forces a real re-fetch regardless.
     final previousUrl = ref.read(profileControllerProvider).value?.coverPicUrl;
+    final link = ref.keepAlive(); // finish the follow-up refresh even if the screen closes
     state = const AsyncLoading();
     final result = await AsyncValue.guard(() async {
       await ref
@@ -34,10 +35,12 @@ class CoverPhotoController extends _$CoverPhotoController {
       ref.invalidate(myProfilePayloadProvider);
     });
     if (ref.mounted) state = result;
+    link.close();
   }
 
   Future<void> delete() async {
     final previousUrl = ref.read(profileControllerProvider).value?.coverPicUrl;
+    final link = ref.keepAlive(); // finish the follow-up refresh even if the screen closes
     state = const AsyncLoading();
     final result = await AsyncValue.guard(() async {
       await ref.read(profileRepositoryProvider).deleteCoverPic();
@@ -47,5 +50,6 @@ class CoverPhotoController extends _$CoverPhotoController {
       ref.invalidate(myProfilePayloadProvider);
     });
     if (ref.mounted) state = result;
+    link.close();
   }
 }

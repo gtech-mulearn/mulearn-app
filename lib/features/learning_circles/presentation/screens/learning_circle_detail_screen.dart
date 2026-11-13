@@ -14,6 +14,7 @@ import 'package:mulearn_app/core/widgets/mu_card.dart';
 import 'package:mulearn_app/core/widgets/mu_chip.dart';
 import 'package:mulearn_app/core/widgets/mu_icon_button.dart';
 import 'package:mulearn_app/core/widgets/mu_load_more_footer.dart';
+import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/core/widgets/mu_section_header.dart';
 import 'package:mulearn_app/core/widgets/mu_stat_block.dart';
 import 'package:mulearn_app/core/widgets/mu_task_tile.dart';
@@ -48,6 +49,7 @@ class LearningCircleDetailScreen extends ConsumerWidget {
         ),
       ),
       body: detailState.when(
+        skipError: true,
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => ErrorRetryView(
           error: error,
@@ -78,12 +80,11 @@ class _CircleDetailBody extends ConsumerWidget {
         members.any((m) => m.muid == myMuid && m.isLeader);
     final role = circleRole(myMuid: myMuid, creatorMuid: detail.createdBy.muid, members: members);
 
-    return RefreshIndicator(
-      onRefresh: () async {
-        ref
-          ..invalidate(circleDetailProvider(circleId))
-          ..invalidate(circleMembersProvider(circleId));
-      },
+    return MuRefresh(
+      onRefresh: () => Future.wait([
+        ref.refresh(circleDetailProvider(circleId).future),
+        ref.refresh(circleMembersProvider(circleId).future),
+      ]),
       child: ListView(
         padding: const EdgeInsets.all(MuSpace.screenH),
         children: [
@@ -479,6 +480,7 @@ class _JoinRequestTile extends ConsumerWidget {
           ),
         ),
         MuIconButton(
+          tooltip: 'Accept join request',
           icon: LucideIcons.check,
           onPressed: () => ref
               .read(circleActionsControllerProvider.notifier)
@@ -486,6 +488,7 @@ class _JoinRequestTile extends ConsumerWidget {
         ),
         const SizedBox(width: MuSpace.s),
         MuIconButton(
+          tooltip: 'Decline join request',
           icon: LucideIcons.x,
           onPressed: () => ref
               .read(circleActionsControllerProvider.notifier)
@@ -511,6 +514,7 @@ class _InvitesSection extends ConsumerWidget {
           children: [
             const Expanded(child: MuSectionHeader(title: 'Invites')),
             MuIconButton(
+              tooltip: 'Invite someone',
               icon: LucideIcons.userPlus,
               onPressed: () => _showInviteDialog(context, ref, circleId),
             ),
@@ -638,6 +642,7 @@ class _MeetingsSection extends ConsumerWidget {
             const Expanded(child: MuSectionHeader(title: 'Meetings')),
             if (isLead)
               MuIconButton(
+                tooltip: 'New meeting',
                 icon: LucideIcons.plus,
                 onPressed: () => context.push(RoutePaths.createMeetingPath(circleId)),
               ),

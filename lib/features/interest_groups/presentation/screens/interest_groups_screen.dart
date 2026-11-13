@@ -9,6 +9,7 @@ import 'package:mulearn_app/core/theme/mulearn_colors.dart';
 import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/core/widgets/mu_icon_button.dart';
+import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/features/interest_groups/presentation/providers/interest_groups_controller.dart';
 import 'package:mulearn_app/features/interest_groups/presentation/widgets/interest_group_card.dart';
 
@@ -30,17 +31,17 @@ class InterestGroupsScreen extends ConsumerWidget {
       body: SafeArea(
         bottom: false,
         child: catalogState.when(
+          skipError: true,
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (error, _) => ErrorRetryView(
             error: error,
             onRetry: () => ref.invalidate(interestGroupsCatalogProvider),
           ),
-          data: (groups) => RefreshIndicator(
-            onRefresh: () async {
-              ref
-                ..invalidate(interestGroupsCatalogProvider)
-                ..invalidate(myProfilePayloadProvider);
-            },
+          data: (groups) => MuRefresh(
+            onRefresh: () => Future.wait([
+              ref.refresh(interestGroupsCatalogProvider.future),
+              ref.refresh(myProfilePayloadProvider.future),
+            ]),
             child: CustomScrollView(
               physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
               slivers: [
@@ -94,7 +95,7 @@ class _Header extends StatelessWidget {
           if (Navigator.of(context).canPop())
             Padding(
               padding: const EdgeInsets.only(bottom: MuSpace.l),
-              child: MuIconButton(icon: LucideIcons.arrowLeft, onPressed: () => context.pop()),
+              child: MuIconButton(tooltip: 'Back', icon: LucideIcons.arrowLeft, onPressed: () => context.pop()),
             ),
           Text('Interest groups', style: MuType.display.copyWith(fontSize: 30)),
           const SizedBox(height: MuSpace.s),

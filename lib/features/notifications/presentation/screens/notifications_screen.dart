@@ -122,6 +122,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
       ),
       body: SafeArea(
         child: notificationsState.when(
+          skipError: true,
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (error, _) => ErrorRetryView(
             error: error,

@@ -19,6 +19,7 @@ import 'package:mulearn_app/core/utils/level_label.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/core/widgets/mu_card.dart';
 import 'package:mulearn_app/core/widgets/mu_icon_button.dart';
+import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/core/widgets/mu_section_header.dart';
 import 'package:mulearn_app/core/widgets/mu_skeleton.dart';
 import 'package:mulearn_app/core/widgets/profile_avatar.dart';
@@ -43,7 +44,7 @@ class HomeScreen extends ConsumerWidget {
   Future<void> _refreshAll(WidgetRef ref) => Future.wait([
         ref.read(myProgressSummaryControllerProvider.notifier).refresh(),
         ref.read(featuredEventsControllerProvider.notifier).refresh(),
-        ref.refresh(learnerSummaryProvider.future).then((_) {}, onError: (_) {}),
+        ref.refresh(learnerSummaryProvider.future),
       ]);
 
   @override
@@ -54,7 +55,7 @@ class HomeScreen extends ConsumerWidget {
       backgroundColor: MuColors.canvas,
       body: SafeArea(
         bottom: false,
-        child: RefreshIndicator(
+        child: MuRefresh(
           onRefresh: () => _refreshAll(ref),
           child: CustomScrollView(
             physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
@@ -69,12 +70,16 @@ class HomeScreen extends ConsumerWidget {
                 sliver: SliverList.list(
                   children: [
                     summaryState.when(
+                      skipError: true,
+                      skipLoadingOnReload: true,
                       loading: () => const _HomeHeader(),
                       error: (error, _) => const _HomeHeader(),
                       data: (summary) => _HomeHeader(summary: summary),
                     ),
                     const SizedBox(height: MuSpace.xxl),
                     summaryState.when(
+                      skipError: true,
+                      skipLoadingOnReload: true,
                       loading: () => const MuSkeleton(height: 220, radius: MuRadius.hero),
                       error: (error, _) => ErrorRetryView(
                         error: error,
@@ -535,6 +540,7 @@ class _LearnerWeek extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ref.watch(learnerSummaryProvider).when(
+          skipError: true,
           loading: () => const SizedBox.shrink(),
           error: (_, __) => Padding(
             padding: const EdgeInsets.only(top: MuSpace.m),

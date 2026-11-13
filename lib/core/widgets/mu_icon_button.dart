@@ -8,11 +8,11 @@ class MuIconButton extends StatelessWidget {
   const MuIconButton({
     required this.icon,
     required this.onPressed,
+    required this.tooltip,
     super.key,
     this.glass = false,
     this.badge = false,
     this.badgeCount = 0,
-    this.tooltip,
   });
 
   final IconData icon;
@@ -29,7 +29,8 @@ class MuIconButton extends StatelessWidget {
   final int badgeCount;
 
   /// What the button does, for screen readers and long-press (UX-08).
-  final String? tooltip;
+  /// Required: an icon alone says nothing to a screen reader.
+  final String tooltip;
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +91,6 @@ class MuIconButton extends StatelessWidget {
       ],
     );
     final label = tooltip;
-    if (label == null) return button;
     return Tooltip(
       message: label,
       excludeFromSemantics: true,

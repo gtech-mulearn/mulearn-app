@@ -12,6 +12,7 @@ import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/core/widgets/mu_card.dart';
 import 'package:mulearn_app/core/widgets/mu_gradient_header.dart';
+import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/features/leaderboard/presentation/widgets/leaderboard_list_tile.dart';
 import 'package:mulearn_app/features/leaderboard/presentation/widgets/leaderboard_podium.dart';
 
@@ -27,14 +28,14 @@ String _collegeDisplayName(CollegeLeaderboardEntry entry) =>
 /// (Learners, Colleges) rather than the mock's 3 — there is no
 /// interest-group leaderboard endpoint, so that segment is omitted rather
 /// than shown empty or faked (per the approved plan).
-class LeaderboardScreen extends StatefulWidget {
+class LeaderboardScreen extends ConsumerStatefulWidget {
   const LeaderboardScreen({super.key});
 
   @override
-  State<LeaderboardScreen> createState() => _LeaderboardScreenState();
+  ConsumerState<LeaderboardScreen> createState() => _LeaderboardScreenState();
 }
 
-class _LeaderboardScreenState extends State<LeaderboardScreen> {
+class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
   bool _monthly = false;
   bool _students = true;
 
@@ -42,7 +43,11 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: MuColors.canvas,
-      body: CustomScrollView(
+      body: MuRefresh(
+        onRefresh: () => _students
+            ? ref.refresh(studentLeaderboardProvider(monthly: _monthly).future)
+            : ref.refresh(collegeLeaderboardProvider(monthly: _monthly).future),
+        child: CustomScrollView(
         physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
         slivers: [
           SliverToBoxAdapter(
@@ -69,6 +74,7 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
           else
             _CollegeLeaderboardSliver(monthly: _monthly),
         ],
+      ),
       ),
     );
   }

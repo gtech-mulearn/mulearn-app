@@ -75,6 +75,7 @@ class MeetingActionsController extends _$MeetingActionsController {
   Future<void> build() async {}
 
   Future<bool> createMeeting(String circleId, MeetingForm form) async {
+    final link = ref.keepAlive(); // finish the follow-up refresh even if the screen closes
     state = const AsyncLoading();
     final result = await AsyncValue.guard(() async {
       await ref
@@ -83,16 +84,19 @@ class MeetingActionsController extends _$MeetingActionsController {
       ref.invalidate(circleMeetingsControllerProvider(circleId));
     });
     if (ref.mounted) state = result;
+    link.close();
     return !result.hasError;
   }
 
   Future<void> editMeeting(String id, MeetingForm form) async {
+    final link = ref.keepAlive(); // finish the follow-up refresh even if the screen closes
     state = const AsyncLoading();
     final result = await AsyncValue.guard(() async {
       await ref.read(learningCirclesRepositoryProvider).editMeeting(id, form);
       ref.invalidate(meetingDetailProvider(id));
     });
     if (ref.mounted) state = result;
+    link.close();
   }
 
   /// [circleId] is only known when reached from the circle detail screen's
@@ -100,34 +104,41 @@ class MeetingActionsController extends _$MeetingActionsController {
   /// its own circle id) — passed so that screen's cached meeting list gets
   /// busted; harmless to omit otherwise.
   Future<bool> deleteMeeting(String id, {String? circleId}) async {
+    final link = ref.keepAlive(); // finish the follow-up refresh even if the screen closes
     state = const AsyncLoading();
     final result = await AsyncValue.guard(() async {
       await ref.read(learningCirclesRepositoryProvider).deleteMeeting(id);
       if (circleId != null) ref.invalidate(circleMeetingsControllerProvider(circleId));
     });
     if (ref.mounted) state = result;
+    link.close();
     return !result.hasError;
   }
 
   Future<void> rsvp(String id) async {
+    final link = ref.keepAlive(); // finish the follow-up refresh even if the screen closes
     state = const AsyncLoading();
     final result = await AsyncValue.guard(() async {
       await ref.read(learningCirclesRepositoryProvider).rsvpMeeting(id);
       ref.invalidate(meetingDetailProvider(id));
     });
     if (ref.mounted) state = result;
+    link.close();
   }
 
   Future<void> cancelRsvp(String id) async {
+    final link = ref.keepAlive(); // finish the follow-up refresh even if the screen closes
     state = const AsyncLoading();
     final result = await AsyncValue.guard(() async {
       await ref.read(learningCirclesRepositoryProvider).cancelRsvp(id);
       ref.invalidate(meetingDetailProvider(id));
     });
     if (ref.mounted) state = result;
+    link.close();
   }
 
   Future<void> joinWithCode(String id, String code) async {
+    final link = ref.keepAlive(); // finish the follow-up refresh even if the screen closes
     state = const AsyncLoading();
     final result = await AsyncValue.guard(() async {
       await ref
@@ -136,15 +147,18 @@ class MeetingActionsController extends _$MeetingActionsController {
       ref.invalidate(meetingDetailProvider(id));
     });
     if (ref.mounted) state = result;
+    link.close();
   }
 
   Future<void> leave(String id) async {
+    final link = ref.keepAlive(); // finish the follow-up refresh even if the screen closes
     state = const AsyncLoading();
     final result = await AsyncValue.guard(() async {
       await ref.read(learningCirclesRepositoryProvider).leaveMeeting(id);
       ref.invalidate(meetingDetailProvider(id));
     });
     if (ref.mounted) state = result;
+    link.close();
   }
 
   Future<void> submitAttendeeReport(
@@ -152,6 +166,7 @@ class MeetingActionsController extends _$MeetingActionsController {
     String? report,
     String? reportLink,
   }) async {
+    final link = ref.keepAlive(); // finish the follow-up refresh even if the screen closes
     state = const AsyncLoading();
     final result = await AsyncValue.guard(() async {
       await ref.read(learningCirclesRepositoryProvider).submitAttendeeReport(
@@ -164,6 +179,7 @@ class MeetingActionsController extends _$MeetingActionsController {
         ..invalidate(meetingDetailProvider(meetingId));
     });
     if (ref.mounted) state = result;
+    link.close();
   }
 
   Future<void> submitMeetingReport(
@@ -171,6 +187,7 @@ class MeetingActionsController extends _$MeetingActionsController {
     required String report,
     required Map<String, bool> attendees,
   }) async {
+    final link = ref.keepAlive(); // finish the follow-up refresh even if the screen closes
     state = const AsyncLoading();
     final result = await AsyncValue.guard(() async {
       await ref.read(learningCirclesRepositoryProvider).submitMeetingReport(
@@ -181,5 +198,6 @@ class MeetingActionsController extends _$MeetingActionsController {
       ref.invalidate(meetingReportProvider(meetingId));
     });
     if (ref.mounted) state = result;
+    link.close();
   }
 }

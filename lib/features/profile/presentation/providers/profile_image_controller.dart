@@ -10,6 +10,7 @@ class ProfileImageController extends _$ProfileImageController {
   Future<void> build() async {}
 
   Future<void> upload(List<int> bytes, String filename) async {
+    final link = ref.keepAlive(); // finish the follow-up refresh even if the screen closes
     state = const AsyncLoading();
     final result = await AsyncValue.guard(() async {
       final profile = await ref.read(profileControllerProvider.future);
@@ -24,5 +25,6 @@ class ProfileImageController extends _$ProfileImageController {
       // shared bus so Home's avatar doesn't keep showing the stale photo.
     });
     if (ref.mounted) state = result;
+    link.close();
   }
 }

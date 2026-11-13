@@ -350,6 +350,7 @@ class _PasswordForm extends StatelessWidget {
                   labelText: 'PASSWORD',
                   hintText: '••••••••',
                   suffixIcon: IconButton(
+                    tooltip: obscure ? 'Show password' : 'Hide password',
                     icon: Icon(
                       obscure ? LucideIcons.eye : LucideIcons.eyeOff,
                       color: MuColors.inkSecondary,

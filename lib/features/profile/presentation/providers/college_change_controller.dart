@@ -46,6 +46,7 @@ class ChangeCollegeController extends _$ChangeCollegeController {
     required String orgId,
     required String departmentId,
   }) async {
+    final link = ref.keepAlive(); // finish the follow-up refresh even if the screen closes
     state = const AsyncLoading();
     final result = await AsyncValue.guard(() async {
       await ref.read(profileRepositoryProvider).changeCollege(
@@ -55,5 +56,6 @@ class ChangeCollegeController extends _$ChangeCollegeController {
       ref.invalidate(myProfilePayloadProvider);
     });
     if (ref.mounted) state = result;
+    link.close();
   }
 }

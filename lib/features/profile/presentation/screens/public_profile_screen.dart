@@ -7,6 +7,7 @@ import 'package:mulearn_app/core/theme/mulearn_colors.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/core/widgets/mu_empty_state.dart';
 import 'package:mulearn_app/core/widgets/mu_qr_card.dart';
+import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/features/profile/domain/entities/user_profile.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/public_profile_controller.dart';
 import 'package:mulearn_app/features/profile/presentation/screens/profile_screen.dart';
@@ -51,6 +52,7 @@ class PublicProfileScreen extends ConsumerWidget {
         title: const Text('Profile'),
       ),
       body: profileState.when(
+        skipError: true,
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => _isPrivateProfileError(error)
             ? const MuEmptyState(
@@ -62,9 +64,8 @@ class PublicProfileScreen extends ConsumerWidget {
                 error: error,
                 onRetry: () => ref.invalidate(publicUserProfileProvider(muid)),
               ),
-        data: (profile) => RefreshIndicator(
-          onRefresh: () async =>
-              ref.invalidate(publicUserProfileProvider(muid)),
+        data: (profile) => MuRefresh(
+          onRefresh: () => ref.refresh(publicUserProfileProvider(muid).future),
           child: _PublicProfileBody(profile: profile),
         ),
       ),

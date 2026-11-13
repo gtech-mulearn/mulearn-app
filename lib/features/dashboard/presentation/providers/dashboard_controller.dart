@@ -33,12 +33,12 @@ class FeaturedEventsController extends _$FeaturedEventsController {
   Future<List<FeaturedEvent>> build() =>
       ref.watch(dashboardRepositoryProvider).getFeaturedEvents();
 
+  /// Refetches; on failure the events already shown stay and the error is
+  /// rethrown for the pull-to-refresh toast.
   Future<void> refresh() async {
-    state = const AsyncLoading();
-    final result = await AsyncValue.guard(
-      () => ref.read(dashboardRepositoryProvider).getFeaturedEvents(),
-    );
-    if (ref.mounted) state = result;
+    final repository = ref.read(dashboardRepositoryProvider);
+    final events = await repository.getFeaturedEvents();
+    if (ref.mounted) state = AsyncData(events);
   }
 }
 
@@ -50,6 +50,6 @@ class MyProgressSummaryController extends _$MyProgressSummaryController {
     return repository.summaryFromPayload(await ref.watch(myProfilePayloadProvider.future));
   }
 
-  /// Refetches the shared profile; every reader of it refreshes.
-  Future<void> refresh() async => ref.invalidate(myProfilePayloadProvider);
+  /// Refetches the shared profile and waits for it; every reader refreshes.
+  Future<void> refresh() async => ref.refresh(myProfilePayloadProvider.future);
 }

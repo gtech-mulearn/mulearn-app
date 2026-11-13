@@ -14,6 +14,7 @@ import 'package:mulearn_app/core/widgets/mu_card.dart';
 import 'package:mulearn_app/core/widgets/mu_checklist.dart';
 import 'package:mulearn_app/core/widgets/mu_chip.dart';
 import 'package:mulearn_app/core/widgets/mu_icon_button.dart';
+import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/core/widgets/mu_section_header.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/meeting_detail.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/meeting_report_attendee.dart';
@@ -49,11 +50,13 @@ class MeetingDetailScreen extends ConsumerWidget {
         actions: [
           if (isCreator) ...[
             MuIconButton(
+              tooltip: 'Edit meeting',
               icon: LucideIcons.pencil,
               onPressed: () => context.push(RoutePaths.editMeetingPath(meetingId)),
             ),
             const SizedBox(width: MuSpace.s),
             MuIconButton(
+              tooltip: 'Delete meeting',
               icon: LucideIcons.trash2,
               onPressed: () => _confirmDelete(context, ref),
             ),
@@ -62,6 +65,7 @@ class MeetingDetailScreen extends ConsumerWidget {
         ],
       ),
       body: detailState.when(
+        skipError: true,
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => ErrorRetryView(
           error: error,
@@ -109,8 +113,8 @@ class _MeetingBody extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isCreator = meeting.meetCode != null;
 
-    return RefreshIndicator(
-      onRefresh: () async => ref.invalidate(meetingDetailProvider(meetingId)),
+    return MuRefresh(
+      onRefresh: () => ref.refresh(meetingDetailProvider(meetingId).future),
       child: ListView(
         padding: const EdgeInsets.all(MuSpace.screenH),
         children: [

@@ -148,6 +148,7 @@ class CircleActionsController extends _$CircleActionsController {
     String? title,
     String? description,
   }) async {
+    final link = ref.keepAlive(); // finish the follow-up refresh even if the screen closes
     state = const AsyncLoading();
     final result = await AsyncValue.guard(() async {
       await ref.read(learningCirclesRepositoryProvider).editCircle(
@@ -160,6 +161,7 @@ class CircleActionsController extends _$CircleActionsController {
       ref.invalidate(circleDetailProvider(id));
     });
     if (ref.mounted) state = result;
+    link.close();
   }
 
   Future<bool> deleteCircle(String id) async {
@@ -181,6 +183,7 @@ class CircleActionsController extends _$CircleActionsController {
 
 
   Future<void> transferLead(String circleId, {required String muid}) async {
+    final link = ref.keepAlive(); // finish the follow-up refresh even if the screen closes
     state = const AsyncLoading();
     final result = await AsyncValue.guard(() async {
       await ref
@@ -191,6 +194,7 @@ class CircleActionsController extends _$CircleActionsController {
         ..invalidate(circleDetailProvider(circleId));
     });
     if (ref.mounted) state = result;
+    link.close();
   }
 
   Future<void> respondToJoinRequest(
@@ -198,6 +202,7 @@ class CircleActionsController extends _$CircleActionsController {
     required String linkId,
     required bool accept,
   }) async {
+    final link = ref.keepAlive(); // finish the follow-up refresh even if the screen closes
     state = const AsyncLoading();
     final result = await AsyncValue.guard(() async {
       await ref
@@ -208,9 +213,11 @@ class CircleActionsController extends _$CircleActionsController {
         ..invalidate(circleMembersProvider(circleId));
     });
     if (ref.mounted) state = result;
+    link.close();
   }
 
   Future<void> sendInvite(String circleId, {required String muid, bool asLead = false}) async {
+    final link = ref.keepAlive(); // finish the follow-up refresh even if the screen closes
     state = const AsyncLoading();
     final result = await AsyncValue.guard(() async {
       await ref
@@ -219,6 +226,7 @@ class CircleActionsController extends _$CircleActionsController {
       ref.invalidate(circleSentInvitesProvider(circleId));
     });
     if (ref.mounted) state = result;
+    link.close();
   }
 
   /// Leaves [circleId]; true on success. The user's circle list refreshes
@@ -261,6 +269,7 @@ class CircleActionsController extends _$CircleActionsController {
   }
 
   Future<void> respondToInvite(String linkId, {required bool accept}) async {
+    final link = ref.keepAlive(); // finish the follow-up refresh even if the screen closes
     state = const AsyncLoading();
     final result = await AsyncValue.guard(() async {
       await ref
@@ -271,5 +280,6 @@ class CircleActionsController extends _$CircleActionsController {
         ..invalidate(myCirclesProvider);
     });
     if (ref.mounted) state = result;
+    link.close();
   }
 }

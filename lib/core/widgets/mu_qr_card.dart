@@ -47,11 +47,11 @@ class MuQrCard extends StatelessWidget {
             children: [
               Expanded(child: Text('μLearn ID', style: MuType.title)),
               if (onCopy != null) ...[
-                MuIconButton(icon: LucideIcons.copy, onPressed: onCopy),
+                MuIconButton(tooltip: 'Copy μID', icon: LucideIcons.copy, onPressed: onCopy),
                 const SizedBox(width: MuSpace.s),
               ],
               if (onShare != null)
-                MuIconButton(icon: LucideIcons.share2, onPressed: onShare),
+                MuIconButton(tooltip: 'Share', icon: LucideIcons.share2, onPressed: onShare),
             ],
           ),
           const SizedBox(height: MuSpace.l),

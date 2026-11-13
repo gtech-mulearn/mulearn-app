@@ -8,6 +8,7 @@ import 'package:mulearn_app/core/theme/mulearn_colors.dart';
 import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/core/widgets/mu_qr_card.dart';
+import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/core/widgets/mu_toast.dart';
 import 'package:mulearn_app/features/profile/domain/entities/user_profile.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/editable_profile_controller.dart';
@@ -38,15 +39,18 @@ class ProfileScreen extends ConsumerWidget {
       body: SafeArea(
         bottom: false,
         child: profileState.when(
+          // Keep the body (and its tab and scroll) while the shared profile
+          // reloads after a change (Plan 2 minor 7) or a refresh fails.
+          skipLoadingOnReload: true,
+          skipError: true,
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (error, _) => ErrorRetryView(
             error: error,
             onRetry: () =>
                 ref.read(profileControllerProvider.notifier).refresh(),
           ),
-          data: (profile) => RefreshIndicator(
-            onRefresh: () =>
-                ref.read(profileControllerProvider.notifier).refresh(),
+          data: (profile) => MuRefresh(
+            onRefresh: () => ref.read(profileControllerProvider.notifier).refresh(),
             child: _ProfileBody(profile: profile),
           ),
         ),

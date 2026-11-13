@@ -14,6 +14,7 @@ import 'package:mulearn_app/core/widgets/mu_buttons.dart';
 import 'package:mulearn_app/core/widgets/mu_empty_state.dart';
 import 'package:mulearn_app/core/widgets/mu_icon_button.dart';
 import 'package:mulearn_app/core/widgets/mu_load_more_footer.dart';
+import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/features/events/domain/entities/event_filter.dart';
 import 'package:mulearn_app/features/events/presentation/providers/events_controller.dart';
 import 'package:mulearn_app/features/events/presentation/widgets/event_list_tile.dart';
@@ -129,6 +130,7 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
           ),
           Expanded(
             child: eventsState.when(
+              skipError: true,
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (error, _) => ErrorRetryView(
                 error: error,
@@ -151,8 +153,8 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
                   );
                 }
                 final hasMore = paged.hasMore;
-                return RefreshIndicator(
-                  onRefresh: () async => ref.invalidate(eventsListControllerProvider(_filter)),
+                return MuRefresh(
+                  onRefresh: () => ref.refresh(eventsListControllerProvider(_filter).future),
                   child: ListView.builder(
                     controller: _scrollController,
                     padding: const EdgeInsets.fromLTRB(MuSpace.screenH, MuSpace.l, MuSpace.screenH, MuSpace.l),

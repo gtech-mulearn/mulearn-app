@@ -10,6 +10,7 @@ import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/core/widgets/mu_card.dart';
 import 'package:mulearn_app/core/widgets/mu_chip.dart';
 import 'package:mulearn_app/core/widgets/mu_empty_state.dart';
+import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/features/tasks/domain/entities/task_catalog_item.dart';
 import 'package:mulearn_app/features/tasks/presentation/providers/tasks_controller.dart';
 
@@ -44,15 +45,19 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
       backgroundColor: MuColors.canvas,
       body: SafeArea(
         child: tasksState.when(
+          skipError: true,
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (error, _) => ErrorRetryView(
             error: error,
             onRetry: () => ref.invalidate(tasksControllerProvider),
           ),
-          data: (tasks) => _TasksList(
-            tasks: tasks,
-            filter: _filter,
-            onFilterChanged: (value) => setState(() => _filter = value),
+          data: (tasks) => MuRefresh(
+            onRefresh: () => ref.refresh(tasksControllerProvider.future),
+            child: _TasksList(
+              tasks: tasks,
+              filter: _filter,
+              onFilterChanged: (value) => setState(() => _filter = value),
+            ),
           ),
         ),
       ),

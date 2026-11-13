@@ -16,6 +16,7 @@ import 'package:mulearn_app/core/widgets/mu_card.dart';
 import 'package:mulearn_app/core/widgets/mu_chip.dart';
 import 'package:mulearn_app/core/widgets/mu_icon_button.dart';
 import 'package:mulearn_app/core/widgets/mu_load_more_footer.dart';
+import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/core/widgets/mu_section_header.dart';
 import 'package:mulearn_app/core/widgets/mu_toast.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/circle_filter.dart';
@@ -159,13 +160,12 @@ class _LearningCirclesScreenState extends ConsumerState<LearningCirclesScreen> {
     return Scaffold(
       backgroundColor: MuColors.canvas,
       body: SafeArea(
-        child: RefreshIndicator(
-          onRefresh: () async {
-            ref
-              ..invalidate(myCirclesProvider)
-              ..invalidate(circlesListControllerProvider)
-              ..invalidate(myPendingCircleInvitesProvider);
-          },
+        child: MuRefresh(
+          onRefresh: () => Future.wait([
+            ref.refresh(myCirclesProvider.future),
+            ref.refresh(circlesListControllerProvider(_filter).future),
+            ref.refresh(myPendingCircleInvitesProvider.future),
+          ]),
           child: ListView(
             controller: _scrollController,
             padding: const EdgeInsets.symmetric(vertical: MuSpace.l),
@@ -305,6 +305,7 @@ class _LearningCirclesScreenState extends ConsumerState<LearningCirclesScreen> {
               ),
               const SizedBox(height: MuSpace.m),
               circlesState.when(
+                skipError: true,
                 loading: () => const Padding(
                   padding: EdgeInsets.symmetric(vertical: MuSpace.l),
                   child: Center(child: CircularProgressIndicator()),
@@ -456,11 +457,13 @@ class _InviteTile extends ConsumerWidget {
             ),
           ),
           MuIconButton(
+            tooltip: 'Accept invitation',
             icon: LucideIcons.check,
             onPressed: isBusy ? null : () => _respond(context, ref, accept: true),
           ),
           const SizedBox(width: MuSpace.s),
           MuIconButton(
+            tooltip: 'Decline invitation',
             icon: LucideIcons.x,
             onPressed: isBusy ? null : () => _respond(context, ref, accept: false),
           ),

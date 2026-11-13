@@ -41,6 +41,7 @@ class TaskDetailScreen extends ConsumerWidget {
         backgroundColor: MuColors.canvas,
         elevation: 0,
         leading: IconButton(
+          tooltip: 'Back',
           icon: const Icon(LucideIcons.arrowLeft, color: MuColors.ink),
           onPressed: () => context.pop(),
         ),

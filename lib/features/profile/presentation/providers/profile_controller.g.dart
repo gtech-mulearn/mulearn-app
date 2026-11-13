@@ -138,7 +138,7 @@ final class ProfileControllerProvider
   ProfileController create() => ProfileController();
 }
 
-String _$profileControllerHash() => r'a02b7bdc84203acd125ce6923abecdf06d7ae8be';
+String _$profileControllerHash() => r'79060a71ac83c4d552afd50a30e3c3bbc25663d3';
 
 /// The current user's profile, mapped from the shared `user-profile` payload
 /// (one request for every reader). Call [refresh] to refetch, e.g. from the
