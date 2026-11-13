@@ -75,12 +75,12 @@ void main() {
     expect(find.text('6 learners · 6 active · 2 upcoming sessions · 3 circles'), findsOneWidget);
   });
 
-  testWidgets('the next sessions ask for scheduled sessions, soonest first', (tester) async {
+  testWidgets('the next sessions are read latest first, so stale ones never crowd them out', (tester) async {
     await pumpHub(tester);
 
     final q = adapter.requests.firstWhere((r) => r.uri.path == '$_base/session/list/').queryParameters;
     expect(q['status'], 'SCHEDULED');
-    expect(q['sortBy'], 'starts_at');
+    expect(q['sortBy'], '-starts_at');
   });
 
   testWidgets('a session that already ended is not "next up"', (tester) async {
@@ -94,6 +94,47 @@ void main() {
     await pumpHub(tester);
 
     expect(find.text('No upcoming sessions.'), findsOneWidget);
+  });
+
+  // Final review, Minor 8 → Important: SCHEDULED sessions that ended but were
+  // never marked complete come first in starts_at order; five of them hid
+  // the next real session behind "No upcoming sessions.".
+  testWidgets('ended sessions never marked complete do not hide the next one', (tester) async {
+    final body = loadFixture('dev/mentor_sessions_scheduled');
+    final response = body['response'] as Map<String, dynamic>;
+    final template = (response['data'] as List).first as Map<String, dynamic>;
+    Map<String, dynamic> row(String id, String title, DateTime start) => {
+          ...template,
+          'id': id,
+          'title': title,
+          'starts_at': start.toIso8601String(),
+          'ends_at': start.add(const Duration(hours: 1)).toIso8601String(),
+        };
+    final all = [
+      for (var i = 1; i <= 6; i++) row('old$i', 'Old session $i', DateTime.utc(2026, 10, i, 10)),
+      row('next', 'The real next session', DateTime.utc(2026, 11, 14, 10)),
+    ];
+    // Serves the list the way session/list/ does: sorted by sortBy, paged.
+    adapter.routes['GET $_base/session/list/'] = (o) {
+      final q = o.queryParameters;
+      final sorted = [...all]..sort((a, b) => (a['starts_at'] as String).compareTo(b['starts_at'] as String));
+      final ordered = q['sortBy'] == '-starts_at' ? sorted.reversed.toList() : sorted;
+      final perPage = int.parse('${q['perPage'] ?? 20}');
+      final page = int.parse('${q['pageIndex'] ?? 1}');
+      final items = ordered.skip((page - 1) * perPage).take(perPage).toList();
+      return FakeResponse(200, {
+        ...body,
+        'response': {
+          'data': items,
+          'pagination': {'count': all.length, 'totalPages': (all.length / perPage).ceil(), 'isNext': page * perPage < all.length},
+        },
+      });
+    };
+    await pumpHub(tester);
+
+    expect(find.text('No upcoming sessions.'), findsNothing);
+    expect(find.text('The real next session'), findsWidgets);
+    expect(find.textContaining('Old session'), findsNothing);
   });
 
   testWidgets('"Finish on web" opens the dashboard profile', (tester) async {

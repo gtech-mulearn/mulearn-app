@@ -137,12 +137,22 @@ String _$mentorProfileCompletionHash() =>
 
 /// The next scheduled sessions, soonest first (5 at most), without any that
 /// already ended.
+///
+/// Read latest first: sessions that ended but were never marked complete
+/// stay SCHEDULED and come first by start time, so a soonest-first page can
+/// be all stale. A further page is read (3 at most) only while every row on
+/// one is still ahead.
 
 @ProviderFor(mentorNextSessions)
 const mentorNextSessionsProvider = MentorNextSessionsProvider._();
 
 /// The next scheduled sessions, soonest first (5 at most), without any that
 /// already ended.
+///
+/// Read latest first: sessions that ended but were never marked complete
+/// stay SCHEDULED and come first by start time, so a soonest-first page can
+/// be all stale. A further page is read (3 at most) only while every row on
+/// one is still ahead.
 
 final class MentorNextSessionsProvider
     extends
@@ -156,6 +166,11 @@ final class MentorNextSessionsProvider
         $FutureProvider<List<MentorSession>> {
   /// The next scheduled sessions, soonest first (5 at most), without any that
   /// already ended.
+  ///
+  /// Read latest first: sessions that ended but were never marked complete
+  /// stay SCHEDULED and come first by start time, so a soonest-first page can
+  /// be all stale. A further page is read (3 at most) only while every row on
+  /// one is still ahead.
   const MentorNextSessionsProvider._()
     : super(
         from: null,
@@ -183,7 +198,7 @@ final class MentorNextSessionsProvider
 }
 
 String _$mentorNextSessionsHash() =>
-    r'74737fc6043dddafae0bcbf1eb4e40d433703d94';
+    r'86b41236e99afacc69ab5c720ec3e9f439f116df';
 
 /// How many student session requests wait for the mentor.
 
