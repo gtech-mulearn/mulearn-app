@@ -19,6 +19,8 @@ import 'package:mulearn_app/features/campus/presentation/screens/campus_groups_s
 import 'package:mulearn_app/features/campus/presentation/screens/campus_overview_screen.dart';
 import 'package:mulearn_app/features/campus/presentation/screens/campus_student_screen.dart';
 import 'package:mulearn_app/features/campus/presentation/screens/campus_students_screen.dart';
+import 'package:mulearn_app/features/campus/presentation/screens/enabler_campus_screen.dart';
+import 'package:mulearn_app/features/campus/presentation/screens/enabler_campuses_screen.dart';
 import 'package:mulearn_app/features/dashboard/presentation/screens/home_screen.dart';
 import 'package:mulearn_app/features/events/presentation/screens/event_detail_screen.dart';
 import 'package:mulearn_app/features/events/presentation/screens/events_screen.dart';
@@ -180,6 +182,22 @@ GoRouter goRouter(Ref ref) {
           select: (a) => a.campus,
           role: 'Campus',
           builder: (_) => const CampusOverviewScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.enablerCampuses,
+        builder: (_, __) => WorkspaceGate(
+          select: (a) => a.enablerCampuses,
+          role: 'Enabler',
+          builder: (_) => const EnablerCampusesScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.enablerCampus,
+        builder: (_, state) => WorkspaceGate(
+          select: (a) => a.enablerCampuses,
+          role: 'Enabler',
+          builder: (_) => EnablerCampusScreen(campusId: state.pathParameters['id']!),
         ),
       ),
       GoRoute(

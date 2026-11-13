@@ -172,7 +172,7 @@ final class ApprovalActionsProvider
   }
 }
 
-String _$approvalActionsHash() => r'279356a40a82127ca7991b4e755e01073bd1212e';
+String _$approvalActionsHash() => r'577f4059a033a0e14e4366c2f328892ec3c524cd';
 
 /// Every decision reloads its list afterwards — after a refusal too, since
 /// the usual cause is someone else having handled it already.

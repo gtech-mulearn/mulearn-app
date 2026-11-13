@@ -1,0 +1,19 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "POST /api/v1/dashboard/enabler/campuses/00000000-0000-0000-0000-000000000000/notes/",
+    "account": "enabler",
+    "status": 400,
+    "recorded_at": "2026-11-13T13:32:29.048290Z"
+  },
+  "body": {
+    "hasError": true,
+    "statusCode": 400,
+    "message": {
+      "general": [
+        "Not assigned to this campus"
+      ]
+    },
+    "response": {}
+  }
+}

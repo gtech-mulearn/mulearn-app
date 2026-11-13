@@ -67,6 +67,20 @@ List<_Target> _targets() {
     const _Target('campus_students_top',
         '/api/v1/dashboard/campus/student-details/?sortBy=-karma&pageIndex=1&perPage=5', account: 'campuslead'),
     const _Target('campus_home_summary_enabler', '/api/v1/dashboard/campus/home-summary/', account: 'enabler'),
+    // Plan 4 Task 12: the QA enabler's campuses (dev's only college).
+    const _Target('enabler_home_summary', '/api/v1/dashboard/enabler/home-summary/', account: 'enabler'),
+    const _Target('enabler_campuses', '/api/v1/dashboard/enabler/campuses/?pageIndex=1&perPage=20', account: 'enabler'),
+    const _Target('enabler_campus_review', '/api/v1/dashboard/enabler/campuses/ad3a3793-d780-4ec1-b03e-fac92e0faa0d/review/', account: 'enabler'),
+    const _Target('enabler_campus_notes',
+        '/api/v1/dashboard/enabler/campuses/ad3a3793-d780-4ec1-b03e-fac92e0faa0d/notes/?pageIndex=1&perPage=20', account: 'enabler'),
+    // The one QA note added by the Plan 4 Task 12 live check (notes can't be deleted).
+    const _Target('enabler_campus_notes_one',
+        '/api/v1/dashboard/enabler/campuses/ad3a3793-d780-4ec1-b03e-fac92e0faa0d/notes/?pageIndex=1&perPage=20',
+        account: 'enabler'),
+    // Refused (a campus the enabler isn't assigned to), so nothing is written.
+    const _Target('enabler_note_not_assigned',
+        '/api/v1/dashboard/enabler/campuses/00000000-0000-0000-0000-000000000000/notes/',
+        account: 'enabler', method: 'POST', data: {'note': 'QA refused'}),
     // Plan 4 Task 11: approvals. The invite is seeded (scratch p4t11_seed.py);
     // the refusals use an id that doesn't exist, so nothing changes.
     const _Target('campus_collab_invites_one', '/api/v1/dashboard/events/my-invites/', account: 'campuslead'),

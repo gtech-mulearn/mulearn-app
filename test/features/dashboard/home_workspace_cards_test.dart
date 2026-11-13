@@ -111,6 +111,7 @@ void main() {
     await pump(tester, const Scaffold(body: WorkspaceLinks()));
 
     expect(find.text('Campus workspace'), findsOneWidget);
+    expect(find.text('My campuses'), findsOneWidget, reason: 'enablers review their campuses');
   });
 
   testWidgets('Profile lists the mentor workspace under Workspaces', (tester) async {
