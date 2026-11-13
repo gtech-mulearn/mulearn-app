@@ -92,6 +92,8 @@ class MuTile extends StatelessWidget {
       padding: const EdgeInsets.all(MuSpacing.space4),
       decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(MuRadii.card)),
       child: Stack(
+        // The corner arrow sits slightly into the padding; don't clip it.
+        clipBehavior: Clip.none,
         children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -104,11 +106,15 @@ class MuTile extends StatelessWidget {
                 ),
                 const SizedBox(height: 6),
               ],
-              Text(
-                title,
-                style: mu.text.title2.copyWith(fontSize: 20, height: 1.1, color: ink),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
+              Padding(
+                // Keep the title clear of the corner arrow when there's no pill above it.
+                padding: EdgeInsetsDirectional.only(end: onTap != null && pill == null ? 36 : 0),
+                child: Text(
+                  title,
+                  style: mu.text.title2.copyWith(fontSize: 20, height: 1.1, color: ink),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
               if (meta != null) ...[
                 const SizedBox(height: 6),

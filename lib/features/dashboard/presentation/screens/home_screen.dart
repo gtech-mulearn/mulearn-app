@@ -222,7 +222,6 @@ class _UpNext extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final c = context.mu.colors;
     final week = ref.watch(learnerSummaryProvider).value;
     final meeting = week?.nextMeeting;
     final needsDiscord =
@@ -252,6 +251,8 @@ class _UpNext extends ConsumerWidget {
         meta: 'Learn with a group',
         onTap: () => context.push(RoutePaths.learningCircles),
       ),
+    ];
+    final setup = <MuTile>[
       if (needsDiscord)
         MuTile(
           title: 'Connect Discord',
@@ -273,11 +274,13 @@ class _UpNext extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        MuSectionTitle(meeting != null ? 'Up next' : 'Keep going'),
-        if (needsDiscord || needsGroups) ...[
-          const SizedBox(height: MuSpacing.space1),
-          Text('Get set up', style: context.mu.text.caption.copyWith(color: c.ink2)),
+        if (setup.isNotEmpty) ...[
+          const MuSectionTitle('Get set up'),
+          const SizedBox(height: MuSpacing.space3),
+          MuBento(tiles: setup),
+          const SizedBox(height: MuSpacing.space10),
         ],
+        MuSectionTitle(meeting != null ? 'Up next' : 'Keep going'),
         const SizedBox(height: MuSpacing.space3),
         MuBento(tiles: tiles),
       ],
