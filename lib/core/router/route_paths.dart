@@ -26,6 +26,10 @@ abstract final class RoutePaths {
   static const String settings = '/settings';
   static const String settingsPassword = '/settings/password';
 
+  /// Discord's OAuth redirect, opened as an App Link (same path as the
+  /// dashboard's page). Query: `code`.
+  static const String connectDiscord = '/dashboard/connect-discord';
+
   /// Read-only view of another user's profile by muid.
   static const String publicProfile = '/u/:muid';
   static String publicProfilePath(String muid) => '/u/$muid';

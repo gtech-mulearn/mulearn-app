@@ -180,6 +180,11 @@ abstract final class ApiPaths {
   // --- Registration (rules.md §3/§9: confirmed against the live dashboard
   // frontend, not the OpenAPI schema) ---
 
+  /// `GET ?code=` — the backend exchanges Discord's OAuth code (redirect
+  /// `{FR_DOMAIN}/dashboard/connect-discord`) and adds the user to the
+  /// server in the background (ConnectDiscordAPI).
+  static const String connectDiscord = '/api/v1/register/connect-discord/';
+
   /// Create a new user account — student, mentor or enabler. Company accounts
   /// are created on the web dashboard (they need a verification document).
   static const String register = '/api/v1/register/';

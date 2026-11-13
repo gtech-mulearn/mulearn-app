@@ -72,6 +72,8 @@ List<_Target> _targets() {
       '/api/v1/notification/00000000-0000-4000-8000-000000000000/read/',
       method: 'PATCH',
     ),
+    // A made-up Discord code: Discord refuses it, nothing is linked.
+    const _Target('connect_discord_bad_code', '/api/v1/register/connect-discord/?code=not-a-real-code'),
     // A wrong current password: rejected before anything changes.
     const _Target(
       'change_password_wrong_current',

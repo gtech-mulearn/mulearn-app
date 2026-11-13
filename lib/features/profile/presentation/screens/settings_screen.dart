@@ -7,6 +7,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/config/app_links.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
+import 'package:mulearn_app/core/session/discord_connect.dart';
 import 'package:mulearn_app/core/session/session_actions.dart';
 import 'package:mulearn_app/core/session/session_providers.dart';
 import 'package:mulearn_app/core/theme/mu_radius.dart';
@@ -115,6 +116,9 @@ class SettingsScreen extends ConsumerWidget {
                   _SettingsRow(
                     icon: LucideIcons.messageCircle,
                     label: 'Discord',
+                    onTap: (needsDiscord ?? false) && ref.watch(discordAuthUriProvider) != null
+                        ? () => unawaited(ref.read(discordConnectFlowProvider.notifier).start())
+                        : null,
                     trailing: Text(
                       switch (needsDiscord) { null => '', true => 'Not connected', false => 'Connected' },
                       style: MuType.caption.copyWith(color: MuColors.inkSecondary),

@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/notifications/unread_notifications.dart';
 import 'package:mulearn_app/core/notifications/unread_refresh_triggers.dart';
+import 'package:mulearn_app/core/session/discord_resume_check.dart';
 import 'package:mulearn_app/core/widgets/mu_bottom_nav.dart';
 
 /// Bottom-navigation shell for the five signed-in top-level destinations
@@ -35,7 +36,7 @@ class MainShell extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       extendBody: true,
-      body: UnreadRefreshTriggers(child: navigationShell),
+      body: UnreadRefreshTriggers(child: DiscordResumeCheck(child: navigationShell)),
       bottomNavigationBar: MuBottomNav(
         items: _items,
         currentIndex: navigationShell.currentIndex,

@@ -15,6 +15,7 @@ class FlavorConfig {
     required this.apiBaseUrl,
     required this.googleServerClientId,
     required this.dashboardUrl,
+    required this.discordAuthUrl,
   });
 
   final Flavor flavor;
@@ -25,6 +26,9 @@ class FlavorConfig {
 
   /// The μLearn web dashboard for this environment.
   final String dashboardUrl;
+
+  /// Discord OAuth authorize URL; empty when Connect Discord is unavailable.
+  final String discordAuthUrl;
 
   static FlavorConfig? _instance;
 
@@ -55,6 +59,10 @@ class FlavorConfig {
       dashboardUrl: switch (flavor) {
         Flavor.dev => EnvDev.dashboardUrl,
         Flavor.prod => EnvProd.dashboardUrl,
+      },
+      discordAuthUrl: switch (flavor) {
+        Flavor.dev => EnvDev.discordAuthUrl,
+        Flavor.prod => EnvProd.discordAuthUrl,
       },
     );
     return _instance = config;

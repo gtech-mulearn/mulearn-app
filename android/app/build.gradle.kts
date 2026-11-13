@@ -57,10 +57,14 @@ android {
             dimension = "env"
             applicationIdSuffix = ".dev"
             resValue("string", "app_name", "Mulearn Dev")
+            // Host Discord redirects to after OAuth (the dev dashboard's
+            // DISCORD_AUTH_URL redirect_uri, see .env.dev).
+            manifestPlaceholders["discordRedirectHost"] = "mulearn-dev.vercel.app"
         }
         create("prod") {
             dimension = "env"
             resValue("string", "app_name", "Mulearn")
+            manifestPlaceholders["discordRedirectHost"] = "app.mulearn.org"
         }
     }
 

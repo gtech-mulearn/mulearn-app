@@ -31,6 +31,16 @@ void main() {
     expect(find.text('Not connected'), findsOneWidget);
   });
 
+  testWidgets('tapping Discord starts the connect flow', (tester) async {
+    final opened = <Uri>[];
+    await openSettings(tester, settingsAdapter(), opened: opened);
+
+    await tester.tap(find.text('Discord'));
+    await tester.pump();
+
+    expect(opened.single, settingsDiscordUri);
+  });
+
   testWidgets('legal links open in the browser', (tester) async {
     final opened = <Uri>[];
     await openSettings(tester, settingsAdapter(), opened: opened);

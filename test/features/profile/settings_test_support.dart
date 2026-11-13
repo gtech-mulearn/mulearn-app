@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mulearn_app/core/network/dio_provider.dart';
+import 'package:mulearn_app/core/session/discord_connect.dart';
 import 'package:mulearn_app/core/storage/secure_storage_provider.dart';
 import 'package:mulearn_app/core/utils/external_links.dart';
 
@@ -15,6 +16,7 @@ const profilePath = '/api/v1/dashboard/profile/user-profile/';
 const userInfoPath = '/api/v1/dashboard/user/info/';
 const sharePath = '/api/v1/dashboard/profile/share-user-profile/';
 const changePasswordPath = '/api/v1/dashboard/profile/change-password/';
+final settingsDiscordUri = Uri.parse('https://discord.com/oauth2/authorize?client_id=1');
 
 const okEnvelope = FakeResponse(200, {
   'hasError': false,
@@ -45,6 +47,7 @@ Future<ProviderContainer> pumpSettingsApp(
     overrides: [
       dioProvider.overrideWithValue(fakeDio(adapter)),
       tokenStorageProvider.overrideWithValue(tokens),
+      discordAuthUriProvider.overrideWithValue(settingsDiscordUri),
       openExternalProvider.overrideWithValue((uri) async {
         opened?.add(uri);
         return true;

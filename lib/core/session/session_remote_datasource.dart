@@ -42,6 +42,15 @@ class SessionRemoteDataSource {
     ApiEnvelope.unwrapObject(response);
   }
 
+  /// `GET /api/v1/register/connect-discord/?code=` — returns the backend's
+  /// message ("You will be added to the discord server soon").
+  Future<String> connectDiscord(String code) async {
+    final response = await _dio.get<dynamic>(ApiPaths.connectDiscord, queryParameters: {'code': code});
+    ApiEnvelope.unwrapObject(response);
+    final messages = _generalMessages(response.data);
+    return messages.isEmpty ? 'Discord connected' : messages.first;
+  }
+
   static List<String> _generalMessages(Object? body) {
     if (body is! Map<String, dynamic>) return const [];
     final message = body['message'];

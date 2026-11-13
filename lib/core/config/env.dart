@@ -21,6 +21,11 @@ abstract class EnvDev {
   /// The μLearn web dashboard, for flows the app hands off (company sign-up).
   @EnviedField(varName: 'DASHBOARD_URL')
   static const String dashboardUrl = _EnvDev.dashboardUrl;
+
+  /// Discord OAuth authorize URL (the dashboard's `NEXT_PUBLIC_DISCORD_AUTH_URL`).
+  /// Empty hides Connect Discord.
+  @EnviedField(varName: 'DISCORD_AUTH_URL', defaultValue: '')
+  static const String discordAuthUrl = _EnvDev.discordAuthUrl;
 }
 
 @Envied(path: '.env.prod', name: 'EnvProd')
@@ -35,4 +40,8 @@ abstract class EnvProd {
   /// See [EnvDev.dashboardUrl]. Defaults to the production dashboard.
   @EnviedField(varName: 'DASHBOARD_URL', defaultValue: 'https://app.mulearn.org')
   static const String dashboardUrl = _EnvProd.dashboardUrl;
+
+  /// See [EnvDev.discordAuthUrl]. Empty until the production value is set.
+  @EnviedField(varName: 'DISCORD_AUTH_URL', defaultValue: '')
+  static const String discordAuthUrl = _EnvProd.discordAuthUrl;
 }

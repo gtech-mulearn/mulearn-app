@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mulearn_app/app/app_redirect.dart';
 import 'package:mulearn_app/app/widgets/main_shell.dart';
 import 'package:mulearn_app/core/auth/app_auth_controller.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
@@ -25,6 +26,7 @@ import 'package:mulearn_app/features/learning_circles/presentation/screens/learn
 import 'package:mulearn_app/features/learning_circles/presentation/screens/meeting_detail_screen.dart';
 import 'package:mulearn_app/features/notifications/presentation/screens/notifications_screen.dart';
 import 'package:mulearn_app/features/profile/presentation/screens/change_password_screen.dart';
+import 'package:mulearn_app/features/profile/presentation/screens/connect_discord_screen.dart';
 import 'package:mulearn_app/features/profile/presentation/screens/journey_screen.dart';
 import 'package:mulearn_app/features/profile/presentation/screens/profile_screen.dart';
 import 'package:mulearn_app/features/profile/presentation/screens/public_profile_screen.dart';
@@ -63,68 +65,7 @@ GoRouter goRouter(Ref ref) {
     initialLocation: RoutePaths.splash,
     refreshListenable: refresh,
     debugLogDiagnostics: kDebugMode,
-    redirect: (context, state) {
-      final auth = ref.read(appAuthControllerProvider);
-      final location = state.matchedLocation;
-
-      // Session still being resolved from secure storage.
-      if (auth.isLoading || !auth.hasValue) {
-        return location == RoutePaths.splash ? null : RoutePaths.splash;
-      }
-
-      final loggedIn = auth.value ?? false;
-
-      // Reachable while signed out — registration itself signs the user in
-      // partway through, so `/register/details` must tolerate both states.
-      const allowedSignedOut = {
-        RoutePaths.signIn,
-        RoutePaths.forgotPassword,
-        RoutePaths.resetPassword,
-        RoutePaths.registerBasicInfo,
-        RoutePaths.registerRoleSelection,
-        RoutePaths.registerDetails,
-      };
-      // Reachable while signed in without bouncing to `/home` — the
-      // registration-details screen (mid-submission), the interests
-      // onboarding step that follows it, and the five bottom-nav tabs.
-      const allowedSignedIn = {
-        RoutePaths.registerDetails,
-        RoutePaths.onboardingInterests,
-        RoutePaths.home,
-        RoutePaths.tasks,
-        RoutePaths.journey,
-        RoutePaths.leaderboard,
-        RoutePaths.profile,
-      };
-      // Routes reachable while signed in, outside the bottom-nav shell —
-      // pushed on top rather than switched to, so they're exempt from the
-      // "must be one of the five tabs" redirect below. Learning circles
-      // moved here (was a tab) — it's now reached only by pushing from
-      // Home's quick-link tile, matching the redesign.
-      const allowedSignedInExtra = {
-        RoutePaths.search,
-        RoutePaths.interestGroups,
-        RoutePaths.events,
-        RoutePaths.calendar,
-        RoutePaths.createLearningCircle,
-        RoutePaths.learningCircles,
-        RoutePaths.notifications,
-      };
-
-      if (!loggedIn) {
-        return allowedSignedOut.contains(location) ? null : RoutePaths.signIn;
-      }
-      if (allowedSignedInExtra.contains(location) ||
-          location.startsWith('/u/') ||
-          location.startsWith('/interest-groups/') ||
-          location.startsWith('/events/') ||
-          location.startsWith('/circles/') ||
-          location.startsWith('/meetings/') ||
-          (location.startsWith('/tasks/') && location != RoutePaths.tasks)) {
-        return null;
-      }
-      return allowedSignedIn.contains(location) ? null : RoutePaths.home;
-    },
+    redirect: (context, state) => appRedirect(auth: ref.read(appAuthControllerProvider), uri: state.uri),
     routes: [
       GoRoute(
         path: RoutePaths.splash,
@@ -209,6 +150,10 @@ GoRouter goRouter(Ref ref) {
       GoRoute(
         path: RoutePaths.settingsPassword,
         builder: (_, __) => const ChangePasswordScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.connectDiscord,
+        builder: (_, state) => ConnectDiscordScreen(code: state.uri.queryParameters['code']),
       ),
       GoRoute(
         path: RoutePaths.taskDetail,
