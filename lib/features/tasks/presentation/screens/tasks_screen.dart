@@ -1,31 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
-import 'package:mulearn_app/core/theme/mu_space.dart';
-import 'package:mulearn_app/core/theme/mulearn_colors.dart';
-import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
-import 'package:mulearn_app/core/widgets/mu_card.dart';
-import 'package:mulearn_app/core/widgets/mu_chip.dart';
 import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/core/widgets/mu_state_display.dart';
 import 'package:mulearn_app/features/tasks/domain/entities/task_catalog_item.dart';
 import 'package:mulearn_app/features/tasks/presentation/providers/tasks_controller.dart';
 
 String _categoryLabel(TaskCategory category) => switch (category) {
-      TaskCategory.startJourney => 'Start your journey',
-      TaskCategory.becomeExpert => 'Become an expert',
-      TaskCategory.events => 'Events',
-    };
+  TaskCategory.startJourney => 'Start your journey',
+  TaskCategory.becomeExpert => 'Become an expert',
+  TaskCategory.events => 'Events',
+};
 
-/// Task discovery — browses the real, dedicated task catalog (`GET
-/// /api/v1/dashboard/task/list/`) confirmed live. DESIGN_SPEC.md §2 "04 —
-/// Task discovery", adapted to real fields: no difficulty tags or "N doing
-/// this" counts (not in this response), filter chips key off the response's
-/// own three categories rather than a fabricated difficulty axis, and the
-/// card's tag pill shows the real `type` (e.g. "Volunteering", "IGLU").
+/// Task discovery over the real task catalog (`GET
+/// /api/v1/dashboard/task/list/`), built from the design system (artifact:
+/// Screen patterns → Tasks). Each task is a card with its hashtag on a tab;
+/// filters are the catalog's own three categories.
 class TasksScreen extends ConsumerStatefulWidget {
   const TasksScreen({super.key});
 
@@ -42,15 +35,13 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
     final tasksState = ref.watch(tasksControllerProvider);
 
     return Scaffold(
-      backgroundColor: MuColors.canvas,
+      backgroundColor: context.mu.colors.chalk,
       body: SafeArea(
+        bottom: false,
         child: tasksState.when(
           skipError: true,
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, _) => ErrorRetryView(
-            error: error,
-            onRetry: () => ref.invalidate(tasksControllerProvider),
-          ),
+          error: (error, _) => ErrorRetryView(error: error, onRetry: () => ref.invalidate(tasksControllerProvider)),
           data: (tasks) => MuRefresh(
             onRefresh: () => ref.refresh(tasksControllerProvider.future),
             child: _TasksList(
@@ -66,11 +57,7 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
 }
 
 class _TasksList extends StatelessWidget {
-  const _TasksList({
-    required this.tasks,
-    required this.filter,
-    required this.onFilterChanged,
-  });
+  const _TasksList({required this.tasks, required this.filter, required this.onFilterChanged});
 
   final List<TaskCatalogItem> tasks;
   final TaskCategory? filter;
@@ -78,39 +65,48 @@ class _TasksList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final filtered =
-        filter == null ? tasks : tasks.where((t) => t.category == filter).toList();
-
-    final sectionLabel =
-        filter == null ? 'ALL TASKS' : '${_categoryLabel(filter!).toUpperCase()} TASKS';
+    final mu = context.mu;
+    final filtered = filter == null ? tasks : tasks.where((t) => t.category == filter).toList();
+    final done = filtered.where((t) => t.completed).length;
 
     return ListView(
-      padding: const EdgeInsets.fromLTRB(
-        MuSpace.screenH,
-        MuSpace.l,
-        MuSpace.screenH,
-        MuSpace.navClearance,
-      ),
+      physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+      padding: const EdgeInsets.only(top: MuSpacing.space4, bottom: MuSpacing.navClearance),
       children: [
-        Text('Tasks', style: MuType.display.copyWith(fontSize: 28)),
-        const SizedBox(height: MuSpace.xs),
-        Text(
-          "Real tasks from μLearn's Discord. Pick one, ship it, earn karma.",
-          style: MuType.body.copyWith(color: MuColors.inkSecondary),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: MuSpacing.space5),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Semantics(
+                header: true,
+                child: Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(text: 'Pick a task, ', style: mu.text.displayLight.copyWith(fontSize: 34)),
+                      TextSpan(text: 'earn karma', style: mu.text.display.copyWith(fontSize: 34)),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: MuSpacing.space2),
+              Text(
+                "Real tasks from μLearn's Discord. Ship it, post it with the hashtag, earn karma.",
+                style: mu.text.body.copyWith(color: mu.colors.ink2),
+              ),
+            ],
+          ),
         ),
-        const SizedBox(height: MuSpace.l),
+        const SizedBox(height: MuSpacing.space4),
         SizedBox(
-          height: 36,
+          height: MuSizes.touchMin,
           child: ListView(
             scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: MuSpacing.space5),
             children: [
-              MuFilterChip(
-                label: 'All',
-                selected: filter == null,
-                onTap: () => onFilterChanged(null),
-              ),
+              MuFilterChip(label: 'All', selected: filter == null, onTap: () => onFilterChanged(null)),
               for (final category in TaskCategory.values) ...[
-                const SizedBox(width: MuSpace.s),
+                const SizedBox(width: MuSpacing.space2),
                 MuFilterChip(
                   label: _categoryLabel(category),
                   selected: filter == category,
@@ -120,25 +116,25 @@ class _TasksList extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: MuSpace.xl),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Flexible(child: Text(sectionLabel, style: MuType.eyebrow, overflow: TextOverflow.ellipsis)),
-            const SizedBox(width: MuSpace.s),
-            Text('${filtered.length} shown', style: MuType.caption),
-          ],
+        const SizedBox(height: MuSpacing.space5),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: MuSpacing.space5),
+          child: Text(
+            done == 0 ? '${filtered.length} tasks' : '${filtered.length} tasks · $done done',
+            style: mu.text.caption,
+          ),
         ),
-        const SizedBox(height: MuSpace.m),
+        const SizedBox(height: MuSpacing.space3),
         if (filtered.isEmpty)
           // The dashboard's μJourney tabs: "no-tasks" when there are none,
-          // "no-results" when a filter left nothing.
+          // "no-results" when a filter left nothing (rules.md §8).
           MuStateDisplay(variant: filter == null ? MuStateVariant.noTasks : MuStateVariant.noResults)
         else
-          for (final task in filtered) ...[
-            _TaskCard(task: task),
-            const SizedBox(height: MuSpace.m),
-          ],
+          for (final task in filtered)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(MuSpacing.space5, 0, MuSpacing.space5, MuSpacing.space4),
+              child: _TaskCard(task: task),
+            ),
       ],
     );
   }
@@ -151,61 +147,19 @@ class _TaskCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MuCard(
+    final eyebrow = [
+      if (task.level != null && task.level!.isNotEmpty) task.level!,
+      if (task.interestGroupName != null && task.interestGroupName!.isNotEmpty) task.interestGroupName!,
+    ].join(' · ');
+    return MuTaskCard(
+      title: task.title,
+      karma: task.karma.toInt(),
+      hashtag: task.hashtag,
+      eyebrow: eyebrow.isEmpty ? null : eyebrow,
+      description: task.description,
+      state: task.completed ? MuTaskState.done : MuTaskState.open,
+      pills: [if (task.type != null && task.type!.isNotEmpty) MuPill(task.type!)],
       onTap: () => context.push(RoutePaths.taskDetailPath(task.id)),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              if (task.interestGroupName != null)
-                MuTagChip(label: task.interestGroupName!.toUpperCase()),
-              if (task.type != null) ...[
-                if (task.interestGroupName != null) const SizedBox(width: MuSpace.s),
-                MuTagChip(label: task.type!.toUpperCase()),
-              ],
-              const Spacer(),
-              if (task.completed)
-                Row(
-                  children: [
-                    const Icon(LucideIcons.checkCircle2, size: 14, color: MuColors.success),
-                    const SizedBox(width: 4),
-                    Text('Done', style: MuType.caption.copyWith(color: MuColors.success)),
-                  ],
-                ),
-            ],
-          ),
-          const SizedBox(height: MuSpace.s),
-          Text(task.title, style: MuType.title),
-          if (task.description != null && task.description!.isNotEmpty) ...[
-            const SizedBox(height: MuSpace.xs),
-            Text(
-              task.description!,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: MuType.body.copyWith(color: MuColors.inkSecondary, fontSize: 13),
-            ),
-          ],
-          const SizedBox(height: MuSpace.m),
-          Row(
-            children: [
-              const Icon(LucideIcons.zap, size: 16, color: MuColors.karmaAccent),
-              const SizedBox(width: 4),
-              Text(
-                '${task.karma}',
-                style: MuType.chip.copyWith(color: MuColors.ink, fontWeight: FontWeight.w800),
-              ),
-              if (task.level != null) ...[
-                const SizedBox(width: MuSpace.m),
-                Text(
-                  task.level!.toUpperCase(),
-                  style: MuType.caption,
-                ),
-              ],
-            ],
-          ),
-        ],
-      ),
     );
   }
 }

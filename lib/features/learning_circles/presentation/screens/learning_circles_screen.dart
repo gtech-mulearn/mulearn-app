@@ -7,6 +7,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/auth/current_user_claims.dart';
 import 'package:mulearn_app/core/design_system/feedback/mu_toast.dart';
 import 'package:mulearn_app/core/design_system/foundation/mu_avatar_stack.dart';
+import 'package:mulearn_app/core/design_system/input/mu_filter_chip.dart';
 import 'package:mulearn_app/core/design_system/input/mu_icon_button.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
