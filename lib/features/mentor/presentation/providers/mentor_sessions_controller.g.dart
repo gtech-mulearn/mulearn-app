@@ -348,7 +348,7 @@ final class SessionActionsProvider
   }
 }
 
-String _$sessionActionsHash() => r'5af6ad42f35180eab5ff960c9e40e2fbcba32e7f';
+String _$sessionActionsHash() => r'77592a2872ce382a174dd26958e887005388f5fb';
 
 /// Create, edit and delete. Each refreshes the lists and the hub after it
 /// succeeds, even if the screen closed meanwhile (keep-alive). Errors are

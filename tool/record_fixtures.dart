@@ -61,6 +61,9 @@ List<_Target> _targets() {
     const _Target('mentor_student_requests',
         '/api/v1/dashboard/mentor/session/student-requests/?pageIndex=1&perPage=1', account: 'mentor'),
     const _Target('mentor_ig_dropdown', '/api/v1/dashboard/mentor/tasks/ig-dropdown/', account: 'mentor'),
+    // One request seeded by the QA student (Plan 4 Task 5, scratch p4t5_seed.py).
+    const _Target('mentor_student_requests_one',
+        '/api/v1/dashboard/mentor/session/student-requests/?pageIndex=1&perPage=20', account: 'mentor'),
     // Refused by the backend (offline with a link), so nothing is created.
     const _Target('mentor_session_create_bad_mode', '/api/v1/dashboard/mentor/session/create/',
         account: 'mentor',

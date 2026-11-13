@@ -36,6 +36,7 @@ abstract final class RoutePaths {
   static const String mentorSessionNew = '/mentor/sessions/new';
   static const String mentorSessionEdit = '/mentor/sessions/:id/edit';
   static String mentorSessionEditPath(String id) => '/mentor/sessions/$id/edit';
+  static const String mentorRequests = '/mentor/requests';
   static const String mentorSessionDetail = '/mentor/sessions/:id';
   static String mentorSessionDetailPath(String id) => '/mentor/sessions/$id';
 

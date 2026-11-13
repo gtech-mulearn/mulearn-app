@@ -44,6 +44,10 @@ class MentorRemoteDataSource {
   Future<Response<dynamic>> completeSession(String id) =>
       _dio.post<dynamic>(MentorPaths.sessionComplete(id), data: <String, dynamic>{});
 
+  /// PATCH, as the dashboard sends it (POST gets 405).
+  Future<Response<dynamic>> verifyRequest(String id, Map<String, Object?> body) =>
+      _dio.patch<dynamic>(MentorPaths.studentRequestVerify(id), data: body);
+
   /// `[{id, name}]`.
   Future<List<dynamic>> fetchIgDropdown() async => ApiEnvelope.unwrapList(await _dio.get<dynamic>(MentorPaths.igDropdown));
 

@@ -56,6 +56,8 @@ void main() {
               'mu_id': 'participant@mulearn',
               'created_by_name': 'Real Mentor',
               'enabler_name': 'Real Enabler',
+              'requested_by_name': 'Real Learner',
+              'requested_by_muid': 'learner@mulearn',
               'email': 'real@person.in',
               'mobile': '9999999999',
             },
@@ -73,6 +75,8 @@ void main() {
     expect(row['mu_id'], 'fixture-user@mulearn');
     expect(row['created_by_name'], 'Fixture User');
     expect(row['enabler_name'], 'Fixture User');
+    expect(row['requested_by_name'], 'Fixture User');
+    expect(row['requested_by_muid'], 'fixture-user@mulearn');
     expect(row['email'], 'user@example.com');
     expect(row['mobile'], isNull);
     expect(((response['data'] as List)[1] as Map)['mu_id'], 'qamentor@mulearn');

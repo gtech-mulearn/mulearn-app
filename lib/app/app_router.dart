@@ -30,6 +30,7 @@ import 'package:mulearn_app/features/mentor/presentation/screens/mentor_hub_scre
 import 'package:mulearn_app/features/mentor/presentation/screens/mentor_session_detail_screen.dart';
 import 'package:mulearn_app/features/mentor/presentation/screens/mentor_sessions_screen.dart';
 import 'package:mulearn_app/features/mentor/presentation/screens/session_form_screen.dart';
+import 'package:mulearn_app/features/mentor/presentation/screens/student_requests_screen.dart';
 import 'package:mulearn_app/features/notifications/presentation/screens/notifications_screen.dart';
 import 'package:mulearn_app/features/profile/presentation/screens/change_password_screen.dart';
 import 'package:mulearn_app/features/profile/presentation/screens/connect_discord_screen.dart';
@@ -190,6 +191,14 @@ GoRouter goRouter(Ref ref) {
           select: (a) => a.mentor,
           role: 'Mentor',
           builder: (_) => SessionFormScreen(sessionId: state.pathParameters['id']),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.mentorRequests,
+        builder: (_, __) => WorkspaceGate(
+          select: (a) => a.mentor,
+          role: 'Mentor',
+          builder: (_) => const StudentRequestsScreen(),
         ),
       ),
       GoRoute(

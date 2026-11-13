@@ -5,6 +5,7 @@ import 'package:mulearn_app/features/mentor/domain/entities/mentor_session.dart'
 import 'package:mulearn_app/features/mentor/domain/entities/session_draft.dart';
 import 'package:mulearn_app/features/mentor/domain/entities/session_enums.dart';
 import 'package:mulearn_app/features/mentor/domain/entities/session_participant.dart';
+import 'package:mulearn_app/features/mentor/domain/entities/student_request.dart';
 
 /// A page of the mentor's sessions.
 typedef SessionPage = ({List<MentorSession> items, bool hasNext, int count});
@@ -64,4 +65,10 @@ abstract interface class MentorRepository {
 
   /// `session/complete/<id>/` (scheduled sessions only).
   Future<String> completeSession(String id);
+
+  /// Learners' requests in the mentor's scopes, page by page.
+  Future<({List<StudentSessionRequest> items, bool hasNext, int count})> getStudentRequests({required int pageIndex});
+
+  /// Approves or rejects a request with [body] (see `verifyBody`).
+  Future<String> answerRequest(String id, Map<String, Object?> body);
 }

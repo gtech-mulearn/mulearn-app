@@ -63,7 +63,7 @@ final class SessionParticipantsControllerProvider
 }
 
 String _$sessionParticipantsControllerHash() =>
-    r'00e5fda6aa6576ca320e4e8444a35f84c76e7817';
+    r'7480f14d3e4843898db61b73a2f9c0561a7a2437';
 
 /// A session's participants (first 50; sessions are small). Attendance
 /// changes show at once and roll back if the backend refuses them.

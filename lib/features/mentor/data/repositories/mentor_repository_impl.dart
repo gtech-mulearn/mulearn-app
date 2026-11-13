@@ -9,6 +9,7 @@ import 'package:mulearn_app/features/mentor/data/dtos/mentor_profile_completion_
 import 'package:mulearn_app/features/mentor/data/dtos/mentor_scope_dto.dart';
 import 'package:mulearn_app/features/mentor/data/dtos/mentor_session_dto.dart';
 import 'package:mulearn_app/features/mentor/data/dtos/session_participant_dto.dart';
+import 'package:mulearn_app/features/mentor/data/dtos/student_request_dto.dart';
 import 'package:mulearn_app/features/mentor/domain/entities/mentor_analytics.dart';
 import 'package:mulearn_app/features/mentor/domain/entities/mentor_profile_completion.dart';
 import 'package:mulearn_app/features/mentor/domain/entities/mentor_scope.dart';
@@ -16,6 +17,7 @@ import 'package:mulearn_app/features/mentor/domain/entities/mentor_session.dart'
 import 'package:mulearn_app/features/mentor/domain/entities/session_draft.dart';
 import 'package:mulearn_app/features/mentor/domain/entities/session_enums.dart';
 import 'package:mulearn_app/features/mentor/domain/entities/session_participant.dart';
+import 'package:mulearn_app/features/mentor/domain/entities/student_request.dart';
 import 'package:mulearn_app/features/mentor/domain/repositories/mentor_repository.dart';
 
 class MentorRepositoryImpl implements MentorRepository {
@@ -132,6 +134,26 @@ class MentorRepositoryImpl implements MentorRepository {
 
   @override
   Future<String> completeSession(String id) => _guard(() async => _message(await _remote.completeSession(id)));
+
+  @override
+  Future<({List<StudentSessionRequest> items, bool hasNext, int count})> getStudentRequests({required int pageIndex}) =>
+      _guard(() async {
+        final body = await _remote.fetchStudentRequests({
+          ...PageIndexPaging.query(pageIndex),
+          'sortBy': 'starts_at',
+        });
+        final page = PageIndexPaging.parse(body['pagination'] as Map<String, dynamic>?);
+        final items = parseEachOrReport(
+          body['data'] as List<dynamic>? ?? const [],
+          (json) => StudentRequestDto.fromJson(json).toDomain(),
+          what: 'StudentRequestDto',
+        );
+        return (items: items, hasNext: page.hasNext, count: page.count);
+      });
+
+  @override
+  Future<String> answerRequest(String id, Map<String, Object?> body) =>
+      _guard(() async => _message(await _remote.verifyRequest(id, body)));
 
   /// Unwraps the envelope (throwing on `hasError`) and returns its message.
   String _message(Response<dynamic> response) => ApiEnvelope.unwrapMessage(response) ?? '';

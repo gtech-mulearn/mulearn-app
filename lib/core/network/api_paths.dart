@@ -457,7 +457,7 @@ abstract final class MentorPaths {
   /// `GET` — REQUESTED sessions in the mentor's scopes.
   static const String studentRequests = '$_base/session/student-requests/';
 
-  /// `POST {status: APPROVED|REJECTED, starts_at?, ends_at?, mode?, meeting_link?, venue?}`.
+  /// `PATCH {status: APPROVED|REJECTED, starts_at?, ends_at?, mode?, meeting_link?, venue?}` (POST is 405).
   static String studentRequestVerify(String sessionId) => '$_base/session/student-requests/$sessionId/verify/';
   static const String availability = '$_base/availability/';
   static String availabilitySlot(String id) => '$_base/availability/$id/';

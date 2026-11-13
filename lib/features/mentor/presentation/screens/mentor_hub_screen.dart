@@ -213,13 +213,16 @@ class _RequestsRow extends StatelessWidget {
       final n => '$n waiting',
     };
     return MuCard(
+      onTap: () => context.push(RoutePaths.mentorRequests),
       padding: const EdgeInsets.all(MuSpace.l),
       child: Row(
         children: [
           const Icon(LucideIcons.inbox, size: 20, color: MuColors.primary),
           const SizedBox(width: MuSpace.m),
           Expanded(child: Text('Session requests', style: MuType.bodyMed)),
-          Text(label, style: MuType.caption),
+          Text(label, style: (count ?? 0) > 0 ? MuType.bodyMed.copyWith(color: MuColors.primary) : MuType.caption),
+          const SizedBox(width: MuSpace.xs),
+          const Icon(LucideIcons.chevronRight, size: 18, color: MuColors.inkSecondary),
         ],
       ),
     );

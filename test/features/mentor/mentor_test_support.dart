@@ -12,6 +12,7 @@ import 'package:mulearn_app/features/mentor/presentation/screens/mentor_hub_scre
 import 'package:mulearn_app/features/mentor/presentation/screens/mentor_session_detail_screen.dart';
 import 'package:mulearn_app/features/mentor/presentation/screens/mentor_sessions_screen.dart';
 import 'package:mulearn_app/features/mentor/presentation/screens/session_form_screen.dart';
+import 'package:mulearn_app/features/mentor/presentation/screens/student_requests_screen.dart';
 
 import '../../support/fake_http_adapter.dart';
 import '../../support/fake_secure_storage.dart';
@@ -71,6 +72,7 @@ Future<GoRouter> pumpMentor(
     GoRoute(path: '/mentor', builder: (_, __) => const MentorHubScreen()),
     GoRoute(path: '/mentor/sessions', builder: (_, __) => const MentorSessionsScreen()),
     GoRoute(path: '/mentor/sessions/new', builder: (_, __) => const SessionFormScreen()),
+    GoRoute(path: '/mentor/requests', builder: (_, __) => const StudentRequestsScreen()),
     GoRoute(path: '/mentor/sessions/:id/edit', builder: (_, s) => SessionFormScreen(sessionId: s.pathParameters['id'])),
     GoRoute(path: '/mentor/sessions/:id', builder: (_, s) => MentorSessionDetailScreen(sessionId: s.pathParameters['id']!)),
   ]);
