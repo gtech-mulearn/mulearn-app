@@ -6,12 +6,11 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
-import 'package:mulearn_app/core/theme/mu_radius.dart';
-import 'package:mulearn_app/core/theme/mu_shadow.dart';
 import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
 import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 import 'package:mulearn_app/core/widgets/mu_buttons.dart';
+import 'package:mulearn_app/core/widgets/mu_logo.dart';
 import 'package:mulearn_app/core/widgets/mu_toast.dart';
 import 'package:mulearn_app/features/auth/domain/entities/social_sign_in_outcome.dart';
 import 'package:mulearn_app/features/auth/presentation/providers/auth_controller.dart';
@@ -620,30 +619,7 @@ class _BrandMark extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          height: 74,
-          width: 74,
-          decoration: BoxDecoration(
-            color: MuColors.primary,
-            borderRadius: BorderRadius.circular(MuRadius.inner + 6),
-            boxShadow: MuShadow.buttonGlow,
-          ),
-          alignment: Alignment.center,
-          child: Text(
-            'μ',
-            style: MuType.display.copyWith(color: MuColors.onBrand, fontSize: 36, height: 1),
-          ),
-        ),
-        const SizedBox(height: MuSpace.m),
-        Text('μLearn', style: MuType.display.copyWith(fontSize: 26)),
-        const SizedBox(height: MuSpace.xs),
-        Text(
-          'a GTech initiative',
-          style: MuType.caption.copyWith(color: MuColors.inkTertiary, letterSpacing: 0.4),
-        ),
-      ],
-    );
+    // The dashboard's login logo (public/logo.webp, tagline included).
+    return const MuLogo.wordmark(height: 64);
   }
 }

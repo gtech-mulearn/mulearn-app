@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
+import 'package:mulearn_app/core/widgets/mu_logo.dart';
 
 /// A circular profile photo with an initial-letter placeholder — shared by
 /// the profile header and anywhere else an avatar is shown.
@@ -18,7 +19,7 @@ class ProfileAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final initial = name.trim().isNotEmpty ? name.trim()[0].toUpperCase() : 'μ';
+    final initial = name.trim().isNotEmpty ? name.trim()[0].toUpperCase() : null;
     // Cycle through the avatar palette, keyed by name so a given person's
     // initials always land on the same color.
     final avatarColor =
@@ -31,14 +32,17 @@ class ProfileAvatar extends StatelessWidget {
         shape: BoxShape.circle,
       ),
       alignment: Alignment.center,
-      child: Text(
-        initial,
-        style: TextStyle(
-          color: MuColors.onBrand,
-          fontSize: size * 0.42,
-          fontWeight: FontWeight.w800,
-        ),
-      ),
+      // No name yet: the μLearn mark on a white tile.
+      child: initial == null
+          ? MuLogo.mark(size: size * 0.72, tile: true)
+          : Text(
+              initial,
+              style: TextStyle(
+                color: MuColors.onBrand,
+                fontSize: size * 0.42,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
     );
 
     if (url == null || url!.isEmpty) return placeholder;
