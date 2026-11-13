@@ -71,6 +71,41 @@ void main() {
       expect(a.enablerCampuses, WorkspaceState.hidden);
     });
 
+    // User, 2026-11-13: "remember a user can have multiple roles".
+    test('one person can hold several roles and gets every workspace', () {
+      final a = derive(
+        ['Student', 'Mentor', 'Campus Lead', 'Enabler'],
+        apps: ['APPROVED'],
+        verified: {'student': true, 'mentor': false, 'campus lead': true, 'enabler': true},
+      );
+      expect(a.mentor, WorkspaceState.open);
+      expect(a.campus, WorkspaceState.open);
+      expect(a.enablerCampuses, WorkspaceState.open);
+      expect(a.campusLead, isTrue);
+    });
+
+    test('each role is decided on its own: one pending, another open', () {
+      final a = derive(
+        ['Mentor', 'Enabler'],
+        apps: ['PENDING'],
+        verified: {'enabler': true},
+      );
+      expect(a.mentor, WorkspaceState.pending);
+      expect(a.campus, WorkspaceState.open);
+
+      final b = derive(['Mentor', 'Enabler'], apps: ['APPROVED'], verified: {'enabler': false});
+      expect(b.mentor, WorkspaceState.open);
+      expect(b.campus, WorkspaceState.pending);
+      expect(b.pendingCampusRole, 'Enabler');
+    });
+
+    test('a campus role verified while another is not still opens the campus', () {
+      final a = derive(['Enabler', 'Campus Lead'], verified: {'enabler': false, 'campus lead': true});
+      expect(a.campus, WorkspaceState.open);
+      expect(a.campusLead, isTrue);
+      expect(a.enablerCampuses, WorkspaceState.pending);
+    });
+
     test('an unverified Campus Lead gets no approvals', () {
       final a = derive(['Campus Lead'], verified: {'campus lead': false});
       expect(a.campus, WorkspaceState.pending);

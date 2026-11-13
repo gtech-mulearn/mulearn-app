@@ -114,6 +114,50 @@ void main() {
     expect(find.text('My campuses'), findsOneWidget, reason: 'enablers review their campuses');
   });
 
+  // User, 2026-11-13: "remember a user can have multiple roles".
+  group('one person with several roles', () {
+    Map<String, dynamic> withRoles(String fixture, List<String> roles, {List<Map<String, Object>>? verification}) {
+      final body = loadFixture(fixture);
+      final response = Map<String, dynamic>.of(body['response'] as Map<String, dynamic>);
+      if (fixture.contains('user_info')) response['roles'] = roles;
+      if (verification != null) response['role_verification'] = verification;
+      return {...body, 'response': response};
+    }
+
+    FakeHttpAdapter everyRole({bool enablerVerified = true}) {
+      final a = adapterFor(userInfo: 'dev/user_info_campuslead', profile: 'dev/user_profile_campuslead');
+      a.routes['GET /api/v1/dashboard/user/info/'] =
+          (_) => FakeResponse(200, withRoles('dev/user_info_campuslead', ['Student', 'Mentor', 'Campus Lead', 'Enabler']));
+      a.routes['GET /api/v1/dashboard/profile/user-profile/'] = (_) => FakeResponse(
+            200,
+            withRoles('dev/user_profile_campuslead', const [], verification: [
+              {'role': 'Student', 'is_verified': true},
+              {'role': 'Mentor', 'is_verified': false},
+              {'role': 'Campus Lead', 'is_verified': true},
+              {'role': 'Enabler', 'is_verified': enablerVerified},
+            ]),
+          );
+      return a;
+    }
+
+    testWidgets('Home shows both the mentor and the campus workspace', (tester) async {
+      adapter = everyRole();
+      await pump(tester, const HomeScreen());
+
+      expect(find.text('Mentor workspace'), findsOneWidget);
+      expect(find.text('Campus workspace'), findsOneWidget);
+    });
+
+    testWidgets('Profile lists every workspace the person has', (tester) async {
+      adapter = everyRole();
+      await pump(tester, const Scaffold(body: WorkspaceLinks()));
+
+      expect(find.text('Mentor workspace'), findsOneWidget);
+      expect(find.text('Campus workspace'), findsOneWidget);
+      expect(find.text('My campuses'), findsOneWidget);
+    });
+  });
+
   testWidgets('Profile lists the mentor workspace under Workspaces', (tester) async {
     adapter = adapterFor(userInfo: 'dev/user_info_mentor', profile: 'dev/user_profile_mentor');
     await pump(tester, const Scaffold(body: WorkspaceLinks()));
