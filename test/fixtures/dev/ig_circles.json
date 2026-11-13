@@ -1,0 +1,57 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/learningcircle/list/?ig=4ff0a5e5-d1ef-44dd-ac13-9a2f9e7717e3&pageIndex=1&perPage=5",
+    "account": "student",
+    "status": 200,
+    "recorded_at": "2026-11-13T06:44:04.408147+00:00"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "data": [
+        {
+          "id": "d612e4c3-4c09-4721-9143-4e2a218712e8",
+          "ig": "Web Development",
+          "title": "Web Accessibility Study Group",
+          "org": "St. Josephs Colege of Engineering and Technology",
+          "total_members": 1,
+          "is_joined": false,
+          "is_creator": false,
+          "status": "not_joined"
+        },
+        {
+          "id": "40a52b79-a820-4dfa-9a12-0bb960567a55",
+          "ig": "Web Development",
+          "title": "Full-Stack Fridays",
+          "org": "St. Josephs Colege of Engineering and Technology",
+          "total_members": 4,
+          "is_joined": true,
+          "is_creator": false,
+          "status": "joined"
+        },
+        {
+          "id": "4cfd3477-08c7-421e-9137-fd6cbc412465",
+          "ig": "Web Development",
+          "title": "Flutter Builders",
+          "org": "St. Josephs Colege of Engineering and Technology",
+          "total_members": 4,
+          "is_joined": true,
+          "is_creator": true,
+          "status": "joined"
+        }
+      ],
+      "pagination": {
+        "count": 3,
+        "totalPages": 1,
+        "isNext": false,
+        "isPrev": false,
+        "nextPage": null
+      }
+    }
+  }
+}

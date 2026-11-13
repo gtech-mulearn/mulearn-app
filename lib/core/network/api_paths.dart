@@ -130,6 +130,13 @@ abstract final class ApiPaths {
   /// (ResetPasswordAPI); 400 "Current Password is incorrect" otherwise.
   static const String changePassword = '/api/v1/dashboard/profile/change-password/';
 
+  /// `POST` — join an interest group (learners: at most 3; "Cannot join more
+  /// than 3 interest groups"). InterestGroupMembershipAPI.
+  static String igJoin(String id) => '/api/v1/dashboard/ig/$id/join/';
+
+  /// `DELETE` — leave an interest group.
+  static String igLeave(String id) => '/api/v1/dashboard/ig/$id/leave/';
+
   /// `PUT {"is_public": bool}` — toggle profile visibility.
   static const String shareUserProfile =
       '/api/v1/dashboard/profile/share-user-profile/';

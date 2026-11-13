@@ -276,25 +276,192 @@ final class MyInterestGroupIdsProvider
 String _$myInterestGroupIdsHash() =>
     r'3864b731ebe0559b1be8520023d12cc2592a43e5';
 
-/// Joins or leaves a single group by replacing the user's full membership
-/// set (the backend's `ig-edit` takes the complete list, not a delta) —
-/// then invalidates the shared profile so every card (and Profile) reflects
-/// the change.
+/// The first circles in a group, for its page.
+
+@ProviderFor(circlesInGroup)
+const circlesInGroupProvider = CirclesInGroupFamily._();
+
+/// The first circles in a group, for its page.
+
+final class CirclesInGroupProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<IgCircleRef>>,
+          List<IgCircleRef>,
+          FutureOr<List<IgCircleRef>>
+        >
+    with
+        $FutureModifier<List<IgCircleRef>>,
+        $FutureProvider<List<IgCircleRef>> {
+  /// The first circles in a group, for its page.
+  const CirclesInGroupProvider._({
+    required CirclesInGroupFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: noRetry,
+         name: r'circlesInGroupProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$circlesInGroupHash();
+
+  @override
+  String toString() {
+    return r'circlesInGroupProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<List<IgCircleRef>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<IgCircleRef>> create(Ref ref) {
+    final argument = this.argument as String;
+    return circlesInGroup(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is CirclesInGroupProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$circlesInGroupHash() => r'cce060fd5807d54f381a51c10a2f76b058ff3c77';
+
+/// The first circles in a group, for its page.
+
+final class CirclesInGroupFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<List<IgCircleRef>>, String> {
+  const CirclesInGroupFamily._()
+    : super(
+        retry: noRetry,
+        name: r'circlesInGroupProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// The first circles in a group, for its page.
+
+  CirclesInGroupProvider call(String igId) =>
+      CirclesInGroupProvider._(argument: igId, from: this);
+
+  @override
+  String toString() => r'circlesInGroupProvider';
+}
+
+/// The first events scoped to a group, for its page.
+
+@ProviderFor(eventsInGroup)
+const eventsInGroupProvider = EventsInGroupFamily._();
+
+/// The first events scoped to a group, for its page.
+
+final class EventsInGroupProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<IgEventRef>>,
+          List<IgEventRef>,
+          FutureOr<List<IgEventRef>>
+        >
+    with $FutureModifier<List<IgEventRef>>, $FutureProvider<List<IgEventRef>> {
+  /// The first events scoped to a group, for its page.
+  const EventsInGroupProvider._({
+    required EventsInGroupFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: noRetry,
+         name: r'eventsInGroupProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$eventsInGroupHash();
+
+  @override
+  String toString() {
+    return r'eventsInGroupProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<List<IgEventRef>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<IgEventRef>> create(Ref ref) {
+    final argument = this.argument as String;
+    return eventsInGroup(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is EventsInGroupProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$eventsInGroupHash() => r'2df1c74a9b9149035d957ff012a6d4d1ed6b775d';
+
+/// The first events scoped to a group, for its page.
+
+final class EventsInGroupFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<List<IgEventRef>>, String> {
+  const EventsInGroupFamily._()
+    : super(
+        retry: noRetry,
+        name: r'eventsInGroupProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// The first events scoped to a group, for its page.
+
+  EventsInGroupProvider call(String igId) =>
+      EventsInGroupProvider._(argument: igId, from: this);
+
+  @override
+  String toString() => r'eventsInGroupProvider';
+}
+
+/// Joins or leaves one group through its own endpoints (FEAT-08) — no
+/// full-list rewrite, so a group joined elsewhere can't be dropped — then
+/// refreshes the shared profile so every card (and Profile) shows it.
 
 @ProviderFor(InterestGroupMembershipController)
 const interestGroupMembershipControllerProvider =
     InterestGroupMembershipControllerProvider._();
 
-/// Joins or leaves a single group by replacing the user's full membership
-/// set (the backend's `ig-edit` takes the complete list, not a delta) —
-/// then invalidates the shared profile so every card (and Profile) reflects
-/// the change.
+/// Joins or leaves one group through its own endpoints (FEAT-08) — no
+/// full-list rewrite, so a group joined elsewhere can't be dropped — then
+/// refreshes the shared profile so every card (and Profile) shows it.
 final class InterestGroupMembershipControllerProvider
     extends $AsyncNotifierProvider<InterestGroupMembershipController, void> {
-  /// Joins or leaves a single group by replacing the user's full membership
-  /// set (the backend's `ig-edit` takes the complete list, not a delta) —
-  /// then invalidates the shared profile so every card (and Profile) reflects
-  /// the change.
+  /// Joins or leaves one group through its own endpoints (FEAT-08) — no
+  /// full-list rewrite, so a group joined elsewhere can't be dropped — then
+  /// refreshes the shared profile so every card (and Profile) shows it.
   const InterestGroupMembershipControllerProvider._()
     : super(
         from: null,
@@ -317,12 +484,11 @@ final class InterestGroupMembershipControllerProvider
 }
 
 String _$interestGroupMembershipControllerHash() =>
-    r'0d9d40134997aeabfbb90a4d6f40ef002236df71';
+    r'2b392660e9a46b3abf3c01af5655408b1e63833c';
 
-/// Joins or leaves a single group by replacing the user's full membership
-/// set (the backend's `ig-edit` takes the complete list, not a delta) —
-/// then invalidates the shared profile so every card (and Profile) reflects
-/// the change.
+/// Joins or leaves one group through its own endpoints (FEAT-08) — no
+/// full-list rewrite, so a group joined elsewhere can't be dropped — then
+/// refreshes the shared profile so every card (and Profile) shows it.
 
 abstract class _$InterestGroupMembershipController
     extends $AsyncNotifier<void> {

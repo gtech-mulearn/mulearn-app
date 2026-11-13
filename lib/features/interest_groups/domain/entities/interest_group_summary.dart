@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:mulearn_app/features/interest_groups/domain/entities/ig_impact_project.dart';
 import 'package:mulearn_app/features/interest_groups/domain/entities/ig_person_ref.dart';
 
 part 'interest_group_summary.freezed.dart';
@@ -22,5 +23,11 @@ abstract class InterestGroupSummary with _$InterestGroupSummary {
     String? code,
     @Default([]) List<String> prerequisites,
     @Default([]) List<String> careerOpportunities,
+
+    /// API-13: the current image fields (`icon` is the legacy one).
+    String? iconImage,
+    String? coverImage,
+    String? officeHours,
+    @Default([]) List<IgImpactProject> impactProjects,
   }) = _InterestGroupSummary;
 }

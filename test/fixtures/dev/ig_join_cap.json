@@ -1,0 +1,19 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "POST /api/v1/dashboard/ig/<not-joined>/join/",
+    "account": "student",
+    "status": 400,
+    "recorded_at": "2026-11-13T06:44:02.032454+00:00"
+  },
+  "body": {
+    "hasError": true,
+    "statusCode": 400,
+    "message": {
+      "general": [
+        "Cannot join more than 3 interest groups"
+      ]
+    },
+    "response": {}
+  }
+}

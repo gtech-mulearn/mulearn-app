@@ -150,7 +150,7 @@ class _GroupIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     final squareBg = isJoined ? MuColors.surface : MuColors.primaryTint;
     final squareFg = isJoined ? MuColors.ink : MuColors.primary;
-    final icon = group.icon;
+    final icon = group.iconImage ?? group.icon;
 
     Widget content;
     if (icon != null && icon.isNotEmpty) {

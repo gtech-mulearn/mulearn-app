@@ -1,0 +1,91 @@
+{
+  "_meta": {
+    "source": "serializer",
+    "built_from": "mulearnbackend origin/dev api/dashboard/ig/impact_project_serializer.py ImpactProjectSerializer (fields id, ig_id, title, image, description, team, links, created_by, updated_by, created_at, updated_at)",
+    "based_on": "dev/public_ig_detail"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "interestGroup": {
+        "id": "4ff0a5e5-d1ef-44dd-ac13-9a2f9e7717e3",
+        "name": "Web Development",
+        "resource": null,
+        "about": null,
+        "prerequisites": null,
+        "career_opportunities": null,
+        "top_blogs": null,
+        "people_to_follow": null,
+        "leads": null,
+        "mentors": [
+          {
+            "muid": "qamentorone@mulearn",
+            "full_name": "QA Mentor One",
+            "profile_pic": null,
+            "company": null,
+            "socials": {
+              "github": null,
+              "facebook": null,
+              "instagram": null,
+              "linkedin": null,
+              "dribble": null,
+              "behance": null,
+              "stackoverflow": null,
+              "medium": null,
+              "hackerrank": null
+            }
+          }
+        ],
+        "thinktank": null,
+        "office_hours": null,
+        "icon": null,
+        "icon_image": null,
+        "cover_image": null,
+        "code": "WEBDEV",
+        "category": "coder",
+        "status": "active",
+        "members": 7,
+        "media_content_links": [],
+        "is_sponsored": false,
+        "sponsor_company_name": null,
+        "sponsor_company_logo": null,
+        "community_partners": [],
+        "updated_by": "Dev Admin",
+        "updated_at": "2026-11-12T14:45:58Z",
+        "created_by": "Dev Admin",
+        "created_at": "2026-11-12T14:45:58Z",
+        "impact_projects": [
+          {
+            "id": "p1",
+            "ig_id": "4ff0a5e5-d1ef-44dd-ac13-9a2f9e7717e3",
+            "title": "Accessible campus map",
+            "image": null,
+            "description": "A screen-reader friendly map of the campus, built by the IG.",
+            "team": [
+              {
+                "muid": "someone@mulearn",
+                "name": "Team Member",
+                "avatar": null,
+                "is_lead": true
+              }
+            ],
+            "links": [
+              {
+                "label": "Repository",
+                "url": "https://github.com/example/campus-map"
+              }
+            ],
+            "created_by": "Team Member",
+            "updated_by": "Team Member",
+            "created_at": "2026-11-12T10:00:00Z",
+            "updated_at": "2026-11-12T10:00:00Z"
+          }
+        ]
+      }
+    }
+  }
+}
