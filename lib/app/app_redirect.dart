@@ -40,9 +40,15 @@ const _allowedSignedInExtra = {
   RoutePaths.connectDiscord,
 };
 
+/// Role workspaces (Plan 4): `/mentor…`, `/campus…`, `/enabler…`. Access
+/// is decided by `WorkspaceGate` on the screen, not here.
+bool _isWorkspace(String path) => const ['/mentor', '/campus', '/enabler']
+    .any((root) => path == root || path.startsWith('$root/'));
+
 bool _isSignedInScreen(String path) =>
     _allowedSignedIn.contains(path) ||
     _allowedSignedInExtra.contains(path) ||
+    _isWorkspace(path) ||
     path.startsWith('/u/') ||
     path.startsWith('/interest-groups/') ||
     path.startsWith('/events/') ||

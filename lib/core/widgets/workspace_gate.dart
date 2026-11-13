@@ -1,0 +1,77 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:lucide_icons/lucide_icons.dart';
+import 'package:mulearn_app/core/router/route_paths.dart';
+import 'package:mulearn_app/core/session/workspace_access.dart';
+import 'package:mulearn_app/core/theme/mu_space.dart';
+import 'package:mulearn_app/core/theme/mulearn_colors.dart';
+import 'package:mulearn_app/core/widgets/error_retry_view.dart';
+import 'package:mulearn_app/core/widgets/mu_empty_state.dart';
+import 'package:mulearn_app/core/widgets/role_pending_banner.dart';
+
+/// Wraps a role workspace route. [builder] runs only when the selected
+/// workspace is open, so a pending or foreign role never builds the
+/// workspace and never makes its requests (deep links included).
+class WorkspaceGate extends ConsumerWidget {
+  const WorkspaceGate({required this.select, required this.role, required this.builder, super.key});
+
+  final WorkspaceState Function(WorkspaceAccess access) select;
+
+  /// The role the pending banner names (e.g. "Mentor", "Enabler").
+  final String role;
+  final WidgetBuilder builder;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return ref.watch(workspaceAccessProvider).when(
+          loading: () => const Scaffold(
+            backgroundColor: MuColors.canvas,
+            body: Center(child: CircularProgressIndicator()),
+          ),
+          error: (error, _) => _Shell(
+            child: ErrorRetryView(error: error, onRetry: () => ref.invalidate(workspaceAccessProvider)),
+          ),
+          data: (access) {
+            final state = access == null ? WorkspaceState.hidden : select(access);
+            return switch (state) {
+              WorkspaceState.open => builder(context),
+              WorkspaceState.pending => _Shell(
+                  child: Padding(
+                    padding: const EdgeInsets.all(MuSpace.screenH),
+                    // A campus gate names the role actually held (Campus
+                    // Lead, Lead Enabler or Enabler).
+                    child: RolePendingBanner(
+                      role: role == 'Mentor' ? role : (access?.pendingCampusRole ?? role),
+                    ),
+                  ),
+                ),
+              WorkspaceState.hidden => _Shell(
+                  child: MuEmptyState(
+                    icon: LucideIcons.lock,
+                    title: 'Not available',
+                    message: "This workspace isn't available for your account.",
+                    actionLabel: 'Back',
+                    onAction: () => context.canPop() ? context.pop() : context.go(RoutePaths.home),
+                  ),
+                ),
+            };
+          },
+        );
+  }
+}
+
+class _Shell extends StatelessWidget {
+  const _Shell({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: MuColors.canvas,
+      appBar: AppBar(backgroundColor: MuColors.canvas, elevation: 0),
+      body: SafeArea(child: Align(alignment: Alignment.topCenter, child: child)),
+    );
+  }
+}

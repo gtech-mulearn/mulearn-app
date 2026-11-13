@@ -16,14 +16,13 @@ abstract class Capabilities with _$Capabilities {
     required bool isEnabler,
     required bool isCampusLead,
     required bool isCompany,
-    required bool canUseCampusWorkspace,
     required bool needsDiscord,
   }) = _Capabilities;
 
   /// Roles from `/user/info/`; mentor approval from the user's mentor
   /// applications (the Mentor role link itself can stay unverified after
-  /// approval). The campus workspace follows the dashboard: Campus Lead,
-  /// Lead Enabler or Enabler.
+  /// approval). Who gets a role workspace is decided in
+  /// `workspace_access.dart`, which also reads role verification.
   factory Capabilities.derive(CurrentUser user, List<MentorApplication> mentorApplications) {
     bool has(String title) => user.roles.contains(title);
     final isMentor = has(RoleTitles.mentor);
@@ -38,7 +37,6 @@ abstract class Capabilities with _$Capabilities {
       isEnabler: isEnabler,
       isCampusLead: isCampusLead,
       isCompany: has(RoleTitles.company),
-      canUseCampusWorkspace: isCampusLead || isEnabler,
       needsDiscord: !user.existInGuild,
     );
   }

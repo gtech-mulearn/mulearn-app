@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Capabilities {
 
- bool get isLearner; bool get isMentor; bool get isMentorApproved; bool get isEnabler; bool get isCampusLead; bool get isCompany; bool get canUseCampusWorkspace; bool get needsDiscord;
+ bool get isLearner; bool get isMentor; bool get isMentorApproved; bool get isEnabler; bool get isCampusLead; bool get isCompany; bool get needsDiscord;
 /// Create a copy of Capabilities
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $CapabilitiesCopyWith<Capabilities> get copyWith => _$CapabilitiesCopyWithImpl<C
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Capabilities&&(identical(other.isLearner, isLearner) || other.isLearner == isLearner)&&(identical(other.isMentor, isMentor) || other.isMentor == isMentor)&&(identical(other.isMentorApproved, isMentorApproved) || other.isMentorApproved == isMentorApproved)&&(identical(other.isEnabler, isEnabler) || other.isEnabler == isEnabler)&&(identical(other.isCampusLead, isCampusLead) || other.isCampusLead == isCampusLead)&&(identical(other.isCompany, isCompany) || other.isCompany == isCompany)&&(identical(other.canUseCampusWorkspace, canUseCampusWorkspace) || other.canUseCampusWorkspace == canUseCampusWorkspace)&&(identical(other.needsDiscord, needsDiscord) || other.needsDiscord == needsDiscord));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Capabilities&&(identical(other.isLearner, isLearner) || other.isLearner == isLearner)&&(identical(other.isMentor, isMentor) || other.isMentor == isMentor)&&(identical(other.isMentorApproved, isMentorApproved) || other.isMentorApproved == isMentorApproved)&&(identical(other.isEnabler, isEnabler) || other.isEnabler == isEnabler)&&(identical(other.isCampusLead, isCampusLead) || other.isCampusLead == isCampusLead)&&(identical(other.isCompany, isCompany) || other.isCompany == isCompany)&&(identical(other.needsDiscord, needsDiscord) || other.needsDiscord == needsDiscord));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isLearner,isMentor,isMentorApproved,isEnabler,isCampusLead,isCompany,canUseCampusWorkspace,needsDiscord);
+int get hashCode => Object.hash(runtimeType,isLearner,isMentor,isMentorApproved,isEnabler,isCampusLead,isCompany,needsDiscord);
 
 @override
 String toString() {
-  return 'Capabilities(isLearner: $isLearner, isMentor: $isMentor, isMentorApproved: $isMentorApproved, isEnabler: $isEnabler, isCampusLead: $isCampusLead, isCompany: $isCompany, canUseCampusWorkspace: $canUseCampusWorkspace, needsDiscord: $needsDiscord)';
+  return 'Capabilities(isLearner: $isLearner, isMentor: $isMentor, isMentorApproved: $isMentorApproved, isEnabler: $isEnabler, isCampusLead: $isCampusLead, isCompany: $isCompany, needsDiscord: $needsDiscord)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $CapabilitiesCopyWith<$Res>  {
   factory $CapabilitiesCopyWith(Capabilities value, $Res Function(Capabilities) _then) = _$CapabilitiesCopyWithImpl;
 @useResult
 $Res call({
- bool isLearner, bool isMentor, bool isMentorApproved, bool isEnabler, bool isCampusLead, bool isCompany, bool canUseCampusWorkspace, bool needsDiscord
+ bool isLearner, bool isMentor, bool isMentorApproved, bool isEnabler, bool isCampusLead, bool isCompany, bool needsDiscord
 });
 
 
@@ -62,7 +62,7 @@ class _$CapabilitiesCopyWithImpl<$Res>
 
 /// Create a copy of Capabilities
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? isLearner = null,Object? isMentor = null,Object? isMentorApproved = null,Object? isEnabler = null,Object? isCampusLead = null,Object? isCompany = null,Object? canUseCampusWorkspace = null,Object? needsDiscord = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? isLearner = null,Object? isMentor = null,Object? isMentorApproved = null,Object? isEnabler = null,Object? isCampusLead = null,Object? isCompany = null,Object? needsDiscord = null,}) {
   return _then(_self.copyWith(
 isLearner: null == isLearner ? _self.isLearner : isLearner // ignore: cast_nullable_to_non_nullable
 as bool,isMentor: null == isMentor ? _self.isMentor : isMentor // ignore: cast_nullable_to_non_nullable
@@ -70,7 +70,6 @@ as bool,isMentorApproved: null == isMentorApproved ? _self.isMentorApproved : is
 as bool,isEnabler: null == isEnabler ? _self.isEnabler : isEnabler // ignore: cast_nullable_to_non_nullable
 as bool,isCampusLead: null == isCampusLead ? _self.isCampusLead : isCampusLead // ignore: cast_nullable_to_non_nullable
 as bool,isCompany: null == isCompany ? _self.isCompany : isCompany // ignore: cast_nullable_to_non_nullable
-as bool,canUseCampusWorkspace: null == canUseCampusWorkspace ? _self.canUseCampusWorkspace : canUseCampusWorkspace // ignore: cast_nullable_to_non_nullable
 as bool,needsDiscord: null == needsDiscord ? _self.needsDiscord : needsDiscord // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
@@ -157,10 +156,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isLearner,  bool isMentor,  bool isMentorApproved,  bool isEnabler,  bool isCampusLead,  bool isCompany,  bool canUseCampusWorkspace,  bool needsDiscord)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isLearner,  bool isMentor,  bool isMentorApproved,  bool isEnabler,  bool isCampusLead,  bool isCompany,  bool needsDiscord)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Capabilities() when $default != null:
-return $default(_that.isLearner,_that.isMentor,_that.isMentorApproved,_that.isEnabler,_that.isCampusLead,_that.isCompany,_that.canUseCampusWorkspace,_that.needsDiscord);case _:
+return $default(_that.isLearner,_that.isMentor,_that.isMentorApproved,_that.isEnabler,_that.isCampusLead,_that.isCompany,_that.needsDiscord);case _:
   return orElse();
 
 }
@@ -178,10 +177,10 @@ return $default(_that.isLearner,_that.isMentor,_that.isMentorApproved,_that.isEn
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isLearner,  bool isMentor,  bool isMentorApproved,  bool isEnabler,  bool isCampusLead,  bool isCompany,  bool canUseCampusWorkspace,  bool needsDiscord)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isLearner,  bool isMentor,  bool isMentorApproved,  bool isEnabler,  bool isCampusLead,  bool isCompany,  bool needsDiscord)  $default,) {final _that = this;
 switch (_that) {
 case _Capabilities():
-return $default(_that.isLearner,_that.isMentor,_that.isMentorApproved,_that.isEnabler,_that.isCampusLead,_that.isCompany,_that.canUseCampusWorkspace,_that.needsDiscord);case _:
+return $default(_that.isLearner,_that.isMentor,_that.isMentorApproved,_that.isEnabler,_that.isCampusLead,_that.isCompany,_that.needsDiscord);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -198,10 +197,10 @@ return $default(_that.isLearner,_that.isMentor,_that.isMentorApproved,_that.isEn
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isLearner,  bool isMentor,  bool isMentorApproved,  bool isEnabler,  bool isCampusLead,  bool isCompany,  bool canUseCampusWorkspace,  bool needsDiscord)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isLearner,  bool isMentor,  bool isMentorApproved,  bool isEnabler,  bool isCampusLead,  bool isCompany,  bool needsDiscord)?  $default,) {final _that = this;
 switch (_that) {
 case _Capabilities() when $default != null:
-return $default(_that.isLearner,_that.isMentor,_that.isMentorApproved,_that.isEnabler,_that.isCampusLead,_that.isCompany,_that.canUseCampusWorkspace,_that.needsDiscord);case _:
+return $default(_that.isLearner,_that.isMentor,_that.isMentorApproved,_that.isEnabler,_that.isCampusLead,_that.isCompany,_that.needsDiscord);case _:
   return null;
 
 }
@@ -213,7 +212,7 @@ return $default(_that.isLearner,_that.isMentor,_that.isMentorApproved,_that.isEn
 
 
 class _Capabilities implements Capabilities {
-  const _Capabilities({required this.isLearner, required this.isMentor, required this.isMentorApproved, required this.isEnabler, required this.isCampusLead, required this.isCompany, required this.canUseCampusWorkspace, required this.needsDiscord});
+  const _Capabilities({required this.isLearner, required this.isMentor, required this.isMentorApproved, required this.isEnabler, required this.isCampusLead, required this.isCompany, required this.needsDiscord});
   
 
 @override final  bool isLearner;
@@ -222,7 +221,6 @@ class _Capabilities implements Capabilities {
 @override final  bool isEnabler;
 @override final  bool isCampusLead;
 @override final  bool isCompany;
-@override final  bool canUseCampusWorkspace;
 @override final  bool needsDiscord;
 
 /// Create a copy of Capabilities
@@ -235,16 +233,16 @@ _$CapabilitiesCopyWith<_Capabilities> get copyWith => __$CapabilitiesCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Capabilities&&(identical(other.isLearner, isLearner) || other.isLearner == isLearner)&&(identical(other.isMentor, isMentor) || other.isMentor == isMentor)&&(identical(other.isMentorApproved, isMentorApproved) || other.isMentorApproved == isMentorApproved)&&(identical(other.isEnabler, isEnabler) || other.isEnabler == isEnabler)&&(identical(other.isCampusLead, isCampusLead) || other.isCampusLead == isCampusLead)&&(identical(other.isCompany, isCompany) || other.isCompany == isCompany)&&(identical(other.canUseCampusWorkspace, canUseCampusWorkspace) || other.canUseCampusWorkspace == canUseCampusWorkspace)&&(identical(other.needsDiscord, needsDiscord) || other.needsDiscord == needsDiscord));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Capabilities&&(identical(other.isLearner, isLearner) || other.isLearner == isLearner)&&(identical(other.isMentor, isMentor) || other.isMentor == isMentor)&&(identical(other.isMentorApproved, isMentorApproved) || other.isMentorApproved == isMentorApproved)&&(identical(other.isEnabler, isEnabler) || other.isEnabler == isEnabler)&&(identical(other.isCampusLead, isCampusLead) || other.isCampusLead == isCampusLead)&&(identical(other.isCompany, isCompany) || other.isCompany == isCompany)&&(identical(other.needsDiscord, needsDiscord) || other.needsDiscord == needsDiscord));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isLearner,isMentor,isMentorApproved,isEnabler,isCampusLead,isCompany,canUseCampusWorkspace,needsDiscord);
+int get hashCode => Object.hash(runtimeType,isLearner,isMentor,isMentorApproved,isEnabler,isCampusLead,isCompany,needsDiscord);
 
 @override
 String toString() {
-  return 'Capabilities(isLearner: $isLearner, isMentor: $isMentor, isMentorApproved: $isMentorApproved, isEnabler: $isEnabler, isCampusLead: $isCampusLead, isCompany: $isCompany, canUseCampusWorkspace: $canUseCampusWorkspace, needsDiscord: $needsDiscord)';
+  return 'Capabilities(isLearner: $isLearner, isMentor: $isMentor, isMentorApproved: $isMentorApproved, isEnabler: $isEnabler, isCampusLead: $isCampusLead, isCompany: $isCompany, needsDiscord: $needsDiscord)';
 }
 
 
@@ -255,7 +253,7 @@ abstract mixin class _$CapabilitiesCopyWith<$Res> implements $CapabilitiesCopyWi
   factory _$CapabilitiesCopyWith(_Capabilities value, $Res Function(_Capabilities) _then) = __$CapabilitiesCopyWithImpl;
 @override @useResult
 $Res call({
- bool isLearner, bool isMentor, bool isMentorApproved, bool isEnabler, bool isCampusLead, bool isCompany, bool canUseCampusWorkspace, bool needsDiscord
+ bool isLearner, bool isMentor, bool isMentorApproved, bool isEnabler, bool isCampusLead, bool isCompany, bool needsDiscord
 });
 
 
@@ -272,7 +270,7 @@ class __$CapabilitiesCopyWithImpl<$Res>
 
 /// Create a copy of Capabilities
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? isLearner = null,Object? isMentor = null,Object? isMentorApproved = null,Object? isEnabler = null,Object? isCampusLead = null,Object? isCompany = null,Object? canUseCampusWorkspace = null,Object? needsDiscord = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? isLearner = null,Object? isMentor = null,Object? isMentorApproved = null,Object? isEnabler = null,Object? isCampusLead = null,Object? isCompany = null,Object? needsDiscord = null,}) {
   return _then(_Capabilities(
 isLearner: null == isLearner ? _self.isLearner : isLearner // ignore: cast_nullable_to_non_nullable
 as bool,isMentor: null == isMentor ? _self.isMentor : isMentor // ignore: cast_nullable_to_non_nullable
@@ -280,7 +278,6 @@ as bool,isMentorApproved: null == isMentorApproved ? _self.isMentorApproved : is
 as bool,isEnabler: null == isEnabler ? _self.isEnabler : isEnabler // ignore: cast_nullable_to_non_nullable
 as bool,isCampusLead: null == isCampusLead ? _self.isCampusLead : isCampusLead // ignore: cast_nullable_to_non_nullable
 as bool,isCompany: null == isCompany ? _self.isCompany : isCompany // ignore: cast_nullable_to_non_nullable
-as bool,canUseCampusWorkspace: null == canUseCampusWorkspace ? _self.canUseCampusWorkspace : canUseCampusWorkspace // ignore: cast_nullable_to_non_nullable
 as bool,needsDiscord: null == needsDiscord ? _self.needsDiscord : needsDiscord // ignore: cast_nullable_to_non_nullable
 as bool,
   ));

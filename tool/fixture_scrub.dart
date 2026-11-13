@@ -6,6 +6,12 @@ library;
 const _placeholders = <String, Object?>{
   'full_name': 'Fixture User',
   'fullName': 'Fixture User',
+  'user_full_name': 'Fixture User',
+  'created_by_name': 'Fixture User',
+  'enabler_name': 'Fixture User',
+  // campus-details `lead: {campus_lead, enabler}` carries names.
+  'campus_lead': 'Fixture User',
+  'enabler': 'Fixture User',
   'email': 'user@example.com',
   'mobile': null,
   'profile_pic': null,
@@ -39,7 +45,7 @@ Object? _scrub(Object? node, Set<String> keepMuids) {
 }
 
 Object? _scrubValue(String key, Object? value, Set<String> keepMuids) {
-  if (key == 'muid' && value is String) {
+  if ((key == 'muid' || key == 'mu_id') && value is String) {
     return keepMuids.contains(value) ? value : _scrubbedMuid;
   }
   if (_placeholders.containsKey(key) && value != null && value is! Map && value is! List) {

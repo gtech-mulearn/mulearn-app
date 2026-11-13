@@ -47,6 +47,10 @@ List<_Target> _targets() {
     const _Target('user_info_campuslead', '/api/v1/dashboard/user/info/', account: 'campuslead'),
     const _Target('mentor_status', '/api/v1/dashboard/mentor/status/', account: 'mentor'),
     const _Target('user_profile', '/api/v1/dashboard/profile/user-profile/'),
+    // Plan 4: `role_verification` per role account (workspace access).
+    const _Target('user_profile_mentor', '/api/v1/dashboard/profile/user-profile/', account: 'mentor'),
+    const _Target('user_profile_enabler', '/api/v1/dashboard/profile/user-profile/', account: 'enabler'),
+    const _Target('user_profile_campuslead', '/api/v1/dashboard/profile/user-profile/', account: 'campuslead'),
     // lvl1…lvl7; every level has 0 tasks on dev (2026-11-13).
     const _Target('get_user_levels', '/api/v1/dashboard/profile/get-user-levels/'),
     const _Target('editable_profile', '/api/v1/dashboard/profile/'),

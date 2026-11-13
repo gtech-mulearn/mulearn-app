@@ -23,6 +23,7 @@ import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/core/widgets/mu_section_header.dart';
 import 'package:mulearn_app/core/widgets/mu_skeleton.dart';
 import 'package:mulearn_app/core/widgets/profile_avatar.dart';
+import 'package:mulearn_app/core/widgets/role_pending_banner.dart';
 import 'package:mulearn_app/features/dashboard/domain/entities/my_progress_summary.dart';
 import 'package:mulearn_app/features/dashboard/presentation/providers/dashboard_controller.dart';
 import 'package:mulearn_app/features/dashboard/presentation/widgets/featured_events_list.dart';
@@ -76,6 +77,8 @@ class HomeScreen extends ConsumerWidget {
                       error: (error, _) => const _HomeHeader(),
                       data: (summary) => _HomeHeader(summary: summary),
                     ),
+                    // A role awaiting verification (ROLE-02).
+                    const PendingRoleBanners(),
                     const SizedBox(height: MuSpace.xxl),
                     summaryState.when(
                       skipError: true,

@@ -16,6 +16,34 @@ void main() {
     expect(appRedirect(auth: signedIn, uri: u('/settings/password')), isNull);
   });
 
+  group('role workspaces (Plan 4)', () {
+    test('workspace routes are signed-in screens', () {
+      for (final path in [
+        '/mentor',
+        '/mentor/sessions',
+        '/mentor/sessions/abc',
+        '/campus',
+        '/campus/students',
+        '/campus/students/someone%40mulearn',
+        '/enabler/campuses',
+        '/enabler/campuses/c1',
+      ]) {
+        expect(appRedirect(auth: signedIn, uri: u(path)), isNull, reason: path);
+      }
+    });
+
+    test('a signed-out workspace link resumes after sign-in', () {
+      final toSignIn = appRedirect(auth: signedOut, uri: u('/mentor'));
+      expect(toSignIn, '/sign-in?from=${fromOf('/mentor')}');
+      expect(appRedirect(auth: signedIn, uri: u(toSignIn!)), '/mentor');
+    });
+
+    test('look-alike prefixes are not workspace routes', () {
+      expect(appRedirect(auth: signedIn, uri: u('/mentors')), isNotNull);
+      expect(appRedirect(auth: signedIn, uri: u('/campusx')), isNotNull);
+    });
+  });
+
   test('the Discord link is reachable signed in', () {
     expect(appRedirect(auth: signedIn, uri: u('/dashboard/connect-discord?code=abc')), isNull);
   });

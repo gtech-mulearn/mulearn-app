@@ -23,7 +23,7 @@ void main() {
 
     expect(c.isLearner, isTrue);
     expect(c.needsDiscord, isTrue);
-    expect([c.isMentor, c.isMentorApproved, c.isEnabler, c.isCampusLead, c.isCompany, c.canUseCampusWorkspace],
+    expect([c.isMentor, c.isMentorApproved, c.isEnabler, c.isCampusLead, c.isCompany],
         everyElement(isFalse));
   });
 
@@ -42,16 +42,17 @@ void main() {
     expect(c.isMentorApproved, isFalse);
   });
 
-  test('an enabler can use the campus workspace and is also a learner', () {
+  // Workspace access itself is decided in workspace_access.dart (Plan 4).
+  test('an enabler is also a learner', () {
     final c = Capabilities.derive(user('dev/user_info_enabler'), const []);
 
-    expect(c.isEnabler && c.canUseCampusWorkspace && c.isLearner, isTrue);
+    expect(c.isEnabler && c.isLearner, isTrue);
   });
 
-  test('a campus lead can use the campus workspace', () {
+  test('a campus lead is a campus lead', () {
     final c = Capabilities.derive(user('dev/user_info_campuslead'), const []);
 
-    expect(c.isCampusLead && c.canUseCampusWorkspace, isTrue);
+    expect(c.isCampusLead, isTrue);
   });
 
   test('unknown role titles grant nothing', () {
@@ -61,7 +62,7 @@ void main() {
     );
 
     expect(
-      [c.isLearner, c.isMentor, c.isMentorApproved, c.isEnabler, c.isCampusLead, c.isCompany, c.canUseCampusWorkspace],
+      [c.isLearner, c.isMentor, c.isMentorApproved, c.isEnabler, c.isCampusLead, c.isCompany],
       everyElement(isFalse),
     );
     expect(c.needsDiscord, isTrue);

@@ -34,7 +34,7 @@ final class CoverPhotoControllerProvider
 }
 
 String _$coverPhotoControllerHash() =>
-    r'3f190a2fdae45f22aff6789fce98f0331094a4fc';
+    r'57100abcc2a7d524b731ada193284d5bf2b45664';
 
 abstract class _$CoverPhotoController extends $AsyncNotifier<void> {
   FutureOr<void> build();

@@ -15,7 +15,6 @@ void main() {
         isEnabler: false,
         isCampusLead: false,
         isCompany: false,
-        canUseCampusWorkspace: false,
         needsDiscord: needsDiscord,
       );
 
