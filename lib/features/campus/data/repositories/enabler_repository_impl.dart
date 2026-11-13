@@ -60,6 +60,12 @@ class EnablerRepositoryImpl implements EnablerRepository {
         return ApiEnvelope.unwrapMessage(response) ?? '';
       });
 
+  @override
+  Future<String> deleteNote(String campusId, String noteId) => _guard(() async {
+        final response = await _dio.delete<dynamic>(EnablerPaths.campusNotes(campusId), data: {'note_id': noteId});
+        return ApiEnvelope.unwrapMessage(response) ?? '';
+      });
+
   Future<T> _guard<T>(Future<T> Function() action) async {
     try {
       return await action();

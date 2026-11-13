@@ -211,18 +211,21 @@ final class EnablerCampusFamily extends $Family
   String toString() => r'enablerCampusProvider';
 }
 
-/// A campus's notes; [add] saves one and reloads the list (the backend
-/// returns only a message).
+/// A campus's notes. [add], [setStatus] and [delete] reload the list
+/// afterwards, success or refusal (the backend returns only a message, and
+/// the usual refusal is a note already gone).
 
 @ProviderFor(CampusNotesController)
 const campusNotesControllerProvider = CampusNotesControllerFamily._();
 
-/// A campus's notes; [add] saves one and reloads the list (the backend
-/// returns only a message).
+/// A campus's notes. [add], [setStatus] and [delete] reload the list
+/// afterwards, success or refusal (the backend returns only a message, and
+/// the usual refusal is a note already gone).
 final class CampusNotesControllerProvider
     extends $AsyncNotifierProvider<CampusNotesController, List<CampusNote>> {
-  /// A campus's notes; [add] saves one and reloads the list (the backend
-  /// returns only a message).
+  /// A campus's notes. [add], [setStatus] and [delete] reload the list
+  /// afterwards, success or refusal (the backend returns only a message, and
+  /// the usual refusal is a note already gone).
   const CampusNotesControllerProvider._({
     required CampusNotesControllerFamily super.from,
     required String super.argument,
@@ -260,10 +263,11 @@ final class CampusNotesControllerProvider
 }
 
 String _$campusNotesControllerHash() =>
-    r'b6dfa00e07ff20b1833c48c3a2994911276a14aa';
+    r'68b40f9d27a5d8f007f510b07d9629be297fb9f8';
 
-/// A campus's notes; [add] saves one and reloads the list (the backend
-/// returns only a message).
+/// A campus's notes. [add], [setStatus] and [delete] reload the list
+/// afterwards, success or refusal (the backend returns only a message, and
+/// the usual refusal is a note already gone).
 
 final class CampusNotesControllerFamily extends $Family
     with
@@ -283,8 +287,9 @@ final class CampusNotesControllerFamily extends $Family
         isAutoDispose: true,
       );
 
-  /// A campus's notes; [add] saves one and reloads the list (the backend
-  /// returns only a message).
+  /// A campus's notes. [add], [setStatus] and [delete] reload the list
+  /// afterwards, success or refusal (the backend returns only a message, and
+  /// the usual refusal is a note already gone).
 
   CampusNotesControllerProvider call(String campusId) =>
       CampusNotesControllerProvider._(argument: campusId, from: this);
@@ -293,8 +298,9 @@ final class CampusNotesControllerFamily extends $Family
   String toString() => r'campusNotesControllerProvider';
 }
 
-/// A campus's notes; [add] saves one and reloads the list (the backend
-/// returns only a message).
+/// A campus's notes. [add], [setStatus] and [delete] reload the list
+/// afterwards, success or refusal (the backend returns only a message, and
+/// the usual refusal is a note already gone).
 
 abstract class _$CampusNotesController
     extends $AsyncNotifier<List<CampusNote>> {

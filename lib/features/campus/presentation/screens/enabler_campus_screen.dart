@@ -77,7 +77,7 @@ class EnablerCampusScreen extends ConsumerWidget {
                       'No notes yet. Add what you discussed and when to follow up.',
                       style: MuType.body.copyWith(color: MuColors.inkSecondary),
                     )
-                  : Column(children: [for (final n in list) _NoteCard(note: n)]),
+                  : Column(children: [for (final n in list) _NoteCard(campusId: campusId, note: n)]),
             ),
           ],
         ),
@@ -108,9 +108,45 @@ class EnablerCampusScreen extends ConsumerWidget {
 }
 
 class _NoteCard extends ConsumerWidget {
-  const _NoteCard({required this.note});
+  const _NoteCard({required this.campusId, required this.note});
 
+  final String campusId;
   final CampusNote note;
+
+  Future<void> _run(BuildContext context, Future<String> Function() action, String fallback) async {
+    try {
+      final message = await action();
+      if (context.mounted) {
+        MuToast.show(context, message: message.isEmpty ? fallback : message, type: MuToastType.success);
+      }
+    } on Object catch (e) {
+      if (context.mounted) MuToast.show(context, message: ApiException.messageFor(e), type: MuToastType.error);
+    }
+  }
+
+  Future<void> _onAction(BuildContext context, WidgetRef ref, _NoteAction action) async {
+    final notes = ref.read(campusNotesControllerProvider(campusId).notifier);
+    switch (action) {
+      case _NoteAction.delete:
+        final sure = await showDialog<bool>(
+          context: context,
+          builder: (dialogContext) => AlertDialog(
+            title: const Text('Delete this note?'),
+            content: const Text("It can't be undone."),
+            actions: [
+              TextButton(onPressed: () => Navigator.of(dialogContext).pop(false), child: const Text('Cancel')),
+              TextButton(
+                onPressed: () => Navigator.of(dialogContext).pop(true),
+                style: TextButton.styleFrom(foregroundColor: MuColors.error),
+                child: const Text('Delete'),
+              ),
+            ],
+          ),
+        );
+        if (sure != true || !context.mounted) return;
+        await _run(context, () => notes.delete(note.id), 'Note deleted');
+    }
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -125,7 +161,22 @@ class _NoteCard extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(n.note, style: MuType.body),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(child: Text(n.note, style: MuType.body)),
+                PopupMenuButton<_NoteAction>(
+                  tooltip: 'Note actions',
+                  icon: const Icon(LucideIcons.moreVertical, size: 18),
+                  onSelected: (a) => unawaited(_onAction(context, ref, a)),
+                  // Delete only: the backend's PATCH can't succeed (it
+                  // rejects its own note_id), so a note can't be closed.
+                  itemBuilder: (_) => const [
+                    PopupMenuItem(value: _NoteAction.delete, child: Text('Delete note')),
+                  ],
+                ),
+              ],
+            ),
             const SizedBox(height: MuSpace.s),
             Wrap(
               spacing: MuSpace.s,
@@ -155,6 +206,8 @@ class _NoteCard extends ConsumerWidget {
     );
   }
 }
+
+enum _NoteAction { delete }
 
 class _NoteSheet extends StatefulWidget {
   const _NoteSheet();

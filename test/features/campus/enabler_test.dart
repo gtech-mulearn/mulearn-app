@@ -131,6 +131,39 @@ void main() {
     await drainToast(tester);
   });
 
+  // Final review, Important 5: EnablerCampusNoteAPI has DELETE (body
+  // {note_id}); an open note past its follow-up stayed overdue for good.
+  // Its PATCH rejects its own note_id on dev, so notes are deleted, not closed.
+  const noteId = '5006a41f-2072-4eec-9ae4-ece76cdc9caf';
+  FakeResponse ok(String message) => FakeResponse(200, {
+        'hasError': false,
+        'statusCode': 200,
+        'message': {
+          'general': [message],
+        },
+        'response': <String, dynamic>{},
+      });
+
+  testWidgets('a note is deleted only after confirming', (tester) async {
+    adapter.routes['DELETE $_notes'] = (_) => ok('Note deleted successfully');
+    await pump(tester, '/enabler/campuses/$_campus');
+
+    await tester.tap(find.byTooltip('Note actions'));
+    await settle(tester);
+    await tester.tap(find.text('Delete note'));
+    await settle(tester);
+    expect(find.text('Delete this note?'), findsOneWidget);
+    expect(adapter.requests.where((RequestOptions r) => r.method == 'DELETE'), isEmpty);
+
+    await tester.tap(find.descendant(of: find.byType(AlertDialog), matching: find.text('Delete')));
+    await settle(tester);
+
+    expect(bodyOf('DELETE', _notes), {'note_id': noteId});
+    expect(adapter.requests.where((r) => r.uri.path == _notes && r.method == 'GET').length, greaterThan(1));
+    expect(find.text('Note deleted successfully'), findsOneWidget);
+    await drainToast(tester);
+  });
+
   testWidgets('a campus the enabler is not assigned to says so', (tester) async {
     adapter.routes['POST $_notes'] = (_) => FakeResponse(400, loadFixture('dev/enabler_note_not_assigned'));
     await pump(tester, '/enabler/campuses/$_campus');

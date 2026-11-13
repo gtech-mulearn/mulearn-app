@@ -19,8 +19,10 @@ Future<List<EnablerCampus>> enablerCampuses(Ref ref) => ref.watch(enablerReposit
 @Riverpod(retry: noRetry)
 Future<EnablerCampus> enablerCampus(Ref ref, String id) => ref.watch(enablerRepositoryProvider).getCampus(id);
 
-/// A campus's notes; [add] saves one and reloads the list (the backend
-/// returns only a message).
+/// A campus's notes. [add] and [delete] reload the list afterwards (the
+/// backend returns only a message; the usual delete refusal is a note
+/// already gone). Notes can't be closed from the app: the backend's PATCH
+/// rejects its own `note_id` ("Unknown field.", dev 2026-11-13).
 @Riverpod(retry: noRetry)
 class CampusNotesController extends _$CampusNotesController {
   @override
@@ -31,5 +33,13 @@ class CampusNotesController extends _$CampusNotesController {
     final message = await repository.addNote(campusId, note: note, priority: priority, followUp: followUp);
     if (ref.mounted) ref.invalidateSelf();
     return message;
+  }
+
+  Future<String> delete(String noteId) async {
+    try {
+      return await ref.read(enablerRepositoryProvider).deleteNote(campusId, noteId);
+    } finally {
+      if (ref.mounted) ref.invalidateSelf();
+    }
   }
 }

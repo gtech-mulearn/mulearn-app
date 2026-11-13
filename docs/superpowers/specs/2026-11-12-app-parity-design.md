@@ -214,11 +214,11 @@ Plan 4 (`docs/superpowers/plans/2026-11-13-plan-4-role-workspaces.md`) ran inlin
 | FEAT-11 K2 students | Done | `e10b453`: search, sort, alumni; student page with activity (serializer fixture — no karma on dev). |
 | FEAT-11 K3 circles and groups | Done | `8bc88d8`: rows open the existing pages; the `<id>/members/` endpoints (500 on dev) are never called. |
 | FEAT-11 K4 approvals | Done | `2b3b604`: college links + invites (Campus Lead), campus events (all campus roles). Live: invite declined, repeat refused. Pending links/events built from serializers (not seedable with QA accounts). |
-| FEAT-11 K5 enabler campuses | Done | `03915e3`: campuses with totals, notes with priority/follow-up; one [QA] note left on dev (no delete API). |
+| FEAT-11 K5 enabler campuses | Done | `03915e3`: campuses with totals, notes with priority/follow-up; delete after the final review (the backend's PATCH can't close a note, TODO #19). The [QA] note was deleted on dev. |
 
 Device checks still pending (HyperOS blocks adb taps): the campus and enabler screens as the QA campus lead / enabler; requests, availability and persona as the QA mentor; the splash and sign-in logos; the Leaderboard header at 360 dp.
 
-Residue on dev (QA only): one Wednesday availability slot and one seeded student request for the phone check (scratch `p4t5_seed.py cleanup` removes the request); one enabler note; one cancelled [QA] admin event; the QA user "QA Pending Link".
+Residue on dev (QA only): one Wednesday availability slot and one seeded student request for the phone check (scratch `p4t5_seed.py cleanup` removes the request); one cancelled [QA] admin event; the QA user "QA Pending Link".
 
 Findings for later plans:
 - Relative labels ("Starts in 10 min", Join) refresh on rebuild or pull, not on a local ticking clock; a 1-minute UI ticker (no backend calls) belongs in hardening.

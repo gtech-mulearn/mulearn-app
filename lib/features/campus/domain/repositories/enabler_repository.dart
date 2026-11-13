@@ -13,4 +13,6 @@ abstract interface class EnablerRepository {
 
   /// Returns the backend's message; the new note is not returned.
   Future<String> addNote(String campusId, {required String note, required String priority, DateTime? followUp});
+  /// `DELETE …/notes/ {note_id}`; the message.
+  Future<String> deleteNote(String campusId, String noteId);
 }
