@@ -253,6 +253,20 @@ class _UpNext extends ConsumerWidget {
         meta: 'Learn with a group',
         onTap: () => context.push(RoutePaths.learningCircles),
       ),
+      // With no group yet, "Join interest groups" under Get set up says it.
+      if (!needsGroups)
+        MuTile(
+          title: 'Interest groups',
+          category: IgCategory.maker,
+          meta: 'Find and join communities',
+          onTap: () => context.push(RoutePaths.interestGroups),
+        ),
+      MuTile(
+        title: 'Weekly Twitches',
+        fill: MuTileFill.cobalt,
+        meta: 'Talks and campus shows',
+        onTap: () => context.push(RoutePaths.weeklyTwitches),
+      ),
       if (canBrowseJobs)
         MuTile(
           title: 'Internships & gigs',
