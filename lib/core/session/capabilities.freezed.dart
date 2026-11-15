@@ -211,8 +211,8 @@ return $default(_that.isLearner,_that.isMentor,_that.isMentorApproved,_that.isEn
 /// @nodoc
 
 
-class _Capabilities implements Capabilities {
-  const _Capabilities({required this.isLearner, required this.isMentor, required this.isMentorApproved, required this.isEnabler, required this.isCampusLead, required this.isCompany, required this.needsDiscord});
+class _Capabilities extends Capabilities {
+  const _Capabilities({required this.isLearner, required this.isMentor, required this.isMentorApproved, required this.isEnabler, required this.isCampusLead, required this.isCompany, required this.needsDiscord}): super._();
   
 
 @override final  bool isLearner;

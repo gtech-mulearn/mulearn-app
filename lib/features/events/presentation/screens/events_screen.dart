@@ -7,6 +7,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/session/my_profile_payload.dart';
+import 'package:mulearn_app/core/session/session_providers.dart';
 import 'package:mulearn_app/core/utils/search_debouncer.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/core/widgets/mu_load_more_footer.dart';
@@ -134,12 +135,14 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
                   Expanded(
                     child: Semantics(header: true, child: Text('Events', style: mu.text.title1)),
                   ),
-                  MuIconButton(
-                    icon: LucideIcons.briefcase,
-                    tooltip: 'Opportunities',
-                    onPressed: () => context.push(RoutePaths.opportunities),
-                  ),
-                  const SizedBox(width: MuSpacing.space2),
+                  if (ref.watch(capabilitiesProvider).value?.canBrowseJobs ?? false) ...[
+                    MuIconButton(
+                      icon: LucideIcons.briefcase,
+                      tooltip: 'Opportunities',
+                      onPressed: () => context.push(RoutePaths.opportunities),
+                    ),
+                    const SizedBox(width: MuSpacing.space2),
+                  ],
                   MuIconButton(
                     icon: LucideIcons.calendarDays,
                     tooltip: 'Calendar',

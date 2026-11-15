@@ -19,6 +19,8 @@ abstract class Capabilities with _$Capabilities {
     required bool needsDiscord,
   }) = _Capabilities;
 
+  const Capabilities._();
+
   /// Roles from `/user/info/`; mentor approval from the user's mentor
   /// applications (the Mentor role link itself can stay unverified after
   /// approval). Who gets a role workspace is decided in
@@ -27,9 +29,8 @@ abstract class Capabilities with _$Capabilities {
     bool has(String title) => user.roles.contains(title);
     final isMentor = has(RoleTitles.mentor);
     final isEnabler = has(RoleTitles.enabler) || has(RoleTitles.leadEnabler);
-    final isCampusLead = has(RoleTitles.campusLead) ||
-        has(RoleTitles.zonalCampusLead) ||
-        has(RoleTitles.districtCampusLead);
+    final isCampusLead =
+        has(RoleTitles.campusLead) || has(RoleTitles.zonalCampusLead) || has(RoleTitles.districtCampusLead);
     return Capabilities(
       isLearner: has(RoleTitles.student),
       isMentor: isMentor,
@@ -40,4 +41,9 @@ abstract class Capabilities with _$Capabilities {
       needsDiscord: !user.existInGuild,
     );
   }
+
+  /// The jobs board ("Put your karma to work"). As on the dashboard's
+  /// `/dashboard/jobs`: everyone but Mentors and Companies, who post and
+  /// review jobs instead.
+  bool get canBrowseJobs => !isMentor && !isCompany;
 }

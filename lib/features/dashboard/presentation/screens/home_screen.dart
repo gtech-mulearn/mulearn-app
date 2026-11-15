@@ -225,8 +225,9 @@ class _UpNext extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final week = ref.watch(learnerSummaryProvider).value;
     final meeting = week?.nextMeeting;
-    final needsDiscord =
-        (ref.watch(capabilitiesProvider).value?.needsDiscord ?? false) && ref.watch(discordAuthUriProvider) != null;
+    final caps = ref.watch(capabilitiesProvider).value;
+    final needsDiscord = (caps?.needsDiscord ?? false) && ref.watch(discordAuthUriProvider) != null;
+    final canBrowseJobs = caps?.canBrowseJobs ?? false;
     final summary = ref.watch(myProgressSummaryControllerProvider).value;
     final needsGroups = summary != null && summary.interestGroupCount == 0;
 
@@ -252,12 +253,13 @@ class _UpNext extends ConsumerWidget {
         meta: 'Learn with a group',
         onTap: () => context.push(RoutePaths.learningCircles),
       ),
-      MuTile(
-        title: 'Put your karma to work',
-        category: IgCategory.coder,
-        meta: 'Internships and gigs from verified companies',
-        onTap: () => context.push(RoutePaths.opportunities),
-      ),
+      if (canBrowseJobs)
+        MuTile(
+          title: 'Put your karma to work',
+          category: IgCategory.coder,
+          meta: 'Internships and gigs from verified companies',
+          onTap: () => context.push(RoutePaths.opportunities),
+        ),
     ];
     final setup = <MuTile>[
       if (needsDiscord)

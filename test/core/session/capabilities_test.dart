@@ -67,4 +67,11 @@ void main() {
     );
     expect(c.needsDiscord, isTrue);
   });
+
+  test('the jobs board is for everyone but mentors and companies, as on the dashboard', () {
+    expect(Capabilities.derive(user('dev/user_info'), const []).canBrowseJobs, isTrue);
+    expect(Capabilities.derive(user('dev/user_info_enabler'), const []).canBrowseJobs, isTrue);
+    expect(Capabilities.derive(user('dev/user_info_campuslead'), const []).canBrowseJobs, isTrue);
+    expect(Capabilities.derive(user('dev/user_info_mentor'), const []).canBrowseJobs, isFalse);
+  });
 }
