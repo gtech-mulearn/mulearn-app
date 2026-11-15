@@ -47,7 +47,9 @@ const goRouterProvider = GoRouterProvider._();
 ///    both states — see `_alwaysAllowedSignedIn` below)
 ///  * signed in on any other pre-auth screen (or `/splash`) → `/profile`
 
-final class GoRouterProvider extends $FunctionalProvider<GoRouter, GoRouter, GoRouter> with $Provider<GoRouter> {
+final class GoRouterProvider
+    extends $FunctionalProvider<GoRouter, GoRouter, GoRouter>
+    with $Provider<GoRouter> {
   /// App router (go_router) with an auth `redirect` that reads the core-level
   /// [AppAuthController] (rules.md §1/§3, architecture §5).
   ///
@@ -81,7 +83,8 @@ final class GoRouterProvider extends $FunctionalProvider<GoRouter, GoRouter, GoR
 
   @$internal
   @override
-  $ProviderElement<GoRouter> $createElement($ProviderPointer pointer) => $ProviderElement(pointer);
+  $ProviderElement<GoRouter> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
 
   @override
   GoRouter create(Ref ref) {
@@ -90,8 +93,11 @@ final class GoRouterProvider extends $FunctionalProvider<GoRouter, GoRouter, GoR
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(GoRouter value) {
-    return $ProviderOverride(origin: this, providerOverride: $SyncValueProvider<GoRouter>(value));
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<GoRouter>(value),
+    );
   }
 }
 
-String _$goRouterHash() => r'3800784c94342b890ce103fe50fd4e05b1621e74';
+String _$goRouterHash() => r'eecb486bca21a0d8129d0d2c1eca9a2ee2be64b6';

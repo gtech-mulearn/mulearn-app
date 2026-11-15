@@ -13,7 +13,12 @@ part of 'welcome_providers.dart';
 const welcomeRemoteDataSourceProvider = WelcomeRemoteDataSourceProvider._();
 
 final class WelcomeRemoteDataSourceProvider
-    extends $FunctionalProvider<WelcomeRemoteDataSource, WelcomeRemoteDataSource, WelcomeRemoteDataSource>
+    extends
+        $FunctionalProvider<
+          WelcomeRemoteDataSource,
+          WelcomeRemoteDataSource,
+          WelcomeRemoteDataSource
+        >
     with $Provider<WelcomeRemoteDataSource> {
   const WelcomeRemoteDataSourceProvider._()
     : super(
@@ -31,7 +36,9 @@ final class WelcomeRemoteDataSourceProvider
 
   @$internal
   @override
-  $ProviderElement<WelcomeRemoteDataSource> $createElement($ProviderPointer pointer) => $ProviderElement(pointer);
+  $ProviderElement<WelcomeRemoteDataSource> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
 
   @override
   WelcomeRemoteDataSource create(Ref ref) {
@@ -40,11 +47,15 @@ final class WelcomeRemoteDataSourceProvider
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(WelcomeRemoteDataSource value) {
-    return $ProviderOverride(origin: this, providerOverride: $SyncValueProvider<WelcomeRemoteDataSource>(value));
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<WelcomeRemoteDataSource>(value),
+    );
   }
 }
 
-String _$welcomeRemoteDataSourceHash() => r'a354a8daaf981d89bd7e1d444f39f20f22dc1df6';
+String _$welcomeRemoteDataSourceHash() =>
+    r'a354a8daaf981d89bd7e1d444f39f20f22dc1df6';
 
 /// Community counts for the arrival beats and the Commons.
 
@@ -53,7 +64,13 @@ const publicStatsProvider = PublicStatsProvider._();
 
 /// Community counts for the arrival beats and the Commons.
 
-final class PublicStatsProvider extends $FunctionalProvider<AsyncValue<PublicStats>, PublicStats, FutureOr<PublicStats>>
+final class PublicStatsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<PublicStats>,
+          PublicStats,
+          FutureOr<PublicStats>
+        >
     with $FutureModifier<PublicStats>, $FutureProvider<PublicStats> {
   /// Community counts for the arrival beats and the Commons.
   const PublicStatsProvider._()
@@ -72,7 +89,9 @@ final class PublicStatsProvider extends $FunctionalProvider<AsyncValue<PublicSta
 
   @$internal
   @override
-  $FutureProviderElement<PublicStats> $createElement($ProviderPointer pointer) => $FutureProviderElement(pointer);
+  $FutureProviderElement<PublicStats> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
 
   @override
   FutureOr<PublicStats> create(Ref ref) {
@@ -90,7 +109,12 @@ const guestFeaturedEventsProvider = GuestFeaturedEventsProvider._();
 /// Featured events, for the "Then show up" beat and the Commons.
 
 final class GuestFeaturedEventsProvider
-    extends $FunctionalProvider<AsyncValue<List<GuestEvent>>, List<GuestEvent>, FutureOr<List<GuestEvent>>>
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<GuestEvent>>,
+          List<GuestEvent>,
+          FutureOr<List<GuestEvent>>
+        >
     with $FutureModifier<List<GuestEvent>>, $FutureProvider<List<GuestEvent>> {
   /// Featured events, for the "Then show up" beat and the Commons.
   const GuestFeaturedEventsProvider._()
@@ -109,7 +133,9 @@ final class GuestFeaturedEventsProvider
 
   @$internal
   @override
-  $FutureProviderElement<List<GuestEvent>> $createElement($ProviderPointer pointer) => $FutureProviderElement(pointer);
+  $FutureProviderElement<List<GuestEvent>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
 
   @override
   FutureOr<List<GuestEvent>> create(Ref ref) {
@@ -117,7 +143,8 @@ final class GuestFeaturedEventsProvider
   }
 }
 
-String _$guestFeaturedEventsHash() => r'239aca4cc120ff0380acfa424fa4af3554d4c994';
+String _$guestFeaturedEventsHash() =>
+    r'239aca4cc120ff0380acfa424fa4af3554d4c994';
 
 /// Every Interest Group's name, for the ring that bursts into stickers.
 
@@ -133,7 +160,9 @@ final class GuestInterestGroupsProvider
           List<GuestInterestGroup>,
           FutureOr<List<GuestInterestGroup>>
         >
-    with $FutureModifier<List<GuestInterestGroup>>, $FutureProvider<List<GuestInterestGroup>> {
+    with
+        $FutureModifier<List<GuestInterestGroup>>,
+        $FutureProvider<List<GuestInterestGroup>> {
   /// Every Interest Group's name, for the ring that bursts into stickers.
   const GuestInterestGroupsProvider._()
     : super(
@@ -151,8 +180,9 @@ final class GuestInterestGroupsProvider
 
   @$internal
   @override
-  $FutureProviderElement<List<GuestInterestGroup>> $createElement($ProviderPointer pointer) =>
-      $FutureProviderElement(pointer);
+  $FutureProviderElement<List<GuestInterestGroup>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
 
   @override
   FutureOr<List<GuestInterestGroup>> create(Ref ref) {
@@ -160,7 +190,8 @@ final class GuestInterestGroupsProvider
   }
 }
 
-String _$guestInterestGroupsHash() => r'9f06804e5d4cea5680e355f337946a215c0b16a9';
+String _$guestInterestGroupsHash() =>
+    r'9f06804e5d4cea5680e355f337946a215c0b16a9';
 
 /// Whether this device has seen the arrival beats. Not a secret, but the
 /// app already keeps one small store, so it lives in secure storage.
@@ -170,7 +201,8 @@ const arrivalSeenProvider = ArrivalSeenProvider._();
 
 /// Whether this device has seen the arrival beats. Not a secret, but the
 /// app already keeps one small store, so it lives in secure storage.
-final class ArrivalSeenProvider extends $AsyncNotifierProvider<ArrivalSeen, bool> {
+final class ArrivalSeenProvider
+    extends $AsyncNotifierProvider<ArrivalSeen, bool> {
   /// Whether this device has seen the arrival beats. Not a secret, but the
   /// app already keeps one small store, so it lives in secure storage.
   const ArrivalSeenProvider._()
@@ -205,7 +237,13 @@ abstract class _$ArrivalSeen extends $AsyncNotifier<bool> {
     final created = build();
     final ref = this.ref as $Ref<AsyncValue<bool>, bool>;
     final element =
-        ref.element as $ClassProviderElement<AnyNotifier<AsyncValue<bool>, bool>, AsyncValue<bool>, Object?, Object?>;
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<bool>, bool>,
+              AsyncValue<bool>,
+              Object?,
+              Object?
+            >;
     element.handleValue(ref, created);
   }
 }

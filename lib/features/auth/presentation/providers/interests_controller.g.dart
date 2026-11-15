@@ -18,7 +18,8 @@ const interestsControllerProvider = InterestsControllerProvider._();
 /// Submits the pathway/endgoal selections from the post-registration
 /// interests onboarding step. Exposes `AsyncValue<void>` for automatic
 /// loading/error state (rules.md §4).
-final class InterestsControllerProvider extends $AsyncNotifierProvider<InterestsController, void> {
+final class InterestsControllerProvider
+    extends $AsyncNotifierProvider<InterestsController, void> {
   /// Submits the pathway/endgoal selections from the post-registration
   /// interests onboarding step. Exposes `AsyncValue<void>` for automatic
   /// loading/error state (rules.md §4).
@@ -41,7 +42,8 @@ final class InterestsControllerProvider extends $AsyncNotifierProvider<Interests
   InterestsController create() => InterestsController();
 }
 
-String _$interestsControllerHash() => r'ba7c392105a0a56830ef40b64142e79a8707f8c9';
+String _$interestsControllerHash() =>
+    r'ba7c392105a0a56830ef40b64142e79a8707f8c9';
 
 /// Submits the pathway/endgoal selections from the post-registration
 /// interests onboarding step. Exposes `AsyncValue<void>` for automatic
@@ -55,7 +57,13 @@ abstract class _$InterestsController extends $AsyncNotifier<void> {
     build();
     final ref = this.ref as $Ref<AsyncValue<void>, void>;
     final element =
-        ref.element as $ClassProviderElement<AnyNotifier<AsyncValue<void>, void>, AsyncValue<void>, Object?, Object?>;
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<void>, void>,
+              AsyncValue<void>,
+              Object?,
+              Object?
+            >;
     element.handleValue(ref, null);
   }
 }

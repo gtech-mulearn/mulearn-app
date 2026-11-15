@@ -13,7 +13,12 @@ part of 'register_providers.dart';
 const registerRemoteDataSourceProvider = RegisterRemoteDataSourceProvider._();
 
 final class RegisterRemoteDataSourceProvider
-    extends $FunctionalProvider<RegisterRemoteDataSource, RegisterRemoteDataSource, RegisterRemoteDataSource>
+    extends
+        $FunctionalProvider<
+          RegisterRemoteDataSource,
+          RegisterRemoteDataSource,
+          RegisterRemoteDataSource
+        >
     with $Provider<RegisterRemoteDataSource> {
   const RegisterRemoteDataSourceProvider._()
     : super(
@@ -31,7 +36,9 @@ final class RegisterRemoteDataSourceProvider
 
   @$internal
   @override
-  $ProviderElement<RegisterRemoteDataSource> $createElement($ProviderPointer pointer) => $ProviderElement(pointer);
+  $ProviderElement<RegisterRemoteDataSource> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
 
   @override
   RegisterRemoteDataSource create(Ref ref) {
@@ -40,11 +47,15 @@ final class RegisterRemoteDataSourceProvider
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(RegisterRemoteDataSource value) {
-    return $ProviderOverride(origin: this, providerOverride: $SyncValueProvider<RegisterRemoteDataSource>(value));
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<RegisterRemoteDataSource>(value),
+    );
   }
 }
 
-String _$registerRemoteDataSourceHash() => r'691e4d56bd11b0711d49437f7858ed2afa59e8bc';
+String _$registerRemoteDataSourceHash() =>
+    r'691e4d56bd11b0711d49437f7858ed2afa59e8bc';
 
 /// Presentation depends on the [RegisterRepository] contract (rules.md §2/§5).
 
@@ -54,7 +65,12 @@ const registerRepositoryProvider = RegisterRepositoryProvider._();
 /// Presentation depends on the [RegisterRepository] contract (rules.md §2/§5).
 
 final class RegisterRepositoryProvider
-    extends $FunctionalProvider<RegisterRepository, RegisterRepository, RegisterRepository>
+    extends
+        $FunctionalProvider<
+          RegisterRepository,
+          RegisterRepository,
+          RegisterRepository
+        >
     with $Provider<RegisterRepository> {
   /// Presentation depends on the [RegisterRepository] contract (rules.md §2/§5).
   const RegisterRepositoryProvider._()
@@ -73,7 +89,9 @@ final class RegisterRepositoryProvider
 
   @$internal
   @override
-  $ProviderElement<RegisterRepository> $createElement($ProviderPointer pointer) => $ProviderElement(pointer);
+  $ProviderElement<RegisterRepository> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
 
   @override
   RegisterRepository create(Ref ref) {
@@ -82,19 +100,29 @@ final class RegisterRepositoryProvider
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(RegisterRepository value) {
-    return $ProviderOverride(origin: this, providerOverride: $SyncValueProvider<RegisterRepository>(value));
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<RegisterRepository>(value),
+    );
   }
 }
 
-String _$registerRepositoryHash() => r'89e5898755955fdc9f058a3a1f8f20deeb3218b4';
+String _$registerRepositoryHash() =>
+    r'89e5898755955fdc9f058a3a1f8f20deeb3218b4';
 
 @ProviderFor(registerRoles)
 const registerRolesProvider = RegisterRolesProvider._();
 
 final class RegisterRolesProvider
     extends
-        $FunctionalProvider<AsyncValue<List<ReferenceOption>>, List<ReferenceOption>, FutureOr<List<ReferenceOption>>>
-    with $FutureModifier<List<ReferenceOption>>, $FutureProvider<List<ReferenceOption>> {
+        $FunctionalProvider<
+          AsyncValue<List<ReferenceOption>>,
+          List<ReferenceOption>,
+          FutureOr<List<ReferenceOption>>
+        >
+    with
+        $FutureModifier<List<ReferenceOption>>,
+        $FutureProvider<List<ReferenceOption>> {
   const RegisterRolesProvider._()
     : super(
         from: null,
@@ -111,8 +139,9 @@ final class RegisterRolesProvider
 
   @$internal
   @override
-  $FutureProviderElement<List<ReferenceOption>> $createElement($ProviderPointer pointer) =>
-      $FutureProviderElement(pointer);
+  $FutureProviderElement<List<ReferenceOption>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
 
   @override
   FutureOr<List<ReferenceOption>> create(Ref ref) {
@@ -127,8 +156,14 @@ const registerCollegesProvider = RegisterCollegesProvider._();
 
 final class RegisterCollegesProvider
     extends
-        $FunctionalProvider<AsyncValue<List<ReferenceOption>>, List<ReferenceOption>, FutureOr<List<ReferenceOption>>>
-    with $FutureModifier<List<ReferenceOption>>, $FutureProvider<List<ReferenceOption>> {
+        $FunctionalProvider<
+          AsyncValue<List<ReferenceOption>>,
+          List<ReferenceOption>,
+          FutureOr<List<ReferenceOption>>
+        >
+    with
+        $FutureModifier<List<ReferenceOption>>,
+        $FutureProvider<List<ReferenceOption>> {
   const RegisterCollegesProvider._()
     : super(
         from: null,
@@ -145,8 +180,9 @@ final class RegisterCollegesProvider
 
   @$internal
   @override
-  $FutureProviderElement<List<ReferenceOption>> $createElement($ProviderPointer pointer) =>
-      $FutureProviderElement(pointer);
+  $FutureProviderElement<List<ReferenceOption>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
 
   @override
   FutureOr<List<ReferenceOption>> create(Ref ref) {
@@ -161,8 +197,14 @@ const registerDepartmentsProvider = RegisterDepartmentsProvider._();
 
 final class RegisterDepartmentsProvider
     extends
-        $FunctionalProvider<AsyncValue<List<ReferenceOption>>, List<ReferenceOption>, FutureOr<List<ReferenceOption>>>
-    with $FutureModifier<List<ReferenceOption>>, $FutureProvider<List<ReferenceOption>> {
+        $FunctionalProvider<
+          AsyncValue<List<ReferenceOption>>,
+          List<ReferenceOption>,
+          FutureOr<List<ReferenceOption>>
+        >
+    with
+        $FutureModifier<List<ReferenceOption>>,
+        $FutureProvider<List<ReferenceOption>> {
   const RegisterDepartmentsProvider._()
     : super(
         from: null,
@@ -179,8 +221,9 @@ final class RegisterDepartmentsProvider
 
   @$internal
   @override
-  $FutureProviderElement<List<ReferenceOption>> $createElement($ProviderPointer pointer) =>
-      $FutureProviderElement(pointer);
+  $FutureProviderElement<List<ReferenceOption>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
 
   @override
   FutureOr<List<ReferenceOption>> create(Ref ref) {
@@ -188,15 +231,22 @@ final class RegisterDepartmentsProvider
   }
 }
 
-String _$registerDepartmentsHash() => r'd89849226a1632446a33bcdd5b4001e4a39cdc30';
+String _$registerDepartmentsHash() =>
+    r'd89849226a1632446a33bcdd5b4001e4a39cdc30';
 
 @ProviderFor(registerCompanies)
 const registerCompaniesProvider = RegisterCompaniesProvider._();
 
 final class RegisterCompaniesProvider
     extends
-        $FunctionalProvider<AsyncValue<List<ReferenceOption>>, List<ReferenceOption>, FutureOr<List<ReferenceOption>>>
-    with $FutureModifier<List<ReferenceOption>>, $FutureProvider<List<ReferenceOption>> {
+        $FunctionalProvider<
+          AsyncValue<List<ReferenceOption>>,
+          List<ReferenceOption>,
+          FutureOr<List<ReferenceOption>>
+        >
+    with
+        $FutureModifier<List<ReferenceOption>>,
+        $FutureProvider<List<ReferenceOption>> {
   const RegisterCompaniesProvider._()
     : super(
         from: null,
@@ -213,8 +263,9 @@ final class RegisterCompaniesProvider
 
   @$internal
   @override
-  $FutureProviderElement<List<ReferenceOption>> $createElement($ProviderPointer pointer) =>
-      $FutureProviderElement(pointer);
+  $FutureProviderElement<List<ReferenceOption>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
 
   @override
   FutureOr<List<ReferenceOption>> create(Ref ref) {
@@ -228,8 +279,15 @@ String _$registerCompaniesHash() => r'0612c6e5992eb5681abe3fceb2fd68e03bbd265f';
 const registerCountriesProvider = RegisterCountriesProvider._();
 
 final class RegisterCountriesProvider
-    extends $FunctionalProvider<AsyncValue<List<LocationOption>>, List<LocationOption>, FutureOr<List<LocationOption>>>
-    with $FutureModifier<List<LocationOption>>, $FutureProvider<List<LocationOption>> {
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<LocationOption>>,
+          List<LocationOption>,
+          FutureOr<List<LocationOption>>
+        >
+    with
+        $FutureModifier<List<LocationOption>>,
+        $FutureProvider<List<LocationOption>> {
   const RegisterCountriesProvider._()
     : super(
         from: null,
@@ -246,8 +304,9 @@ final class RegisterCountriesProvider
 
   @$internal
   @override
-  $FutureProviderElement<List<LocationOption>> $createElement($ProviderPointer pointer) =>
-      $FutureProviderElement(pointer);
+  $FutureProviderElement<List<LocationOption>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
 
   @override
   FutureOr<List<LocationOption>> create(Ref ref) {
@@ -261,16 +320,25 @@ String _$registerCountriesHash() => r'3f7a7d3f9cd8e70cceac3a369064d75d1432bcc3';
 const registerStatesProvider = RegisterStatesFamily._();
 
 final class RegisterStatesProvider
-    extends $FunctionalProvider<AsyncValue<List<LocationOption>>, List<LocationOption>, FutureOr<List<LocationOption>>>
-    with $FutureModifier<List<LocationOption>>, $FutureProvider<List<LocationOption>> {
-  const RegisterStatesProvider._({required RegisterStatesFamily super.from, required String super.argument})
-    : super(
-        retry: null,
-        name: r'registerStatesProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<LocationOption>>,
+          List<LocationOption>,
+          FutureOr<List<LocationOption>>
+        >
+    with
+        $FutureModifier<List<LocationOption>>,
+        $FutureProvider<List<LocationOption>> {
+  const RegisterStatesProvider._({
+    required RegisterStatesFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'registerStatesProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
   @override
   String debugGetCreateSourceHash() => _$registerStatesHash();
@@ -284,8 +352,9 @@ final class RegisterStatesProvider
 
   @$internal
   @override
-  $FutureProviderElement<List<LocationOption>> $createElement($ProviderPointer pointer) =>
-      $FutureProviderElement(pointer);
+  $FutureProviderElement<List<LocationOption>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
 
   @override
   FutureOr<List<LocationOption>> create(Ref ref) {
@@ -317,7 +386,8 @@ final class RegisterStatesFamily extends $Family
         isAutoDispose: true,
       );
 
-  RegisterStatesProvider call(String countryId) => RegisterStatesProvider._(argument: countryId, from: this);
+  RegisterStatesProvider call(String countryId) =>
+      RegisterStatesProvider._(argument: countryId, from: this);
 
   @override
   String toString() => r'registerStatesProvider';
@@ -327,16 +397,25 @@ final class RegisterStatesFamily extends $Family
 const registerDistrictsProvider = RegisterDistrictsFamily._();
 
 final class RegisterDistrictsProvider
-    extends $FunctionalProvider<AsyncValue<List<LocationOption>>, List<LocationOption>, FutureOr<List<LocationOption>>>
-    with $FutureModifier<List<LocationOption>>, $FutureProvider<List<LocationOption>> {
-  const RegisterDistrictsProvider._({required RegisterDistrictsFamily super.from, required String super.argument})
-    : super(
-        retry: null,
-        name: r'registerDistrictsProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<LocationOption>>,
+          List<LocationOption>,
+          FutureOr<List<LocationOption>>
+        >
+    with
+        $FutureModifier<List<LocationOption>>,
+        $FutureProvider<List<LocationOption>> {
+  const RegisterDistrictsProvider._({
+    required RegisterDistrictsFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'registerDistrictsProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
   @override
   String debugGetCreateSourceHash() => _$registerDistrictsHash();
@@ -350,8 +429,9 @@ final class RegisterDistrictsProvider
 
   @$internal
   @override
-  $FutureProviderElement<List<LocationOption>> $createElement($ProviderPointer pointer) =>
-      $FutureProviderElement(pointer);
+  $FutureProviderElement<List<LocationOption>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
 
   @override
   FutureOr<List<LocationOption>> create(Ref ref) {
@@ -383,7 +463,8 @@ final class RegisterDistrictsFamily extends $Family
         isAutoDispose: true,
       );
 
-  RegisterDistrictsProvider call(String stateId) => RegisterDistrictsProvider._(argument: stateId, from: this);
+  RegisterDistrictsProvider call(String stateId) =>
+      RegisterDistrictsProvider._(argument: stateId, from: this);
 
   @override
   String toString() => r'registerDistrictsProvider';
