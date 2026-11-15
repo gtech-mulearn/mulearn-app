@@ -72,6 +72,20 @@ class MuTile extends StatelessWidget {
   /// Opens the item. Anything that looks like an item opens it.
   final VoidCallback? onTap;
 
+  /// This tile with another footprint (a lone square spans its row at its
+  /// content height instead of a square's).
+  MuTile resized(MuTileSize size) => MuTile(
+    title: title,
+    category: category,
+    size: size,
+    pill: pill,
+    meta: meta,
+    footer: footer,
+    onTap: onTap,
+    fill: fill,
+    key: key,
+  );
+
   @override
   Widget build(BuildContext context) {
     final mu = context.mu;
@@ -210,7 +224,7 @@ class MuBento extends StatelessWidget {
         bands.add(_row(t, tiles[i + 1]));
         i += 2;
       } else {
-        bands.add(t);
+        bands.add(t.size == MuTileSize.square ? t.resized(MuTileSize.short) : t);
         i++;
       }
     }
