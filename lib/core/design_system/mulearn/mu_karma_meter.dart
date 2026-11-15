@@ -98,6 +98,8 @@ class MuKarmaMeter extends StatelessWidget {
                   children: [
                     Positioned.fill(child: ColoredBox(color: c.onNight.withValues(alpha: 0.16))),
                     FractionallySizedBox(
+                      // Grow from the start edge (the default centres the bar).
+                      alignment: AlignmentDirectional.centerStart,
                       widthFactor: progress!.clamp(0, 1),
                       child: ColoredBox(color: c.volt),
                     ),

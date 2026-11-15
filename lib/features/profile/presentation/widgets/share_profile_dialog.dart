@@ -32,16 +32,15 @@ class ShareProfileDialog extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final profileUrl = '$_profileUrlBase/${profile.muid}';
-    final qrUrl = 'https://quickchart.io/qr'
+    final qrUrl =
+        'https://quickchart.io/qr'
         '?text=${Uri.encodeComponent(profileUrl)}'
         '&centerImageUrl=${Uri.encodeComponent('https://avatars.githubusercontent.com/u/98015594?s=88&v=4')}';
 
     return Dialog(
       backgroundColor: MuColors.surface,
       insetPadding: const EdgeInsets.symmetric(horizontal: MuSpace.xxl),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(MuRadius.hero),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(MuRadius.hero)),
       child: Padding(
         padding: const EdgeInsets.all(MuSpace.xl),
         child: Column(
@@ -52,10 +51,7 @@ class ShareProfileDialog extends ConsumerWidget {
             const SizedBox(height: MuSpace.l),
             Container(
               padding: const EdgeInsets.all(MuSpace.l),
-              decoration: BoxDecoration(
-                color: MuColors.canvas,
-                borderRadius: BorderRadius.circular(MuRadius.card),
-              ),
+              decoration: BoxDecoration(color: MuColors.canvas, borderRadius: BorderRadius.circular(MuRadius.card)),
               child: Row(
                 children: [
                   Expanded(
@@ -77,9 +73,7 @@ class ShareProfileDialog extends ConsumerWidget {
                   Switch(
                     value: profile.isPublic,
                     activeTrackColor: MuColors.primary,
-                    onChanged: (value) => ref
-                        .read(profileControllerProvider.notifier)
-                        .togglePublic(isPublic: value),
+                    onChanged: (value) => ref.read(profileControllerProvider.notifier).togglePublic(isPublic: value),
                   ),
                 ],
               ),
@@ -93,61 +87,34 @@ class ShareProfileDialog extends ConsumerWidget {
                     border: Border.all(color: MuColors.divider, width: 1.5),
                     borderRadius: BorderRadius.circular(MuRadius.qr),
                   ),
-                  child: CachedNetworkImage(
-                    imageUrl: qrUrl,
-                    height: 180,
-                    width: 180,
-                  ),
+                  child: CachedNetworkImage(imageUrl: qrUrl, height: 180, width: 180),
                 ),
               ),
               const SizedBox(height: MuSpace.l),
               Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: MuSpace.m,
-                  vertical: MuSpace.s,
-                ),
-                decoration: BoxDecoration(
-                  color: MuColors.canvas,
-                  borderRadius: BorderRadius.circular(MuRadius.inner),
-                ),
+                padding: const EdgeInsets.symmetric(horizontal: MuSpace.m, vertical: MuSpace.s),
+                decoration: BoxDecoration(color: MuColors.canvas, borderRadius: BorderRadius.circular(MuRadius.inner)),
                 child: Row(
                   children: [
                     Expanded(
-                      child: Text(
-                        profileUrl,
-                        style: MuType.caption,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                      child: Text(profileUrl, style: MuType.caption, overflow: TextOverflow.ellipsis),
                     ),
                     const SizedBox(width: MuSpace.s),
                     GestureDetector(
                       onTap: () async {
-                        await Clipboard.setData(
-                          ClipboardData(text: profileUrl),
-                        );
+                        await Clipboard.setData(ClipboardData(text: profileUrl));
                         if (context.mounted) {
-                          MuToast.show(
-                            context,
-                            message: 'Link copied',
-                            type: MuToastType.success,
-                          );
+                          MuToast.show(context, message: 'Link copied', type: MuToastType.success);
                         }
                       },
-                      child: const Icon(
-                        LucideIcons.copy,
-                        size: 16,
-                        color: MuColors.primary,
-                      ),
+                      child: const Icon(LucideIcons.copy, size: 16, color: MuColors.primary),
                     ),
                   ],
                 ),
               ),
             ],
             const SizedBox(height: MuSpace.xl),
-            MuGhostButton(
-              label: 'Close',
-              onPressed: () => Navigator.of(context).pop(),
-            ),
+            MuGhostButton(label: 'Close', onPressed: () => Navigator.of(context).pop()),
           ],
         ),
       ),

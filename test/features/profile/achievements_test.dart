@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mulearn_app/core/config/feature_flags.dart';
 import 'package:mulearn_app/core/data/location_remote_datasource.dart';
+import 'package:mulearn_app/core/design_system/input/mu_button.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/network/dio_provider.dart';
 import 'package:mulearn_app/core/storage/secure_storage_provider.dart';
@@ -161,7 +162,7 @@ void main() {
       await tester.tap(find.text('Eligible'));
       await settle(tester);
 
-      await tester.tap(find.widgetWithText(TextButton, 'Claim'));
+      await tester.tap(find.widgetWithText(MuButton, 'Claim'));
       await settle(tester);
 
       expect(adapter.requests.where((RequestOptions r) => r.method == 'POST'), hasLength(1));

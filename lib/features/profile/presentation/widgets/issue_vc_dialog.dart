@@ -36,7 +36,9 @@ class _IssueVcDialogState extends ConsumerState<IssueVcDialog> {
 
   Future<void> _issue(String did) async {
     final achievement = widget.achievement.achievement;
-    await ref.read(vcIssuanceControllerProvider.notifier).issue(
+    await ref
+        .read(vcIssuanceControllerProvider.notifier)
+        .issue(
           muid: widget.muid,
           achievementId: widget.achievement.id,
           subjectInfo: VcSubjectInfo(
@@ -58,8 +60,7 @@ class _IssueVcDialogState extends ConsumerState<IssueVcDialog> {
   @override
   Widget build(BuildContext context) {
     final issuance = ref.watch(vcIssuanceControllerProvider);
-    final alreadyIssued =
-        widget.achievement.isIssued && widget.achievement.vcUrl != null;
+    final alreadyIssued = widget.achievement.isIssued && widget.achievement.vcUrl != null;
 
     return AlertDialog(
       title: Text(alreadyIssued ? 'Credential' : 'Issue credential'),
@@ -68,10 +69,8 @@ class _IssueVcDialogState extends ConsumerState<IssueVcDialog> {
         child: alreadyIssued
             ? _IssuedView(vcUrl: widget.achievement.vcUrl!)
             : issuance.when(
-                loading: () =>
-                    const Center(child: CircularProgressIndicator()),
-                error: (error, _) =>
-                    Text(ApiException.messageFor(error)),
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (error, _) => Text(ApiException.messageFor(error)),
                 data: (issued) {
                   if (issued != null && issued.isNotEmpty) {
                     return _IssuedView(vcUrl: issued.first.message);
@@ -86,10 +85,7 @@ class _IssueVcDialogState extends ConsumerState<IssueVcDialog> {
               ),
       ),
       actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: Text(alreadyIssued ? 'Close' : 'Cancel'),
-        ),
+        TextButton(onPressed: () => Navigator.of(context).pop(), child: Text(alreadyIssued ? 'Close' : 'Cancel')),
         if (!alreadyIssued && !(issuance.value?.isNotEmpty ?? false))
           Consumer(
             builder: (context, ref, _) {
@@ -97,15 +93,9 @@ class _IssueVcDialogState extends ConsumerState<IssueVcDialog> {
               final dids = didsAsync.value ?? [];
               final did = _selectedDid ?? dids.firstOrNull;
               return FilledButton(
-                onPressed: (did == null || issuance.isLoading)
-                    ? null
-                    : () => _issue(did),
+                onPressed: (did == null || issuance.isLoading) ? null : () => _issue(did),
                 child: issuance.isLoading
-                    ? const SizedBox(
-                        height: 16,
-                        width: 16,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      )
+                    ? const SizedBox(height: 16, width: 16, child: CircularProgressIndicator(strokeWidth: 2))
                     : const Text('Issue VC'),
               );
             },
@@ -141,10 +131,7 @@ class _IssueForm extends ConsumerWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'No DID linked yet',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
+              Text('No DID linked yet', style: TextStyle(fontWeight: FontWeight.bold)),
               SizedBox(height: 8),
               Text(
                 'To issue a Verifiable Credential, download the QSeverse app '
@@ -159,8 +146,7 @@ class _IssueForm extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(achievementName,
-                style: const TextStyle(fontWeight: FontWeight.bold)),
+            Text(achievementName, style: const TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 12),
             if (dids.length > 1)
               RadioGroup<String>(
@@ -180,10 +166,7 @@ class _IssueForm extends ConsumerWidget {
                 ),
               )
             else
-              Text(
-                'DID: ${dids.first}',
-                style: const TextStyle(fontSize: 12),
-              ),
+              Text('DID: ${dids.first}', style: const TextStyle(fontSize: 12)),
           ],
         );
       },

@@ -5,5 +5,4 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'user_log_controller.g.dart';
 
 @riverpod
-Future<List<UserLogEntry>> userLog(Ref ref) =>
-    ref.watch(profileRepositoryProvider).getUserLog();
+Future<List<UserLogEntry>> userLog(Ref ref) => ref.watch(profileRepositoryProvider).getUserLog();

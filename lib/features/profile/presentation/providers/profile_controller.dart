@@ -10,14 +10,13 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'profile_controller.g.dart';
 
 @riverpod
-ProfileRemoteDataSource profileRemoteDataSource(Ref ref) =>
-    ProfileRemoteDataSource(ref.watch(dioProvider));
+ProfileRemoteDataSource profileRemoteDataSource(Ref ref) => ProfileRemoteDataSource(ref.watch(dioProvider));
 
 @riverpod
 ProfileRepository profileRepository(Ref ref) => ProfileRepositoryImpl(
-      remote: ref.watch(profileRemoteDataSourceProvider),
-      locationRemote: ref.watch(locationRemoteDataSourceProvider),
-    );
+  remote: ref.watch(profileRemoteDataSourceProvider),
+  locationRemote: ref.watch(locationRemoteDataSourceProvider),
+);
 
 /// The current user's profile, mapped from the shared `user-profile` payload
 /// (one request for every reader). Call [refresh] to refetch, e.g. from the
@@ -39,9 +38,7 @@ class ProfileController extends _$ProfileController {
   /// refetched so every reader (and a later rebuild) agrees with the server.
   Future<void> togglePublic({required bool isPublic}) async {
     final current = state.value;
-    await ref
-        .read(profileRepositoryProvider)
-        .togglePublicProfile(isPublic: isPublic);
+    await ref.read(profileRepositoryProvider).togglePublicProfile(isPublic: isPublic);
     if (!ref.mounted) return;
     if (current != null) {
       state = AsyncData(current.copyWith(isPublic: isPublic));

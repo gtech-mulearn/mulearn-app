@@ -24,5 +24,4 @@ Future<List<UserLevel>> publicUserLevels(Ref ref, String muid) =>
     ref.watch(profileRepositoryProvider).getPublicUserLevels(muid);
 
 @riverpod
-Future<Socials> publicSocials(Ref ref, String muid) =>
-    ref.watch(profileRepositoryProvider).getPublicSocials(muid);
+Future<Socials> publicSocials(Ref ref, String muid) => ref.watch(profileRepositoryProvider).getPublicSocials(muid);

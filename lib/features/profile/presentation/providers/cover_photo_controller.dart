@@ -26,9 +26,7 @@ class CoverPhotoController extends _$CoverPhotoController {
     final link = ref.keepAlive(); // finish the follow-up refresh even if the screen closes
     state = const AsyncLoading();
     final result = await AsyncValue.guard(() async {
-      await ref
-          .read(profileRepositoryProvider)
-          .uploadCoverPic(bytes, filename);
+      await ref.read(profileRepositoryProvider).uploadCoverPic(bytes, filename);
       if (previousUrl != null && previousUrl.isNotEmpty) {
         await CachedNetworkImage.evictFromCache(previousUrl);
       }

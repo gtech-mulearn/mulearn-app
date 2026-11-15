@@ -47,12 +47,7 @@ class _EditProfileDialogState extends ConsumerState<EditProfileDialog> {
     super.dispose();
   }
 
-  static const _genderOptions = [
-    'Male',
-    'Female',
-    'Other',
-    'Prefer not to say',
-  ];
+  static const _genderOptions = ['Male', 'Female', 'Other', 'Prefer not to say'];
 
   /// `DropdownButtonFormField` crashes with a failed assertion if its value
   /// doesn't exactly match one of its items — but the backend doesn't
@@ -72,14 +67,10 @@ class _EditProfileDialogState extends ConsumerState<EditProfileDialog> {
   void _prefill(EditableProfile editable) {
     if (_prefilled) return;
     _prefilled = true;
-    _fullName.text = editable.fullName.isNotEmpty
-        ? editable.fullName
-        : widget.profile.fullName;
+    _fullName.text = editable.fullName.isNotEmpty ? editable.fullName : widget.profile.fullName;
     _email.text = editable.email;
     _mobile.text = editable.mobile;
-    _gender = _normalizeGender(
-      editable.gender.isNotEmpty ? editable.gender : widget.profile.gender,
-    );
+    _gender = _normalizeGender(editable.gender.isNotEmpty ? editable.gender : widget.profile.gender);
     _dob.text = editable.dob;
     _communities = editable.communities.toSet();
     _districtId = editable.district?.id;
@@ -95,7 +86,9 @@ class _EditProfileDialogState extends ConsumerState<EditProfileDialog> {
       // mobile/gender which accept `""` fine — so an unset DOB must be
       // omitted entirely, not sent blank.
       final dob = _dob.text.trim();
-      await ref.read(editableProfileControllerProvider.notifier).save(
+      await ref
+          .read(editableProfileControllerProvider.notifier)
+          .save(
             fullName: _fullName.text.trim(),
             email: _email.text.trim(),
             mobile: _mobile.text.trim(),
@@ -105,10 +98,7 @@ class _EditProfileDialogState extends ConsumerState<EditProfileDialog> {
           );
 
       if (_orgId != null && _departmentId != null) {
-        await ref.read(changeCollegeControllerProvider.notifier).submit(
-              orgId: _orgId!,
-              departmentId: _departmentId!,
-            );
+        await ref.read(changeCollegeControllerProvider.notifier).submit(orgId: _orgId!, departmentId: _departmentId!);
       }
 
       if (mounted) Navigator.of(context).pop();
@@ -123,18 +113,14 @@ class _EditProfileDialogState extends ConsumerState<EditProfileDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final editableState = ref.watch(editableProfileControllerProvider)
-      ..whenData(_prefill);
+    final editableState = ref.watch(editableProfileControllerProvider)..whenData(_prefill);
 
     return AlertDialog(
       title: const Text('Edit profile'),
       content: SizedBox(
         width: 480,
         child: editableState.isLoading && !_prefilled
-            ? const SizedBox(
-                height: 200,
-                child: Center(child: CircularProgressIndicator()),
-              )
+            ? const SizedBox(height: 200, child: Center(child: CircularProgressIndicator()))
             : SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -161,24 +147,19 @@ class _EditProfileDialogState extends ConsumerState<EditProfileDialog> {
                       initialValue: _gender,
                       decoration: const InputDecoration(labelText: 'Gender'),
                       items: [
-                        for (final option in _genderOptions)
-                          DropdownMenuItem(value: option, child: Text(option)),
+                        for (final option in _genderOptions) DropdownMenuItem(value: option, child: Text(option)),
                       ],
                       onChanged: (value) => setState(() => _gender = value),
                     ),
                     const SizedBox(height: 12),
                     TextField(
                       controller: _dob,
-                      decoration: const InputDecoration(
-                        labelText: 'Date of birth',
-                        hintText: 'YYYY-MM-DD',
-                      ),
+                      decoration: const InputDecoration(labelText: 'Date of birth', hintText: 'YYYY-MM-DD'),
                       readOnly: true,
                       onTap: () async {
                         final picked = await showDatePicker(
                           context: context,
-                          initialDate: DateTime.tryParse(_dob.text) ??
-                              DateTime(2000),
+                          initialDate: DateTime.tryParse(_dob.text) ?? DateTime(2000),
                           firstDate: DateTime(1950),
                           lastDate: DateTime.now(),
                         );
@@ -191,8 +172,7 @@ class _EditProfileDialogState extends ConsumerState<EditProfileDialog> {
                       },
                     ),
                     const SizedBox(height: 20),
-                    Text('College / school',
-                        style: Theme.of(context).textTheme.titleSmall),
+                    Text('College / school', style: Theme.of(context).textTheme.titleSmall),
                     const SizedBox(height: 4),
                     Text(
                       'Current: ${widget.profile.collegeCode ?? '—'}'
@@ -225,26 +205,18 @@ class _EditProfileDialogState extends ConsumerState<EditProfileDialog> {
                         _departmentId = null;
                       }),
                       onOrgChanged: (id) => setState(() => _orgId = id),
-                      onDepartmentChanged: (id) =>
-                          setState(() => _departmentId = id),
+                      onDepartmentChanged: (id) => setState(() => _departmentId = id),
                     ),
                   ],
                 ),
               ),
       ),
       actions: [
-        TextButton(
-          onPressed: _saving ? null : () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
-        ),
+        TextButton(onPressed: _saving ? null : () => Navigator.of(context).pop(), child: const Text('Cancel')),
         FilledButton(
           onPressed: _saving ? null : _save,
           child: _saving
-              ? const SizedBox(
-                  height: 16,
-                  width: 16,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                )
+              ? const SizedBox(height: 16, width: 16, child: CircularProgressIndicator(strokeWidth: 2))
               : const Text('Save'),
         ),
       ],
@@ -280,14 +252,9 @@ class _CollegeChangeSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final countries = ref.watch(profileCountriesProvider);
-    final states = countryId == null
-        ? null
-        : ref.watch(profileStatesProvider(countryId!));
-    final districts =
-        stateId == null ? null : ref.watch(profileDistrictsProvider(stateId!));
-    final orgsAndDepartments = districtId == null
-        ? null
-        : ref.watch(organizationsAndDepartmentsProvider(districtId!));
+    final states = countryId == null ? null : ref.watch(profileStatesProvider(countryId!));
+    final districts = stateId == null ? null : ref.watch(profileDistrictsProvider(stateId!));
+    final orgsAndDepartments = districtId == null ? null : ref.watch(organizationsAndDepartmentsProvider(districtId!));
 
     return Column(
       children: [
@@ -296,8 +263,7 @@ class _CollegeChangeSection extends ConsumerWidget {
           initialValue: countryId,
           isLoading: countries.isLoading,
           options: [
-            for (final LocationOption c
-                in countries.value ?? const <LocationOption>[])
+            for (final LocationOption c in countries.value ?? const <LocationOption>[])
               SelectOption(id: c.id, label: c.name),
           ],
           onSelected: onCountryChanged,
@@ -309,8 +275,7 @@ class _CollegeChangeSection extends ConsumerWidget {
           enabled: countryId != null,
           isLoading: states?.isLoading ?? false,
           options: [
-            for (final LocationOption s
-                in states?.value ?? const <LocationOption>[])
+            for (final LocationOption s in states?.value ?? const <LocationOption>[])
               SelectOption(id: s.id, label: s.name),
           ],
           onSelected: onStateChanged,
@@ -322,8 +287,7 @@ class _CollegeChangeSection extends ConsumerWidget {
           enabled: stateId != null,
           isLoading: districts?.isLoading ?? false,
           options: [
-            for (final LocationOption d
-                in districts?.value ?? const <LocationOption>[])
+            for (final LocationOption d in districts?.value ?? const <LocationOption>[])
               SelectOption(id: d.id, label: d.name),
           ],
           onSelected: onDistrictChanged,
@@ -335,10 +299,7 @@ class _CollegeChangeSection extends ConsumerWidget {
           enabled: districtId != null,
           isLoading: orgsAndDepartments?.isLoading ?? false,
           options: [
-            for (final ReferenceOption o in orgsAndDepartments
-                    ?.value
-                    ?.organizations ??
-                const <ReferenceOption>[])
+            for (final ReferenceOption o in orgsAndDepartments?.value?.organizations ?? const <ReferenceOption>[])
               SelectOption(id: o.id, label: o.title),
           ],
           onSelected: onOrgChanged,
@@ -350,10 +311,7 @@ class _CollegeChangeSection extends ConsumerWidget {
           enabled: districtId != null,
           isLoading: orgsAndDepartments?.isLoading ?? false,
           options: [
-            for (final ReferenceOption d in orgsAndDepartments
-                    ?.value
-                    ?.departments ??
-                const <ReferenceOption>[])
+            for (final ReferenceOption d in orgsAndDepartments?.value?.departments ?? const <ReferenceOption>[])
               SelectOption(id: d.id, label: d.title),
           ],
           onSelected: onDepartmentChanged,

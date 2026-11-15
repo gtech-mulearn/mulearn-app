@@ -51,43 +51,45 @@ class SettingsScreen extends ConsumerWidget {
   void _showDeletion(BuildContext context, WidgetRef ref) {
     final muid = ref.read(currentUserProvider).value?.muid ?? '';
     final open = ref.read(openExternalProvider);
-    unawaited(showModalBottomSheet<void>(
-      context: context,
-      backgroundColor: MuColors.surface,
-      showDragHandle: true,
-      builder: (sheetContext) => SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(MuSpace.screenH, 0, MuSpace.screenH, MuSpace.xl),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text('Delete account', style: MuType.headline),
-              const SizedBox(height: MuSpace.s),
-              Text(
-                "Contact support to delete your account. We'll confirm the request with you, "
-                "then permanently delete your account and its data. This can't be undone.",
-                style: MuType.body.copyWith(color: MuColors.inkSecondary),
-              ),
-              const SizedBox(height: MuSpace.s),
-              Text(
-                'Your email goes to ${AppLinks.supportEmail}.',
-                style: MuType.caption.copyWith(color: MuColors.inkTertiary),
-              ),
-              const SizedBox(height: MuSpace.xl),
-              MuPrimaryButton(
-                label: 'Email support',
-                icon: LucideIcons.mail,
-                onPressed: () {
-                  unawaited(open(AppLinks.deletionRequest(muid)));
-                  Navigator.of(sheetContext).pop();
-                },
-              ),
-            ],
+    unawaited(
+      showModalBottomSheet<void>(
+        context: context,
+        backgroundColor: MuColors.surface,
+        showDragHandle: true,
+        builder: (sheetContext) => SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(MuSpace.screenH, 0, MuSpace.screenH, MuSpace.xl),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text('Delete account', style: MuType.headline),
+                const SizedBox(height: MuSpace.s),
+                Text(
+                  "Contact support to delete your account. We'll confirm the request with you, "
+                  "then permanently delete your account and its data. This can't be undone.",
+                  style: MuType.body.copyWith(color: MuColors.inkSecondary),
+                ),
+                const SizedBox(height: MuSpace.s),
+                Text(
+                  'Your email goes to ${AppLinks.supportEmail}.',
+                  style: MuType.caption.copyWith(color: MuColors.inkTertiary),
+                ),
+                const SizedBox(height: MuSpace.xl),
+                MuPrimaryButton(
+                  label: 'Email support',
+                  icon: LucideIcons.mail,
+                  onPressed: () {
+                    unawaited(open(AppLinks.deletionRequest(muid)));
+                    Navigator.of(sheetContext).pop();
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       ),
-    ));
+    );
   }
 
   @override
@@ -98,7 +100,10 @@ class SettingsScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: MuColors.canvas,
-      appBar: AppBar(backgroundColor: MuColors.canvas, title: Text('Settings', style: MuType.headline)),
+      appBar: AppBar(
+        backgroundColor: MuColors.canvas,
+        title: Text('Settings', style: MuType.headline),
+      ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.fromLTRB(MuSpace.screenH, MuSpace.s, MuSpace.screenH, MuSpace.navClearance),
@@ -119,10 +124,11 @@ class SettingsScreen extends ConsumerWidget {
                     onTap: (needsDiscord ?? false) && ref.watch(discordAuthUriProvider) != null
                         ? () => unawaited(ref.read(discordConnectFlowProvider.notifier).start())
                         : null,
-                    trailing: Text(
-                      switch (needsDiscord) { null => '', true => 'Not connected', false => 'Connected' },
-                      style: MuType.caption.copyWith(color: MuColors.inkSecondary),
-                    ),
+                    trailing: Text(switch (needsDiscord) {
+                      null => '',
+                      true => 'Not connected',
+                      false => 'Connected',
+                    }, style: MuType.caption.copyWith(color: MuColors.inkSecondary)),
                     isLast: true,
                   ),
                 ],
@@ -198,12 +204,15 @@ class _SectionLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.fromLTRB(MuSpace.xs, MuSpace.xl, MuSpace.xs, MuSpace.s),
-        child: Semantics(
-          header: true,
-          child: Text(text.toUpperCase(), style: MuType.caption.copyWith(color: MuColors.inkTertiary, fontWeight: FontWeight.w600)),
-        ),
-      );
+    padding: const EdgeInsets.fromLTRB(MuSpace.xs, MuSpace.xl, MuSpace.xs, MuSpace.s),
+    child: Semantics(
+      header: true,
+      child: Text(
+        text.toUpperCase(),
+        style: MuType.caption.copyWith(color: MuColors.inkTertiary, fontWeight: FontWeight.w600),
+      ),
+    ),
+  );
 }
 
 /// One settings row, styled like Profile's quick-action rows.
@@ -256,8 +265,7 @@ class _SettingsRow extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(label, style: MuType.bodyMed),
-                  if (subtitle != null)
-                    Text(subtitle!, style: MuType.caption.copyWith(color: MuColors.inkSecondary)),
+                  if (subtitle != null) Text(subtitle!, style: MuType.caption.copyWith(color: MuColors.inkSecondary)),
                 ],
               ),
             ),

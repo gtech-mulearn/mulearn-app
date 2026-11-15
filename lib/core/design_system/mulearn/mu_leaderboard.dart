@@ -174,6 +174,8 @@ class MuRankRow extends StatelessWidget {
                       children: [
                         Positioned.fill(child: ColoredBox(color: c.surfaceSunk)),
                         FractionallySizedBox(
+                          // Grow from the start edge (the default centres the bar).
+                          alignment: AlignmentDirectional.centerStart,
                           widthFactor: share,
                           child: ColoredBox(color: c.cobalt),
                         ),

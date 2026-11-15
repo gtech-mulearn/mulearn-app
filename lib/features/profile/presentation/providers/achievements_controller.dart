@@ -28,8 +28,7 @@ Future<Map<String, String>> achievementDescriptions(Ref ref) =>
 /// DIDs already connected/verified via QSeverse for [muid] — used to decide
 /// whether the VC-issuance flow can proceed without an extra connect step.
 @riverpod
-Future<List<String>> connectedDids(Ref ref, String muid) =>
-    ref.watch(profileRepositoryProvider).getConnectedDids(muid);
+Future<List<String>> connectedDids(Ref ref, String muid) => ref.watch(profileRepositoryProvider).getConnectedDids(muid);
 
 /// Claims an achievement, then refreshes the earned, eligible and progress
 /// lists. Throws the backend's reason when refused.

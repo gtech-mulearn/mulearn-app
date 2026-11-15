@@ -102,7 +102,10 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
     final saving = ref.watch(changePasswordControllerProvider).isLoading;
     return Scaffold(
       backgroundColor: MuColors.canvas,
-      appBar: AppBar(backgroundColor: MuColors.canvas, title: Text('Password', style: MuType.headline)),
+      appBar: AppBar(
+        backgroundColor: MuColors.canvas,
+        title: Text('Password', style: MuType.headline),
+      ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(MuSpace.screenH),
@@ -142,10 +145,7 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                       validator: (v) => confirmPasswordError(next: _next.text, confirm: v ?? ''),
                     ),
                     const SizedBox(height: MuSpace.xl),
-                    MuPrimaryButton(
-                      label: saving ? 'Saving…' : 'Change password',
-                      onPressed: saving ? null : _submit,
-                    ),
+                    MuPrimaryButton(label: saving ? 'Saving…' : 'Change password', onPressed: saving ? null : _submit),
                   ],
                 ),
               ),

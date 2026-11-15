@@ -7,8 +7,7 @@ part 'user_preferences_controller.g.dart';
 @riverpod
 class UserPreferencesController extends _$UserPreferencesController {
   @override
-  Future<UserPreferences> build() =>
-      ref.watch(profileRepositoryProvider).getUserPreferences();
+  Future<UserPreferences> build() => ref.watch(profileRepositoryProvider).getUserPreferences();
 
   Future<void> save({
     List<String>? domains,
@@ -16,7 +15,9 @@ class UserPreferencesController extends _$UserPreferencesController {
     bool? interestedInWork,
     bool? interestedInGigWork,
   }) async {
-    await ref.read(profileRepositoryProvider).updateUserPreferences(
+    await ref
+        .read(profileRepositoryProvider)
+        .updateUserPreferences(
           domains: domains,
           endgoals: endgoals,
           interestedInWork: interestedInWork,

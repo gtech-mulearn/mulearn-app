@@ -115,7 +115,9 @@ class _ConnectDiscordScreenState extends ConsumerState<ConnectDiscordScreen> {
             ? null
             : IconButton(tooltip: 'Close', icon: const Icon(LucideIcons.x), onPressed: _leave),
       ),
-      body: SafeArea(child: Padding(padding: const EdgeInsets.all(MuSpace.screenH), child: body)),
+      body: SafeArea(
+        child: Padding(padding: const EdgeInsets.all(MuSpace.screenH), child: body),
+      ),
     );
   }
 }
@@ -125,15 +127,15 @@ class _Connecting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const CircularProgressIndicator(),
-            const SizedBox(height: MuSpace.l),
-            Text('Connecting your Discord account…', style: MuType.body.copyWith(color: MuColors.inkSecondary)),
-          ],
-        ),
-      );
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        const CircularProgressIndicator(),
+        const SizedBox(height: MuSpace.l),
+        Text('Connecting your Discord account…', style: MuType.body.copyWith(color: MuColors.inkSecondary)),
+      ],
+    ),
+  );
 }
 
 class _Outcome extends StatelessWidget {
@@ -153,16 +155,20 @@ class _Outcome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Icon(icon, size: 48, color: iconColor),
-          const SizedBox(height: MuSpace.l),
-          Text(title, style: MuType.headline, textAlign: TextAlign.center),
-          const SizedBox(height: MuSpace.s),
-          Text(message, style: MuType.body.copyWith(color: MuColors.inkSecondary), textAlign: TextAlign.center),
-          const SizedBox(height: MuSpace.xl),
-          ...actions,
-        ],
-      );
+    mainAxisAlignment: MainAxisAlignment.center,
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: [
+      Icon(icon, size: 48, color: iconColor),
+      const SizedBox(height: MuSpace.l),
+      Text(title, style: MuType.headline, textAlign: TextAlign.center),
+      const SizedBox(height: MuSpace.s),
+      Text(
+        message,
+        style: MuType.body.copyWith(color: MuColors.inkSecondary),
+        textAlign: TextAlign.center,
+      ),
+      const SizedBox(height: MuSpace.xl),
+      ...actions,
+    ],
+  );
 }
