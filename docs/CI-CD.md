@@ -347,6 +347,7 @@ Open the failed run; the first red step says which stage failed.
 | **Analyze** or **Test** fails | Reproduce with `flutter analyze` / `flutter test` locally (same Flutter 3.47.9). Nothing is built or published until they pass. |
 | **Install dependencies** fails with a lockfile error | `pubspec.lock` doesn't match `pubspec.yaml`. Run `flutter pub get` locally and commit the lock file. |
 | `Missing signing secret(s)` (stable/release) | Production environment secrets missing or misnamed — see [Secrets](#secrets). |
+| `Missing signing secret(s)` although the environment has them | The caller workflow lacks `secrets: inherit`. A reusable workflow only sees secrets its caller passes, even when its own job names the environment. |
 | `The keystore did not open …` | `ANDROID_KEYSTORE_PASSWORD` or `ANDROID_KEY_ALIAS` doesn't match the keystore, or `ANDROID_KEYSTORE` isn't the base64 of the `.jks`. |
 | Gradle: `Prod release builds need android/key.properties` | A prod release was built without signing. In CI this means `signing: required` was bypassed; locally, create `android/key.properties`. |
 | Run waits on **Review deployments** | Production needs an approval. Approve it from the run page. |
