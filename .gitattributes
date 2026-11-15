@@ -1,0 +1,3 @@
+# CI shell scripts must keep LF endings, or bash fails on Windows checkouts
+# (core.autocrlf=true would turn them into CRLF).
+*.sh text eol=lf
