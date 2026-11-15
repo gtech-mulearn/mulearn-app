@@ -321,11 +321,13 @@ can still merge with *bypass branch protections* when nobody else is available.
   <https://github.com/gtech-mulearn/mulearn-app/releases/tag/dev-latest>.
 - **Any dev, nightly or stable build:** Actions → pick the run → *Artifacts*
   at the bottom of the summary page. Each artifact is the `.apk` itself, not a
-  zip. Downloading artifacts requires a GitHub login. From a terminal:
+  zip. Downloading artifacts requires a GitHub login. From a terminal (not
+  `gh run download`, which tries to unzip the APK itself and fails):
 
   ```bash
   gh run list --workflow nightly.yml --limit 5
-  gh run download <run-id> --dir apks
+  gh api repos/gtech-mulearn/mulearn-app/actions/runs/<run-id>/artifacts --jq '.artifacts[] | "\(.id) \(.name)"'
+  gh api repos/gtech-mulearn/mulearn-app/actions/artifacts/<artifact-id>/zip > mulearn.apk
   ```
 
 - **Releases:** <https://github.com/gtech-mulearn/mulearn-app/releases> —
