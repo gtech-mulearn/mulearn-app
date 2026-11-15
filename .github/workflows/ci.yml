@@ -1,51 +1,37 @@
-# Continuous integration — static analysis + tests.
+# Pull request validation (and a quick check on feature-branch pushes).
 #
-# Runs on pull requests and on pushes to feature branches. Release branches
-# are excluded here because they have their own workflows:
-#   - dev      -> release-dev.yml  (builds + publishes the dev pre-release)
-#   - v* tags  -> release-prod.yml (builds + publishes the production release)
-#     (tags are cut from the `production` branch — see docs/releases.md)
+#   pull_request (any base, incl. dev and main):
+#     format check of the files the PR changes (blocking), flutter analyze,
+#     flutter test, then an unsigned release build of the dev flavor to prove
+#     the Android build still works. Nothing is uploaded or published, and no
+#     secrets are used, so PRs from forks are safe to run.
+#   push to any branch except dev/main (those have their own build workflows):
+#     analyze + test (+ whole-repo format report); no APK build.
+#
+# Docs: docs/CI-CD.md
 name: CI
 
 on:
   pull_request:
   push:
     branches-ignore:
-      - production
       - dev
+      - main
 
-# Cancel superseded runs on the same branch/PR.
+# Only the newest commit of a PR / branch matters.
 concurrency:
-  group: ci-${{ github.workflow }}-${{ github.ref }}
+  group: ci-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 permissions:
   contents: read
 
 jobs:
-  analyze-and-test:
-    name: Analyze & test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      # Dart SDK ^3.12.2 (pubspec.yaml) — latest stable Flutter satisfies it.
-      # `cache: true` caches the Flutter SDK and pub artifacts between runs.
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: stable
-          # Pinned so CI builds with the same toolchain as local development.
-          flutter-version: 3.47.9
-          cache: true
-
-      - name: Install dependencies
-        run: flutter pub get
-
-      # rules.md §7: `flutter analyze` and `flutter test` must pass before merge.
-      - name: Analyze
-        run: flutter analyze
-
-      - name: Run tests
-        run: flutter test
+  android:
+    name: Android
+    uses: ./.github/workflows/android-build.yml
+    with:
+      channel: ci
+      format-base: ${{ github.event.pull_request.base.sha || '' }}
+      build: ${{ github.event_name == 'pull_request' }}
+      signing: none
