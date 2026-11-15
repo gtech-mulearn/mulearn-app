@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mulearn_app/app/app_router.dart';
 import 'package:mulearn_app/core/config/flavor_config.dart';
 import 'package:mulearn_app/core/design_system/theme/mu_theme.dart';
+import 'package:mulearn_app/core/theme/appearance.dart';
 import 'package:mulearn_app/core/theme/mulearn_theme.dart';
 
 /// Root widget. `MaterialApp.router` is driven by the go_router provider; theme
@@ -29,6 +30,8 @@ class MulearnApp extends ConsumerWidget {
       // so migrated screens go dark and old ones keep their light look until
       // they move over.
       darkTheme: MulearnTheme.light().copyWith(extensions: [MuTheme.dark()]),
+      // System by default; Settings → Appearance can pin Light or Dark.
+      themeMode: ref.watch(appearanceProvider),
       routerConfig: router,
     );
   }

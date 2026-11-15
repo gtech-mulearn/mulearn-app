@@ -5,24 +5,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/config/app_links.dart';
-import 'package:mulearn_app/core/design_system/feedback/mu_toast.dart';
+import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/session/discord_connect.dart';
 import 'package:mulearn_app/core/session/session_actions.dart';
 import 'package:mulearn_app/core/session/session_providers.dart';
-import 'package:mulearn_app/core/theme/mu_radius.dart';
-import 'package:mulearn_app/core/theme/mu_space.dart';
-import 'package:mulearn_app/core/theme/mulearn_colors.dart';
-import 'package:mulearn_app/core/theme/mulearn_typography.dart';
+import 'package:mulearn_app/core/theme/appearance.dart';
 import 'package:mulearn_app/core/utils/external_links.dart';
-import 'package:mulearn_app/core/widgets/mu_buttons.dart';
-import 'package:mulearn_app/core/widgets/mu_card.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/profile_controller.dart';
 
-/// Account settings (UX-03, SEC-14; L19): password, connected accounts,
-/// profile visibility, legal links, sign out, and account deletion through
-/// support (the backend's delete is a hard cascade; spec §11).
+/// Settings (artifact Screen patterns → Settings): grouped lists on cards.
+/// Account (password, Discord), Privacy (public profile), Appearance
+/// (System / Light / Dark), Legal, then Sign out (confirmed) and Delete
+/// account through support (the backend's delete is a hard cascade; spec
+/// §11). Rows are 56 tall with trailing values in `ink-3` and chevrons.
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
@@ -35,50 +32,45 @@ class SettingsScreen extends ConsumerWidget {
   }
 
   Future<void> _confirmSignOut(BuildContext context, WidgetRef ref) async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Sign out?'),
-        actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(false), child: const Text('Cancel')),
-          TextButton(onPressed: () => Navigator.of(context).pop(true), child: const Text('Sign out')),
-        ],
-      ),
+    final confirmed = await showMuConfirm(
+      context,
+      title: 'Sign out?',
+      body: "You'll need your email or muid and password, or Google, to come back.",
+      confirmLabel: 'Sign out',
+      destructive: true,
     );
-    if (confirmed ?? false) await ref.read(sessionActionsProvider.notifier).signOut();
+    if (confirmed) await ref.read(sessionActionsProvider.notifier).signOut();
   }
 
   void _showDeletion(BuildContext context, WidgetRef ref) {
     final muid = ref.read(currentUserProvider).value?.muid ?? '';
     final open = ref.read(openExternalProvider);
     unawaited(
-      showModalBottomSheet<void>(
-        context: context,
-        backgroundColor: MuColors.surface,
-        showDragHandle: true,
-        builder: (sheetContext) => SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(MuSpace.screenH, 0, MuSpace.screenH, MuSpace.xl),
+      showMuSheet<void>(
+        context,
+        builder: (sheetContext) {
+          final mu = sheetContext.mu;
+          final c = mu.colors;
+          return Padding(
+            padding: const EdgeInsets.fromLTRB(MuSpacing.space5, 0, MuSpacing.space5, MuSpacing.space5),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text('Delete account', style: MuType.headline),
-                const SizedBox(height: MuSpace.s),
+                Text('Delete account', style: mu.text.title2),
+                const SizedBox(height: MuSpacing.space2),
                 Text(
                   "Contact support to delete your account. We'll confirm the request with you, "
                   "then permanently delete your account and its data. This can't be undone.",
-                  style: MuType.body.copyWith(color: MuColors.inkSecondary),
+                  style: mu.text.body.copyWith(color: c.ink2),
                 ),
-                const SizedBox(height: MuSpace.s),
-                Text(
-                  'Your email goes to ${AppLinks.supportEmail}.',
-                  style: MuType.caption.copyWith(color: MuColors.inkTertiary),
-                ),
-                const SizedBox(height: MuSpace.xl),
-                MuPrimaryButton(
+                const SizedBox(height: MuSpacing.space2),
+                Text('Your email goes to ${AppLinks.supportEmail}.', style: mu.text.caption),
+                const SizedBox(height: MuSpacing.space5),
+                MuButton(
                   label: 'Email support',
                   icon: LucideIcons.mail,
+                  block: true,
                   onPressed: () {
                     unawaited(open(AppLinks.deletionRequest(muid)));
                     Navigator.of(sheetContext).pop();
@@ -86,106 +78,118 @@ class SettingsScreen extends ConsumerWidget {
                 ),
               ],
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final mu = context.mu;
+    final c = mu.colors;
     final open = ref.watch(openExternalProvider);
     final needsDiscord = ref.watch(capabilitiesProvider).value?.needsDiscord;
     final isPublic = ref.watch(profileControllerProvider).value?.isPublic;
+    final appearance = ref.watch(appearanceProvider);
 
     return Scaffold(
-      backgroundColor: MuColors.canvas,
-      appBar: AppBar(
-        backgroundColor: MuColors.canvas,
-        title: Text('Settings', style: MuType.headline),
-      ),
+      backgroundColor: c.chalk,
       body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.fromLTRB(MuSpace.screenH, MuSpace.s, MuSpace.screenH, MuSpace.navClearance),
+        bottom: false,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const _SectionLabel('Account'),
-            MuCard(
-              padding: const EdgeInsets.symmetric(vertical: MuSpace.xs),
-              child: Column(
-                children: [
-                  _SettingsRow(
-                    icon: LucideIcons.keyRound,
-                    label: 'Change password',
-                    onTap: () => context.push(RoutePaths.settingsPassword),
-                  ),
-                  _SettingsRow(
-                    icon: LucideIcons.messageCircle,
-                    label: 'Discord',
-                    onTap: (needsDiscord ?? false) && ref.watch(discordAuthUriProvider) != null
-                        ? () => unawaited(ref.read(discordConnectFlowProvider.notifier).start())
-                        : null,
-                    trailing: Text(switch (needsDiscord) {
-                      null => '',
-                      true => 'Not connected',
-                      false => 'Connected',
-                    }, style: MuType.caption.copyWith(color: MuColors.inkSecondary)),
-                    isLast: true,
-                  ),
-                ],
-              ),
-            ),
-            const _SectionLabel('Privacy'),
-            MuCard(
-              padding: const EdgeInsets.symmetric(vertical: MuSpace.xs),
-              child: _SettingsRow(
-                icon: LucideIcons.globe,
-                label: 'Public profile',
-                subtitle: 'Anyone with your link can see your profile',
-                trailing: Switch(
-                  value: isPublic ?? false,
-                  onChanged: isPublic == null ? null : (v) => _togglePublic(context, ref, v),
+            const MuTopBar.detail(title: 'Settings'),
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(
+                  MuSpacing.space5,
+                  MuSpacing.space2,
+                  MuSpacing.space5,
+                  MuSpacing.navClearance,
                 ),
-                isLast: true,
-              ),
-            ),
-            const _SectionLabel('Legal'),
-            MuCard(
-              padding: const EdgeInsets.symmetric(vertical: MuSpace.xs),
-              child: Column(
                 children: [
-                  _SettingsRow(
-                    icon: LucideIcons.shieldCheck,
-                    label: 'Privacy policy',
-                    onTap: () => unawaited(open(AppLinks.privacyPolicy)),
-                    external: true,
+                  const _SectionLabel('Account'),
+                  _Group(
+                    children: [
+                      _Row(
+                        icon: LucideIcons.keyRound,
+                        label: 'Change password',
+                        onTap: () => context.push(RoutePaths.settingsPassword),
+                      ),
+                      _Row(
+                        icon: LucideIcons.messageCircle,
+                        label: 'Discord',
+                        value: switch (needsDiscord) {
+                          null => null,
+                          true => 'Not connected',
+                          false => 'Connected',
+                        },
+                        onTap: (needsDiscord ?? false) && ref.watch(discordAuthUriProvider) != null
+                            ? () => unawaited(ref.read(discordConnectFlowProvider.notifier).start())
+                            : null,
+                        last: true,
+                      ),
+                    ],
                   ),
-                  _SettingsRow(
-                    icon: LucideIcons.fileText,
-                    label: 'Terms and conditions',
-                    onTap: () => unawaited(open(AppLinks.terms)),
-                    external: true,
-                    isLast: true,
+                  const _SectionLabel('Privacy'),
+                  _Group(
+                    children: [
+                      MuSwitchTile(
+                        label: 'Public profile',
+                        subtitle: 'Anyone with your link can see your profile',
+                        value: isPublic ?? false,
+                        onChanged: isPublic == null ? null : (v) => _togglePublic(context, ref, v),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
-            const SizedBox(height: MuSpace.xl),
-            MuCard(
-              padding: const EdgeInsets.symmetric(vertical: MuSpace.xs),
-              child: Column(
-                children: [
-                  _SettingsRow(
-                    icon: LucideIcons.logOut,
-                    label: 'Sign out',
-                    iconColor: MuColors.error,
-                    onTap: () => _confirmSignOut(context, ref),
+                  const _SectionLabel('Appearance'),
+                  MuSegmented<ThemeMode>(
+                    values: const [ThemeMode.system, ThemeMode.light, ThemeMode.dark],
+                    selected: appearance,
+                    label: (m) => switch (m) {
+                      ThemeMode.system => 'System',
+                      ThemeMode.light => 'Light',
+                      ThemeMode.dark => 'Dark',
+                    },
+                    onChanged: (m) => unawaited(ref.read(appearanceProvider.notifier).set(m)),
                   ),
-                  _SettingsRow(
-                    icon: LucideIcons.trash2,
-                    label: 'Delete account',
-                    iconColor: MuColors.error,
-                    onTap: () => _showDeletion(context, ref),
-                    isLast: true,
+                  const _SectionLabel('Legal'),
+                  _Group(
+                    children: [
+                      _Row(
+                        icon: LucideIcons.shieldCheck,
+                        label: 'Privacy policy',
+                        external: true,
+                        onTap: () => unawaited(open(AppLinks.privacyPolicy)),
+                      ),
+                      _Row(
+                        icon: LucideIcons.fileText,
+                        label: 'Terms and conditions',
+                        external: true,
+                        onTap: () => unawaited(open(AppLinks.terms)),
+                        last: true,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: MuSpacing.space8),
+                  _Group(
+                    children: [
+                      _Row(
+                        icon: LucideIcons.logOut,
+                        label: 'Sign out',
+                        danger: true,
+                        onTap: () => _confirmSignOut(context, ref),
+                      ),
+                      _Row(
+                        icon: LucideIcons.trash2,
+                        label: 'Delete account',
+                        danger: true,
+                        onTap: () => _showDeletion(context, ref),
+                        last: true,
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -204,80 +208,85 @@ class _SectionLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.fromLTRB(MuSpace.xs, MuSpace.xl, MuSpace.xs, MuSpace.s),
+    padding: const EdgeInsets.fromLTRB(MuSpacing.space1, MuSpacing.space6, MuSpacing.space1, MuSpacing.space2),
     child: Semantics(
       header: true,
-      child: Text(
-        text.toUpperCase(),
-        style: MuType.caption.copyWith(color: MuColors.inkTertiary, fontWeight: FontWeight.w600),
-      ),
+      child: Text(text.toUpperCase(), style: context.mu.text.eyebrow.copyWith(color: context.mu.colors.ink3)),
     ),
   );
 }
 
-/// One settings row, styled like Profile's quick-action rows.
-class _SettingsRow extends StatelessWidget {
-  const _SettingsRow({
+/// Rows on one `surface` card.
+class _Group extends StatelessWidget {
+  const _Group({required this.children});
+
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) => Container(
+    padding: const EdgeInsets.symmetric(horizontal: MuSpacing.space4),
+    decoration: BoxDecoration(color: context.mu.colors.surface, borderRadius: BorderRadius.circular(MuRadii.card)),
+    clipBehavior: Clip.antiAlias,
+    child: Column(children: children),
+  );
+}
+
+/// A 56-tall settings row: icon, label, a trailing value in `ink-3`, then a
+/// chevron (or an out-arrow for links that leave the app).
+class _Row extends StatelessWidget {
+  const _Row({
     required this.icon,
     required this.label,
-    this.subtitle,
+    this.value,
     this.onTap,
-    this.trailing,
-    this.iconColor,
     this.external = false,
-    this.isLast = false,
+    this.danger = false,
+    this.last = false,
   });
 
   final IconData icon;
   final String label;
-  final String? subtitle;
+  final String? value;
   final VoidCallback? onTap;
-  final Widget? trailing;
-  final Color? iconColor;
   final bool external;
-  final bool isLast;
+  final bool danger;
+  final bool last;
 
   @override
   Widget build(BuildContext context) {
-    final color = iconColor ?? MuColors.primary;
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: MuSpace.l, vertical: MuSpace.m),
-        decoration: BoxDecoration(
-          border: isLast ? null : const Border(bottom: BorderSide(color: MuColors.hairline)),
-        ),
-        child: Row(
-          children: [
-            Container(
-              height: 36,
-              width: 36,
-              decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(MuRadius.inner),
+    final mu = context.mu;
+    final c = mu.colors;
+    final fg = danger ? c.danger : c.ink;
+    return Semantics(
+      button: onTap != null,
+      label: [label, ?value].join(', '),
+      excludeSemantics: true,
+      child: InkWell(
+        onTap: onTap,
+        child: Container(
+          constraints: const BoxConstraints(minHeight: 56),
+          decoration: BoxDecoration(
+            border: last ? null : Border(bottom: BorderSide(color: c.line)),
+          ),
+          child: Row(
+            children: [
+              Icon(icon, size: MuSizes.iconMd, color: danger ? c.danger : c.ink2),
+              const SizedBox(width: MuSpacing.space3),
+              Expanded(
+                child: Text(label, style: mu.text.bodyStrong.copyWith(color: fg)),
               ),
-              alignment: Alignment.center,
-              child: Icon(icon, size: 18, color: color),
-            ),
-            const SizedBox(width: MuSpace.m),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(label, style: MuType.bodyMed),
-                  if (subtitle != null) Text(subtitle!, style: MuType.caption.copyWith(color: MuColors.inkSecondary)),
-                ],
-              ),
-            ),
-            if (trailing != null)
-              trailing!
-            else if (onTap != null)
-              Icon(
-                external ? LucideIcons.externalLink : LucideIcons.chevronRight,
-                size: 18,
-                color: MuColors.inkTertiary,
-              ),
-          ],
+              if (value != null) ...[
+                Text(value!, style: mu.text.body.copyWith(color: c.ink3)),
+                const SizedBox(width: MuSpacing.space2),
+              ],
+              if (onTap != null)
+                Icon(
+                  external ? LucideIcons.arrowUpRight : LucideIcons.chevronRight,
+                  size: MuSizes.iconSm,
+                  color: c.ink3,
+                ),
+            ],
+          ),
         ),
       ),
     );

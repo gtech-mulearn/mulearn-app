@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mulearn_app/core/config/app_links.dart';
 import 'package:mulearn_app/features/profile/presentation/screens/settings_screen.dart';
@@ -57,7 +56,7 @@ void main() {
     final adapter = settingsAdapter();
     await openSettings(tester, adapter, opened: opened);
 
-    await tester.ensureVisible(find.text('Delete account'));
+    await tester.scrollUntilVisible(find.text('Delete account'), 200);
     await tester.pumpAndSettle();
     await tester.tap(find.text('Delete account'));
     await settle(tester);
@@ -77,7 +76,7 @@ void main() {
     await openSettings(tester, adapter);
     final before = adapter.requests.where((RequestOptions r) => r.uri.path == profilePath).length;
 
-    await tester.tap(find.byType(Switch));
+    await tester.tap(find.text('Public profile'));
     await settle(tester);
 
     final put = adapter.requests.singleWhere((RequestOptions r) => r.method == 'PUT');
