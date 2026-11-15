@@ -23,7 +23,7 @@ void main() {
     expect(find.bySemanticsLabel(RegExp(r'^Thursday 12 November.*2 items$')), findsOneWidget);
     expect(find.text('Thu'), findsOneWidget);
 
-    await tester.tap(find.bySemanticsLabel(RegExp(r'^Friday 13 November')));
+    await tester.tap(find.bySemanticsLabel(RegExp('^Friday 13 November')));
     expect(picked, DateTime(2026, 11, 13));
   });
 
