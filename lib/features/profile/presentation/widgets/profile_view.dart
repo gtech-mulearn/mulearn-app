@@ -112,7 +112,7 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                             height: ProfileHeader.sheetOverlap + 1,
                             child: DecoratedBox(
                               decoration: BoxDecoration(
-                                color: context.mu.colors.night,
+                                color: ProfileSheet.colorOf(context),
                                 borderRadius: const BorderRadius.vertical(top: Radius.circular(MuRadii.panel)),
                               ),
                             ),
@@ -129,7 +129,11 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                 ),
                 SliverPersistentHeader(
                   pinned: true,
-                  delegate: _SectionBar(top: _barPad, selected: _section, onChanged: (s) => setState(() => _section = s)),
+                  delegate: _SectionBar(
+                    top: _barPad,
+                    selected: _section,
+                    onChanged: (s) => setState(() => _section = s),
+                  ),
                 ),
                 SliverToBoxAdapter(
                   child: switch (_section) {
@@ -155,7 +159,7 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
               child: AnimatedOpacity(
                 opacity: _underStatusBar ? 1 : 0,
                 duration: const Duration(milliseconds: 180),
-                child: ColoredBox(color: context.mu.colors.night),
+                child: ColoredBox(color: ProfileSheet.colorOf(context)),
               ),
             ),
           ),

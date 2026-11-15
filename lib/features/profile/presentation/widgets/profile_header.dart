@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'dart:ui' as ui;
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -150,40 +151,69 @@ class ProfileHeader extends ConsumerWidget {
     );
 
     return ColoredBox(
-      color: c.cobalt,
+      color: hasCover ? c.night : c.cobalt,
       child: Stack(
         children: [
-          // The cover is cropped 3:1 (dashboard PROFILE_COVER_ASPECT), so it
-          // shows as a banner across the top, exactly as framed, and fades
-          // into the cobalt poster under the name.
-          if (hasCover)
+          // With a cover, the whole hero is the photo: a blurred, darkened
+          // full-bleed copy as the ground, and the 3:1 crop (dashboard
+          // PROFILE_COVER_ASPECT) sharp across the top, fading into it. The
+          // name sits on the blurred part, where it stays readable.
+          if (hasCover) ...[
+            Positioned.fill(
+              child: ClipRect(
+                child: ImageFiltered(
+                  imageFilter: ui.ImageFilter.blur(sigmaX: 36, sigmaY: 36, tileMode: TileMode.clamp),
+                  child: Transform.scale(
+                    scale: 1.25,
+                    child: CachedNetworkImage(
+                      imageUrl: profile.coverPicUrl!,
+                      fit: BoxFit.cover,
+                      errorWidget: (_, _, _) => const SizedBox.shrink(),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            Positioned.fill(child: ColoredBox(color: c.night.withValues(alpha: 0.55))),
             Positioned(
               top: 0,
               left: 0,
               right: 0,
               height: bannerH,
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  CachedNetworkImage(
-                    imageUrl: profile.coverPicUrl!,
-                    fit: BoxFit.cover,
-                    alignment: Alignment.bottomCenter,
-                    errorWidget: (_, _, _) => const SizedBox.shrink(),
-                  ),
-                  DecoratedBox(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        stops: const [0, 0.25, 0.7, 1],
-                        colors: [c.night.withValues(alpha: 0.4), c.night.withValues(alpha: 0), c.cobalt.withValues(alpha: 0), c.cobalt],
+              child: ShaderMask(
+                // Fade the banner's lower third into the blurred ground.
+                shaderCallback: (rect) => LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  stops: const [0, 0.65, 1],
+                  colors: [c.night, c.night, c.night.withValues(alpha: 0)],
+                ).createShader(rect),
+                blendMode: BlendMode.dstIn,
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    CachedNetworkImage(
+                      imageUrl: profile.coverPicUrl!,
+                      fit: BoxFit.cover,
+                      alignment: Alignment.bottomCenter,
+                      errorWidget: (_, _, _) => const SizedBox.shrink(),
+                    ),
+                    // Keeps the status bar and tools legible on bright photos.
+                    DecoratedBox(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          stops: const [0, 0.45],
+                          colors: [c.night.withValues(alpha: 0.45), c.night.withValues(alpha: 0)],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
+          ],
           PositionedDirectional(
             end: MuSpacing.space2,
             bottom: sheetOverlap,

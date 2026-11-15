@@ -35,6 +35,10 @@ class MuTheme extends ThemeExtension<MuTheme> {
   /// Elevation tokens.
   final MuShadows shadows;
 
+  /// Whether the page is dark (read from the page colour, so it holds
+  /// mid-way through a theme change too).
+  bool get isDark => colors.chalk.computeLuminance() < 0.2;
+
   @override
   MuTheme copyWith({MuPalette? colors, MuTextStyles? text, MuShadows? shadows}) =>
       MuTheme(colors: colors ?? this.colors, text: text ?? this.text, shadows: shadows ?? this.shadows);

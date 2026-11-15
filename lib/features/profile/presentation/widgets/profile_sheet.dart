@@ -25,6 +25,10 @@ import 'package:mulearn_app/features/profile/presentation/widgets/edit_socials_d
 class ProfileSheet extends ConsumerWidget {
   const ProfileSheet({required this.profile, this.isOwn = true, this.onKarma, super.key});
 
+  /// The sheet's ground: `night` over the light page; in dark mode the
+  /// page's own dark, so the whole profile reads as one dark surface.
+  static Color colorOf(BuildContext context) => context.mu.isDark ? context.mu.colors.chalk : context.mu.colors.night;
+
   final UserProfile profile;
   final bool isOwn;
 
@@ -49,7 +53,7 @@ class ProfileSheet extends ConsumerWidget {
       width: double.infinity,
       // The rounded top is drawn by ProfileView, up into the hero.
       padding: const EdgeInsets.fromLTRB(MuSpacing.space5, 0, MuSpacing.space5, MuSpacing.space6),
-      color: c.night,
+      color: ProfileSheet.colorOf(context),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
