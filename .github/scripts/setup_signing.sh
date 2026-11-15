@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Writes android/key.properties + the keystore for a release-signed build,
 # from the environment-scoped secrets ANDROID_KEYSTORE (base64 .jks),
-# ANDROID_KEYSTORE_PASSWORD, ANDROID_KEY_ALIAS and ANDROID_KEY_PASSWORD.
+# ANDROID_KEYSTORE_PASSWORD and ANDROID_KEY_PASSWORD, and the environment
+# variable ANDROID_KEY_ALIAS (not secret, so it isn't masked in outputs).
 #
 #   bash .github/scripts/setup_signing.sh <none|optional|required>
 #
@@ -31,9 +32,9 @@ done
 
 if [ ${#missing[@]} -gt 0 ]; then
   if [ "$mode" = "required" ]; then
-    die "Missing signing secret(s): ${missing[*]}. Add them to this job's GitHub environment (docs/CI-CD.md, 'Secrets')."
+    die "Missing signing value(s): ${missing[*]}. Add them to this job's GitHub environment (docs/CI-CD.md, 'Secrets')."
   fi
-  echo "::warning::Missing signing secret(s): ${missing[*]} — signing with this runner's throwaway debug key. Testers must uninstall before installing the next build."
+  echo "::warning::Missing signing value(s): ${missing[*]} — signing with this runner's throwaway debug key. Testers must uninstall before installing the next build."
   exit 0
 fi
 
