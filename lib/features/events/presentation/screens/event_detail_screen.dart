@@ -56,9 +56,16 @@ String? _place(Event e) {
   if (v.venueType == 'online') {
     return (v.venuePlatform?.isNotEmpty ?? false) ? 'Online · ${v.venuePlatform}' : 'Online';
   }
-  final parts = [v.venueAddress, v.venueCity].where((s) => s != null && s.trim().isNotEmpty).join(', ');
+  final address = v.venueAddress?.trim() ?? '';
+  final city = v.venueCity?.trim() ?? '';
+  final parts = [
+    if (address.isNotEmpty) address,
+    if (city.isNotEmpty && !address.toLowerCase().contains(city.toLowerCase())) city,
+  ].join(', ');
   return parts.isEmpty ? null : parts;
 }
+
+bool _sameDay(DateTime a, DateTime b) => a.year == b.year && a.month == b.month && a.day == b.day;
 
 String? _organiser(Event e) {
   final o = e.organizer;
@@ -161,8 +168,14 @@ class _Body extends ConsumerWidget {
             if (start != null)
               MuFeedRow(
                 leading: const MuFeedIcon(LucideIcons.calendar, tone: MuFeedTone.event),
-                subject: end == null ? formatDay(start) : formatRange(start, end),
-                time: end == null ? formatTime(start) : '${formatTime(start)} – ${formatTime(end)}',
+                subject: end == null || _sameDay(start, end)
+                    ? formatDay(start)
+                    : '${formatDay(start)} – ${formatDay(end)}',
+                time: end == null
+                    ? formatTime(start)
+                    : _sameDay(start, end)
+                    ? '${formatTime(start)} – ${formatTime(end)}'
+                    : 'From ${formatTime(start)}',
               ),
             MuFeedRow(
               leading: MuFeedIcon(online ? LucideIcons.wifi : LucideIcons.mapPin, tone: MuFeedTone.event),
@@ -304,10 +317,9 @@ class _StubBar extends ConsumerWidget {
             if (hasForm)
               Row(
                 children: [
-                  Expanded(flex: 4, child: interest),
-                  const SizedBox(width: MuSpacing.space2),
+                  _InterestToggle(interested: interested, busy: busy, onPressed: open && !busy ? toggle : null),
+                  const SizedBox(width: MuSpacing.space3),
                   Expanded(
-                    flex: 5,
                     child: MuButton(
                       label: 'Register',
                       variant: MuButtonVariant.ink,
@@ -321,6 +333,56 @@ class _StubBar extends ConsumerWidget {
             else
               interest,
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Interest as a round star beside Register: filled cobalt once you're
+/// interested. Says which in words to screen readers.
+class _InterestToggle extends StatelessWidget {
+  const _InterestToggle({required this.interested, required this.busy, required this.onPressed});
+
+  final bool interested;
+  final bool busy;
+  final VoidCallback? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = context.mu.colors;
+    return Semantics(
+      button: true,
+      toggled: interested,
+      enabled: onPressed != null,
+      label: interested ? 'Interested' : "I'm interested",
+      excludeSemantics: true,
+      child: Tooltip(
+        message: interested ? 'Interested' : "I'm interested",
+        child: MuPressable(
+          onTap: onPressed,
+          pressedScale: 0.94,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 180),
+            width: MuSizes.buttonH,
+            height: MuSizes.buttonH,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: interested ? c.cobalt : null,
+              border: interested ? null : Border.all(color: c.lineStrong, width: 1.5),
+            ),
+            alignment: Alignment.center,
+            child: busy
+                ? SizedBox.square(
+                    dimension: 18,
+                    child: CircularProgressIndicator(strokeWidth: 2, color: interested ? c.onCobalt : c.ink2),
+                  )
+                : Icon(
+                    interested ? LucideIcons.check : LucideIcons.star,
+                    size: MuSizes.iconMd,
+                    color: onPressed == null ? c.ink3 : (interested ? c.onCobalt : c.ink),
+                  ),
+          ),
         ),
       ),
     );

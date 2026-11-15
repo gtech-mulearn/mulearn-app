@@ -109,7 +109,7 @@ class ShareProfileSheet extends ConsumerWidget {
                       ),
                       const SizedBox(height: MuSpacing.space4),
                       Container(
-                        padding: const EdgeInsetsDirectional.only(start: 16, end: 4),
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
                         constraints: const BoxConstraints(minHeight: MuSizes.fieldH),
                         decoration: BoxDecoration(
                           color: c.surfaceSunk,
@@ -127,7 +127,6 @@ class ShareProfileSheet extends ConsumerWidget {
                                 style: mu.text.codeSm.copyWith(color: c.ink2),
                               ),
                             ),
-                            MuIconButton(icon: LucideIcons.copy, tooltip: 'Copy link', onPressed: copy),
                           ],
                         ),
                       ),

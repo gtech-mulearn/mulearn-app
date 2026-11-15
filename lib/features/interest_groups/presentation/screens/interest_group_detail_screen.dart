@@ -225,7 +225,7 @@ class _About extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final mu = context.mu;
     final c = mu.colors;
-    final body = mu.text.bodyLg.copyWith(color: c.ink2);
+    final body = mu.text.body.copyWith(color: c.ink2, height: 1.55);
     return MarkdownBody(
       data: unescapeLiteralUnicode(text),
       onTapLink: (_, href, _) {

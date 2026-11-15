@@ -179,7 +179,6 @@ class _LearningCirclesScreenState extends ConsumerState<LearningCirclesScreen> {
               title: discover[i].title,
               total: discover[i].totalMembers,
               igName: discover[i].ig,
-              igCategory: MuTones.hashed(discover[i].ig),
               caption: [
                 if (discover[i].org != null && discover[i].org!.isNotEmpty) discover[i].org!,
                 if (discover[i].totalMembers == 1) '1 member' else '${discover[i].totalMembers} members',
@@ -382,7 +381,6 @@ class _MyCircleCard extends ConsumerWidget {
       title: circle.title,
       total: circle.totalMembers,
       igName: circle.ig,
-      igCategory: MuTones.hashed(circle.ig),
       members: [for (final m in members.take(5)) (name: m.fullName, url: m.profilePicUrl)],
       badge: isLead ? const MuPill('You lead', tone: MuPillTone.volt) : null,
       caption: [
