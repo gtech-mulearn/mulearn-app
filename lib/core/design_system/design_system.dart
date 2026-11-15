@@ -28,6 +28,7 @@ export 'input/mu_slide_to_confirm.dart';
 export 'input/mu_text_field.dart';
 export 'motion/mu_pressable.dart';
 export 'motion/mu_spring.dart';
+export 'mulearn/mu_circle_card.dart';
 export 'mulearn/mu_date_strip.dart';
 export 'mulearn/mu_karma_meter.dart';
 export 'mulearn/mu_leaderboard.dart';
