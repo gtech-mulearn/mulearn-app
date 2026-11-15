@@ -29,11 +29,7 @@ const notificationsControllerProvider = NotificationsControllerProvider._();
 /// through [UnreadNotifications], so these actions cost no extra count
 /// request.
 final class NotificationsControllerProvider
-    extends
-        $AsyncNotifierProvider<
-          NotificationsController,
-          PagedState<AppNotification>
-        > {
+    extends $AsyncNotifierProvider<NotificationsController, PagedState<AppNotification>> {
   /// The inbox, page by page. Lives only while the Notifications screen is
   /// open: it loads on open, on pull-to-refresh and on scroll-to-end, and never
   /// refetches in the background (no polling; Plan 3 Global Constraints).
@@ -61,8 +57,7 @@ final class NotificationsControllerProvider
   NotificationsController create() => NotificationsController();
 }
 
-String _$notificationsControllerHash() =>
-    r'a6ab0e0b108df842db7e7853b0266ba9c3362bf7';
+String _$notificationsControllerHash() => r'a6ab0e0b108df842db7e7853b0266ba9c3362bf7';
 
 /// The inbox, page by page. Lives only while the Notifications screen is
 /// open: it loads on open, on pull-to-refresh and on scroll-to-end, and never
@@ -73,26 +68,17 @@ String _$notificationsControllerHash() =>
 /// through [UnreadNotifications], so these actions cost no extra count
 /// request.
 
-abstract class _$NotificationsController
-    extends $AsyncNotifier<PagedState<AppNotification>> {
+abstract class _$NotificationsController extends $AsyncNotifier<PagedState<AppNotification>> {
   FutureOr<PagedState<AppNotification>> build();
   @$mustCallSuper
   @override
   void runBuild() {
     final created = build();
-    final ref =
-        this.ref
-            as $Ref<
-              AsyncValue<PagedState<AppNotification>>,
-              PagedState<AppNotification>
-            >;
+    final ref = this.ref as $Ref<AsyncValue<PagedState<AppNotification>>, PagedState<AppNotification>>;
     final element =
         ref.element
             as $ClassProviderElement<
-              AnyNotifier<
-                AsyncValue<PagedState<AppNotification>>,
-                PagedState<AppNotification>
-              >,
+              AnyNotifier<AsyncValue<PagedState<AppNotification>>, PagedState<AppNotification>>,
               AsyncValue<PagedState<AppNotification>>,
               Object?,
               Object?

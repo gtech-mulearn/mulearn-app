@@ -5,29 +5,28 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/config/flavor_config.dart';
-import 'package:mulearn_app/core/design_system/feedback/mu_toast.dart';
+import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/notifications/unread_notifications.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/router/tab_navigation.dart';
-import 'package:mulearn_app/core/theme/mu_space.dart';
-import 'package:mulearn_app/core/theme/mulearn_colors.dart';
-import 'package:mulearn_app/core/theme/mulearn_typography.dart';
+import 'package:mulearn_app/core/utils/date_format.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/core/widgets/mu_load_more_footer.dart';
 import 'package:mulearn_app/core/widgets/mu_state_display.dart';
 import 'package:mulearn_app/features/notifications/domain/entities/app_notification.dart';
 import 'package:mulearn_app/features/notifications/domain/notification_target.dart';
 import 'package:mulearn_app/features/notifications/presentation/providers/notifications_controller.dart';
-import 'package:mulearn_app/features/notifications/presentation/widgets/notification_list_tile.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-/// Notification inbox (L16; DESIGN_SPEC.md §2 "14 — Notifications"), backed
-/// by the v2 feed (`/api/v1/notification/`). Items are grouped Today /
-/// Earlier; tapping marks one read and opens what it's about; swiping left
-/// archives it.
+enum _Filter { all, invites, karma }
+
+/// Notifications (artifact Screen patterns → Notifications), backed by the
+/// v2 feed (`/api/v1/notification/`): a title with Mark all read, All /
+/// Invites / Karma, then FeedRows on cards grouped Today / Earlier. Tapping
+/// marks one read and opens what it's about; swiping left archives it.
 ///
-/// Loads on open, pull-to-refresh and scroll-to-end only — nothing polls.
+/// Loads on open, pull-to-refresh and scroll-to-end only; nothing polls.
 /// Opening the inbox also refreshes the unread badge once.
 class NotificationsScreen extends ConsumerStatefulWidget {
   const NotificationsScreen({super.key});
@@ -37,6 +36,14 @@ class NotificationsScreen extends ConsumerStatefulWidget {
 }
 
 class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
+  _Filter _filter = _Filter.all;
+
+  bool _matches(AppNotification n) => switch (_filter) {
+    _Filter.all => true,
+    _Filter.invites => (n.type ?? '').toUpperCase().contains('INVITE'),
+    _Filter.karma => n.category == 'KARMA',
+  };
+
   @override
   void initState() {
     super.initState();
@@ -61,13 +68,12 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
 
   void _open(AppNotification notification) {
     final controller = ref.read(notificationsControllerProvider.notifier);
-    unawaited(controller.markRead(notification.id).catchError((Object e) {
-      _toast(ApiException.messageFor(e), MuToastType.error);
-    }));
-    final target = notificationTarget(
-      notification,
-      dashboardBase: Uri.parse(FlavorConfig.instance.dashboardUrl),
+    unawaited(
+      controller.markRead(notification.id).catchError((Object e) {
+        _toast(ApiException.messageFor(e), MuToastType.error);
+      }),
     );
+    final target = notificationTarget(notification, dashboardBase: Uri.parse(FlavorConfig.instance.dashboardUrl));
     switch (target) {
       case AppRoute(:final location):
         if (RoutePaths.tabRoots.contains(location)) {
@@ -102,81 +108,120 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final mu = context.mu;
+    final c = mu.colors;
     final notificationsState = ref.watch(notificationsControllerProvider);
 
     return Scaffold(
-      backgroundColor: MuColors.canvas,
-      appBar: AppBar(
-        backgroundColor: MuColors.canvas,
-        title: Text('Notifications', style: MuType.headline),
-        actions: [
-          TextButton(
-            onPressed: _markAllRead,
-            child: Text(
-              'Mark all read',
-              style: MuType.bodyMed.copyWith(color: MuColors.primary),
-            ),
-          ),
-          const SizedBox(width: MuSpace.xs),
-        ],
-      ),
+      backgroundColor: c.chalk,
       body: SafeArea(
-        child: notificationsState.when(
-          skipError: true,
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, _) => ErrorRetryView(
-            error: error,
-            onRetry: () => ref.invalidate(notificationsControllerProvider),
-          ),
-          data: (paged) => RefreshIndicator(
-            onRefresh: _refresh,
-            child: paged.items.isEmpty
-                ? ListView(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    children: const [
-                      // The dashboard's notification list says "No notifications".
-                      MuStateDisplay(
-                        variant: MuStateVariant.noResults,
-                        title: 'No notifications',
-                        description: 'Notifications will show up here.',
-                      ),
-                    ],
-                  )
-                : NotificationListener<ScrollNotification>(
-                    onNotification: (n) {
-                      if (n.metrics.extentAfter < 400 && paged.hasMore && paged.loadMoreError == null) {
-                        unawaited(ref.read(notificationsControllerProvider.notifier).loadMore());
-                      }
-                      return false;
-                    },
-                    child: _InboxList(
-                      items: paged.items,
-                      footer: paged.hasMore || paged.loadMoreError != null
-                          ? MuLoadMoreFooter(
-                              isLoading: paged.isLoadingMore,
-                              error: paged.loadMoreError,
-                              onRetry: () => ref.read(notificationsControllerProvider.notifier).loadMore(),
-                            )
-                          : null,
-                      onOpen: _open,
-                      onArchive: _archive,
-                    ),
+        bottom: false,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(MuSpacing.space3, MuSpacing.space2, MuSpacing.space3, 0),
+              child: Row(
+                children: [
+                  MuIconButton(
+                    icon: LucideIcons.arrowLeft,
+                    tooltip: 'Back',
+                    onPressed: () => Navigator.of(context).maybePop(),
                   ),
-          ),
+                  const SizedBox(width: MuSpacing.space1),
+                  Expanded(
+                    child: Semantics(header: true, child: Text('Notifications', style: mu.text.title1)),
+                  ),
+                  MuButton(
+                    label: 'Mark all read',
+                    variant: MuButtonVariant.ghost,
+                    size: MuButtonSize.small,
+                    onPressed: _markAllRead,
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space3, MuSpacing.space5, 0),
+              child: MuSegmented<_Filter>(
+                values: _Filter.values,
+                selected: _filter,
+                label: (f) => switch (f) {
+                  _Filter.all => 'All',
+                  _Filter.invites => 'Invites',
+                  _Filter.karma => 'Karma',
+                },
+                onChanged: (f) => setState(() => _filter = f),
+              ),
+            ),
+            Expanded(
+              child: notificationsState.when(
+                skipError: true,
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (error, _) =>
+                    ErrorRetryView(error: error, onRetry: () => ref.invalidate(notificationsControllerProvider)),
+                data: (paged) {
+                  final items = paged.items.where(_matches).toList();
+                  return RefreshIndicator(
+                    color: c.cobalt,
+                    onRefresh: _refresh,
+                    child: items.isEmpty
+                        ? ListView(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            children: [
+                              // The dashboard's notification list says "No notifications".
+                              if (_filter == _Filter.all)
+                                const MuStateDisplay(
+                                  variant: MuStateVariant.noResults,
+                                  title: 'No notifications',
+                                  description: 'Notifications will show up here.',
+                                )
+                              else
+                                Padding(
+                                  padding: const EdgeInsets.all(MuSpacing.space8),
+                                  child: Text(
+                                    _filter == _Filter.invites ? 'No invites right now.' : 'No karma news yet.',
+                                    textAlign: TextAlign.center,
+                                    style: mu.text.body.copyWith(color: c.ink3),
+                                  ),
+                                ),
+                            ],
+                          )
+                        : NotificationListener<ScrollNotification>(
+                            onNotification: (n) {
+                              if (n.metrics.extentAfter < 400 && paged.hasMore && paged.loadMoreError == null) {
+                                unawaited(ref.read(notificationsControllerProvider.notifier).loadMore());
+                              }
+                              return false;
+                            },
+                            child: _InboxList(
+                              items: items,
+                              footer: paged.hasMore || paged.loadMoreError != null
+                                  ? MuLoadMoreFooter(
+                                      isLoading: paged.isLoadingMore,
+                                      error: paged.loadMoreError,
+                                      onRetry: () => ref.read(notificationsControllerProvider.notifier).loadMore(),
+                                    )
+                                  : null,
+                              onOpen: _open,
+                              onArchive: _archive,
+                            ),
+                          ),
+                  );
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-/// The feed as "Today" and "Earlier" sections (local dates), newest first.
+/// The feed as "Today" and "Earlier" groups (local dates), newest first,
+/// each a card of FeedRows.
 class _InboxList extends StatelessWidget {
-  const _InboxList({
-    required this.items,
-    required this.onOpen,
-    required this.onArchive,
-    this.footer,
-  });
+  const _InboxList({required this.items, required this.onOpen, required this.onArchive, this.footer});
 
   final List<AppNotification> items;
   final Widget? footer;
@@ -193,36 +238,67 @@ class _InboxList extends StatelessWidget {
 
     final today = items.where(isToday).toList();
     final earlier = items.where((n) => !isToday(n)).toList();
-    final rows = <Widget>[
-      if (today.isNotEmpty) const _SectionLabel('Today'),
-      for (final n in today) _row(n),
-      if (earlier.isNotEmpty) const _SectionLabel('Earlier'),
-      for (final n in earlier) _row(n),
-      ?footer,
-      const SizedBox(height: MuSpace.xl),
-    ];
+
+    Widget group(String title, List<AppNotification> list) => Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _SectionLabel(title),
+        MuFeedGroup(
+          children: [for (var i = 0; i < list.length; i++) _row(context, list[i], now, last: i == list.length - 1)],
+        ),
+      ],
+    );
+
     return ListView(
       physics: const AlwaysScrollableScrollPhysics(),
-      padding: const EdgeInsets.symmetric(vertical: MuSpace.s),
-      children: rows,
+      padding: const EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space2, MuSpacing.space5, MuSpacing.space8),
+      children: [
+        if (today.isNotEmpty) group('Today', today),
+        if (earlier.isNotEmpty) group('Earlier', earlier),
+        ?footer,
+      ],
     );
   }
 
-  Widget _row(AppNotification n) => Dismissible(
-        key: ValueKey('notification-${n.id}'),
-        direction: DismissDirection.endToStart,
-        background: Container(
-          alignment: Alignment.centerRight,
-          padding: const EdgeInsets.only(right: MuSpace.xl),
-          color: MuColors.hairline,
-          child: const Icon(LucideIcons.archive, color: MuColors.inkSecondary),
+  static (IconData, MuFeedTone) _look(AppNotification n) => switch (n.category) {
+    'KARMA' => (LucideIcons.zap, MuFeedTone.karma),
+    'EVENTS' => (LucideIcons.calendarDays, MuFeedTone.event),
+    'LC' => (LucideIcons.users, MuFeedTone.done),
+    _ => (LucideIcons.megaphone, MuFeedTone.neutral),
+  };
+
+  Widget _row(BuildContext context, AppNotification n, DateTime now, {required bool last}) {
+    final mu = context.mu;
+    final c = mu.colors;
+    final (icon, tone) = _look(n);
+    return Dismissible(
+      key: ValueKey('notification-${n.id}'),
+      direction: DismissDirection.endToStart,
+      background: Container(
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.only(right: MuSpacing.space5),
+        color: c.night,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(LucideIcons.archive, size: MuSizes.iconSm, color: c.onNight),
+            const SizedBox(width: MuSpacing.space2),
+            Text('Archive', style: mu.text.label.copyWith(color: c.onNight)),
+          ],
         ),
-        onDismissed: (_) => onArchive(n),
-        child: Semantics(
-          label: n.read ? null : 'Unread',
-          child: NotificationListTile(notification: n, onTap: () => onOpen(n)),
-        ),
-      );
+      ),
+      onDismissed: (_) => onArchive(n),
+      child: MuFeedRow(
+        leading: MuFeedIcon(icon, tone: tone),
+        subject: n.title,
+        body: n.description,
+        time: formatAgo(n.createdAt.toLocal(), now),
+        unread: !n.read,
+        divider: !last,
+        onTap: () => onOpen(n),
+      ),
+    );
+  }
 }
 
 class _SectionLabel extends StatelessWidget {
@@ -232,10 +308,10 @@ class _SectionLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.fromLTRB(MuSpace.screenH, MuSpace.m, MuSpace.screenH, MuSpace.xs),
-        child: Semantics(
-          header: true,
-          child: Text(text, style: MuType.caption.copyWith(color: MuColors.inkTertiary, fontWeight: FontWeight.w600)),
-        ),
-      );
+    padding: const EdgeInsets.fromLTRB(MuSpacing.space1, MuSpacing.space5, 0, MuSpacing.space2),
+    child: Semantics(
+      header: true,
+      child: Text(text, style: context.mu.text.label.copyWith(color: context.mu.colors.ink3)),
+    ),
+  );
 }

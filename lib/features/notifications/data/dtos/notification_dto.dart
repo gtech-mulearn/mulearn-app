@@ -28,16 +28,16 @@ abstract class NotificationDto with _$NotificationDto {
   factory NotificationDto.fromJson(Map<String, dynamic> json) => _$NotificationDtoFromJson(json);
 
   AppNotification toDomain() => AppNotification(
-        id: id,
-        title: title,
-        description: description,
-        isBroadcast: source == 'broadcast',
-        read: isRead,
-        createdAt: DateTime.parse(createdAt).toUtc(),
-        type: type,
-        category: category,
-        entityType: entityType,
-        entityId: entityId,
-        redirectUrl: redirectUrl,
-      );
+    id: id,
+    title: title,
+    description: description,
+    isBroadcast: source == 'broadcast',
+    read: isRead,
+    createdAt: DateTime.parse(createdAt).toUtc(),
+    type: type,
+    category: category,
+    entityType: entityType,
+    entityId: entityId,
+    redirectUrl: redirectUrl,
+  );
 }

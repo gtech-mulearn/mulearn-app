@@ -76,7 +76,7 @@ void main() {
   testWidgets('tapping marks it read and opens its circle', (tester) async {
     await pumpInbox(tester);
 
-    await tester.tap(find.text('Title t1'));
+    await tester.tap(find.textContaining('Title t1', findRichText: true));
     await tester.pumpAndSettle();
 
     expect(callsTo(adapter, 'PATCH', readPath('t1')), 1);
@@ -86,13 +86,13 @@ void main() {
   testWidgets('swiping archives with a toast', (tester) async {
     await pumpInbox(tester);
 
-    await tester.drag(find.text('Title t1'), const Offset(-600, 0));
+    await tester.drag(find.textContaining('Title t1', findRichText: true), const Offset(-600, 0));
     await tester.pumpAndSettle();
     await settleRequests(tester);
 
     expect(callsTo(adapter, 'PATCH', archivePath('t1')), 1);
     expect(find.text('Notification archived'), findsOneWidget);
-    expect(find.text('Title t1'), findsNothing);
+    expect(find.textContaining('Title t1', findRichText: true), findsNothing);
     await tester.pump(const Duration(seconds: 4)); // let the toast go
     await tester.pumpAndSettle();
   });

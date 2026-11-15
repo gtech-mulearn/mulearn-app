@@ -55,10 +55,9 @@ class NotificationsController extends _$NotificationsController {
       final page = await repository.getPage(next);
       if (!ref.mounted) return;
       _page = next;
-      state = AsyncData(PagedState(
-        items: mergeUniqueBy(current.items, page.items, (n) => n.id),
-        hasMore: page.hasNext,
-      ));
+      state = AsyncData(
+        PagedState(items: mergeUniqueBy(current.items, page.items, (n) => n.id), hasMore: page.hasNext),
+      );
     } on Object catch (e, st) {
       appLogger.w('Loading more notifications failed', error: e, stackTrace: st);
       if (!ref.mounted) return;
