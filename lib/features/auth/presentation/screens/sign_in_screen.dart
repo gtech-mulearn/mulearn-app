@@ -1,40 +1,26 @@
 import 'package:flutter/foundation.dart' show defaultTargetPlatform;
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
-import 'package:mulearn_app/core/theme/mu_space.dart';
-import 'package:mulearn_app/core/theme/mulearn_colors.dart';
-import 'package:mulearn_app/core/theme/mulearn_typography.dart';
-import 'package:mulearn_app/core/widgets/mu_buttons.dart';
 import 'package:mulearn_app/core/widgets/mu_logo.dart';
-import 'package:mulearn_app/core/widgets/mu_toast.dart';
 import 'package:mulearn_app/features/auth/domain/entities/social_sign_in_outcome.dart';
 import 'package:mulearn_app/features/auth/presentation/providers/auth_controller.dart';
 import 'package:mulearn_app/features/auth/presentation/providers/register_wizard_controller.dart';
 
-/// Email/MuID sign-in, matching the layout and copy of the reference
-/// `mulearn-dashboard` login screen: password sign-in with an OTP-login
-/// alternative, a forgot-password link, and native Google/Apple sign-in
-/// (token exchange with `/auth/google-mobile/` / `/auth/apple-mobile/` —
-/// confirmed real endpoints, distinct from the web-redirect flow the
-/// reference dashboard uses, which this app can't replicate without deep
-/// links).
+/// Sign in (artifact Screen patterns → Authentication): one column on
+/// `chalk`, "Welcome to μLearn", social sign-in first (Google in ink, Apple
+/// outlined on Apple platforms), an "or with email" hairline, filled
+/// fields, a blue Sign in, then Forgot password and a one-time-code path.
+/// The code arrives in six cells and signs in on the last digit.
 ///
-/// Visual treatment matches DESIGN_SPEC.md §2 "01 — Login": a soft two-orb
-/// blue/purple wash behind a centered brand mark, "Welcome back" headline,
-/// pill inputs/buttons, an "OR" divider, and outline OAuth pills — a static
-/// stand-in for the mock's CSS `drift`/`float` keyframe animations rather
-/// than a pixel-for-pixel port of them. None of the `_submitPassword` /
-/// `_submitOtpRequest` / `_submitOtpVerify` / `_signInWithGoogle` /
-/// `_signInWithApple` logic, the [authControllerProvider] calls, or the form
-/// validation rules below were touched — only the visual tree.
-///
-/// Navigation on successful sign-in is handled by the router redirect, not
-/// here.
+/// Logic is the dashboard login's: password, or OTP request then verify,
+/// plus native Google/Apple token exchange (`/auth/google-mobile/`,
+/// `/auth/apple-mobile/`). Navigation after sign-in is the router's.
 class SignInScreen extends ConsumerStatefulWidget {
   const SignInScreen({super.key});
 
@@ -49,14 +35,11 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
 
   final _passwordFormKey = GlobalKey<FormState>();
   final _otpRequestFormKey = GlobalKey<FormState>();
-  final _otpVerifyFormKey = GlobalKey<FormState>();
 
   final _emailOrMuidController = TextEditingController();
   final _passwordController = TextEditingController();
   final _otpEmailOrMuidController = TextEditingController();
   final _otpController = TextEditingController();
-
-  bool _obscure = true;
 
   @override
   void dispose() {
@@ -71,12 +54,14 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     if (!(_passwordFormKey.currentState?.validate() ?? false)) return;
     FocusScope.of(context).unfocus();
     try {
-      await ref.read(authControllerProvider.notifier).signInWithPassword(
+      await ref
+          .read(authControllerProvider.notifier)
+          .signInWithPassword(
             emailOrMuid: _emailOrMuidController.text.trim(),
             password: _passwordController.text,
           );
     } on Object catch (_) {
-      // Surfaced via the ref.listen snackbar below.
+      // Surfaced via the ref.listen toast below.
     }
   }
 
@@ -84,39 +69,55 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     if (!(_otpRequestFormKey.currentState?.validate() ?? false)) return;
     FocusScope.of(context).unfocus();
     try {
-      await ref.read(authControllerProvider.notifier).requestOtp(
-            emailOrMuid: _otpEmailOrMuidController.text.trim(),
-          );
+      await ref
+          .read(authControllerProvider.notifier)
+          .requestOtp(emailOrMuid: _otpEmailOrMuidController.text.trim());
       if (mounted) setState(() => _mode = _AuthMode.otpVerify);
     } on Object catch (_) {
-      // Surfaced via the ref.listen snackbar below.
+      // Surfaced via the ref.listen toast below.
     }
   }
 
-  Future<void> _submitOtpVerify() async {
-    if (!(_otpVerifyFormKey.currentState?.validate() ?? false)) return;
+  Future<void> _submitOtpVerify(String code) async {
+    if (code.trim().length < 6) return;
     FocusScope.of(context).unfocus();
     try {
-      await ref.read(authControllerProvider.notifier).signInWithOtp(
+      await ref
+          .read(authControllerProvider.notifier)
+          .signInWithOtp(
             emailOrMuid: _otpEmailOrMuidController.text.trim(),
-            otp: _otpController.text.trim(),
+            otp: code.trim(),
           );
     } on Object catch (_) {
-      // Surfaced via the ref.listen snackbar below.
+      // Surfaced via the ref.listen toast below; the code stays so it can
+      // be corrected.
     }
   }
 
-  void _switchMode(_AuthMode mode) => setState(() => _mode = mode);
+  void _switchMode(_AuthMode mode) {
+    HapticFeedback.selectionClick();
+    // Carry what was typed across: the same person, a different way in.
+    if (mode == _AuthMode.otpRequest &&
+        _otpEmailOrMuidController.text.isEmpty) {
+      _otpEmailOrMuidController.text = _emailOrMuidController.text;
+    }
+    if (mode == _AuthMode.otpVerify) _otpController.clear();
+    setState(() => _mode = mode);
+  }
 
   Future<void> _signInWithGoogle() async {
     final SocialSignInOutcome outcome;
     try {
-      outcome = await ref.read(authControllerProvider.notifier).signInWithGoogle();
+      outcome = await ref
+          .read(authControllerProvider.notifier)
+          .signInWithGoogle();
     } on Object catch (_) {
-      return; // Surfaced via the ref.listen snackbar below.
+      return; // Surfaced via the ref.listen toast below.
     }
     if (outcome is SocialNeedsRegistration && mounted) {
-      ref.read(registerWizardControllerProvider.notifier).setGoogleSignUp(
+      ref
+          .read(registerWizardControllerProvider.notifier)
+          .setGoogleSignUp(
             tempToken: outcome.tempToken,
             email: outcome.email,
             fullName: outcome.fullName,
@@ -129,35 +130,21 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     try {
       await ref.read(authControllerProvider.notifier).signInWithApple();
     } on AppleAccountNotFound {
-      if (mounted) await _showAppleAccountNotFound();
+      if (!mounted) return;
+      final create = await showMuConfirm(
+        context,
+        title: 'No account yet',
+        body:
+            "No μLearn account uses this Apple ID's email yet. Create an account with that email first, "
+            'then sign in with Apple.',
+        confirmLabel: 'Create account',
+        cancelLabel: 'Close',
+      );
+      if (create) _startSignUp();
     } on Object catch (_) {
-      // Surfaced via the ref.listen snackbar below.
+      // Surfaced via the ref.listen toast below.
     }
   }
-
-  Future<void> _showAppleAccountNotFound() => showDialog<void>(
-        context: context,
-        builder: (dialogContext) => AlertDialog(
-          title: const Text('No account yet'),
-          content: const Text(
-            "No μLearn account uses this Apple ID's email yet. Create an "
-            'account with that email first, then sign in with Apple.',
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(dialogContext).pop(),
-              child: const Text('Close'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(dialogContext).pop();
-                _startSignUp();
-              },
-              child: const Text('Create account'),
-            ),
-          ],
-        ),
-      );
 
   /// Normal (password) sign-up: drop any half-finished Google sign-up first.
   void _startSignUp() {
@@ -167,459 +154,334 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(authControllerProvider);
+    final mu = context.mu;
+    final c = mu.colors;
+    final loading = ref.watch(authControllerProvider).isLoading;
+    final showGoogle = ref
+        .watch(googleNativeSignInDataSourceProvider)
+        .isAvailable;
+    final showApple = defaultTargetPlatform == TargetPlatform.iOS;
 
     ref.listen(authControllerProvider, (_, next) {
-      // Apple's "no account" case gets its own dialog, not a toast.
-      if (next.hasError && !next.isLoading && next.error is! AppleAccountNotFound) {
-        final error = next.error;
-        final message = ApiException.messageFor(error!);
-        MuToast.show(context, message: message, type: MuToastType.error);
+      // Apple's "no account" case gets its own sheet, not a toast.
+      if (next.hasError &&
+          !next.isLoading &&
+          next.error is! AppleAccountNotFound) {
+        MuToast.show(
+          context,
+          message: ApiException.messageFor(next.error!),
+          type: MuToastType.error,
+        );
       }
     });
 
-    final isLoading = state.isLoading;
+    final (
+      String eyebrow,
+      String light,
+      String bold,
+      String lead,
+    ) = switch (_mode) {
+      _AuthMode.password => (
+        'Sign in',
+        'Welcome\nto ',
+        'μLearn',
+        'Pick up your karma where you left off.',
+      ),
+      _AuthMode.otpRequest => (
+        'Sign in with a code',
+        'One code, ',
+        'no password',
+        "Enter your email or muid and we'll send a 6-digit code.",
+      ),
+      _AuthMode.otpVerify => (
+        'Check your email',
+        'Enter ',
+        'your code',
+        'We sent a 6-digit code. It signs you in as soon as the last digit is in.',
+      ),
+    };
 
     return Scaffold(
-      backgroundColor: MuColors.canvas,
-      body: Stack(
-        children: [
-          const _AuthBackdrop(),
-          SafeArea(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 26, vertical: 32),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const Center(child: _BrandMark()),
-                  const SizedBox(height: 40),
-                  switch (_mode) {
-                    _AuthMode.password => _PasswordForm(
-                        formKey: _passwordFormKey,
-                        emailOrMuidController: _emailOrMuidController,
-                        passwordController: _passwordController,
-                        obscure: _obscure,
-                        isLoading: isLoading,
-                        onToggleObscure: () =>
-                            setState(() => _obscure = !_obscure),
-                        onForgotPassword: () =>
-                            context.push(RoutePaths.forgotPassword),
-                        onSwitchToOtp: () => _switchMode(_AuthMode.otpRequest),
-                        onSubmit: _submitPassword,
-                      ),
-                    _AuthMode.otpRequest => _OtpRequestForm(
-                        formKey: _otpRequestFormKey,
-                        emailOrMuidController: _otpEmailOrMuidController,
-                        isLoading: isLoading,
-                        onSwitchToPassword: () => _switchMode(_AuthMode.password),
-                        onSubmit: _submitOtpRequest,
-                      ),
-                    _AuthMode.otpVerify => _OtpVerifyForm(
-                        formKey: _otpVerifyFormKey,
-                        otpController: _otpController,
-                        isLoading: isLoading,
-                        onBack: () => _switchMode(_AuthMode.otpRequest),
-                        onSubmit: _submitOtpVerify,
-                      ),
-                  },
-                  if (_mode == _AuthMode.password) ...[
-                    const SizedBox(height: MuSpace.xl),
-                    _OrDivider(),
-                    const SizedBox(height: MuSpace.l),
-                    _SocialSignInButtons(
-                      isLoading: isLoading,
-                      showGoogle: ref.watch(googleNativeSignInDataSourceProvider).isAvailable,
-                      onGoogle: _signInWithGoogle,
-                      onApple: _signInWithApple,
-                    ),
-                    const SizedBox(height: MuSpace.xl),
-                    _SignUpFooter(
-                      onSignUp: _startSignUp,
-                    ),
-                  ],
-                ],
-              ),
-            ),
+      backgroundColor: c.chalk,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(
+            MuSpacing.space5,
+            MuSpacing.space3,
+            MuSpacing.space5,
+            MuSpacing.space8,
           ),
-        ],
-      ),
-    );
-  }
-}
-
-/// Soft two-orb wash behind the sign-in form — a static stand-in for the
-/// mock's `drift` keyframe background animation (DESIGN_SPEC.md §1
-/// "Animations"), not ported pixel-for-pixel.
-class _AuthBackdrop extends StatelessWidget {
-  const _AuthBackdrop();
-
-  @override
-  Widget build(BuildContext context) {
-    return Positioned.fill(
-      child: IgnorePointer(
-        child: ClipRect(
-          child: Stack(
-            children: [
-              Positioned(
-                top: -80,
-                left: -70,
-                child: _orb(MuColors.primary, 240, 0.16),
-              ),
-              Positioned(
-                bottom: -100,
-                right: -70,
-                child: _orb(MuColors.karmaAccent, 260, 0.14),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _orb(Color color, double size, double opacity) {
-    return Container(
-      height: size,
-      width: size,
-      decoration: BoxDecoration(shape: BoxShape.circle, color: color.withValues(alpha: opacity)),
-    );
-  }
-}
-
-class _PasswordForm extends StatelessWidget {
-  const _PasswordForm({
-    required this.formKey,
-    required this.emailOrMuidController,
-    required this.passwordController,
-    required this.obscure,
-    required this.isLoading,
-    required this.onToggleObscure,
-    required this.onForgotPassword,
-    required this.onSwitchToOtp,
-    required this.onSubmit,
-  });
-
-  final GlobalKey<FormState> formKey;
-  final TextEditingController emailOrMuidController;
-  final TextEditingController passwordController;
-  final bool obscure;
-  final bool isLoading;
-  final VoidCallback onToggleObscure;
-  final VoidCallback onForgotPassword;
-  final VoidCallback onSwitchToOtp;
-  final VoidCallback onSubmit;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text('Welcome back', style: MuType.display.copyWith(fontSize: 34)),
-        const SizedBox(height: MuSpace.s),
-        Text(
-          'Sign in to pick up your karma where you left off.',
-          style: MuType.body.copyWith(color: MuColors.inkSecondary),
-        ),
-        const SizedBox(height: MuSpace.xxl),
-        Form(
-          key: formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              TextFormField(
-                controller: emailOrMuidController,
-                textInputAction: TextInputAction.next,
-                enabled: !isLoading,
-                decoration: const InputDecoration(
-                  labelText: 'EMAIL OR MUID',
-                  hintText: 'you@college.edu',
-                ),
-                validator: (value) => (value?.trim().isEmpty ?? true)
-                    ? 'Enter your email or MuID to continue.'
-                    : null,
-              ),
-              const SizedBox(height: MuSpace.l),
-              TextFormField(
-                controller: passwordController,
-                obscureText: obscure,
-                textInputAction: TextInputAction.done,
-                enabled: !isLoading,
-                onFieldSubmitted: (_) => onSubmit(),
-                decoration: InputDecoration(
-                  labelText: 'PASSWORD',
-                  hintText: '••••••••',
-                  suffixIcon: IconButton(
-                    tooltip: obscure ? 'Show password' : 'Hide password',
-                    icon: Icon(
-                      obscure ? LucideIcons.eye : LucideIcons.eyeOff,
-                      color: MuColors.inkSecondary,
-                    ),
-                    onPressed: onToggleObscure,
-                  ),
-                ),
-                validator: (value) =>
-                    (value == null || value.isEmpty) ? 'Password is required.' : null,
-              ),
-              const SizedBox(height: MuSpace.m),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  TextButton(
-                    onPressed: isLoading ? null : onForgotPassword,
-                    style: TextButton.styleFrom(padding: EdgeInsets.zero),
-                    child: const Text('Forgot password?'),
-                  ),
-                  TextButton(
-                    onPressed: isLoading ? null : onSwitchToOtp,
-                    style: TextButton.styleFrom(padding: EdgeInsets.zero),
-                    child: const Text('Login with OTP'),
-                  ),
+                  if (_mode != _AuthMode.password)
+                    MuIconButton(
+                      icon: LucideIcons.arrowLeft,
+                      tooltip: 'Back',
+                      onPressed: loading
+                          ? null
+                          : () => _switchMode(
+                              _mode == _AuthMode.otpVerify
+                                  ? _AuthMode.otpRequest
+                                  : _AuthMode.password,
+                            ),
+                    )
+                  else
+                    const ExcludeSemantics(child: MuLogo.mark(size: 40)),
                 ],
               ),
-              const SizedBox(height: MuSpace.l),
-              MuPrimaryButton(
-                label: isLoading ? 'Signing you in…' : 'Sign in',
-                onPressed: isLoading ? null : onSubmit,
+              const SizedBox(height: MuSpacing.space6),
+              Text(
+                eyebrow.toUpperCase(),
+                style: mu.text.eyebrow.copyWith(color: c.ink3),
               ),
+              const SizedBox(height: MuSpacing.space2),
+              Semantics(
+                header: true,
+                child: Text.rich(
+                  TextSpan(
+                    children: [
+                      TextSpan(
+                        text: light,
+                        style: mu.text.displayLight.copyWith(fontSize: 40),
+                      ),
+                      TextSpan(
+                        text: bold,
+                        style: mu.text.display.copyWith(fontSize: 40),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: MuSpacing.space2),
+              Text(
+                lead,
+                style: mu.text.bodyLg.copyWith(fontSize: 16, color: c.ink2),
+              ),
+              const SizedBox(height: MuSpacing.space6),
+              ...switch (_mode) {
+                _AuthMode.password => [
+                  if (showGoogle) ...[
+                    MuButton(
+                      label: 'Continue with Google',
+                      icon: LucideIcons.chrome,
+                      variant: MuButtonVariant.ink,
+                      block: true,
+                      onPressed: loading ? null : _signInWithGoogle,
+                    ),
+                    const SizedBox(height: MuSpacing.space3),
+                  ],
+                  // Sign in with Apple has no native picker on Android.
+                  if (showApple) ...[
+                    MuButton(
+                      label: 'Continue with Apple',
+                      icon: LucideIcons.apple,
+                      variant: MuButtonVariant.outline,
+                      block: true,
+                      onPressed: loading ? null : _signInWithApple,
+                    ),
+                    const SizedBox(height: MuSpacing.space3),
+                  ],
+                  if (showGoogle || showApple) ...[
+                    const _OrDivider(),
+                    const SizedBox(height: MuSpacing.space4),
+                  ],
+                  Form(
+                    key: _passwordFormKey,
+                    child: AutofillGroup(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          MuTextField(
+                            label: 'Email or muid',
+                            hint: 'you@college.edu',
+                            controller: _emailOrMuidController,
+                            enabled: !loading,
+                            keyboardType: TextInputType.emailAddress,
+                            textInputAction: TextInputAction.next,
+                            autofillHints: const [
+                              AutofillHints.username,
+                              AutofillHints.email,
+                            ],
+                            validator: (v) => (v?.trim().isEmpty ?? true)
+                                ? 'Enter your email or muid to continue.'
+                                : null,
+                          ),
+                          const SizedBox(height: MuSpacing.space4),
+                          MuTextField(
+                            label: 'Password',
+                            controller: _passwordController,
+                            obscure: true,
+                            enabled: !loading,
+                            textInputAction: TextInputAction.done,
+                            autofillHints: const [AutofillHints.password],
+                            onSubmitted: (_) => _submitPassword(),
+                            validator: (v) => (v == null || v.isEmpty)
+                                ? 'Enter your password.'
+                                : null,
+                          ),
+                          const SizedBox(height: MuSpacing.space5),
+                          MuButton(
+                            label: 'Sign in',
+                            block: true,
+                            loading: loading,
+                            loadingLabel: 'Signing you in…',
+                            onPressed: _submitPassword,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: MuSpacing.space2),
+                  Wrap(
+                    alignment: WrapAlignment.spaceBetween,
+                    children: [
+                      MuButton(
+                        label: 'Forgot password',
+                        variant: MuButtonVariant.ghost,
+                        size: MuButtonSize.small,
+                        onPressed: loading
+                            ? null
+                            : () => context.push(RoutePaths.forgotPassword),
+                      ),
+                      MuButton(
+                        label: 'Use a code instead',
+                        variant: MuButtonVariant.ghost,
+                        size: MuButtonSize.small,
+                        onPressed: loading
+                            ? null
+                            : () => _switchMode(_AuthMode.otpRequest),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: MuSpacing.space6),
+                  _NewHere(onSignUp: loading ? null : _startSignUp),
+                ],
+                _AuthMode.otpRequest => [
+                  Form(
+                    key: _otpRequestFormKey,
+                    child: MuTextField(
+                      label: 'Email or muid',
+                      hint: 'you@college.edu',
+                      controller: _otpEmailOrMuidController,
+                      enabled: !loading,
+                      autofocus: _otpEmailOrMuidController.text.isEmpty,
+                      keyboardType: TextInputType.emailAddress,
+                      textInputAction: TextInputAction.send,
+                      onSubmitted: (_) => _submitOtpRequest(),
+                      validator: (v) => (v?.trim().isEmpty ?? true)
+                          ? 'Enter your email or muid to continue.'
+                          : null,
+                    ),
+                  ),
+                  const SizedBox(height: MuSpacing.space5),
+                  MuButton(
+                    label: 'Send code',
+                    block: true,
+                    loading: loading,
+                    loadingLabel: 'Sending…',
+                    onPressed: _submitOtpRequest,
+                  ),
+                  const SizedBox(height: MuSpacing.space2),
+                  Center(
+                    child: MuButton(
+                      label: 'Use my password',
+                      variant: MuButtonVariant.ghost,
+                      size: MuButtonSize.small,
+                      onPressed: loading
+                          ? null
+                          : () => _switchMode(_AuthMode.password),
+                    ),
+                  ),
+                ],
+                _AuthMode.otpVerify => [
+                  MuOtpField(
+                    label:
+                        'Code sent to ${_otpEmailOrMuidController.text.trim()}',
+                    controller: _otpController,
+                    enabled: !loading,
+                    onCompleted: _submitOtpVerify,
+                  ),
+                  const SizedBox(height: MuSpacing.space5),
+                  if (loading)
+                    const Center(
+                      child: MuDotsLoader(label: 'Checking your code…'),
+                    )
+                  else
+                    MuButton(
+                      label: 'Verify and sign in',
+                      block: true,
+                      onPressed: () => _submitOtpVerify(_otpController.text),
+                    ),
+                  const SizedBox(height: MuSpacing.space2),
+                  Center(
+                    child: MuButton(
+                      label: 'Send a new code',
+                      variant: MuButtonVariant.ghost,
+                      size: MuButtonSize.small,
+                      onPressed: loading ? null : _submitOtpRequest,
+                    ),
+                  ),
+                ],
+              },
             ],
           ),
         ),
-      ],
+      ),
     );
   }
 }
 
-class _OtpRequestForm extends StatelessWidget {
-  const _OtpRequestForm({
-    required this.formKey,
-    required this.emailOrMuidController,
-    required this.isLoading,
-    required this.onSwitchToPassword,
-    required this.onSubmit,
-  });
-
-  final GlobalKey<FormState> formKey;
-  final TextEditingController emailOrMuidController;
-  final bool isLoading;
-  final VoidCallback onSwitchToPassword;
-  final VoidCallback onSubmit;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text('Login with OTP', style: MuType.display.copyWith(fontSize: 30)),
-        const SizedBox(height: MuSpace.s),
-        Text(
-          'Enter your email or MuID and we’ll send a 6-digit code.',
-          style: MuType.body.copyWith(color: MuColors.inkSecondary),
-        ),
-        const SizedBox(height: MuSpace.xxl),
-        Form(
-          key: formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              TextFormField(
-                controller: emailOrMuidController,
-                textInputAction: TextInputAction.done,
-                enabled: !isLoading,
-                onFieldSubmitted: (_) => onSubmit(),
-                decoration: const InputDecoration(
-                  labelText: 'EMAIL OR MUID',
-                  hintText: 'you@college.edu',
-                ),
-                validator: (value) => (value?.trim().isEmpty ?? true)
-                    ? 'Enter your email or MuID to continue.'
-                    : null,
-              ),
-              const SizedBox(height: MuSpace.s),
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: isLoading ? null : onSwitchToPassword,
-                  style: TextButton.styleFrom(padding: EdgeInsets.zero),
-                  child: const Text('Use password'),
-                ),
-              ),
-              const SizedBox(height: MuSpace.s),
-              MuPrimaryButton(
-                label: isLoading ? 'Sending…' : 'Send code',
-                onPressed: isLoading ? null : onSubmit,
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _OtpVerifyForm extends StatelessWidget {
-  const _OtpVerifyForm({
-    required this.formKey,
-    required this.otpController,
-    required this.isLoading,
-    required this.onBack,
-    required this.onSubmit,
-  });
-
-  final GlobalKey<FormState> formKey;
-  final TextEditingController otpController;
-  final bool isLoading;
-  final VoidCallback onBack;
-  final VoidCallback onSubmit;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        TextButton.icon(
-          onPressed: isLoading ? null : onBack,
-          style: TextButton.styleFrom(
-            padding: EdgeInsets.zero,
-            alignment: Alignment.centerLeft,
-          ),
-          icon: const Icon(LucideIcons.arrowLeft, size: 18),
-          label: const Text('Back'),
-        ),
-        const SizedBox(height: MuSpace.s),
-        Text('Enter your code', style: MuType.display.copyWith(fontSize: 30)),
-        const SizedBox(height: MuSpace.s),
-        Text(
-          "We've sent a 6-digit code to your email. Enter it below to continue.",
-          style: MuType.body.copyWith(color: MuColors.inkSecondary),
-        ),
-        const SizedBox(height: MuSpace.xxl),
-        Form(
-          key: formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              TextFormField(
-                controller: otpController,
-                keyboardType: TextInputType.number,
-                textInputAction: TextInputAction.done,
-                enabled: !isLoading,
-                onFieldSubmitted: (_) => onSubmit(),
-                decoration: const InputDecoration(
-                  labelText: '6-DIGIT CODE',
-                  hintText: '000000',
-                ),
-                validator: (value) => (value?.trim().isEmpty ?? true)
-                    ? 'Enter all six digits of your code.'
-                    : null,
-              ),
-              const SizedBox(height: MuSpace.l),
-              MuPrimaryButton(
-                label: isLoading ? 'Verifying…' : 'Verify & continue',
-                onPressed: isLoading ? null : onSubmit,
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
+/// "or with email" between two hairlines.
 class _OrDivider extends StatelessWidget {
+  const _OrDivider();
+
   @override
   Widget build(BuildContext context) {
+    final mu = context.mu;
+    final c = mu.colors;
     return Row(
       children: [
-        const Expanded(child: Divider()),
+        Expanded(child: Container(height: 1, color: c.line)),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: MuSpace.m),
-          child: Text('OR', style: MuType.caption),
+          padding: const EdgeInsets.symmetric(horizontal: MuSpacing.space3),
+          child: Text(
+            'or with email',
+            style: mu.text.caption.copyWith(color: c.ink3),
+          ),
         ),
-        const Expanded(child: Divider()),
+        Expanded(child: Container(height: 1, color: c.line)),
       ],
     );
   }
 }
 
-class _SocialSignInButtons extends StatelessWidget {
-  const _SocialSignInButtons({
-    required this.isLoading,
-    required this.showGoogle,
-    required this.onGoogle,
-    required this.onApple,
-  });
+/// "New to μLearn? Create an account".
+class _NewHere extends StatelessWidget {
+  const _NewHere({required this.onSignUp});
 
-  final bool isLoading;
-
-  /// False where native Google sign-in can't return an ID token (Android
-  /// without a server client id) — the button is hidden, not left to fail.
-  final bool showGoogle;
-  final VoidCallback onGoogle;
-  final VoidCallback onApple;
+  final VoidCallback? onSignUp;
 
   @override
   Widget build(BuildContext context) {
-    final showApple = defaultTargetPlatform == TargetPlatform.iOS;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
+    final mu = context.mu;
+    return Wrap(
+      alignment: WrapAlignment.center,
+      crossAxisAlignment: WrapCrossAlignment.center,
       children: [
-        if (showGoogle)
-          MuGhostButton(
-            label: 'Continue with Google',
-            icon: LucideIcons.chrome,
-            onPressed: isLoading ? null : onGoogle,
-          ),
-        // Sign in with Apple is an Apple-platform-only affordance — Android
-        // has no native Apple ID picker, so the button is never shown there.
-        if (showApple) ...[
-          if (showGoogle) const SizedBox(height: MuSpace.m),
-          MuGhostButton(
-            label: 'Continue with Apple',
-            icon: LucideIcons.apple,
-            onPressed: isLoading ? null : onApple,
-          ),
-        ],
+        Text(
+          'New to μLearn?',
+          style: mu.text.body.copyWith(color: mu.colors.ink2),
+        ),
+        MuButton(
+          label: 'Create an account',
+          variant: MuButtonVariant.ghost,
+          size: MuButtonSize.small,
+          onPressed: onSignUp,
+        ),
       ],
     );
-  }
-}
-
-class _SignUpFooter extends StatelessWidget {
-  const _SignUpFooter({required this.onSignUp});
-
-  final VoidCallback onSignUp;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: RichText(
-        text: TextSpan(
-          style: MuType.body.copyWith(color: MuColors.inkSecondary),
-          children: [
-            const TextSpan(text: "Don't have an account? "),
-            TextSpan(
-              text: 'Sign up',
-              style: const TextStyle(
-                color: MuColors.primary,
-                fontWeight: FontWeight.w600,
-              ),
-              recognizer: TapGestureRecognizer()..onTap = onSignUp,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-/// 74×74 rounded-square primary tile + wordmark + caption, matching
-/// DESIGN_SPEC.md §2 "01 — Login" logo block.
-class _BrandMark extends StatelessWidget {
-  const _BrandMark();
-
-  @override
-  Widget build(BuildContext context) {
-    // The dashboard's login logo (public/logo.webp, tagline included).
-    return const MuLogo.wordmark(height: 64);
   }
 }

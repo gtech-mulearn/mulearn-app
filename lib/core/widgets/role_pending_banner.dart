@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:mulearn_app/core/design_system/theme/mu_theme.dart';
 import 'package:mulearn_app/core/session/workspace_access.dart';
 import 'package:mulearn_app/core/theme/mu_radius.dart';
 import 'package:mulearn_app/core/theme/mu_space.dart';
-import 'package:mulearn_app/core/theme/mulearn_colors.dart';
-import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 
 /// "`<Role>` account pending verification" — the dashboard's
 /// VerificationStatusBanner copy (Mentor and Enabler verbatim; the same
@@ -23,16 +22,22 @@ class RolePendingBanner extends StatelessWidget {
         width: double.infinity,
         padding: const EdgeInsets.all(MuSpace.m),
         decoration: BoxDecoration(
-          color: MuColors.warningBg,
+          color: context.mu.colors.warningTint,
           borderRadius: BorderRadius.circular(MuRadius.inner),
-          border: Border.all(color: MuColors.warningFill.withValues(alpha: 0.3)),
+          border: Border.all(
+            color: context.mu.colors.warning.withValues(alpha: 0.3),
+          ),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Padding(
-              padding: EdgeInsets.only(top: 2),
-              child: Icon(LucideIcons.alertCircle, size: 18, color: MuColors.warning),
+            Padding(
+              padding: const EdgeInsets.only(top: 2),
+              child: Icon(
+                LucideIcons.alertCircle,
+                size: 18,
+                color: context.mu.colors.warning,
+              ),
             ),
             const SizedBox(width: MuSpace.s),
             Expanded(
@@ -41,13 +46,18 @@ class RolePendingBanner extends StatelessWidget {
                 children: [
                   Text(
                     '$role account pending verification',
-                    style: MuType.body.copyWith(color: MuColors.warning, fontWeight: FontWeight.w600),
+                    style: context.mu.text.body.copyWith(
+                      color: context.mu.colors.warning,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     'Your ${role.toLowerCase()} profile is awaiting admin approval. '
                     'You will be notified once your account is verified.',
-                    style: MuType.body.copyWith(color: MuColors.warning),
+                    style: context.mu.text.body.copyWith(
+                      color: context.mu.colors.warning,
+                    ),
                   ),
                 ],
               ),

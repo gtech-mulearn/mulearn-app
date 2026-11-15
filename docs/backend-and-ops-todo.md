@@ -71,3 +71,8 @@ Work the app needs but can't do itself: this round changes no backend, authserve
 
 Resolved:
 - (was 6) A password changed through `/dashboard/profile/change-password/` does sign in through the authserver — verified live 2026-11-13 (Plan 3, Task 3).
+
+## Deferred to a later release
+
+- **Nearby events (EventMap).** Offline events on a map with venue pins and a ticket card that rises from the bottom (artifact EventMap). Not in this release. Needs: (1) `venue_lat` / `venue_lng` on events (or geocoding on save); today events carry only `venue_address`, `venue_city` and `venue_maps_url`; (2) approval for a map package, `flutter_map` with an OpenStreetMap-compatible tile provider (suggested) or `google_maps_flutter`. Location permission is asked only when the person taps "Show events near me".
+- **Continue as guest.** A button on sign-in that opens the public parts of the app without an account.

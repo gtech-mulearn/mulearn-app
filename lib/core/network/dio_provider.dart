@@ -13,19 +13,19 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'dio_provider.g.dart';
 
 BaseOptions _baseOptions() => BaseOptions(
-      baseUrl: FlavorConfig.instance.apiBaseUrl,
-      connectTimeout: const Duration(seconds: 20),
-      receiveTimeout: const Duration(seconds: 20),
-      contentType: Headers.jsonContentType,
-      // Envelope handling / error mapping is done in ApiEnvelope + ApiException,
-      // so let Dio surface non-2xx as DioException as usual.
-    );
+  baseUrl: FlavorConfig.instance.apiBaseUrl,
+  connectTimeout: const Duration(seconds: 20),
+  receiveTimeout: const Duration(seconds: 20),
+  contentType: Headers.jsonContentType,
+  // Envelope handling / error mapping is done in ApiEnvelope + ApiException,
+  // so let Dio surface non-2xx as DioException as usual.
+);
 
 Interceptor _logInterceptor() => LogInterceptor(
-      requestHeader: false,
-      responseHeader: false,
-      logPrint: appLogger.d,
-    );
+  requestHeader: false,
+  responseHeader: false,
+  logPrint: appLogger.d,
+);
 
 /// Bare Dio used only for the token-refresh call and for retrying a request
 /// after refresh — deliberately WITHOUT the auth interceptor, so refreshing
@@ -37,6 +37,10 @@ Dio refreshDio(Ref ref) {
   return dio;
 }
 
+/// The user the HTTP cache is keyed for ([CacheScope]); one per app.
+@Riverpod(keepAlive: true)
+CacheScope cacheScope(Ref ref) => CacheScope();
+
 /// The app's main Dio client.
 ///
 /// Interceptor order matters (rules.md §3): the cache scope tags the request
@@ -46,10 +50,11 @@ Dio refreshDio(Ref ref) {
 Dio dio(Ref ref) {
   final dio = Dio(_baseOptions());
   final store = ref.watch(cacheStoreProvider);
+  final scope = ref.watch(cacheScopeProvider);
 
   dio.interceptors
-    ..add(CacheScopeInterceptor(ref.watch(tokenStorageProvider)))
-    ..add(DioCacheInterceptor(options: CacheConfig.base(store)));
+    ..add(CacheScopeInterceptor(ref.watch(tokenStorageProvider), scope))
+    ..add(DioCacheInterceptor(options: CacheConfig.base(store, scope)));
   dio.interceptors.add(
     AuthInterceptor(
       refreshDio: ref.watch(refreshDioProvider),

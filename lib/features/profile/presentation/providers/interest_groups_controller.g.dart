@@ -12,7 +12,7 @@ part of 'interest_groups_controller.dart';
 /// user's own membership list embedded in [UserProfile].
 
 @ProviderFor(interestGroupsList)
-const interestGroupsListProvider = InterestGroupsListProvider._();
+final interestGroupsListProvider = InterestGroupsListProvider._();
 
 /// The full interest-group catalog for the group picker — distinct from the
 /// user's own membership list embedded in [UserProfile].
@@ -29,7 +29,7 @@ final class InterestGroupsListProvider
         $FutureProvider<List<InterestGroupListItem>> {
   /// The full interest-group catalog for the group picker — distinct from the
   /// user's own membership list embedded in [UserProfile].
-  const InterestGroupsListProvider._()
+  InterestGroupsListProvider._()
     : super(
         from: null,
         argument: null,
@@ -62,7 +62,7 @@ String _$interestGroupsListHash() =>
 /// so the sidebar reflects the change.
 
 @ProviderFor(InterestGroupsEditController)
-const interestGroupsEditControllerProvider =
+final interestGroupsEditControllerProvider =
     InterestGroupsEditControllerProvider._();
 
 /// Saves the user's chosen interest groups, then refreshes the main profile
@@ -71,7 +71,7 @@ final class InterestGroupsEditControllerProvider
     extends $AsyncNotifierProvider<InterestGroupsEditController, void> {
   /// Saves the user's chosen interest groups, then refreshes the main profile
   /// so the sidebar reflects the change.
-  const InterestGroupsEditControllerProvider._()
+  InterestGroupsEditControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -100,8 +100,7 @@ abstract class _$InterestGroupsEditController extends $AsyncNotifier<void> {
   FutureOr<void> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<void>, void>;
     final element =
         ref.element
@@ -111,6 +110,6 @@ abstract class _$InterestGroupsEditController extends $AsyncNotifier<void> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, null);
+    return element.handleCreate(ref, build);
   }
 }

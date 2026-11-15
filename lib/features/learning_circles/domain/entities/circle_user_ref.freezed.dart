@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'circle_user_ref.dart';
@@ -9,6 +9,7 @@ part of 'circle_user_ref.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $CircleUserRefCopyWith<CircleUserRef> get copyWith => _$CircleUserRefCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CircleUserRef&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.id, id) || other.id == id)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.profilePicUrl, profilePicUrl) || other.profilePicUrl == profilePicUrl));
+  final _this = this as CircleUserRef;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CircleUserRef&&(identical(other.fullName, _this.fullName) || other.fullName == _this.fullName)&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.muid, _this.muid) || other.muid == _this.muid)&&(identical(other.profilePicUrl, _this.profilePicUrl) || other.profilePicUrl == _this.profilePicUrl));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,fullName,id,muid,profilePicUrl);
+int get hashCode {
+  final _this = this as CircleUserRef;
+  return Object.hash(runtimeType,_this.fullName,_this.id,_this.muid,_this.profilePicUrl);
+}
 
 @override
 String toString() {
-  return 'CircleUserRef(fullName: $fullName, id: $id, muid: $muid, profilePicUrl: $profilePicUrl)';
+  final _this = this as CircleUserRef;
+  return 'CircleUserRef(fullName: ${_this.fullName}, id: ${_this.id}, muid: ${_this.muid}, profilePicUrl: ${_this.profilePicUrl})';
 }
 
 
@@ -63,7 +69,7 @@ class _$CircleUserRefCopyWithImpl<$Res>
 /// Create a copy of CircleUserRef
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? fullName = null,Object? id = freezed,Object? muid = freezed,Object? profilePicUrl = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(CircleUserRef(
 fullName: null == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
 as String,id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,muid: freezed == muid ? _self.muid : muid // ignore: cast_nullable_to_non_nullable
@@ -227,16 +233,18 @@ _$CircleUserRefCopyWith<_CircleUserRef> get copyWith => __$CircleUserRefCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CircleUserRef&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.id, id) || other.id == id)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.profilePicUrl, profilePicUrl) || other.profilePicUrl == profilePicUrl));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CircleUserRef&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.id, id) || other.id == id)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.profilePicUrl, profilePicUrl) || other.profilePicUrl == profilePicUrl));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,fullName,id,muid,profilePicUrl);
+int get hashCode {
+    return Object.hash(runtimeType,fullName,id,muid,profilePicUrl);
+}
 
 @override
 String toString() {
-  return 'CircleUserRef(fullName: $fullName, id: $id, muid: $muid, profilePicUrl: $profilePicUrl)';
+    return 'CircleUserRef(fullName: $fullName, id: $id, muid: $muid, profilePicUrl: $profilePicUrl)';
 }
 
 

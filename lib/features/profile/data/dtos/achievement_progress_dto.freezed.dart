@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'achievement_progress_dto.dart';
@@ -9,6 +9,7 @@ part of 'achievement_progress_dto.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $AchievementProgressDtoCopyWith<AchievementProgressDto> get copyWith => _$Achiev
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AchievementProgressDto&&(identical(other.achievementId, achievementId) || other.achievementId == achievementId)&&(identical(other.achievementName, achievementName) || other.achievementName == achievementName)&&(identical(other.eligible, eligible) || other.eligible == eligible)&&(identical(other.claimed, claimed) || other.claimed == claimed)&&(identical(other.reason, reason) || other.reason == reason)&&const DeepCollectionEquality().equals(other.progress, progress));
+  final _this = this as AchievementProgressDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AchievementProgressDto&&(identical(other.achievementId, _this.achievementId) || other.achievementId == _this.achievementId)&&(identical(other.achievementName, _this.achievementName) || other.achievementName == _this.achievementName)&&(identical(other.eligible, _this.eligible) || other.eligible == _this.eligible)&&(identical(other.claimed, _this.claimed) || other.claimed == _this.claimed)&&(identical(other.reason, _this.reason) || other.reason == _this.reason)&&const DeepCollectionEquality().equals(other.progress, _this.progress));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,achievementId,achievementName,eligible,claimed,reason,const DeepCollectionEquality().hash(progress));
+int get hashCode {
+  final _this = this as AchievementProgressDto;
+  return Object.hash(runtimeType,_this.achievementId,_this.achievementName,_this.eligible,_this.claimed,_this.reason,const DeepCollectionEquality().hash(_this.progress));
+}
 
 @override
 String toString() {
-  return 'AchievementProgressDto(achievementId: $achievementId, achievementName: $achievementName, eligible: $eligible, claimed: $claimed, reason: $reason, progress: $progress)';
+  final _this = this as AchievementProgressDto;
+  return 'AchievementProgressDto(achievementId: ${_this.achievementId}, achievementName: ${_this.achievementName}, eligible: ${_this.eligible}, claimed: ${_this.claimed}, reason: ${_this.reason}, progress: ${_this.progress})';
 }
 
 
@@ -66,7 +72,7 @@ class _$AchievementProgressDtoCopyWithImpl<$Res>
 /// Create a copy of AchievementProgressDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? achievementId = null,Object? achievementName = null,Object? eligible = null,Object? claimed = null,Object? reason = freezed,Object? progress = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(AchievementProgressDto(
 achievementId: null == achievementId ? _self.achievementId : achievementId // ignore: cast_nullable_to_non_nullable
 as String,achievementName: null == achievementName ? _self.achievementName : achievementName // ignore: cast_nullable_to_non_nullable
 as String,eligible: null == eligible ? _self.eligible : eligible // ignore: cast_nullable_to_non_nullable
@@ -214,7 +220,7 @@ return $default(_that.achievementId,_that.achievementName,_that.eligible,_that.c
 @JsonSerializable()
 
 class _AchievementProgressDto extends AchievementProgressDto {
-  const _AchievementProgressDto({required this.achievementId, this.achievementName = '', this.eligible = false, this.claimed = false, this.reason, final  Map<String, dynamic>? progress}): _progress = progress,super._();
+  const _AchievementProgressDto({required this.achievementId, this.achievementName = '', this.eligible = false, this.claimed = false, this.reason,  Map<String, dynamic>? progress}): _progress = progress,super._();
   factory _AchievementProgressDto.fromJson(Map<String, dynamic> json) => _$AchievementProgressDtoFromJson(json);
 
 @override final  String achievementId;
@@ -245,16 +251,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AchievementProgressDto&&(identical(other.achievementId, achievementId) || other.achievementId == achievementId)&&(identical(other.achievementName, achievementName) || other.achievementName == achievementName)&&(identical(other.eligible, eligible) || other.eligible == eligible)&&(identical(other.claimed, claimed) || other.claimed == claimed)&&(identical(other.reason, reason) || other.reason == reason)&&const DeepCollectionEquality().equals(other._progress, _progress));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _AchievementProgressDto&&(identical(other.achievementId, achievementId) || other.achievementId == achievementId)&&(identical(other.achievementName, achievementName) || other.achievementName == achievementName)&&(identical(other.eligible, eligible) || other.eligible == eligible)&&(identical(other.claimed, claimed) || other.claimed == claimed)&&(identical(other.reason, reason) || other.reason == reason)&&const DeepCollectionEquality().equals(other.progress, _progress));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,achievementId,achievementName,eligible,claimed,reason,const DeepCollectionEquality().hash(_progress));
+int get hashCode {
+    return Object.hash(runtimeType,achievementId,achievementName,eligible,claimed,reason,const DeepCollectionEquality().hash(_progress));
+}
 
 @override
 String toString() {
-  return 'AchievementProgressDto(achievementId: $achievementId, achievementName: $achievementName, eligible: $eligible, claimed: $claimed, reason: $reason, progress: $progress)';
+    return 'AchievementProgressDto(achievementId: $achievementId, achievementName: $achievementName, eligible: $eligible, claimed: $claimed, reason: $reason, progress: $progress)';
 }
 
 

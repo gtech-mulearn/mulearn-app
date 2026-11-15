@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:mulearn_app/core/design_system/feedback/mu_toast.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/theme/mu_space.dart';
@@ -13,7 +14,6 @@ import 'package:mulearn_app/core/utils/date_format.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/core/widgets/mu_buttons.dart';
 import 'package:mulearn_app/core/widgets/mu_card.dart';
-import 'package:mulearn_app/core/widgets/mu_toast.dart';
 import 'package:mulearn_app/features/mentor/domain/entities/mentor_session.dart';
 import 'package:mulearn_app/features/mentor/domain/entities/session_draft.dart';
 import 'package:mulearn_app/features/mentor/domain/entities/session_enums.dart';
@@ -39,34 +39,52 @@ class SessionFormScreen extends ConsumerWidget {
         title: Text(id == null ? 'New session' : 'Edit session'),
       ),
       body: id == null
-          ? ref.watch(sessionTargetsProvider).when(
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (e, _) => ErrorRetryView(error: e, onRetry: () => ref.invalidate(sessionTargetsProvider)),
-                data: (targets) {
-                  // Wait for who the mentor acts as (its scope is the
-                  // default); a failure just means no default.
-                  final persona = ref.watch(personaControllerProvider);
-                  if (persona.isLoading && !persona.hasValue) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                  final acting = persona.value;
-                  return _SessionForm(
-                    targets: targets,
-                    preferredEntityId: acting != null && acting.isMentor ? acting.scopeId : null,
-                  );
-                },
-              )
-          : ref.watch(mentorSessionProvider(id)).when(
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (e, _) => ErrorRetryView(error: e, onRetry: () => ref.invalidate(mentorSessionProvider(id))),
-                data: (session) => _SessionForm(editing: session),
-              ),
+          ? ref
+                .watch(sessionTargetsProvider)
+                .when(
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
+                  error: (e, _) => ErrorRetryView(
+                    error: e,
+                    onRetry: () => ref.invalidate(sessionTargetsProvider),
+                  ),
+                  data: (targets) {
+                    // Wait for who the mentor acts as (its scope is the
+                    // default); a failure just means no default.
+                    final persona = ref.watch(personaControllerProvider);
+                    if (persona.isLoading && !persona.hasValue) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    final acting = persona.value;
+                    return _SessionForm(
+                      targets: targets,
+                      preferredEntityId: acting != null && acting.isMentor
+                          ? acting.scopeId
+                          : null,
+                    );
+                  },
+                )
+          : ref
+                .watch(mentorSessionProvider(id))
+                .when(
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
+                  error: (e, _) => ErrorRetryView(
+                    error: e,
+                    onRetry: () => ref.invalidate(mentorSessionProvider(id)),
+                  ),
+                  data: (session) => _SessionForm(editing: session),
+                ),
     );
   }
 }
 
 class _SessionForm extends ConsumerStatefulWidget {
-  const _SessionForm({this.targets = const [], this.editing, this.preferredEntityId});
+  const _SessionForm({
+    this.targets = const [],
+    this.editing,
+    this.preferredEntityId,
+  });
 
   final List<SessionTarget> targets;
   final MentorSession? editing;
@@ -98,7 +116,11 @@ class _SessionFormState extends ConsumerState<_SessionForm> {
     final s = widget.editing;
     if (s != null) {
       _draft = SessionDraft(
-        target: SessionTarget(type: s.type, entityId: s.entityId, label: s.entityName),
+        target: SessionTarget(
+          type: s.type,
+          entityId: s.entityId,
+          label: s.entityName,
+        ),
         title: s.title,
         description: s.description,
         mode: s.mode == SessionMode.unknown ? SessionMode.online : s.mode,
@@ -112,7 +134,10 @@ class _SessionFormState extends ConsumerState<_SessionForm> {
       final now = ref.read(clockProvider)().toLocal();
       final starts = DateTime(now.year, now.month, now.day + 1, 10);
       _draft = SessionDraft(
-        target: widget.targets.where((t) => t.entityId == widget.preferredEntityId).firstOrNull ??
+        target:
+            widget.targets
+                .where((t) => t.entityId == widget.preferredEntityId)
+                .firstOrNull ??
             (widget.targets.length == 1 ? widget.targets.single : null),
         title: '',
         description: '',
@@ -140,16 +165,17 @@ class _SessionFormState extends ConsumerState<_SessionForm> {
   }
 
   SessionDraft _current() => _draft.copyWith(
-        title: _title.text,
-        description: _description.text,
-        meetingLink: _link.text,
-        venue: _venue.text,
-        maxParticipants: int.tryParse(_max.text.trim()),
-        recurrenceInterval: int.tryParse(_interval.text.trim())?.clamp(1, 365) ?? 1,
-      );
+    title: _title.text,
+    description: _description.text,
+    meetingLink: _link.text,
+    venue: _venue.text,
+    maxParticipants: int.tryParse(_max.text.trim()),
+    recurrenceInterval: int.tryParse(_interval.text.trim())?.clamp(1, 365) ?? 1,
+  );
 
   Future<void> _pickDateTime({required bool start}) async {
-    final initial = (start ? _draft.startsLocal : _draft.endsLocal) ?? DateTime.now();
+    final initial =
+        (start ? _draft.startsLocal : _draft.endsLocal) ?? DateTime.now();
     final date = await showDatePicker(
       context: context,
       initialDate: initial,
@@ -157,15 +183,28 @@ class _SessionFormState extends ConsumerState<_SessionForm> {
       lastDate: DateTime(initial.year + 2),
     );
     if (date == null || !mounted) return;
-    final time = await showTimePicker(context: context, initialTime: TimeOfDay.fromDateTime(initial));
+    final time = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.fromDateTime(initial),
+    );
     if (time == null || !mounted) return;
-    final picked = DateTime(date.year, date.month, date.day, time.hour, time.minute);
+    final picked = DateTime(
+      date.year,
+      date.month,
+      date.day,
+      time.hour,
+      time.minute,
+    );
     setState(() {
       if (start) {
-        final length = (_draft.endsLocal ?? picked).difference(_draft.startsLocal ?? picked);
+        final length = (_draft.endsLocal ?? picked).difference(
+          _draft.startsLocal ?? picked,
+        );
         _draft = _draft.copyWith(
           startsLocal: picked,
-          endsLocal: length.isNegative || length == Duration.zero ? picked.add(const Duration(hours: 1)) : picked.add(length),
+          endsLocal: length.isNegative || length == Duration.zero
+              ? picked.add(const Duration(hours: 1))
+              : picked.add(length),
         );
       } else {
         _draft = _draft.copyWith(endsLocal: picked);
@@ -194,8 +233,14 @@ class _SessionFormState extends ConsumerState<_SessionForm> {
       if (editing != null) {
         final message = await actions.update(editing.id, draft);
         if (!mounted) return;
-        MuToast.show(context, message: message.isEmpty ? 'Session updated' : message, type: MuToastType.success);
-        context.canPop() ? context.pop() : context.go(RoutePaths.mentorSessionDetailPath(editing.id));
+        MuToast.show(
+          context,
+          message: message.isEmpty ? 'Session updated' : message,
+          type: MuToastType.success,
+        );
+        context.canPop()
+            ? context.pop()
+            : context.go(RoutePaths.mentorSessionDetailPath(editing.id));
         return;
       }
       final created = await actions.create(draft);
@@ -207,7 +252,9 @@ class _SessionFormState extends ConsumerState<_SessionForm> {
       );
       // Show what was just created, in place of the form.
       if (created.id.isEmpty) {
-        context.canPop() ? context.pop() : context.go(RoutePaths.mentorSessions);
+        context.canPop()
+            ? context.pop()
+            : context.go(RoutePaths.mentorSessions);
       } else {
         context.pushReplacement(RoutePaths.mentorSessionDetailPath(created.id));
       }
@@ -216,7 +263,10 @@ class _SessionFormState extends ConsumerState<_SessionForm> {
       setState(() {
         _busy = false;
         if (e is ApiException && e.fieldErrors.isNotEmpty) {
-          _fieldErrors = {for (final f in e.fieldErrors.entries) f.key: f.value.firstOrNull ?? ''};
+          _fieldErrors = {
+            for (final f in e.fieldErrors.entries)
+              f.key: f.value.firstOrNull ?? '',
+          };
           // A field this form doesn't show (recurrence_*, non_field_errors,
           // …) still has to reach the mentor, under the form.
           final hidden = [
@@ -233,7 +283,14 @@ class _SessionFormState extends ConsumerState<_SessionForm> {
 
   /// Backend fields that have a place under an input on this form.
   static const _shownFields = {
-    'entity_id', 'title', 'description', 'meeting_link', 'venue', 'starts_at', 'ends_at', 'max_participants', //
+    'entity_id',
+    'title',
+    'description',
+    'meeting_link',
+    'venue',
+    'starts_at',
+    'ends_at',
+    'max_participants', //
   };
 
   /// A field's error: the backend's for that field, else the local one.
@@ -243,7 +300,8 @@ class _SessionFormState extends ConsumerState<_SessionForm> {
     return switch ((field, _formError)) {
       ('title', 'Title is required.') => _formError,
       ('venue', 'Venue is required for a hybrid session.') => _formError,
-      ('meeting_link', 'Meeting link is required for a hybrid session.') => _formError,
+      ('meeting_link', 'Meeting link is required for a hybrid session.') =>
+        _formError,
       _ => null,
     };
   }
@@ -251,7 +309,9 @@ class _SessionFormState extends ConsumerState<_SessionForm> {
   String? get _generalError {
     final e = _formError;
     if (e == null) return null;
-    return ['title', 'venue', 'meeting_link'].any((f) => _errorFor(f) == e) ? null : e;
+    return ['title', 'venue', 'meeting_link'].any((f) => _errorFor(f) == e)
+        ? null
+        : e;
   }
 
   @override
@@ -259,7 +319,12 @@ class _SessionFormState extends ConsumerState<_SessionForm> {
     final noTarget = !_isEdit && widget.targets.isEmpty;
     final mode = _draft.mode;
     return ListView(
-      padding: const EdgeInsets.fromLTRB(MuSpace.screenH, MuSpace.m, MuSpace.screenH, MuSpace.xxl),
+      padding: const EdgeInsets.fromLTRB(
+        MuSpace.screenH,
+        MuSpace.m,
+        MuSpace.screenH,
+        MuSpace.xxl,
+      ),
       children: [
         if (noTarget)
           MuCard(
@@ -283,24 +348,37 @@ class _SessionFormState extends ConsumerState<_SessionForm> {
           DropdownButtonFormField<SessionTarget>(
             initialValue: _draft.target,
             isExpanded: true,
-            decoration: InputDecoration(labelText: 'Where', errorText: _fieldErrors['entity_id']),
+            decoration: InputDecoration(
+              labelText: 'Where',
+              errorText: _fieldErrors['entity_id'],
+            ),
             items: [
               for (final t in widget.targets)
-                DropdownMenuItem(value: t, child: Text(t.label, overflow: TextOverflow.ellipsis)),
+                DropdownMenuItem(
+                  value: t,
+                  child: Text(t.label, overflow: TextOverflow.ellipsis),
+                ),
             ],
-            onChanged: (t) => setState(() => _draft = _draft.copyWith(target: t)),
+            onChanged: (t) =>
+                setState(() => _draft = _draft.copyWith(target: t)),
           ),
         const SizedBox(height: MuSpace.m),
         TextFormField(
           controller: _title,
-          decoration: InputDecoration(labelText: 'Title', errorText: _errorFor('title')),
+          decoration: InputDecoration(
+            labelText: 'Title',
+            errorText: _errorFor('title'),
+          ),
           textCapitalization: TextCapitalization.sentences,
           textInputAction: TextInputAction.next,
         ),
         const SizedBox(height: MuSpace.m),
         TextFormField(
           controller: _description,
-          decoration: InputDecoration(labelText: 'Description', errorText: _fieldErrors['description']),
+          decoration: InputDecoration(
+            labelText: 'Description',
+            errorText: _fieldErrors['description'],
+          ),
           minLines: 2,
           maxLines: 5,
         ),
@@ -312,7 +390,8 @@ class _SessionFormState extends ConsumerState<_SessionForm> {
             ButtonSegment(value: SessionMode.hybrid, label: Text('Hybrid')),
           ],
           selected: {mode},
-          onSelectionChanged: (s) => setState(() => _draft = _draft.copyWith(mode: s.first)),
+          onSelectionChanged: (s) =>
+              setState(() => _draft = _draft.copyWith(mode: s.first)),
         ),
         const SizedBox(height: MuSpace.m),
         if (mode != SessionMode.offline)
@@ -325,8 +404,12 @@ class _SessionFormState extends ConsumerState<_SessionForm> {
                 tooltip: 'Paste link',
                 icon: const Icon(LucideIcons.clipboardPaste, size: 18),
                 onPressed: () async {
-                  final text = (await Clipboard.getData(Clipboard.kTextPlain))?.text?.trim();
-                  if (text != null && text.isNotEmpty && mounted) setState(() => _link.text = text);
+                  final text = (await Clipboard.getData(
+                    Clipboard.kTextPlain,
+                  ))?.text?.trim();
+                  if (text != null && text.isNotEmpty && mounted) {
+                    setState(() => _link.text = text);
+                  }
                 },
               ),
             ),
@@ -336,18 +419,25 @@ class _SessionFormState extends ConsumerState<_SessionForm> {
           const SizedBox(height: MuSpace.m),
           TextFormField(
             controller: _venue,
-            decoration: InputDecoration(labelText: 'Venue', errorText: _errorFor('venue')),
+            decoration: InputDecoration(
+              labelText: 'Venue',
+              errorText: _errorFor('venue'),
+            ),
           ),
         ],
         const SizedBox(height: MuSpace.m),
         _PickerRow(
           label: 'Starts',
-          value: _draft.startsLocal == null ? 'Pick' : formatDayTime(_draft.startsLocal!),
+          value: _draft.startsLocal == null
+              ? 'Pick'
+              : formatDayTime(_draft.startsLocal!),
           onTap: () => _pickDateTime(start: true),
         ),
         _PickerRow(
           label: 'Ends',
-          value: _draft.endsLocal == null ? 'Pick' : formatDayTime(_draft.endsLocal!),
+          value: _draft.endsLocal == null
+              ? 'Pick'
+              : formatDayTime(_draft.endsLocal!),
           onTap: () => _pickDateTime(start: false),
           error: _fieldErrors['ends_at'] ?? _fieldErrors['starts_at'],
         ),
@@ -355,56 +445,88 @@ class _SessionFormState extends ConsumerState<_SessionForm> {
           const SizedBox(height: MuSpace.m),
           TextFormField(
             controller: _max,
-            decoration: InputDecoration(labelText: 'Max participants (optional)', errorText: _fieldErrors['max_participants']),
+            decoration: InputDecoration(
+              labelText: 'Max participants (optional)',
+              errorText: _fieldErrors['max_participants'],
+            ),
             keyboardType: TextInputType.number,
           ),
           SwitchListTile(
             contentPadding: EdgeInsets.zero,
             title: const Text('Repeats'),
             value: _draft.isRecurring,
-            onChanged: (v) => setState(() => _draft = _draft.copyWith(isRecurring: v)),
+            onChanged: (v) =>
+                setState(() => _draft = _draft.copyWith(isRecurring: v)),
           ),
           if (_draft.isRecurring) ...[
             SegmentedButton<RecurrenceType>(
               emptySelectionAllowed: true,
               segments: const [
-                ButtonSegment(value: RecurrenceType.daily, label: Text('Daily')),
-                ButtonSegment(value: RecurrenceType.weekly, label: Text('Weekly')),
-                ButtonSegment(value: RecurrenceType.monthly, label: Text('Monthly')),
+                ButtonSegment(
+                  value: RecurrenceType.daily,
+                  label: Text('Daily'),
+                ),
+                ButtonSegment(
+                  value: RecurrenceType.weekly,
+                  label: Text('Weekly'),
+                ),
+                ButtonSegment(
+                  value: RecurrenceType.monthly,
+                  label: Text('Monthly'),
+                ),
               ],
-              selected: {if (_draft.recurrenceType != null) _draft.recurrenceType!},
-              onSelectionChanged: (s) => setState(() => _draft = _draft.copyWith(recurrenceType: s.firstOrNull)),
+              selected: {
+                if (_draft.recurrenceType != null) _draft.recurrenceType!,
+              },
+              onSelectionChanged: (s) => setState(
+                () => _draft = _draft.copyWith(recurrenceType: s.firstOrNull),
+              ),
             ),
             const SizedBox(height: MuSpace.m),
             TextFormField(
               controller: _interval,
-              decoration: const InputDecoration(labelText: 'Every (1 = each time)'),
+              decoration: const InputDecoration(
+                labelText: 'Every (1 = each time)',
+              ),
               keyboardType: TextInputType.number,
             ),
             _PickerRow(
               label: 'Until',
-              value: _draft.recurrenceEndDate == null ? 'Pick a date' : formatDay(_draft.recurrenceEndDate!),
+              value: _draft.recurrenceEndDate == null
+                  ? 'Pick a date'
+                  : formatDay(_draft.recurrenceEndDate!),
               onTap: () async {
                 final starts = _draft.startsLocal ?? DateTime.now();
                 final date = await showDatePicker(
                   context: context,
-                  initialDate: _draft.recurrenceEndDate ?? starts.add(const Duration(days: 28)),
+                  initialDate:
+                      _draft.recurrenceEndDate ??
+                      starts.add(const Duration(days: 28)),
                   // The backend needs the end after the first session's day.
                   firstDate: starts.add(const Duration(days: 1)),
                   lastDate: DateTime(starts.year + 2),
                 );
-                if (date != null && mounted) setState(() => _draft = _draft.copyWith(recurrenceEndDate: date));
+                if (date != null && mounted) {
+                  setState(
+                    () => _draft = _draft.copyWith(recurrenceEndDate: date),
+                  );
+                }
               },
             ),
           ],
         ],
         if (_generalError != null) ...[
           const SizedBox(height: MuSpace.m),
-          Text(_generalError!, style: MuType.body.copyWith(color: MuColors.error)),
+          Text(
+            _generalError!,
+            style: MuType.body.copyWith(color: MuColors.error),
+          ),
         ],
         const SizedBox(height: MuSpace.xl),
         MuPrimaryButton(
-          label: _busy ? 'Please wait…' : (_isEdit ? 'Save changes' : 'Create session'),
+          label: _busy
+              ? 'Please wait…'
+              : (_isEdit ? 'Save changes' : 'Create session'),
           onPressed: _busy || noTarget ? null : _submit,
         ),
       ],
@@ -413,7 +535,12 @@ class _SessionFormState extends ConsumerState<_SessionForm> {
 }
 
 class _PickerRow extends StatelessWidget {
-  const _PickerRow({required this.label, required this.value, required this.onTap, this.error});
+  const _PickerRow({
+    required this.label,
+    required this.value,
+    required this.onTap,
+    this.error,
+  });
 
   final String label;
   final String value;
@@ -422,18 +549,23 @@ class _PickerRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListTile(
-        contentPadding: EdgeInsets.zero,
-        title: Text(label, style: MuType.caption),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(value, style: MuType.bodyMed),
-            if (error != null) Text(error!, style: MuType.caption.copyWith(color: MuColors.error)),
-          ],
-        ),
-        trailing: const Icon(LucideIcons.chevronRight, size: 18, color: MuColors.inkSecondary),
-        onTap: onTap,
-      );
+    contentPadding: EdgeInsets.zero,
+    title: Text(label, style: MuType.caption),
+    subtitle: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(value, style: MuType.bodyMed),
+        if (error != null)
+          Text(error!, style: MuType.caption.copyWith(color: MuColors.error)),
+      ],
+    ),
+    trailing: const Icon(
+      LucideIcons.chevronRight,
+      size: 18,
+      color: MuColors.inkSecondary,
+    ),
+    onTap: onTap,
+  );
 }
 
 class _ReadOnlyRow extends StatelessWidget {
@@ -444,10 +576,10 @@ class _ReadOnlyRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(label, style: MuType.caption),
-          Text(value, style: MuType.bodyMed),
-        ],
-      );
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(label, style: MuType.caption),
+      Text(value, style: MuType.bodyMed),
+    ],
+  );
 }

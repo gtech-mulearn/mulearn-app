@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'event_organizer_dto.dart';
@@ -9,6 +9,7 @@ part of 'event_organizer_dto.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $EventOrganizerDtoCopyWith<EventOrganizerDto> get copyWith => _$EventOrganizerDt
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EventOrganizerDto&&(identical(other.organiserType, organiserType) || other.organiserType == organiserType)&&(identical(other.organiserIg, organiserIg) || other.organiserIg == organiserIg)&&(identical(other.organiserCampus, organiserCampus) || other.organiserCampus == organiserCampus)&&(identical(other.organiserCompany, organiserCompany) || other.organiserCompany == organiserCompany)&&(identical(other.organiserCiId, organiserCiId) || other.organiserCiId == organiserCiId));
+  final _this = this as EventOrganizerDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EventOrganizerDto&&(identical(other.organiserType, _this.organiserType) || other.organiserType == _this.organiserType)&&(identical(other.organiserIg, _this.organiserIg) || other.organiserIg == _this.organiserIg)&&(identical(other.organiserCampus, _this.organiserCampus) || other.organiserCampus == _this.organiserCampus)&&(identical(other.organiserCompany, _this.organiserCompany) || other.organiserCompany == _this.organiserCompany)&&(identical(other.organiserCiId, _this.organiserCiId) || other.organiserCiId == _this.organiserCiId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,organiserType,organiserIg,organiserCampus,organiserCompany,organiserCiId);
+int get hashCode {
+  final _this = this as EventOrganizerDto;
+  return Object.hash(runtimeType,_this.organiserType,_this.organiserIg,_this.organiserCampus,_this.organiserCompany,_this.organiserCiId);
+}
 
 @override
 String toString() {
-  return 'EventOrganizerDto(organiserType: $organiserType, organiserIg: $organiserIg, organiserCampus: $organiserCampus, organiserCompany: $organiserCompany, organiserCiId: $organiserCiId)';
+  final _this = this as EventOrganizerDto;
+  return 'EventOrganizerDto(organiserType: ${_this.organiserType}, organiserIg: ${_this.organiserIg}, organiserCampus: ${_this.organiserCampus}, organiserCompany: ${_this.organiserCompany}, organiserCiId: ${_this.organiserCiId})';
 }
 
 
@@ -66,7 +72,7 @@ class _$EventOrganizerDtoCopyWithImpl<$Res>
 /// Create a copy of EventOrganizerDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? organiserType = null,Object? organiserIg = freezed,Object? organiserCampus = freezed,Object? organiserCompany = freezed,Object? organiserCiId = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(EventOrganizerDto(
 organiserType: null == organiserType ? _self.organiserType : organiserType // ignore: cast_nullable_to_non_nullable
 as String,organiserIg: freezed == organiserIg ? _self.organiserIg : organiserIg // ignore: cast_nullable_to_non_nullable
 as EventOrganizerIgDto?,organiserCampus: freezed == organiserCampus ? _self.organiserCampus : organiserCampus // ignore: cast_nullable_to_non_nullable
@@ -271,16 +277,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EventOrganizerDto&&(identical(other.organiserType, organiserType) || other.organiserType == organiserType)&&(identical(other.organiserIg, organiserIg) || other.organiserIg == organiserIg)&&(identical(other.organiserCampus, organiserCampus) || other.organiserCampus == organiserCampus)&&(identical(other.organiserCompany, organiserCompany) || other.organiserCompany == organiserCompany)&&(identical(other.organiserCiId, organiserCiId) || other.organiserCiId == organiserCiId));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _EventOrganizerDto&&(identical(other.organiserType, organiserType) || other.organiserType == organiserType)&&(identical(other.organiserIg, organiserIg) || other.organiserIg == organiserIg)&&(identical(other.organiserCampus, organiserCampus) || other.organiserCampus == organiserCampus)&&(identical(other.organiserCompany, organiserCompany) || other.organiserCompany == organiserCompany)&&(identical(other.organiserCiId, organiserCiId) || other.organiserCiId == organiserCiId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,organiserType,organiserIg,organiserCampus,organiserCompany,organiserCiId);
+int get hashCode {
+    return Object.hash(runtimeType,organiserType,organiserIg,organiserCampus,organiserCompany,organiserCiId);
+}
 
 @override
 String toString() {
-  return 'EventOrganizerDto(organiserType: $organiserType, organiserIg: $organiserIg, organiserCampus: $organiserCampus, organiserCompany: $organiserCompany, organiserCiId: $organiserCiId)';
+    return 'EventOrganizerDto(organiserType: $organiserType, organiserIg: $organiserIg, organiserCampus: $organiserCampus, organiserCompany: $organiserCompany, organiserCiId: $organiserCiId)';
 }
 
 

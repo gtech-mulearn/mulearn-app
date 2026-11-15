@@ -1,0 +1,661 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/user/search/?search=&pageIndex=1&perPage=30",
+    "account": "qa-student",
+    "status": 200,
+    "recorded_at": "2026-11-15T16:11:52.657Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "data": [
+        {
+          "id": "30782573-2c43-40d8-bdd9-3cd38e30fde0",
+          "full_name": "onthmurali",
+          "muid": "onthmurali@mulearn",
+          "interest_groups": [],
+          "organizations": [],
+          "profile_pic": null,
+          "karma": "15700"
+        },
+        {
+          "id": "be7d9ff0-90da-4da7-a892-554eb370b17b",
+          "full_name": "afif shoufeer",
+          "muid": "afifshoufeer@mulearn",
+          "interest_groups": [],
+          "organizations": [
+            {
+              "id": "ad3a3793-d780-4ec1-b03e-fac92e0faa0d",
+              "title": "St. Josephs Colege of Engineering and Technology",
+              "code": "SJC",
+              "org_type": "College"
+            }
+          ],
+          "profile_pic": null,
+          "karma": "0"
+        },
+        {
+          "id": "6b18a0a4-61ba-4a18-92af-540a33166eb2",
+          "full_name": "Aiswarya Pillai",
+          "muid": "aiswaryapillai@mulearn",
+          "interest_groups": [
+            {
+              "id": "9a21bbd3-860a-4743-8379-54a0f5984f27",
+              "name": "Generative AI"
+            },
+            {
+              "id": "22ac542c-c849-428e-a91c-77e6b4c2c1aa",
+              "name": "Ui Ux"
+            },
+            {
+              "id": "1502f6f1-6c84-4ef9-980f-8f984c056088",
+              "name": "Comics"
+            }
+          ],
+          "organizations": [
+            {
+              "id": "ad3a3793-d780-4ec1-b03e-fac92e0faa0d",
+              "title": "St. Josephs Colege of Engineering and Technology",
+              "code": "SJC",
+              "org_type": "College"
+            }
+          ],
+          "profile_pic": null,
+          "karma": "0"
+        },
+        {
+          "id": "7580336f-0198-4d8b-b015-ad64f2a4abb1",
+          "full_name": "Fathima Rahman",
+          "muid": "fathimarahman@mulearn",
+          "interest_groups": [
+            {
+              "id": "22ac542c-c849-428e-a91c-77e6b4c2c1aa",
+              "name": "Ui Ux"
+            },
+            {
+              "id": "ffaf6426-5e79-4fcf-ba3d-8d45891ac694",
+              "name": "Creative Design"
+            },
+            {
+              "id": "4ff0a5e5-d1ef-44dd-ac13-9a2f9e7717e3",
+              "name": "Web Development"
+            }
+          ],
+          "organizations": [
+            {
+              "id": "ad3a3793-d780-4ec1-b03e-fac92e0faa0d",
+              "title": "St. Josephs Colege of Engineering and Technology",
+              "code": "SJC",
+              "org_type": "College"
+            }
+          ],
+          "profile_pic": null,
+          "karma": "0"
+        },
+        {
+          "id": "77d83f99-bf37-11f1-9f2a-062e965e7537",
+          "full_name": "Dev Admin",
+          "muid": "admin@mulearn",
+          "interest_groups": [
+            {
+              "id": "22ac542c-c849-428e-a91c-77e6b4c2c1aa",
+              "name": "Ui Ux"
+            },
+            {
+              "id": "61cc75ba-319e-4825-9072-a38230c40ece",
+              "name": "MuV"
+            },
+            {
+              "id": "1502f6f1-6c84-4ef9-980f-8f984c056088",
+              "name": "Comics"
+            }
+          ],
+          "organizations": [
+            {
+              "id": "ad3a3793-d780-4ec1-b03e-fac92e0faa0d",
+              "title": "St. Josephs Colege of Engineering and Technology",
+              "code": "SJC",
+              "org_type": "College"
+            }
+          ],
+          "profile_pic": "https://dev.mulearn.org/muback-media/user/profile/77d83f99-bf37-11f1-9f2a-062e965e7537.png",
+          "karma": "0"
+        },
+        {
+          "id": "88087ac2-1be8-4ccb-b091-56d4dab6bb46",
+          "full_name": "Pranav P",
+          "muid": "pranavp@mulearn",
+          "interest_groups": [],
+          "organizations": [
+            {
+              "id": "ad3a3793-d780-4ec1-b03e-fac92e0faa0d",
+              "title": "St. Josephs Colege of Engineering and Technology",
+              "code": "SJC",
+              "org_type": "College"
+            }
+          ],
+          "profile_pic": null,
+          "karma": "0"
+        },
+        {
+          "id": "8bd46276-a5b5-44cb-bcd6-35074b6d8d9c",
+          "full_name": "Awin",
+          "muid": "awin@mulearn",
+          "interest_groups": [],
+          "organizations": [
+            {
+              "id": "4812dd67-ad93-4ac0-8472-1b9718f48cd8",
+              "title": "Base",
+              "code": "6345967b5b0d",
+              "org_type": "Company"
+            }
+          ],
+          "profile_pic": null,
+          "karma": "0"
+        },
+        {
+          "id": "a1865006-6d7a-482c-8a66-e76663e3ec49",
+          "full_name": "QA Mentor One",
+          "muid": "qamentorone@mulearn",
+          "interest_groups": [
+            {
+              "id": "4ff0a5e5-d1ef-44dd-ac13-9a2f9e7717e3",
+              "name": "Web Development"
+            }
+          ],
+          "organizations": [],
+          "profile_pic": null,
+          "karma": "0"
+        },
+        {
+          "id": "aa6ca0dc-529e-4aa5-ad50-d3361289220e",
+          "full_name": "Aditya Menon",
+          "muid": "adityamenon@mulearn",
+          "interest_groups": [
+            {
+              "id": "4ff0a5e5-d1ef-44dd-ac13-9a2f9e7717e3",
+              "name": "Web Development"
+            },
+            {
+              "id": "662370ae-bfa6-41c6-8962-60a3476f8143",
+              "name": "Data Structures and Algorithm"
+            },
+            {
+              "id": "b434ea03-908f-4078-8d02-26ebc3575d36",
+              "name": "AI"
+            }
+          ],
+          "organizations": [
+            {
+              "id": "ad3a3793-d780-4ec1-b03e-fac92e0faa0d",
+              "title": "St. Josephs Colege of Engineering and Technology",
+              "code": "SJC",
+              "org_type": "College"
+            }
+          ],
+          "profile_pic": null,
+          "karma": "0"
+        },
+        {
+          "id": "0115efaa-c563-4131-ac75-df7351d7a32a",
+          "full_name": "Ananya Krishnan",
+          "muid": "ananyakrishnan@mulearn",
+          "interest_groups": [
+            {
+              "id": "d1d734b9-b374-46c4-8bff-e3a9b081715c",
+              "name": "Project Management"
+            },
+            {
+              "id": "72cd26ef-f8ff-4680-8ed2-786a10f16a13",
+              "name": "Human Resources"
+            },
+            {
+              "id": "42c929a0-b308-4540-bb29-d73a92843f22",
+              "name": "Strategic Leadership"
+            }
+          ],
+          "organizations": [
+            {
+              "id": "ad3a3793-d780-4ec1-b03e-fac92e0faa0d",
+              "title": "St. Josephs Colege of Engineering and Technology",
+              "code": "SJC",
+              "org_type": "College"
+            }
+          ],
+          "profile_pic": null,
+          "karma": "0"
+        },
+        {
+          "id": "c0d283ea-35a7-40eb-83e5-e42aa61a22ef",
+          "full_name": "Rohit Varghese",
+          "muid": "rohitvarghese@mulearn",
+          "interest_groups": [
+            {
+              "id": "6897a65c-7e4b-4412-90b6-3a08ef2255f2",
+              "name": "Game Dev"
+            },
+            {
+              "id": "069325d2-a5a4-47fe-a5cc-e16569a9ea08",
+              "name": "Civil"
+            },
+            {
+              "id": "e506c2f8-8cee-4a88-8728-7d43b7365d1d",
+              "name": "Blender"
+            }
+          ],
+          "organizations": [
+            {
+              "id": "ad3a3793-d780-4ec1-b03e-fac92e0faa0d",
+              "title": "St. Josephs Colege of Engineering and Technology",
+              "code": "SJC",
+              "org_type": "College"
+            }
+          ],
+          "profile_pic": null,
+          "karma": "0"
+        },
+        {
+          "id": "c40cfd09-a94d-4109-ae29-7429e65b8d44",
+          "full_name": "Arjun Nair",
+          "muid": "arjunnair@mulearn",
+          "interest_groups": [
+            {
+              "id": "c55ff174-cbac-4eeb-a4f1-a0b676c20903",
+              "name": "Internet Of Things (IOT) And Robotics"
+            },
+            {
+              "id": "b434ea03-908f-4078-8d02-26ebc3575d36",
+              "name": "AI"
+            },
+            {
+              "id": "c746528b-cf5c-4330-8c0e-8c4727a10b0e",
+              "name": "Space"
+            }
+          ],
+          "organizations": [
+            {
+              "id": "ad3a3793-d780-4ec1-b03e-fac92e0faa0d",
+              "title": "St. Josephs Colege of Engineering and Technology",
+              "code": "SJC",
+              "org_type": "College"
+            }
+          ],
+          "profile_pic": null,
+          "karma": "0"
+        },
+        {
+          "id": "c5c572cf-fc53-455b-aa45-2783b3914dbc",
+          "full_name": "Arya Shibu",
+          "muid": "aryashibu@mulearn",
+          "interest_groups": [],
+          "organizations": [
+            {
+              "id": "ad3a3793-d780-4ec1-b03e-fac92e0faa0d",
+              "title": "St. Josephs Colege of Engineering and Technology",
+              "code": "SJC",
+              "org_type": "College"
+            }
+          ],
+          "profile_pic": null,
+          "karma": "0"
+        },
+        {
+          "id": "c89fb033-0ec1-4c67-9b6b-911636e4fa2e",
+          "full_name": "Alvin Dennis",
+          "muid": "alvindennis@mulearn",
+          "interest_groups": [],
+          "organizations": [
+            {
+              "id": "ad3a3793-d780-4ec1-b03e-fac92e0faa0d",
+              "title": "St. Josephs Colege of Engineering and Technology",
+              "code": "SJC",
+              "org_type": "College"
+            }
+          ],
+          "profile_pic": null,
+          "karma": "0"
+        },
+        {
+          "id": "cad19166-50b4-4de7-a3f3-e88c28748dc4",
+          "full_name": "erzer",
+          "muid": "erzer@mulearn",
+          "interest_groups": [],
+          "organizations": [],
+          "profile_pic": null,
+          "karma": "0"
+        },
+        {
+          "id": "e8323f58-e608-41c6-bc19-e969955b6878",
+          "full_name": "Sanjay",
+          "muid": "sanjay@mulearn",
+          "interest_groups": [],
+          "organizations": [],
+          "profile_pic": null,
+          "karma": "0"
+        },
+        {
+          "id": "f6276ea2-3cd0-4087-bc09-1288968edda5",
+          "full_name": "Devika Suresh",
+          "muid": "devikasuresh@mulearn",
+          "interest_groups": [
+            {
+              "id": "f8f8e361-a1ee-4ed2-9c4f-1daba9150f48",
+              "name": "Data Analytics"
+            },
+            {
+              "id": "662370ae-bfa6-41c6-8962-60a3476f8143",
+              "name": "Data Structures and Algorithm"
+            },
+            {
+              "id": "4ff0a5e5-d1ef-44dd-ac13-9a2f9e7717e3",
+              "name": "Web Development"
+            }
+          ],
+          "organizations": [
+            {
+              "id": "ad3a3793-d780-4ec1-b03e-fac92e0faa0d",
+              "title": "St. Josephs Colege of Engineering and Technology",
+              "code": "SJC",
+              "org_type": "College"
+            }
+          ],
+          "profile_pic": null,
+          "karma": "0"
+        },
+        {
+          "id": "f67beaee-73f4-45e6-a290-709999f7e58e",
+          "full_name": "QA Campus Lead One",
+          "muid": "qacampusleadone@mulearn",
+          "interest_groups": [
+            {
+              "id": "662370ae-bfa6-41c6-8962-60a3476f8143",
+              "name": "Data Structures and Algorithm"
+            },
+            {
+              "id": "4ff0a5e5-d1ef-44dd-ac13-9a2f9e7717e3",
+              "name": "Web Development"
+            }
+          ],
+          "organizations": [
+            {
+              "id": "ad3a3793-d780-4ec1-b03e-fac92e0faa0d",
+              "title": "St. Josephs Colege of Engineering and Technology",
+              "code": "SJC",
+              "org_type": "College"
+            }
+          ],
+          "profile_pic": null,
+          "karma": "0"
+        },
+        {
+          "id": "479c668d-c066-4a43-81d2-0520f6afcc5e",
+          "full_name": "Abhishek George",
+          "muid": "abhishekgeorge@mulearn",
+          "interest_groups": [
+            {
+              "id": "61cc75ba-319e-4825-9072-a38230c40ece",
+              "name": "MuV"
+            },
+            {
+              "id": "e506c2f8-8cee-4a88-8728-7d43b7365d1d",
+              "name": "Blender"
+            },
+            {
+              "id": "6897a65c-7e4b-4412-90b6-3a08ef2255f2",
+              "name": "Game Dev"
+            }
+          ],
+          "organizations": [
+            {
+              "id": "ad3a3793-d780-4ec1-b03e-fac92e0faa0d",
+              "title": "St. Josephs Colege of Engineering and Technology",
+              "code": "SJC",
+              "org_type": "College"
+            }
+          ],
+          "profile_pic": null,
+          "karma": "0"
+        },
+        {
+          "id": "04afe242-e329-4491-af58-d555abd82e5f",
+          "full_name": "QA Student One",
+          "muid": "qastudentone@mulearn",
+          "interest_groups": [
+            {
+              "id": "22ac542c-c849-428e-a91c-77e6b4c2c1aa",
+              "name": "Ui Ux"
+            },
+            {
+              "id": "b434ea03-908f-4078-8d02-26ebc3575d36",
+              "name": "AI"
+            },
+            {
+              "id": "4ff0a5e5-d1ef-44dd-ac13-9a2f9e7717e3",
+              "name": "Web Development"
+            }
+          ],
+          "organizations": [
+            {
+              "id": "ad3a3793-d780-4ec1-b03e-fac92e0faa0d",
+              "title": "St. Josephs Colege of Engineering and Technology",
+              "code": "SJC",
+              "org_type": "College"
+            }
+          ],
+          "profile_pic": null,
+          "karma": "0"
+        },
+        {
+          "id": "063fe943-f7b3-4768-a3de-00ca9dc3e6d2",
+          "full_name": "harshil",
+          "muid": "harshil@mulearn",
+          "interest_groups": [],
+          "organizations": [],
+          "profile_pic": "https://dev.mulearn.org/muback-media/user/profile/063fe943-f7b3-4768-a3de-00ca9dc3e6d2.png",
+          "karma": "0"
+        },
+        {
+          "id": "0f26f561-2170-4047-ba93-acb803845dde",
+          "full_name": "Sneha Thomas",
+          "muid": "snehathomas@mulearn",
+          "interest_groups": [
+            {
+              "id": "b434ea03-908f-4078-8d02-26ebc3575d36",
+              "name": "AI"
+            },
+            {
+              "id": "2de51ebe-b72a-40fe-a41f-2264f20ac264",
+              "name": "Data Science"
+            },
+            {
+              "id": "9a21bbd3-860a-4743-8379-54a0f5984f27",
+              "name": "Generative AI"
+            }
+          ],
+          "organizations": [
+            {
+              "id": "ad3a3793-d780-4ec1-b03e-fac92e0faa0d",
+              "title": "St. Josephs Colege of Engineering and Technology",
+              "code": "SJC",
+              "org_type": "College"
+            }
+          ],
+          "profile_pic": null,
+          "karma": "0"
+        },
+        {
+          "id": "17b8fd7d-6d18-484d-8985-6a11f337af4d",
+          "full_name": "Meera Balakrishnan",
+          "muid": "meerabalakrishnan@mulearn",
+          "interest_groups": [
+            {
+              "id": "85f18181-a8d0-4343-9217-c674d958b235",
+              "name": "Quantum Technologies"
+            },
+            {
+              "id": "2de51ebe-b72a-40fe-a41f-2264f20ac264",
+              "name": "Data Science"
+            },
+            {
+              "id": "f8f8e361-a1ee-4ed2-9c4f-1daba9150f48",
+              "name": "Data Analytics"
+            }
+          ],
+          "organizations": [
+            {
+              "id": "ad3a3793-d780-4ec1-b03e-fac92e0faa0d",
+              "title": "St. Josephs Colege of Engineering and Technology",
+              "code": "SJC",
+              "org_type": "College"
+            }
+          ],
+          "profile_pic": null,
+          "karma": "0"
+        },
+        {
+          "id": "1ccb0b0c-13a9-4f4d-bee3-c7b2d111907f",
+          "full_name": "Nikhil Joseph",
+          "muid": "nikhiljoseph@mulearn",
+          "interest_groups": [
+            {
+              "id": "85f18181-a8d0-4343-9217-c674d958b235",
+              "name": "Quantum Technologies"
+            },
+            {
+              "id": "c55ff174-cbac-4eeb-a4f1-a0b676c20903",
+              "name": "Internet Of Things (IOT) And Robotics"
+            },
+            {
+              "id": "c7d691bc-2d48-49f4-afa6-c631a8defa17",
+              "name": "Blockchain"
+            }
+          ],
+          "organizations": [
+            {
+              "id": "ad3a3793-d780-4ec1-b03e-fac92e0faa0d",
+              "title": "St. Josephs Colege of Engineering and Technology",
+              "code": "SJC",
+              "org_type": "College"
+            }
+          ],
+          "profile_pic": null,
+          "karma": "0"
+        },
+        {
+          "id": "1da5540a-574e-4922-9e5d-d11de34ee66f",
+          "full_name": "Pranav P",
+          "muid": "pranavp-1@mulearn",
+          "interest_groups": [],
+          "organizations": [
+            {
+              "id": "d3c4b25e-e779-41a7-98bc-7ffd2e6395a2",
+              "title": "Home Land",
+              "code": "8bc34981d001",
+              "org_type": "Company"
+            }
+          ],
+          "profile_pic": null,
+          "karma": "0"
+        },
+        {
+          "id": "2266e35d-4dc7-4dec-b0f8-49864c43899f",
+          "full_name": "afif",
+          "muid": "afif@mulearn",
+          "interest_groups": [],
+          "organizations": [
+            {
+              "id": "59e4dba3-be19-4702-b550-993f7d746d77",
+              "title": "company 1",
+              "code": "a1d64ffb2145",
+              "org_type": "Company"
+            }
+          ],
+          "profile_pic": null,
+          "karma": "0"
+        },
+        {
+          "id": "23902b70-b5cf-4583-aab7-48dd33feba7e",
+          "full_name": "Mohammed Faiz",
+          "muid": "mohammedfaiz@mulearn",
+          "interest_groups": [
+            {
+              "id": "4ff0a5e5-d1ef-44dd-ac13-9a2f9e7717e3",
+              "name": "Web Development"
+            },
+            {
+              "id": "31c589b8-d876-41da-9e53-89b1b5a200a8",
+              "name": "Devops"
+            },
+            {
+              "id": "96a37467-11ba-4ff2-8534-342e89b96f4e",
+              "name": "Cyber Security"
+            }
+          ],
+          "organizations": [
+            {
+              "id": "ad3a3793-d780-4ec1-b03e-fac92e0faa0d",
+              "title": "St. Josephs Colege of Engineering and Technology",
+              "code": "SJC",
+              "org_type": "College"
+            }
+          ],
+          "profile_pic": null,
+          "karma": "0"
+        },
+        {
+          "id": "3789eb88-a999-4bc7-8001-ced6adbbf312",
+          "full_name": "Balagovind Manoj",
+          "muid": "balagovindmanoj@mulearn",
+          "interest_groups": [],
+          "organizations": [
+            {
+              "id": "ad3a3793-d780-4ec1-b03e-fac92e0faa0d",
+              "title": "St. Josephs Colege of Engineering and Technology",
+              "code": "SJC",
+              "org_type": "College"
+            }
+          ],
+          "profile_pic": null,
+          "karma": "0"
+        },
+        {
+          "id": "3a057419-fd00-48af-b210-516036486c90",
+          "full_name": "Sajnay",
+          "muid": "sajnay@mulearn",
+          "interest_groups": [],
+          "organizations": [],
+          "profile_pic": null,
+          "karma": "0"
+        },
+        {
+          "id": "3a20b53a-3cd3-4e93-8ac0-eed20248dd69",
+          "full_name": "pstester",
+          "muid": "pstester@mulearn",
+          "interest_groups": [],
+          "organizations": [
+            {
+              "id": "ad3a3793-d780-4ec1-b03e-fac92e0faa0d",
+              "title": "St. Josephs Colege of Engineering and Technology",
+              "code": "SJC",
+              "org_type": "College"
+            }
+          ],
+          "profile_pic": null,
+          "karma": "0"
+        }
+      ],
+      "pagination": {
+        "count": 36,
+        "totalPages": 2,
+        "isNext": true,
+        "isPrev": false,
+        "nextPage": 2
+      }
+    }
+  }
+}

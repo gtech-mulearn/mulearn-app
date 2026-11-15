@@ -10,7 +10,7 @@ part of 'user_levels_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(userLevels)
-const userLevelsProvider = UserLevelsProvider._();
+final userLevelsProvider = UserLevelsProvider._();
 
 final class UserLevelsProvider
     extends
@@ -20,7 +20,7 @@ final class UserLevelsProvider
           FutureOr<List<UserLevel>>
         >
     with $FutureModifier<List<UserLevel>>, $FutureProvider<List<UserLevel>> {
-  const UserLevelsProvider._()
+  UserLevelsProvider._()
     : super(
         from: null,
         argument: null,

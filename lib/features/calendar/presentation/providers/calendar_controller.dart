@@ -22,26 +22,4 @@ Future<List<CalendarEntry>> calendarEntries(
   Ref ref, {
   required DateTime start,
   required DateTime end,
-}) =>
-    ref.watch(calendarRepositoryProvider).getEntries(start: start, end: end);
-
-/// Tracks which month the calendar grid is currently showing — navigation
-/// state only, the entries themselves are fetched by [calendarEntriesProvider]
-/// keyed off the visible grid's date range.
-@riverpod
-class CalendarMonthController extends _$CalendarMonthController {
-  @override
-  DateTime build() {
-    final now = DateTime.now();
-    return DateTime(now.year, now.month);
-  }
-
-  void nextMonth() => state = DateTime(state.year, state.month + 1);
-
-  void previousMonth() => state = DateTime(state.year, state.month - 1);
-
-  void jumpToToday() {
-    final now = DateTime.now();
-    state = DateTime(now.year, now.month);
-  }
-}
+}) => ref.watch(calendarRepositoryProvider).getEntries(start: start, end: end);

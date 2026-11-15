@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'socials.dart';
@@ -9,6 +9,7 @@ part of 'socials.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $SocialsCopyWith<Socials> get copyWith => _$SocialsCopyWithImpl<Socials>(this as
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Socials&&(identical(other.github, github) || other.github == github)&&(identical(other.facebook, facebook) || other.facebook == facebook)&&(identical(other.instagram, instagram) || other.instagram == instagram)&&(identical(other.linkedin, linkedin) || other.linkedin == linkedin)&&(identical(other.dribble, dribble) || other.dribble == dribble)&&(identical(other.behance, behance) || other.behance == behance)&&(identical(other.stackoverflow, stackoverflow) || other.stackoverflow == stackoverflow)&&(identical(other.medium, medium) || other.medium == medium)&&(identical(other.hackerrank, hackerrank) || other.hackerrank == hackerrank));
+  final _this = this as Socials;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Socials&&(identical(other.github, _this.github) || other.github == _this.github)&&(identical(other.facebook, _this.facebook) || other.facebook == _this.facebook)&&(identical(other.instagram, _this.instagram) || other.instagram == _this.instagram)&&(identical(other.linkedin, _this.linkedin) || other.linkedin == _this.linkedin)&&(identical(other.dribble, _this.dribble) || other.dribble == _this.dribble)&&(identical(other.behance, _this.behance) || other.behance == _this.behance)&&(identical(other.stackoverflow, _this.stackoverflow) || other.stackoverflow == _this.stackoverflow)&&(identical(other.medium, _this.medium) || other.medium == _this.medium)&&(identical(other.hackerrank, _this.hackerrank) || other.hackerrank == _this.hackerrank));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,github,facebook,instagram,linkedin,dribble,behance,stackoverflow,medium,hackerrank);
+int get hashCode {
+  final _this = this as Socials;
+  return Object.hash(runtimeType,_this.github,_this.facebook,_this.instagram,_this.linkedin,_this.dribble,_this.behance,_this.stackoverflow,_this.medium,_this.hackerrank);
+}
 
 @override
 String toString() {
-  return 'Socials(github: $github, facebook: $facebook, instagram: $instagram, linkedin: $linkedin, dribble: $dribble, behance: $behance, stackoverflow: $stackoverflow, medium: $medium, hackerrank: $hackerrank)';
+  final _this = this as Socials;
+  return 'Socials(github: ${_this.github}, facebook: ${_this.facebook}, instagram: ${_this.instagram}, linkedin: ${_this.linkedin}, dribble: ${_this.dribble}, behance: ${_this.behance}, stackoverflow: ${_this.stackoverflow}, medium: ${_this.medium}, hackerrank: ${_this.hackerrank})';
 }
 
 
@@ -63,7 +69,7 @@ class _$SocialsCopyWithImpl<$Res>
 /// Create a copy of Socials
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? github = freezed,Object? facebook = freezed,Object? instagram = freezed,Object? linkedin = freezed,Object? dribble = freezed,Object? behance = freezed,Object? stackoverflow = freezed,Object? medium = freezed,Object? hackerrank = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(Socials(
 github: freezed == github ? _self.github : github // ignore: cast_nullable_to_non_nullable
 as String?,facebook: freezed == facebook ? _self.facebook : facebook // ignore: cast_nullable_to_non_nullable
 as String?,instagram: freezed == instagram ? _self.instagram : instagram // ignore: cast_nullable_to_non_nullable
@@ -237,16 +243,18 @@ _$SocialsCopyWith<_Socials> get copyWith => __$SocialsCopyWithImpl<_Socials>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Socials&&(identical(other.github, github) || other.github == github)&&(identical(other.facebook, facebook) || other.facebook == facebook)&&(identical(other.instagram, instagram) || other.instagram == instagram)&&(identical(other.linkedin, linkedin) || other.linkedin == linkedin)&&(identical(other.dribble, dribble) || other.dribble == dribble)&&(identical(other.behance, behance) || other.behance == behance)&&(identical(other.stackoverflow, stackoverflow) || other.stackoverflow == stackoverflow)&&(identical(other.medium, medium) || other.medium == medium)&&(identical(other.hackerrank, hackerrank) || other.hackerrank == hackerrank));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Socials&&(identical(other.github, github) || other.github == github)&&(identical(other.facebook, facebook) || other.facebook == facebook)&&(identical(other.instagram, instagram) || other.instagram == instagram)&&(identical(other.linkedin, linkedin) || other.linkedin == linkedin)&&(identical(other.dribble, dribble) || other.dribble == dribble)&&(identical(other.behance, behance) || other.behance == behance)&&(identical(other.stackoverflow, stackoverflow) || other.stackoverflow == stackoverflow)&&(identical(other.medium, medium) || other.medium == medium)&&(identical(other.hackerrank, hackerrank) || other.hackerrank == hackerrank));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,github,facebook,instagram,linkedin,dribble,behance,stackoverflow,medium,hackerrank);
+int get hashCode {
+    return Object.hash(runtimeType,github,facebook,instagram,linkedin,dribble,behance,stackoverflow,medium,hackerrank);
+}
 
 @override
 String toString() {
-  return 'Socials(github: $github, facebook: $facebook, instagram: $instagram, linkedin: $linkedin, dribble: $dribble, behance: $behance, stackoverflow: $stackoverflow, medium: $medium, hackerrank: $hackerrank)';
+    return 'Socials(github: $github, facebook: $facebook, instagram: $instagram, linkedin: $linkedin, dribble: $dribble, behance: $behance, stackoverflow: $stackoverflow, medium: $medium, hackerrank: $hackerrank)';
 }
 
 

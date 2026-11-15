@@ -11,7 +11,11 @@ part of 'secure_storage_provider.dart';
 /// Secure key/value store — tokens only (rules.md §1). Never put tokens in
 /// SharedPreferences.
 ///
-/// `useDataProtectionKeyChain: false` on macOS: the default (`true`) uses the
+/// Android uses the package's default cipher storage (AES-GCM keys wrapped by
+/// RSA-OAEP in the Android Keystore); the old Jetpack `EncryptedSharedPreferences`
+/// option was deprecated and then removed upstream (flutter_secure_storage 11).
+///
+/// `usesDataProtectionKeychain: false` on macOS: the default (`true`) uses the
 /// newer per-app "Data Protection Keychain", which requires a
 /// `keychain-access-groups` entitlement tied to a real Apple Developer Team
 /// signing identity — regardless of App Sandbox state. This project has no
@@ -22,12 +26,16 @@ part of 'secure_storage_provider.dart';
 /// requirement entirely.
 
 @ProviderFor(secureStorage)
-const secureStorageProvider = SecureStorageProvider._();
+final secureStorageProvider = SecureStorageProvider._();
 
 /// Secure key/value store — tokens only (rules.md §1). Never put tokens in
 /// SharedPreferences.
 ///
-/// `useDataProtectionKeyChain: false` on macOS: the default (`true`) uses the
+/// Android uses the package's default cipher storage (AES-GCM keys wrapped by
+/// RSA-OAEP in the Android Keystore); the old Jetpack `EncryptedSharedPreferences`
+/// option was deprecated and then removed upstream (flutter_secure_storage 11).
+///
+/// `usesDataProtectionKeychain: false` on macOS: the default (`true`) uses the
 /// newer per-app "Data Protection Keychain", which requires a
 /// `keychain-access-groups` entitlement tied to a real Apple Developer Team
 /// signing identity — regardless of App Sandbox state. This project has no
@@ -48,7 +56,11 @@ final class SecureStorageProvider
   /// Secure key/value store — tokens only (rules.md §1). Never put tokens in
   /// SharedPreferences.
   ///
-  /// `useDataProtectionKeyChain: false` on macOS: the default (`true`) uses the
+  /// Android uses the package's default cipher storage (AES-GCM keys wrapped by
+  /// RSA-OAEP in the Android Keystore); the old Jetpack `EncryptedSharedPreferences`
+  /// option was deprecated and then removed upstream (flutter_secure_storage 11).
+  ///
+  /// `usesDataProtectionKeychain: false` on macOS: the default (`true`) uses the
   /// newer per-app "Data Protection Keychain", which requires a
   /// `keychain-access-groups` entitlement tied to a real Apple Developer Team
   /// signing identity — regardless of App Sandbox state. This project has no
@@ -57,7 +69,7 @@ final class SecureStorageProvider
   /// even after disabling the sandbox (confirmed by reproducing the exact
   /// failure live). Falling back to the legacy keychain avoids that entitlement
   /// requirement entirely.
-  const SecureStorageProvider._()
+  SecureStorageProvider._()
     : super(
         from: null,
         argument: null,
@@ -91,15 +103,15 @@ final class SecureStorageProvider
   }
 }
 
-String _$secureStorageHash() => r'20eb86340d1b0eaa5dcac993880ebe79a7179c7e';
+String _$secureStorageHash() => r'e5affa1471c1cc90fa3f0e1208add72ae8640bc1';
 
 @ProviderFor(tokenStorage)
-const tokenStorageProvider = TokenStorageProvider._();
+final tokenStorageProvider = TokenStorageProvider._();
 
 final class TokenStorageProvider
     extends $FunctionalProvider<TokenStorage, TokenStorage, TokenStorage>
     with $Provider<TokenStorage> {
-  const TokenStorageProvider._()
+  TokenStorageProvider._()
     : super(
         from: null,
         argument: null,

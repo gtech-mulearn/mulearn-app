@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'my_progress_summary_dto.dart';
@@ -9,6 +9,7 @@ part of 'my_progress_summary_dto.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $MyProgressSummaryDtoCopyWith<MyProgressSummaryDto> get copyWith => _$MyProgress
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MyProgressSummaryDto&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.level, level) || other.level == level)&&(identical(other.profilePic, profilePic) || other.profilePic == profilePic)&&(identical(other.rank, rank) || other.rank == rank)&&(identical(other.percentile, percentile) || other.percentile == percentile)&&const DeepCollectionEquality().equals(other.interestGroups, interestGroups));
+  final _this = this as MyProgressSummaryDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MyProgressSummaryDto&&(identical(other.fullName, _this.fullName) || other.fullName == _this.fullName)&&(identical(other.muid, _this.muid) || other.muid == _this.muid)&&(identical(other.karma, _this.karma) || other.karma == _this.karma)&&(identical(other.level, _this.level) || other.level == _this.level)&&(identical(other.profilePic, _this.profilePic) || other.profilePic == _this.profilePic)&&(identical(other.rank, _this.rank) || other.rank == _this.rank)&&(identical(other.percentile, _this.percentile) || other.percentile == _this.percentile)&&const DeepCollectionEquality().equals(other.interestGroups, _this.interestGroups));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,fullName,muid,karma,level,profilePic,rank,percentile,const DeepCollectionEquality().hash(interestGroups));
+int get hashCode {
+  final _this = this as MyProgressSummaryDto;
+  return Object.hash(runtimeType,_this.fullName,_this.muid,_this.karma,_this.level,_this.profilePic,_this.rank,_this.percentile,const DeepCollectionEquality().hash(_this.interestGroups));
+}
 
 @override
 String toString() {
-  return 'MyProgressSummaryDto(fullName: $fullName, muid: $muid, karma: $karma, level: $level, profilePic: $profilePic, rank: $rank, percentile: $percentile, interestGroups: $interestGroups)';
+  final _this = this as MyProgressSummaryDto;
+  return 'MyProgressSummaryDto(fullName: ${_this.fullName}, muid: ${_this.muid}, karma: ${_this.karma}, level: ${_this.level}, profilePic: ${_this.profilePic}, rank: ${_this.rank}, percentile: ${_this.percentile}, interestGroups: ${_this.interestGroups})';
 }
 
 
@@ -66,7 +72,7 @@ class _$MyProgressSummaryDtoCopyWithImpl<$Res>
 /// Create a copy of MyProgressSummaryDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? fullName = null,Object? muid = null,Object? karma = freezed,Object? level = freezed,Object? profilePic = freezed,Object? rank = freezed,Object? percentile = freezed,Object? interestGroups = null,}) {
-  return _then(_self.copyWith(
+  return _then(MyProgressSummaryDto(
 fullName: null == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
 as String,muid: null == muid ? _self.muid : muid // ignore: cast_nullable_to_non_nullable
 as String,karma: freezed == karma ? _self.karma : karma // ignore: cast_nullable_to_non_nullable
@@ -216,7 +222,7 @@ return $default(_that.fullName,_that.muid,_that.karma,_that.level,_that.profileP
 @JsonSerializable()
 
 class _MyProgressSummaryDto extends MyProgressSummaryDto {
-  const _MyProgressSummaryDto({required this.fullName, required this.muid, this.karma, this.level, this.profilePic, this.rank, this.percentile, final  List<dynamic> interestGroups = const <dynamic>[]}): _interestGroups = interestGroups,super._();
+  const _MyProgressSummaryDto({required this.fullName, required this.muid, this.karma, this.level, this.profilePic, this.rank, this.percentile,  List<dynamic> interestGroups = const <dynamic>[]}): _interestGroups = interestGroups,super._();
   factory _MyProgressSummaryDto.fromJson(Map<String, dynamic> json) => _$MyProgressSummaryDtoFromJson(json);
 
 @override final  String fullName;
@@ -247,16 +253,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MyProgressSummaryDto&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.level, level) || other.level == level)&&(identical(other.profilePic, profilePic) || other.profilePic == profilePic)&&(identical(other.rank, rank) || other.rank == rank)&&(identical(other.percentile, percentile) || other.percentile == percentile)&&const DeepCollectionEquality().equals(other._interestGroups, _interestGroups));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MyProgressSummaryDto&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.level, level) || other.level == level)&&(identical(other.profilePic, profilePic) || other.profilePic == profilePic)&&(identical(other.rank, rank) || other.rank == rank)&&(identical(other.percentile, percentile) || other.percentile == percentile)&&const DeepCollectionEquality().equals(other.interestGroups, _interestGroups));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,fullName,muid,karma,level,profilePic,rank,percentile,const DeepCollectionEquality().hash(_interestGroups));
+int get hashCode {
+    return Object.hash(runtimeType,fullName,muid,karma,level,profilePic,rank,percentile,const DeepCollectionEquality().hash(_interestGroups));
+}
 
 @override
 String toString() {
-  return 'MyProgressSummaryDto(fullName: $fullName, muid: $muid, karma: $karma, level: $level, profilePic: $profilePic, rank: $rank, percentile: $percentile, interestGroups: $interestGroups)';
+    return 'MyProgressSummaryDto(fullName: $fullName, muid: $muid, karma: $karma, level: $level, profilePic: $profilePic, rank: $rank, percentile: $percentile, interestGroups: $interestGroups)';
 }
 
 

@@ -22,46 +22,52 @@ void main() {
     return container;
   }
 
-  test('submitPathwaysOnly saves domains and nothing else (quiz mode)', () async {
-    when(() => repository.selectDomains(any())).thenAnswer((_) async {});
+  test(
+    'submitPathwaysOnly saves domains and nothing else (quiz mode)',
+    () async {
+      when(() => repository.selectDomains(any())).thenAnswer((_) async {});
 
-    final container = makeContainer();
-    await container
-        .read(interestsControllerProvider.notifier)
-        .submitPathwaysOnly(['coder', 'maker']);
+      final container = makeContainer();
+      await container
+          .read(interestsControllerProvider.notifier)
+          .submitPathwaysOnly(['coder', 'maker']);
 
-    verify(() => repository.selectDomains(['coder', 'maker'])).called(1);
-    verifyNever(() => repository.selectEndgoals(any()));
-    expect(container.read(interestsControllerProvider).hasError, isFalse);
-  });
+      verify(() => repository.selectDomains(['coder', 'maker'])).called(1);
+      verifyNever(() => repository.selectEndgoals(any()));
+      expect(container.read(interestsControllerProvider).hasError, isFalse);
+    },
+  );
 
-  test('submitPathwaysAndEndgoals saves both, domains before endgoals', () async {
-    final calls = <String>[];
-    when(() => repository.selectDomains(any())).thenAnswer((_) async {
-      calls.add('domains');
-    });
-    when(() => repository.selectEndgoals(any())).thenAnswer((_) async {
-      calls.add('endgoals');
-    });
+  test(
+    'submitPathwaysAndEndgoals saves both, domains before endgoals',
+    () async {
+      final calls = <String>[];
+      when(() => repository.selectDomains(any())).thenAnswer((_) async {
+        calls.add('domains');
+      });
+      when(() => repository.selectEndgoals(any())).thenAnswer((_) async {
+        calls.add('endgoals');
+      });
 
-    final container = makeContainer();
-    await container
-        .read(interestsControllerProvider.notifier)
-        .submitPathwaysAndEndgoals(['coder'], ['job', 'r&d']);
+      final container = makeContainer();
+      await container
+          .read(interestsControllerProvider.notifier)
+          .submitPathwaysAndEndgoals(['coder'], ['job', 'r&d']);
 
-    verify(() => repository.selectDomains(['coder'])).called(1);
-    verify(() => repository.selectEndgoals(['job', 'r&d'])).called(1);
-    expect(calls, ['domains', 'endgoals']);
-  });
+      verify(() => repository.selectDomains(['coder'])).called(1);
+      verify(() => repository.selectEndgoals(['job', 'r&d'])).called(1);
+      expect(calls, ['domains', 'endgoals']);
+    },
+  );
 
   test('surfaces repository errors as AsyncError', () async {
     when(() => repository.selectDomains(any())).thenThrow(Exception('down'));
 
     final container = makeContainer();
     await expectLater(
-      container
-          .read(interestsControllerProvider.notifier)
-          .submitPathwaysOnly(['coder']),
+      container.read(interestsControllerProvider.notifier).submitPathwaysOnly([
+        'coder',
+      ]),
       throwsException,
     );
 

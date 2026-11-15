@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/auth/current_user_claims.dart';
+import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
-import 'package:mulearn_app/core/theme/mu_space.dart';
-import 'package:mulearn_app/core/theme/mulearn_colors.dart';
-import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 import 'package:mulearn_app/core/utils/clock.dart';
-import 'package:mulearn_app/core/widgets/mu_buttons.dart';
-import 'package:mulearn_app/core/widgets/mu_toast.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/meeting_detail.dart';
 import 'package:mulearn_app/features/learning_circles/domain/membership_rules.dart';
 import 'package:mulearn_app/features/learning_circles/presentation/providers/learning_circles_controller.dart';
@@ -28,45 +25,52 @@ class CircleLeaveSection extends ConsumerWidget {
   final CircleRole role;
 
   Future<void> _leave(BuildContext context, WidgetRef ref) async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: Text('Leave $circleTitle?'),
-        content: const Text('You can ask to join again later.'),
-        actions: [
-          TextButton(onPressed: () => Navigator.of(dialogContext).pop(false), child: const Text('Cancel')),
-          TextButton(onPressed: () => Navigator.of(dialogContext).pop(true), child: const Text('Leave')),
-        ],
-      ),
+    final confirmed = await showMuConfirm(
+      context,
+      title: 'Leave $circleTitle?',
+      body: 'You can ask to join again later.',
+      confirmLabel: 'Leave',
+      destructive: true,
     );
-    if (!(confirmed ?? false) || !context.mounted) return;
+    if (!confirmed || !context.mounted) return;
     final controller = ref.read(circleActionsControllerProvider.notifier);
     final left = await controller.leaveCircle(circleId);
     if (!context.mounted) return;
     if (left) {
-      MuToast.show(context, message: 'You left $circleTitle', type: MuToastType.success);
+      MuToast.show(
+        context,
+        message: 'You left $circleTitle',
+        type: MuToastType.success,
+      );
       await Navigator.of(context).maybePop();
     } else {
       final error = ref.read(circleActionsControllerProvider).error;
-      MuToast.show(context, message: ApiException.messageFor(error ?? "Couldn't leave the circle"), type: MuToastType.error);
+      MuToast.show(
+        context,
+        message: ApiException.messageFor(error ?? "Couldn't leave the circle"),
+        type: MuToastType.error,
+      );
     }
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final mu = context.mu;
     switch (role) {
       case CircleRole.member:
         return Center(
-          child: TextButton(
+          child: MuButton(
+            label: 'Leave circle',
+            icon: LucideIcons.logOut,
+            variant: MuButtonVariant.ghost,
             onPressed: () => _leave(context, ref),
-            child: Text('Leave circle', style: MuType.bodyMed.copyWith(color: MuColors.error)),
           ),
         );
       case CircleRole.lead:
         return Text(
           'You lead this circle. Transfer leadership before leaving.',
           textAlign: TextAlign.center,
-          style: MuType.caption.copyWith(color: MuColors.inkSecondary),
+          style: mu.text.caption,
         );
       case CircleRole.creator:
       case CircleRole.visitor:
@@ -90,8 +94,12 @@ class MeetingActionsBar extends ConsumerWidget {
   final MeetingDetail meeting;
   final VoidCallback onJoinWithCode;
 
-  Future<void> _run(BuildContext context, WidgetRef ref, Future<void> Function(MeetingActionsController c) action,
-      {required String success}) async {
+  Future<void> _run(
+    BuildContext context,
+    WidgetRef ref,
+    Future<void> Function(MeetingActionsController c) action, {
+    required String success,
+  }) async {
     final controller = ref.read(meetingActionsControllerProvider.notifier);
     await action(controller);
     if (!context.mounted) return;
@@ -105,6 +113,8 @@ class MeetingActionsBar extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final mu = context.mu;
+    final c = mu.colors;
     final myId = ref.watch(currentUserIdProvider).value;
     final now = ref.watch(clockProvider)();
     final busy = ref.watch(meetingActionsControllerProvider).isLoading;
@@ -113,46 +123,91 @@ class MeetingActionsBar extends ConsumerWidget {
     if (s.membersOnly) {
       return Text(
         'Only circle members can RSVP or join this meeting.',
-        style: MuType.caption.copyWith(color: MuColors.inkSecondary),
+        textAlign: TextAlign.center,
+        style: mu.text.caption,
       );
     }
     if (s.canRsvp) {
-      return MuPrimaryButton(
-        label: 'RSVP',
-        onPressed: busy ? null : () => _run(context, ref, (c) => c.rsvp(meetingId), success: "You're going"),
+      return MuButton(
+        label: "RSVP · I'll be there",
+        variant: MuButtonVariant.ink,
+        knob: true,
+        block: true,
+        loading: busy,
+        onPressed: busy
+            ? null
+            : () => _run(
+                context,
+                ref,
+                (c) => c.rsvp(meetingId),
+                success: "You're going",
+              ),
       );
     }
     if (s.canJoinWithCode) {
-      return MuPrimaryButton(label: 'Join with code', onPressed: busy ? null : onJoinWithCode);
+      return MuButton(
+        label: 'Join with code',
+        icon: LucideIcons.keyRound,
+        block: true,
+        onPressed: busy ? null : onJoinWithCode,
+      );
     }
     if (s.canLeave) {
-      return MuGhostButton(
+      return MuButton(
         label: 'Leave meeting',
-        onPressed: busy ? null : () => _run(context, ref, (c) => c.leave(meetingId), success: 'You left the meeting'),
+        variant: MuButtonVariant.outline,
+        block: true,
+        loading: busy,
+        onPressed: busy
+            ? null
+            : () => _run(
+                context,
+                ref,
+                (c) => c.leave(meetingId),
+                success: 'You left the meeting',
+              ),
       );
     }
     if (s.isRsvpd && !s.hasJoined) {
       return Row(
         children: [
-          Expanded(child: Text("You're going", style: MuType.bodyMed.copyWith(color: MuColors.success))),
+          Icon(
+            LucideIcons.checkCircle2,
+            size: MuSizes.iconMd,
+            color: c.success,
+          ),
+          const SizedBox(width: MuSpacing.space2),
+          Expanded(
+            child: Text(
+              "You're going",
+              style: mu.text.bodyStrong.copyWith(color: c.success),
+            ),
+          ),
           if (s.canCancelRsvp)
-            TextButton(
+            MuButton(
+              label: 'Cancel RSVP',
+              variant: MuButtonVariant.ghost,
+              size: MuButtonSize.small,
               onPressed: busy
                   ? null
-                  : () => _run(context, ref, (c) => c.cancelRsvp(meetingId), success: 'RSVP cancelled'),
-              child: const Text('Cancel RSVP'),
+                  : () => _run(
+                      context,
+                      ref,
+                      (c) => c.cancelRsvp(meetingId),
+                      success: 'RSVP cancelled',
+                    ),
             )
           else
             Flexible(
               child: Text(
                 'RSVPs close ${rsvpCancelCutoff.inMinutes} minutes before the start.',
                 textAlign: TextAlign.end,
-                style: MuType.caption.copyWith(color: MuColors.inkSecondary),
+                style: mu.text.caption,
               ),
             ),
         ],
       );
     }
-    return const SizedBox(height: MuSpace.xs);
+    return const SizedBox(height: MuSpacing.space1);
   }
 }

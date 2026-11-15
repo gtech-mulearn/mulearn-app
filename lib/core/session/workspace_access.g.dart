@@ -11,7 +11,7 @@ part of 'workspace_access.dart';
 /// The signed-in user's role verification, read from the shared profile.
 
 @ProviderFor(roleVerification)
-const roleVerificationProvider = RoleVerificationProvider._();
+final roleVerificationProvider = RoleVerificationProvider._();
 
 /// The signed-in user's role verification, read from the shared profile.
 
@@ -26,7 +26,7 @@ final class RoleVerificationProvider
         $FutureModifier<Map<String, bool>>,
         $FutureProvider<Map<String, bool>> {
   /// The signed-in user's role verification, read from the shared profile.
-  const RoleVerificationProvider._()
+  RoleVerificationProvider._()
     : super(
         from: null,
         argument: null,
@@ -58,7 +58,7 @@ String _$roleVerificationHash() => r'1e9f30c404a49ada902100344a4a4c802018bf7f';
 /// profile is read only for users holding a campus role.
 
 @ProviderFor(workspaceAccess)
-const workspaceAccessProvider = WorkspaceAccessProvider._();
+final workspaceAccessProvider = WorkspaceAccessProvider._();
 
 /// [WorkspaceAccess] for the signed-in user; `null` when signed out. The
 /// profile is read only for users holding a campus role.
@@ -73,7 +73,7 @@ final class WorkspaceAccessProvider
     with $FutureModifier<WorkspaceAccess?>, $FutureProvider<WorkspaceAccess?> {
   /// [WorkspaceAccess] for the signed-in user; `null` when signed out. The
   /// profile is read only for users holding a campus role.
-  const WorkspaceAccessProvider._()
+  WorkspaceAccessProvider._()
     : super(
         from: null,
         argument: null,

@@ -17,25 +17,35 @@ import '../../support/fixtures.dart';
 /// what the screen already shows.
 void main() {
   Future<void> pull(WidgetTester tester, {Finder? on}) async {
-    await tester.fling(on ?? find.byType(ListView).first, const Offset(0, 400), 1000);
+    await tester.fling(
+      on ?? find.byType(ListView).first,
+      const Offset(0, 400),
+      1000,
+    );
     await tester.pump();
-    await tester.pump(const Duration(seconds: 1)); // the indicator's settle animation
+    await tester.pump(
+      const Duration(seconds: 1),
+    ); // the indicator's settle animation
   }
 
   testWidgets('the indicator stays until the refetch finishes', (tester) async {
     final done = Completer<void>();
     var calls = 0;
-    await tester.pumpWidget(MaterialApp(
-      home: Scaffold(
-        body: MuRefresh(
-          onRefresh: () {
-            calls++;
-            return done.future;
-          },
-          child: ListView(children: const [SizedBox(height: 2000, child: Text('rows'))]),
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: MuRefresh(
+            onRefresh: () {
+              calls++;
+              return done.future;
+            },
+            child: ListView(
+              children: const [SizedBox(height: 2000, child: Text('rows'))],
+            ),
+          ),
         ),
       ),
-    ));
+    );
 
     await pull(tester);
     expect(calls, 1);
@@ -46,15 +56,22 @@ void main() {
     expect(find.byType(RefreshProgressIndicator), findsNothing);
   });
 
-  testWidgets("a failed refetch is a toast with the backend's message", (tester) async {
-    await tester.pumpWidget(MaterialApp(
-      home: Scaffold(
-        body: MuRefresh(
-          onRefresh: () async => throw const ApiException(message: 'Server unavailable'),
-          child: ListView(children: const [SizedBox(height: 2000, child: Text('rows'))]),
+  testWidgets("a failed refetch is a toast with the backend's message", (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: MuRefresh(
+            onRefresh: () async =>
+                throw const ApiException(message: 'Server unavailable'),
+            child: ListView(
+              children: const [SizedBox(height: 2000, child: Text('rows'))],
+            ),
+          ),
         ),
       ),
-    ));
+    );
 
     await pull(tester);
     await tester.pumpAndSettle();
@@ -68,12 +85,27 @@ void main() {
   testWidgets('Events keeps its rows when a refresh fails', (tester) async {
     var fail = false;
     final adapter = FakeHttpAdapter({
-      'GET /api/v1/dashboard/events/': (_) => fail ? const FakeResponse(-1, null) : FakeResponse(200, loadFixture('dev/events_page1')),
+      'GET /api/v1/dashboard/events/': (_) => fail
+          ? const FakeResponse(-1, null)
+          : FakeResponse(200, loadFixture('dev/events_page1')),
     });
     final c = await eventsContainer(adapter);
-    await tester.pumpWidget(UncontrolledProviderScope(container: c, child: const MaterialApp(home: EventsScreen())));
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: c,
+        child: const MaterialApp(home: EventsScreen()),
+      ),
+    );
     await settle(tester);
-    final first = c.read(eventsListControllerProvider(const EventFilter())).value!.items.first.title;
+    // Every event, not just upcoming ones: the fixture's dates are fixed.
+    await tester.tap(find.text('All events'));
+    await settle(tester);
+    final first = c
+        .read(eventsListControllerProvider(const EventFilter()))
+        .value!
+        .items
+        .first
+        .title;
     expect(find.text(first), findsOneWidget);
 
     final before = adapter.requests.length;
@@ -82,7 +114,11 @@ void main() {
     await settle(tester);
     await tester.pumpAndSettle();
 
-    expect(adapter.requests.length, greaterThan(before), reason: 'the pull refetched');
+    expect(
+      adapter.requests.length,
+      greaterThan(before),
+      reason: 'the pull refetched',
+    );
     expect(find.text(first), findsOneWidget, reason: 'the list stays');
     expect(find.text('Retry'), findsNothing, reason: 'no full-screen error');
     await tester.pump(const Duration(seconds: 4));

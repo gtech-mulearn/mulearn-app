@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'role_verification.dart';
@@ -9,6 +9,7 @@ part of 'role_verification.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $RoleVerificationCopyWith<RoleVerification> get copyWith => _$RoleVerificationCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RoleVerification&&(identical(other.role, role) || other.role == role)&&(identical(other.isVerified, isVerified) || other.isVerified == isVerified));
+  final _this = this as RoleVerification;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RoleVerification&&(identical(other.role, _this.role) || other.role == _this.role)&&(identical(other.isVerified, _this.isVerified) || other.isVerified == _this.isVerified));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,role,isVerified);
+int get hashCode {
+  final _this = this as RoleVerification;
+  return Object.hash(runtimeType,_this.role,_this.isVerified);
+}
 
 @override
 String toString() {
-  return 'RoleVerification(role: $role, isVerified: $isVerified)';
+  final _this = this as RoleVerification;
+  return 'RoleVerification(role: ${_this.role}, isVerified: ${_this.isVerified})';
 }
 
 
@@ -63,7 +69,7 @@ class _$RoleVerificationCopyWithImpl<$Res>
 /// Create a copy of RoleVerification
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? role = null,Object? isVerified = null,}) {
-  return _then(_self.copyWith(
+  return _then(RoleVerification(
 role: null == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
 as String,isVerified: null == isVerified ? _self.isVerified : isVerified // ignore: cast_nullable_to_non_nullable
 as bool,
@@ -223,16 +229,18 @@ _$RoleVerificationCopyWith<_RoleVerification> get copyWith => __$RoleVerificatio
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RoleVerification&&(identical(other.role, role) || other.role == role)&&(identical(other.isVerified, isVerified) || other.isVerified == isVerified));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _RoleVerification&&(identical(other.role, role) || other.role == role)&&(identical(other.isVerified, isVerified) || other.isVerified == isVerified));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,role,isVerified);
+int get hashCode {
+    return Object.hash(runtimeType,role,isVerified);
+}
 
 @override
 String toString() {
-  return 'RoleVerification(role: $role, isVerified: $isVerified)';
+    return 'RoleVerification(role: $role, isVerified: $isVerified)';
 }
 
 

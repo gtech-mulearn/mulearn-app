@@ -250,6 +250,9 @@ so expect a long *Other changes* section until that improves.
 
 ## Versioning
 
+- **The first release is `1.0.0+1`.** The installed versionName and
+  versionCode show at the bottom of Settings (`core/config/app_version.dart`),
+  so testers can quote the exact build.
 - **versionName / versionCode come from `pubspec.yaml`** (`version: X.Y.Z+N`)
   — no version is hardcoded anywhere else. Rules per channel are in
   [`version.sh`](../.github/scripts/version.sh); run it locally to see exactly

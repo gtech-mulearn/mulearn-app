@@ -10,7 +10,7 @@ part of 'mentor_repository_provider.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(mentorRemoteDataSource)
-const mentorRemoteDataSourceProvider = MentorRemoteDataSourceProvider._();
+final mentorRemoteDataSourceProvider = MentorRemoteDataSourceProvider._();
 
 final class MentorRemoteDataSourceProvider
     extends
@@ -20,7 +20,7 @@ final class MentorRemoteDataSourceProvider
           MentorRemoteDataSource
         >
     with $Provider<MentorRemoteDataSource> {
-  const MentorRemoteDataSourceProvider._()
+  MentorRemoteDataSourceProvider._()
     : super(
         from: null,
         argument: null,
@@ -60,7 +60,7 @@ String _$mentorRemoteDataSourceHash() =>
 /// Presentation depends on the [MentorRepository] contract (rules.md §2/§5).
 
 @ProviderFor(mentorRepository)
-const mentorRepositoryProvider = MentorRepositoryProvider._();
+final mentorRepositoryProvider = MentorRepositoryProvider._();
 
 /// Presentation depends on the [MentorRepository] contract (rules.md §2/§5).
 
@@ -73,7 +73,7 @@ final class MentorRepositoryProvider
         >
     with $Provider<MentorRepository> {
   /// Presentation depends on the [MentorRepository] contract (rules.md §2/§5).
-  const MentorRepositoryProvider._()
+  MentorRepositoryProvider._()
     : super(
         from: null,
         argument: null,

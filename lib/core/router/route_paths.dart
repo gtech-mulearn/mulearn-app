@@ -5,6 +5,9 @@ abstract final class RoutePaths {
 
   static const String splash = '/splash';
   static const String signIn = '/sign-in';
+
+  /// First-launch arrival beats (signed out, once per device).
+  static const String welcome = '/welcome';
   static const String forgotPassword = '/forgot-password';
   static const String resetPassword = '/reset-password';
   static const String registerBasicInfo = '/register';
@@ -19,7 +22,13 @@ abstract final class RoutePaths {
 
   /// The bottom-bar tab roots, in the shell's branch order (`app_router.dart`).
   /// Open them with `context.openTab`, never `push`.
-  static const List<String> tabRoots = [home, tasks, journey, leaderboard, profile];
+  static const List<String> tabRoots = [
+    home,
+    tasks,
+    journey,
+    leaderboard,
+    profile,
+  ];
   static const String leaderboard = '/leaderboard';
   static const String profile = '/profile';
   static const String notifications = '/notifications';
@@ -40,7 +49,8 @@ abstract final class RoutePaths {
   static const String enablerCampus = '/enabler/campuses/:id';
   static String enablerCampusPath(String id) => '/enabler/campuses/$id';
   static const String campusStudent = '/campus/students/:muid';
-  static String campusStudentPath(String muid) => '/campus/students/${Uri.encodeComponent(muid)}';
+  static String campusStudentPath(String muid) =>
+      '/campus/students/${Uri.encodeComponent(muid)}';
   static const String mentorSessions = '/mentor/sessions';
   static const String mentorSessionNew = '/mentor/sessions/new';
   static const String mentorSessionEdit = '/mentor/sessions/:id/edit';
@@ -54,6 +64,10 @@ abstract final class RoutePaths {
   static const String publicProfile = '/u/:muid';
   static String publicProfilePath(String muid) => '/u/$muid';
 
+  /// A college's public page (the dashboard's /dashboard/campus/:id).
+  static const String publicCampus = '/campuses/:id';
+  static String publicCampusPath(String id) => '/campuses/$id';
+
   static const String search = '/search';
 
   static const String interestGroups = '/interest-groups';
@@ -65,6 +79,31 @@ abstract final class RoutePaths {
   static String eventDetailPath(String id) => '/events/$id';
 
   static const String calendar = '/calendar';
+
+  /// Jobs, internships and gigs from verified companies, and your applications.
+  static const String opportunities = '/opportunities';
+
+  /// Weekly Twitches; `?show=<slug>` opens on a show.
+  /// A learner's mentor sessions: join one, ask for one, rate one.
+  static const String learnerSessions = '/sessions';
+
+  static const String projects = '/projects';
+  static const String projectNew = '/projects/new';
+  static const String project = '/projects/:id';
+  static String projectPath(String id) => '/projects/$id';
+  static const String projectEdit = '/projects/:id/edit';
+  static String projectEditPath(String id) => '/projects/$id/edit';
+
+  static const String problemStatements = '/problem-statements';
+  static const String problemStatement = '/problem-statements/:id';
+  static String problemStatementPath(String id) => '/problem-statements/$id';
+
+  static const String weeklyTwitches = '/weekly-twitches';
+  static String weeklyTwitchesShowPath(String show) =>
+      '/weekly-twitches?show=$show';
+  static const String weeklyTwitch = '/weekly-twitches/:show/:id';
+  static String weeklyTwitchPath(String show, String id) =>
+      '/weekly-twitches/$show/$id';
 
   static const String learningCircles = '/circles';
   static const String createLearningCircle = '/circles/create';

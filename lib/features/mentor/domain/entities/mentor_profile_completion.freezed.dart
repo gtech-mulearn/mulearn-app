@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'mentor_profile_completion.dart';
@@ -9,6 +9,7 @@ part of 'mentor_profile_completion.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $MentorProfileCompletionCopyWith<MentorProfileCompletion> get copyWith => _$Ment
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MentorProfileCompletion&&(identical(other.percentage, percentage) || other.percentage == percentage)&&const DeepCollectionEquality().equals(other.checklist, checklist));
+  final _this = this as MentorProfileCompletion;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MentorProfileCompletion&&(identical(other.percentage, _this.percentage) || other.percentage == _this.percentage)&&const DeepCollectionEquality().equals(other.checklist, _this.checklist));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,percentage,const DeepCollectionEquality().hash(checklist));
+int get hashCode {
+  final _this = this as MentorProfileCompletion;
+  return Object.hash(runtimeType,_this.percentage,const DeepCollectionEquality().hash(_this.checklist));
+}
 
 @override
 String toString() {
-  return 'MentorProfileCompletion(percentage: $percentage, checklist: $checklist)';
+  final _this = this as MentorProfileCompletion;
+  return 'MentorProfileCompletion(percentage: ${_this.percentage}, checklist: ${_this.checklist})';
 }
 
 
@@ -63,7 +69,7 @@ class _$MentorProfileCompletionCopyWithImpl<$Res>
 /// Create a copy of MentorProfileCompletion
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? percentage = null,Object? checklist = null,}) {
-  return _then(_self.copyWith(
+  return _then(MentorProfileCompletion(
 percentage: null == percentage ? _self.percentage : percentage // ignore: cast_nullable_to_non_nullable
 as int,checklist: null == checklist ? _self.checklist : checklist // ignore: cast_nullable_to_non_nullable
 as Map<String, bool>,
@@ -207,7 +213,7 @@ return $default(_that.percentage,_that.checklist);case _:
 
 
 class _MentorProfileCompletion implements MentorProfileCompletion {
-  const _MentorProfileCompletion({required this.percentage, required final  Map<String, bool> checklist}): _checklist = checklist;
+  const _MentorProfileCompletion({required this.percentage, required  Map<String, bool> checklist}): _checklist = checklist;
   
 
 @override final  int percentage;
@@ -229,16 +235,18 @@ _$MentorProfileCompletionCopyWith<_MentorProfileCompletion> get copyWith => __$M
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MentorProfileCompletion&&(identical(other.percentage, percentage) || other.percentage == percentage)&&const DeepCollectionEquality().equals(other._checklist, _checklist));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MentorProfileCompletion&&(identical(other.percentage, percentage) || other.percentage == percentage)&&const DeepCollectionEquality().equals(other.checklist, _checklist));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,percentage,const DeepCollectionEquality().hash(_checklist));
+int get hashCode {
+    return Object.hash(runtimeType,percentage,const DeepCollectionEquality().hash(_checklist));
+}
 
 @override
 String toString() {
-  return 'MentorProfileCompletion(percentage: $percentage, checklist: $checklist)';
+    return 'MentorProfileCompletion(percentage: $percentage, checklist: $checklist)';
 }
 
 

@@ -10,7 +10,7 @@ part of 'location_remote_datasource.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(locationRemoteDataSource)
-const locationRemoteDataSourceProvider = LocationRemoteDataSourceProvider._();
+final locationRemoteDataSourceProvider = LocationRemoteDataSourceProvider._();
 
 final class LocationRemoteDataSourceProvider
     extends
@@ -20,7 +20,7 @@ final class LocationRemoteDataSourceProvider
           LocationRemoteDataSource
         >
     with $Provider<LocationRemoteDataSource> {
-  const LocationRemoteDataSourceProvider._()
+  LocationRemoteDataSourceProvider._()
     : super(
         from: null,
         argument: null,

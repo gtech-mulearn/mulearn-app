@@ -13,7 +13,7 @@ part of 'meetings_controller.dart';
 /// concurrent [loadMore] calls share one request.
 
 @ProviderFor(CircleMeetingsController)
-const circleMeetingsControllerProvider = CircleMeetingsControllerFamily._();
+final circleMeetingsControllerProvider = CircleMeetingsControllerFamily._();
 
 /// A circle's meetings, one page at a time — the same paging behaviour as
 /// [CirclesListController]: keep-on-error, de-duplicated by id, and
@@ -24,7 +24,7 @@ final class CircleMeetingsControllerProvider
   /// A circle's meetings, one page at a time — the same paging behaviour as
   /// [CirclesListController]: keep-on-error, de-duplicated by id, and
   /// concurrent [loadMore] calls share one request.
-  const CircleMeetingsControllerProvider._({
+  CircleMeetingsControllerProvider._({
     required CircleMeetingsControllerFamily super.from,
     required String super.argument,
   }) : super(
@@ -77,7 +77,7 @@ final class CircleMeetingsControllerFamily extends $Family
           FutureOr<PagedState<Meeting>>,
           String
         > {
-  const CircleMeetingsControllerFamily._()
+  CircleMeetingsControllerFamily._()
     : super(
         retry: null,
         name: r'circleMeetingsControllerProvider',
@@ -109,8 +109,7 @@ abstract class _$CircleMeetingsController
   FutureOr<PagedState<Meeting>> build(String circleId);
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build(_$args);
+  WhenComplete runBuild() {
     final ref =
         this.ref as $Ref<AsyncValue<PagedState<Meeting>>, PagedState<Meeting>>;
     final element =
@@ -121,12 +120,12 @@ abstract class _$CircleMeetingsController
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, () => build(_$args));
   }
 }
 
 @ProviderFor(meetingDetail)
-const meetingDetailProvider = MeetingDetailFamily._();
+final meetingDetailProvider = MeetingDetailFamily._();
 
 final class MeetingDetailProvider
     extends
@@ -136,7 +135,7 @@ final class MeetingDetailProvider
           FutureOr<MeetingDetail>
         >
     with $FutureModifier<MeetingDetail>, $FutureProvider<MeetingDetail> {
-  const MeetingDetailProvider._({
+  MeetingDetailProvider._({
     required MeetingDetailFamily super.from,
     required String super.argument,
   }) : super(
@@ -184,7 +183,7 @@ String _$meetingDetailHash() => r'71136dc73492da9c853e546d9b84b41ae3643834';
 
 final class MeetingDetailFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<MeetingDetail>, String> {
-  const MeetingDetailFamily._()
+  MeetingDetailFamily._()
     : super(
         retry: null,
         name: r'meetingDetailProvider',
@@ -201,7 +200,7 @@ final class MeetingDetailFamily extends $Family
 }
 
 @ProviderFor(attendeeReport)
-const attendeeReportProvider = AttendeeReportFamily._();
+final attendeeReportProvider = AttendeeReportFamily._();
 
 final class AttendeeReportProvider
     extends
@@ -211,7 +210,7 @@ final class AttendeeReportProvider
           FutureOr<AttendeeReport>
         >
     with $FutureModifier<AttendeeReport>, $FutureProvider<AttendeeReport> {
-  const AttendeeReportProvider._({
+  AttendeeReportProvider._({
     required AttendeeReportFamily super.from,
     required String super.argument,
   }) : super(
@@ -259,7 +258,7 @@ String _$attendeeReportHash() => r'a7c1bf063aaa309cd9fa50e57f809f8259b7aa36';
 
 final class AttendeeReportFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<AttendeeReport>, String> {
-  const AttendeeReportFamily._()
+  AttendeeReportFamily._()
     : super(
         retry: null,
         name: r'attendeeReportProvider',
@@ -276,7 +275,7 @@ final class AttendeeReportFamily extends $Family
 }
 
 @ProviderFor(meetingReport)
-const meetingReportProvider = MeetingReportFamily._();
+final meetingReportProvider = MeetingReportFamily._();
 
 final class MeetingReportProvider
     extends
@@ -286,7 +285,7 @@ final class MeetingReportProvider
           FutureOr<MeetingReport>
         >
     with $FutureModifier<MeetingReport>, $FutureProvider<MeetingReport> {
-  const MeetingReportProvider._({
+  MeetingReportProvider._({
     required MeetingReportFamily super.from,
     required String super.argument,
   }) : super(
@@ -334,7 +333,7 @@ String _$meetingReportHash() => r'236b4d4a0c373ef685f666bdd42a64de8f81571e';
 
 final class MeetingReportFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<MeetingReport>, String> {
-  const MeetingReportFamily._()
+  MeetingReportFamily._()
     : super(
         retry: null,
         name: r'meetingReportProvider',
@@ -354,7 +353,7 @@ final class MeetingReportFamily extends $Family
 /// reports) — a single notifier, mirroring [CircleActionsController].
 
 @ProviderFor(MeetingActionsController)
-const meetingActionsControllerProvider = MeetingActionsControllerProvider._();
+final meetingActionsControllerProvider = MeetingActionsControllerProvider._();
 
 /// Every meeting action (create/edit/delete/RSVP/join-by-code/leave/
 /// reports) — a single notifier, mirroring [CircleActionsController].
@@ -362,7 +361,7 @@ final class MeetingActionsControllerProvider
     extends $AsyncNotifierProvider<MeetingActionsController, void> {
   /// Every meeting action (create/edit/delete/RSVP/join-by-code/leave/
   /// reports) — a single notifier, mirroring [CircleActionsController].
-  const MeetingActionsControllerProvider._()
+  MeetingActionsControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -391,8 +390,7 @@ abstract class _$MeetingActionsController extends $AsyncNotifier<void> {
   FutureOr<void> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<void>, void>;
     final element =
         ref.element
@@ -402,6 +400,6 @@ abstract class _$MeetingActionsController extends $AsyncNotifier<void> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, null);
+    return element.handleCreate(ref, build);
   }
 }

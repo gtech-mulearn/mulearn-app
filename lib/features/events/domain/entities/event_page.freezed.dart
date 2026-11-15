@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'event_page.dart';
@@ -9,6 +9,7 @@ part of 'event_page.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $EventPageCopyWith<EventPage> get copyWith => _$EventPageCopyWithImpl<EventPage>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EventPage&&const DeepCollectionEquality().equals(other.events, events)&&(identical(other.hasNext, hasNext) || other.hasNext == hasNext)&&(identical(other.totalPages, totalPages) || other.totalPages == totalPages));
+  final _this = this as EventPage;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EventPage&&const DeepCollectionEquality().equals(other.events, _this.events)&&(identical(other.hasNext, _this.hasNext) || other.hasNext == _this.hasNext)&&(identical(other.totalPages, _this.totalPages) || other.totalPages == _this.totalPages));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(events),hasNext,totalPages);
+int get hashCode {
+  final _this = this as EventPage;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.events),_this.hasNext,_this.totalPages);
+}
 
 @override
 String toString() {
-  return 'EventPage(events: $events, hasNext: $hasNext, totalPages: $totalPages)';
+  final _this = this as EventPage;
+  return 'EventPage(events: ${_this.events}, hasNext: ${_this.hasNext}, totalPages: ${_this.totalPages})';
 }
 
 
@@ -63,7 +69,7 @@ class _$EventPageCopyWithImpl<$Res>
 /// Create a copy of EventPage
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? events = null,Object? hasNext = null,Object? totalPages = null,}) {
-  return _then(_self.copyWith(
+  return _then(EventPage(
 events: null == events ? _self.events : events // ignore: cast_nullable_to_non_nullable
 as List<Event>,hasNext: null == hasNext ? _self.hasNext : hasNext // ignore: cast_nullable_to_non_nullable
 as bool,totalPages: null == totalPages ? _self.totalPages : totalPages // ignore: cast_nullable_to_non_nullable
@@ -208,7 +214,7 @@ return $default(_that.events,_that.hasNext,_that.totalPages);case _:
 
 
 class _EventPage implements EventPage {
-  const _EventPage({required final  List<Event> events, required this.hasNext, required this.totalPages}): _events = events;
+  const _EventPage({required  List<Event> events, required this.hasNext, required this.totalPages}): _events = events;
   
 
  final  List<Event> _events;
@@ -231,16 +237,18 @@ _$EventPageCopyWith<_EventPage> get copyWith => __$EventPageCopyWithImpl<_EventP
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EventPage&&const DeepCollectionEquality().equals(other._events, _events)&&(identical(other.hasNext, hasNext) || other.hasNext == hasNext)&&(identical(other.totalPages, totalPages) || other.totalPages == totalPages));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _EventPage&&const DeepCollectionEquality().equals(other.events, _events)&&(identical(other.hasNext, hasNext) || other.hasNext == hasNext)&&(identical(other.totalPages, totalPages) || other.totalPages == totalPages));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_events),hasNext,totalPages);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_events),hasNext,totalPages);
+}
 
 @override
 String toString() {
-  return 'EventPage(events: $events, hasNext: $hasNext, totalPages: $totalPages)';
+    return 'EventPage(events: $events, hasNext: $hasNext, totalPages: $totalPages)';
 }
 
 

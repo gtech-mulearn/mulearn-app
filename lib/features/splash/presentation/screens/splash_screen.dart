@@ -1,149 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
-import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 import 'package:mulearn_app/core/widgets/mu_logo.dart';
 
-/// Branded loading screen shown while the initial session is resolved from
-/// secure storage. The router redirects away from here once auth state
-/// settles.
-///
-/// Cinematic "title card" treatment (near-black backdrop, a soft brand-color
-/// glow bloom, the logo mark punching in with an overshoot then settling) —
-/// the kind of bold single-mark-on-black opener streaming apps use, brought
-/// to μLearn's own purple/blue brand color instead of copying anyone else's
-/// literal palette. A two-stage haptic (an anticipatory tap, then a heavier
-/// thud right as the logo lands) sells the "impact" moment.
-///
-/// Brand mark matches DESIGN_SPEC.md §2 "01 — Login"'s logo block: a 74×74
-/// white rounded tile with the μLearn mark (the app icon), the
-/// "μLearn" wordmark below it, and the "a GTech initiative" caption — all of
-/// the loading/redirect logic below is unchanged, only the mark itself
-/// swapped from the flat logo asset to this tile treatment.
-class SplashScreen extends StatefulWidget {
+/// The loading screen while the session is read from secure storage: the app
+/// icon alone on launch navy, pixel-identical to the native launch window
+/// before it (`launch_background.xml` / Android 12 `splash_icon`, iOS
+/// `LaunchImage`: all a [markSize] tile), so opening the app reads as one
+/// still screen with no flash or jump. The router moves on once auth state is
+/// known.
+class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
 
-  @override
-  State<SplashScreen> createState() => _SplashScreenState();
-}
-
-class _SplashScreenState extends State<SplashScreen>
-    with SingleTickerProviderStateMixin {
-  late final _controller = AnimationController(
-    duration: const Duration(milliseconds: 900),
-    vsync: this,
-  );
-  late final _glowOpacity = CurvedAnimation(
-    parent: _controller,
-    curve: const Interval(0, 0.3, curve: Curves.easeOut),
-  );
-  late final _logoOpacity = CurvedAnimation(
-    parent: _controller,
-    curve: const Interval(0.05, 0.35, curve: Curves.easeOut),
-  );
-  // Punches past full size before settling — the "impact" the haptic below
-  // is timed against — rather than a plain ease-in.
-  late final _logoScale = TweenSequence<double>([
-    TweenSequenceItem(tween: Tween(begin: 0.5, end: 1.15), weight: 70),
-    TweenSequenceItem(tween: Tween(begin: 1.15, end: 1), weight: 30),
-  ]).animate(CurvedAnimation(
-    parent: _controller,
-    curve: const Interval(0, 0.75, curve: Curves.easeOut),
-  ));
-  late final _spinnerOpacity = CurvedAnimation(
-    parent: _controller,
-    curve: const Interval(0.75, 1, curve: Curves.easeIn),
-  );
-
-  @override
-  void initState() {
-    super.initState();
-    HapticFeedback.mediumImpact();
-    Future.delayed(const Duration(milliseconds: 450), () {
-      if (mounted) HapticFeedback.heavyImpact();
-    });
-    _controller.forward();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
+  /// Shared with the native launch assets rendered by `design/logo/`.
+  static const double markSize = 120;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: MuColors.ink,
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SizedBox(
-              height: 120,
-              width: 120,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  FadeTransition(
-                    opacity: _glowOpacity,
-                    child: Container(
-                      height: 120,
-                      width: 120,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: MuColors.primaryBright.withValues(alpha: 0.45),
-                            blurRadius: 60,
-                            spreadRadius: 10,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  FadeTransition(
-                    opacity: _logoOpacity,
-                    child: ScaleTransition(
-                      scale: _logoScale,
-                      // The app icon's mark on its white tile.
-                      child: const MuLogo.mark(size: 74, tile: true),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: MuSpace.l),
-            FadeTransition(
-              opacity: _logoOpacity,
-              child: Column(
-                children: [
-                  const MuLogo.wordmarkOnBrand(height: 30),
-                  const SizedBox(height: MuSpace.xs),
-                  Text(
-                    'a GTech initiative',
-                    style: MuType.caption.copyWith(
-                      color: MuColors.onBrand.withValues(alpha: 0.5),
-                      letterSpacing: 0.4,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: MuSpace.xl),
-            FadeTransition(
-              opacity: _spinnerOpacity,
-              child: const SizedBox(
-                width: 24,
-                height: 24,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2.5,
-                  valueColor: AlwaysStoppedAnimation(MuColors.onBrand),
-                ),
-              ),
-            ),
-          ],
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.light,
+      child: Scaffold(
+        backgroundColor: MuColors.launchNavy,
+        body: Center(
+          child: Semantics(
+            label: 'μLearn',
+            image: true,
+            child: const MuLogo.appIcon(size: markSize),
+          ),
         ),
       ),
     );

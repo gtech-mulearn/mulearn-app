@@ -1,4 +1,5 @@
-import 'package:flutter/foundation.dart' show TargetPlatform, defaultTargetPlatform;
+import 'package:flutter/foundation.dart'
+    show TargetPlatform, defaultTargetPlatform;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mulearn_app/core/config/flavor_config.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
@@ -19,19 +20,22 @@ import 'package:mulearn_app/core/network/api_exception.dart';
 /// `GOOGLE_SERVER_CLIENT_ID`; while it is empty, [isAvailable] is false and
 /// the sign-in screen hides the button instead of offering one that fails.
 class GoogleNativeSignInDataSource {
-  GoogleNativeSignInDataSource({TargetPlatform? platform, String? serverClientId})
-      : _platform = platform ?? defaultTargetPlatform,
-        _serverClientId = serverClientId ?? FlavorConfig.instance.googleServerClientId;
+  GoogleNativeSignInDataSource({
+    TargetPlatform? platform,
+    String? serverClientId,
+  }) : _platform = platform ?? defaultTargetPlatform,
+       _serverClientId =
+           serverClientId ?? FlavorConfig.instance.googleServerClientId;
 
   final TargetPlatform _platform;
   final String _serverClientId;
 
   /// Whether this platform can complete a native Google sign-in.
   bool get isAvailable => switch (_platform) {
-        TargetPlatform.iOS => true,
-        TargetPlatform.android => _serverClientId.isNotEmpty,
-        _ => false,
-      };
+    TargetPlatform.iOS => true,
+    TargetPlatform.android => _serverClientId.isNotEmpty,
+    _ => false,
+  };
 
   static const _iosClientId =
       '966772588752-tr5qq5cs4d6kfqsv6tivk3v58n26tnes.apps.googleusercontent.com';
@@ -42,7 +46,9 @@ class GoogleNativeSignInDataSource {
     if (_initialized) return;
     await GoogleSignIn.instance.initialize(
       clientId: _platform == TargetPlatform.iOS ? _iosClientId : null,
-      serverClientId: _platform == TargetPlatform.android ? _serverClientId : null,
+      serverClientId: _platform == TargetPlatform.android
+          ? _serverClientId
+          : null,
     );
     _initialized = true;
   }

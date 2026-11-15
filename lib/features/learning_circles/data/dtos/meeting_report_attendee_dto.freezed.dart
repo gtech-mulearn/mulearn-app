@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'meeting_report_attendee_dto.dart';
@@ -9,6 +9,7 @@ part of 'meeting_report_attendee_dto.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $MeetingReportAttendeeDtoCopyWith<MeetingReportAttendeeDto> get copyWith => _$Me
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MeetingReportAttendeeDto&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.isLcApproved, isLcApproved) || other.isLcApproved == isLcApproved)&&(identical(other.report, report) || other.report == report)&&(identical(other.reportLink, reportLink) || other.reportLink == reportLink));
+  final _this = this as MeetingReportAttendeeDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MeetingReportAttendeeDto&&(identical(other.userId, _this.userId) || other.userId == _this.userId)&&(identical(other.fullName, _this.fullName) || other.fullName == _this.fullName)&&(identical(other.muid, _this.muid) || other.muid == _this.muid)&&(identical(other.isLcApproved, _this.isLcApproved) || other.isLcApproved == _this.isLcApproved)&&(identical(other.report, _this.report) || other.report == _this.report)&&(identical(other.reportLink, _this.reportLink) || other.reportLink == _this.reportLink));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,userId,fullName,muid,isLcApproved,report,reportLink);
+int get hashCode {
+  final _this = this as MeetingReportAttendeeDto;
+  return Object.hash(runtimeType,_this.userId,_this.fullName,_this.muid,_this.isLcApproved,_this.report,_this.reportLink);
+}
 
 @override
 String toString() {
-  return 'MeetingReportAttendeeDto(userId: $userId, fullName: $fullName, muid: $muid, isLcApproved: $isLcApproved, report: $report, reportLink: $reportLink)';
+  final _this = this as MeetingReportAttendeeDto;
+  return 'MeetingReportAttendeeDto(userId: ${_this.userId}, fullName: ${_this.fullName}, muid: ${_this.muid}, isLcApproved: ${_this.isLcApproved}, report: ${_this.report}, reportLink: ${_this.reportLink})';
 }
 
 
@@ -66,7 +72,7 @@ class _$MeetingReportAttendeeDtoCopyWithImpl<$Res>
 /// Create a copy of MeetingReportAttendeeDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? userId = null,Object? fullName = null,Object? muid = null,Object? isLcApproved = null,Object? report = freezed,Object? reportLink = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(MeetingReportAttendeeDto(
 userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,fullName: null == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
 as String,muid: null == muid ? _self.muid : muid // ignore: cast_nullable_to_non_nullable
@@ -237,16 +243,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MeetingReportAttendeeDto&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.isLcApproved, isLcApproved) || other.isLcApproved == isLcApproved)&&(identical(other.report, report) || other.report == report)&&(identical(other.reportLink, reportLink) || other.reportLink == reportLink));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MeetingReportAttendeeDto&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.isLcApproved, isLcApproved) || other.isLcApproved == isLcApproved)&&(identical(other.report, report) || other.report == report)&&(identical(other.reportLink, reportLink) || other.reportLink == reportLink));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,userId,fullName,muid,isLcApproved,report,reportLink);
+int get hashCode {
+    return Object.hash(runtimeType,userId,fullName,muid,isLcApproved,report,reportLink);
+}
 
 @override
 String toString() {
-  return 'MeetingReportAttendeeDto(userId: $userId, fullName: $fullName, muid: $muid, isLcApproved: $isLcApproved, report: $report, reportLink: $reportLink)';
+    return 'MeetingReportAttendeeDto(userId: $userId, fullName: $fullName, muid: $muid, isLcApproved: $isLcApproved, report: $report, reportLink: $reportLink)';
 }
 
 

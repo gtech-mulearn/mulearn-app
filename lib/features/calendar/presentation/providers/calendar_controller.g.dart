@@ -10,7 +10,7 @@ part of 'calendar_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(calendarRemoteDataSource)
-const calendarRemoteDataSourceProvider = CalendarRemoteDataSourceProvider._();
+final calendarRemoteDataSourceProvider = CalendarRemoteDataSourceProvider._();
 
 final class CalendarRemoteDataSourceProvider
     extends
@@ -20,7 +20,7 @@ final class CalendarRemoteDataSourceProvider
           CalendarRemoteDataSource
         >
     with $Provider<CalendarRemoteDataSource> {
-  const CalendarRemoteDataSourceProvider._()
+  CalendarRemoteDataSourceProvider._()
     : super(
         from: null,
         argument: null,
@@ -61,7 +61,7 @@ String _$calendarRemoteDataSourceHash() =>
 /// §2/§5).
 
 @ProviderFor(calendarRepository)
-const calendarRepositoryProvider = CalendarRepositoryProvider._();
+final calendarRepositoryProvider = CalendarRepositoryProvider._();
 
 /// Presentation depends on the [CalendarRepository] contract (rules.md
 /// §2/§5).
@@ -76,7 +76,7 @@ final class CalendarRepositoryProvider
     with $Provider<CalendarRepository> {
   /// Presentation depends on the [CalendarRepository] contract (rules.md
   /// §2/§5).
-  const CalendarRepositoryProvider._()
+  CalendarRepositoryProvider._()
     : super(
         from: null,
         argument: null,
@@ -114,7 +114,7 @@ String _$calendarRepositoryHash() =>
     r'419497a58a792dc9ae28873139ecfa6350d53570';
 
 @ProviderFor(calendarEntries)
-const calendarEntriesProvider = CalendarEntriesFamily._();
+final calendarEntriesProvider = CalendarEntriesFamily._();
 
 final class CalendarEntriesProvider
     extends
@@ -126,7 +126,7 @@ final class CalendarEntriesProvider
     with
         $FutureModifier<List<CalendarEntry>>,
         $FutureProvider<List<CalendarEntry>> {
-  const CalendarEntriesProvider._({
+  CalendarEntriesProvider._({
     required CalendarEntriesFamily super.from,
     required ({DateTime start, DateTime end}) super.argument,
   }) : super(
@@ -178,7 +178,7 @@ final class CalendarEntriesFamily extends $Family
           FutureOr<List<CalendarEntry>>,
           ({DateTime start, DateTime end})
         > {
-  const CalendarEntriesFamily._()
+  CalendarEntriesFamily._()
     : super(
         retry: null,
         name: r'calendarEntriesProvider',
@@ -195,72 +195,4 @@ final class CalendarEntriesFamily extends $Family
 
   @override
   String toString() => r'calendarEntriesProvider';
-}
-
-/// Tracks which month the calendar grid is currently showing — navigation
-/// state only, the entries themselves are fetched by [calendarEntriesProvider]
-/// keyed off the visible grid's date range.
-
-@ProviderFor(CalendarMonthController)
-const calendarMonthControllerProvider = CalendarMonthControllerProvider._();
-
-/// Tracks which month the calendar grid is currently showing — navigation
-/// state only, the entries themselves are fetched by [calendarEntriesProvider]
-/// keyed off the visible grid's date range.
-final class CalendarMonthControllerProvider
-    extends $NotifierProvider<CalendarMonthController, DateTime> {
-  /// Tracks which month the calendar grid is currently showing — navigation
-  /// state only, the entries themselves are fetched by [calendarEntriesProvider]
-  /// keyed off the visible grid's date range.
-  const CalendarMonthControllerProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'calendarMonthControllerProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$calendarMonthControllerHash();
-
-  @$internal
-  @override
-  CalendarMonthController create() => CalendarMonthController();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(DateTime value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<DateTime>(value),
-    );
-  }
-}
-
-String _$calendarMonthControllerHash() =>
-    r'510161f7384a7ad4029f292b32836122125b5e49';
-
-/// Tracks which month the calendar grid is currently showing — navigation
-/// state only, the entries themselves are fetched by [calendarEntriesProvider]
-/// keyed off the visible grid's date range.
-
-abstract class _$CalendarMonthController extends $Notifier<DateTime> {
-  DateTime build();
-  @$mustCallSuper
-  @override
-  void runBuild() {
-    final created = build();
-    final ref = this.ref as $Ref<DateTime, DateTime>;
-    final element =
-        ref.element
-            as $ClassProviderElement<
-              AnyNotifier<DateTime, DateTime>,
-              DateTime,
-              Object?,
-              Object?
-            >;
-    element.handleValue(ref, created);
-  }
 }

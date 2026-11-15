@@ -10,7 +10,7 @@ part of 'approvals_providers.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(orgLinkRequests)
-const orgLinkRequestsProvider = OrgLinkRequestsProvider._();
+final orgLinkRequestsProvider = OrgLinkRequestsProvider._();
 
 final class OrgLinkRequestsProvider
     extends
@@ -22,7 +22,7 @@ final class OrgLinkRequestsProvider
     with
         $FutureModifier<List<OrgLinkRequest>>,
         $FutureProvider<List<OrgLinkRequest>> {
-  const OrgLinkRequestsProvider._()
+  OrgLinkRequestsProvider._()
     : super(
         from: null,
         argument: null,
@@ -51,7 +51,7 @@ final class OrgLinkRequestsProvider
 String _$orgLinkRequestsHash() => r'486b76b18c073525cc4cdcb039ce3bb1fcaf33d0';
 
 @ProviderFor(pendingCampusEvents)
-const pendingCampusEventsProvider = PendingCampusEventsProvider._();
+final pendingCampusEventsProvider = PendingCampusEventsProvider._();
 
 final class PendingCampusEventsProvider
     extends
@@ -63,7 +63,7 @@ final class PendingCampusEventsProvider
     with
         $FutureModifier<List<PendingCampusEvent>>,
         $FutureProvider<List<PendingCampusEvent>> {
-  const PendingCampusEventsProvider._()
+  PendingCampusEventsProvider._()
     : super(
         from: null,
         argument: null,
@@ -93,7 +93,7 @@ String _$pendingCampusEventsHash() =>
     r'58c436626704f29854c14eba642d6dbeaa93f1e5';
 
 @ProviderFor(collabInvites)
-const collabInvitesProvider = CollabInvitesProvider._();
+final collabInvitesProvider = CollabInvitesProvider._();
 
 final class CollabInvitesProvider
     extends
@@ -105,7 +105,7 @@ final class CollabInvitesProvider
     with
         $FutureModifier<List<CollabInvite>>,
         $FutureProvider<List<CollabInvite>> {
-  const CollabInvitesProvider._()
+  CollabInvitesProvider._()
     : super(
         from: null,
         argument: null,
@@ -137,7 +137,7 @@ String _$collabInvitesHash() => r'994be6a8076b46c700f0cb375da6a7994470a615';
 /// the usual cause is someone else having handled it already.
 
 @ProviderFor(ApprovalActions)
-const approvalActionsProvider = ApprovalActionsProvider._();
+final approvalActionsProvider = ApprovalActionsProvider._();
 
 /// Every decision reloads its list afterwards — after a refusal too, since
 /// the usual cause is someone else having handled it already.
@@ -145,7 +145,7 @@ final class ApprovalActionsProvider
     extends $NotifierProvider<ApprovalActions, void> {
   /// Every decision reloads its list afterwards — after a refusal too, since
   /// the usual cause is someone else having handled it already.
-  const ApprovalActionsProvider._()
+  ApprovalActionsProvider._()
     : super(
         from: null,
         argument: null,
@@ -181,8 +181,7 @@ abstract class _$ApprovalActions extends $Notifier<void> {
   void build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<void, void>;
     final element =
         ref.element
@@ -192,6 +191,6 @@ abstract class _$ApprovalActions extends $Notifier<void> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, null);
+    return element.handleCreate(ref, build);
   }
 }

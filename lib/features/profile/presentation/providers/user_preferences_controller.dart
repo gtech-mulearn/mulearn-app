@@ -16,7 +16,9 @@ class UserPreferencesController extends _$UserPreferencesController {
     bool? interestedInWork,
     bool? interestedInGigWork,
   }) async {
-    await ref.read(profileRepositoryProvider).updateUserPreferences(
+    await ref
+        .read(profileRepositoryProvider)
+        .updateUserPreferences(
           domains: domains,
           endgoals: endgoals,
           interestedInWork: interestedInWork,

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'meeting_attendee.dart';
@@ -9,6 +9,7 @@ part of 'meeting_attendee.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $MeetingAttendeeCopyWith<MeetingAttendee> get copyWith => _$MeetingAttendeeCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MeetingAttendee&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.isJoined, isJoined) || other.isJoined == isJoined)&&(identical(other.isReportSubmitted, isReportSubmitted) || other.isReportSubmitted == isReportSubmitted)&&(identical(other.profilePicUrl, profilePicUrl) || other.profilePicUrl == profilePicUrl)&&(identical(other.isSameOrg, isSameOrg) || other.isSameOrg == isSameOrg));
+  final _this = this as MeetingAttendee;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MeetingAttendee&&(identical(other.userId, _this.userId) || other.userId == _this.userId)&&(identical(other.fullName, _this.fullName) || other.fullName == _this.fullName)&&(identical(other.isJoined, _this.isJoined) || other.isJoined == _this.isJoined)&&(identical(other.isReportSubmitted, _this.isReportSubmitted) || other.isReportSubmitted == _this.isReportSubmitted)&&(identical(other.profilePicUrl, _this.profilePicUrl) || other.profilePicUrl == _this.profilePicUrl)&&(identical(other.isSameOrg, _this.isSameOrg) || other.isSameOrg == _this.isSameOrg));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,userId,fullName,isJoined,isReportSubmitted,profilePicUrl,isSameOrg);
+int get hashCode {
+  final _this = this as MeetingAttendee;
+  return Object.hash(runtimeType,_this.userId,_this.fullName,_this.isJoined,_this.isReportSubmitted,_this.profilePicUrl,_this.isSameOrg);
+}
 
 @override
 String toString() {
-  return 'MeetingAttendee(userId: $userId, fullName: $fullName, isJoined: $isJoined, isReportSubmitted: $isReportSubmitted, profilePicUrl: $profilePicUrl, isSameOrg: $isSameOrg)';
+  final _this = this as MeetingAttendee;
+  return 'MeetingAttendee(userId: ${_this.userId}, fullName: ${_this.fullName}, isJoined: ${_this.isJoined}, isReportSubmitted: ${_this.isReportSubmitted}, profilePicUrl: ${_this.profilePicUrl}, isSameOrg: ${_this.isSameOrg})';
 }
 
 
@@ -63,7 +69,7 @@ class _$MeetingAttendeeCopyWithImpl<$Res>
 /// Create a copy of MeetingAttendee
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? userId = null,Object? fullName = null,Object? isJoined = null,Object? isReportSubmitted = null,Object? profilePicUrl = freezed,Object? isSameOrg = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(MeetingAttendee(
 userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,fullName: null == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
 as String,isJoined: null == isJoined ? _self.isJoined : isJoined // ignore: cast_nullable_to_non_nullable
@@ -231,16 +237,18 @@ _$MeetingAttendeeCopyWith<_MeetingAttendee> get copyWith => __$MeetingAttendeeCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MeetingAttendee&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.isJoined, isJoined) || other.isJoined == isJoined)&&(identical(other.isReportSubmitted, isReportSubmitted) || other.isReportSubmitted == isReportSubmitted)&&(identical(other.profilePicUrl, profilePicUrl) || other.profilePicUrl == profilePicUrl)&&(identical(other.isSameOrg, isSameOrg) || other.isSameOrg == isSameOrg));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MeetingAttendee&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.isJoined, isJoined) || other.isJoined == isJoined)&&(identical(other.isReportSubmitted, isReportSubmitted) || other.isReportSubmitted == isReportSubmitted)&&(identical(other.profilePicUrl, profilePicUrl) || other.profilePicUrl == profilePicUrl)&&(identical(other.isSameOrg, isSameOrg) || other.isSameOrg == isSameOrg));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,userId,fullName,isJoined,isReportSubmitted,profilePicUrl,isSameOrg);
+int get hashCode {
+    return Object.hash(runtimeType,userId,fullName,isJoined,isReportSubmitted,profilePicUrl,isSameOrg);
+}
 
 @override
 String toString() {
-  return 'MeetingAttendee(userId: $userId, fullName: $fullName, isJoined: $isJoined, isReportSubmitted: $isReportSubmitted, profilePicUrl: $profilePicUrl, isSameOrg: $isSameOrg)';
+    return 'MeetingAttendee(userId: $userId, fullName: $fullName, isJoined: $isJoined, isReportSubmitted: $isReportSubmitted, profilePicUrl: $profilePicUrl, isSameOrg: $isSameOrg)';
 }
 
 

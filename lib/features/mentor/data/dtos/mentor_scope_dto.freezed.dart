@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'mentor_scope_dto.dart';
@@ -9,6 +9,7 @@ part of 'mentor_scope_dto.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $MentorScopeDtoCopyWith<MentorScopeDto> get copyWith => _$MentorScopeDtoCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MentorScopeDto&&(identical(other.scopeType, scopeType) || other.scopeType == scopeType)&&(identical(other.scopeId, scopeId) || other.scopeId == scopeId)&&(identical(other.scopeName, scopeName) || other.scopeName == scopeName)&&const DeepCollectionEquality().equals(other.metrics, metrics));
+  final _this = this as MentorScopeDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MentorScopeDto&&(identical(other.scopeType, _this.scopeType) || other.scopeType == _this.scopeType)&&(identical(other.scopeId, _this.scopeId) || other.scopeId == _this.scopeId)&&(identical(other.scopeName, _this.scopeName) || other.scopeName == _this.scopeName)&&const DeepCollectionEquality().equals(other.metrics, _this.metrics));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,scopeType,scopeId,scopeName,const DeepCollectionEquality().hash(metrics));
+int get hashCode {
+  final _this = this as MentorScopeDto;
+  return Object.hash(runtimeType,_this.scopeType,_this.scopeId,_this.scopeName,const DeepCollectionEquality().hash(_this.metrics));
+}
 
 @override
 String toString() {
-  return 'MentorScopeDto(scopeType: $scopeType, scopeId: $scopeId, scopeName: $scopeName, metrics: $metrics)';
+  final _this = this as MentorScopeDto;
+  return 'MentorScopeDto(scopeType: ${_this.scopeType}, scopeId: ${_this.scopeId}, scopeName: ${_this.scopeName}, metrics: ${_this.metrics})';
 }
 
 
@@ -66,7 +72,7 @@ class _$MentorScopeDtoCopyWithImpl<$Res>
 /// Create a copy of MentorScopeDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? scopeType = freezed,Object? scopeId = null,Object? scopeName = null,Object? metrics = null,}) {
-  return _then(_self.copyWith(
+  return _then(MentorScopeDto(
 scopeType: freezed == scopeType ? _self.scopeType : scopeType // ignore: cast_nullable_to_non_nullable
 as String?,scopeId: null == scopeId ? _self.scopeId : scopeId // ignore: cast_nullable_to_non_nullable
 as String,scopeName: null == scopeName ? _self.scopeName : scopeName // ignore: cast_nullable_to_non_nullable
@@ -212,7 +218,7 @@ return $default(_that.scopeType,_that.scopeId,_that.scopeName,_that.metrics);cas
 @JsonSerializable()
 
 class _MentorScopeDto extends MentorScopeDto {
-  const _MentorScopeDto({this.scopeType, this.scopeId = '', this.scopeName = '', final  Map<String, dynamic> metrics = const <String, dynamic>{}}): _metrics = metrics,super._();
+  const _MentorScopeDto({this.scopeType, this.scopeId = '', this.scopeName = '',  Map<String, dynamic> metrics = const <String, dynamic>{}}): _metrics = metrics,super._();
   factory _MentorScopeDto.fromJson(Map<String, dynamic> json) => _$MentorScopeDtoFromJson(json);
 
 @override final  String? scopeType;
@@ -239,16 +245,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MentorScopeDto&&(identical(other.scopeType, scopeType) || other.scopeType == scopeType)&&(identical(other.scopeId, scopeId) || other.scopeId == scopeId)&&(identical(other.scopeName, scopeName) || other.scopeName == scopeName)&&const DeepCollectionEquality().equals(other._metrics, _metrics));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MentorScopeDto&&(identical(other.scopeType, scopeType) || other.scopeType == scopeType)&&(identical(other.scopeId, scopeId) || other.scopeId == scopeId)&&(identical(other.scopeName, scopeName) || other.scopeName == scopeName)&&const DeepCollectionEquality().equals(other.metrics, _metrics));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,scopeType,scopeId,scopeName,const DeepCollectionEquality().hash(_metrics));
+int get hashCode {
+    return Object.hash(runtimeType,scopeType,scopeId,scopeName,const DeepCollectionEquality().hash(_metrics));
+}
 
 @override
 String toString() {
-  return 'MentorScopeDto(scopeType: $scopeType, scopeId: $scopeId, scopeName: $scopeName, metrics: $metrics)';
+    return 'MentorScopeDto(scopeType: $scopeType, scopeId: $scopeId, scopeName: $scopeName, metrics: $metrics)';
 }
 
 

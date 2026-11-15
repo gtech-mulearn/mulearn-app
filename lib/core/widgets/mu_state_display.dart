@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:mulearn_app/core/design_system/theme/mu_theme.dart';
 import 'package:mulearn_app/core/theme/mu_space.dart';
-import 'package:mulearn_app/core/theme/mulearn_colors.dart';
-import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 
 /// Which illustrated state to show. Mirrors the dashboard's StateDisplay
 /// variants (`src/components/ui/state-display.tsx`):
@@ -14,7 +13,13 @@ enum MuStateVariant { notFound, noResults, noTasks }
 /// Illustration width presets: the dashboard's `max-w-45/65/90`.
 enum MuStateSize { sm, md, lg }
 
-typedef _StateConfig = ({String asset, double width, double height, String title, String description});
+typedef _StateConfig = ({
+  String asset,
+  double width,
+  double height,
+  String title,
+  String description,
+});
 
 /// The dashboard's `STATE_ILLUSTRATIONS` registry: the same SVGs (copied
 /// unchanged into `assets/illustrations/`) and the same default copy.
@@ -24,21 +29,24 @@ const Map<MuStateVariant, _StateConfig> _states = {
     width: 1607,
     height: 979,
     title: 'Looks like you wandered off the path.',
-    description: "That's how new paths are discovered. But this one doesn't exist yet.",
+    description:
+        "That's how new paths are discovered. But this one doesn't exist yet.",
   ),
   MuStateVariant.noResults: (
     asset: 'assets/illustrations/no-results.svg',
     width: 1536,
     height: 1024,
     title: 'Nothing here. Yet.',
-    description: "Curiosity doesn't always find answers on the first try. Try a different path and keep exploring.",
+    description:
+        "Curiosity doesn't always find answers on the first try. Try a different path and keep exploring.",
   ),
   MuStateVariant.noTasks: (
     asset: 'assets/illustrations/no-tasks.svg',
     width: 1536,
     height: 1024,
     title: 'No tasks available',
-    description: 'There are currently no tasks listed in this view. New tasks will appear here once created.',
+    description:
+        'There are currently no tasks listed in this view. New tasks will appear here once created.',
   ),
 };
 
@@ -98,20 +106,24 @@ class MuStateDisplay extends StatelessWidget {
             constraints: const BoxConstraints(maxWidth: 448),
             child: Column(
               children: [
-                Text(title ?? config.title, style: MuType.title, textAlign: TextAlign.center),
+                Text(
+                  title ?? config.title,
+                  style: context.mu.text.title2,
+                  textAlign: TextAlign.center,
+                ),
                 const SizedBox(height: MuSpace.xs),
                 Text(
                   description ?? config.description,
-                  style: MuType.body.copyWith(fontSize: 14, color: MuColors.inkSecondary),
+                  style: context.mu.text.body.copyWith(
+                    fontSize: 14,
+                    color: context.mu.colors.ink2,
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ],
             ),
           ),
-          if (action != null) ...[
-            const SizedBox(height: MuSpace.l),
-            action!,
-          ],
+          if (action != null) ...[const SizedBox(height: MuSpace.l), action!],
         ],
       ),
     );

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'campus_summary.dart';
@@ -9,6 +9,7 @@ part of 'campus_summary.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $CampusSummaryCopyWith<CampusSummary> get copyWith => _$CampusSummaryCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CampusSummary&&(identical(other.orgId, orgId) || other.orgId == orgId)&&(identical(other.collegeName, collegeName) || other.collegeName == collegeName)&&(identical(other.campusCode, campusCode) || other.campusCode == campusCode)&&(identical(other.zone, zone) || other.zone == zone)&&const DeepCollectionEquality().equals(other.stats, stats)&&const DeepCollectionEquality().equals(other.funnel, funnel)&&(identical(other.funnelMax, funnelMax) || other.funnelMax == funnelMax)&&const DeepCollectionEquality().equals(other.circleHealth, circleHealth)&&const DeepCollectionEquality().equals(other.recentActivity, recentActivity));
+  final _this = this as CampusSummary;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CampusSummary&&(identical(other.orgId, _this.orgId) || other.orgId == _this.orgId)&&(identical(other.collegeName, _this.collegeName) || other.collegeName == _this.collegeName)&&(identical(other.campusCode, _this.campusCode) || other.campusCode == _this.campusCode)&&(identical(other.zone, _this.zone) || other.zone == _this.zone)&&const DeepCollectionEquality().equals(other.stats, _this.stats)&&const DeepCollectionEquality().equals(other.funnel, _this.funnel)&&(identical(other.funnelMax, _this.funnelMax) || other.funnelMax == _this.funnelMax)&&const DeepCollectionEquality().equals(other.circleHealth, _this.circleHealth)&&const DeepCollectionEquality().equals(other.recentActivity, _this.recentActivity));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,orgId,collegeName,campusCode,zone,const DeepCollectionEquality().hash(stats),const DeepCollectionEquality().hash(funnel),funnelMax,const DeepCollectionEquality().hash(circleHealth),const DeepCollectionEquality().hash(recentActivity));
+int get hashCode {
+  final _this = this as CampusSummary;
+  return Object.hash(runtimeType,_this.orgId,_this.collegeName,_this.campusCode,_this.zone,const DeepCollectionEquality().hash(_this.stats),const DeepCollectionEquality().hash(_this.funnel),_this.funnelMax,const DeepCollectionEquality().hash(_this.circleHealth),const DeepCollectionEquality().hash(_this.recentActivity));
+}
 
 @override
 String toString() {
-  return 'CampusSummary(orgId: $orgId, collegeName: $collegeName, campusCode: $campusCode, zone: $zone, stats: $stats, funnel: $funnel, funnelMax: $funnelMax, circleHealth: $circleHealth, recentActivity: $recentActivity)';
+  final _this = this as CampusSummary;
+  return 'CampusSummary(orgId: ${_this.orgId}, collegeName: ${_this.collegeName}, campusCode: ${_this.campusCode}, zone: ${_this.zone}, stats: ${_this.stats}, funnel: ${_this.funnel}, funnelMax: ${_this.funnelMax}, circleHealth: ${_this.circleHealth}, recentActivity: ${_this.recentActivity})';
 }
 
 
@@ -63,7 +69,7 @@ class _$CampusSummaryCopyWithImpl<$Res>
 /// Create a copy of CampusSummary
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? orgId = null,Object? collegeName = null,Object? campusCode = null,Object? zone = null,Object? stats = null,Object? funnel = null,Object? funnelMax = null,Object? circleHealth = null,Object? recentActivity = null,}) {
-  return _then(_self.copyWith(
+  return _then(CampusSummary(
 orgId: null == orgId ? _self.orgId : orgId // ignore: cast_nullable_to_non_nullable
 as String,collegeName: null == collegeName ? _self.collegeName : collegeName // ignore: cast_nullable_to_non_nullable
 as String,campusCode: null == campusCode ? _self.campusCode : campusCode // ignore: cast_nullable_to_non_nullable
@@ -214,7 +220,7 @@ return $default(_that.orgId,_that.collegeName,_that.campusCode,_that.zone,_that.
 
 
 class _CampusSummary implements CampusSummary {
-  const _CampusSummary({required this.orgId, required this.collegeName, required this.campusCode, required this.zone, required final  List<StatCard> stats, required final  List<FunnelStage> funnel, required this.funnelMax, required final  List<CircleHealth> circleHealth, required final  List<CampusActivity> recentActivity}): _stats = stats,_funnel = funnel,_circleHealth = circleHealth,_recentActivity = recentActivity;
+  const _CampusSummary({required this.orgId, required this.collegeName, required this.campusCode, required this.zone, required  List<StatCard> stats, required  List<FunnelStage> funnel, required this.funnelMax, required  List<CircleHealth> circleHealth, required  List<CampusActivity> recentActivity}): _stats = stats,_funnel = funnel,_circleHealth = circleHealth,_recentActivity = recentActivity;
   
 
 @override final  String orgId;
@@ -261,16 +267,18 @@ _$CampusSummaryCopyWith<_CampusSummary> get copyWith => __$CampusSummaryCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CampusSummary&&(identical(other.orgId, orgId) || other.orgId == orgId)&&(identical(other.collegeName, collegeName) || other.collegeName == collegeName)&&(identical(other.campusCode, campusCode) || other.campusCode == campusCode)&&(identical(other.zone, zone) || other.zone == zone)&&const DeepCollectionEquality().equals(other._stats, _stats)&&const DeepCollectionEquality().equals(other._funnel, _funnel)&&(identical(other.funnelMax, funnelMax) || other.funnelMax == funnelMax)&&const DeepCollectionEquality().equals(other._circleHealth, _circleHealth)&&const DeepCollectionEquality().equals(other._recentActivity, _recentActivity));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CampusSummary&&(identical(other.orgId, orgId) || other.orgId == orgId)&&(identical(other.collegeName, collegeName) || other.collegeName == collegeName)&&(identical(other.campusCode, campusCode) || other.campusCode == campusCode)&&(identical(other.zone, zone) || other.zone == zone)&&const DeepCollectionEquality().equals(other.stats, _stats)&&const DeepCollectionEquality().equals(other.funnel, _funnel)&&(identical(other.funnelMax, funnelMax) || other.funnelMax == funnelMax)&&const DeepCollectionEquality().equals(other.circleHealth, _circleHealth)&&const DeepCollectionEquality().equals(other.recentActivity, _recentActivity));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,orgId,collegeName,campusCode,zone,const DeepCollectionEquality().hash(_stats),const DeepCollectionEquality().hash(_funnel),funnelMax,const DeepCollectionEquality().hash(_circleHealth),const DeepCollectionEquality().hash(_recentActivity));
+int get hashCode {
+    return Object.hash(runtimeType,orgId,collegeName,campusCode,zone,const DeepCollectionEquality().hash(_stats),const DeepCollectionEquality().hash(_funnel),funnelMax,const DeepCollectionEquality().hash(_circleHealth),const DeepCollectionEquality().hash(_recentActivity));
+}
 
 @override
 String toString() {
-  return 'CampusSummary(orgId: $orgId, collegeName: $collegeName, campusCode: $campusCode, zone: $zone, stats: $stats, funnel: $funnel, funnelMax: $funnelMax, circleHealth: $circleHealth, recentActivity: $recentActivity)';
+    return 'CampusSummary(orgId: $orgId, collegeName: $collegeName, campusCode: $campusCode, zone: $zone, stats: $stats, funnel: $funnel, funnelMax: $funnelMax, circleHealth: $circleHealth, recentActivity: $recentActivity)';
 }
 
 
@@ -330,16 +338,21 @@ $StatCardCopyWith<StatCard> get copyWith => _$StatCardCopyWithImpl<StatCard>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is StatCard&&(identical(other.key, key) || other.key == key)&&(identical(other.label, label) || other.label == label)&&(identical(other.value, value) || other.value == value)&&(identical(other.delta, delta) || other.delta == delta)&&(identical(other.deltaType, deltaType) || other.deltaType == deltaType)&&(identical(other.period, period) || other.period == period));
+  final _this = this as StatCard;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StatCard&&(identical(other.key, _this.key) || other.key == _this.key)&&(identical(other.label, _this.label) || other.label == _this.label)&&(identical(other.value, _this.value) || other.value == _this.value)&&(identical(other.delta, _this.delta) || other.delta == _this.delta)&&(identical(other.deltaType, _this.deltaType) || other.deltaType == _this.deltaType)&&(identical(other.period, _this.period) || other.period == _this.period));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,key,label,value,delta,deltaType,period);
+int get hashCode {
+  final _this = this as StatCard;
+  return Object.hash(runtimeType,_this.key,_this.label,_this.value,_this.delta,_this.deltaType,_this.period);
+}
 
 @override
 String toString() {
-  return 'StatCard(key: $key, label: $label, value: $value, delta: $delta, deltaType: $deltaType, period: $period)';
+  final _this = this as StatCard;
+  return 'StatCard(key: ${_this.key}, label: ${_this.label}, value: ${_this.value}, delta: ${_this.delta}, deltaType: ${_this.deltaType}, period: ${_this.period})';
 }
 
 
@@ -368,7 +381,7 @@ class _$StatCardCopyWithImpl<$Res>
 /// Create a copy of StatCard
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? key = null,Object? label = null,Object? value = freezed,Object? delta = freezed,Object? deltaType = freezed,Object? period = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(StatCard(
 key: null == key ? _self.key : key // ignore: cast_nullable_to_non_nullable
 as String,label: null == label ? _self.label : label // ignore: cast_nullable_to_non_nullable
 as String,value: freezed == value ? _self.value : value // ignore: cast_nullable_to_non_nullable
@@ -536,16 +549,18 @@ _$StatCardCopyWith<_StatCard> get copyWith => __$StatCardCopyWithImpl<_StatCard>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StatCard&&(identical(other.key, key) || other.key == key)&&(identical(other.label, label) || other.label == label)&&(identical(other.value, value) || other.value == value)&&(identical(other.delta, delta) || other.delta == delta)&&(identical(other.deltaType, deltaType) || other.deltaType == deltaType)&&(identical(other.period, period) || other.period == period));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _StatCard&&(identical(other.key, key) || other.key == key)&&(identical(other.label, label) || other.label == label)&&(identical(other.value, value) || other.value == value)&&(identical(other.delta, delta) || other.delta == delta)&&(identical(other.deltaType, deltaType) || other.deltaType == deltaType)&&(identical(other.period, period) || other.period == period));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,key,label,value,delta,deltaType,period);
+int get hashCode {
+    return Object.hash(runtimeType,key,label,value,delta,deltaType,period);
+}
 
 @override
 String toString() {
-  return 'StatCard(key: $key, label: $label, value: $value, delta: $delta, deltaType: $deltaType, period: $period)';
+    return 'StatCard(key: $key, label: $label, value: $value, delta: $delta, deltaType: $deltaType, period: $period)';
 }
 
 
@@ -602,16 +617,21 @@ $FunnelStageCopyWith<FunnelStage> get copyWith => _$FunnelStageCopyWithImpl<Funn
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FunnelStage&&(identical(other.key, key) || other.key == key)&&(identical(other.label, label) || other.label == label)&&(identical(other.count, count) || other.count == count)&&(identical(other.percentage, percentage) || other.percentage == percentage));
+  final _this = this as FunnelStage;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FunnelStage&&(identical(other.key, _this.key) || other.key == _this.key)&&(identical(other.label, _this.label) || other.label == _this.label)&&(identical(other.count, _this.count) || other.count == _this.count)&&(identical(other.percentage, _this.percentage) || other.percentage == _this.percentage));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,key,label,count,percentage);
+int get hashCode {
+  final _this = this as FunnelStage;
+  return Object.hash(runtimeType,_this.key,_this.label,_this.count,_this.percentage);
+}
 
 @override
 String toString() {
-  return 'FunnelStage(key: $key, label: $label, count: $count, percentage: $percentage)';
+  final _this = this as FunnelStage;
+  return 'FunnelStage(key: ${_this.key}, label: ${_this.label}, count: ${_this.count}, percentage: ${_this.percentage})';
 }
 
 
@@ -640,7 +660,7 @@ class _$FunnelStageCopyWithImpl<$Res>
 /// Create a copy of FunnelStage
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? key = null,Object? label = null,Object? count = null,Object? percentage = null,}) {
-  return _then(_self.copyWith(
+  return _then(FunnelStage(
 key: null == key ? _self.key : key // ignore: cast_nullable_to_non_nullable
 as String,label: null == label ? _self.label : label // ignore: cast_nullable_to_non_nullable
 as String,count: null == count ? _self.count : count // ignore: cast_nullable_to_non_nullable
@@ -804,16 +824,18 @@ _$FunnelStageCopyWith<_FunnelStage> get copyWith => __$FunnelStageCopyWithImpl<_
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FunnelStage&&(identical(other.key, key) || other.key == key)&&(identical(other.label, label) || other.label == label)&&(identical(other.count, count) || other.count == count)&&(identical(other.percentage, percentage) || other.percentage == percentage));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _FunnelStage&&(identical(other.key, key) || other.key == key)&&(identical(other.label, label) || other.label == label)&&(identical(other.count, count) || other.count == count)&&(identical(other.percentage, percentage) || other.percentage == percentage));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,key,label,count,percentage);
+int get hashCode {
+    return Object.hash(runtimeType,key,label,count,percentage);
+}
 
 @override
 String toString() {
-  return 'FunnelStage(key: $key, label: $label, count: $count, percentage: $percentage)';
+    return 'FunnelStage(key: $key, label: $label, count: $count, percentage: $percentage)';
 }
 
 
@@ -868,16 +890,21 @@ $CircleHealthCopyWith<CircleHealth> get copyWith => _$CircleHealthCopyWithImpl<C
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CircleHealth&&(identical(other.circleId, circleId) || other.circleId == circleId)&&(identical(other.circleName, circleName) || other.circleName == circleName)&&(identical(other.igName, igName) || other.igName == igName)&&(identical(other.memberCount, memberCount) || other.memberCount == memberCount)&&(identical(other.sessionsPerMonth, sessionsPerMonth) || other.sessionsPerMonth == sessionsPerMonth)&&(identical(other.status, status) || other.status == status)&&(identical(other.lastSessionAt, lastSessionAt) || other.lastSessionAt == lastSessionAt));
+  final _this = this as CircleHealth;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CircleHealth&&(identical(other.circleId, _this.circleId) || other.circleId == _this.circleId)&&(identical(other.circleName, _this.circleName) || other.circleName == _this.circleName)&&(identical(other.igName, _this.igName) || other.igName == _this.igName)&&(identical(other.memberCount, _this.memberCount) || other.memberCount == _this.memberCount)&&(identical(other.sessionsPerMonth, _this.sessionsPerMonth) || other.sessionsPerMonth == _this.sessionsPerMonth)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.lastSessionAt, _this.lastSessionAt) || other.lastSessionAt == _this.lastSessionAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,circleId,circleName,igName,memberCount,sessionsPerMonth,status,lastSessionAt);
+int get hashCode {
+  final _this = this as CircleHealth;
+  return Object.hash(runtimeType,_this.circleId,_this.circleName,_this.igName,_this.memberCount,_this.sessionsPerMonth,_this.status,_this.lastSessionAt);
+}
 
 @override
 String toString() {
-  return 'CircleHealth(circleId: $circleId, circleName: $circleName, igName: $igName, memberCount: $memberCount, sessionsPerMonth: $sessionsPerMonth, status: $status, lastSessionAt: $lastSessionAt)';
+  final _this = this as CircleHealth;
+  return 'CircleHealth(circleId: ${_this.circleId}, circleName: ${_this.circleName}, igName: ${_this.igName}, memberCount: ${_this.memberCount}, sessionsPerMonth: ${_this.sessionsPerMonth}, status: ${_this.status}, lastSessionAt: ${_this.lastSessionAt})';
 }
 
 
@@ -906,7 +933,7 @@ class _$CircleHealthCopyWithImpl<$Res>
 /// Create a copy of CircleHealth
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? circleId = null,Object? circleName = null,Object? igName = null,Object? memberCount = null,Object? sessionsPerMonth = null,Object? status = null,Object? lastSessionAt = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(CircleHealth(
 circleId: null == circleId ? _self.circleId : circleId // ignore: cast_nullable_to_non_nullable
 as String,circleName: null == circleName ? _self.circleName : circleName // ignore: cast_nullable_to_non_nullable
 as String,igName: null == igName ? _self.igName : igName // ignore: cast_nullable_to_non_nullable
@@ -1076,16 +1103,18 @@ _$CircleHealthCopyWith<_CircleHealth> get copyWith => __$CircleHealthCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CircleHealth&&(identical(other.circleId, circleId) || other.circleId == circleId)&&(identical(other.circleName, circleName) || other.circleName == circleName)&&(identical(other.igName, igName) || other.igName == igName)&&(identical(other.memberCount, memberCount) || other.memberCount == memberCount)&&(identical(other.sessionsPerMonth, sessionsPerMonth) || other.sessionsPerMonth == sessionsPerMonth)&&(identical(other.status, status) || other.status == status)&&(identical(other.lastSessionAt, lastSessionAt) || other.lastSessionAt == lastSessionAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CircleHealth&&(identical(other.circleId, circleId) || other.circleId == circleId)&&(identical(other.circleName, circleName) || other.circleName == circleName)&&(identical(other.igName, igName) || other.igName == igName)&&(identical(other.memberCount, memberCount) || other.memberCount == memberCount)&&(identical(other.sessionsPerMonth, sessionsPerMonth) || other.sessionsPerMonth == sessionsPerMonth)&&(identical(other.status, status) || other.status == status)&&(identical(other.lastSessionAt, lastSessionAt) || other.lastSessionAt == lastSessionAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,circleId,circleName,igName,memberCount,sessionsPerMonth,status,lastSessionAt);
+int get hashCode {
+    return Object.hash(runtimeType,circleId,circleName,igName,memberCount,sessionsPerMonth,status,lastSessionAt);
+}
 
 @override
 String toString() {
-  return 'CircleHealth(circleId: $circleId, circleName: $circleName, igName: $igName, memberCount: $memberCount, sessionsPerMonth: $sessionsPerMonth, status: $status, lastSessionAt: $lastSessionAt)';
+    return 'CircleHealth(circleId: $circleId, circleName: $circleName, igName: $igName, memberCount: $memberCount, sessionsPerMonth: $sessionsPerMonth, status: $status, lastSessionAt: $lastSessionAt)';
 }
 
 
@@ -1143,16 +1172,21 @@ $CampusActivityCopyWith<CampusActivity> get copyWith => _$CampusActivityCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CampusActivity&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.title, title) || other.title == title)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.actorName, actorName) || other.actorName == actorName)&&(identical(other.actorMuid, actorMuid) || other.actorMuid == actorMuid));
+  final _this = this as CampusActivity;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CampusActivity&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.type, _this.type) || other.type == _this.type)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.actorName, _this.actorName) || other.actorName == _this.actorName)&&(identical(other.actorMuid, _this.actorMuid) || other.actorMuid == _this.actorMuid));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,type,title,createdAt,actorName,actorMuid);
+int get hashCode {
+  final _this = this as CampusActivity;
+  return Object.hash(runtimeType,_this.id,_this.type,_this.title,_this.createdAt,_this.actorName,_this.actorMuid);
+}
 
 @override
 String toString() {
-  return 'CampusActivity(id: $id, type: $type, title: $title, createdAt: $createdAt, actorName: $actorName, actorMuid: $actorMuid)';
+  final _this = this as CampusActivity;
+  return 'CampusActivity(id: ${_this.id}, type: ${_this.type}, title: ${_this.title}, createdAt: ${_this.createdAt}, actorName: ${_this.actorName}, actorMuid: ${_this.actorMuid})';
 }
 
 
@@ -1181,7 +1215,7 @@ class _$CampusActivityCopyWithImpl<$Res>
 /// Create a copy of CampusActivity
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? type = null,Object? title = null,Object? createdAt = null,Object? actorName = freezed,Object? actorMuid = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(CampusActivity(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -1349,16 +1383,18 @@ _$CampusActivityCopyWith<_CampusActivity> get copyWith => __$CampusActivityCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CampusActivity&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.title, title) || other.title == title)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.actorName, actorName) || other.actorName == actorName)&&(identical(other.actorMuid, actorMuid) || other.actorMuid == actorMuid));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CampusActivity&&(identical(other.id, id) || other.id == id)&&(identical(other.type, type) || other.type == type)&&(identical(other.title, title) || other.title == title)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.actorName, actorName) || other.actorName == actorName)&&(identical(other.actorMuid, actorMuid) || other.actorMuid == actorMuid));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,type,title,createdAt,actorName,actorMuid);
+int get hashCode {
+    return Object.hash(runtimeType,id,type,title,createdAt,actorName,actorMuid);
+}
 
 @override
 String toString() {
-  return 'CampusActivity(id: $id, type: $type, title: $title, createdAt: $createdAt, actorName: $actorName, actorMuid: $actorMuid)';
+    return 'CampusActivity(id: $id, type: $type, title: $title, createdAt: $createdAt, actorName: $actorName, actorMuid: $actorMuid)';
 }
 
 

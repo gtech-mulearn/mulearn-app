@@ -19,3 +19,9 @@ TasksRepository tasksRepository(Ref ref) =>
 @riverpod
 Future<List<TaskCatalogItem>> tasksController(Ref ref) =>
     ref.watch(tasksRepositoryProvider).getTasks();
+
+/// The signed-in user's level name (`"lvl4"`) for the Tasks title and the
+/// "you're here" marker; null when the profile has none.
+@riverpod
+Future<String?> myTaskLevel(Ref ref) =>
+    ref.watch(tasksRepositoryProvider).getMyLevel();

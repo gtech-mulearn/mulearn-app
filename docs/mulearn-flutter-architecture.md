@@ -14,7 +14,7 @@
 | Env config | **envied** (keep, upgrade from dotenv-style) | Values are baked in at build time via code-gen + obfuscation, instead of shipping a plaintext `.env` in assets. Type-safe (`String`, `bool`, `int` fields, not string parsing at runtime). Pairs with `--dart-define` for CI secrets. |
 | Networking | **Dio + Retrofit** | Interceptors for auth headers/refresh-token logic, typed API clients generated from annotations, easy to mock in tests. |
 | Models | **Freezed + json_serializable** | Immutable domain models, union types for `AsyncValue`-style states, `copyWith` for free, exhaustive `when`/`map` pattern matching. |
-| HTTP response cache | **dio_cache_interceptor** + Hive store | Caches API responses per-endpoint policy — see section 12. No offline-first datastore needed since the app requires network. |
+| HTTP response cache | **dio_cache_interceptor** 4 + **http_cache_hive_store** (hive_ce) | Caches API responses per-endpoint policy — see section 12. No offline-first datastore needed since the app requires network. |
 | Secure storage | **flutter_secure_storage** | Tokens, refresh tokens — never in SharedPreferences. |
 | Testing | **mocktail + riverpod's `ProviderContainer` overrides** | No codegen needed for mocks, very ergonomic with Riverpod. |
 | Lints | **very_good_analysis** or **flutter_lints** (strict) | Enforced style, catches footguns pre-review. |
@@ -52,7 +52,7 @@ lib/
 │   │   └── route_paths.dart
 │   ├── storage/
 │   │   ├── secure_storage_provider.dart
-│   │   └── cache_store_provider.dart   # dio_cache_interceptor Hive store instance
+│   │   └── cache_store_provider.dart   # http_cache_hive_store instance (keys scoped per user)
 │   ├── widgets/                        # shared dumb widgets (buttons, cards, shimmer)
 │   ├── utils/
 │   └── extensions/
@@ -454,7 +454,7 @@ If leaderboard/course-catalog data is public (no auth required to view), put Clo
 ```yaml
 dependencies:
   dio_cache_interceptor: ^3.5.1
-  dio_cache_interceptor_hive_store: ^3.2.2   # persistent cache store backed by Hive
+  http_cache_hive_store: ^5.1.1   # persistent cache store backed by hive_ce
 ```
 
 The package list and folder structure in earlier sections have been updated above to reflect this — no offline datastore, just the HTTP cache layer. If a specific feature later needs true offline capability (e.g. drafting a post with no signal), that's a narrow, local decision for that feature, not a blanket architecture choice.

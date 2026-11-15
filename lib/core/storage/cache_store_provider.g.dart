@@ -16,7 +16,7 @@ part of 'cache_store_provider.dart';
 /// plumbing and is trivial to override in tests with a [MemCacheStore].
 
 @ProviderFor(cacheStore)
-const cacheStoreProvider = CacheStoreProvider._();
+final cacheStoreProvider = CacheStoreProvider._();
 
 /// Persistent HTTP-response cache store (Hive-backed) for
 /// `dio_cache_interceptor` — rules.md §1, architecture §12.
@@ -34,7 +34,7 @@ final class CacheStoreProvider
   /// The path is resolved once during bootstrap and passed in via an override,
   /// so this provider itself stays free of `path_provider`/`WidgetsBinding`
   /// plumbing and is trivial to override in tests with a [MemCacheStore].
-  const CacheStoreProvider._()
+  CacheStoreProvider._()
     : super(
         from: null,
         argument: null,

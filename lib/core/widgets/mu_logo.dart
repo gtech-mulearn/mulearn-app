@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
 
-enum _LogoKind { mark, wordmark, wordmarkOnBrand }
+enum _LogoKind { mark, appIcon, wordmark, wordmarkOnBrand }
 
 /// The μLearn logo — the dashboard's own images, never a typed μ glyph:
 /// - [MuLogo.mark]: the gradient μ (the dashboard favicon), optionally on a
-///   white rounded [tile] like the app icon;
+///   white rounded [tile];
+/// - [MuLogo.appIcon]: the app icon itself (blue tile, white μ, gold
+///   spark), rendered by `design/logo/` — the launch screens show it;
 /// - [MuLogo.wordmark]: "μLearn — a GTech Initiative" (`public/logo.webp`),
 ///   for light surfaces;
 /// - [MuLogo.wordmarkOnBrand]: the wordmark in white for brand-coloured
@@ -13,18 +15,23 @@ enum _LogoKind { mark, wordmark, wordmarkOnBrand }
 /// Screen readers hear "μLearn".
 class MuLogo extends StatelessWidget {
   const MuLogo.mark({double size = 48, this.tile = false, super.key})
-      : _kind = _LogoKind.mark,
-        _size = size;
+    : _kind = _LogoKind.mark,
+      _size = size;
+
+  const MuLogo.appIcon({required double size, super.key})
+    : _kind = _LogoKind.appIcon,
+      _size = size,
+      tile = false;
 
   const MuLogo.wordmark({double height = 40, super.key})
-      : _kind = _LogoKind.wordmark,
-        _size = height,
-        tile = false;
+    : _kind = _LogoKind.wordmark,
+      _size = height,
+      tile = false;
 
   const MuLogo.wordmarkOnBrand({double height = 28, super.key})
-      : _kind = _LogoKind.wordmarkOnBrand,
-        _size = height,
-        tile = false;
+    : _kind = _LogoKind.wordmarkOnBrand,
+      _size = height,
+      tile = false;
 
   final _LogoKind _kind;
   final double _size;
@@ -33,6 +40,7 @@ class MuLogo extends StatelessWidget {
   final bool tile;
 
   static const markAsset = 'assets/images/logo.png';
+  static const appIconAsset = 'assets/images/app_logo.png';
   static const wordmarkAsset = 'assets/images/logo_wordmark.webp';
   static const wordmarkMonoAsset = 'assets/images/logo_wordmark_mono.webp';
 
@@ -40,22 +48,45 @@ class MuLogo extends StatelessWidget {
   Widget build(BuildContext context) {
     final image = switch (_kind) {
       _LogoKind.mark when tile => Container(
-          height: _size,
-          width: _size,
-          padding: EdgeInsets.all(_size * 0.2),
-          decoration: BoxDecoration(
-            color: MuColors.surface,
-            borderRadius: BorderRadius.circular(_size * 0.28),
-          ),
-          child: Image.asset(markAsset, fit: BoxFit.contain),
+        height: _size,
+        width: _size,
+        padding: EdgeInsets.all(_size * 0.2),
+        decoration: BoxDecoration(
+          color: MuColors.surface,
+          borderRadius: BorderRadius.circular(_size * 0.28),
         ),
-      _LogoKind.mark => Image.asset(markAsset, height: _size, width: _size, fit: BoxFit.contain),
-      _LogoKind.wordmark => Image.asset(wordmarkAsset, height: _size, fit: BoxFit.contain),
+        child: Image.asset(markAsset, fit: BoxFit.contain),
+      ),
+      _LogoKind.mark => Image.asset(
+        markAsset,
+        height: _size,
+        width: _size,
+        fit: BoxFit.contain,
+      ),
+      _LogoKind.appIcon => Image.asset(
+        appIconAsset,
+        height: _size,
+        width: _size,
+        fit: BoxFit.contain,
+      ),
+      _LogoKind.wordmark => Image.asset(
+        wordmarkAsset,
+        height: _size,
+        fit: BoxFit.contain,
+      ),
       _LogoKind.wordmarkOnBrand => ColorFiltered(
-          colorFilter: const ColorFilter.mode(MuColors.onBrand, BlendMode.srcIn),
-          child: Image.asset(wordmarkMonoAsset, height: _size, fit: BoxFit.contain),
+        colorFilter: const ColorFilter.mode(MuColors.onBrand, BlendMode.srcIn),
+        child: Image.asset(
+          wordmarkMonoAsset,
+          height: _size,
+          fit: BoxFit.contain,
         ),
+      ),
     };
-    return Semantics(label: 'μLearn', image: true, child: ExcludeSemantics(child: image));
+    return Semantics(
+      label: 'μLearn',
+      image: true,
+      child: ExcludeSemantics(child: image),
+    );
   }
 }

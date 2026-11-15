@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'approvals.dart';
@@ -9,6 +9,7 @@ part of 'approvals.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $OrgLinkRequestCopyWith<OrgLinkRequest> get copyWith => _$OrgLinkRequestCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is OrgLinkRequest&&(identical(other.id, id) || other.id == id)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.orgTitle, orgTitle) || other.orgTitle == orgTitle)&&(identical(other.isAlumni, isAlumni) || other.isAlumni == isAlumni)&&(identical(other.requestedAt, requestedAt) || other.requestedAt == requestedAt)&&(identical(other.graduationYear, graduationYear) || other.graduationYear == graduationYear));
+  final _this = this as OrgLinkRequest;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is OrgLinkRequest&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.fullName, _this.fullName) || other.fullName == _this.fullName)&&(identical(other.muid, _this.muid) || other.muid == _this.muid)&&(identical(other.orgTitle, _this.orgTitle) || other.orgTitle == _this.orgTitle)&&(identical(other.isAlumni, _this.isAlumni) || other.isAlumni == _this.isAlumni)&&(identical(other.requestedAt, _this.requestedAt) || other.requestedAt == _this.requestedAt)&&(identical(other.graduationYear, _this.graduationYear) || other.graduationYear == _this.graduationYear));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,fullName,muid,orgTitle,isAlumni,requestedAt,graduationYear);
+int get hashCode {
+  final _this = this as OrgLinkRequest;
+  return Object.hash(runtimeType,_this.id,_this.fullName,_this.muid,_this.orgTitle,_this.isAlumni,_this.requestedAt,_this.graduationYear);
+}
 
 @override
 String toString() {
-  return 'OrgLinkRequest(id: $id, fullName: $fullName, muid: $muid, orgTitle: $orgTitle, isAlumni: $isAlumni, requestedAt: $requestedAt, graduationYear: $graduationYear)';
+  final _this = this as OrgLinkRequest;
+  return 'OrgLinkRequest(id: ${_this.id}, fullName: ${_this.fullName}, muid: ${_this.muid}, orgTitle: ${_this.orgTitle}, isAlumni: ${_this.isAlumni}, requestedAt: ${_this.requestedAt}, graduationYear: ${_this.graduationYear})';
 }
 
 
@@ -63,7 +69,7 @@ class _$OrgLinkRequestCopyWithImpl<$Res>
 /// Create a copy of OrgLinkRequest
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? fullName = null,Object? muid = null,Object? orgTitle = null,Object? isAlumni = null,Object? requestedAt = freezed,Object? graduationYear = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(OrgLinkRequest(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,fullName: null == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
 as String,muid: null == muid ? _self.muid : muid // ignore: cast_nullable_to_non_nullable
@@ -233,16 +239,18 @@ _$OrgLinkRequestCopyWith<_OrgLinkRequest> get copyWith => __$OrgLinkRequestCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _OrgLinkRequest&&(identical(other.id, id) || other.id == id)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.orgTitle, orgTitle) || other.orgTitle == orgTitle)&&(identical(other.isAlumni, isAlumni) || other.isAlumni == isAlumni)&&(identical(other.requestedAt, requestedAt) || other.requestedAt == requestedAt)&&(identical(other.graduationYear, graduationYear) || other.graduationYear == graduationYear));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _OrgLinkRequest&&(identical(other.id, id) || other.id == id)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.orgTitle, orgTitle) || other.orgTitle == orgTitle)&&(identical(other.isAlumni, isAlumni) || other.isAlumni == isAlumni)&&(identical(other.requestedAt, requestedAt) || other.requestedAt == requestedAt)&&(identical(other.graduationYear, graduationYear) || other.graduationYear == graduationYear));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,fullName,muid,orgTitle,isAlumni,requestedAt,graduationYear);
+int get hashCode {
+    return Object.hash(runtimeType,id,fullName,muid,orgTitle,isAlumni,requestedAt,graduationYear);
+}
 
 @override
 String toString() {
-  return 'OrgLinkRequest(id: $id, fullName: $fullName, muid: $muid, orgTitle: $orgTitle, isAlumni: $isAlumni, requestedAt: $requestedAt, graduationYear: $graduationYear)';
+    return 'OrgLinkRequest(id: $id, fullName: $fullName, muid: $muid, orgTitle: $orgTitle, isAlumni: $isAlumni, requestedAt: $requestedAt, graduationYear: $graduationYear)';
 }
 
 
@@ -300,16 +308,21 @@ $PendingCampusEventCopyWith<PendingCampusEvent> get copyWith => _$PendingCampusE
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PendingCampusEvent&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&const DeepCollectionEquality().equals(other.tags, tags)&&(identical(other.start, start) || other.start == start)&&(identical(other.end, end) || other.end == end)&&(identical(other.venueCity, venueCity) || other.venueCity == venueCity));
+  final _this = this as PendingCampusEvent;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PendingCampusEvent&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.title, _this.title) || other.title == _this.title)&&const DeepCollectionEquality().equals(other.tags, _this.tags)&&(identical(other.start, _this.start) || other.start == _this.start)&&(identical(other.end, _this.end) || other.end == _this.end)&&(identical(other.venueCity, _this.venueCity) || other.venueCity == _this.venueCity));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,title,const DeepCollectionEquality().hash(tags),start,end,venueCity);
+int get hashCode {
+  final _this = this as PendingCampusEvent;
+  return Object.hash(runtimeType,_this.id,_this.title,const DeepCollectionEquality().hash(_this.tags),_this.start,_this.end,_this.venueCity);
+}
 
 @override
 String toString() {
-  return 'PendingCampusEvent(id: $id, title: $title, tags: $tags, start: $start, end: $end, venueCity: $venueCity)';
+  final _this = this as PendingCampusEvent;
+  return 'PendingCampusEvent(id: ${_this.id}, title: ${_this.title}, tags: ${_this.tags}, start: ${_this.start}, end: ${_this.end}, venueCity: ${_this.venueCity})';
 }
 
 
@@ -338,7 +351,7 @@ class _$PendingCampusEventCopyWithImpl<$Res>
 /// Create a copy of PendingCampusEvent
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? tags = null,Object? start = freezed,Object? end = freezed,Object? venueCity = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(PendingCampusEvent(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,tags: null == tags ? _self.tags : tags // ignore: cast_nullable_to_non_nullable
@@ -486,7 +499,7 @@ return $default(_that.id,_that.title,_that.tags,_that.start,_that.end,_that.venu
 
 
 class _PendingCampusEvent implements PendingCampusEvent {
-  const _PendingCampusEvent({required this.id, required this.title, required final  List<String> tags, this.start, this.end, this.venueCity}): _tags = tags;
+  const _PendingCampusEvent({required this.id, required this.title, required  List<String> tags, this.start, this.end, this.venueCity}): _tags = tags;
   
 
 @override final  String id;
@@ -512,16 +525,18 @@ _$PendingCampusEventCopyWith<_PendingCampusEvent> get copyWith => __$PendingCamp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PendingCampusEvent&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&const DeepCollectionEquality().equals(other._tags, _tags)&&(identical(other.start, start) || other.start == start)&&(identical(other.end, end) || other.end == end)&&(identical(other.venueCity, venueCity) || other.venueCity == venueCity));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PendingCampusEvent&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&const DeepCollectionEquality().equals(other.tags, _tags)&&(identical(other.start, start) || other.start == start)&&(identical(other.end, end) || other.end == end)&&(identical(other.venueCity, venueCity) || other.venueCity == venueCity));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,title,const DeepCollectionEquality().hash(_tags),start,end,venueCity);
+int get hashCode {
+    return Object.hash(runtimeType,id,title,const DeepCollectionEquality().hash(_tags),start,end,venueCity);
+}
 
 @override
 String toString() {
-  return 'PendingCampusEvent(id: $id, title: $title, tags: $tags, start: $start, end: $end, venueCity: $venueCity)';
+    return 'PendingCampusEvent(id: $id, title: $title, tags: $tags, start: $start, end: $end, venueCity: $venueCity)';
 }
 
 
@@ -578,16 +593,21 @@ $CollabInviteCopyWith<CollabInvite> get copyWith => _$CollabInviteCopyWithImpl<C
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CollabInvite&&(identical(other.id, id) || other.id == id)&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.eventTitle, eventTitle) || other.eventTitle == eventTitle)&&(identical(other.roleLabel, roleLabel) || other.roleLabel == roleLabel)&&(identical(other.entityName, entityName) || other.entityName == entityName)&&(identical(other.eventStart, eventStart) || other.eventStart == eventStart));
+  final _this = this as CollabInvite;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CollabInvite&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.eventId, _this.eventId) || other.eventId == _this.eventId)&&(identical(other.eventTitle, _this.eventTitle) || other.eventTitle == _this.eventTitle)&&(identical(other.roleLabel, _this.roleLabel) || other.roleLabel == _this.roleLabel)&&(identical(other.entityName, _this.entityName) || other.entityName == _this.entityName)&&(identical(other.eventStart, _this.eventStart) || other.eventStart == _this.eventStart));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,eventId,eventTitle,roleLabel,entityName,eventStart);
+int get hashCode {
+  final _this = this as CollabInvite;
+  return Object.hash(runtimeType,_this.id,_this.eventId,_this.eventTitle,_this.roleLabel,_this.entityName,_this.eventStart);
+}
 
 @override
 String toString() {
-  return 'CollabInvite(id: $id, eventId: $eventId, eventTitle: $eventTitle, roleLabel: $roleLabel, entityName: $entityName, eventStart: $eventStart)';
+  final _this = this as CollabInvite;
+  return 'CollabInvite(id: ${_this.id}, eventId: ${_this.eventId}, eventTitle: ${_this.eventTitle}, roleLabel: ${_this.roleLabel}, entityName: ${_this.entityName}, eventStart: ${_this.eventStart})';
 }
 
 
@@ -616,7 +636,7 @@ class _$CollabInviteCopyWithImpl<$Res>
 /// Create a copy of CollabInvite
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? eventId = null,Object? eventTitle = null,Object? roleLabel = null,Object? entityName = null,Object? eventStart = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(CollabInvite(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
 as String,eventTitle: null == eventTitle ? _self.eventTitle : eventTitle // ignore: cast_nullable_to_non_nullable
@@ -784,16 +804,18 @@ _$CollabInviteCopyWith<_CollabInvite> get copyWith => __$CollabInviteCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CollabInvite&&(identical(other.id, id) || other.id == id)&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.eventTitle, eventTitle) || other.eventTitle == eventTitle)&&(identical(other.roleLabel, roleLabel) || other.roleLabel == roleLabel)&&(identical(other.entityName, entityName) || other.entityName == entityName)&&(identical(other.eventStart, eventStart) || other.eventStart == eventStart));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CollabInvite&&(identical(other.id, id) || other.id == id)&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.eventTitle, eventTitle) || other.eventTitle == eventTitle)&&(identical(other.roleLabel, roleLabel) || other.roleLabel == roleLabel)&&(identical(other.entityName, entityName) || other.entityName == entityName)&&(identical(other.eventStart, eventStart) || other.eventStart == eventStart));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,eventId,eventTitle,roleLabel,entityName,eventStart);
+int get hashCode {
+    return Object.hash(runtimeType,id,eventId,eventTitle,roleLabel,entityName,eventStart);
+}
 
 @override
 String toString() {
-  return 'CollabInvite(id: $id, eventId: $eventId, eventTitle: $eventTitle, roleLabel: $roleLabel, entityName: $entityName, eventStart: $eventStart)';
+    return 'CollabInvite(id: $id, eventId: $eventId, eventTitle: $eventTitle, roleLabel: $roleLabel, entityName: $entityName, eventStart: $eventStart)';
 }
 
 

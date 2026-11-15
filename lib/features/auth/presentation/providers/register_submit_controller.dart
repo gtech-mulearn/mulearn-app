@@ -53,14 +53,17 @@ class RegisterSubmitController extends _$RegisterSubmitController {
       if (fullName == null ||
           email == null ||
           (googleTempToken == null && password == null)) {
-        throw const ApiException(message: 'Missing basic info. Please start over.');
+        throw const ApiException(
+          message: 'Missing basic info. Please start over.',
+        );
       }
 
       final roles = await ref.read(registerRolesProvider.future);
       final roleId = resolveRoleId(roles, role.apiTitle);
       if (roleId == null) {
         throw ApiException(
-          message: 'Role list has not loaded yet or "${role.apiTitle}" not '
+          message:
+              'Role list has not loaded yet or "${role.apiTitle}" not '
               'found. Please try again.',
         );
       }
@@ -99,7 +102,8 @@ class RegisterSubmitController extends _$RegisterSubmitController {
         return;
       }
 
-      if (role == RegistrationRole.student || role == RegistrationRole.enabler) {
+      if (role == RegistrationRole.student ||
+          role == RegistrationRole.enabler) {
         final isStudent = role == RegistrationRole.student;
         if (college == 'others' && customCollege != null) {
           await repo.createOrganization(
@@ -141,7 +145,10 @@ class RegisterSubmitController extends _$RegisterSubmitController {
     });
     if (ref.mounted) state = result;
     if (result.hasError) {
-      Error.throwWithStackTrace(result.error!, result.stackTrace ?? StackTrace.current);
+      Error.throwWithStackTrace(
+        result.error!,
+        result.stackTrace ?? StackTrace.current,
+      );
     }
   }
 }

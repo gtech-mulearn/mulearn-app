@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'interest_group_summary.dart';
@@ -9,6 +9,7 @@ part of 'interest_group_summary.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -26,16 +27,21 @@ $InterestGroupSummaryCopyWith<InterestGroupSummary> get copyWith => _$InterestGr
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is InterestGroupSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.category, category) || other.category == category)&&(identical(other.memberCount, memberCount) || other.memberCount == memberCount)&&const DeepCollectionEquality().equals(other.leads, leads)&&const DeepCollectionEquality().equals(other.mentors, mentors)&&(identical(other.about, about) || other.about == about)&&(identical(other.resource, resource) || other.resource == resource)&&(identical(other.icon, icon) || other.icon == icon)&&(identical(other.code, code) || other.code == code)&&const DeepCollectionEquality().equals(other.prerequisites, prerequisites)&&const DeepCollectionEquality().equals(other.careerOpportunities, careerOpportunities)&&(identical(other.iconImage, iconImage) || other.iconImage == iconImage)&&(identical(other.coverImage, coverImage) || other.coverImage == coverImage)&&(identical(other.officeHours, officeHours) || other.officeHours == officeHours)&&const DeepCollectionEquality().equals(other.impactProjects, impactProjects));
+  final _this = this as InterestGroupSummary;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is InterestGroupSummary&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.category, _this.category) || other.category == _this.category)&&(identical(other.memberCount, _this.memberCount) || other.memberCount == _this.memberCount)&&const DeepCollectionEquality().equals(other.leads, _this.leads)&&const DeepCollectionEquality().equals(other.mentors, _this.mentors)&&(identical(other.about, _this.about) || other.about == _this.about)&&(identical(other.resource, _this.resource) || other.resource == _this.resource)&&(identical(other.icon, _this.icon) || other.icon == _this.icon)&&(identical(other.code, _this.code) || other.code == _this.code)&&const DeepCollectionEquality().equals(other.prerequisites, _this.prerequisites)&&const DeepCollectionEquality().equals(other.careerOpportunities, _this.careerOpportunities)&&(identical(other.iconImage, _this.iconImage) || other.iconImage == _this.iconImage)&&(identical(other.coverImage, _this.coverImage) || other.coverImage == _this.coverImage)&&(identical(other.officeHours, _this.officeHours) || other.officeHours == _this.officeHours)&&const DeepCollectionEquality().equals(other.impactProjects, _this.impactProjects));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,category,memberCount,const DeepCollectionEquality().hash(leads),const DeepCollectionEquality().hash(mentors),about,resource,icon,code,const DeepCollectionEquality().hash(prerequisites),const DeepCollectionEquality().hash(careerOpportunities),iconImage,coverImage,officeHours,const DeepCollectionEquality().hash(impactProjects));
+int get hashCode {
+  final _this = this as InterestGroupSummary;
+  return Object.hash(runtimeType,_this.id,_this.name,_this.category,_this.memberCount,const DeepCollectionEquality().hash(_this.leads),const DeepCollectionEquality().hash(_this.mentors),_this.about,_this.resource,_this.icon,_this.code,const DeepCollectionEquality().hash(_this.prerequisites),const DeepCollectionEquality().hash(_this.careerOpportunities),_this.iconImage,_this.coverImage,_this.officeHours,const DeepCollectionEquality().hash(_this.impactProjects));
+}
 
 @override
 String toString() {
-  return 'InterestGroupSummary(id: $id, name: $name, category: $category, memberCount: $memberCount, leads: $leads, mentors: $mentors, about: $about, resource: $resource, icon: $icon, code: $code, prerequisites: $prerequisites, careerOpportunities: $careerOpportunities, iconImage: $iconImage, coverImage: $coverImage, officeHours: $officeHours, impactProjects: $impactProjects)';
+  final _this = this as InterestGroupSummary;
+  return 'InterestGroupSummary(id: ${_this.id}, name: ${_this.name}, category: ${_this.category}, memberCount: ${_this.memberCount}, leads: ${_this.leads}, mentors: ${_this.mentors}, about: ${_this.about}, resource: ${_this.resource}, icon: ${_this.icon}, code: ${_this.code}, prerequisites: ${_this.prerequisites}, careerOpportunities: ${_this.careerOpportunities}, iconImage: ${_this.iconImage}, coverImage: ${_this.coverImage}, officeHours: ${_this.officeHours}, impactProjects: ${_this.impactProjects})';
 }
 
 
@@ -64,7 +70,7 @@ class _$InterestGroupSummaryCopyWithImpl<$Res>
 /// Create a copy of InterestGroupSummary
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? category = null,Object? memberCount = null,Object? leads = null,Object? mentors = null,Object? about = freezed,Object? resource = freezed,Object? icon = freezed,Object? code = freezed,Object? prerequisites = null,Object? careerOpportunities = null,Object? iconImage = freezed,Object? coverImage = freezed,Object? officeHours = freezed,Object? impactProjects = null,}) {
-  return _then(_self.copyWith(
+  return _then(InterestGroupSummary(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,category: null == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
@@ -222,7 +228,7 @@ return $default(_that.id,_that.name,_that.category,_that.memberCount,_that.leads
 
 
 class _InterestGroupSummary implements InterestGroupSummary {
-  const _InterestGroupSummary({required this.id, required this.name, required this.category, required this.memberCount, required final  List<IgPersonRef> leads, required final  List<IgPersonRef> mentors, this.about, this.resource, this.icon, this.code, final  List<String> prerequisites = const [], final  List<String> careerOpportunities = const [], this.iconImage, this.coverImage, this.officeHours, final  List<IgImpactProject> impactProjects = const []}): _leads = leads,_mentors = mentors,_prerequisites = prerequisites,_careerOpportunities = careerOpportunities,_impactProjects = impactProjects;
+  const _InterestGroupSummary({required this.id, required this.name, required this.category, required this.memberCount, required  List<IgPersonRef> leads, required  List<IgPersonRef> mentors, this.about, this.resource, this.icon, this.code,  List<String> prerequisites = const [],  List<String> careerOpportunities = const [], this.iconImage, this.coverImage, this.officeHours,  List<IgImpactProject> impactProjects = const []}): _leads = leads,_mentors = mentors,_prerequisites = prerequisites,_careerOpportunities = careerOpportunities,_impactProjects = impactProjects;
   
 
 @override final  String id;
@@ -283,16 +289,18 @@ _$InterestGroupSummaryCopyWith<_InterestGroupSummary> get copyWith => __$Interes
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _InterestGroupSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.category, category) || other.category == category)&&(identical(other.memberCount, memberCount) || other.memberCount == memberCount)&&const DeepCollectionEquality().equals(other._leads, _leads)&&const DeepCollectionEquality().equals(other._mentors, _mentors)&&(identical(other.about, about) || other.about == about)&&(identical(other.resource, resource) || other.resource == resource)&&(identical(other.icon, icon) || other.icon == icon)&&(identical(other.code, code) || other.code == code)&&const DeepCollectionEquality().equals(other._prerequisites, _prerequisites)&&const DeepCollectionEquality().equals(other._careerOpportunities, _careerOpportunities)&&(identical(other.iconImage, iconImage) || other.iconImage == iconImage)&&(identical(other.coverImage, coverImage) || other.coverImage == coverImage)&&(identical(other.officeHours, officeHours) || other.officeHours == officeHours)&&const DeepCollectionEquality().equals(other._impactProjects, _impactProjects));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _InterestGroupSummary&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.category, category) || other.category == category)&&(identical(other.memberCount, memberCount) || other.memberCount == memberCount)&&const DeepCollectionEquality().equals(other.leads, _leads)&&const DeepCollectionEquality().equals(other.mentors, _mentors)&&(identical(other.about, about) || other.about == about)&&(identical(other.resource, resource) || other.resource == resource)&&(identical(other.icon, icon) || other.icon == icon)&&(identical(other.code, code) || other.code == code)&&const DeepCollectionEquality().equals(other.prerequisites, _prerequisites)&&const DeepCollectionEquality().equals(other.careerOpportunities, _careerOpportunities)&&(identical(other.iconImage, iconImage) || other.iconImage == iconImage)&&(identical(other.coverImage, coverImage) || other.coverImage == coverImage)&&(identical(other.officeHours, officeHours) || other.officeHours == officeHours)&&const DeepCollectionEquality().equals(other.impactProjects, _impactProjects));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,category,memberCount,const DeepCollectionEquality().hash(_leads),const DeepCollectionEquality().hash(_mentors),about,resource,icon,code,const DeepCollectionEquality().hash(_prerequisites),const DeepCollectionEquality().hash(_careerOpportunities),iconImage,coverImage,officeHours,const DeepCollectionEquality().hash(_impactProjects));
+int get hashCode {
+    return Object.hash(runtimeType,id,name,category,memberCount,const DeepCollectionEquality().hash(_leads),const DeepCollectionEquality().hash(_mentors),about,resource,icon,code,const DeepCollectionEquality().hash(_prerequisites),const DeepCollectionEquality().hash(_careerOpportunities),iconImage,coverImage,officeHours,const DeepCollectionEquality().hash(_impactProjects));
+}
 
 @override
 String toString() {
-  return 'InterestGroupSummary(id: $id, name: $name, category: $category, memberCount: $memberCount, leads: $leads, mentors: $mentors, about: $about, resource: $resource, icon: $icon, code: $code, prerequisites: $prerequisites, careerOpportunities: $careerOpportunities, iconImage: $iconImage, coverImage: $coverImage, officeHours: $officeHours, impactProjects: $impactProjects)';
+    return 'InterestGroupSummary(id: $id, name: $name, category: $category, memberCount: $memberCount, leads: $leads, mentors: $mentors, about: $about, resource: $resource, icon: $icon, code: $code, prerequisites: $prerequisites, careerOpportunities: $careerOpportunities, iconImage: $iconImage, coverImage: $coverImage, officeHours: $officeHours, impactProjects: $impactProjects)';
 }
 
 

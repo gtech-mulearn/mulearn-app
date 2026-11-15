@@ -12,7 +12,7 @@ part of 'mentor_sessions_controller.dart';
 /// "load more" keeps the rows and records the error for an inline retry.
 
 @ProviderFor(MentorSessionsController)
-const mentorSessionsControllerProvider = MentorSessionsControllerFamily._();
+final mentorSessionsControllerProvider = MentorSessionsControllerFamily._();
 
 /// The mentor's sessions for one [SessionFilter], page by page. A failed
 /// "load more" keeps the rows and records the error for an inline retry.
@@ -24,7 +24,7 @@ final class MentorSessionsControllerProvider
         > {
   /// The mentor's sessions for one [SessionFilter], page by page. A failed
   /// "load more" keeps the rows and records the error for an inline retry.
-  const MentorSessionsControllerProvider._({
+  MentorSessionsControllerProvider._({
     required MentorSessionsControllerFamily super.from,
     required SessionFilter super.argument,
   }) : super(
@@ -76,7 +76,7 @@ final class MentorSessionsControllerFamily extends $Family
           FutureOr<PagedState<MentorSession>>,
           SessionFilter
         > {
-  const MentorSessionsControllerFamily._()
+  MentorSessionsControllerFamily._()
     : super(
         retry: noRetry,
         name: r'mentorSessionsControllerProvider',
@@ -106,8 +106,7 @@ abstract class _$MentorSessionsController
   FutureOr<PagedState<MentorSession>> build(SessionFilter filter);
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build(_$args);
+  WhenComplete runBuild() {
     final ref =
         this.ref
             as $Ref<
@@ -125,14 +124,14 @@ abstract class _$MentorSessionsController
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, () => build(_$args));
   }
 }
 
 /// One of the mentor's sessions (`session/list/<id>/`).
 
 @ProviderFor(mentorSession)
-const mentorSessionProvider = MentorSessionFamily._();
+final mentorSessionProvider = MentorSessionFamily._();
 
 /// One of the mentor's sessions (`session/list/<id>/`).
 
@@ -145,7 +144,7 @@ final class MentorSessionProvider
         >
     with $FutureModifier<MentorSession>, $FutureProvider<MentorSession> {
   /// One of the mentor's sessions (`session/list/<id>/`).
-  const MentorSessionProvider._({
+  MentorSessionProvider._({
     required MentorSessionFamily super.from,
     required String super.argument,
   }) : super(
@@ -195,7 +194,7 @@ String _$mentorSessionHash() => r'beaa953e519ce03c02ba717ab24d3a9d0c7c0eea';
 
 final class MentorSessionFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<MentorSession>, String> {
-  const MentorSessionFamily._()
+  MentorSessionFamily._()
     : super(
         retry: noRetry,
         name: r'mentorSessionProvider',
@@ -216,7 +215,7 @@ final class MentorSessionFamily extends $Family
 /// The interest groups the mentor can use.
 
 @ProviderFor(mentorIgs)
-const mentorIgsProvider = MentorIgsProvider._();
+final mentorIgsProvider = MentorIgsProvider._();
 
 /// The interest groups the mentor can use.
 
@@ -229,7 +228,7 @@ final class MentorIgsProvider
         >
     with $FutureModifier<List<IgOption>>, $FutureProvider<List<IgOption>> {
   /// The interest groups the mentor can use.
-  const MentorIgsProvider._()
+  MentorIgsProvider._()
     : super(
         from: null,
         argument: null,
@@ -261,7 +260,7 @@ String _$mentorIgsHash() => r'948c618de778518af78c0a849e7e6d4d92b7cb50';
 /// only for a global mentor.
 
 @ProviderFor(sessionTargets)
-const sessionTargetsProvider = SessionTargetsProvider._();
+final sessionTargetsProvider = SessionTargetsProvider._();
 
 /// Where the mentor can create sessions. The interest-group list is fetched
 /// only for a global mentor.
@@ -278,7 +277,7 @@ final class SessionTargetsProvider
         $FutureProvider<List<SessionTarget>> {
   /// Where the mentor can create sessions. The interest-group list is fetched
   /// only for a global mentor.
-  const SessionTargetsProvider._()
+  SessionTargetsProvider._()
     : super(
         from: null,
         argument: null,
@@ -311,7 +310,7 @@ String _$sessionTargetsHash() => r'ac75c6dbb7784ff316fa8e40312a3598d9121e8d';
 /// thrown to the caller, which shows them.
 
 @ProviderFor(SessionActions)
-const sessionActionsProvider = SessionActionsProvider._();
+final sessionActionsProvider = SessionActionsProvider._();
 
 /// Create, edit and delete. Each refreshes the lists and the hub after it
 /// succeeds, even if the screen closed meanwhile (keep-alive). Errors are
@@ -321,7 +320,7 @@ final class SessionActionsProvider
   /// Create, edit and delete. Each refreshes the lists and the hub after it
   /// succeeds, even if the screen closed meanwhile (keep-alive). Errors are
   /// thrown to the caller, which shows them.
-  const SessionActionsProvider._()
+  SessionActionsProvider._()
     : super(
         from: null,
         argument: null,
@@ -358,8 +357,7 @@ abstract class _$SessionActions extends $Notifier<void> {
   void build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<void, void>;
     final element =
         ref.element
@@ -369,6 +367,6 @@ abstract class _$SessionActions extends $Notifier<void> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, null);
+    return element.handleCreate(ref, build);
   }
 }

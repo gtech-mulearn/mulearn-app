@@ -17,4 +17,13 @@ class TasksRemoteDataSource {
     final response = await _dio.get<dynamic>(ApiPaths.taskList);
     return ApiEnvelope.unwrapObject(response);
   }
+
+  /// The signed-in user's level name from `GET
+  /// /api/v1/dashboard/profile/user-profile/` (`"lvl4"`), for "Tasks for
+  /// Level 4". Null when the profile has none.
+  Future<String?> fetchMyLevel() async {
+    final response = await _dio.get<dynamic>(ApiPaths.userProfile);
+    final level = ApiEnvelope.unwrapObject(response)['level'];
+    return level is String && level.isNotEmpty ? level : null;
+  }
 }

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'app_notification.dart';
@@ -9,6 +9,7 @@ part of 'app_notification.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -30,16 +31,21 @@ $AppNotificationCopyWith<AppNotification> get copyWith => _$AppNotificationCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppNotification&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.isBroadcast, isBroadcast) || other.isBroadcast == isBroadcast)&&(identical(other.read, read) || other.read == read)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.type, type) || other.type == type)&&(identical(other.category, category) || other.category == category)&&(identical(other.entityType, entityType) || other.entityType == entityType)&&(identical(other.entityId, entityId) || other.entityId == entityId)&&(identical(other.redirectUrl, redirectUrl) || other.redirectUrl == redirectUrl));
+  final _this = this as AppNotification;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppNotification&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.description, _this.description) || other.description == _this.description)&&(identical(other.isBroadcast, _this.isBroadcast) || other.isBroadcast == _this.isBroadcast)&&(identical(other.read, _this.read) || other.read == _this.read)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.type, _this.type) || other.type == _this.type)&&(identical(other.category, _this.category) || other.category == _this.category)&&(identical(other.entityType, _this.entityType) || other.entityType == _this.entityType)&&(identical(other.entityId, _this.entityId) || other.entityId == _this.entityId)&&(identical(other.redirectUrl, _this.redirectUrl) || other.redirectUrl == _this.redirectUrl));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,title,description,isBroadcast,read,createdAt,type,category,entityType,entityId,redirectUrl);
+int get hashCode {
+  final _this = this as AppNotification;
+  return Object.hash(runtimeType,_this.id,_this.title,_this.description,_this.isBroadcast,_this.read,_this.createdAt,_this.type,_this.category,_this.entityType,_this.entityId,_this.redirectUrl);
+}
 
 @override
 String toString() {
-  return 'AppNotification(id: $id, title: $title, description: $description, isBroadcast: $isBroadcast, read: $read, createdAt: $createdAt, type: $type, category: $category, entityType: $entityType, entityId: $entityId, redirectUrl: $redirectUrl)';
+  final _this = this as AppNotification;
+  return 'AppNotification(id: ${_this.id}, title: ${_this.title}, description: ${_this.description}, isBroadcast: ${_this.isBroadcast}, read: ${_this.read}, createdAt: ${_this.createdAt}, type: ${_this.type}, category: ${_this.category}, entityType: ${_this.entityType}, entityId: ${_this.entityId}, redirectUrl: ${_this.redirectUrl})';
 }
 
 
@@ -68,7 +74,7 @@ class _$AppNotificationCopyWithImpl<$Res>
 /// Create a copy of AppNotification
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? description = null,Object? isBroadcast = null,Object? read = null,Object? createdAt = null,Object? type = freezed,Object? category = freezed,Object? entityType = freezed,Object? entityId = freezed,Object? redirectUrl = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(AppNotification(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
@@ -251,16 +257,18 @@ _$AppNotificationCopyWith<_AppNotification> get copyWith => __$AppNotificationCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppNotification&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.isBroadcast, isBroadcast) || other.isBroadcast == isBroadcast)&&(identical(other.read, read) || other.read == read)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.type, type) || other.type == type)&&(identical(other.category, category) || other.category == category)&&(identical(other.entityType, entityType) || other.entityType == entityType)&&(identical(other.entityId, entityId) || other.entityId == entityId)&&(identical(other.redirectUrl, redirectUrl) || other.redirectUrl == redirectUrl));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppNotification&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.isBroadcast, isBroadcast) || other.isBroadcast == isBroadcast)&&(identical(other.read, read) || other.read == read)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.type, type) || other.type == type)&&(identical(other.category, category) || other.category == category)&&(identical(other.entityType, entityType) || other.entityType == entityType)&&(identical(other.entityId, entityId) || other.entityId == entityId)&&(identical(other.redirectUrl, redirectUrl) || other.redirectUrl == redirectUrl));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,title,description,isBroadcast,read,createdAt,type,category,entityType,entityId,redirectUrl);
+int get hashCode {
+    return Object.hash(runtimeType,id,title,description,isBroadcast,read,createdAt,type,category,entityType,entityId,redirectUrl);
+}
 
 @override
 String toString() {
-  return 'AppNotification(id: $id, title: $title, description: $description, isBroadcast: $isBroadcast, read: $read, createdAt: $createdAt, type: $type, category: $category, entityType: $entityType, entityId: $entityId, redirectUrl: $redirectUrl)';
+    return 'AppNotification(id: $id, title: $title, description: $description, isBroadcast: $isBroadcast, read: $read, createdAt: $createdAt, type: $type, category: $category, entityType: $entityType, entityId: $entityId, redirectUrl: $redirectUrl)';
 }
 
 
