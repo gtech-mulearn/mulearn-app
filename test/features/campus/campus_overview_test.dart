@@ -104,18 +104,22 @@ void main() {
     expect(find.text('+16 in 30 days'), findsOneWidget);
     expect(find.text('—'), findsOneWidget, reason: 'a null rank');
     expect(find.text('Level 2+'), findsOneWidget);
+    await tester.scrollUntilVisible(find.textContaining('slow'), 400);
     expect(find.textContaining('slow'), findsWidgets);
+    await tester.scrollUntilVisible(find.text('No karma earned this week yet.'), 400);
     expect(find.text('No karma earned this week yet.'), findsOneWidget);
     await tester.scrollUntilVisible(find.text('Quantum Computing Basics created'), 400);
     expect(find.text('Quantum Computing Basics created'), findsOneWidget);
     await tester.scrollUntilVisible(find.text('TOP STUDENTS'), 400);
     expect(find.text('TOP STUDENTS'), findsOneWidget);
-    await tester.pump(const Duration(seconds: 2)); // the scroll settles
+    await tester.pump(const Duration(seconds: 6)); // the scroll settles
   });
 
   testWidgets('a circle that needs attention opens its page', (tester) async {
     await pump(tester);
 
+    await tester.scrollUntilVisible(find.text('Blender: Donut to Diorama'), 400);
+    await tester.pump(const Duration(seconds: 1));
     await tester.tap(find.text('Blender: Donut to Diorama'));
     await tester.pumpAndSettle();
     expect(find.text('circle 217cd8ca-d6a3-4e75-9621-036c057f7ecd'), findsOneWidget);

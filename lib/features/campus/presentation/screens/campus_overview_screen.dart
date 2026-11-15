@@ -1,42 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart' show ScrollCacheExtent;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
-import 'package:mulearn_app/core/theme/mu_space.dart';
-import 'package:mulearn_app/core/theme/mulearn_colors.dart';
-import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 import 'package:mulearn_app/core/utils/clock.dart';
 import 'package:mulearn_app/core/utils/date_format.dart';
 import 'package:mulearn_app/core/utils/level_label.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
-import 'package:mulearn_app/core/widgets/mu_card.dart';
-import 'package:mulearn_app/core/widgets/mu_progress_bars.dart';
 import 'package:mulearn_app/core/widgets/mu_refresh.dart';
-import 'package:mulearn_app/core/widgets/mu_skeleton.dart';
-import 'package:mulearn_app/core/widgets/mu_stat_block.dart';
 import 'package:mulearn_app/features/campus/domain/entities/campus_student.dart';
 import 'package:mulearn_app/features/campus/domain/entities/campus_summary.dart';
 import 'package:mulearn_app/features/campus/presentation/providers/campus_overview_providers.dart';
+import 'package:mulearn_app/features/campus/presentation/widgets/campus_kit.dart';
 
-/// The campus at a glance (K1, audit 06 "K1 Campus overview"): headline
-/// numbers, the member funnel, circles that need attention, this week's
-/// karma, recent activity and the top students. Loads on open and on
-/// pull-to-refresh only.
+/// The campus at a glance (K1): the campus seal and name, headline
+/// numbers, what's waiting for review, the member funnel, circles that
+/// need attention, this week's karma, recent activity and the top
+/// students. Loads on open and on pull-to-refresh.
 class CampusOverviewScreen extends ConsumerWidget {
   const CampusOverviewScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final summary = ref.watch(campusSummaryProvider);
-    return Scaffold(
-      backgroundColor: MuColors.canvas,
-      appBar: AppBar(backgroundColor: MuColors.canvas, elevation: 0, title: const Text('Campus')),
+    return CampusPage(
       body: summary.when(
         skipError: true,
         skipLoadingOnReload: true,
-        loading: () => const Center(child: CircularProgressIndicator()),
+        loading: () => const Center(child: MuDotsLoader(label: 'Loading your campus…')),
         error: (e, _) => ErrorRetryView(error: e, onRetry: () => ref.invalidate(campusSummaryProvider)),
         data: (s) => MuRefresh(
           onRefresh: () => Future.wait([
@@ -45,63 +39,70 @@ class CampusOverviewScreen extends ConsumerWidget {
             ref.refresh(campusTopStudentsProvider.future),
           ]),
           child: ListView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            padding: const EdgeInsets.fromLTRB(MuSpace.screenH, MuSpace.s, MuSpace.screenH, MuSpace.xxl),
+            physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+            padding: campusListPadding,
+            // Keep every section built while scrolling, so the karma chart and
+            // top students don't refetch each time they come back into view.
+            scrollCacheExtent: const ScrollCacheExtent.pixels(4000),
             children: [
-              Text(s.collegeName, style: MuType.title),
-              Text([s.campusCode, s.zone].where((x) => x.isNotEmpty).join(' · '), style: MuType.caption),
-              const SizedBox(height: MuSpace.l),
-              _Stats(stats: s.stats),
-              const SizedBox(height: MuSpace.m),
-              MuCard(
-                onTap: () => context.push(RoutePaths.campusApprovals),
-                padding: const EdgeInsets.all(MuSpace.l),
-                child: Row(
-                  children: [
-                    const Icon(LucideIcons.checkSquare, size: 20, color: MuColors.primary),
-                    const SizedBox(width: MuSpace.m),
-                    Expanded(child: Text('Review approvals', style: MuType.bodyMed)),
-                    const Icon(LucideIcons.chevronRight, size: 18, color: MuColors.inkSecondary),
+              _Header(summary: s),
+              const SizedBox(height: MuSpacing.space5),
+              CampusStatGrid(
+                tiles: [
+                  for (final st in s.stats)
+                    CampusStatTile(
+                      label: st.label,
+                      value: st.value == null ? '—' : '${st.value}',
+                      change: (st.delta ?? 0) != 0 && st.deltaType != 'neutral'
+                          ? '${st.deltaType == 'decrease' ? '−' : '+'}${st.delta!.abs()} in ${_period(st.period)}'
+                          : null,
+                      up: st.deltaType != 'decrease',
+                    ),
+                ],
+              ),
+              const SizedBox(height: MuSpacing.space4),
+              MuFeedGroup(
+                children: [
+                  MuFeedRow(
+                    leading: const MuFeedIcon(LucideIcons.checkSquare, tone: MuFeedTone.pending),
+                    subject: 'Review approvals',
+                    time: 'Student links, campus events and collaboration invites',
+                    trailing: const _Chevron(),
+                    divider: false,
+                    onTap: () => context.push(RoutePaths.campusApprovals),
+                  ),
+                ],
+              ),
+              if (s.funnel.isNotEmpty) ...[
+                const CampusEyebrow('Members'),
+                CampusBarList(
+                  items: [
+                    for (final f in s.funnel)
+                      (label: f.label, value: f.count, icon: null, note: '${f.percentage.round()}%'),
                   ],
                 ),
-              ),
-              const SizedBox(height: MuSpace.xl),
-              if (s.funnel.isNotEmpty) ...[
-                const _Heading('Members'),
-                _Funnel(stages: s.funnel, max: s.funnelMax),
-                const SizedBox(height: MuSpace.xl),
               ],
-              Row(
-                children: [
-                  const Expanded(child: _Heading('Circles')),
-                  Flexible(
-                    child: TextButton(
-                      onPressed: () => context.push(RoutePaths.campusGroups),
-                      child: const Text('All circles and groups', overflow: TextOverflow.ellipsis),
-                    ),
-                  ),
-                ],
+              CampusEyebrow(
+                'Circles',
+                action: 'All circles and groups',
+                onAction: () => context.push(RoutePaths.campusGroups),
               ),
               _CircleHealthSection(circles: s.circleHealth),
-              const SizedBox(height: MuSpace.xl),
-              const _Heading('Karma this week'),
+              const CampusEyebrow('Karma this week'),
               const _WeeklyKarma(),
-              const SizedBox(height: MuSpace.xl),
               if (s.recentActivity.isNotEmpty) ...[
-                const _Heading('Recent activity'),
-                for (final a in s.recentActivity) _ActivityRow(activity: a),
-                const SizedBox(height: MuSpace.xl),
+                const CampusEyebrow('Recent activity'),
+                MuFeedGroup(
+                  children: [
+                    for (var i = 0; i < s.recentActivity.length; i++)
+                      _ActivityRow(activity: s.recentActivity[i], last: i == s.recentActivity.length - 1),
+                  ],
+                ),
               ],
-              Row(
-                children: [
-                  const Expanded(child: _Heading('Top students')),
-                  Flexible(
-                    child: TextButton(
-                      onPressed: () => context.push(RoutePaths.campusStudents),
-                      child: const Text('All students', overflow: TextOverflow.ellipsis),
-                    ),
-                  ),
-                ],
+              CampusEyebrow(
+                'Top students',
+                action: 'All students',
+                onAction: () => context.push(RoutePaths.campusStudents),
               ),
               const _TopStudents(),
             ],
@@ -112,109 +113,51 @@ class CampusOverviewScreen extends ConsumerWidget {
   }
 }
 
-class _Heading extends StatelessWidget {
-  const _Heading(this.text);
+class _Header extends StatelessWidget {
+  const _Header({required this.summary});
 
-  final String text;
+  final CampusSummary summary;
 
   @override
-  Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.only(bottom: MuSpace.s),
-        child: Text(text.toUpperCase(), style: MuType.eyebrow),
-      );
+  Widget build(BuildContext context) {
+    final mu = context.mu;
+    return Row(
+      children: [
+        MuCampusSeal(code: summary.campusCode, size: 64),
+        const SizedBox(width: MuSpacing.space4),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Semantics(header: true, child: Text(summary.collegeName, style: mu.text.title1)),
+              const SizedBox(height: 2),
+              Text([summary.campusCode, summary.zone].where((x) => x.isNotEmpty).join(' · '), style: mu.text.caption),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _Chevron extends StatelessWidget {
+  const _Chevron();
+
+  @override
+  Widget build(BuildContext context) =>
+      Icon(LucideIcons.chevronRight, size: MuSizes.iconSm + 2, color: context.mu.colors.ink3);
 }
 
 String _period(String? p) => switch (p) {
-      '7d' => '7 days',
-      '30d' => '30 days',
-      '90d' => '90 days',
-      null || '' => '',
-      _ => p,
-    };
-
-class _Stats extends StatelessWidget {
-  const _Stats({required this.stats});
-
-  final List<StatCard> stats;
-
-  @override
-  Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final width = (constraints.maxWidth - MuSpace.m) / 2;
-        return Wrap(
-          spacing: MuSpace.m,
-          runSpacing: MuSpace.m,
-          children: [
-            for (final s in stats)
-              SizedBox(
-                width: width,
-                child: MuCard(
-                  padding: const EdgeInsets.all(MuSpace.l),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      MuStatBlock(label: s.label, value: s.value == null ? '—' : '${s.value}'),
-                      if ((s.delta ?? 0) != 0 && s.deltaType != 'neutral')
-                        Text(
-                          '${s.deltaType == 'decrease' ? '−' : '+'}${s.delta!.abs()} in ${_period(s.period)}',
-                          style: MuType.caption.copyWith(
-                            color: s.deltaType == 'decrease' ? MuColors.error : MuColors.success,
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-              ),
-          ],
-        );
-      },
-    );
-  }
-}
-
-class _Funnel extends StatelessWidget {
-  const _Funnel({required this.stages, required this.max});
-
-  final List<FunnelStage> stages;
-  final int max;
-
-  @override
-  Widget build(BuildContext context) {
-    return MuCard(
-      padding: const EdgeInsets.all(MuSpace.l),
-      child: Column(
-        children: [
-          for (final f in stages)
-            Padding(
-              padding: const EdgeInsets.only(bottom: MuSpace.m),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(child: Text(f.label, style: MuType.body)),
-                      Text('${f.count}', style: MuType.bodyMed),
-                      const SizedBox(width: MuSpace.s),
-                      SizedBox(
-                        width: 48,
-                        child: Text('${f.percentage.round()}%', style: MuType.caption, textAlign: TextAlign.end),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: MuSpace.xs),
-                  MuLinearProgress(value: max <= 0 ? 0 : (f.count / max).clamp(0, 1).toDouble()),
-                ],
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-}
+  '7d' => '7 days',
+  '30d' => '30 days',
+  '90d' => '90 days',
+  null || '' => '',
+  _ => p,
+};
 
 /// How many circles are active, slow and inactive, then the slow and
-/// inactive ones — each opens its page.
+/// inactive ones; each opens its page.
 class _CircleHealthSection extends ConsumerWidget {
   const _CircleHealthSection({required this.circles});
 
@@ -222,65 +165,48 @@ class _CircleHealthSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (circles.isEmpty) {
-      return Text('No circles at this campus yet.', style: MuType.body.copyWith(color: MuColors.inkSecondary));
-    }
+    final mu = context.mu;
+    if (circles.isEmpty) return const CampusEmptyLine('No circles at this campus yet.');
     int count(String status) => circles.where((c) => c.status == status).length;
-    final attention = [
-      ...circles.where((c) => c.status == 'inactive'),
-      ...circles.where((c) => c.status == 'slow'),
-    ];
+    final attention = [...circles.where((c) => c.status == 'inactive'), ...circles.where((c) => c.status == 'slow')];
     final now = ref.watch(clockProvider)().toLocal();
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text(
-          '${count('active')} active · ${count('slow')} slow · ${count('inactive')} inactive',
-          style: MuType.bodyMed,
+        CampusBarList(
+          items: [
+            (label: 'Meeting regularly', value: count('active'), icon: LucideIcons.checkCircle2, note: null),
+            (label: 'Going slow', value: count('slow'), icon: LucideIcons.clock, note: null),
+            (label: 'Inactive', value: count('inactive'), icon: LucideIcons.pauseCircle, note: null),
+          ],
         ),
         if (attention.isNotEmpty) ...[
-          const SizedBox(height: MuSpace.s),
-          Text('Needs attention', style: MuType.caption),
-          for (final c in attention)
-            Padding(
-              padding: const EdgeInsets.only(top: MuSpace.s),
-              child: MuCard(
-                onTap: () => context.push(RoutePaths.learningCircleDetailPath(c.circleId)),
-                padding: const EdgeInsets.fromLTRB(MuSpace.l, MuSpace.m, MuSpace.s, MuSpace.m),
-                child: Row(
-                  children: [
-                    Icon(
-                      LucideIcons.circleDot,
-                      size: 16,
-                      color: c.status == 'inactive' ? MuColors.error : MuColors.warning,
-                    ),
-                    const SizedBox(width: MuSpace.m),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(c.circleName, style: MuType.bodyMed, maxLines: 1, overflow: TextOverflow.ellipsis),
-                          Text(
-                            [
-                              if (c.igName.isNotEmpty) c.igName,
-                              '${c.memberCount} ${c.memberCount == 1 ? 'member' : 'members'}',
-                              if (c.lastSessionAt == null)
-                                'No meetings yet'
-                              else
-                                'Last met ${formatAgo(c.lastSessionAt!.toLocal(), now)}',
-                            ].join(' · '),
-                            style: MuType.caption,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                    ),
-                    const Icon(LucideIcons.chevronRight, size: 18, color: MuColors.inkSecondary),
-                  ],
+          const SizedBox(height: MuSpacing.space4),
+          Text('Needs attention', style: mu.text.label.copyWith(color: mu.colors.ink2)),
+          const SizedBox(height: MuSpacing.space2),
+          MuFeedGroup(
+            children: [
+              for (var i = 0; i < attention.length; i++)
+                MuFeedRow(
+                  leading: MuFeedIcon(
+                    LucideIcons.users,
+                    tone: attention[i].status == 'inactive' ? MuFeedTone.problem : MuFeedTone.pending,
+                  ),
+                  subject: attention[i].circleName,
+                  time: [
+                    if (attention[i].igName.isNotEmpty) attention[i].igName,
+                    '${attention[i].memberCount} ${attention[i].memberCount == 1 ? 'member' : 'members'}',
+                    if (attention[i].lastSessionAt == null)
+                      'No meetings yet'
+                    else
+                      'Last met ${formatAgo(attention[i].lastSessionAt!.toLocal(), now)}',
+                  ].join(' · '),
+                  trailing: const _Chevron(),
+                  divider: i < attention.length - 1,
+                  onTap: () => context.push(RoutePaths.learningCircleDetailPath(attention[i].circleId)),
                 ),
-              ),
-            ),
+            ],
+          ),
         ],
       ],
     );
@@ -289,52 +215,96 @@ class _CircleHealthSection extends ConsumerWidget {
 
 const _dayLetters = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
 
-class _WeeklyKarma extends ConsumerWidget {
+/// Seven bars of one hue; the best day in volt. Tap a day to read its
+/// karma in the line above (the total until one is picked).
+class _WeeklyKarma extends ConsumerStatefulWidget {
   const _WeeklyKarma();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return ref.watch(campusWeeklyKarmaProvider).when(
+  ConsumerState<_WeeklyKarma> createState() => _WeeklyKarmaState();
+}
+
+class _WeeklyKarmaState extends ConsumerState<_WeeklyKarma> {
+  int? _picked;
+
+  @override
+  Widget build(BuildContext context) {
+    final mu = context.mu;
+    final c = mu.colors;
+    return ref
+        .watch(campusWeeklyKarmaProvider)
+        .when(
           skipError: true,
           skipLoadingOnReload: true,
-          loading: () => const MuSkeleton(height: 96),
-          error: (e, _) => Text(ApiException.messageFor(e), style: MuType.caption),
+          loading: () => const SizedBox(height: 120, child: Center(child: MuDotsLoader())),
+          error: (e, _) => Text(ApiException.messageFor(e), style: mu.text.caption),
           data: (days) {
             final total = days.fold<int>(0, (sum, d) => sum + d.karma);
-            if (total == 0) {
-              return Text('No karma earned this week yet.', style: MuType.body.copyWith(color: MuColors.inkSecondary));
-            }
+            if (total == 0) return const CampusEmptyLine('No karma earned this week yet.');
             final peak = days.map((d) => d.karma).reduce((a, b) => a > b ? a : b);
-            return MuCard(
-              padding: const EdgeInsets.all(MuSpace.l),
+            final picked = _picked != null && _picked! < days.length ? days[_picked!] : null;
+            return CampusCard(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('$total karma in 7 days', style: MuType.bodyMed),
-                  const SizedBox(height: MuSpace.m),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        muGrouped(picked?.karma ?? total),
+                        style: mu.text.numeral.copyWith(fontSize: 28, color: c.voltText),
+                      ),
+                      const SizedBox(width: MuSpacing.space2),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 4),
+                        child: Text(
+                          picked == null ? 'karma in 7 days' : 'karma on ${formatDay(picked.day)}',
+                          style: mu.text.caption,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: MuSpacing.space4),
                   SizedBox(
-                    height: 96,
+                    height: 104,
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        for (final d in days)
+                        for (var i = 0; i < days.length; i++)
                           Expanded(
                             child: Semantics(
-                              label: '${formatDay(d.day)}: ${d.karma} karma',
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Container(
-                                    height: peak == 0 ? 2 : (72 * d.karma / peak).clamp(2, 72).toDouble(),
-                                    margin: const EdgeInsets.symmetric(horizontal: 4),
-                                    decoration: BoxDecoration(
-                                      color: MuColors.primary,
-                                      borderRadius: BorderRadius.circular(4),
+                              button: true,
+                              selected: _picked == i,
+                              label: '${formatDay(days[i].day)}: ${days[i].karma} karma',
+                              excludeSemantics: true,
+                              child: GestureDetector(
+                                behavior: HitTestBehavior.opaque,
+                                onTap: () => setState(() => _picked = _picked == i ? null : i),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    AnimatedContainer(
+                                      duration: const Duration(milliseconds: 180),
+                                      height: peak == 0 ? 2 : (76 * days[i].karma / peak).clamp(2, 76).toDouble(),
+                                      // 2px surface gap each side between bars.
+                                      margin: const EdgeInsets.symmetric(horizontal: 5),
+                                      decoration: BoxDecoration(
+                                        color: (days[i].karma == peak ? c.volt : c.cobalt).withValues(
+                                          alpha: _picked == null || _picked == i ? 1 : 0.35,
+                                        ),
+                                        borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
+                                      ),
                                     ),
-                                  ),
-                                  const SizedBox(height: MuSpace.xs),
-                                  Text(_dayLetters[d.day.weekday - 1], style: MuType.caption),
-                                ],
+                                    const SizedBox(height: MuSpacing.space2),
+                                    Text(
+                                      _dayLetters[days[i].day.weekday - 1],
+                                      style: mu.text.caption.copyWith(
+                                        color: _picked == i ? c.ink : c.ink3,
+                                        fontWeight: _picked == i ? FontWeight.w700 : null,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -350,42 +320,22 @@ class _WeeklyKarma extends ConsumerWidget {
 }
 
 class _ActivityRow extends ConsumerWidget {
-  const _ActivityRow({required this.activity});
+  const _ActivityRow({required this.activity, required this.last});
 
   final CampusActivity activity;
+  final bool last;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final a = activity;
     final now = ref.watch(clockProvider)().toLocal();
     final muid = a.actorMuid;
-    return InkWell(
+    return MuFeedRow(
+      leading: const MuFeedIcon(LucideIcons.activity),
+      subject: a.title,
+      time: [if ((a.actorName ?? '').isNotEmpty) a.actorName!, formatAgo(a.createdAt.toLocal(), now)].join(' · '),
+      divider: !last,
       onTap: muid == null || muid.isEmpty ? null : () => context.push(RoutePaths.publicProfilePath(muid)),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: MuSpace.s),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Padding(
-              padding: EdgeInsets.only(top: 2),
-              child: Icon(LucideIcons.activity, size: 16, color: MuColors.inkSecondary),
-            ),
-            const SizedBox(width: MuSpace.m),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(a.title, style: MuType.body),
-                  Text(
-                    [if ((a.actorName ?? '').isNotEmpty) a.actorName!, formatAgo(a.createdAt.toLocal(), now)].join(' · '),
-                    style: MuType.caption,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
@@ -395,55 +345,56 @@ class _TopStudents extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ref.watch(campusTopStudentsProvider).when(
+    final mu = context.mu;
+    return ref
+        .watch(campusTopStudentsProvider)
+        .when(
           skipError: true,
           skipLoadingOnReload: true,
-          loading: () => const MuSkeleton(height: 120),
-          error: (e, _) => Text(ApiException.messageFor(e), style: MuType.caption),
+          loading: () => const SizedBox(height: 120, child: Center(child: MuDotsLoader())),
+          error: (e, _) => Text(ApiException.messageFor(e), style: mu.text.caption),
           data: (students) => students.isEmpty
-              ? Text('No students yet.', style: MuType.body.copyWith(color: MuColors.inkSecondary))
-              : MuCard(
-                  padding: EdgeInsets.zero,
-                  child: Column(children: [for (final s in students) _StudentRow(student: s)]),
+              ? const CampusEmptyLine('No students yet.')
+              : MuFeedGroup(
+                  children: [
+                    for (var i = 0; i < students.length; i++)
+                      _StudentRow(student: students[i], leader: students.first.karma, last: i == students.length - 1),
+                  ],
                 ),
         );
   }
 }
 
 class _StudentRow extends StatelessWidget {
-  const _StudentRow({required this.student});
+  const _StudentRow({required this.student, required this.leader, required this.last});
 
   final CampusStudent student;
+
+  /// The top karma in the list, for the bar.
+  final int leader;
+  final bool last;
 
   @override
   Widget build(BuildContext context) {
     final s = student;
-    return InkWell(
-      onTap: s.muid.isEmpty ? null : () => context.push(RoutePaths.campusStudentPath(s.muid), extra: s),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: MuSpace.l, vertical: MuSpace.m),
-        child: Row(
+    return MuFeedRow(
+      leading: CampusRankDisc(s.rank),
+      subject: s.fullName.isEmpty ? s.muid : s.fullName,
+      body: s.level.isEmpty ? null : levelLabel(s.level),
+      time: s.muid,
+      trailing: SizedBox(
+        width: 84,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            SizedBox(width: 36, child: Text(s.rank == null ? '' : '#${s.rank}', style: MuType.caption)),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(s.fullName.isEmpty ? s.muid : s.fullName, style: MuType.bodyMed),
-                  Text(s.muid, style: MuType.caption),
-                ],
-              ),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text('${s.karma} karma', style: MuType.bodyMed),
-                if (s.level.isNotEmpty) Text(levelLabel(s.level), style: MuType.caption),
-              ],
-            ),
+            MuFeedAmount(muGrouped(s.karma)),
+            const SizedBox(height: 6),
+            CampusBar(value: leader <= 0 ? 0 : s.karma / leader),
           ],
         ),
       ),
+      divider: !last,
+      onTap: s.muid.isEmpty ? null : () => context.push(RoutePaths.campusStudentPath(s.muid), extra: s),
     );
   }
 }

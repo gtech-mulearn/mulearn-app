@@ -231,83 +231,10 @@ class _Campus extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mu = context.mu;
-    final c = mu.colors;
     final hasCode = (code ?? '').isNotEmpty;
     final lines = [?department, if (joinedYear != null) 'Member since $joinedYear'];
-    // Artifact CampusCrest: a surface card, the campus seal in `night` with a
-    // dashed inner ring, then the campus and what the person studies there.
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: MuSpacing.space4, vertical: 14),
-      decoration: BoxDecoration(color: c.surface, borderRadius: BorderRadius.circular(MuRadii.card)),
-      child: Row(
-        children: [
-          SizedBox.square(
-            dimension: 56,
-            child: CustomPaint(
-              painter: _SealPainter(fill: c.night, ring: c.onNight.withValues(alpha: 0.35)),
-              child: Center(
-                child: hasCode
-                    ? Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: FittedBox(
-                          child: Text(
-                            code!,
-                            style: mu.text.title3.copyWith(color: c.onNight, fontSize: 15, letterSpacing: 0.3),
-                          ),
-                        ),
-                      )
-                    : Icon(LucideIcons.school, size: MuSizes.iconMd, color: c.onNight),
-              ),
-            ),
-          ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(hasCode ? code! : 'No campus yet', style: mu.text.title3.copyWith(color: c.ink)),
-                if (lines.isNotEmpty) ...[
-                  const SizedBox(height: 2),
-                  Text(lines.join(' · '), style: mu.text.caption.copyWith(color: c.ink3)),
-                ],
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
+    return MuCampusCrest(code: code, name: hasCode ? code! : 'No campus yet', caption: lines.join(' · '));
   }
-}
-
-/// The campus seal: a 16-radius `night` square with a dashed ring inset 4.
-class _SealPainter extends CustomPainter {
-  _SealPainter({required this.fill, required this.ring});
-
-  final Color fill;
-  final Color ring;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final outer = RRect.fromRectAndRadius(Offset.zero & size, const Radius.circular(16));
-    canvas.drawRRect(outer, Paint()..color = fill);
-    final inner = RRect.fromRectAndRadius(
-      const Offset(4, 4) & Size(size.width - 8, size.height - 8),
-      const Radius.circular(12),
-    );
-    final paint = Paint()
-      ..color = ring
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.5;
-    for (final metric in (Path()..addRRect(inner)).computeMetrics()) {
-      for (var d = 0.0; d < metric.length; d += 7) {
-        canvas.drawPath(metric.extractPath(d, d + 4), paint);
-      }
-    }
-  }
-
-  @override
-  bool shouldRepaint(_SealPainter old) => old.fill != fill || old.ring != ring;
 }
 
 /// Socials as chips that open the person's page.
