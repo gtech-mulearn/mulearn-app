@@ -1,0 +1,90 @@
+# Nightly build of the latest staging commit (dev flavor, Development test key).
+#
+# Runs at 20:30 UTC (02:00 IST). Skips the night when staging hasn't moved:
+# if an unexpired nightly artifact for staging's head commit already exists,
+# there is nothing new to build. (A failed night leaves no artifact, so the
+# next night retries.) Manual runs can force a build.
+#
+# Artifact only — no GitHub Release — kept 14 days, named
+# mulearn-nightly-<version>-<yyyymmdd>-<sha>.apk so it can't be confused with
+# a staging push or manual dev build (versionName …-nightly.<yyyymmdd>).
+#
+# Scheduled workflows run from the default branch (dev), so this file must be
+# on dev; it builds staging's code. GitHub pauses schedules in public repos
+# after 60 days without repository activity — re-enable under Actions.
+# Docs: docs/CI-CD.md
+name: Nightly build
+
+on:
+  schedule:
+    - cron: '30 20 * * *'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: Build even if this staging commit already has a nightly.
+        type: boolean
+        default: false
+
+concurrency:
+  group: nightly
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  # Pin one commit up front, so validation and the build see the same code
+  # even if staging moves meanwhile — and fail loudly if staging is gone.
+  resolve:
+    name: Resolve staging
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      actions: read # list earlier nightly artifacts
+    outputs:
+      sha: ${{ steps.staging.outputs.sha }}
+      skip: ${{ steps.staging.outputs.skip }}
+    steps:
+      - name: Find staging head
+        id: staging
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FORCE: ${{ inputs.force }}
+        run: |
+          if ! sha=$(gh api "repos/${GITHUB_REPOSITORY}/branches/staging" --jq .commit.sha 2>err.txt); then
+            echo "::error::Branch 'staging' was not found in ${GITHUB_REPOSITORY} — nothing to build. ($(cat err.txt))"
+            exit 1
+          fi
+          short=${sha:0:7}
+          echo "sha=${sha}" >> "$GITHUB_OUTPUT"
+
+          skip=false
+          if [ "$FORCE" != "true" ]; then
+            existing=$(gh api --paginate "repos/${GITHUB_REPOSITORY}/actions/artifacts?per_page=100" \
+              --jq '.artifacts[] | select(.expired | not) | .name' |
+              grep -E "^mulearn-nightly-.*-${short}\.apk$" | head -n 1 || true)
+            if [ -n "$existing" ]; then
+              skip=true
+              echo "::notice::staging is still at ${short}, already built as ${existing} — skipping tonight."
+              echo "Skipped: staging unchanged since \`${existing}\`." >> "$GITHUB_STEP_SUMMARY"
+            fi
+          fi
+          echo "skip=${skip}" >> "$GITHUB_OUTPUT"
+          [ "$skip" = "true" ] || echo "Building staging @ ${sha}"
+
+  build:
+    name: Android
+    needs: resolve
+    if: needs.resolve.outputs.skip != 'true'
+    uses: ./.github/workflows/android-build.yml
+    # Required for the called workflow to read the Development environment
+    # secrets, even though its build job names the environment.
+    secrets: inherit
+    with:
+      channel: nightly
+      ref: ${{ needs.resolve.outputs.sha }}
+      signing: optional
+      environment: Development
+      upload: true
+      retention-days: 14

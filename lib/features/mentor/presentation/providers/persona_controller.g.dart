@@ -12,7 +12,7 @@ part of 'persona_controller.dart';
 /// the backend refuses it (the error is rethrown for the screen).
 
 @ProviderFor(PersonaController)
-const personaControllerProvider = PersonaControllerProvider._();
+final personaControllerProvider = PersonaControllerProvider._();
 
 /// Who the mentor is acting as. A switch shows at once and is restored if
 /// the backend refuses it (the error is rethrown for the screen).
@@ -20,7 +20,7 @@ final class PersonaControllerProvider
     extends $AsyncNotifierProvider<PersonaController, Persona> {
   /// Who the mentor is acting as. A switch shows at once and is restored if
   /// the backend refuses it (the error is rethrown for the screen).
-  const PersonaControllerProvider._()
+  PersonaControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -48,8 +48,7 @@ abstract class _$PersonaController extends $AsyncNotifier<Persona> {
   FutureOr<Persona> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<Persona>, Persona>;
     final element =
         ref.element
@@ -59,6 +58,6 @@ abstract class _$PersonaController extends $AsyncNotifier<Persona> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }

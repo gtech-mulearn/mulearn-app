@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'campus_student.dart';
@@ -9,6 +9,7 @@ part of 'campus_student.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $CampusStudentCopyWith<CampusStudent> get copyWith => _$CampusStudentCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CampusStudent&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.level, level) || other.level == level)&&(identical(other.isAlumni, isAlumni) || other.isAlumni == isAlumni)&&(identical(other.igCount, igCount) || other.igCount == igCount)&&(identical(other.lcCount, lcCount) || other.lcCount == lcCount)&&(identical(other.rank, rank) || other.rank == rank)&&(identical(other.joinedAt, joinedAt) || other.joinedAt == joinedAt)&&(identical(other.lastKarmaAt, lastKarmaAt) || other.lastKarmaAt == lastKarmaAt)&&(identical(other.graduationYear, graduationYear) || other.graduationYear == graduationYear)&&(identical(other.department, department) || other.department == department));
+  final _this = this as CampusStudent;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CampusStudent&&(identical(other.fullName, _this.fullName) || other.fullName == _this.fullName)&&(identical(other.muid, _this.muid) || other.muid == _this.muid)&&(identical(other.karma, _this.karma) || other.karma == _this.karma)&&(identical(other.level, _this.level) || other.level == _this.level)&&(identical(other.isAlumni, _this.isAlumni) || other.isAlumni == _this.isAlumni)&&(identical(other.igCount, _this.igCount) || other.igCount == _this.igCount)&&(identical(other.lcCount, _this.lcCount) || other.lcCount == _this.lcCount)&&(identical(other.rank, _this.rank) || other.rank == _this.rank)&&(identical(other.joinedAt, _this.joinedAt) || other.joinedAt == _this.joinedAt)&&(identical(other.lastKarmaAt, _this.lastKarmaAt) || other.lastKarmaAt == _this.lastKarmaAt)&&(identical(other.graduationYear, _this.graduationYear) || other.graduationYear == _this.graduationYear)&&(identical(other.department, _this.department) || other.department == _this.department));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,fullName,muid,karma,level,isAlumni,igCount,lcCount,rank,joinedAt,lastKarmaAt,graduationYear,department);
+int get hashCode {
+  final _this = this as CampusStudent;
+  return Object.hash(runtimeType,_this.fullName,_this.muid,_this.karma,_this.level,_this.isAlumni,_this.igCount,_this.lcCount,_this.rank,_this.joinedAt,_this.lastKarmaAt,_this.graduationYear,_this.department);
+}
 
 @override
 String toString() {
-  return 'CampusStudent(fullName: $fullName, muid: $muid, karma: $karma, level: $level, isAlumni: $isAlumni, igCount: $igCount, lcCount: $lcCount, rank: $rank, joinedAt: $joinedAt, lastKarmaAt: $lastKarmaAt, graduationYear: $graduationYear, department: $department)';
+  final _this = this as CampusStudent;
+  return 'CampusStudent(fullName: ${_this.fullName}, muid: ${_this.muid}, karma: ${_this.karma}, level: ${_this.level}, isAlumni: ${_this.isAlumni}, igCount: ${_this.igCount}, lcCount: ${_this.lcCount}, rank: ${_this.rank}, joinedAt: ${_this.joinedAt}, lastKarmaAt: ${_this.lastKarmaAt}, graduationYear: ${_this.graduationYear}, department: ${_this.department})';
 }
 
 
@@ -63,7 +69,7 @@ class _$CampusStudentCopyWithImpl<$Res>
 /// Create a copy of CampusStudent
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? fullName = null,Object? muid = null,Object? karma = null,Object? level = null,Object? isAlumni = null,Object? igCount = null,Object? lcCount = null,Object? rank = freezed,Object? joinedAt = freezed,Object? lastKarmaAt = freezed,Object? graduationYear = freezed,Object? department = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(CampusStudent(
 fullName: null == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
 as String,muid: null == muid ? _self.muid : muid // ignore: cast_nullable_to_non_nullable
 as String,karma: null == karma ? _self.karma : karma // ignore: cast_nullable_to_non_nullable
@@ -243,16 +249,18 @@ _$CampusStudentCopyWith<_CampusStudent> get copyWith => __$CampusStudentCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CampusStudent&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.level, level) || other.level == level)&&(identical(other.isAlumni, isAlumni) || other.isAlumni == isAlumni)&&(identical(other.igCount, igCount) || other.igCount == igCount)&&(identical(other.lcCount, lcCount) || other.lcCount == lcCount)&&(identical(other.rank, rank) || other.rank == rank)&&(identical(other.joinedAt, joinedAt) || other.joinedAt == joinedAt)&&(identical(other.lastKarmaAt, lastKarmaAt) || other.lastKarmaAt == lastKarmaAt)&&(identical(other.graduationYear, graduationYear) || other.graduationYear == graduationYear)&&(identical(other.department, department) || other.department == department));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CampusStudent&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.level, level) || other.level == level)&&(identical(other.isAlumni, isAlumni) || other.isAlumni == isAlumni)&&(identical(other.igCount, igCount) || other.igCount == igCount)&&(identical(other.lcCount, lcCount) || other.lcCount == lcCount)&&(identical(other.rank, rank) || other.rank == rank)&&(identical(other.joinedAt, joinedAt) || other.joinedAt == joinedAt)&&(identical(other.lastKarmaAt, lastKarmaAt) || other.lastKarmaAt == lastKarmaAt)&&(identical(other.graduationYear, graduationYear) || other.graduationYear == graduationYear)&&(identical(other.department, department) || other.department == department));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,fullName,muid,karma,level,isAlumni,igCount,lcCount,rank,joinedAt,lastKarmaAt,graduationYear,department);
+int get hashCode {
+    return Object.hash(runtimeType,fullName,muid,karma,level,isAlumni,igCount,lcCount,rank,joinedAt,lastKarmaAt,graduationYear,department);
+}
 
 @override
 String toString() {
-  return 'CampusStudent(fullName: $fullName, muid: $muid, karma: $karma, level: $level, isAlumni: $isAlumni, igCount: $igCount, lcCount: $lcCount, rank: $rank, joinedAt: $joinedAt, lastKarmaAt: $lastKarmaAt, graduationYear: $graduationYear, department: $department)';
+    return 'CampusStudent(fullName: $fullName, muid: $muid, karma: $karma, level: $level, isAlumni: $isAlumni, igCount: $igCount, lcCount: $lcCount, rank: $rank, joinedAt: $joinedAt, lastKarmaAt: $lastKarmaAt, graduationYear: $graduationYear, department: $department)';
 }
 
 

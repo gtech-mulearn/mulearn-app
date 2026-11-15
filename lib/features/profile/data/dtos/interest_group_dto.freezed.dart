@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'interest_group_dto.dart';
@@ -9,6 +9,7 @@ part of 'interest_group_dto.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $InterestGroupDtoCopyWith<InterestGroupDto> get copyWith => _$InterestGroupDtoCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is InterestGroupDto&&(identical(other.name, name) || other.name == name)&&(identical(other.id, id) || other.id == id)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.level, level) || other.level == level)&&(identical(other.selected, selected) || other.selected == selected));
+  final _this = this as InterestGroupDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is InterestGroupDto&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.karma, _this.karma) || other.karma == _this.karma)&&(identical(other.level, _this.level) || other.level == _this.level)&&(identical(other.selected, _this.selected) || other.selected == _this.selected));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,name,id,karma,level,selected);
+int get hashCode {
+  final _this = this as InterestGroupDto;
+  return Object.hash(runtimeType,_this.name,_this.id,_this.karma,_this.level,_this.selected);
+}
 
 @override
 String toString() {
-  return 'InterestGroupDto(name: $name, id: $id, karma: $karma, level: $level, selected: $selected)';
+  final _this = this as InterestGroupDto;
+  return 'InterestGroupDto(name: ${_this.name}, id: ${_this.id}, karma: ${_this.karma}, level: ${_this.level}, selected: ${_this.selected})';
 }
 
 
@@ -66,7 +72,7 @@ class _$InterestGroupDtoCopyWithImpl<$Res>
 /// Create a copy of InterestGroupDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? id = freezed,Object? karma = freezed,Object? level = freezed,Object? selected = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(InterestGroupDto(
 name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,karma: freezed == karma ? _self.karma : karma // ignore: cast_nullable_to_non_nullable
@@ -247,16 +253,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _InterestGroupDto&&(identical(other.name, name) || other.name == name)&&(identical(other.id, id) || other.id == id)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.level, level) || other.level == level)&&(identical(other.selected, selected) || other.selected == selected));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _InterestGroupDto&&(identical(other.name, name) || other.name == name)&&(identical(other.id, id) || other.id == id)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.level, level) || other.level == level)&&(identical(other.selected, selected) || other.selected == selected));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,name,id,karma,level,selected);
+int get hashCode {
+    return Object.hash(runtimeType,name,id,karma,level,selected);
+}
 
 @override
 String toString() {
-  return 'InterestGroupDto(name: $name, id: $id, karma: $karma, level: $level, selected: $selected)';
+    return 'InterestGroupDto(name: $name, id: $id, karma: $karma, level: $level, selected: $selected)';
 }
 
 

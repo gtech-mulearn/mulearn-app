@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mulearn_app/core/design_system/foundation/mu_avatar_stack.dart';
 import 'package:mulearn_app/core/theme/mu_radius.dart';
 import 'package:mulearn_app/core/theme/mu_space.dart';
 import 'package:mulearn_app/core/theme/mulearn_colors.dart';
 import 'package:mulearn_app/core/theme/mulearn_typography.dart';
-import 'package:mulearn_app/core/widgets/mu_avatar_stack.dart';
 import 'package:mulearn_app/core/widgets/mu_card.dart';
 import 'package:mulearn_app/core/widgets/mu_chip.dart';
 
@@ -45,7 +45,12 @@ class MuTaskTile extends StatelessWidget {
             Wrap(spacing: MuSpace.s, runSpacing: MuSpace.xs, children: tags),
             const SizedBox(height: MuSpace.s),
           ],
-          Text(title, style: MuType.title, maxLines: 1, overflow: TextOverflow.ellipsis),
+          Text(
+            title,
+            style: MuType.title,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
           const SizedBox(height: 2),
           Text(
             subtitle,
@@ -64,7 +69,10 @@ class MuTaskTile extends StatelessWidget {
                 ),
               const Spacer(),
               if (trailingLabel != null)
-                _TrailingButton(label: trailingLabel!, onTap: onTrailingTap ?? onTap),
+                _TrailingButton(
+                  label: trailingLabel!,
+                  onTap: onTrailingTap ?? onTap,
+                ),
             ],
           ),
         ],

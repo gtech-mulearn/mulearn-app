@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'learner_summary_dto.dart';
@@ -9,6 +9,7 @@ part of 'learner_summary_dto.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $LearnerSummaryDtoCopyWith<LearnerSummaryDto> get copyWith => _$LearnerSummaryDt
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LearnerSummaryDto&&(identical(other.stats, stats) || other.stats == stats)&&(identical(other.nextMeeting, nextMeeting) || other.nextMeeting == nextMeeting));
+  final _this = this as LearnerSummaryDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LearnerSummaryDto&&(identical(other.stats, _this.stats) || other.stats == _this.stats)&&(identical(other.nextMeeting, _this.nextMeeting) || other.nextMeeting == _this.nextMeeting));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,stats,nextMeeting);
+int get hashCode {
+  final _this = this as LearnerSummaryDto;
+  return Object.hash(runtimeType,_this.stats,_this.nextMeeting);
+}
 
 @override
 String toString() {
-  return 'LearnerSummaryDto(stats: $stats, nextMeeting: $nextMeeting)';
+  final _this = this as LearnerSummaryDto;
+  return 'LearnerSummaryDto(stats: ${_this.stats}, nextMeeting: ${_this.nextMeeting})';
 }
 
 
@@ -66,7 +72,7 @@ class _$LearnerSummaryDtoCopyWithImpl<$Res>
 /// Create a copy of LearnerSummaryDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? stats = null,Object? nextMeeting = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(LearnerSummaryDto(
 stats: null == stats ? _self.stats : stats // ignore: cast_nullable_to_non_nullable
 as LearnerStatsDto,nextMeeting: freezed == nextMeeting ? _self.nextMeeting : nextMeeting // ignore: cast_nullable_to_non_nullable
 as NextMeetingDto?,
@@ -250,16 +256,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LearnerSummaryDto&&(identical(other.stats, stats) || other.stats == stats)&&(identical(other.nextMeeting, nextMeeting) || other.nextMeeting == nextMeeting));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _LearnerSummaryDto&&(identical(other.stats, stats) || other.stats == stats)&&(identical(other.nextMeeting, nextMeeting) || other.nextMeeting == nextMeeting));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,stats,nextMeeting);
+int get hashCode {
+    return Object.hash(runtimeType,stats,nextMeeting);
+}
 
 @override
 String toString() {
-  return 'LearnerSummaryDto(stats: $stats, nextMeeting: $nextMeeting)';
+    return 'LearnerSummaryDto(stats: $stats, nextMeeting: $nextMeeting)';
 }
 
 
@@ -336,16 +344,21 @@ $LearnerStatsDtoCopyWith<LearnerStatsDto> get copyWith => _$LearnerStatsDtoCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LearnerStatsDto&&(identical(other.weeklyKarma, weeklyKarma) || other.weeklyKarma == weeklyKarma)&&(identical(other.totalKarma, totalKarma) || other.totalKarma == totalKarma)&&(identical(other.activeCircles, activeCircles) || other.activeCircles == activeCircles)&&(identical(other.streakDays, streakDays) || other.streakDays == streakDays));
+  final _this = this as LearnerStatsDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LearnerStatsDto&&(identical(other.weeklyKarma, _this.weeklyKarma) || other.weeklyKarma == _this.weeklyKarma)&&(identical(other.totalKarma, _this.totalKarma) || other.totalKarma == _this.totalKarma)&&(identical(other.activeCircles, _this.activeCircles) || other.activeCircles == _this.activeCircles)&&(identical(other.streakDays, _this.streakDays) || other.streakDays == _this.streakDays));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,weeklyKarma,totalKarma,activeCircles,streakDays);
+int get hashCode {
+  final _this = this as LearnerStatsDto;
+  return Object.hash(runtimeType,_this.weeklyKarma,_this.totalKarma,_this.activeCircles,_this.streakDays);
+}
 
 @override
 String toString() {
-  return 'LearnerStatsDto(weeklyKarma: $weeklyKarma, totalKarma: $totalKarma, activeCircles: $activeCircles, streakDays: $streakDays)';
+  final _this = this as LearnerStatsDto;
+  return 'LearnerStatsDto(weeklyKarma: ${_this.weeklyKarma}, totalKarma: ${_this.totalKarma}, activeCircles: ${_this.activeCircles}, streakDays: ${_this.streakDays})';
 }
 
 
@@ -374,7 +387,7 @@ class _$LearnerStatsDtoCopyWithImpl<$Res>
 /// Create a copy of LearnerStatsDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? weeklyKarma = null,Object? totalKarma = null,Object? activeCircles = null,Object? streakDays = null,}) {
-  return _then(_self.copyWith(
+  return _then(LearnerStatsDto(
 weeklyKarma: null == weeklyKarma ? _self.weeklyKarma : weeklyKarma // ignore: cast_nullable_to_non_nullable
 as num,totalKarma: null == totalKarma ? _self.totalKarma : totalKarma // ignore: cast_nullable_to_non_nullable
 as num,activeCircles: null == activeCircles ? _self.activeCircles : activeCircles // ignore: cast_nullable_to_non_nullable
@@ -541,16 +554,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LearnerStatsDto&&(identical(other.weeklyKarma, weeklyKarma) || other.weeklyKarma == weeklyKarma)&&(identical(other.totalKarma, totalKarma) || other.totalKarma == totalKarma)&&(identical(other.activeCircles, activeCircles) || other.activeCircles == activeCircles)&&(identical(other.streakDays, streakDays) || other.streakDays == streakDays));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _LearnerStatsDto&&(identical(other.weeklyKarma, weeklyKarma) || other.weeklyKarma == weeklyKarma)&&(identical(other.totalKarma, totalKarma) || other.totalKarma == totalKarma)&&(identical(other.activeCircles, activeCircles) || other.activeCircles == activeCircles)&&(identical(other.streakDays, streakDays) || other.streakDays == streakDays));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,weeklyKarma,totalKarma,activeCircles,streakDays);
+int get hashCode {
+    return Object.hash(runtimeType,weeklyKarma,totalKarma,activeCircles,streakDays);
+}
 
 @override
 String toString() {
-  return 'LearnerStatsDto(weeklyKarma: $weeklyKarma, totalKarma: $totalKarma, activeCircles: $activeCircles, streakDays: $streakDays)';
+    return 'LearnerStatsDto(weeklyKarma: $weeklyKarma, totalKarma: $totalKarma, activeCircles: $activeCircles, streakDays: $streakDays)';
 }
 
 
@@ -608,16 +623,21 @@ $NextMeetingDtoCopyWith<NextMeetingDto> get copyWith => _$NextMeetingDtoCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is NextMeetingDto&&(identical(other.id, id) || other.id == id)&&(identical(other.circleId, circleId) || other.circleId == circleId)&&(identical(other.startsAt, startsAt) || other.startsAt == startsAt)&&(identical(other.circleName, circleName) || other.circleName == circleName)&&(identical(other.title, title) || other.title == title)&&(identical(other.durationMinutes, durationMinutes) || other.durationMinutes == durationMinutes)&&(identical(other.rsvpStatus, rsvpStatus) || other.rsvpStatus == rsvpStatus));
+  final _this = this as NextMeetingDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is NextMeetingDto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.circleId, _this.circleId) || other.circleId == _this.circleId)&&(identical(other.startsAt, _this.startsAt) || other.startsAt == _this.startsAt)&&(identical(other.circleName, _this.circleName) || other.circleName == _this.circleName)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.durationMinutes, _this.durationMinutes) || other.durationMinutes == _this.durationMinutes)&&(identical(other.rsvpStatus, _this.rsvpStatus) || other.rsvpStatus == _this.rsvpStatus));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,circleId,startsAt,circleName,title,durationMinutes,rsvpStatus);
+int get hashCode {
+  final _this = this as NextMeetingDto;
+  return Object.hash(runtimeType,_this.id,_this.circleId,_this.startsAt,_this.circleName,_this.title,_this.durationMinutes,_this.rsvpStatus);
+}
 
 @override
 String toString() {
-  return 'NextMeetingDto(id: $id, circleId: $circleId, startsAt: $startsAt, circleName: $circleName, title: $title, durationMinutes: $durationMinutes, rsvpStatus: $rsvpStatus)';
+  final _this = this as NextMeetingDto;
+  return 'NextMeetingDto(id: ${_this.id}, circleId: ${_this.circleId}, startsAt: ${_this.startsAt}, circleName: ${_this.circleName}, title: ${_this.title}, durationMinutes: ${_this.durationMinutes}, rsvpStatus: ${_this.rsvpStatus})';
 }
 
 
@@ -646,7 +666,7 @@ class _$NextMeetingDtoCopyWithImpl<$Res>
 /// Create a copy of NextMeetingDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? circleId = null,Object? startsAt = null,Object? circleName = null,Object? title = null,Object? durationMinutes = freezed,Object? rsvpStatus = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(NextMeetingDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,circleId: null == circleId ? _self.circleId : circleId // ignore: cast_nullable_to_non_nullable
 as String,startsAt: null == startsAt ? _self.startsAt : startsAt // ignore: cast_nullable_to_non_nullable
@@ -819,16 +839,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NextMeetingDto&&(identical(other.id, id) || other.id == id)&&(identical(other.circleId, circleId) || other.circleId == circleId)&&(identical(other.startsAt, startsAt) || other.startsAt == startsAt)&&(identical(other.circleName, circleName) || other.circleName == circleName)&&(identical(other.title, title) || other.title == title)&&(identical(other.durationMinutes, durationMinutes) || other.durationMinutes == durationMinutes)&&(identical(other.rsvpStatus, rsvpStatus) || other.rsvpStatus == rsvpStatus));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _NextMeetingDto&&(identical(other.id, id) || other.id == id)&&(identical(other.circleId, circleId) || other.circleId == circleId)&&(identical(other.startsAt, startsAt) || other.startsAt == startsAt)&&(identical(other.circleName, circleName) || other.circleName == circleName)&&(identical(other.title, title) || other.title == title)&&(identical(other.durationMinutes, durationMinutes) || other.durationMinutes == durationMinutes)&&(identical(other.rsvpStatus, rsvpStatus) || other.rsvpStatus == rsvpStatus));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,circleId,startsAt,circleName,title,durationMinutes,rsvpStatus);
+int get hashCode {
+    return Object.hash(runtimeType,id,circleId,startsAt,circleName,title,durationMinutes,rsvpStatus);
+}
 
 @override
 String toString() {
-  return 'NextMeetingDto(id: $id, circleId: $circleId, startsAt: $startsAt, circleName: $circleName, title: $title, durationMinutes: $durationMinutes, rsvpStatus: $rsvpStatus)';
+    return 'NextMeetingDto(id: $id, circleId: $circleId, startsAt: $startsAt, circleName: $circleName, title: $title, durationMinutes: $durationMinutes, rsvpStatus: $rsvpStatus)';
 }
 
 

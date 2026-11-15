@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'student_filter.dart';
@@ -9,6 +9,7 @@ part of 'student_filter.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $StudentFilterCopyWith<StudentFilter> get copyWith => _$StudentFilterCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is StudentFilter&&(identical(other.search, search) || other.search == search)&&(identical(other.sort, sort) || other.sort == sort)&&(identical(other.alumni, alumni) || other.alumni == alumni));
+  final _this = this as StudentFilter;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StudentFilter&&(identical(other.search, _this.search) || other.search == _this.search)&&(identical(other.sort, _this.sort) || other.sort == _this.sort)&&(identical(other.alumni, _this.alumni) || other.alumni == _this.alumni));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,search,sort,alumni);
+int get hashCode {
+  final _this = this as StudentFilter;
+  return Object.hash(runtimeType,_this.search,_this.sort,_this.alumni);
+}
 
 @override
 String toString() {
-  return 'StudentFilter(search: $search, sort: $sort, alumni: $alumni)';
+  final _this = this as StudentFilter;
+  return 'StudentFilter(search: ${_this.search}, sort: ${_this.sort}, alumni: ${_this.alumni})';
 }
 
 
@@ -63,7 +69,7 @@ class _$StudentFilterCopyWithImpl<$Res>
 /// Create a copy of StudentFilter
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? search = null,Object? sort = null,Object? alumni = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(StudentFilter(
 search: null == search ? _self.search : search // ignore: cast_nullable_to_non_nullable
 as String,sort: null == sort ? _self.sort : sort // ignore: cast_nullable_to_non_nullable
 as StudentSort,alumni: freezed == alumni ? _self.alumni : alumni // ignore: cast_nullable_to_non_nullable
@@ -225,16 +231,18 @@ _$StudentFilterCopyWith<_StudentFilter> get copyWith => __$StudentFilterCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StudentFilter&&(identical(other.search, search) || other.search == search)&&(identical(other.sort, sort) || other.sort == sort)&&(identical(other.alumni, alumni) || other.alumni == alumni));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _StudentFilter&&(identical(other.search, search) || other.search == search)&&(identical(other.sort, sort) || other.sort == sort)&&(identical(other.alumni, alumni) || other.alumni == alumni));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,search,sort,alumni);
+int get hashCode {
+    return Object.hash(runtimeType,search,sort,alumni);
+}
 
 @override
 String toString() {
-  return 'StudentFilter(search: $search, sort: $sort, alumni: $alumni)';
+    return 'StudentFilter(search: $search, sort: $sort, alumni: $alumni)';
 }
 
 

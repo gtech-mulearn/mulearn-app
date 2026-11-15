@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'achievement_progress.dart';
@@ -9,6 +9,7 @@ part of 'achievement_progress.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -27,16 +28,21 @@ $AchievementProgressCopyWith<AchievementProgress> get copyWith => _$AchievementP
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AchievementProgress&&(identical(other.achievementId, achievementId) || other.achievementId == achievementId)&&(identical(other.name, name) || other.name == name)&&(identical(other.eligible, eligible) || other.eligible == eligible)&&(identical(other.claimed, claimed) || other.claimed == claimed)&&(identical(other.reason, reason) || other.reason == reason)&&(identical(other.current, current) || other.current == current)&&(identical(other.required, required) || other.required == required)&&(identical(other.percentage, percentage) || other.percentage == percentage));
+  final _this = this as AchievementProgress;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AchievementProgress&&(identical(other.achievementId, _this.achievementId) || other.achievementId == _this.achievementId)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.eligible, _this.eligible) || other.eligible == _this.eligible)&&(identical(other.claimed, _this.claimed) || other.claimed == _this.claimed)&&(identical(other.reason, _this.reason) || other.reason == _this.reason)&&(identical(other.current, _this.current) || other.current == _this.current)&&(identical(other.required, _this.required) || other.required == _this.required)&&(identical(other.percentage, _this.percentage) || other.percentage == _this.percentage));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,achievementId,name,eligible,claimed,reason,current,required,percentage);
+int get hashCode {
+  final _this = this as AchievementProgress;
+  return Object.hash(runtimeType,_this.achievementId,_this.name,_this.eligible,_this.claimed,_this.reason,_this.current,_this.required,_this.percentage);
+}
 
 @override
 String toString() {
-  return 'AchievementProgress(achievementId: $achievementId, name: $name, eligible: $eligible, claimed: $claimed, reason: $reason, current: $current, required: $required, percentage: $percentage)';
+  final _this = this as AchievementProgress;
+  return 'AchievementProgress(achievementId: ${_this.achievementId}, name: ${_this.name}, eligible: ${_this.eligible}, claimed: ${_this.claimed}, reason: ${_this.reason}, current: ${_this.current}, required: ${_this.required}, percentage: ${_this.percentage})';
 }
 
 
@@ -65,7 +71,7 @@ class _$AchievementProgressCopyWithImpl<$Res>
 /// Create a copy of AchievementProgress
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? achievementId = null,Object? name = null,Object? eligible = null,Object? claimed = null,Object? reason = freezed,Object? current = freezed,Object? required = freezed,Object? percentage = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(AchievementProgress(
 achievementId: null == achievementId ? _self.achievementId : achievementId // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,eligible: null == eligible ? _self.eligible : eligible // ignore: cast_nullable_to_non_nullable
@@ -239,16 +245,18 @@ _$AchievementProgressCopyWith<_AchievementProgress> get copyWith => __$Achieveme
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AchievementProgress&&(identical(other.achievementId, achievementId) || other.achievementId == achievementId)&&(identical(other.name, name) || other.name == name)&&(identical(other.eligible, eligible) || other.eligible == eligible)&&(identical(other.claimed, claimed) || other.claimed == claimed)&&(identical(other.reason, reason) || other.reason == reason)&&(identical(other.current, current) || other.current == current)&&(identical(other.required, required) || other.required == required)&&(identical(other.percentage, percentage) || other.percentage == percentage));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _AchievementProgress&&(identical(other.achievementId, achievementId) || other.achievementId == achievementId)&&(identical(other.name, name) || other.name == name)&&(identical(other.eligible, eligible) || other.eligible == eligible)&&(identical(other.claimed, claimed) || other.claimed == claimed)&&(identical(other.reason, reason) || other.reason == reason)&&(identical(other.current, current) || other.current == current)&&(identical(other.required, required) || other.required == required)&&(identical(other.percentage, percentage) || other.percentage == percentage));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,achievementId,name,eligible,claimed,reason,current,required,percentage);
+int get hashCode {
+    return Object.hash(runtimeType,achievementId,name,eligible,claimed,reason,current,required,percentage);
+}
 
 @override
 String toString() {
-  return 'AchievementProgress(achievementId: $achievementId, name: $name, eligible: $eligible, claimed: $claimed, reason: $reason, current: $current, required: $required, percentage: $percentage)';
+    return 'AchievementProgress(achievementId: $achievementId, name: $name, eligible: $eligible, claimed: $claimed, reason: $reason, current: $current, required: $required, percentage: $percentage)';
 }
 
 
@@ -307,16 +315,21 @@ $ClaimResultCopyWith<ClaimResult> get copyWith => _$ClaimResultCopyWithImpl<Clai
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ClaimResult&&(identical(other.achievementName, achievementName) || other.achievementName == achievementName)&&(identical(other.vcPending, vcPending) || other.vcPending == vcPending)&&(identical(other.message, message) || other.message == message));
+  final _this = this as ClaimResult;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ClaimResult&&(identical(other.achievementName, _this.achievementName) || other.achievementName == _this.achievementName)&&(identical(other.vcPending, _this.vcPending) || other.vcPending == _this.vcPending)&&(identical(other.message, _this.message) || other.message == _this.message));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,achievementName,vcPending,message);
+int get hashCode {
+  final _this = this as ClaimResult;
+  return Object.hash(runtimeType,_this.achievementName,_this.vcPending,_this.message);
+}
 
 @override
 String toString() {
-  return 'ClaimResult(achievementName: $achievementName, vcPending: $vcPending, message: $message)';
+  final _this = this as ClaimResult;
+  return 'ClaimResult(achievementName: ${_this.achievementName}, vcPending: ${_this.vcPending}, message: ${_this.message})';
 }
 
 
@@ -345,7 +358,7 @@ class _$ClaimResultCopyWithImpl<$Res>
 /// Create a copy of ClaimResult
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? achievementName = null,Object? vcPending = null,Object? message = null,}) {
-  return _then(_self.copyWith(
+  return _then(ClaimResult(
 achievementName: null == achievementName ? _self.achievementName : achievementName // ignore: cast_nullable_to_non_nullable
 as String,vcPending: null == vcPending ? _self.vcPending : vcPending // ignore: cast_nullable_to_non_nullable
 as bool,message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
@@ -507,16 +520,18 @@ _$ClaimResultCopyWith<_ClaimResult> get copyWith => __$ClaimResultCopyWithImpl<_
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ClaimResult&&(identical(other.achievementName, achievementName) || other.achievementName == achievementName)&&(identical(other.vcPending, vcPending) || other.vcPending == vcPending)&&(identical(other.message, message) || other.message == message));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ClaimResult&&(identical(other.achievementName, achievementName) || other.achievementName == achievementName)&&(identical(other.vcPending, vcPending) || other.vcPending == vcPending)&&(identical(other.message, message) || other.message == message));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,achievementName,vcPending,message);
+int get hashCode {
+    return Object.hash(runtimeType,achievementName,vcPending,message);
+}
 
 @override
 String toString() {
-  return 'ClaimResult(achievementName: $achievementName, vcPending: $vcPending, message: $message)';
+    return 'ClaimResult(achievementName: $achievementName, vcPending: $vcPending, message: $message)';
 }
 
 

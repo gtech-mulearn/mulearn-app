@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'event_organizer_ig.dart';
@@ -9,6 +9,7 @@ part of 'event_organizer_ig.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $EventOrganizerIgCopyWith<EventOrganizerIg> get copyWith => _$EventOrganizerIgCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EventOrganizerIg&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.iconImage, iconImage) || other.iconImage == iconImage));
+  final _this = this as EventOrganizerIg;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EventOrganizerIg&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.iconImage, _this.iconImage) || other.iconImage == _this.iconImage));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,iconImage);
+int get hashCode {
+  final _this = this as EventOrganizerIg;
+  return Object.hash(runtimeType,_this.id,_this.name,_this.iconImage);
+}
 
 @override
 String toString() {
-  return 'EventOrganizerIg(id: $id, name: $name, iconImage: $iconImage)';
+  final _this = this as EventOrganizerIg;
+  return 'EventOrganizerIg(id: ${_this.id}, name: ${_this.name}, iconImage: ${_this.iconImage})';
 }
 
 
@@ -63,7 +69,7 @@ class _$EventOrganizerIgCopyWithImpl<$Res>
 /// Create a copy of EventOrganizerIg
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? iconImage = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(EventOrganizerIg(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,iconImage: freezed == iconImage ? _self.iconImage : iconImage // ignore: cast_nullable_to_non_nullable
@@ -225,16 +231,18 @@ _$EventOrganizerIgCopyWith<_EventOrganizerIg> get copyWith => __$EventOrganizerI
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EventOrganizerIg&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.iconImage, iconImage) || other.iconImage == iconImage));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _EventOrganizerIg&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.iconImage, iconImage) || other.iconImage == iconImage));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,iconImage);
+int get hashCode {
+    return Object.hash(runtimeType,id,name,iconImage);
+}
 
 @override
 String toString() {
-  return 'EventOrganizerIg(id: $id, name: $name, iconImage: $iconImage)';
+    return 'EventOrganizerIg(id: $id, name: $name, iconImage: $iconImage)';
 }
 
 

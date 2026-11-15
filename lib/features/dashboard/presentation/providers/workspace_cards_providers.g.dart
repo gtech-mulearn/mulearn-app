@@ -12,7 +12,7 @@ part of 'workspace_cards_providers.dart';
 /// workspace is open, so other users make no call.
 
 @ProviderFor(mentorUpcomingCount)
-const mentorUpcomingCountProvider = MentorUpcomingCountProvider._();
+final mentorUpcomingCountProvider = MentorUpcomingCountProvider._();
 
 /// Upcoming sessions for the Home mentor card; watched only when the mentor
 /// workspace is open, so other users make no call.
@@ -22,7 +22,7 @@ final class MentorUpcomingCountProvider
     with $FutureModifier<int>, $FutureProvider<int> {
   /// Upcoming sessions for the Home mentor card; watched only when the mentor
   /// workspace is open, so other users make no call.
-  const MentorUpcomingCountProvider._()
+  MentorUpcomingCountProvider._()
     : super(
         from: null,
         argument: null,
@@ -54,7 +54,7 @@ String _$mentorUpcomingCountHash() =>
 /// open.
 
 @ProviderFor(campusHeadline)
-const campusHeadlineProvider = CampusHeadlineProvider._();
+final campusHeadlineProvider = CampusHeadlineProvider._();
 
 /// The Home campus card's line; watched only when the campus workspace is
 /// open.
@@ -79,7 +79,7 @@ final class CampusHeadlineProvider
         > {
   /// The Home campus card's line; watched only when the campus workspace is
   /// open.
-  const CampusHeadlineProvider._()
+  CampusHeadlineProvider._()
     : super(
         from: null,
         argument: null,

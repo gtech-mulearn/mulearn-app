@@ -1,0 +1,28 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/projects/?muid=qastudentone@mulearn&perPage=50",
+    "account": "qa-student",
+    "status": 200,
+    "recorded_at": "2026-11-15T16:35:14.013Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "data": {
+        "Projects": []
+      },
+      "pagination": {
+        "count": 0,
+        "totalPages": 1,
+        "isNext": false,
+        "isPrev": false,
+        "nextPage": null
+      }
+    }
+  }
+}

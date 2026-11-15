@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'my_progress_summary.dart';
@@ -9,6 +9,7 @@ part of 'my_progress_summary.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $MyProgressSummaryCopyWith<MyProgressSummary> get copyWith => _$MyProgressSummar
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MyProgressSummary&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.level, level) || other.level == level)&&(identical(other.profilePicUrl, profilePicUrl) || other.profilePicUrl == profilePicUrl)&&(identical(other.rank, rank) || other.rank == rank)&&(identical(other.percentile, percentile) || other.percentile == percentile)&&(identical(other.interestGroupCount, interestGroupCount) || other.interestGroupCount == interestGroupCount));
+  final _this = this as MyProgressSummary;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MyProgressSummary&&(identical(other.fullName, _this.fullName) || other.fullName == _this.fullName)&&(identical(other.muid, _this.muid) || other.muid == _this.muid)&&(identical(other.karma, _this.karma) || other.karma == _this.karma)&&(identical(other.level, _this.level) || other.level == _this.level)&&(identical(other.profilePicUrl, _this.profilePicUrl) || other.profilePicUrl == _this.profilePicUrl)&&(identical(other.rank, _this.rank) || other.rank == _this.rank)&&(identical(other.percentile, _this.percentile) || other.percentile == _this.percentile)&&(identical(other.interestGroupCount, _this.interestGroupCount) || other.interestGroupCount == _this.interestGroupCount));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,fullName,muid,karma,level,profilePicUrl,rank,percentile,interestGroupCount);
+int get hashCode {
+  final _this = this as MyProgressSummary;
+  return Object.hash(runtimeType,_this.fullName,_this.muid,_this.karma,_this.level,_this.profilePicUrl,_this.rank,_this.percentile,_this.interestGroupCount);
+}
 
 @override
 String toString() {
-  return 'MyProgressSummary(fullName: $fullName, muid: $muid, karma: $karma, level: $level, profilePicUrl: $profilePicUrl, rank: $rank, percentile: $percentile, interestGroupCount: $interestGroupCount)';
+  final _this = this as MyProgressSummary;
+  return 'MyProgressSummary(fullName: ${_this.fullName}, muid: ${_this.muid}, karma: ${_this.karma}, level: ${_this.level}, profilePicUrl: ${_this.profilePicUrl}, rank: ${_this.rank}, percentile: ${_this.percentile}, interestGroupCount: ${_this.interestGroupCount})';
 }
 
 
@@ -63,7 +69,7 @@ class _$MyProgressSummaryCopyWithImpl<$Res>
 /// Create a copy of MyProgressSummary
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? fullName = null,Object? muid = null,Object? karma = null,Object? level = freezed,Object? profilePicUrl = freezed,Object? rank = freezed,Object? percentile = freezed,Object? interestGroupCount = null,}) {
-  return _then(_self.copyWith(
+  return _then(MyProgressSummary(
 fullName: null == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
 as String,muid: null == muid ? _self.muid : muid // ignore: cast_nullable_to_non_nullable
 as String,karma: null == karma ? _self.karma : karma // ignore: cast_nullable_to_non_nullable
@@ -235,16 +241,18 @@ _$MyProgressSummaryCopyWith<_MyProgressSummary> get copyWith => __$MyProgressSum
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MyProgressSummary&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.level, level) || other.level == level)&&(identical(other.profilePicUrl, profilePicUrl) || other.profilePicUrl == profilePicUrl)&&(identical(other.rank, rank) || other.rank == rank)&&(identical(other.percentile, percentile) || other.percentile == percentile)&&(identical(other.interestGroupCount, interestGroupCount) || other.interestGroupCount == interestGroupCount));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MyProgressSummary&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.level, level) || other.level == level)&&(identical(other.profilePicUrl, profilePicUrl) || other.profilePicUrl == profilePicUrl)&&(identical(other.rank, rank) || other.rank == rank)&&(identical(other.percentile, percentile) || other.percentile == percentile)&&(identical(other.interestGroupCount, interestGroupCount) || other.interestGroupCount == interestGroupCount));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,fullName,muid,karma,level,profilePicUrl,rank,percentile,interestGroupCount);
+int get hashCode {
+    return Object.hash(runtimeType,fullName,muid,karma,level,profilePicUrl,rank,percentile,interestGroupCount);
+}
 
 @override
 String toString() {
-  return 'MyProgressSummary(fullName: $fullName, muid: $muid, karma: $karma, level: $level, profilePicUrl: $profilePicUrl, rank: $rank, percentile: $percentile, interestGroupCount: $interestGroupCount)';
+    return 'MyProgressSummary(fullName: $fullName, muid: $muid, karma: $karma, level: $level, profilePicUrl: $profilePicUrl, rank: $rank, percentile: $percentile, interestGroupCount: $interestGroupCount)';
 }
 
 

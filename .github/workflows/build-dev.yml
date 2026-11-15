@@ -1,0 +1,94 @@
+# Development channel — internal QA builds of the dev flavor
+# ("Mulearn Dev", org.mulearn.muapp.dev, dev API host).
+#
+#   push to staging    validate → build → upload artifact
+#                      → refresh the rolling `dev-latest` GitHub pre-release
+#   manual (Run workflow, any branch)
+#                      validate → build → upload artifact only
+#
+# The dev branch builds nothing; staging is where dev-channel builds come
+# from. Signed with the Development environment's test key so each build installs
+# over the previous one. Never the production key, never a production release.
+# Docs: docs/CI-CD.md
+name: Dev build
+
+on:
+  push:
+    branches:
+      - staging
+  workflow_dispatch:
+
+# A newer push supersedes an in-flight build (and its dev-latest refresh).
+concurrency:
+  group: dev-build-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Android
+    uses: ./.github/workflows/android-build.yml
+    # Required for the called workflow to read the Production/Development
+    # environment secrets, even though its build job names the environment.
+    secrets: inherit
+    with:
+      channel: dev
+      signing: optional
+      environment: Development
+      upload: true
+      retention-days: 14
+
+  # Testers' stable download URL: .../releases/tag/dev-latest. One rolling
+  # pre-release, recreated on each push to staging — not a versioned release.
+  publish:
+    name: Refresh dev-latest pre-release
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/staging'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - name: Download APK
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: ${{ needs.build.outputs.artifact }}.apk
+          path: dist
+
+      - name: Publish dev-latest
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ARTIFACT: ${{ needs.build.outputs.artifact }}
+          BUILD_NAME: ${{ needs.build.outputs.build-name }}
+          BUILD_NUMBER: ${{ needs.build.outputs.build-number }}
+          SHA: ${{ needs.build.outputs.sha }}
+          BUILT_AT: ${{ needs.build.outputs.built-at }}
+          APK_SHA256: ${{ needs.build.outputs.apk-sha256 }}
+        run: |
+          apk=$(find dist -type f -name '*.apk' | head -n 1)
+          [ -n "$apk" ] || { echo "::error::No APK downloaded."; exit 1; }
+          cat > notes.md <<EOF
+          Automated **development** build for internal QA — not for production use.
+
+          | | |
+          |---|---|
+          | versionName | \`${BUILD_NAME}\` |
+          | versionCode | \`${BUILD_NUMBER}\` |
+          | Branch | \`staging\` |
+          | Commit | ${SHA} |
+          | Built (UTC) | ${BUILT_AT} |
+          | Flavor | \`dev\` (Mulearn Dev, \`org.mulearn.muapp.dev\`, dev API host) |
+          | APK SHA-256 | \`${APK_SHA256}\` |
+          | Workflow run | ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} |
+
+          Refreshed on every push to \`staging\`; this URL always serves the latest dev APK.
+          EOF
+          gh release delete dev-latest -R "$GITHUB_REPOSITORY" --yes --cleanup-tag || true
+          gh release create dev-latest -R "$GITHUB_REPOSITORY" \
+            --prerelease --latest=false \
+            --target "$SHA" \
+            --title "Development build ${BUILD_NAME}" \
+            --notes-file notes.md \
+            "$apk"

@@ -4,14 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/session/discord_connect.dart';
-import 'package:mulearn_app/core/theme/mu_space.dart';
-import 'package:mulearn_app/core/theme/mulearn_colors.dart';
-import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 import 'package:mulearn_app/core/utils/external_links.dart';
-import 'package:mulearn_app/core/widgets/mu_buttons.dart';
 
 /// Where Discord's OAuth redirect lands (`/dashboard/connect-discord?code=`,
 /// opened as an App Link). Sends the code to the backend once and shows the
@@ -22,7 +19,8 @@ class ConnectDiscordScreen extends ConsumerStatefulWidget {
   final String? code;
 
   @override
-  ConsumerState<ConnectDiscordScreen> createState() => _ConnectDiscordScreenState();
+  ConsumerState<ConnectDiscordScreen> createState() =>
+      _ConnectDiscordScreenState();
 }
 
 class _ConnectDiscordScreenState extends ConsumerState<ConnectDiscordScreen> {
@@ -33,7 +31,13 @@ class _ConnectDiscordScreenState extends ConsumerState<ConnectDiscordScreen> {
     super.initState();
     if (_hasCode) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) unawaited(ref.read(discordConnectControllerProvider.notifier).connect(widget.code!));
+        if (mounted) {
+          unawaited(
+            ref
+                .read(discordConnectControllerProvider.notifier)
+                .connect(widget.code!),
+          );
+        }
       });
     }
   }
@@ -46,30 +50,50 @@ class _ConnectDiscordScreenState extends ConsumerState<ConnectDiscordScreen> {
     super.didUpdateWidget(oldWidget);
     if (_hasCode && widget.code != oldWidget.code) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) unawaited(ref.read(discordConnectControllerProvider.notifier).connect(widget.code!));
+        if (mounted) {
+          unawaited(
+            ref
+                .read(discordConnectControllerProvider.notifier)
+                .connect(widget.code!),
+          );
+        }
       });
     }
   }
 
-  void _startFlow() => unawaited(ref.read(discordConnectFlowProvider.notifier).start());
+  void _startFlow() =>
+      unawaited(ref.read(discordConnectFlowProvider.notifier).start());
 
   /// Opened from a link, the screen is the whole stack: leave to Home.
-  void _leave() => context.canPop() ? context.pop() : context.go(RoutePaths.home);
+  void _leave() =>
+      context.canPop() ? context.pop() : context.go(RoutePaths.home);
 
-  Widget get _notNow => TextButton(onPressed: _leave, child: const Text('Not now'));
+  Widget get _notNow => MuButton(
+    label: 'Not now',
+    variant: MuButtonVariant.ghost,
+    block: true,
+    onPressed: _leave,
+  );
 
   @override
   Widget build(BuildContext context) {
+    final c = context.mu.colors;
     final available = ref.watch(discordAuthUriProvider) != null;
     final Widget body;
     if (!_hasCode) {
       body = _Outcome(
         icon: LucideIcons.messageCircle,
+        tone: MuFeedTone.event,
         title: 'Join the μLearn Discord',
-        message: 'Link your Discord account to join the server, where task proof is posted and karma is counted.',
+        message:
+            'Link your Discord account to join the server, where task proof is posted and karma is counted.',
         actions: [
-          if (available) MuPrimaryButton(label: 'Connect Discord', onPressed: _startFlow),
-          const SizedBox(height: MuSpace.m),
+          if (available)
+            MuButton(
+              label: 'Connect Discord',
+              block: true,
+              onPressed: _startFlow,
+            ),
           _notNow,
         ],
       );
@@ -79,12 +103,12 @@ class _ConnectDiscordScreenState extends ConsumerState<ConnectDiscordScreen> {
         loading: () => const _Connecting(),
         error: (error, _) => _Outcome(
           icon: LucideIcons.xCircle,
-          iconColor: MuColors.error,
+          tone: MuFeedTone.problem,
           title: "Couldn't connect Discord",
           message: ApiException.messageFor(error),
           actions: [
-            if (available) MuPrimaryButton(label: 'Try again', onPressed: _startFlow),
-            const SizedBox(height: MuSpace.m),
+            if (available)
+              MuButton(label: 'Try again', block: true, onPressed: _startFlow),
             _notNow,
           ],
         ),
@@ -92,30 +116,45 @@ class _ConnectDiscordScreenState extends ConsumerState<ConnectDiscordScreen> {
             ? const _Connecting()
             : _Outcome(
                 icon: LucideIcons.checkCircle2,
-                iconColor: MuColors.success,
+                tone: MuFeedTone.done,
                 title: 'Discord connected',
                 message: message,
                 actions: [
-                  MuPrimaryButton(
+                  MuButton(
                     label: 'Open the μLearn server',
-                    onPressed: () => unawaited(ref.read(openExternalProvider)(discordServerInvite)),
+                    block: true,
+                    knob: true,
+                    onPressed: () => unawaited(
+                      ref.read(openExternalProvider)(discordServerInvite),
+                    ),
                   ),
-                  const SizedBox(height: MuSpace.m),
-                  TextButton(onPressed: _leave, child: const Text('Done')),
+                  MuButton(
+                    label: 'Done',
+                    variant: MuButtonVariant.ghost,
+                    block: true,
+                    onPressed: _leave,
+                  ),
                 ],
               ),
       );
     }
+
     return Scaffold(
-      backgroundColor: MuColors.canvas,
-      appBar: AppBar(
-        backgroundColor: MuColors.canvas,
-        title: Text('Discord', style: MuType.headline),
-        leading: context.canPop()
-            ? null
-            : IconButton(tooltip: 'Close', icon: const Icon(LucideIcons.x), onPressed: _leave),
+      backgroundColor: c.chalk,
+      body: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            MuTopBar.detail(title: 'Discord', onBack: _leave),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(MuSpacing.space5),
+                child: body,
+              ),
+            ),
+          ],
+        ),
       ),
-      body: SafeArea(child: Padding(padding: const EdgeInsets.all(MuSpace.screenH), child: body)),
     );
   }
 }
@@ -124,45 +163,57 @@ class _Connecting extends StatelessWidget {
   const _Connecting();
 
   @override
-  Widget build(BuildContext context) => Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const CircularProgressIndicator(),
-            const SizedBox(height: MuSpace.l),
-            Text('Connecting your Discord account…', style: MuType.body.copyWith(color: MuColors.inkSecondary)),
-          ],
-        ),
-      );
+  Widget build(BuildContext context) => const Center(
+    child: MuDotsLoader(label: 'Connecting your Discord account…'),
+  );
 }
 
 class _Outcome extends StatelessWidget {
   const _Outcome({
     required this.icon,
+    required this.tone,
     required this.title,
     required this.message,
     required this.actions,
-    this.iconColor = MuColors.primary,
   });
 
   final IconData icon;
-  final Color iconColor;
+  final MuFeedTone tone;
   final String title;
   final String message;
   final List<Widget> actions;
 
   @override
-  Widget build(BuildContext context) => Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Icon(icon, size: 48, color: iconColor),
-          const SizedBox(height: MuSpace.l),
-          Text(title, style: MuType.headline, textAlign: TextAlign.center),
-          const SizedBox(height: MuSpace.s),
-          Text(message, style: MuType.body.copyWith(color: MuColors.inkSecondary), textAlign: TextAlign.center),
-          const SizedBox(height: MuSpace.xl),
-          ...actions,
+  Widget build(BuildContext context) {
+    final mu = context.mu;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const Spacer(),
+        Center(
+          child: Transform.scale(scale: 2, child: MuFeedIcon(icon, tone: tone)),
+        ),
+        const SizedBox(height: MuSpacing.space10),
+        Semantics(
+          header: true,
+          child: Text(
+            title,
+            style: mu.text.title1,
+            textAlign: TextAlign.center,
+          ),
+        ),
+        const SizedBox(height: MuSpacing.space2),
+        Text(
+          message,
+          style: mu.text.body.copyWith(color: mu.colors.ink2),
+          textAlign: TextAlign.center,
+        ),
+        const Spacer(),
+        for (final a in actions) ...[
+          a,
+          const SizedBox(height: MuSpacing.space2),
         ],
-      );
+      ],
+    );
+  }
 }

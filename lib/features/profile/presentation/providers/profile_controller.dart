@@ -15,9 +15,9 @@ ProfileRemoteDataSource profileRemoteDataSource(Ref ref) =>
 
 @riverpod
 ProfileRepository profileRepository(Ref ref) => ProfileRepositoryImpl(
-      remote: ref.watch(profileRemoteDataSourceProvider),
-      locationRemote: ref.watch(locationRemoteDataSourceProvider),
-    );
+  remote: ref.watch(profileRemoteDataSourceProvider),
+  locationRemote: ref.watch(locationRemoteDataSourceProvider),
+);
 
 /// The current user's profile, mapped from the shared `user-profile` payload
 /// (one request for every reader). Call [refresh] to refetch, e.g. from the
@@ -27,7 +27,9 @@ class ProfileController extends _$ProfileController {
   @override
   Future<UserProfile> build() async {
     final repository = ref.watch(profileRepositoryProvider);
-    return repository.profileFromPayload(await ref.watch(myProfilePayloadProvider.future));
+    return repository.profileFromPayload(
+      await ref.watch(myProfilePayloadProvider.future),
+    );
   }
 
   /// Refetches the shared profile; every reader of it refreshes.

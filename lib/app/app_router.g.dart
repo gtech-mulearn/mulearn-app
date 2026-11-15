@@ -27,7 +27,7 @@ part of 'app_router.dart';
 ///  * signed in on any other pre-auth screen (or `/splash`) → `/profile`
 
 @ProviderFor(goRouter)
-const goRouterProvider = GoRouterProvider._();
+final goRouterProvider = GoRouterProvider._();
 
 /// App router (go_router) with an auth `redirect` that reads the core-level
 /// [AppAuthController] (rules.md §1/§3, architecture §5).
@@ -67,7 +67,7 @@ final class GoRouterProvider
   ///    transitions from signed-out to signed-in mid-flow, so it's allowed in
   ///    both states — see `_alwaysAllowedSignedIn` below)
   ///  * signed in on any other pre-auth screen (or `/splash`) → `/profile`
-  const GoRouterProvider._()
+  GoRouterProvider._()
     : super(
         from: null,
         argument: null,
@@ -100,4 +100,4 @@ final class GoRouterProvider
   }
 }
 
-String _$goRouterHash() => r'3800784c94342b890ce103fe50fd4e05b1621e74';
+String _$goRouterHash() => r'bb1082376eee84a853f5d3c06e22c532673ed93f';

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'vc_subject_info.dart';
@@ -9,6 +9,7 @@ part of 'vc_subject_info.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $VcSubjectInfoCopyWith<VcSubjectInfo> get copyWith => _$VcSubjectInfoCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is VcSubjectInfo&&(identical(other.type, type) || other.type == type)&&(identical(other.did, did) || other.did == did)&&(identical(other.name, name) || other.name == name)&&(identical(other.email, email) || other.email == email));
+  final _this = this as VcSubjectInfo;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is VcSubjectInfo&&(identical(other.type, _this.type) || other.type == _this.type)&&(identical(other.did, _this.did) || other.did == _this.did)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.email, _this.email) || other.email == _this.email));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,type,did,name,email);
+int get hashCode {
+  final _this = this as VcSubjectInfo;
+  return Object.hash(runtimeType,_this.type,_this.did,_this.name,_this.email);
+}
 
 @override
 String toString() {
-  return 'VcSubjectInfo(type: $type, did: $did, name: $name, email: $email)';
+  final _this = this as VcSubjectInfo;
+  return 'VcSubjectInfo(type: ${_this.type}, did: ${_this.did}, name: ${_this.name}, email: ${_this.email})';
 }
 
 
@@ -63,7 +69,7 @@ class _$VcSubjectInfoCopyWithImpl<$Res>
 /// Create a copy of VcSubjectInfo
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? did = null,Object? name = null,Object? email = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(VcSubjectInfo(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as VcCredentialType,did: null == did ? _self.did : did // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -227,16 +233,18 @@ _$VcSubjectInfoCopyWith<_VcSubjectInfo> get copyWith => __$VcSubjectInfoCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _VcSubjectInfo&&(identical(other.type, type) || other.type == type)&&(identical(other.did, did) || other.did == did)&&(identical(other.name, name) || other.name == name)&&(identical(other.email, email) || other.email == email));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _VcSubjectInfo&&(identical(other.type, type) || other.type == type)&&(identical(other.did, did) || other.did == did)&&(identical(other.name, name) || other.name == name)&&(identical(other.email, email) || other.email == email));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,type,did,name,email);
+int get hashCode {
+    return Object.hash(runtimeType,type,did,name,email);
+}
 
 @override
 String toString() {
-  return 'VcSubjectInfo(type: $type, did: $did, name: $name, email: $email)';
+    return 'VcSubjectInfo(type: $type, did: $did, name: $name, email: $email)';
 }
 
 

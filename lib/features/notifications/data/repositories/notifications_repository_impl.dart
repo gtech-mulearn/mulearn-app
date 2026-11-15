@@ -14,14 +14,14 @@ class NotificationsRepositoryImpl implements NotificationsRepository {
 
   @override
   Future<NotificationPage> getPage(int page) => _guard(() async {
-        final body = await _remote.fetchPage(page);
-        final items = parseEachOrReport(
-          body['results'] as List<dynamic>? ?? const [],
-          (json) => NotificationDto.fromJson(json).toDomain(),
-          what: 'NotificationDto',
-        );
-        return (items: items, hasNext: PagePaging.parse(body).hasNext);
-      });
+    final body = await _remote.fetchPage(page);
+    final items = parseEachOrReport(
+      body['results'] as List<dynamic>? ?? const [],
+      (json) => NotificationDto.fromJson(json).toDomain(),
+      what: 'NotificationDto',
+    );
+    return (items: items, hasNext: PagePaging.parse(body).hasNext);
+  });
 
   @override
   Future<void> markRead(String id) => _guard(() => _remote.markRead(id));

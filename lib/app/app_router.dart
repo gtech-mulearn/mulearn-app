@@ -6,6 +6,8 @@ import 'package:mulearn_app/app/widgets/not_found_screen.dart';
 import 'package:mulearn_app/core/auth/app_auth_controller.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/widgets/workspace_gate.dart';
+import 'package:mulearn_app/features/auth/presentation/providers/welcome_providers.dart';
+import 'package:mulearn_app/features/auth/presentation/screens/arrival_screen.dart';
 import 'package:mulearn_app/features/auth/presentation/screens/forgot_password_screen.dart';
 import 'package:mulearn_app/features/auth/presentation/screens/onboarding_interests_screen.dart';
 import 'package:mulearn_app/features/auth/presentation/screens/register_basic_info_screen.dart';
@@ -22,6 +24,7 @@ import 'package:mulearn_app/features/campus/presentation/screens/campus_student_
 import 'package:mulearn_app/features/campus/presentation/screens/campus_students_screen.dart';
 import 'package:mulearn_app/features/campus/presentation/screens/enabler_campus_screen.dart';
 import 'package:mulearn_app/features/campus/presentation/screens/enabler_campuses_screen.dart';
+import 'package:mulearn_app/features/campus_profile/presentation/screens/public_campus_screen.dart';
 import 'package:mulearn_app/features/dashboard/presentation/screens/home_screen.dart';
 import 'package:mulearn_app/features/events/presentation/screens/event_detail_screen.dart';
 import 'package:mulearn_app/features/events/presentation/screens/events_screen.dart';
@@ -35,22 +38,32 @@ import 'package:mulearn_app/features/learning_circles/presentation/screens/learn
 import 'package:mulearn_app/features/learning_circles/presentation/screens/learning_circles_screen.dart';
 import 'package:mulearn_app/features/learning_circles/presentation/screens/meeting_detail_screen.dart';
 import 'package:mulearn_app/features/mentor/presentation/screens/availability_screen.dart';
+import 'package:mulearn_app/features/mentor/presentation/screens/learner_sessions_screen.dart';
 import 'package:mulearn_app/features/mentor/presentation/screens/mentor_hub_screen.dart';
 import 'package:mulearn_app/features/mentor/presentation/screens/mentor_session_detail_screen.dart';
 import 'package:mulearn_app/features/mentor/presentation/screens/mentor_sessions_screen.dart';
 import 'package:mulearn_app/features/mentor/presentation/screens/session_form_screen.dart';
 import 'package:mulearn_app/features/mentor/presentation/screens/student_requests_screen.dart';
 import 'package:mulearn_app/features/notifications/presentation/screens/notifications_screen.dart';
+import 'package:mulearn_app/features/opportunities/presentation/screens/opportunities_screen.dart';
+import 'package:mulearn_app/features/problem_statements/presentation/screens/problem_statement_detail_screen.dart';
+import 'package:mulearn_app/features/problem_statements/presentation/screens/problem_statements_screen.dart';
 import 'package:mulearn_app/features/profile/presentation/screens/change_password_screen.dart';
 import 'package:mulearn_app/features/profile/presentation/screens/connect_discord_screen.dart';
 import 'package:mulearn_app/features/profile/presentation/screens/journey_screen.dart';
 import 'package:mulearn_app/features/profile/presentation/screens/profile_screen.dart';
 import 'package:mulearn_app/features/profile/presentation/screens/public_profile_screen.dart';
 import 'package:mulearn_app/features/profile/presentation/screens/settings_screen.dart';
+import 'package:mulearn_app/features/projects/presentation/screens/project_detail_screen.dart';
+import 'package:mulearn_app/features/projects/presentation/screens/project_form_screen.dart';
+import 'package:mulearn_app/features/projects/presentation/screens/projects_screen.dart';
 import 'package:mulearn_app/features/search/presentation/screens/search_screen.dart';
 import 'package:mulearn_app/features/splash/presentation/screens/splash_screen.dart';
 import 'package:mulearn_app/features/tasks/presentation/screens/task_detail_screen.dart';
 import 'package:mulearn_app/features/tasks/presentation/screens/tasks_screen.dart';
+import 'package:mulearn_app/features/weekly_twitches/domain/entities/twitch.dart';
+import 'package:mulearn_app/features/weekly_twitches/presentation/screens/twitch_detail_screen.dart';
+import 'package:mulearn_app/features/weekly_twitches/presentation/screens/weekly_twitches_screen.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'app_router.g.dart';
@@ -81,13 +94,21 @@ GoRouter goRouter(Ref ref) {
     initialLocation: RoutePaths.splash,
     refreshListenable: refresh,
     debugLogDiagnostics: kDebugMode,
-    redirect: (context, state) => appRedirect(auth: ref.read(appAuthControllerProvider), uri: state.uri),
+    redirect: (context, state) => appRedirect(
+      auth: ref.read(appAuthControllerProvider),
+      arrivalSeen: ref.read(arrivalSeenProvider),
+      uri: state.uri,
+    ),
     // A path the app doesn't know (e.g. an old link): the dashboard's 404.
     errorBuilder: (_, __) => const NotFoundScreen(),
     routes: [
       GoRoute(
         path: RoutePaths.splash,
         builder: (_, __) => const SplashScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.welcome,
+        builder: (_, __) => const ArrivalScreen(),
       ),
       GoRoute(
         path: RoutePaths.signIn,
@@ -122,6 +143,11 @@ GoRouter goRouter(Ref ref) {
         builder: (_, __) => const SearchScreen(),
       ),
       GoRoute(
+        path: RoutePaths.publicCampus,
+        builder: (_, state) =>
+            PublicCampusScreen(campusId: state.pathParameters['id']!),
+      ),
+      GoRoute(
         path: RoutePaths.publicProfile,
         builder: (_, state) =>
             PublicProfileScreen(muid: state.pathParameters['muid']!),
@@ -132,9 +158,8 @@ GoRouter goRouter(Ref ref) {
       ),
       GoRoute(
         path: RoutePaths.interestGroupDetail,
-        builder: (_, state) => InterestGroupDetailScreen(
-          groupId: state.pathParameters['id']!,
-        ),
+        builder: (_, state) =>
+            InterestGroupDetailScreen(groupId: state.pathParameters['id']!),
       ),
       GoRoute(
         path: RoutePaths.events,
@@ -148,6 +173,59 @@ GoRouter goRouter(Ref ref) {
       GoRoute(
         path: RoutePaths.calendar,
         builder: (_, __) => const CalendarScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.opportunities,
+        builder: (_, __) => const OpportunitiesScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.problemStatements,
+        builder: (_, __) => const ProblemStatementsScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.learnerSessions,
+        builder: (_, __) => const LearnerSessionsScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.projects,
+        builder: (_, __) => const ProjectsScreen(),
+      ),
+      // Before /projects/:id, so "new" isn't read as an id.
+      GoRoute(
+        path: RoutePaths.projectNew,
+        builder: (_, __) => const ProjectFormScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.project,
+        builder: (_, state) =>
+            ProjectDetailScreen(id: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: RoutePaths.projectEdit,
+        builder: (_, state) =>
+            ProjectFormScreen(projectId: state.pathParameters['id']),
+      ),
+      GoRoute(
+        path: RoutePaths.problemStatement,
+        builder: (_, state) =>
+            ProblemStatementDetailScreen(id: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: RoutePaths.weeklyTwitches,
+        builder: (_, state) => WeeklyTwitchesScreen(
+          initial:
+              TwitchShow.from(state.uri.queryParameters['show']) ??
+              TwitchShow.officeHours,
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.weeklyTwitch,
+        builder: (_, state) => TwitchDetailScreen(
+          show:
+              TwitchShow.from(state.pathParameters['show']) ??
+              TwitchShow.officeHours,
+          id: state.pathParameters['id']!,
+        ),
       ),
       GoRoute(
         path: RoutePaths.learningCircles,
@@ -198,7 +276,8 @@ GoRouter goRouter(Ref ref) {
         builder: (_, state) => WorkspaceGate(
           select: (a) => a.enablerCampuses,
           role: 'Enabler',
-          builder: (_) => EnablerCampusScreen(campusId: state.pathParameters['id']!),
+          builder: (_) =>
+              EnablerCampusScreen(campusId: state.pathParameters['id']!),
         ),
       ),
       GoRoute(
@@ -232,7 +311,9 @@ GoRouter goRouter(Ref ref) {
           role: 'Campus',
           builder: (_) => CampusStudentScreen(
             muid: state.pathParameters['muid']!,
-            student: state.extra is CampusStudent ? state.extra! as CampusStudent : null,
+            student: state.extra is CampusStudent
+                ? state.extra! as CampusStudent
+                : null,
           ),
         ),
       ),
@@ -258,7 +339,8 @@ GoRouter goRouter(Ref ref) {
         builder: (_, state) => WorkspaceGate(
           select: (a) => a.mentor,
           role: 'Mentor',
-          builder: (_) => SessionFormScreen(sessionId: state.pathParameters['id']),
+          builder: (_) =>
+              SessionFormScreen(sessionId: state.pathParameters['id']),
         ),
       ),
       GoRoute(
@@ -282,12 +364,14 @@ GoRouter goRouter(Ref ref) {
         builder: (_, state) => WorkspaceGate(
           select: (a) => a.mentor,
           role: 'Mentor',
-          builder: (_) => MentorSessionDetailScreen(sessionId: state.pathParameters['id']!),
+          builder: (_) =>
+              MentorSessionDetailScreen(sessionId: state.pathParameters['id']!),
         ),
       ),
       GoRoute(
         path: RoutePaths.connectDiscord,
-        builder: (_, state) => ConnectDiscordScreen(code: state.uri.queryParameters['code']),
+        builder: (_, state) =>
+            ConnectDiscordScreen(code: state.uri.queryParameters['code']),
       ),
       GoRoute(
         path: RoutePaths.taskDetail,
@@ -296,15 +380,13 @@ GoRouter goRouter(Ref ref) {
       ),
       GoRoute(
         path: RoutePaths.learningCircleDetail,
-        builder: (_, state) => LearningCircleDetailScreen(
-          circleId: state.pathParameters['id']!,
-        ),
+        builder: (_, state) =>
+            LearningCircleDetailScreen(circleId: state.pathParameters['id']!),
       ),
       GoRoute(
         path: RoutePaths.createMeeting,
-        builder: (_, state) => CreateMeetingScreen(
-          circleId: state.pathParameters['id']!,
-        ),
+        builder: (_, state) =>
+            CreateMeetingScreen(circleId: state.pathParameters['id']!),
       ),
       GoRoute(
         path: RoutePaths.meetingDetail,
@@ -315,9 +397,8 @@ GoRouter goRouter(Ref ref) {
       ),
       GoRoute(
         path: RoutePaths.editMeeting,
-        builder: (_, state) => EditMeetingScreen(
-          meetingId: state.pathParameters['id']!,
-        ),
+        builder: (_, state) =>
+            EditMeetingScreen(meetingId: state.pathParameters['id']!),
       ),
       StatefulShellRoute.indexedStack(
         builder: (_, __, navigationShell) =>
@@ -374,6 +455,8 @@ GoRouter goRouter(Ref ref) {
 /// rebuilding the whole [GoRouter].
 class _AuthRefreshListenable extends ChangeNotifier {
   _AuthRefreshListenable(Ref ref) {
-    ref.listen(appAuthControllerProvider, (_, __) => notifyListeners());
+    ref
+      ..listen(appAuthControllerProvider, (_, __) => notifyListeners())
+      ..listen(arrivalSeenProvider, (_, __) => notifyListeners());
   }
 }

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'task_list_item_dto.dart';
@@ -9,6 +9,7 @@ part of 'task_list_item_dto.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $TaskListItemDtoCopyWith<TaskListItemDto> get copyWith => _$TaskListItemDtoCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TaskListItemDto&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.hashtag, hashtag) || other.hashtag == hashtag)&&(identical(other.description, description) || other.description == description)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.channel, channel) || other.channel == channel)&&(identical(other.discordId, discordId) || other.discordId == discordId)&&(identical(other.type, type) || other.type == type)&&(identical(other.level, level) || other.level == level)&&(identical(other.ig, ig) || other.ig == ig)&&(identical(other.completed, completed) || other.completed == completed));
+  final _this = this as TaskListItemDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TaskListItemDto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.hashtag, _this.hashtag) || other.hashtag == _this.hashtag)&&(identical(other.description, _this.description) || other.description == _this.description)&&(identical(other.karma, _this.karma) || other.karma == _this.karma)&&(identical(other.channel, _this.channel) || other.channel == _this.channel)&&(identical(other.discordId, _this.discordId) || other.discordId == _this.discordId)&&(identical(other.type, _this.type) || other.type == _this.type)&&(identical(other.level, _this.level) || other.level == _this.level)&&(identical(other.ig, _this.ig) || other.ig == _this.ig)&&(identical(other.completed, _this.completed) || other.completed == _this.completed));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,hashtag,description,karma,channel,discordId,type,level,ig,completed);
+int get hashCode {
+  final _this = this as TaskListItemDto;
+  return Object.hash(runtimeType,_this.id,_this.title,_this.hashtag,_this.description,_this.karma,_this.channel,_this.discordId,_this.type,_this.level,_this.ig,_this.completed);
+}
 
 @override
 String toString() {
-  return 'TaskListItemDto(id: $id, title: $title, hashtag: $hashtag, description: $description, karma: $karma, channel: $channel, discordId: $discordId, type: $type, level: $level, ig: $ig, completed: $completed)';
+  final _this = this as TaskListItemDto;
+  return 'TaskListItemDto(id: ${_this.id}, title: ${_this.title}, hashtag: ${_this.hashtag}, description: ${_this.description}, karma: ${_this.karma}, channel: ${_this.channel}, discordId: ${_this.discordId}, type: ${_this.type}, level: ${_this.level}, ig: ${_this.ig}, completed: ${_this.completed})';
 }
 
 
@@ -66,7 +72,7 @@ class _$TaskListItemDtoCopyWithImpl<$Res>
 /// Create a copy of TaskListItemDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? hashtag = freezed,Object? description = freezed,Object? karma = freezed,Object? channel = freezed,Object? discordId = freezed,Object? type = freezed,Object? level = freezed,Object? ig = freezed,Object? completed = null,}) {
-  return _then(_self.copyWith(
+  return _then(TaskListItemDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,hashtag: freezed == hashtag ? _self.hashtag : hashtag // ignore: cast_nullable_to_non_nullable
@@ -247,16 +253,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TaskListItemDto&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.hashtag, hashtag) || other.hashtag == hashtag)&&(identical(other.description, description) || other.description == description)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.channel, channel) || other.channel == channel)&&(identical(other.discordId, discordId) || other.discordId == discordId)&&(identical(other.type, type) || other.type == type)&&(identical(other.level, level) || other.level == level)&&(identical(other.ig, ig) || other.ig == ig)&&(identical(other.completed, completed) || other.completed == completed));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _TaskListItemDto&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.hashtag, hashtag) || other.hashtag == hashtag)&&(identical(other.description, description) || other.description == description)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.channel, channel) || other.channel == channel)&&(identical(other.discordId, discordId) || other.discordId == discordId)&&(identical(other.type, type) || other.type == type)&&(identical(other.level, level) || other.level == level)&&(identical(other.ig, ig) || other.ig == ig)&&(identical(other.completed, completed) || other.completed == completed));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,hashtag,description,karma,channel,discordId,type,level,ig,completed);
+int get hashCode {
+    return Object.hash(runtimeType,id,title,hashtag,description,karma,channel,discordId,type,level,ig,completed);
+}
 
 @override
 String toString() {
-  return 'TaskListItemDto(id: $id, title: $title, hashtag: $hashtag, description: $description, karma: $karma, channel: $channel, discordId: $discordId, type: $type, level: $level, ig: $ig, completed: $completed)';
+    return 'TaskListItemDto(id: $id, title: $title, hashtag: $hashtag, description: $description, karma: $karma, channel: $channel, discordId: $discordId, type: $type, level: $level, ig: $ig, completed: $completed)';
 }
 
 

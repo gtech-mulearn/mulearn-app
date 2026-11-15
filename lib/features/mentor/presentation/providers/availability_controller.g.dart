@@ -12,7 +12,7 @@ part of 'availability_controller.dart';
 /// actions are rethrown for the screen to show.
 
 @ProviderFor(AvailabilityController)
-const availabilityControllerProvider = AvailabilityControllerProvider._();
+final availabilityControllerProvider = AvailabilityControllerProvider._();
 
 /// The mentor's weekly slots, Monday first, earliest first. Errors from the
 /// actions are rethrown for the screen to show.
@@ -21,7 +21,7 @@ final class AvailabilityControllerProvider
         $AsyncNotifierProvider<AvailabilityController, List<AvailabilitySlot>> {
   /// The mentor's weekly slots, Monday first, earliest first. Errors from the
   /// actions are rethrown for the screen to show.
-  const AvailabilityControllerProvider._()
+  AvailabilityControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -51,8 +51,7 @@ abstract class _$AvailabilityController
   FutureOr<List<AvailabilitySlot>> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref =
         this.ref
             as $Ref<AsyncValue<List<AvailabilitySlot>>, List<AvailabilitySlot>>;
@@ -67,6 +66,6 @@ abstract class _$AvailabilityController
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }

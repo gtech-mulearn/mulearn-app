@@ -15,12 +15,11 @@ class AuthRepositoryImpl implements AuthRepository {
   const AuthRepositoryImpl({
     required AuthRemoteDataSource remote,
     required TokenStorage tokenStorage,
-  })  : _remote = remote,
-        _tokenStorage = tokenStorage;
+  }) : _remote = remote,
+       _tokenStorage = tokenStorage;
 
   final AuthRemoteDataSource _remote;
   final TokenStorage _tokenStorage;
-
 
   @override
   Future<AuthSession> signInWithPassword({
@@ -94,11 +93,15 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<SocialSignInOutcome> signInWithGoogle({required String idToken}) async {
+  Future<SocialSignInOutcome> signInWithGoogle({
+    required String idToken,
+  }) async {
     try {
       final payload = await _remote.authenticateWithGoogle(idToken: idToken);
       final tempToken = payload['tempToken'];
-      if (payload['isNewUser'] == true && tempToken is String && tempToken.isNotEmpty) {
+      if (payload['isNewUser'] == true &&
+          tempToken is String &&
+          tempToken.isNotEmpty) {
         return SocialNeedsRegistration(
           tempToken: tempToken,
           email: payload['email'] as String? ?? '',
@@ -115,7 +118,9 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<AuthSession> signInWithApple({required String identityToken}) async {
     try {
-      final payload = await _remote.authenticateWithApple(identityToken: identityToken);
+      final payload = await _remote.authenticateWithApple(
+        identityToken: identityToken,
+      );
       return await _completeSignIn(payload);
     } on DioException catch (e) {
       throw ApiException.fromDioException(e);
@@ -126,7 +131,8 @@ class AuthRepositoryImpl implements AuthRepository {
     final tokens = AuthTokenParser.tryParse(payload);
     if (tokens == null) {
       throw const ApiException(
-        message: 'Signed in, but could not read the auth tokens from the '
+        message:
+            'Signed in, but could not read the auth tokens from the '
             'response.',
       );
     }
@@ -150,15 +156,11 @@ class AuthRepositoryImpl implements AuthRepository {
     return currentSession();
   }
 
-
   @override
   Future<AuthSession?> currentSession() async {
     final access = await _tokenStorage.readAccessToken();
     final refresh = await _tokenStorage.readRefreshToken();
     if (access == null || access.isEmpty) return null;
-    return AuthSession(
-      accessToken: access,
-      refreshToken: refresh ?? '',
-    );
+    return AuthSession(accessToken: access, refreshToken: refresh ?? '');
   }
 }

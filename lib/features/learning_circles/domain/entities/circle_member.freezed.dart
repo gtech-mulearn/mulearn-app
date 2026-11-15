@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'circle_member.dart';
@@ -9,6 +9,7 @@ part of 'circle_member.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $CircleMemberCopyWith<CircleMember> get copyWith => _$CircleMemberCopyWithImpl<C
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CircleMember&&(identical(other.id, id) || other.id == id)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.profilePicUrl, profilePicUrl) || other.profilePicUrl == profilePicUrl)&&(identical(other.igKarma, igKarma) || other.igKarma == igKarma)&&(identical(other.isLeader, isLeader) || other.isLeader == isLeader));
+  final _this = this as CircleMember;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CircleMember&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.fullName, _this.fullName) || other.fullName == _this.fullName)&&(identical(other.muid, _this.muid) || other.muid == _this.muid)&&(identical(other.profilePicUrl, _this.profilePicUrl) || other.profilePicUrl == _this.profilePicUrl)&&(identical(other.igKarma, _this.igKarma) || other.igKarma == _this.igKarma)&&(identical(other.isLeader, _this.isLeader) || other.isLeader == _this.isLeader));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,fullName,muid,profilePicUrl,igKarma,isLeader);
+int get hashCode {
+  final _this = this as CircleMember;
+  return Object.hash(runtimeType,_this.id,_this.fullName,_this.muid,_this.profilePicUrl,_this.igKarma,_this.isLeader);
+}
 
 @override
 String toString() {
-  return 'CircleMember(id: $id, fullName: $fullName, muid: $muid, profilePicUrl: $profilePicUrl, igKarma: $igKarma, isLeader: $isLeader)';
+  final _this = this as CircleMember;
+  return 'CircleMember(id: ${_this.id}, fullName: ${_this.fullName}, muid: ${_this.muid}, profilePicUrl: ${_this.profilePicUrl}, igKarma: ${_this.igKarma}, isLeader: ${_this.isLeader})';
 }
 
 
@@ -63,7 +69,7 @@ class _$CircleMemberCopyWithImpl<$Res>
 /// Create a copy of CircleMember
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? fullName = null,Object? muid = null,Object? profilePicUrl = freezed,Object? igKarma = freezed,Object? isLeader = null,}) {
-  return _then(_self.copyWith(
+  return _then(CircleMember(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,fullName: null == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
 as String,muid: null == muid ? _self.muid : muid // ignore: cast_nullable_to_non_nullable
@@ -231,16 +237,18 @@ _$CircleMemberCopyWith<_CircleMember> get copyWith => __$CircleMemberCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CircleMember&&(identical(other.id, id) || other.id == id)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.profilePicUrl, profilePicUrl) || other.profilePicUrl == profilePicUrl)&&(identical(other.igKarma, igKarma) || other.igKarma == igKarma)&&(identical(other.isLeader, isLeader) || other.isLeader == isLeader));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CircleMember&&(identical(other.id, id) || other.id == id)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.profilePicUrl, profilePicUrl) || other.profilePicUrl == profilePicUrl)&&(identical(other.igKarma, igKarma) || other.igKarma == igKarma)&&(identical(other.isLeader, isLeader) || other.isLeader == isLeader));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,fullName,muid,profilePicUrl,igKarma,isLeader);
+int get hashCode {
+    return Object.hash(runtimeType,id,fullName,muid,profilePicUrl,igKarma,isLeader);
+}
 
 @override
 String toString() {
-  return 'CircleMember(id: $id, fullName: $fullName, muid: $muid, profilePicUrl: $profilePicUrl, igKarma: $igKarma, isLeader: $isLeader)';
+    return 'CircleMember(id: $id, fullName: $fullName, muid: $muid, profilePicUrl: $profilePicUrl, igKarma: $igKarma, isLeader: $isLeader)';
 }
 
 

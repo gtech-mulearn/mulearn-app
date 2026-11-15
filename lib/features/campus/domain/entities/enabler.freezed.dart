@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'enabler.dart';
@@ -9,6 +9,7 @@ part of 'enabler.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $EnablerCampusCopyWith<EnablerCampus> get copyWith => _$EnablerCampusCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EnablerCampus&&(identical(other.id, id) || other.id == id)&&(identical(other.collegeName, collegeName) || other.collegeName == collegeName)&&(identical(other.campusCode, campusCode) || other.campusCode == campusCode)&&(identical(other.zone, zone) || other.zone == zone)&&(identical(other.orgType, orgType) || other.orgType == orgType));
+  final _this = this as EnablerCampus;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EnablerCampus&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.collegeName, _this.collegeName) || other.collegeName == _this.collegeName)&&(identical(other.campusCode, _this.campusCode) || other.campusCode == _this.campusCode)&&(identical(other.zone, _this.zone) || other.zone == _this.zone)&&(identical(other.orgType, _this.orgType) || other.orgType == _this.orgType));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,collegeName,campusCode,zone,orgType);
+int get hashCode {
+  final _this = this as EnablerCampus;
+  return Object.hash(runtimeType,_this.id,_this.collegeName,_this.campusCode,_this.zone,_this.orgType);
+}
 
 @override
 String toString() {
-  return 'EnablerCampus(id: $id, collegeName: $collegeName, campusCode: $campusCode, zone: $zone, orgType: $orgType)';
+  final _this = this as EnablerCampus;
+  return 'EnablerCampus(id: ${_this.id}, collegeName: ${_this.collegeName}, campusCode: ${_this.campusCode}, zone: ${_this.zone}, orgType: ${_this.orgType})';
 }
 
 
@@ -63,7 +69,7 @@ class _$EnablerCampusCopyWithImpl<$Res>
 /// Create a copy of EnablerCampus
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? collegeName = null,Object? campusCode = null,Object? zone = null,Object? orgType = null,}) {
-  return _then(_self.copyWith(
+  return _then(EnablerCampus(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,collegeName: null == collegeName ? _self.collegeName : collegeName // ignore: cast_nullable_to_non_nullable
 as String,campusCode: null == campusCode ? _self.campusCode : campusCode // ignore: cast_nullable_to_non_nullable
@@ -229,16 +235,18 @@ _$EnablerCampusCopyWith<_EnablerCampus> get copyWith => __$EnablerCampusCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EnablerCampus&&(identical(other.id, id) || other.id == id)&&(identical(other.collegeName, collegeName) || other.collegeName == collegeName)&&(identical(other.campusCode, campusCode) || other.campusCode == campusCode)&&(identical(other.zone, zone) || other.zone == zone)&&(identical(other.orgType, orgType) || other.orgType == orgType));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _EnablerCampus&&(identical(other.id, id) || other.id == id)&&(identical(other.collegeName, collegeName) || other.collegeName == collegeName)&&(identical(other.campusCode, campusCode) || other.campusCode == campusCode)&&(identical(other.zone, zone) || other.zone == zone)&&(identical(other.orgType, orgType) || other.orgType == orgType));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,collegeName,campusCode,zone,orgType);
+int get hashCode {
+    return Object.hash(runtimeType,id,collegeName,campusCode,zone,orgType);
+}
 
 @override
 String toString() {
-  return 'EnablerCampus(id: $id, collegeName: $collegeName, campusCode: $campusCode, zone: $zone, orgType: $orgType)';
+    return 'EnablerCampus(id: $id, collegeName: $collegeName, campusCode: $campusCode, zone: $zone, orgType: $orgType)';
 }
 
 
@@ -294,16 +302,21 @@ $CampusNoteCopyWith<CampusNote> get copyWith => _$CampusNoteCopyWithImpl<CampusN
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CampusNote&&(identical(other.id, id) || other.id == id)&&(identical(other.note, note) || other.note == note)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.author, author) || other.author == author)&&(identical(other.followUp, followUp) || other.followUp == followUp));
+  final _this = this as CampusNote;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CampusNote&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.note, _this.note) || other.note == _this.note)&&(identical(other.priority, _this.priority) || other.priority == _this.priority)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.author, _this.author) || other.author == _this.author)&&(identical(other.followUp, _this.followUp) || other.followUp == _this.followUp));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,note,priority,status,createdAt,author,followUp);
+int get hashCode {
+  final _this = this as CampusNote;
+  return Object.hash(runtimeType,_this.id,_this.note,_this.priority,_this.status,_this.createdAt,_this.author,_this.followUp);
+}
 
 @override
 String toString() {
-  return 'CampusNote(id: $id, note: $note, priority: $priority, status: $status, createdAt: $createdAt, author: $author, followUp: $followUp)';
+  final _this = this as CampusNote;
+  return 'CampusNote(id: ${_this.id}, note: ${_this.note}, priority: ${_this.priority}, status: ${_this.status}, createdAt: ${_this.createdAt}, author: ${_this.author}, followUp: ${_this.followUp})';
 }
 
 
@@ -332,7 +345,7 @@ class _$CampusNoteCopyWithImpl<$Res>
 /// Create a copy of CampusNote
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? note = null,Object? priority = null,Object? status = null,Object? createdAt = null,Object? author = freezed,Object? followUp = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(CampusNote(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,note: null == note ? _self.note : note // ignore: cast_nullable_to_non_nullable
 as String,priority: null == priority ? _self.priority : priority // ignore: cast_nullable_to_non_nullable
@@ -502,16 +515,18 @@ _$CampusNoteCopyWith<_CampusNote> get copyWith => __$CampusNoteCopyWithImpl<_Cam
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CampusNote&&(identical(other.id, id) || other.id == id)&&(identical(other.note, note) || other.note == note)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.author, author) || other.author == author)&&(identical(other.followUp, followUp) || other.followUp == followUp));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CampusNote&&(identical(other.id, id) || other.id == id)&&(identical(other.note, note) || other.note == note)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.status, status) || other.status == status)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.author, author) || other.author == author)&&(identical(other.followUp, followUp) || other.followUp == followUp));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,note,priority,status,createdAt,author,followUp);
+int get hashCode {
+    return Object.hash(runtimeType,id,note,priority,status,createdAt,author,followUp);
+}
 
 @override
 String toString() {
-  return 'CampusNote(id: $id, note: $note, priority: $priority, status: $status, createdAt: $createdAt, author: $author, followUp: $followUp)';
+    return 'CampusNote(id: $id, note: $note, priority: $priority, status: $status, createdAt: $createdAt, author: $author, followUp: $followUp)';
 }
 
 

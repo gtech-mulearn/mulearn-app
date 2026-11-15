@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'calendar_entry.dart';
@@ -9,6 +9,7 @@ part of 'calendar_entry.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $CalendarEntryCopyWith<CalendarEntry> get copyWith => _$CalendarEntryCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CalendarEntry&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.start, start) || other.start == start)&&(identical(other.end, end) || other.end == end)&&(identical(other.status, status) || other.status == status)&&(identical(other.kind, kind) || other.kind == kind)&&(identical(other.venueType, venueType) || other.venueType == venueType)&&(identical(other.organiserName, organiserName) || other.organiserName == organiserName)&&(identical(other.categoryName, categoryName) || other.categoryName == categoryName)&&(identical(other.isFeatured, isFeatured) || other.isFeatured == isFeatured));
+  final _this = this as CalendarEntry;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CalendarEntry&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.start, _this.start) || other.start == _this.start)&&(identical(other.end, _this.end) || other.end == _this.end)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.kind, _this.kind) || other.kind == _this.kind)&&(identical(other.venueType, _this.venueType) || other.venueType == _this.venueType)&&(identical(other.organiserName, _this.organiserName) || other.organiserName == _this.organiserName)&&(identical(other.categoryName, _this.categoryName) || other.categoryName == _this.categoryName)&&(identical(other.isFeatured, _this.isFeatured) || other.isFeatured == _this.isFeatured));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,title,start,end,status,kind,venueType,organiserName,categoryName,isFeatured);
+int get hashCode {
+  final _this = this as CalendarEntry;
+  return Object.hash(runtimeType,_this.id,_this.title,_this.start,_this.end,_this.status,_this.kind,_this.venueType,_this.organiserName,_this.categoryName,_this.isFeatured);
+}
 
 @override
 String toString() {
-  return 'CalendarEntry(id: $id, title: $title, start: $start, end: $end, status: $status, kind: $kind, venueType: $venueType, organiserName: $organiserName, categoryName: $categoryName, isFeatured: $isFeatured)';
+  final _this = this as CalendarEntry;
+  return 'CalendarEntry(id: ${_this.id}, title: ${_this.title}, start: ${_this.start}, end: ${_this.end}, status: ${_this.status}, kind: ${_this.kind}, venueType: ${_this.venueType}, organiserName: ${_this.organiserName}, categoryName: ${_this.categoryName}, isFeatured: ${_this.isFeatured})';
 }
 
 
@@ -63,7 +69,7 @@ class _$CalendarEntryCopyWithImpl<$Res>
 /// Create a copy of CalendarEntry
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? start = null,Object? end = null,Object? status = null,Object? kind = null,Object? venueType = freezed,Object? organiserName = freezed,Object? categoryName = freezed,Object? isFeatured = null,}) {
-  return _then(_self.copyWith(
+  return _then(CalendarEntry(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,start: null == start ? _self.start : start // ignore: cast_nullable_to_non_nullable
@@ -239,16 +245,18 @@ _$CalendarEntryCopyWith<_CalendarEntry> get copyWith => __$CalendarEntryCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CalendarEntry&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.start, start) || other.start == start)&&(identical(other.end, end) || other.end == end)&&(identical(other.status, status) || other.status == status)&&(identical(other.kind, kind) || other.kind == kind)&&(identical(other.venueType, venueType) || other.venueType == venueType)&&(identical(other.organiserName, organiserName) || other.organiserName == organiserName)&&(identical(other.categoryName, categoryName) || other.categoryName == categoryName)&&(identical(other.isFeatured, isFeatured) || other.isFeatured == isFeatured));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CalendarEntry&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.start, start) || other.start == start)&&(identical(other.end, end) || other.end == end)&&(identical(other.status, status) || other.status == status)&&(identical(other.kind, kind) || other.kind == kind)&&(identical(other.venueType, venueType) || other.venueType == venueType)&&(identical(other.organiserName, organiserName) || other.organiserName == organiserName)&&(identical(other.categoryName, categoryName) || other.categoryName == categoryName)&&(identical(other.isFeatured, isFeatured) || other.isFeatured == isFeatured));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,title,start,end,status,kind,venueType,organiserName,categoryName,isFeatured);
+int get hashCode {
+    return Object.hash(runtimeType,id,title,start,end,status,kind,venueType,organiserName,categoryName,isFeatured);
+}
 
 @override
 String toString() {
-  return 'CalendarEntry(id: $id, title: $title, start: $start, end: $end, status: $status, kind: $kind, venueType: $venueType, organiserName: $organiserName, categoryName: $categoryName, isFeatured: $isFeatured)';
+    return 'CalendarEntry(id: $id, title: $title, start: $start, end: $end, status: $status, kind: $kind, venueType: $venueType, organiserName: $organiserName, categoryName: $categoryName, isFeatured: $isFeatured)';
 }
 
 

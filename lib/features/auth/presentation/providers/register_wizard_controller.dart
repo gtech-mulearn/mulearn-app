@@ -22,7 +22,11 @@ class RegisterWizardController extends _$RegisterWizardController {
     required String email,
     String? password,
   }) {
-    state = state.copyWith(fullName: fullName, email: email, password: password);
+    state = state.copyWith(
+      fullName: fullName,
+      email: email,
+      password: password,
+    );
   }
 
   /// Starts sign-up from a Google account that has no μLearn account yet.

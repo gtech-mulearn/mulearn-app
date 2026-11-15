@@ -11,7 +11,7 @@ part of 'external_links.dart';
 /// The app's way to open external links; tests override it.
 
 @ProviderFor(openExternal)
-const openExternalProvider = OpenExternalProvider._();
+final openExternalProvider = OpenExternalProvider._();
 
 /// The app's way to open external links; tests override it.
 
@@ -19,7 +19,7 @@ final class OpenExternalProvider
     extends $FunctionalProvider<OpenExternal, OpenExternal, OpenExternal>
     with $Provider<OpenExternal> {
   /// The app's way to open external links; tests override it.
-  const OpenExternalProvider._()
+  OpenExternalProvider._()
     : super(
         from: null,
         argument: null,

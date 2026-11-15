@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'learner_summary.dart';
@@ -9,6 +9,7 @@ part of 'learner_summary.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $LearnerSummaryCopyWith<LearnerSummary> get copyWith => _$LearnerSummaryCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LearnerSummary&&(identical(other.weeklyKarma, weeklyKarma) || other.weeklyKarma == weeklyKarma)&&(identical(other.totalKarma, totalKarma) || other.totalKarma == totalKarma)&&(identical(other.activeCircles, activeCircles) || other.activeCircles == activeCircles)&&(identical(other.streakDays, streakDays) || other.streakDays == streakDays)&&(identical(other.nextMeeting, nextMeeting) || other.nextMeeting == nextMeeting));
+  final _this = this as LearnerSummary;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LearnerSummary&&(identical(other.weeklyKarma, _this.weeklyKarma) || other.weeklyKarma == _this.weeklyKarma)&&(identical(other.totalKarma, _this.totalKarma) || other.totalKarma == _this.totalKarma)&&(identical(other.activeCircles, _this.activeCircles) || other.activeCircles == _this.activeCircles)&&(identical(other.streakDays, _this.streakDays) || other.streakDays == _this.streakDays)&&(identical(other.nextMeeting, _this.nextMeeting) || other.nextMeeting == _this.nextMeeting));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,weeklyKarma,totalKarma,activeCircles,streakDays,nextMeeting);
+int get hashCode {
+  final _this = this as LearnerSummary;
+  return Object.hash(runtimeType,_this.weeklyKarma,_this.totalKarma,_this.activeCircles,_this.streakDays,_this.nextMeeting);
+}
 
 @override
 String toString() {
-  return 'LearnerSummary(weeklyKarma: $weeklyKarma, totalKarma: $totalKarma, activeCircles: $activeCircles, streakDays: $streakDays, nextMeeting: $nextMeeting)';
+  final _this = this as LearnerSummary;
+  return 'LearnerSummary(weeklyKarma: ${_this.weeklyKarma}, totalKarma: ${_this.totalKarma}, activeCircles: ${_this.activeCircles}, streakDays: ${_this.streakDays}, nextMeeting: ${_this.nextMeeting})';
 }
 
 
@@ -63,7 +69,7 @@ class _$LearnerSummaryCopyWithImpl<$Res>
 /// Create a copy of LearnerSummary
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? weeklyKarma = null,Object? totalKarma = null,Object? activeCircles = null,Object? streakDays = null,Object? nextMeeting = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(LearnerSummary(
 weeklyKarma: null == weeklyKarma ? _self.weeklyKarma : weeklyKarma // ignore: cast_nullable_to_non_nullable
 as int,totalKarma: null == totalKarma ? _self.totalKarma : totalKarma // ignore: cast_nullable_to_non_nullable
 as int,activeCircles: null == activeCircles ? _self.activeCircles : activeCircles // ignore: cast_nullable_to_non_nullable
@@ -241,16 +247,18 @@ _$LearnerSummaryCopyWith<_LearnerSummary> get copyWith => __$LearnerSummaryCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LearnerSummary&&(identical(other.weeklyKarma, weeklyKarma) || other.weeklyKarma == weeklyKarma)&&(identical(other.totalKarma, totalKarma) || other.totalKarma == totalKarma)&&(identical(other.activeCircles, activeCircles) || other.activeCircles == activeCircles)&&(identical(other.streakDays, streakDays) || other.streakDays == streakDays)&&(identical(other.nextMeeting, nextMeeting) || other.nextMeeting == nextMeeting));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _LearnerSummary&&(identical(other.weeklyKarma, weeklyKarma) || other.weeklyKarma == weeklyKarma)&&(identical(other.totalKarma, totalKarma) || other.totalKarma == totalKarma)&&(identical(other.activeCircles, activeCircles) || other.activeCircles == activeCircles)&&(identical(other.streakDays, streakDays) || other.streakDays == streakDays)&&(identical(other.nextMeeting, nextMeeting) || other.nextMeeting == nextMeeting));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,weeklyKarma,totalKarma,activeCircles,streakDays,nextMeeting);
+int get hashCode {
+    return Object.hash(runtimeType,weeklyKarma,totalKarma,activeCircles,streakDays,nextMeeting);
+}
 
 @override
 String toString() {
-  return 'LearnerSummary(weeklyKarma: $weeklyKarma, totalKarma: $totalKarma, activeCircles: $activeCircles, streakDays: $streakDays, nextMeeting: $nextMeeting)';
+    return 'LearnerSummary(weeklyKarma: $weeklyKarma, totalKarma: $totalKarma, activeCircles: $activeCircles, streakDays: $streakDays, nextMeeting: $nextMeeting)';
 }
 
 
@@ -318,16 +326,21 @@ $NextMeetingCopyWith<NextMeeting> get copyWith => _$NextMeetingCopyWithImpl<Next
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is NextMeeting&&(identical(other.id, id) || other.id == id)&&(identical(other.circleId, circleId) || other.circleId == circleId)&&(identical(other.circleName, circleName) || other.circleName == circleName)&&(identical(other.title, title) || other.title == title)&&(identical(other.startsAt, startsAt) || other.startsAt == startsAt)&&(identical(other.durationMinutes, durationMinutes) || other.durationMinutes == durationMinutes)&&(identical(other.rsvpStatus, rsvpStatus) || other.rsvpStatus == rsvpStatus));
+  final _this = this as NextMeeting;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is NextMeeting&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.circleId, _this.circleId) || other.circleId == _this.circleId)&&(identical(other.circleName, _this.circleName) || other.circleName == _this.circleName)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.startsAt, _this.startsAt) || other.startsAt == _this.startsAt)&&(identical(other.durationMinutes, _this.durationMinutes) || other.durationMinutes == _this.durationMinutes)&&(identical(other.rsvpStatus, _this.rsvpStatus) || other.rsvpStatus == _this.rsvpStatus));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,circleId,circleName,title,startsAt,durationMinutes,rsvpStatus);
+int get hashCode {
+  final _this = this as NextMeeting;
+  return Object.hash(runtimeType,_this.id,_this.circleId,_this.circleName,_this.title,_this.startsAt,_this.durationMinutes,_this.rsvpStatus);
+}
 
 @override
 String toString() {
-  return 'NextMeeting(id: $id, circleId: $circleId, circleName: $circleName, title: $title, startsAt: $startsAt, durationMinutes: $durationMinutes, rsvpStatus: $rsvpStatus)';
+  final _this = this as NextMeeting;
+  return 'NextMeeting(id: ${_this.id}, circleId: ${_this.circleId}, circleName: ${_this.circleName}, title: ${_this.title}, startsAt: ${_this.startsAt}, durationMinutes: ${_this.durationMinutes}, rsvpStatus: ${_this.rsvpStatus})';
 }
 
 
@@ -356,7 +369,7 @@ class _$NextMeetingCopyWithImpl<$Res>
 /// Create a copy of NextMeeting
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? circleId = null,Object? circleName = null,Object? title = null,Object? startsAt = null,Object? durationMinutes = freezed,Object? rsvpStatus = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(NextMeeting(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,circleId: null == circleId ? _self.circleId : circleId // ignore: cast_nullable_to_non_nullable
 as String,circleName: null == circleName ? _self.circleName : circleName // ignore: cast_nullable_to_non_nullable
@@ -526,16 +539,18 @@ _$NextMeetingCopyWith<_NextMeeting> get copyWith => __$NextMeetingCopyWithImpl<_
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NextMeeting&&(identical(other.id, id) || other.id == id)&&(identical(other.circleId, circleId) || other.circleId == circleId)&&(identical(other.circleName, circleName) || other.circleName == circleName)&&(identical(other.title, title) || other.title == title)&&(identical(other.startsAt, startsAt) || other.startsAt == startsAt)&&(identical(other.durationMinutes, durationMinutes) || other.durationMinutes == durationMinutes)&&(identical(other.rsvpStatus, rsvpStatus) || other.rsvpStatus == rsvpStatus));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _NextMeeting&&(identical(other.id, id) || other.id == id)&&(identical(other.circleId, circleId) || other.circleId == circleId)&&(identical(other.circleName, circleName) || other.circleName == circleName)&&(identical(other.title, title) || other.title == title)&&(identical(other.startsAt, startsAt) || other.startsAt == startsAt)&&(identical(other.durationMinutes, durationMinutes) || other.durationMinutes == durationMinutes)&&(identical(other.rsvpStatus, rsvpStatus) || other.rsvpStatus == rsvpStatus));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,circleId,circleName,title,startsAt,durationMinutes,rsvpStatus);
+int get hashCode {
+    return Object.hash(runtimeType,id,circleId,circleName,title,startsAt,durationMinutes,rsvpStatus);
+}
 
 @override
 String toString() {
-  return 'NextMeeting(id: $id, circleId: $circleId, circleName: $circleName, title: $title, startsAt: $startsAt, durationMinutes: $durationMinutes, rsvpStatus: $rsvpStatus)';
+    return 'NextMeeting(id: $id, circleId: $circleId, circleName: $circleName, title: $title, startsAt: $startsAt, durationMinutes: $durationMinutes, rsvpStatus: $rsvpStatus)';
 }
 
 

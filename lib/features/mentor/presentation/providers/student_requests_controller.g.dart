@@ -11,7 +11,7 @@ part of 'student_requests_controller.dart';
 /// Learners' requests waiting for the mentor, soonest first.
 
 @ProviderFor(StudentRequestsController)
-const studentRequestsControllerProvider = StudentRequestsControllerProvider._();
+final studentRequestsControllerProvider = StudentRequestsControllerProvider._();
 
 /// Learners' requests waiting for the mentor, soonest first.
 final class StudentRequestsControllerProvider
@@ -21,7 +21,7 @@ final class StudentRequestsControllerProvider
           PagedState<StudentSessionRequest>
         > {
   /// Learners' requests waiting for the mentor, soonest first.
-  const StudentRequestsControllerProvider._()
+  StudentRequestsControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -50,8 +50,7 @@ abstract class _$StudentRequestsController
   FutureOr<PagedState<StudentSessionRequest>> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref =
         this.ref
             as $Ref<
@@ -69,6 +68,6 @@ abstract class _$StudentRequestsController
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }

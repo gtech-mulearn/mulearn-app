@@ -10,7 +10,7 @@ part of 'campus_repository_provider.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(campusRemoteDataSource)
-const campusRemoteDataSourceProvider = CampusRemoteDataSourceProvider._();
+final campusRemoteDataSourceProvider = CampusRemoteDataSourceProvider._();
 
 final class CampusRemoteDataSourceProvider
     extends
@@ -20,7 +20,7 @@ final class CampusRemoteDataSourceProvider
           CampusRemoteDataSource
         >
     with $Provider<CampusRemoteDataSource> {
-  const CampusRemoteDataSourceProvider._()
+  CampusRemoteDataSourceProvider._()
     : super(
         from: null,
         argument: null,
@@ -60,7 +60,7 @@ String _$campusRemoteDataSourceHash() =>
 /// Presentation depends on the [CampusRepository] contract (rules.md §2/§5).
 
 @ProviderFor(campusRepository)
-const campusRepositoryProvider = CampusRepositoryProvider._();
+final campusRepositoryProvider = CampusRepositoryProvider._();
 
 /// Presentation depends on the [CampusRepository] contract (rules.md §2/§5).
 
@@ -73,7 +73,7 @@ final class CampusRepositoryProvider
         >
     with $Provider<CampusRepository> {
   /// Presentation depends on the [CampusRepository] contract (rules.md §2/§5).
-  const CampusRepositoryProvider._()
+  CampusRepositoryProvider._()
     : super(
         from: null,
         argument: null,

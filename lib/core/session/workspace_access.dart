@@ -26,6 +26,11 @@ abstract class WorkspaceAccess with _$WorkspaceAccess {
     /// collaboration invites (backend `role_required([Admin, Campus Lead])`).
     required bool campusLead,
 
+    /// Campus Lead or Lead Enabler held **and** verified: start, edit and
+    /// remove the campus's IG chapters (backend `role_required([Campus Lead,
+    /// Lead Enabler])` on `ig-chapters/`).
+    @Default(false) bool campusChapters,
+
     /// Every campus role held but not verified yet, in naming order. Each
     /// gets its own banner, even when another held role opens the campus
     /// (the dashboard checks Enabler verification on its own).
@@ -36,7 +41,11 @@ abstract class WorkspaceAccess with _$WorkspaceAccess {
 /// The campus workspace's roles, in banner-naming order: the backend's
 /// `campus_staff_required` and the dashboard's `CAMPUS_MANAGEMENT_ROLES`.
 /// Zonal and District Campus Leads are not campus staff.
-const _campusRoles = [RoleTitles.campusLead, RoleTitles.leadEnabler, RoleTitles.enabler];
+const _campusRoles = [
+  RoleTitles.campusLead,
+  RoleTitles.leadEnabler,
+  RoleTitles.enabler,
+];
 const _enablerRoles = [RoleTitles.leadEnabler, RoleTitles.enabler];
 
 /// Mentor: open with an APPROVED application, pending while one is PENDING
@@ -61,7 +70,9 @@ WorkspaceAccess deriveWorkspaceAccess({
 
   WorkspaceState mentor() {
     if (!roles.contains(RoleTitles.mentor)) return WorkspaceState.hidden;
-    final statuses = mentorApplications.map((a) => a.status.toUpperCase()).toSet();
+    final statuses = mentorApplications
+        .map((a) => a.status.toUpperCase())
+        .toSet();
     if (statuses.contains('APPROVED')) return WorkspaceState.open;
     if (statuses.contains('PENDING')) return WorkspaceState.pending;
     return WorkspaceState.hidden;
@@ -71,7 +82,13 @@ WorkspaceAccess deriveWorkspaceAccess({
     mentor: mentor(),
     campus: roleState(_campusRoles),
     enablerCampuses: roleState(_enablerRoles),
-    campusLead: roles.contains(RoleTitles.campusLead) && verified(RoleTitles.campusLead),
+    campusLead:
+        roles.contains(RoleTitles.campusLead) &&
+        verified(RoleTitles.campusLead),
+    campusChapters: [
+      RoleTitles.campusLead,
+      RoleTitles.leadEnabler,
+    ].any((r) => roles.contains(r) && verified(r)),
     pendingCampusRoles: [
       for (final role in _campusRoles)
         if (roles.contains(role) && !verified(role)) role,
@@ -81,7 +98,10 @@ WorkspaceAccess deriveWorkspaceAccess({
 
 /// The pending role a pending workspace names: for an Enabler workspace an
 /// enabler role, otherwise the first pending campus role. Null when none.
-String? pendingRoleFor(WorkspaceAccess access, {required bool enablerWorkspace}) {
+String? pendingRoleFor(
+  WorkspaceAccess access, {
+  required bool enablerWorkspace,
+}) {
   final candidates = enablerWorkspace ? _enablerRoles : _campusRoles;
   return candidates.where(access.pendingCampusRoles.contains).firstOrNull;
 }
@@ -112,6 +132,12 @@ Future<WorkspaceAccess?> workspaceAccess(Ref ref) async {
   if (user == null) return null;
   final applications = await ref.watch(mentorApplicationsProvider.future);
   final needsVerification = _campusRoles.any(user.roles.contains);
-  final verified = needsVerification ? await ref.watch(roleVerificationProvider.future) : const <String, bool>{};
-  return deriveWorkspaceAccess(roles: user.roles, mentorApplications: applications, roleVerified: verified);
+  final verified = needsVerification
+      ? await ref.watch(roleVerificationProvider.future)
+      : const <String, bool>{};
+  return deriveWorkspaceAccess(
+    roles: user.roles,
+    mentorApplications: applications,
+    roleVerified: verified,
+  );
 }

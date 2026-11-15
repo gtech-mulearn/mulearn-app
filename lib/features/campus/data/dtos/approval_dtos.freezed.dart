@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'approval_dtos.dart';
@@ -9,6 +9,7 @@ part of 'approval_dtos.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $OrgLinkRequestDtoCopyWith<OrgLinkRequestDto> get copyWith => _$OrgLinkRequestDt
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is OrgLinkRequestDto&&(identical(other.id, id) || other.id == id)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.orgTitle, orgTitle) || other.orgTitle == orgTitle)&&(identical(other.graduationYear, graduationYear) || other.graduationYear == graduationYear)&&(identical(other.isAlumni, isAlumni) || other.isAlumni == isAlumni)&&(identical(other.linkCreatedAt, linkCreatedAt) || other.linkCreatedAt == linkCreatedAt));
+  final _this = this as OrgLinkRequestDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is OrgLinkRequestDto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.fullName, _this.fullName) || other.fullName == _this.fullName)&&(identical(other.muid, _this.muid) || other.muid == _this.muid)&&(identical(other.orgTitle, _this.orgTitle) || other.orgTitle == _this.orgTitle)&&(identical(other.graduationYear, _this.graduationYear) || other.graduationYear == _this.graduationYear)&&(identical(other.isAlumni, _this.isAlumni) || other.isAlumni == _this.isAlumni)&&(identical(other.linkCreatedAt, _this.linkCreatedAt) || other.linkCreatedAt == _this.linkCreatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,fullName,muid,orgTitle,graduationYear,isAlumni,linkCreatedAt);
+int get hashCode {
+  final _this = this as OrgLinkRequestDto;
+  return Object.hash(runtimeType,_this.id,_this.fullName,_this.muid,_this.orgTitle,_this.graduationYear,_this.isAlumni,_this.linkCreatedAt);
+}
 
 @override
 String toString() {
-  return 'OrgLinkRequestDto(id: $id, fullName: $fullName, muid: $muid, orgTitle: $orgTitle, graduationYear: $graduationYear, isAlumni: $isAlumni, linkCreatedAt: $linkCreatedAt)';
+  final _this = this as OrgLinkRequestDto;
+  return 'OrgLinkRequestDto(id: ${_this.id}, fullName: ${_this.fullName}, muid: ${_this.muid}, orgTitle: ${_this.orgTitle}, graduationYear: ${_this.graduationYear}, isAlumni: ${_this.isAlumni}, linkCreatedAt: ${_this.linkCreatedAt})';
 }
 
 
@@ -66,7 +72,7 @@ class _$OrgLinkRequestDtoCopyWithImpl<$Res>
 /// Create a copy of OrgLinkRequestDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? fullName = null,Object? muid = null,Object? orgTitle = null,Object? graduationYear = freezed,Object? isAlumni = null,Object? linkCreatedAt = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(OrgLinkRequestDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,fullName: null == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
 as String,muid: null == muid ? _self.muid : muid // ignore: cast_nullable_to_non_nullable
@@ -239,16 +245,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _OrgLinkRequestDto&&(identical(other.id, id) || other.id == id)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.orgTitle, orgTitle) || other.orgTitle == orgTitle)&&(identical(other.graduationYear, graduationYear) || other.graduationYear == graduationYear)&&(identical(other.isAlumni, isAlumni) || other.isAlumni == isAlumni)&&(identical(other.linkCreatedAt, linkCreatedAt) || other.linkCreatedAt == linkCreatedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _OrgLinkRequestDto&&(identical(other.id, id) || other.id == id)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.orgTitle, orgTitle) || other.orgTitle == orgTitle)&&(identical(other.graduationYear, graduationYear) || other.graduationYear == graduationYear)&&(identical(other.isAlumni, isAlumni) || other.isAlumni == isAlumni)&&(identical(other.linkCreatedAt, linkCreatedAt) || other.linkCreatedAt == linkCreatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,fullName,muid,orgTitle,graduationYear,isAlumni,linkCreatedAt);
+int get hashCode {
+    return Object.hash(runtimeType,id,fullName,muid,orgTitle,graduationYear,isAlumni,linkCreatedAt);
+}
 
 @override
 String toString() {
-  return 'OrgLinkRequestDto(id: $id, fullName: $fullName, muid: $muid, orgTitle: $orgTitle, graduationYear: $graduationYear, isAlumni: $isAlumni, linkCreatedAt: $linkCreatedAt)';
+    return 'OrgLinkRequestDto(id: $id, fullName: $fullName, muid: $muid, orgTitle: $orgTitle, graduationYear: $graduationYear, isAlumni: $isAlumni, linkCreatedAt: $linkCreatedAt)';
 }
 
 
@@ -309,16 +317,21 @@ $PendingCampusEventDtoCopyWith<PendingCampusEventDto> get copyWith => _$PendingC
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PendingCampusEventDto&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.startDatetime, startDatetime) || other.startDatetime == startDatetime)&&(identical(other.endDatetime, endDatetime) || other.endDatetime == endDatetime)&&(identical(other.venueCity, venueCity) || other.venueCity == venueCity)&&const DeepCollectionEquality().equals(other.tags, tags));
+  final _this = this as PendingCampusEventDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PendingCampusEventDto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.startDatetime, _this.startDatetime) || other.startDatetime == _this.startDatetime)&&(identical(other.endDatetime, _this.endDatetime) || other.endDatetime == _this.endDatetime)&&(identical(other.venueCity, _this.venueCity) || other.venueCity == _this.venueCity)&&const DeepCollectionEquality().equals(other.tags, _this.tags));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,startDatetime,endDatetime,venueCity,const DeepCollectionEquality().hash(tags));
+int get hashCode {
+  final _this = this as PendingCampusEventDto;
+  return Object.hash(runtimeType,_this.id,_this.title,_this.startDatetime,_this.endDatetime,_this.venueCity,const DeepCollectionEquality().hash(_this.tags));
+}
 
 @override
 String toString() {
-  return 'PendingCampusEventDto(id: $id, title: $title, startDatetime: $startDatetime, endDatetime: $endDatetime, venueCity: $venueCity, tags: $tags)';
+  final _this = this as PendingCampusEventDto;
+  return 'PendingCampusEventDto(id: ${_this.id}, title: ${_this.title}, startDatetime: ${_this.startDatetime}, endDatetime: ${_this.endDatetime}, venueCity: ${_this.venueCity}, tags: ${_this.tags})';
 }
 
 
@@ -347,7 +360,7 @@ class _$PendingCampusEventDtoCopyWithImpl<$Res>
 /// Create a copy of PendingCampusEventDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? startDatetime = freezed,Object? endDatetime = freezed,Object? venueCity = freezed,Object? tags = null,}) {
-  return _then(_self.copyWith(
+  return _then(PendingCampusEventDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,startDatetime: freezed == startDatetime ? _self.startDatetime : startDatetime // ignore: cast_nullable_to_non_nullable
@@ -495,7 +508,7 @@ return $default(_that.id,_that.title,_that.startDatetime,_that.endDatetime,_that
 @JsonSerializable()
 
 class _PendingCampusEventDto extends PendingCampusEventDto {
-  const _PendingCampusEventDto({required this.id, this.title = '', this.startDatetime, this.endDatetime, this.venueCity, final  List<String> tags = const <String>[]}): _tags = tags,super._();
+  const _PendingCampusEventDto({required this.id, this.title = '', this.startDatetime, this.endDatetime, this.venueCity,  List<String> tags = const <String>[]}): _tags = tags,super._();
   factory _PendingCampusEventDto.fromJson(Map<String, dynamic> json) => _$PendingCampusEventDtoFromJson(json);
 
 @override final  String id;
@@ -524,16 +537,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PendingCampusEventDto&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.startDatetime, startDatetime) || other.startDatetime == startDatetime)&&(identical(other.endDatetime, endDatetime) || other.endDatetime == endDatetime)&&(identical(other.venueCity, venueCity) || other.venueCity == venueCity)&&const DeepCollectionEquality().equals(other._tags, _tags));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PendingCampusEventDto&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.startDatetime, startDatetime) || other.startDatetime == startDatetime)&&(identical(other.endDatetime, endDatetime) || other.endDatetime == endDatetime)&&(identical(other.venueCity, venueCity) || other.venueCity == venueCity)&&const DeepCollectionEquality().equals(other.tags, _tags));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,startDatetime,endDatetime,venueCity,const DeepCollectionEquality().hash(_tags));
+int get hashCode {
+    return Object.hash(runtimeType,id,title,startDatetime,endDatetime,venueCity,const DeepCollectionEquality().hash(_tags));
+}
 
 @override
 String toString() {
-  return 'PendingCampusEventDto(id: $id, title: $title, startDatetime: $startDatetime, endDatetime: $endDatetime, venueCity: $venueCity, tags: $tags)';
+    return 'PendingCampusEventDto(id: $id, title: $title, startDatetime: $startDatetime, endDatetime: $endDatetime, venueCity: $venueCity, tags: $tags)';
 }
 
 
@@ -593,16 +608,21 @@ $CollabInviteDtoCopyWith<CollabInviteDto> get copyWith => _$CollabInviteDtoCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CollabInviteDto&&(identical(other.id, id) || other.id == id)&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.eventTitle, eventTitle) || other.eventTitle == eventTitle)&&(identical(other.eventStartDatetime, eventStartDatetime) || other.eventStartDatetime == eventStartDatetime)&&(identical(other.roleLabel, roleLabel) || other.roleLabel == roleLabel)&&const DeepCollectionEquality().equals(other.entityDetail, entityDetail));
+  final _this = this as CollabInviteDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CollabInviteDto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.eventId, _this.eventId) || other.eventId == _this.eventId)&&(identical(other.eventTitle, _this.eventTitle) || other.eventTitle == _this.eventTitle)&&(identical(other.eventStartDatetime, _this.eventStartDatetime) || other.eventStartDatetime == _this.eventStartDatetime)&&(identical(other.roleLabel, _this.roleLabel) || other.roleLabel == _this.roleLabel)&&const DeepCollectionEquality().equals(other.entityDetail, _this.entityDetail));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,eventId,eventTitle,eventStartDatetime,roleLabel,const DeepCollectionEquality().hash(entityDetail));
+int get hashCode {
+  final _this = this as CollabInviteDto;
+  return Object.hash(runtimeType,_this.id,_this.eventId,_this.eventTitle,_this.eventStartDatetime,_this.roleLabel,const DeepCollectionEquality().hash(_this.entityDetail));
+}
 
 @override
 String toString() {
-  return 'CollabInviteDto(id: $id, eventId: $eventId, eventTitle: $eventTitle, eventStartDatetime: $eventStartDatetime, roleLabel: $roleLabel, entityDetail: $entityDetail)';
+  final _this = this as CollabInviteDto;
+  return 'CollabInviteDto(id: ${_this.id}, eventId: ${_this.eventId}, eventTitle: ${_this.eventTitle}, eventStartDatetime: ${_this.eventStartDatetime}, roleLabel: ${_this.roleLabel}, entityDetail: ${_this.entityDetail})';
 }
 
 
@@ -631,7 +651,7 @@ class _$CollabInviteDtoCopyWithImpl<$Res>
 /// Create a copy of CollabInviteDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? eventId = null,Object? eventTitle = null,Object? eventStartDatetime = freezed,Object? roleLabel = null,Object? entityDetail = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(CollabInviteDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
 as String,eventTitle: null == eventTitle ? _self.eventTitle : eventTitle // ignore: cast_nullable_to_non_nullable
@@ -779,7 +799,7 @@ return $default(_that.id,_that.eventId,_that.eventTitle,_that.eventStartDatetime
 @JsonSerializable()
 
 class _CollabInviteDto extends CollabInviteDto {
-  const _CollabInviteDto({required this.id, required this.eventId, this.eventTitle = '', this.eventStartDatetime, this.roleLabel = '', final  Map<String, dynamic>? entityDetail}): _entityDetail = entityDetail,super._();
+  const _CollabInviteDto({required this.id, required this.eventId, this.eventTitle = '', this.eventStartDatetime, this.roleLabel = '',  Map<String, dynamic>? entityDetail}): _entityDetail = entityDetail,super._();
   factory _CollabInviteDto.fromJson(Map<String, dynamic> json) => _$CollabInviteDtoFromJson(json);
 
 @override final  String id;
@@ -810,16 +830,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CollabInviteDto&&(identical(other.id, id) || other.id == id)&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.eventTitle, eventTitle) || other.eventTitle == eventTitle)&&(identical(other.eventStartDatetime, eventStartDatetime) || other.eventStartDatetime == eventStartDatetime)&&(identical(other.roleLabel, roleLabel) || other.roleLabel == roleLabel)&&const DeepCollectionEquality().equals(other._entityDetail, _entityDetail));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CollabInviteDto&&(identical(other.id, id) || other.id == id)&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.eventTitle, eventTitle) || other.eventTitle == eventTitle)&&(identical(other.eventStartDatetime, eventStartDatetime) || other.eventStartDatetime == eventStartDatetime)&&(identical(other.roleLabel, roleLabel) || other.roleLabel == roleLabel)&&const DeepCollectionEquality().equals(other.entityDetail, _entityDetail));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,eventId,eventTitle,eventStartDatetime,roleLabel,const DeepCollectionEquality().hash(_entityDetail));
+int get hashCode {
+    return Object.hash(runtimeType,id,eventId,eventTitle,eventStartDatetime,roleLabel,const DeepCollectionEquality().hash(_entityDetail));
+}
 
 @override
 String toString() {
-  return 'CollabInviteDto(id: $id, eventId: $eventId, eventTitle: $eventTitle, eventStartDatetime: $eventStartDatetime, roleLabel: $roleLabel, entityDetail: $entityDetail)';
+    return 'CollabInviteDto(id: $id, eventId: $eventId, eventTitle: $eventTitle, eventStartDatetime: $eventStartDatetime, roleLabel: $roleLabel, entityDetail: $entityDetail)';
 }
 
 

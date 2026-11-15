@@ -14,11 +14,11 @@ enum Endgoal {
 /// snake_case for the rest), so mapped explicitly.
 extension EndgoalApiValue on Endgoal {
   String get apiValue => switch (this) {
-        Endgoal.job => 'job',
-        Endgoal.researchAndDevelopment => 'r&d',
-        Endgoal.entrepreneurship => 'entrepreneurship',
-        Endgoal.gigWork => 'gig_work',
-        Endgoal.higherEducation => 'higher_education',
-        Endgoal.socialImpact => 'social_impact',
-      };
+    Endgoal.job => 'job',
+    Endgoal.researchAndDevelopment => 'r&d',
+    Endgoal.entrepreneurship => 'entrepreneurship',
+    Endgoal.gigWork => 'gig_work',
+    Endgoal.higherEducation => 'higher_education',
+    Endgoal.socialImpact => 'social_impact',
+  };
 }

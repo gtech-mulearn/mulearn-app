@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'district_location.dart';
@@ -9,6 +9,7 @@ part of 'district_location.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $DistrictLocationCopyWith<DistrictLocation> get copyWith => _$DistrictLocationCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DistrictLocation&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.state, state) || other.state == state));
+  final _this = this as DistrictLocation;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DistrictLocation&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.state, _this.state) || other.state == _this.state));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,state);
+int get hashCode {
+  final _this = this as DistrictLocation;
+  return Object.hash(runtimeType,_this.id,_this.name,_this.state);
+}
 
 @override
 String toString() {
-  return 'DistrictLocation(id: $id, name: $name, state: $state)';
+  final _this = this as DistrictLocation;
+  return 'DistrictLocation(id: ${_this.id}, name: ${_this.name}, state: ${_this.state})';
 }
 
 
@@ -63,7 +69,7 @@ class _$DistrictLocationCopyWithImpl<$Res>
 /// Create a copy of DistrictLocation
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? state = null,}) {
-  return _then(_self.copyWith(
+  return _then(DistrictLocation(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,state: null == state ? _self.state : state // ignore: cast_nullable_to_non_nullable
@@ -234,16 +240,18 @@ _$DistrictLocationCopyWith<_DistrictLocation> get copyWith => __$DistrictLocatio
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DistrictLocation&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.state, state) || other.state == state));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _DistrictLocation&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.state, state) || other.state == state));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,state);
+int get hashCode {
+    return Object.hash(runtimeType,id,name,state);
+}
 
 @override
 String toString() {
-  return 'DistrictLocation(id: $id, name: $name, state: $state)';
+    return 'DistrictLocation(id: $id, name: $name, state: $state)';
 }
 
 

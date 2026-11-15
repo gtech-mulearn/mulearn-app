@@ -1,0 +1,140 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/campus/ad3a3793-d780-4ec1-b03e-fac92e0faa0d/",
+    "account": "qa-admin",
+    "status": 200,
+    "recorded_at": "2026-11-15T15:16:58.346Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "org_id": "ad3a3793-d780-4ec1-b03e-fac92e0faa0d",
+      "college_name": "St. Josephs Colege of Engineering and Technology",
+      "campus_code": "SJC",
+      "campus_zone": "Central Zone",
+      "total_karma": 0,
+      "total_members": 24,
+      "active_members": 17,
+      "rank": 1,
+      "social_links": [],
+      "campus_lead": {
+        "user_id": "f67beaee-73f4-45e6-a290-709999f7e58e",
+        "full_name": "QA Campus Lead One",
+        "muid": "qacampusleadone@mulearn",
+        "profile_pic": null,
+        "role": "Campus Lead"
+      },
+      "execom": [],
+      "top_10_campus_leaderboard": [
+        {
+          "rank": 1,
+          "user_id": "77d83f99-bf37-11f1-9f2a-062e965e7537",
+          "full_name": "Dev Admin",
+          "muid": "admin@mulearn",
+          "profile_pic": "https://dev.mulearn.org/muback-media/user/profile/77d83f99-bf37-11f1-9f2a-062e965e7537.png",
+          "karma": 0
+        },
+        {
+          "rank": 2,
+          "user_id": "c89fb033-0ec1-4c67-9b6b-911636e4fa2e",
+          "full_name": "Alvin Dennis",
+          "muid": "alvindennis@mulearn",
+          "profile_pic": null,
+          "karma": 0
+        },
+        {
+          "rank": 3,
+          "user_id": "88087ac2-1be8-4ccb-b091-56d4dab6bb46",
+          "full_name": "Pranav P",
+          "muid": "pranavp@mulearn",
+          "profile_pic": null,
+          "karma": 0
+        },
+        {
+          "rank": 4,
+          "user_id": "c5c572cf-fc53-455b-aa45-2783b3914dbc",
+          "full_name": "Arya Shibu",
+          "muid": "aryashibu@mulearn",
+          "profile_pic": null,
+          "karma": 0
+        },
+        {
+          "rank": 5,
+          "user_id": "be7d9ff0-90da-4da7-a892-554eb370b17b",
+          "full_name": "afif shoufeer",
+          "muid": "afifshoufeer@mulearn",
+          "profile_pic": null,
+          "karma": 0
+        },
+        {
+          "rank": 6,
+          "user_id": "3789eb88-a999-4bc7-8001-ced6adbbf312",
+          "full_name": "Balagovind Manoj",
+          "muid": "balagovindmanoj@mulearn",
+          "profile_pic": null,
+          "karma": 0
+        },
+        {
+          "rank": 7,
+          "user_id": "3a20b53a-3cd3-4e93-8ac0-eed20248dd69",
+          "full_name": "pstester",
+          "muid": "pstester@mulearn",
+          "profile_pic": null,
+          "karma": 0
+        },
+        {
+          "rank": 8,
+          "user_id": "5696bdb9-077b-47c4-b6e8-0f4df997cf41",
+          "full_name": "Pranav G nath",
+          "muid": "pranavgnath@mulearn",
+          "profile_pic": null,
+          "karma": 0
+        },
+        {
+          "rank": 9,
+          "user_id": "04afe242-e329-4491-af58-d555abd82e5f",
+          "full_name": "QA Student One",
+          "muid": "qastudentone@mulearn",
+          "profile_pic": null,
+          "karma": 0
+        },
+        {
+          "rank": 10,
+          "user_id": "46126ca1-2923-40a8-8a0c-92a73107eaa7",
+          "full_name": "QA Enabler One",
+          "muid": "qaenablerone@mulearn",
+          "profile_pic": null,
+          "karma": 0
+        }
+      ],
+      "active_ig_chapters": [],
+      "karma_by_cluster": {
+        "coder": {
+          "total_karma": 0,
+          "member_count": 9
+        },
+        "unclustered": {
+          "total_karma": 0,
+          "member_count": 9
+        },
+        "creative": {
+          "total_karma": 0,
+          "member_count": 4
+        },
+        "maker": {
+          "total_karma": 0,
+          "member_count": 1
+        },
+        "manager": {
+          "total_karma": 0,
+          "member_count": 1
+        }
+      }
+    }
+  }
+}

@@ -10,7 +10,7 @@ part of 'profile_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(profileRemoteDataSource)
-const profileRemoteDataSourceProvider = ProfileRemoteDataSourceProvider._();
+final profileRemoteDataSourceProvider = ProfileRemoteDataSourceProvider._();
 
 final class ProfileRemoteDataSourceProvider
     extends
@@ -20,7 +20,7 @@ final class ProfileRemoteDataSourceProvider
           ProfileRemoteDataSource
         >
     with $Provider<ProfileRemoteDataSource> {
-  const ProfileRemoteDataSourceProvider._()
+  ProfileRemoteDataSourceProvider._()
     : super(
         from: null,
         argument: null,
@@ -58,7 +58,7 @@ String _$profileRemoteDataSourceHash() =>
     r'0fed139b97bbdfbf0f8cbf17910ee5c531213d52';
 
 @ProviderFor(profileRepository)
-const profileRepositoryProvider = ProfileRepositoryProvider._();
+final profileRepositoryProvider = ProfileRepositoryProvider._();
 
 final class ProfileRepositoryProvider
     extends
@@ -68,7 +68,7 @@ final class ProfileRepositoryProvider
           ProfileRepository
         >
     with $Provider<ProfileRepository> {
-  const ProfileRepositoryProvider._()
+  ProfileRepositoryProvider._()
     : super(
         from: null,
         argument: null,
@@ -109,7 +109,7 @@ String _$profileRepositoryHash() => r'babcceef764de52b2a40ee0a629c88f5298829a1';
 /// error-state retry button.
 
 @ProviderFor(ProfileController)
-const profileControllerProvider = ProfileControllerProvider._();
+final profileControllerProvider = ProfileControllerProvider._();
 
 /// The current user's profile, mapped from the shared `user-profile` payload
 /// (one request for every reader). Call [refresh] to refetch, e.g. from the
@@ -119,7 +119,7 @@ final class ProfileControllerProvider
   /// The current user's profile, mapped from the shared `user-profile` payload
   /// (one request for every reader). Call [refresh] to refetch, e.g. from the
   /// error-state retry button.
-  const ProfileControllerProvider._()
+  ProfileControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -148,8 +148,7 @@ abstract class _$ProfileController extends $AsyncNotifier<UserProfile> {
   FutureOr<UserProfile> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<UserProfile>, UserProfile>;
     final element =
         ref.element
@@ -159,6 +158,6 @@ abstract class _$ProfileController extends $AsyncNotifier<UserProfile> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }

@@ -1,0 +1,270 @@
+# Reusable pipeline: validate (format, analyze, test) → build the Android APK.
+#
+# Every channel calls this one workflow, so the toolchain, checks and build
+# steps live in exactly one place:
+#   ci.yml            channel ci       PR validation + unsigned build check
+#   build-dev.yml     channel dev      staging pushes: dev APK + rolling dev-latest
+#   nightly.yml       channel nightly  nightly dev APK artifact from staging
+#   build-stable.yml  channel stable   signed prod APK artifact from master
+#   release.yml       channel release  signed prod APK + AAB for a vX.Y.Z tag
+#
+# The build job only runs once validation passed, so a failing check never
+# produces an artifact. Versioning lives in .github/scripts/version.sh.
+# Full documentation: docs/CI-CD.md
+name: Android build
+
+on:
+  workflow_call:
+    inputs:
+      channel:
+        description: ci | dev | nightly | stable | release (see version.sh)
+        type: string
+        required: true
+      ref:
+        description: Commit to check out. Empty = the commit that triggered the caller.
+        type: string
+        default: ''
+      format-base:
+        description: Base commit for a blocking format check of changed files. Empty = whole-repo report only.
+        type: string
+        default: ''
+      build:
+        description: Build the APK after validation.
+        type: boolean
+        default: true
+      signing:
+        description: none | optional | required (see setup_signing.sh)
+        type: string
+        default: none
+      environment:
+        description: GitHub environment holding the signing secrets. Empty = none.
+        type: string
+        default: ''
+      appbundle:
+        description: Also build an AAB (Play Store upload format).
+        type: boolean
+        default: false
+      upload:
+        description: Upload the APK (and AAB) as workflow artifacts.
+        type: boolean
+        default: false
+      retention-days:
+        type: number
+        default: 14
+    outputs:
+      artifact:
+        description: Artifact base name, e.g. mulearn-dev-1.0.0-84 (the APK is <artifact>.apk).
+        value: ${{ jobs.build.outputs.artifact }}
+      version:
+        value: ${{ jobs.build.outputs.version }}
+      build-name:
+        value: ${{ jobs.build.outputs.build-name }}
+      build-number:
+        value: ${{ jobs.build.outputs.build-number }}
+      sha:
+        value: ${{ jobs.build.outputs.sha }}
+      built-at:
+        value: ${{ jobs.build.outputs.built-at }}
+      apk-sha256:
+        value: ${{ jobs.build.outputs.apk-sha256 }}
+
+permissions:
+  contents: read
+
+env:
+  # The one place the toolchain is pinned. Bump deliberately, together with
+  # README.md "Prerequisites". JDK 21 runs Gradle 9.1 / AGP 9.0.1; the app
+  # itself compiles to Java 17 bytecode (android/app/build.gradle.kts).
+  FLUTTER_VERSION: 3.47.9
+  JAVA_VERSION: '21'
+
+jobs:
+  validate:
+    name: Validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.ref }}
+          # The changed-files format check diffs against the PR base. (Strings,
+          # because a bare 0 is falsy and `&& 0 || 1` would always yield 1.)
+          fetch-depth: ${{ inputs.format-base != '' && '0' || '1' }}
+          persist-credentials: false
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+        with:
+          channel: stable
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+
+      # --enforce-lockfile: build exactly what pubspec.lock pins; fail rather
+      # than silently resolve different versions on the runner.
+      - name: Install dependencies
+        run: flutter pub get --enforce-lockfile
+
+      - name: Check formatting
+        run: bash .github/scripts/format_check.sh "${{ inputs.format-base }}"
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Test
+        run: flutter test
+
+  build:
+    name: Build APK
+    needs: validate
+    if: inputs.build
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    # Signing secrets are environment-scoped: Production (stable, release)
+    # only admits master and v* tags; Development holds the test key.
+    environment: ${{ inputs.environment }}
+    outputs:
+      artifact: ${{ steps.version.outputs.artifact }}
+      version: ${{ steps.version.outputs.version }}
+      build-name: ${{ steps.version.outputs.build_name }}
+      build-number: ${{ steps.version.outputs.build_number }}
+      sha: ${{ steps.version.outputs.sha }}
+      built-at: ${{ steps.version.outputs.built_at }}
+      apk-sha256: ${{ steps.package.outputs.apk_sha256 }}
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ inputs.ref }}
+          # Full history: dev/nightly build numbers are the commit count.
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Set up Java
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad # v6.1.0
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: gradle
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
+        with:
+          channel: stable
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get --enforce-lockfile
+
+      - name: Compute version
+        id: version
+        run: bash .github/scripts/version.sh "${{ inputs.channel }}" | tee -a "$GITHUB_OUTPUT"
+
+      - name: Configure signing
+        env:
+          ANDROID_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          # The alias is an environment *variable*, not a secret: GitHub masks
+          # secret values everywhere, and an alias like "mulearn-dev" or
+          # "upload" occurs in artifact names and logs — a masked job output
+          # is dropped, which broke the dev-latest publish.
+          ANDROID_KEY_ALIAS: ${{ vars.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: bash .github/scripts/setup_signing.sh "${{ inputs.signing }}"
+
+      - name: Build APK
+        env:
+          FLAVOR: ${{ steps.version.outputs.flavor }}
+          BUILD_NAME: ${{ steps.version.outputs.build_name }}
+          BUILD_NUMBER: ${{ steps.version.outputs.build_number }}
+        run: |
+          flutter build apk --release \
+            --flavor "$FLAVOR" -t "lib/main_${FLAVOR}.dart" \
+            --build-name "$BUILD_NAME" --build-number "$BUILD_NUMBER"
+
+      - name: Build AAB
+        if: inputs.appbundle
+        env:
+          FLAVOR: ${{ steps.version.outputs.flavor }}
+          BUILD_NAME: ${{ steps.version.outputs.build_name }}
+          BUILD_NUMBER: ${{ steps.version.outputs.build_number }}
+        run: |
+          flutter build appbundle --release \
+            --flavor "$FLAVOR" -t "lib/main_${FLAVOR}.dart" \
+            --build-name "$BUILD_NAME" --build-number "$BUILD_NUMBER"
+
+      - name: Remove signing files
+        if: always()
+        run: rm -f android/key.properties "${RUNNER_TEMP}/mulearn-signing.jks"
+
+      - name: Package
+        id: package
+        env:
+          FLAVOR: ${{ steps.version.outputs.flavor }}
+          ARTIFACT: ${{ steps.version.outputs.artifact }}
+          APPBUNDLE: ${{ inputs.appbundle }}
+        run: |
+          mkdir -p dist
+          cp "build/app/outputs/flutter-apk/app-${FLAVOR}-release.apk" "dist/${ARTIFACT}.apk"
+          if [ "$APPBUNDLE" = "true" ]; then
+            cp "build/app/outputs/bundle/${FLAVOR}Release/app-${FLAVOR}-release.aab" "dist/${ARTIFACT}.aab"
+          fi
+          echo "apk_sha256=$(sha256sum "dist/${ARTIFACT}.apk" | cut -d' ' -f1)" >> "$GITHUB_OUTPUT"
+          ls -l dist
+
+      # archive: false uploads the .apk itself, so testers download an
+      # installable file rather than a zip. The artifact is named after it.
+      - name: Upload APK
+        if: inputs.upload
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          path: dist/${{ steps.version.outputs.artifact }}.apk
+          archive: false
+          overwrite: true
+          if-no-files-found: error
+          retention-days: ${{ inputs.retention-days }}
+
+      - name: Upload AAB
+        if: inputs.upload && inputs.appbundle
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          path: dist/${{ steps.version.outputs.artifact }}.aab
+          archive: false
+          overwrite: true
+          if-no-files-found: error
+          retention-days: ${{ inputs.retention-days }}
+
+      - name: Summary
+        env:
+          CHANNEL: ${{ inputs.channel }}
+          FLAVOR: ${{ steps.version.outputs.flavor }}
+          ARTIFACT: ${{ steps.version.outputs.artifact }}
+          BUILD_NAME: ${{ steps.version.outputs.build_name }}
+          BUILD_NUMBER: ${{ steps.version.outputs.build_number }}
+          SHA: ${{ steps.version.outputs.sha }}
+          BUILT_AT: ${{ steps.version.outputs.built_at }}
+          APK_SHA256: ${{ steps.package.outputs.apk_sha256 }}
+          UPLOADED: ${{ inputs.upload }}
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          {
+            echo "### ${CHANNEL} build — \`${ARTIFACT}.apk\`"
+            echo
+            echo "| | |"
+            echo "|---|---|"
+            echo "| Channel | \`${CHANNEL}\` (flavor \`${FLAVOR}\`) |"
+            echo "| versionName | \`${BUILD_NAME}\` |"
+            echo "| versionCode | \`${BUILD_NUMBER}\` |"
+            echo "| Ref | \`${REF_NAME}\` |"
+            echo "| Commit | \`${SHA}\` |"
+            echo "| Built (UTC) | ${BUILT_AT} |"
+            echo "| Flutter | ${FLUTTER_VERSION} |"
+            echo "| APK SHA-256 | \`${APK_SHA256}\` |"
+            echo
+            if [ "$UPLOADED" = "true" ]; then
+              echo "Download it from **Artifacts** at the bottom of this run's summary page."
+            else
+              echo "Build check only — nothing was uploaded."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"

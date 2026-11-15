@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'meeting_form.dart';
@@ -9,6 +9,7 @@ part of 'meeting_form.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $MeetingFormCopyWith<MeetingForm> get copyWith => _$MeetingFormCopyWithImpl<Meet
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MeetingForm&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.mode, mode) || other.mode == mode)&&(identical(other.meetPlace, meetPlace) || other.meetPlace == meetPlace)&&(identical(other.meetTime, meetTime) || other.meetTime == meetTime)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.isRecurring, isRecurring) || other.isRecurring == isRecurring)&&(identical(other.isReportNeeded, isReportNeeded) || other.isReportNeeded == isReportNeeded)&&(identical(other.platform, platform) || other.platform == platform)&&(identical(other.meetLink, meetLink) || other.meetLink == meetLink)&&(identical(other.coordX, coordX) || other.coordX == coordX)&&(identical(other.coordY, coordY) || other.coordY == coordY)&&(identical(other.recurrenceType, recurrenceType) || other.recurrenceType == recurrenceType)&&(identical(other.recurrence, recurrence) || other.recurrence == recurrence)&&(identical(other.reportDescription, reportDescription) || other.reportDescription == reportDescription));
+  final _this = this as MeetingForm;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MeetingForm&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.description, _this.description) || other.description == _this.description)&&(identical(other.mode, _this.mode) || other.mode == _this.mode)&&(identical(other.meetPlace, _this.meetPlace) || other.meetPlace == _this.meetPlace)&&(identical(other.meetTime, _this.meetTime) || other.meetTime == _this.meetTime)&&(identical(other.duration, _this.duration) || other.duration == _this.duration)&&(identical(other.isRecurring, _this.isRecurring) || other.isRecurring == _this.isRecurring)&&(identical(other.isReportNeeded, _this.isReportNeeded) || other.isReportNeeded == _this.isReportNeeded)&&(identical(other.platform, _this.platform) || other.platform == _this.platform)&&(identical(other.meetLink, _this.meetLink) || other.meetLink == _this.meetLink)&&(identical(other.coordX, _this.coordX) || other.coordX == _this.coordX)&&(identical(other.coordY, _this.coordY) || other.coordY == _this.coordY)&&(identical(other.recurrenceType, _this.recurrenceType) || other.recurrenceType == _this.recurrenceType)&&(identical(other.recurrence, _this.recurrence) || other.recurrence == _this.recurrence)&&(identical(other.reportDescription, _this.reportDescription) || other.reportDescription == _this.reportDescription));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,title,description,mode,meetPlace,meetTime,duration,isRecurring,isReportNeeded,platform,meetLink,coordX,coordY,recurrenceType,recurrence,reportDescription);
+int get hashCode {
+  final _this = this as MeetingForm;
+  return Object.hash(runtimeType,_this.title,_this.description,_this.mode,_this.meetPlace,_this.meetTime,_this.duration,_this.isRecurring,_this.isReportNeeded,_this.platform,_this.meetLink,_this.coordX,_this.coordY,_this.recurrenceType,_this.recurrence,_this.reportDescription);
+}
 
 @override
 String toString() {
-  return 'MeetingForm(title: $title, description: $description, mode: $mode, meetPlace: $meetPlace, meetTime: $meetTime, duration: $duration, isRecurring: $isRecurring, isReportNeeded: $isReportNeeded, platform: $platform, meetLink: $meetLink, coordX: $coordX, coordY: $coordY, recurrenceType: $recurrenceType, recurrence: $recurrence, reportDescription: $reportDescription)';
+  final _this = this as MeetingForm;
+  return 'MeetingForm(title: ${_this.title}, description: ${_this.description}, mode: ${_this.mode}, meetPlace: ${_this.meetPlace}, meetTime: ${_this.meetTime}, duration: ${_this.duration}, isRecurring: ${_this.isRecurring}, isReportNeeded: ${_this.isReportNeeded}, platform: ${_this.platform}, meetLink: ${_this.meetLink}, coordX: ${_this.coordX}, coordY: ${_this.coordY}, recurrenceType: ${_this.recurrenceType}, recurrence: ${_this.recurrence}, reportDescription: ${_this.reportDescription})';
 }
 
 
@@ -63,7 +69,7 @@ class _$MeetingFormCopyWithImpl<$Res>
 /// Create a copy of MeetingForm
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? title = null,Object? description = null,Object? mode = null,Object? meetPlace = null,Object? meetTime = null,Object? duration = null,Object? isRecurring = null,Object? isReportNeeded = null,Object? platform = freezed,Object? meetLink = freezed,Object? coordX = freezed,Object? coordY = freezed,Object? recurrenceType = freezed,Object? recurrence = freezed,Object? reportDescription = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(MeetingForm(
 title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,mode: null == mode ? _self.mode : mode // ignore: cast_nullable_to_non_nullable
@@ -249,16 +255,18 @@ _$MeetingFormCopyWith<_MeetingForm> get copyWith => __$MeetingFormCopyWithImpl<_
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MeetingForm&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.mode, mode) || other.mode == mode)&&(identical(other.meetPlace, meetPlace) || other.meetPlace == meetPlace)&&(identical(other.meetTime, meetTime) || other.meetTime == meetTime)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.isRecurring, isRecurring) || other.isRecurring == isRecurring)&&(identical(other.isReportNeeded, isReportNeeded) || other.isReportNeeded == isReportNeeded)&&(identical(other.platform, platform) || other.platform == platform)&&(identical(other.meetLink, meetLink) || other.meetLink == meetLink)&&(identical(other.coordX, coordX) || other.coordX == coordX)&&(identical(other.coordY, coordY) || other.coordY == coordY)&&(identical(other.recurrenceType, recurrenceType) || other.recurrenceType == recurrenceType)&&(identical(other.recurrence, recurrence) || other.recurrence == recurrence)&&(identical(other.reportDescription, reportDescription) || other.reportDescription == reportDescription));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MeetingForm&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.mode, mode) || other.mode == mode)&&(identical(other.meetPlace, meetPlace) || other.meetPlace == meetPlace)&&(identical(other.meetTime, meetTime) || other.meetTime == meetTime)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.isRecurring, isRecurring) || other.isRecurring == isRecurring)&&(identical(other.isReportNeeded, isReportNeeded) || other.isReportNeeded == isReportNeeded)&&(identical(other.platform, platform) || other.platform == platform)&&(identical(other.meetLink, meetLink) || other.meetLink == meetLink)&&(identical(other.coordX, coordX) || other.coordX == coordX)&&(identical(other.coordY, coordY) || other.coordY == coordY)&&(identical(other.recurrenceType, recurrenceType) || other.recurrenceType == recurrenceType)&&(identical(other.recurrence, recurrence) || other.recurrence == recurrence)&&(identical(other.reportDescription, reportDescription) || other.reportDescription == reportDescription));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,title,description,mode,meetPlace,meetTime,duration,isRecurring,isReportNeeded,platform,meetLink,coordX,coordY,recurrenceType,recurrence,reportDescription);
+int get hashCode {
+    return Object.hash(runtimeType,title,description,mode,meetPlace,meetTime,duration,isRecurring,isReportNeeded,platform,meetLink,coordX,coordY,recurrenceType,recurrence,reportDescription);
+}
 
 @override
 String toString() {
-  return 'MeetingForm(title: $title, description: $description, mode: $mode, meetPlace: $meetPlace, meetTime: $meetTime, duration: $duration, isRecurring: $isRecurring, isReportNeeded: $isReportNeeded, platform: $platform, meetLink: $meetLink, coordX: $coordX, coordY: $coordY, recurrenceType: $recurrenceType, recurrence: $recurrence, reportDescription: $reportDescription)';
+    return 'MeetingForm(title: $title, description: $description, mode: $mode, meetPlace: $meetPlace, meetTime: $meetTime, duration: $duration, isRecurring: $isRecurring, isReportNeeded: $isReportNeeded, platform: $platform, meetLink: $meetLink, coordX: $coordX, coordY: $coordY, recurrenceType: $recurrenceType, recurrence: $recurrence, reportDescription: $reportDescription)';
 }
 
 

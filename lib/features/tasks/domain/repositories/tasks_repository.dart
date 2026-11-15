@@ -7,4 +7,7 @@ abstract interface class TasksRepository {
   /// flattened across its three categories (`start_journey`/`become_expert`/
   /// `events`) into one list, each item tagged with its [TaskCategory].
   Future<List<TaskCatalogItem>> getTasks();
+
+  /// The signed-in user's level name (`"lvl4"`), or null.
+  Future<String?> getMyLevel();
 }

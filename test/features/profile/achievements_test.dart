@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mulearn_app/core/config/feature_flags.dart';
 import 'package:mulearn_app/core/data/location_remote_datasource.dart';
+import 'package:mulearn_app/core/design_system/input/mu_button.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/network/dio_provider.dart';
 import 'package:mulearn_app/core/storage/secure_storage_provider.dart';
@@ -28,12 +29,17 @@ const _catalog = '/api/v1/dashboard/achievement/list/';
 /// two QA-only badges (milestone total_karma ≥ 0 and ≥ 500), then removed.
 void main() {
   List<Map<String, dynamic>> listOf(String fixture) =>
-      (loadFixtureResponse(fixture)! as List<dynamic>).cast<Map<String, dynamic>>();
+      (loadFixtureResponse(fixture)! as List<dynamic>)
+          .cast<Map<String, dynamic>>();
 
   group('progress items', () {
     test('eligible and progress replies parse', () {
-      final eligible = listOf('dev/achievement_eligible').map((j) => AchievementProgressDto.fromJson(j).toDomain()).toList();
-      final progress = listOf('dev/achievement_progress').map((j) => AchievementProgressDto.fromJson(j).toDomain()).toList();
+      final eligible = listOf(
+        'dev/achievement_eligible',
+      ).map((j) => AchievementProgressDto.fromJson(j).toDomain()).toList();
+      final progress = listOf(
+        'dev/achievement_progress',
+      ).map((j) => AchievementProgressDto.fromJson(j).toDomain()).toList();
 
       expect(eligible.single.name, 'QA Starter Badge');
       expect(eligible.single.eligible, isTrue);
@@ -57,41 +63,64 @@ void main() {
     });
   });
 
-  test("In Progress is what's neither earned nor ready to claim (the dashboard's filter)", () {
-    final progress = listOf('dev/achievement_progress').map((j) => AchievementProgressDto.fromJson(j).toDomain()).toList();
-    final eligible = listOf('dev/achievement_eligible').map((j) => AchievementProgressDto.fromJson(j).toDomain()).toList();
+  test(
+    "In Progress is what's neither earned nor ready to claim (the dashboard's filter)",
+    () {
+      final progress = listOf(
+        'dev/achievement_progress',
+      ).map((j) => AchievementProgressDto.fromJson(j).toDomain()).toList();
+      final eligible = listOf(
+        'dev/achievement_eligible',
+      ).map((j) => AchievementProgressDto.fromJson(j).toDomain()).toList();
 
-    final inProgress = inProgressAchievements(progress, earnedIds: const {}, eligibleIds: {for (final e in eligible) e.achievementId});
+      final inProgress = inProgressAchievements(
+        progress,
+        earnedIds: const {},
+        eligibleIds: {for (final e in eligible) e.achievementId},
+      );
 
-    expect(inProgress.map((p) => p.name), ['QA Rising Badge']);
-  });
+      expect(inProgress.map((p) => p.name), ['QA Rising Badge']);
+    },
+  );
 
   group('claim', () {
-    ProfileRepositoryImpl repo(FakeHttpAdapter adapter) => ProfileRepositoryImpl(
+    ProfileRepositoryImpl repo(FakeHttpAdapter adapter) =>
+        ProfileRepositoryImpl(
           remote: ProfileRemoteDataSource(fakeDio(adapter)),
           locationRemote: LocationRemoteDataSource(fakeDio(adapter)),
         );
 
-    test('a claim posts to claim/<id>/ and returns the backend message', () async {
-      final adapter = FakeHttpAdapter({
-        'POST /api/v1/dashboard/achievement/claim/a1/': (_) => FakeResponse(200, loadFixture('dev/achievement_claim_ok')),
-      });
+    test(
+      'a claim posts to claim/<id>/ and returns the backend message',
+      () async {
+        final adapter = FakeHttpAdapter({
+          'POST /api/v1/dashboard/achievement/claim/a1/': (_) =>
+              FakeResponse(200, loadFixture('dev/achievement_claim_ok')),
+        });
 
-      final result = await repo(adapter).claimAchievement('a1');
+        final result = await repo(adapter).claimAchievement('a1');
 
-      expect(result.achievementName, 'QA Starter Badge');
-      expect(result.message, 'Achievement claimed successfully!');
-      expect(result.vcPending, isFalse);
-    });
+        expect(result.achievementName, 'QA Starter Badge');
+        expect(result.message, 'Achievement claimed successfully!');
+        expect(result.vcPending, isFalse);
+      },
+    );
 
     test("a refused claim surfaces the backend's reason", () async {
       final adapter = FakeHttpAdapter({
-        'POST /api/v1/dashboard/achievement/claim/a1/': (_) => FakeResponse(400, loadFixture('dev/achievement_claim_repeat')),
+        'POST /api/v1/dashboard/achievement/claim/a1/': (_) =>
+            FakeResponse(400, loadFixture('dev/achievement_claim_repeat')),
       });
 
       await expectLater(
         repo(adapter).claimAchievement('a1'),
-        throwsA(isA<ApiException>().having((e) => e.message, 'message', 'Achievement already claimed')),
+        throwsA(
+          isA<ApiException>().having(
+            (e) => e.message,
+            'message',
+            'Achievement already claimed',
+          ),
+        ),
       );
     });
   });
@@ -119,31 +148,49 @@ void main() {
                 'response': <Object>[],
               })
             : FakeResponse(200, loadFixture('dev/achievement_eligible')),
-        'GET $_progress': (_) => FakeResponse(200, loadFixture('dev/achievement_progress')),
-        'GET $_catalog': (_) => FakeResponse(200, loadFixture('dev/achievement_catalog')),
-        'POST /api/v1/dashboard/achievement/claim/f98238dc-b660-4dcf-aa63-e765fadeb4a3/': (_) {
-          claimed = true;
-          return FakeResponse(200, loadFixture('dev/achievement_claim_ok'));
-        },
+        'GET $_progress': (_) =>
+            FakeResponse(200, loadFixture('dev/achievement_progress')),
+        'GET $_catalog': (_) =>
+            FakeResponse(200, loadFixture('dev/achievement_catalog')),
+        'POST /api/v1/dashboard/achievement/claim/f98238dc-b660-4dcf-aa63-e765fadeb4a3/':
+            (_) {
+              claimed = true;
+              return FakeResponse(200, loadFixture('dev/achievement_claim_ok'));
+            },
       });
     });
 
     Future<void> pumpTab(WidgetTester tester, {bool own = true}) async {
       final tokens = TokenStorage(FakeSecureStorage());
       await tokens.saveTokens(accessToken: 'a', refreshToken: 'r');
-      final container = ProviderContainer(retry: (_, __) => null, overrides: [
-        dioProvider.overrideWithValue(fakeDio(adapter)),
-        tokenStorageProvider.overrideWithValue(tokens),
-      ]);
+      final container = ProviderContainer(
+        retry: (_, __) => null,
+        overrides: [
+          dioProvider.overrideWithValue(fakeDio(adapter)),
+          tokenStorageProvider.overrideWithValue(tokens),
+        ],
+      );
       addTearDown(container.dispose);
-      await tester.pumpWidget(UncontrolledProviderScope(
-        container: container,
-        child: MaterialApp(home: Scaffold(body: AchievementsTab(muid: _muid, userName: 'QA', isOwnProfile: own))),
-      ));
+      await tester.pumpWidget(
+        UncontrolledProviderScope(
+          container: container,
+          child: MaterialApp(
+            home: Scaffold(
+              body: AchievementsTab(
+                muid: _muid,
+                userName: 'QA',
+                isOwnProfile: own,
+              ),
+            ),
+          ),
+        ),
+      );
       await settle(tester);
     }
 
-    testWidgets('your own profile: Earned, Eligible and In Progress', (tester) async {
+    testWidgets('your own profile: Earned, Eligible and In Progress', (
+      tester,
+    ) async {
       await pumpTab(tester);
 
       expect(find.text('Earned'), findsOneWidget);
@@ -156,30 +203,42 @@ void main() {
       expect(find.text('0 / 500'), findsOneWidget);
     });
 
-    testWidgets('claiming moves a badge from Eligible to Earned', (tester) async {
+    testWidgets('claiming moves a badge from Eligible to Earned', (
+      tester,
+    ) async {
       await pumpTab(tester);
       await tester.tap(find.text('Eligible'));
       await settle(tester);
 
-      await tester.tap(find.widgetWithText(TextButton, 'Claim'));
+      await tester.tap(find.widgetWithText(MuButton, 'Claim'));
       await settle(tester);
 
-      expect(adapter.requests.where((RequestOptions r) => r.method == 'POST'), hasLength(1));
+      expect(
+        adapter.requests.where((RequestOptions r) => r.method == 'POST'),
+        hasLength(1),
+      );
       expect(find.text('Achievement claimed successfully!'), findsOneWidget);
+      // Toasts drop in from the top; in this bare harness the tabs sit at
+      // the very top, so let the toast leave before tapping one.
+      await tester.pump(const Duration(seconds: 4));
+      await tester.pumpAndSettle();
       await tester.tap(find.text('Earned'));
       await settle(tester);
       expect(find.text('QA Starter Badge'), findsOneWidget);
-      await tester.pump(const Duration(seconds: 4));
-      await tester.pumpAndSettle();
     });
 
-    testWidgets("someone else's profile shows only what they earned", (tester) async {
+    testWidgets("someone else's profile shows only what they earned", (
+      tester,
+    ) async {
       claimed = true;
       await pumpTab(tester, own: false);
 
       expect(find.text('Eligible'), findsNothing);
       expect(find.text('QA Starter Badge'), findsOneWidget);
-      expect(adapter.requests.where((RequestOptions r) => r.uri.path == _eligible), isEmpty);
+      expect(
+        adapter.requests.where((RequestOptions r) => r.uri.path == _eligible),
+        isEmpty,
+      );
     });
 
     testWidgets('credential issuing stays hidden (SEC-04)', (tester) async {

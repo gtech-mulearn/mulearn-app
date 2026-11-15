@@ -1,0 +1,44 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/campus/execom/search/?q=qa",
+    "account": "qa-campuslead",
+    "status": 200,
+    "recorded_at": "2026-11-15T19:36:13.815Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "data": [
+        {
+          "id": "f67beaee-73f4-45e6-a290-709999f7e58e",
+          "full_name": "QA Campus Lead One",
+          "muid": "qacampusleadone@mulearn",
+          "profile_pic": null
+        },
+        {
+          "id": "46126ca1-2923-40a8-8a0c-92a73107eaa7",
+          "full_name": "QA Enabler One",
+          "muid": "qaenablerone@mulearn",
+          "profile_pic": null
+        },
+        {
+          "id": "45e6ec1d-37e0-452a-8a8b-ba7e4ecfc2b5",
+          "full_name": "QA Pending Link",
+          "muid": "qapendinglink@mulearn",
+          "profile_pic": null
+        },
+        {
+          "id": "04afe242-e329-4491-af58-d555abd82e5f",
+          "full_name": "QA Student One",
+          "muid": "qastudentone@mulearn",
+          "profile_pic": null
+        }
+      ]
+    }
+  }
+}

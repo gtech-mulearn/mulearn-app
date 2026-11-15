@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'event_filter.dart';
@@ -9,6 +9,7 @@ part of 'event_filter.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $EventFilterCopyWith<EventFilter> get copyWith => _$EventFilterCopyWithImpl<Even
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EventFilter&&(identical(other.search, search) || other.search == search)&&(identical(other.eventType, eventType) || other.eventType == eventType)&&(identical(other.igId, igId) || other.igId == igId)&&(identical(other.from, from) || other.from == from)&&(identical(other.eligibleOnly, eligibleOnly) || other.eligibleOnly == eligibleOnly));
+  final _this = this as EventFilter;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EventFilter&&(identical(other.search, _this.search) || other.search == _this.search)&&(identical(other.eventType, _this.eventType) || other.eventType == _this.eventType)&&(identical(other.igId, _this.igId) || other.igId == _this.igId)&&(identical(other.from, _this.from) || other.from == _this.from)&&(identical(other.eligibleOnly, _this.eligibleOnly) || other.eligibleOnly == _this.eligibleOnly));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,search,eventType,igId,from,eligibleOnly);
+int get hashCode {
+  final _this = this as EventFilter;
+  return Object.hash(runtimeType,_this.search,_this.eventType,_this.igId,_this.from,_this.eligibleOnly);
+}
 
 @override
 String toString() {
-  return 'EventFilter(search: $search, eventType: $eventType, igId: $igId, from: $from, eligibleOnly: $eligibleOnly)';
+  final _this = this as EventFilter;
+  return 'EventFilter(search: ${_this.search}, eventType: ${_this.eventType}, igId: ${_this.igId}, from: ${_this.from}, eligibleOnly: ${_this.eligibleOnly})';
 }
 
 
@@ -63,7 +69,7 @@ class _$EventFilterCopyWithImpl<$Res>
 /// Create a copy of EventFilter
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? search = null,Object? eventType = freezed,Object? igId = freezed,Object? from = freezed,Object? eligibleOnly = null,}) {
-  return _then(_self.copyWith(
+  return _then(EventFilter(
 search: null == search ? _self.search : search // ignore: cast_nullable_to_non_nullable
 as String,eventType: freezed == eventType ? _self.eventType : eventType // ignore: cast_nullable_to_non_nullable
 as String?,igId: freezed == igId ? _self.igId : igId // ignore: cast_nullable_to_non_nullable
@@ -229,16 +235,18 @@ _$EventFilterCopyWith<_EventFilter> get copyWith => __$EventFilterCopyWithImpl<_
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EventFilter&&(identical(other.search, search) || other.search == search)&&(identical(other.eventType, eventType) || other.eventType == eventType)&&(identical(other.igId, igId) || other.igId == igId)&&(identical(other.from, from) || other.from == from)&&(identical(other.eligibleOnly, eligibleOnly) || other.eligibleOnly == eligibleOnly));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _EventFilter&&(identical(other.search, search) || other.search == search)&&(identical(other.eventType, eventType) || other.eventType == eventType)&&(identical(other.igId, igId) || other.igId == igId)&&(identical(other.from, from) || other.from == from)&&(identical(other.eligibleOnly, eligibleOnly) || other.eligibleOnly == eligibleOnly));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,search,eventType,igId,from,eligibleOnly);
+int get hashCode {
+    return Object.hash(runtimeType,search,eventType,igId,from,eligibleOnly);
+}
 
 @override
 String toString() {
-  return 'EventFilter(search: $search, eventType: $eventType, igId: $igId, from: $from, eligibleOnly: $eligibleOnly)';
+    return 'EventFilter(search: $search, eventType: $eventType, igId: $igId, from: $from, eligibleOnly: $eligibleOnly)';
 }
 
 

@@ -20,7 +20,10 @@ class InterestsController extends _$InterestsController {
     );
     if (ref.mounted) state = result;
     if (result.hasError) {
-      Error.throwWithStackTrace(result.error!, result.stackTrace ?? StackTrace.current);
+      Error.throwWithStackTrace(
+        result.error!,
+        result.stackTrace ?? StackTrace.current,
+      );
     }
   }
 
@@ -37,7 +40,10 @@ class InterestsController extends _$InterestsController {
     });
     if (ref.mounted) state = result;
     if (result.hasError) {
-      Error.throwWithStackTrace(result.error!, result.stackTrace ?? StackTrace.current);
+      Error.throwWithStackTrace(
+        result.error!,
+        result.stackTrace ?? StackTrace.current,
+      );
     }
   }
 }

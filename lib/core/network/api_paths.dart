@@ -42,8 +42,7 @@ abstract final class ApiPaths {
 
   /// `POST {"password"}` — reset the password using a verified token
   /// (token is a path segment, appended by the caller).
-  static const String resetPassword =
-      '/api/v1/dashboard/user/reset-password/';
+  static const String resetPassword = '/api/v1/dashboard/user/reset-password/';
 
   /// `POST {"id_token" | "idToken"}` — exchange a native Google Sign-In ID
   /// token for an app session. Confirmed against the real OpenAPI contract —
@@ -86,8 +85,7 @@ abstract final class ApiPaths {
   static const String userLog = '/api/v1/dashboard/profile/user-log/';
 
   /// `GET` — level progress with nested tasks, under a bare `response` array.
-  static const String userLevels =
-      '/api/v1/dashboard/profile/get-user-levels/';
+  static const String userLevels = '/api/v1/dashboard/profile/get-user-levels/';
 
   /// `GET` — the full browsable task catalog, under `response` as an object
   /// keyed by category: `start_journey`, `become_expert`, `events` (each a
@@ -109,8 +107,7 @@ abstract final class ApiPaths {
 
   /// `PATCH {"interest_group": string[]}` — update the user's interest
   /// groups.
-  static const String editInterestGroups =
-      '/api/v1/dashboard/profile/ig-edit/';
+  static const String editInterestGroups = '/api/v1/dashboard/profile/ig-edit/';
 
   /// `GET` — the full interest-group catalog, under
   /// `response.interestGroup` (note the singular, camelCase key). Each entry
@@ -126,9 +123,21 @@ abstract final class ApiPaths {
   /// this public alternative is the one that actually works for browsing.
   static String interestGroupDetail(String id) => '/api/v1/public/ig/$id/';
 
+  /// `GET`, no sign-in: community counts (`members`, `org_type_counts`,
+  /// `enablers_mentors_count`, `ig_count`, `learning_circle_count`) for the
+  /// pre-login arrival and Commons.
+  static const String publicGlobalCount = '/api/v1/public/global-count/';
+
+  /// `GET`, no sign-in: `{interestGroups: [{id, name, …}]}`.
+  static const String publicInterestGroups = '/api/v1/public/ig/list/';
+
+  /// `GET`, no sign-in: featured events, `{data: [...], pagination}`.
+  static const String publicFeaturedEvents = '/api/v1/public/events/featured/';
+
   /// `POST {"current_password", "password"}` — change the password
   /// (ResetPasswordAPI); 400 "Current Password is incorrect" otherwise.
-  static const String changePassword = '/api/v1/dashboard/profile/change-password/';
+  static const String changePassword =
+      '/api/v1/dashboard/profile/change-password/';
 
   /// `POST` — join an interest group (learners: at most 3; "Cannot join more
   /// than 3 interest groups"). InterestGroupMembershipAPI.
@@ -136,6 +145,27 @@ abstract final class ApiPaths {
 
   /// `DELETE` — leave an interest group.
   static String igLeave(String id) => '/api/v1/dashboard/ig/$id/leave/';
+
+  /// `GET ?search=&pageIndex=&perPage=` — active jobs from verified
+  /// companies (PublicJobAPI); carries `eligibility` when signed in.
+  static const String jobsAll = '/api/v1/dashboard/company/jobs/all/';
+
+  /// `POST {"resume_link", "cover_letter"?}` — apply (JobApplicationAPI).
+  static String jobApply(String id) =>
+      '/api/v1/dashboard/company/jobs/$id/apply/';
+
+  /// `GET` — the learner's own applications (UserAppliedJobsAPI).
+  static const String myJobApplications =
+      '/api/v1/dashboard/company/applications/me/';
+
+  /// `DELETE` — withdraw an application (soft; not when Selected).
+  static String jobApplicationWithdraw(String id) =>
+      '/api/v1/dashboard/company/applications/$id/withdraw/';
+
+  /// `PATCH {"resume_link", "cover_letter"?}` — resubmit a rejected or
+  /// withdrawn application.
+  static String jobApplicationResubmit(String id) =>
+      '/api/v1/dashboard/company/applications/$id/resubmit/';
 
   /// `PUT {"is_public": bool}` — toggle profile visibility.
   static const String shareUserProfile =
@@ -161,17 +191,21 @@ abstract final class ApiPaths {
       '/api/v1/dashboard/achievement/list/user/$muid/';
 
   /// `GET` — achievements the signed-in user can claim now.
-  static const String achievementEligible = '/api/v1/dashboard/achievement/eligible/';
+  static const String achievementEligible =
+      '/api/v1/dashboard/achievement/eligible/';
 
   /// `GET` — the rule engine's progress towards every achievement.
-  static const String achievementProgress = '/api/v1/dashboard/achievement/progress/';
+  static const String achievementProgress =
+      '/api/v1/dashboard/achievement/progress/';
 
   /// `GET` — the achievement catalog (name, description, icon).
-  static const String achievementCatalog = '/api/v1/dashboard/achievement/list/';
+  static const String achievementCatalog =
+      '/api/v1/dashboard/achievement/list/';
 
   /// `POST {}` — claim [id]; 400 "Achievement already claimed" or
   /// "Not eligible: …" otherwise.
-  static String achievementClaim(String id) => '/api/v1/dashboard/achievement/claim/$id/';
+  static String achievementClaim(String id) =>
+      '/api/v1/dashboard/achievement/claim/$id/';
 
   /// `POST {"achievement_id", "vc_url"}` — save the VC URL after a
   /// successful QSeverse issuance (confusingly named `issueVC` in the
@@ -197,6 +231,11 @@ abstract final class ApiPaths {
   /// the param.
   static const String userSearch = '/api/v1/dashboard/user/search/';
 
+  /// `GET ?search=&pageIndex=&perPage=` — campuses by type (InstitutionAPI):
+  /// `college` or `school`; the dashboard's campus search queries both.
+  static String institutes(String type) =>
+      '/api/v1/dashboard/organisation/institutes/$type/';
+
   // --- Registration (rules.md §3/§9: confirmed against the live dashboard
   // frontend, not the OpenAPI schema) ---
 
@@ -221,8 +260,7 @@ abstract final class ApiPaths {
   static const String registerColleges = '/api/v1/register/colleges/';
 
   /// `GET` — list of departments, `{id, title}`, under `response.departments`.
-  static const String registerDepartments =
-      '/api/v1/register/department/list/';
+  static const String registerDepartments = '/api/v1/register/department/list/';
 
   /// `GET` — list of companies, `{id, title}`, under `response.companies`.
   static const String registerCompanies = '/api/v1/register/company/list/';
@@ -239,8 +277,7 @@ abstract final class ApiPaths {
   static const String registerDistricts = '/api/v1/register/district/list/';
 
   /// `GET` — list of communities, `{id, title}`, under `response.communities`.
-  static const String registerCommunities =
-      '/api/v1/register/community/list/';
+  static const String registerCommunities = '/api/v1/register/community/list/';
 
   /// `POST {"district": id}` — colleges AND departments in a district (used
   /// by the college-change picker), `{id, title}` each, under
@@ -268,13 +305,12 @@ abstract final class ApiPaths {
   /// `POST {"endgoals": [...]}` — save chosen end goals.
   static const String selectEndgoals = '/api/v1/register/select-endgoals/';
 
-
   // --- Dashboard (home screen) — confirmed live (rules.md §3/§9) ---
-
 
   /// `GET` — the learner's week: `{stats, next_meeting, quick_action_counts}`
   /// (LearnerDashboardSummaryAPIView).
-  static const String learnerSummary = '/api/v1/dashboard/home/learner/summary/';
+  static const String learnerSummary =
+      '/api/v1/dashboard/home/learner/summary/';
 
   /// `GET` — featured events, under `response.data` with a `pagination`
   /// sibling key. Confirmed live: 5 items, `isNext: false` for this account,
@@ -310,8 +346,7 @@ abstract final class ApiPaths {
   // `learningcircle` (singular, no space), verified against the real
   // backend rather than assumed from the reference dashboard's client. ---
 
-  static const String circlesList =
-      '/api/v1/dashboard/learningcircle/list/';
+  static const String circlesList = '/api/v1/dashboard/learningcircle/list/';
   static const String circlesCreate =
       '/api/v1/dashboard/learningcircle/create/';
   static const String userCircles =
@@ -336,10 +371,12 @@ abstract final class ApiPaths {
       '/api/v1/dashboard/learningcircle/join/$id/';
 
   /// `DELETE` — leave (members only; leads transfer first, creators delete).
-  static String circleLeave(String id) => '/api/v1/dashboard/learningcircle/leave/$id/';
+  static String circleLeave(String id) =>
+      '/api/v1/dashboard/learningcircle/leave/$id/';
 
   /// `DELETE {"muid"}` — the lead or creator removes a member.
-  static String circleMemberRemove(String id) => '/api/v1/dashboard/learningcircle/members/remove/$id/';
+  static String circleMemberRemove(String id) =>
+      '/api/v1/dashboard/learningcircle/members/remove/$id/';
 
   static String circleInvite(String id) =>
       '/api/v1/dashboard/learningcircle/invite/$id/';
@@ -446,19 +483,23 @@ abstract final class MentorPaths {
 
   /// `POST` — only a SCHEDULED session.
   static String sessionComplete(String id) => '$_base/session/complete/$id/';
-  static String participants(String sessionId) => '$_base/session/participant/list/$sessionId/';
+  static String participants(String sessionId) =>
+      '$_base/session/participant/list/$sessionId/';
 
   /// `POST {muid}`.
-  static String participantAdd(String sessionId) => '$_base/session/participant/add/$sessionId/';
+  static String participantAdd(String sessionId) =>
+      '$_base/session/participant/add/$sessionId/';
 
   /// `PATCH {attendance_status, progress_note, contributed_minutes}`.
-  static String participantUpdate(String linkId) => '$_base/session/participant/update/$linkId/';
+  static String participantUpdate(String linkId) =>
+      '$_base/session/participant/update/$linkId/';
 
   /// `GET` — REQUESTED sessions in the mentor's scopes.
   static const String studentRequests = '$_base/session/student-requests/';
 
   /// `PATCH {status: APPROVED|REJECTED, starts_at?, ends_at?, mode?, meeting_link?, venue?}` (POST is 405).
-  static String studentRequestVerify(String sessionId) => '$_base/session/student-requests/$sessionId/verify/';
+  static String studentRequestVerify(String sessionId) =>
+      '$_base/session/student-requests/$sessionId/verify/';
   static const String availability = '$_base/availability/';
   static String availabilitySlot(String id) => '$_base/availability/$id/';
 
@@ -484,18 +525,21 @@ abstract final class CampusPaths {
 
   /// `GET ?search&sortBy&is_alumni&ig&pageIndex&perPage` — what the dashboard uses.
   static const String students = '$_base/student-details/';
-  static String studentActivity(String muid) => '$_base/students/${Uri.encodeComponent(muid)}/activity/';
+  static String studentActivity(String muid) =>
+      '$_base/students/${Uri.encodeComponent(muid)}/activity/';
   static const String circles = '$_base/learning-circles/';
-  static const String igs = '$_base/igs/';
 
   /// `GET ?status=pending_campus_approval`.
   static const String events = '$_base/events/';
 
   /// Campus Lead (and Admin) only.
   static const String orgLinks = '/api/v1/dashboard/user/unverified-org-links/';
-  static String orgLink(String id) => '/api/v1/dashboard/user/unverified-org-links/$id/';
-  static String eventApprove(String id) => '/api/v1/dashboard/events/campus/$id/approve/';
-  static String eventReject(String id) => '/api/v1/dashboard/events/campus/$id/reject/';
+  static String orgLink(String id) =>
+      '/api/v1/dashboard/user/unverified-org-links/$id/';
+  static String eventApprove(String id) =>
+      '/api/v1/dashboard/events/campus/$id/approve/';
+  static String eventReject(String id) =>
+      '/api/v1/dashboard/events/campus/$id/reject/';
   static const String myInvites = '/api/v1/dashboard/events/my-invites/';
   static String inviteAccept(String eventId, String id) =>
       '/api/v1/dashboard/events/manage/$eventId/collaborators/$id/accept/';

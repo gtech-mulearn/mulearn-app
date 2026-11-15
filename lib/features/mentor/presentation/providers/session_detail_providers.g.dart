@@ -12,7 +12,7 @@ part of 'session_detail_providers.dart';
 /// changes show at once and roll back if the backend refuses them.
 
 @ProviderFor(SessionParticipantsController)
-const sessionParticipantsControllerProvider =
+final sessionParticipantsControllerProvider =
     SessionParticipantsControllerFamily._();
 
 /// A session's participants (first 50; sessions are small). Attendance
@@ -25,7 +25,7 @@ final class SessionParticipantsControllerProvider
         > {
   /// A session's participants (first 50; sessions are small). Attendance
   /// changes show at once and roll back if the backend refuses them.
-  const SessionParticipantsControllerProvider._({
+  SessionParticipantsControllerProvider._({
     required SessionParticipantsControllerFamily super.from,
     required String super.argument,
   }) : super(
@@ -77,7 +77,7 @@ final class SessionParticipantsControllerFamily extends $Family
           FutureOr<({int count, List<SessionParticipant> items})>,
           String
         > {
-  const SessionParticipantsControllerFamily._()
+  SessionParticipantsControllerFamily._()
     : super(
         retry: noRetry,
         name: r'sessionParticipantsControllerProvider',
@@ -109,8 +109,7 @@ abstract class _$SessionParticipantsController
   );
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build(_$args);
+  WhenComplete runBuild() {
     final ref =
         this.ref
             as $Ref<
@@ -128,7 +127,7 @@ abstract class _$SessionParticipantsController
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, () => build(_$args));
   }
 }
 
@@ -136,7 +135,7 @@ abstract class _$SessionParticipantsController
 /// refetched so the screen shows the backend's current status.
 
 @ProviderFor(SessionCompletion)
-const sessionCompletionProvider = SessionCompletionProvider._();
+final sessionCompletionProvider = SessionCompletionProvider._();
 
 /// Marks a scheduled session completed. Success or failure, the session is
 /// refetched so the screen shows the backend's current status.
@@ -144,7 +143,7 @@ final class SessionCompletionProvider
     extends $NotifierProvider<SessionCompletion, void> {
   /// Marks a scheduled session completed. Success or failure, the session is
   /// refetched so the screen shows the backend's current status.
-  const SessionCompletionProvider._()
+  SessionCompletionProvider._()
     : super(
         from: null,
         argument: null,
@@ -180,8 +179,7 @@ abstract class _$SessionCompletion extends $Notifier<void> {
   void build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<void, void>;
     final element =
         ref.element
@@ -191,6 +189,6 @@ abstract class _$SessionCompletion extends $Notifier<void> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, null);
+    return element.handleCreate(ref, build);
   }
 }

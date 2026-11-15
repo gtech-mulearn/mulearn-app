@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'task_submission_channel_dto.dart';
@@ -9,6 +9,7 @@ part of 'task_submission_channel_dto.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $TaskSubmissionChannelDtoCopyWith<TaskSubmissionChannelDto> get copyWith => _$Ta
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is TaskSubmissionChannelDto&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.discordId, discordId) || other.discordId == discordId));
+  final _this = this as TaskSubmissionChannelDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TaskSubmissionChannelDto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.discordId, _this.discordId) || other.discordId == _this.discordId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,discordId);
+int get hashCode {
+  final _this = this as TaskSubmissionChannelDto;
+  return Object.hash(runtimeType,_this.id,_this.name,_this.discordId);
+}
 
 @override
 String toString() {
-  return 'TaskSubmissionChannelDto(id: $id, name: $name, discordId: $discordId)';
+  final _this = this as TaskSubmissionChannelDto;
+  return 'TaskSubmissionChannelDto(id: ${_this.id}, name: ${_this.name}, discordId: ${_this.discordId})';
 }
 
 
@@ -66,7 +72,7 @@ class _$TaskSubmissionChannelDtoCopyWithImpl<$Res>
 /// Create a copy of TaskSubmissionChannelDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? name = freezed,Object? discordId = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(TaskSubmissionChannelDto(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String?,discordId: freezed == discordId ? _self.discordId : discordId // ignore: cast_nullable_to_non_nullable
@@ -231,16 +237,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TaskSubmissionChannelDto&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.discordId, discordId) || other.discordId == discordId));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _TaskSubmissionChannelDto&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.discordId, discordId) || other.discordId == discordId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,discordId);
+int get hashCode {
+    return Object.hash(runtimeType,id,name,discordId);
+}
 
 @override
 String toString() {
-  return 'TaskSubmissionChannelDto(id: $id, name: $name, discordId: $discordId)';
+    return 'TaskSubmissionChannelDto(id: $id, name: $name, discordId: $discordId)';
 }
 
 

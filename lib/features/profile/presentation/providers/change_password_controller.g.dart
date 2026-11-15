@@ -12,7 +12,7 @@ part of 'change_password_controller.dart';
 /// and errors.
 
 @ProviderFor(ChangePasswordController)
-const changePasswordControllerProvider = ChangePasswordControllerProvider._();
+final changePasswordControllerProvider = ChangePasswordControllerProvider._();
 
 /// Submits a password change; the screen reads the state for its spinner
 /// and errors.
@@ -20,7 +20,7 @@ final class ChangePasswordControllerProvider
     extends $AsyncNotifierProvider<ChangePasswordController, void> {
   /// Submits a password change; the screen reads the state for its spinner
   /// and errors.
-  const ChangePasswordControllerProvider._()
+  ChangePasswordControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -49,8 +49,7 @@ abstract class _$ChangePasswordController extends $AsyncNotifier<void> {
   FutureOr<void> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<void>, void>;
     final element =
         ref.element
@@ -60,6 +59,6 @@ abstract class _$ChangePasswordController extends $AsyncNotifier<void> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, null);
+    return element.handleCreate(ref, build);
   }
 }

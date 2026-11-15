@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'interest_group_list_item.dart';
@@ -9,6 +9,7 @@ part of 'interest_group_list_item.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $InterestGroupListItemCopyWith<InterestGroupListItem> get copyWith => _$Interest
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is InterestGroupListItem&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.category, category) || other.category == category));
+  final _this = this as InterestGroupListItem;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is InterestGroupListItem&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.category, _this.category) || other.category == _this.category));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,category);
+int get hashCode {
+  final _this = this as InterestGroupListItem;
+  return Object.hash(runtimeType,_this.id,_this.name,_this.category);
+}
 
 @override
 String toString() {
-  return 'InterestGroupListItem(id: $id, name: $name, category: $category)';
+  final _this = this as InterestGroupListItem;
+  return 'InterestGroupListItem(id: ${_this.id}, name: ${_this.name}, category: ${_this.category})';
 }
 
 
@@ -63,7 +69,7 @@ class _$InterestGroupListItemCopyWithImpl<$Res>
 /// Create a copy of InterestGroupListItem
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? category = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(InterestGroupListItem(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,category: freezed == category ? _self.category : category // ignore: cast_nullable_to_non_nullable
@@ -225,16 +231,18 @@ _$InterestGroupListItemCopyWith<_InterestGroupListItem> get copyWith => __$Inter
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _InterestGroupListItem&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.category, category) || other.category == category));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _InterestGroupListItem&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.category, category) || other.category == category));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,category);
+int get hashCode {
+    return Object.hash(runtimeType,id,name,category);
+}
 
 @override
 String toString() {
-  return 'InterestGroupListItem(id: $id, name: $name, category: $category)';
+    return 'InterestGroupListItem(id: $id, name: $name, category: $category)';
 }
 
 

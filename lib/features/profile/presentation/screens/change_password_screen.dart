@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
-import 'package:mulearn_app/core/theme/mu_space.dart';
-import 'package:mulearn_app/core/theme/mulearn_colors.dart';
-import 'package:mulearn_app/core/theme/mulearn_typography.dart';
-import 'package:mulearn_app/core/widgets/mu_buttons.dart';
-import 'package:mulearn_app/core/widgets/mu_toast.dart';
 import 'package:mulearn_app/features/profile/domain/password_rules.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/change_password_controller.dart';
 
@@ -17,7 +12,8 @@ class ChangePasswordScreen extends ConsumerStatefulWidget {
   const ChangePasswordScreen({super.key});
 
   @override
-  ConsumerState<ChangePasswordScreen> createState() => _ChangePasswordScreenState();
+  ConsumerState<ChangePasswordScreen> createState() =>
+      _ChangePasswordScreenState();
 }
 
 class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
@@ -25,7 +21,6 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
   final _current = TextEditingController();
   final _next = TextEditingController();
   final _confirm = TextEditingController();
-  final _obscure = <String, bool>{'current': true, 'next': true, 'confirm': true};
   String? _currentServerError;
   String? _nextServerError;
 
@@ -43,11 +38,17 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
       _nextServerError = null;
     });
     if (!(_formKey.currentState?.validate() ?? false)) return;
-    final controller = ref.read(changePasswordControllerProvider.notifier);
-    final ok = await controller.submit(current: _current.text, next: _next.text);
+    FocusScope.of(context).unfocus();
+    final ok = await ref
+        .read(changePasswordControllerProvider.notifier)
+        .submit(current: _current.text, next: _next.text);
     if (!mounted) return;
     if (ok) {
-      MuToast.show(context, message: 'Password changed', type: MuToastType.success);
+      MuToast.show(
+        context,
+        message: 'Password changed',
+        type: MuToastType.success,
+      );
       context.pop();
       return;
     }
@@ -65,89 +66,102 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
       }
     });
     if (_currentServerError == null && _nextServerError == null) {
-      MuToast.show(context, message: ApiException.messageFor(error ?? 'Something went wrong'), type: MuToastType.error);
+      MuToast.show(
+        context,
+        message: ApiException.messageFor(error ?? 'Something went wrong'),
+        type: MuToastType.error,
+      );
     }
-  }
-
-  Widget _field({
-    required String key,
-    required String label,
-    required TextEditingController controller,
-    required String? Function(String?) validator,
-    String? serverError,
-    TextInputAction action = TextInputAction.next,
-  }) {
-    final obscure = _obscure[key]!;
-    return TextFormField(
-      controller: controller,
-      obscureText: obscure,
-      textInputAction: action,
-      autofillHints: key == 'current' ? const [AutofillHints.password] : const [AutofillHints.newPassword],
-      onFieldSubmitted: action == TextInputAction.done ? (_) => _submit() : null,
-      forceErrorText: serverError,
-      decoration: InputDecoration(
-        labelText: label,
-        suffixIcon: IconButton(
-          tooltip: obscure ? 'Show password' : 'Hide password',
-          icon: Icon(obscure ? LucideIcons.eye : LucideIcons.eyeOff, color: MuColors.inkSecondary),
-          onPressed: () => setState(() => _obscure[key] = !obscure),
-        ),
-      ),
-      validator: validator,
-    );
   }
 
   @override
   Widget build(BuildContext context) {
+    final mu = context.mu;
+    final c = mu.colors;
     final saving = ref.watch(changePasswordControllerProvider).isLoading;
+
     return Scaffold(
-      backgroundColor: MuColors.canvas,
-      appBar: AppBar(backgroundColor: MuColors.canvas, title: Text('Password', style: MuType.headline)),
+      backgroundColor: c.chalk,
       body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.all(MuSpace.screenH),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              'Use at least 8 characters, different from your current password.',
-              style: MuType.body.copyWith(color: MuColors.inkSecondary),
-            ),
-            const SizedBox(height: MuSpace.xl),
-            AutofillGroup(
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    _field(
-                      key: 'current',
-                      label: 'Current password',
-                      controller: _current,
-                      serverError: _currentServerError,
-                      validator: (v) => currentPasswordError(v ?? ''),
-                    ),
-                    const SizedBox(height: MuSpace.l),
-                    _field(
-                      key: 'next',
-                      label: 'New password',
-                      controller: _next,
-                      serverError: _nextServerError,
-                      validator: (v) => newPasswordError(current: _current.text, next: v ?? ''),
-                    ),
-                    const SizedBox(height: MuSpace.l),
-                    _field(
-                      key: 'confirm',
-                      label: 'Confirm new password',
-                      controller: _confirm,
-                      action: TextInputAction.done,
-                      validator: (v) => confirmPasswordError(next: _next.text, confirm: v ?? ''),
-                    ),
-                    const SizedBox(height: MuSpace.xl),
-                    MuPrimaryButton(
-                      label: saving ? 'Saving…' : 'Change password',
-                      onPressed: saving ? null : _submit,
-                    ),
-                  ],
+            const MuTopBar.detail(title: 'Password'),
+            Expanded(
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(
+                  MuSpacing.space5,
+                  MuSpacing.space3,
+                  MuSpacing.space5,
+                  MuSpacing.space8,
                 ),
+                children: [
+                  Text(
+                    'Use at least 8 characters, different from your current password.',
+                    style: mu.text.body.copyWith(color: c.ink2),
+                  ),
+                  const SizedBox(height: MuSpacing.space5),
+                  AutofillGroup(
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          MuTextField(
+                            label: 'Current password',
+                            controller: _current,
+                            obscure: true,
+                            error: _currentServerError,
+                            autofillHints: const [AutofillHints.password],
+                            textInputAction: TextInputAction.next,
+                            validator: (v) => currentPasswordError(v ?? ''),
+                          ),
+                          const SizedBox(height: MuSpacing.space4),
+                          MuTextField(
+                            label: 'New password',
+                            controller: _next,
+                            obscure: true,
+                            error: _nextServerError,
+                            autofillHints: const [AutofillHints.newPassword],
+                            textInputAction: TextInputAction.next,
+                            validator: (v) => newPasswordError(
+                              current: _current.text,
+                              next: v ?? '',
+                            ),
+                          ),
+                          const SizedBox(height: MuSpacing.space4),
+                          MuTextField(
+                            label: 'Confirm new password',
+                            controller: _confirm,
+                            obscure: true,
+                            autofillHints: const [AutofillHints.newPassword],
+                            textInputAction: TextInputAction.done,
+                            onSubmitted: (_) => _submit(),
+                            validator: (v) => confirmPasswordError(
+                              next: _next.text,
+                              confirm: v ?? '',
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                MuSpacing.space5,
+                MuSpacing.space2,
+                MuSpacing.space5,
+                MuSpacing.space4,
+              ),
+              child: MuButton(
+                label: 'Change password',
+                block: true,
+                loading: saving,
+                loadingLabel: 'Saving…',
+                onPressed: _submit,
               ),
             ),
           ],

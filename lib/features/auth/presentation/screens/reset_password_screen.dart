@@ -1,29 +1,27 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
-import 'package:mulearn_app/core/theme/mu_space.dart';
-import 'package:mulearn_app/core/theme/mulearn_colors.dart';
-import 'package:mulearn_app/core/theme/mulearn_typography.dart';
-import 'package:mulearn_app/core/widgets/mu_buttons.dart';
-import 'package:mulearn_app/core/widgets/mu_toast.dart';
 import 'package:mulearn_app/features/auth/presentation/providers/auth_controller.dart';
+import 'package:mulearn_app/features/auth/presentation/widgets/auth_page.dart';
 
 enum _ResetStep { enterToken, newPassword, done }
 
-/// Password-reset confirmation — a manual-entry alternative to consuming the
-/// emailed reset link via a deep link (which this app doesn't have platform
-/// config for yet): paste the token/code from the email, verify it, then set
-/// a new password. Both API calls (`verify-token` then `reset-password`) are
-/// real, confirmed endpoints — only "how the token gets into the app" is
-/// simplified here to manual entry instead of a deep link.
+/// Password reset by hand: paste the code from the reset email, verify it
+/// (`verify-token`), then set a new password (`reset-password`). Both are
+/// the real endpoints; only how the code gets into the app is manual.
 class ResetPasswordScreen extends ConsumerStatefulWidget {
   const ResetPasswordScreen({super.key});
 
   @override
-  ConsumerState<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
+  ConsumerState<ResetPasswordScreen> createState() =>
+      _ResetPasswordScreenState();
 }
 
 class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
@@ -34,8 +32,6 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
   final _tokenController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  bool _obscure = true;
-  bool _obscureConfirm = true;
 
   @override
   void dispose() {
@@ -54,7 +50,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
           .verifyResetToken(_tokenController.text.trim());
       if (mounted) setState(() => _step = _ResetStep.newPassword);
     } on Object catch (_) {
-      // Surfaced via the ref.listen snackbar below.
+      // Surfaced via the ref.listen toast below.
     }
   }
 
@@ -62,241 +58,146 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
     if (!(_passwordFormKey.currentState?.validate() ?? false)) return;
     FocusScope.of(context).unfocus();
     try {
-      await ref.read(authControllerProvider.notifier).resetPassword(
+      await ref
+          .read(authControllerProvider.notifier)
+          .resetPassword(
             token: _tokenController.text.trim(),
             password: _passwordController.text,
           );
-      if (mounted) setState(() => _step = _ResetStep.done);
+      if (!mounted) return;
+      unawaited(HapticFeedback.mediumImpact());
+      setState(() => _step = _ResetStep.done);
     } on Object catch (_) {
-      // Surfaced via the ref.listen snackbar below.
+      // Surfaced via the ref.listen toast below.
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(authControllerProvider);
+    final loading = ref.watch(authControllerProvider).isLoading;
 
     ref.listen(authControllerProvider, (_, next) {
       if (next.hasError && !next.isLoading) {
-        final error = next.error;
-        final message = ApiException.messageFor(error!);
-        MuToast.show(context, message: message, type: MuToastType.error);
+        MuToast.show(
+          context,
+          message: ApiException.messageFor(next.error!),
+          type: MuToastType.error,
+        );
       }
     });
 
-    final isLoading = state.isLoading;
-
-    return Scaffold(
-      backgroundColor: MuColors.canvas,
-      appBar: AppBar(),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 26),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SizedBox(height: MuSpace.m),
-              switch (_step) {
-                _ResetStep.enterToken => _EnterTokenStep(
-                    formKey: _tokenFormKey,
-                    tokenController: _tokenController,
-                    isLoading: isLoading,
-                    onSubmit: _verifyToken,
-                  ),
-                _ResetStep.newPassword => _NewPasswordStep(
-                    formKey: _passwordFormKey,
-                    passwordController: _passwordController,
-                    confirmPasswordController: _confirmPasswordController,
-                    obscure: _obscure,
-                    obscureConfirm: _obscureConfirm,
-                    isLoading: isLoading,
-                    onToggleObscure: () => setState(() => _obscure = !_obscure),
-                    onToggleObscureConfirm: () =>
-                        setState(() => _obscureConfirm = !_obscureConfirm),
-                    onSubmit: _resetPassword,
-                  ),
-                _ResetStep.done => _DoneStep(
-                    onSignIn: () => context.go(RoutePaths.signIn),
-                  ),
-              },
-            ],
-          ),
+    return switch (_step) {
+      _ResetStep.enterToken => AuthPage(
+        eyebrow: 'Reset your password',
+        light: 'Enter ',
+        bold: 'your reset code',
+        lead: 'Paste the code from the password-reset email we sent you.',
+        bottom: MuButton(
+          label: 'Verify code',
+          block: true,
+          loading: loading,
+          loadingLabel: 'Verifying…',
+          onPressed: _verifyToken,
         ),
+        children: [
+          Form(
+            key: _tokenFormKey,
+            child: MuTextField(
+              label: 'Reset code',
+              controller: _tokenController,
+              enabled: !loading,
+              autofocus: true,
+              textInputAction: TextInputAction.done,
+              onSubmitted: (_) => _verifyToken(),
+              validator: (v) => (v?.trim().isEmpty ?? true)
+                  ? 'Paste the code from the email.'
+                  : null,
+            ),
+          ),
+        ],
       ),
-    );
-  }
-}
-
-class _EnterTokenStep extends StatelessWidget {
-  const _EnterTokenStep({
-    required this.formKey,
-    required this.tokenController,
-    required this.isLoading,
-    required this.onSubmit,
-  });
-
-  final GlobalKey<FormState> formKey;
-  final TextEditingController tokenController;
-  final bool isLoading;
-  final VoidCallback onSubmit;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text('Enter your reset code', style: MuType.display.copyWith(fontSize: 30)),
-        const SizedBox(height: MuSpace.s),
-        Text(
-          'Paste the code or link token from the password-reset email we sent you.',
-          style: MuType.body.copyWith(color: MuColors.inkSecondary),
+      _ResetStep.newPassword => AuthPage(
+        eyebrow: 'Code verified',
+        light: 'Choose ',
+        bold: 'a new password',
+        lead: 'At least 8 characters. Something only you would know.',
+        bottom: MuButton(
+          label: 'Save password',
+          block: true,
+          loading: loading,
+          loadingLabel: 'Saving…',
+          onPressed: _resetPassword,
         ),
-        const SizedBox(height: MuSpace.xxl),
-        Form(
-          key: formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              TextFormField(
-                controller: tokenController,
-                enabled: !isLoading,
-                textInputAction: TextInputAction.done,
-                onFieldSubmitted: (_) => onSubmit(),
-                decoration: const InputDecoration(labelText: 'Reset code'),
-                validator: (value) => (value?.trim().isEmpty ?? true)
-                    ? 'Reset code is required.'
-                    : null,
-              ),
-              const SizedBox(height: MuSpace.xl),
-              MuPrimaryButton(
-                label: isLoading ? 'Verifying…' : 'Verify code',
-                onPressed: isLoading ? null : onSubmit,
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class _NewPasswordStep extends StatelessWidget {
-  const _NewPasswordStep({
-    required this.formKey,
-    required this.passwordController,
-    required this.confirmPasswordController,
-    required this.obscure,
-    required this.obscureConfirm,
-    required this.isLoading,
-    required this.onToggleObscure,
-    required this.onToggleObscureConfirm,
-    required this.onSubmit,
-  });
-
-  final GlobalKey<FormState> formKey;
-  final TextEditingController passwordController;
-  final TextEditingController confirmPasswordController;
-  final bool obscure;
-  final bool obscureConfirm;
-  final bool isLoading;
-  final VoidCallback onToggleObscure;
-  final VoidCallback onToggleObscureConfirm;
-  final VoidCallback onSubmit;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text('Set a new password', style: MuType.display.copyWith(fontSize: 30)),
-        const SizedBox(height: MuSpace.s),
-        Text(
-          'Your code is verified. Choose a new password.',
-          style: MuType.body.copyWith(color: MuColors.inkSecondary),
-        ),
-        const SizedBox(height: MuSpace.xxl),
-        Form(
-          key: formKey,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              TextFormField(
-                controller: passwordController,
-                obscureText: obscure,
-                enabled: !isLoading,
-                textInputAction: TextInputAction.next,
-                decoration: InputDecoration(
-                  labelText: 'New password',
-                  suffixIcon: IconButton(
-                    tooltip: obscure ? 'Show password' : 'Hide password',
-                    icon: Icon(
-                      obscure ? LucideIcons.eye : LucideIcons.eyeOff,
-                      color: MuColors.inkSecondary,
-                    ),
-                    onPressed: onToggleObscure,
+        children: [
+          Form(
+            key: _passwordFormKey,
+            child: AutofillGroup(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  MuTextField(
+                    label: 'New password',
+                    controller: _passwordController,
+                    obscure: true,
+                    enabled: !loading,
+                    autofocus: true,
+                    textInputAction: TextInputAction.next,
+                    autofillHints: const [AutofillHints.newPassword],
+                    validator: (value) {
+                      final v = value ?? '';
+                      if (v.length < 8) return 'Use at least 8 characters.';
+                      if (v.length > 100) return 'Use at most 100 characters.';
+                      return null;
+                    },
                   ),
-                ),
-                validator: (value) {
-                  final v = value ?? '';
-                  if (v.length < 8) return 'Password must be at least 8 characters.';
-                  if (v.length > 100) return 'Password must be at most 100 characters.';
-                  return null;
-                },
-              ),
-              const SizedBox(height: MuSpace.l),
-              TextFormField(
-                controller: confirmPasswordController,
-                obscureText: obscureConfirm,
-                enabled: !isLoading,
-                textInputAction: TextInputAction.done,
-                onFieldSubmitted: (_) => onSubmit(),
-                decoration: InputDecoration(
-                  labelText: 'Confirm new password',
-                  suffixIcon: IconButton(
-                    tooltip: obscureConfirm ? 'Show password' : 'Hide password',
-                    icon: Icon(
-                      obscureConfirm ? LucideIcons.eye : LucideIcons.eyeOff,
-                      color: MuColors.inkSecondary,
-                    ),
-                    onPressed: onToggleObscureConfirm,
+                  const SizedBox(height: MuSpacing.space4),
+                  MuTextField(
+                    label: 'Type it again',
+                    controller: _confirmPasswordController,
+                    obscure: true,
+                    enabled: !loading,
+                    textInputAction: TextInputAction.done,
+                    onSubmitted: (_) => _resetPassword(),
+                    validator: (v) => v != _passwordController.text
+                        ? "The two passwords don't match."
+                        : null,
                   ),
-                ),
-                validator: (value) => value != passwordController.text
-                    ? "Passwords don't match."
-                    : null,
+                ],
               ),
-              const SizedBox(height: MuSpace.xl),
-              MuPrimaryButton(
-                label: isLoading ? 'Saving…' : 'Reset password',
-                onPressed: isLoading ? null : onSubmit,
-              ),
-            ],
+            ),
           ),
+        ],
+      ),
+      _ResetStep.done => AuthPage(
+        eyebrow: 'All set',
+        light: 'Password ',
+        bold: 'changed',
+        lead: 'Sign in with your new password.',
+        onBack: () => context.go(RoutePaths.signIn),
+        bottom: MuButton(
+          label: 'Sign in',
+          block: true,
+          knob: true,
+          onPressed: () => context.go(RoutePaths.signIn),
         ),
-      ],
-    );
-  }
-}
-
-class _DoneStep extends StatelessWidget {
-  const _DoneStep({required this.onSignIn});
-
-  final VoidCallback onSignIn;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text('Password reset!', style: MuType.display.copyWith(fontSize: 30)),
-        const SizedBox(height: MuSpace.s),
-        Text(
-          'You can now sign in with your new password.',
-          style: MuType.body.copyWith(color: MuColors.inkSecondary),
-        ),
-        const SizedBox(height: MuSpace.l),
-        MuPrimaryButton(label: 'Sign in', onPressed: onSignIn),
-      ],
-    );
+        children: [
+          Center(
+            child: Container(
+              width: 88,
+              height: 88,
+              decoration: BoxDecoration(
+                color: context.mu.colors.successTint,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                LucideIcons.check,
+                size: 40,
+                color: context.mu.colors.success,
+              ),
+            ),
+          ),
+        ],
+      ),
+    };
   }
 }

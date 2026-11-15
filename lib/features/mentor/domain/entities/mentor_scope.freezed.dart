@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'mentor_scope.dart';
@@ -9,6 +9,7 @@ part of 'mentor_scope.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $MentorScopeCopyWith<MentorScope> get copyWith => _$MentorScopeCopyWithImpl<Ment
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MentorScope&&(identical(other.type, type) || other.type == type)&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.metrics, metrics) || other.metrics == metrics));
+  final _this = this as MentorScope;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MentorScope&&(identical(other.type, _this.type) || other.type == _this.type)&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.metrics, _this.metrics) || other.metrics == _this.metrics));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,type,id,name,metrics);
+int get hashCode {
+  final _this = this as MentorScope;
+  return Object.hash(runtimeType,_this.type,_this.id,_this.name,_this.metrics);
+}
 
 @override
 String toString() {
-  return 'MentorScope(type: $type, id: $id, name: $name, metrics: $metrics)';
+  final _this = this as MentorScope;
+  return 'MentorScope(type: ${_this.type}, id: ${_this.id}, name: ${_this.name}, metrics: ${_this.metrics})';
 }
 
 
@@ -63,7 +69,7 @@ class _$MentorScopeCopyWithImpl<$Res>
 /// Create a copy of MentorScope
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? id = null,Object? name = null,Object? metrics = null,}) {
-  return _then(_self.copyWith(
+  return _then(MentorScope(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as MentorScopeType,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -236,16 +242,18 @@ _$MentorScopeCopyWith<_MentorScope> get copyWith => __$MentorScopeCopyWithImpl<_
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MentorScope&&(identical(other.type, type) || other.type == type)&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.metrics, metrics) || other.metrics == metrics));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MentorScope&&(identical(other.type, type) || other.type == type)&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.metrics, metrics) || other.metrics == metrics));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,type,id,name,metrics);
+int get hashCode {
+    return Object.hash(runtimeType,type,id,name,metrics);
+}
 
 @override
 String toString() {
-  return 'MentorScope(type: $type, id: $id, name: $name, metrics: $metrics)';
+    return 'MentorScope(type: $type, id: $id, name: $name, metrics: $metrics)';
 }
 
 
@@ -309,16 +317,21 @@ $MentorScopeMetricsCopyWith<MentorScopeMetrics> get copyWith => _$MentorScopeMet
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MentorScopeMetrics&&(identical(other.totalIgLearners, totalIgLearners) || other.totalIgLearners == totalIgLearners)&&(identical(other.activeIgLearners, activeIgLearners) || other.activeIgLearners == activeIgLearners)&&(identical(other.upcomingSessions, upcomingSessions) || other.upcomingSessions == upcomingSessions)&&(identical(other.completedSessions, completedSessions) || other.completedSessions == completedSessions)&&(identical(other.pendingTasks, pendingTasks) || other.pendingTasks == pendingTasks)&&(identical(other.igLearningCircles, igLearningCircles) || other.igLearningCircles == igLearningCircles)&&(identical(other.openOpportunities, openOpportunities) || other.openOpportunities == openOpportunities)&&(identical(other.igTasks, igTasks) || other.igTasks == igTasks));
+  final _this = this as MentorScopeMetrics;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MentorScopeMetrics&&(identical(other.totalIgLearners, _this.totalIgLearners) || other.totalIgLearners == _this.totalIgLearners)&&(identical(other.activeIgLearners, _this.activeIgLearners) || other.activeIgLearners == _this.activeIgLearners)&&(identical(other.upcomingSessions, _this.upcomingSessions) || other.upcomingSessions == _this.upcomingSessions)&&(identical(other.completedSessions, _this.completedSessions) || other.completedSessions == _this.completedSessions)&&(identical(other.pendingTasks, _this.pendingTasks) || other.pendingTasks == _this.pendingTasks)&&(identical(other.igLearningCircles, _this.igLearningCircles) || other.igLearningCircles == _this.igLearningCircles)&&(identical(other.openOpportunities, _this.openOpportunities) || other.openOpportunities == _this.openOpportunities)&&(identical(other.igTasks, _this.igTasks) || other.igTasks == _this.igTasks));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,totalIgLearners,activeIgLearners,upcomingSessions,completedSessions,pendingTasks,igLearningCircles,openOpportunities,igTasks);
+int get hashCode {
+  final _this = this as MentorScopeMetrics;
+  return Object.hash(runtimeType,_this.totalIgLearners,_this.activeIgLearners,_this.upcomingSessions,_this.completedSessions,_this.pendingTasks,_this.igLearningCircles,_this.openOpportunities,_this.igTasks);
+}
 
 @override
 String toString() {
-  return 'MentorScopeMetrics(totalIgLearners: $totalIgLearners, activeIgLearners: $activeIgLearners, upcomingSessions: $upcomingSessions, completedSessions: $completedSessions, pendingTasks: $pendingTasks, igLearningCircles: $igLearningCircles, openOpportunities: $openOpportunities, igTasks: $igTasks)';
+  final _this = this as MentorScopeMetrics;
+  return 'MentorScopeMetrics(totalIgLearners: ${_this.totalIgLearners}, activeIgLearners: ${_this.activeIgLearners}, upcomingSessions: ${_this.upcomingSessions}, completedSessions: ${_this.completedSessions}, pendingTasks: ${_this.pendingTasks}, igLearningCircles: ${_this.igLearningCircles}, openOpportunities: ${_this.openOpportunities}, igTasks: ${_this.igTasks})';
 }
 
 
@@ -347,7 +360,7 @@ class _$MentorScopeMetricsCopyWithImpl<$Res>
 /// Create a copy of MentorScopeMetrics
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? totalIgLearners = null,Object? activeIgLearners = null,Object? upcomingSessions = null,Object? completedSessions = null,Object? pendingTasks = null,Object? igLearningCircles = null,Object? openOpportunities = null,Object? igTasks = null,}) {
-  return _then(_self.copyWith(
+  return _then(MentorScopeMetrics(
 totalIgLearners: null == totalIgLearners ? _self.totalIgLearners : totalIgLearners // ignore: cast_nullable_to_non_nullable
 as int,activeIgLearners: null == activeIgLearners ? _self.activeIgLearners : activeIgLearners // ignore: cast_nullable_to_non_nullable
 as int,upcomingSessions: null == upcomingSessions ? _self.upcomingSessions : upcomingSessions // ignore: cast_nullable_to_non_nullable
@@ -519,16 +532,18 @@ _$MentorScopeMetricsCopyWith<_MentorScopeMetrics> get copyWith => __$MentorScope
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MentorScopeMetrics&&(identical(other.totalIgLearners, totalIgLearners) || other.totalIgLearners == totalIgLearners)&&(identical(other.activeIgLearners, activeIgLearners) || other.activeIgLearners == activeIgLearners)&&(identical(other.upcomingSessions, upcomingSessions) || other.upcomingSessions == upcomingSessions)&&(identical(other.completedSessions, completedSessions) || other.completedSessions == completedSessions)&&(identical(other.pendingTasks, pendingTasks) || other.pendingTasks == pendingTasks)&&(identical(other.igLearningCircles, igLearningCircles) || other.igLearningCircles == igLearningCircles)&&(identical(other.openOpportunities, openOpportunities) || other.openOpportunities == openOpportunities)&&(identical(other.igTasks, igTasks) || other.igTasks == igTasks));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MentorScopeMetrics&&(identical(other.totalIgLearners, totalIgLearners) || other.totalIgLearners == totalIgLearners)&&(identical(other.activeIgLearners, activeIgLearners) || other.activeIgLearners == activeIgLearners)&&(identical(other.upcomingSessions, upcomingSessions) || other.upcomingSessions == upcomingSessions)&&(identical(other.completedSessions, completedSessions) || other.completedSessions == completedSessions)&&(identical(other.pendingTasks, pendingTasks) || other.pendingTasks == pendingTasks)&&(identical(other.igLearningCircles, igLearningCircles) || other.igLearningCircles == igLearningCircles)&&(identical(other.openOpportunities, openOpportunities) || other.openOpportunities == openOpportunities)&&(identical(other.igTasks, igTasks) || other.igTasks == igTasks));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,totalIgLearners,activeIgLearners,upcomingSessions,completedSessions,pendingTasks,igLearningCircles,openOpportunities,igTasks);
+int get hashCode {
+    return Object.hash(runtimeType,totalIgLearners,activeIgLearners,upcomingSessions,completedSessions,pendingTasks,igLearningCircles,openOpportunities,igTasks);
+}
 
 @override
 String toString() {
-  return 'MentorScopeMetrics(totalIgLearners: $totalIgLearners, activeIgLearners: $activeIgLearners, upcomingSessions: $upcomingSessions, completedSessions: $completedSessions, pendingTasks: $pendingTasks, igLearningCircles: $igLearningCircles, openOpportunities: $openOpportunities, igTasks: $igTasks)';
+    return 'MentorScopeMetrics(totalIgLearners: $totalIgLearners, activeIgLearners: $activeIgLearners, upcomingSessions: $upcomingSessions, completedSessions: $completedSessions, pendingTasks: $pendingTasks, igLearningCircles: $igLearningCircles, openOpportunities: $openOpportunities, igTasks: $igTasks)';
 }
 
 

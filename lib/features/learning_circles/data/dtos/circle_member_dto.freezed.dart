@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'circle_member_dto.dart';
@@ -9,6 +9,7 @@ part of 'circle_member_dto.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $CircleMemberDtoCopyWith<CircleMemberDto> get copyWith => _$CircleMemberDtoCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CircleMemberDto&&(identical(other.id, id) || other.id == id)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.profilePic, profilePic) || other.profilePic == profilePic)&&(identical(other.igKarma, igKarma) || other.igKarma == igKarma)&&(identical(other.isLeader, isLeader) || other.isLeader == isLeader));
+  final _this = this as CircleMemberDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CircleMemberDto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.muid, _this.muid) || other.muid == _this.muid)&&(identical(other.fullName, _this.fullName) || other.fullName == _this.fullName)&&(identical(other.profilePic, _this.profilePic) || other.profilePic == _this.profilePic)&&(identical(other.igKarma, _this.igKarma) || other.igKarma == _this.igKarma)&&(identical(other.isLeader, _this.isLeader) || other.isLeader == _this.isLeader));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,muid,fullName,profilePic,igKarma,isLeader);
+int get hashCode {
+  final _this = this as CircleMemberDto;
+  return Object.hash(runtimeType,_this.id,_this.muid,_this.fullName,_this.profilePic,_this.igKarma,_this.isLeader);
+}
 
 @override
 String toString() {
-  return 'CircleMemberDto(id: $id, muid: $muid, fullName: $fullName, profilePic: $profilePic, igKarma: $igKarma, isLeader: $isLeader)';
+  final _this = this as CircleMemberDto;
+  return 'CircleMemberDto(id: ${_this.id}, muid: ${_this.muid}, fullName: ${_this.fullName}, profilePic: ${_this.profilePic}, igKarma: ${_this.igKarma}, isLeader: ${_this.isLeader})';
 }
 
 
@@ -66,7 +72,7 @@ class _$CircleMemberDtoCopyWithImpl<$Res>
 /// Create a copy of CircleMemberDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? muid = null,Object? fullName = freezed,Object? profilePic = freezed,Object? igKarma = freezed,Object? isLeader = null,}) {
-  return _then(_self.copyWith(
+  return _then(CircleMemberDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,muid: null == muid ? _self.muid : muid // ignore: cast_nullable_to_non_nullable
 as String,fullName: freezed == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
@@ -237,16 +243,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CircleMemberDto&&(identical(other.id, id) || other.id == id)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.profilePic, profilePic) || other.profilePic == profilePic)&&(identical(other.igKarma, igKarma) || other.igKarma == igKarma)&&(identical(other.isLeader, isLeader) || other.isLeader == isLeader));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CircleMemberDto&&(identical(other.id, id) || other.id == id)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.profilePic, profilePic) || other.profilePic == profilePic)&&(identical(other.igKarma, igKarma) || other.igKarma == igKarma)&&(identical(other.isLeader, isLeader) || other.isLeader == isLeader));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,muid,fullName,profilePic,igKarma,isLeader);
+int get hashCode {
+    return Object.hash(runtimeType,id,muid,fullName,profilePic,igKarma,isLeader);
+}
 
 @override
 String toString() {
-  return 'CircleMemberDto(id: $id, muid: $muid, fullName: $fullName, profilePic: $profilePic, igKarma: $igKarma, isLeader: $isLeader)';
+    return 'CircleMemberDto(id: $id, muid: $muid, fullName: $fullName, profilePic: $profilePic, igKarma: $igKarma, isLeader: $isLeader)';
 }
 
 

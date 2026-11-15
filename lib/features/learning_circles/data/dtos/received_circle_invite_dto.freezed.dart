@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'received_circle_invite_dto.dart';
@@ -9,6 +9,7 @@ part of 'received_circle_invite_dto.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $ReceivedCircleInviteDtoCopyWith<ReceivedCircleInviteDto> get copyWith => _$Rece
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReceivedCircleInviteDto&&(identical(other.linkId, linkId) || other.linkId == linkId)&&(identical(other.circleId, circleId) || other.circleId == circleId)&&(identical(other.circleTitle, circleTitle) || other.circleTitle == circleTitle)&&(identical(other.ig, ig) || other.ig == ig)&&(identical(other.isLeadInvite, isLeadInvite) || other.isLeadInvite == isLeadInvite)&&(identical(other.invitedBy, invitedBy) || other.invitedBy == invitedBy)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  final _this = this as ReceivedCircleInviteDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReceivedCircleInviteDto&&(identical(other.linkId, _this.linkId) || other.linkId == _this.linkId)&&(identical(other.circleId, _this.circleId) || other.circleId == _this.circleId)&&(identical(other.circleTitle, _this.circleTitle) || other.circleTitle == _this.circleTitle)&&(identical(other.ig, _this.ig) || other.ig == _this.ig)&&(identical(other.isLeadInvite, _this.isLeadInvite) || other.isLeadInvite == _this.isLeadInvite)&&(identical(other.invitedBy, _this.invitedBy) || other.invitedBy == _this.invitedBy)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,linkId,circleId,circleTitle,ig,isLeadInvite,invitedBy,createdAt);
+int get hashCode {
+  final _this = this as ReceivedCircleInviteDto;
+  return Object.hash(runtimeType,_this.linkId,_this.circleId,_this.circleTitle,_this.ig,_this.isLeadInvite,_this.invitedBy,_this.createdAt);
+}
 
 @override
 String toString() {
-  return 'ReceivedCircleInviteDto(linkId: $linkId, circleId: $circleId, circleTitle: $circleTitle, ig: $ig, isLeadInvite: $isLeadInvite, invitedBy: $invitedBy, createdAt: $createdAt)';
+  final _this = this as ReceivedCircleInviteDto;
+  return 'ReceivedCircleInviteDto(linkId: ${_this.linkId}, circleId: ${_this.circleId}, circleTitle: ${_this.circleTitle}, ig: ${_this.ig}, isLeadInvite: ${_this.isLeadInvite}, invitedBy: ${_this.invitedBy}, createdAt: ${_this.createdAt})';
 }
 
 
@@ -66,7 +72,7 @@ class _$ReceivedCircleInviteDtoCopyWithImpl<$Res>
 /// Create a copy of ReceivedCircleInviteDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? linkId = null,Object? circleId = null,Object? circleTitle = null,Object? ig = freezed,Object? isLeadInvite = null,Object? invitedBy = freezed,Object? createdAt = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(ReceivedCircleInviteDto(
 linkId: null == linkId ? _self.linkId : linkId // ignore: cast_nullable_to_non_nullable
 as String,circleId: null == circleId ? _self.circleId : circleId // ignore: cast_nullable_to_non_nullable
 as String,circleTitle: null == circleTitle ? _self.circleTitle : circleTitle // ignore: cast_nullable_to_non_nullable
@@ -251,16 +257,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReceivedCircleInviteDto&&(identical(other.linkId, linkId) || other.linkId == linkId)&&(identical(other.circleId, circleId) || other.circleId == circleId)&&(identical(other.circleTitle, circleTitle) || other.circleTitle == circleTitle)&&(identical(other.ig, ig) || other.ig == ig)&&(identical(other.isLeadInvite, isLeadInvite) || other.isLeadInvite == isLeadInvite)&&(identical(other.invitedBy, invitedBy) || other.invitedBy == invitedBy)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReceivedCircleInviteDto&&(identical(other.linkId, linkId) || other.linkId == linkId)&&(identical(other.circleId, circleId) || other.circleId == circleId)&&(identical(other.circleTitle, circleTitle) || other.circleTitle == circleTitle)&&(identical(other.ig, ig) || other.ig == ig)&&(identical(other.isLeadInvite, isLeadInvite) || other.isLeadInvite == isLeadInvite)&&(identical(other.invitedBy, invitedBy) || other.invitedBy == invitedBy)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,linkId,circleId,circleTitle,ig,isLeadInvite,invitedBy,createdAt);
+int get hashCode {
+    return Object.hash(runtimeType,linkId,circleId,circleTitle,ig,isLeadInvite,invitedBy,createdAt);
+}
 
 @override
 String toString() {
-  return 'ReceivedCircleInviteDto(linkId: $linkId, circleId: $circleId, circleTitle: $circleTitle, ig: $ig, isLeadInvite: $isLeadInvite, invitedBy: $invitedBy, createdAt: $createdAt)';
+    return 'ReceivedCircleInviteDto(linkId: $linkId, circleId: $circleId, circleTitle: $circleTitle, ig: $ig, isLeadInvite: $isLeadInvite, invitedBy: $invitedBy, createdAt: $createdAt)';
 }
 
 
@@ -333,16 +341,21 @@ $CircleInviterDtoCopyWith<CircleInviterDto> get copyWith => _$CircleInviterDtoCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CircleInviterDto&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.profilePic, profilePic) || other.profilePic == profilePic));
+  final _this = this as CircleInviterDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CircleInviterDto&&(identical(other.userId, _this.userId) || other.userId == _this.userId)&&(identical(other.fullName, _this.fullName) || other.fullName == _this.fullName)&&(identical(other.profilePic, _this.profilePic) || other.profilePic == _this.profilePic));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,userId,fullName,profilePic);
+int get hashCode {
+  final _this = this as CircleInviterDto;
+  return Object.hash(runtimeType,_this.userId,_this.fullName,_this.profilePic);
+}
 
 @override
 String toString() {
-  return 'CircleInviterDto(userId: $userId, fullName: $fullName, profilePic: $profilePic)';
+  final _this = this as CircleInviterDto;
+  return 'CircleInviterDto(userId: ${_this.userId}, fullName: ${_this.fullName}, profilePic: ${_this.profilePic})';
 }
 
 
@@ -371,7 +384,7 @@ class _$CircleInviterDtoCopyWithImpl<$Res>
 /// Create a copy of CircleInviterDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? userId = freezed,Object? fullName = freezed,Object? profilePic = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(CircleInviterDto(
 userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String?,fullName: freezed == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
 as String?,profilePic: freezed == profilePic ? _self.profilePic : profilePic // ignore: cast_nullable_to_non_nullable
@@ -536,16 +549,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CircleInviterDto&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.profilePic, profilePic) || other.profilePic == profilePic));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CircleInviterDto&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.profilePic, profilePic) || other.profilePic == profilePic));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,userId,fullName,profilePic);
+int get hashCode {
+    return Object.hash(runtimeType,userId,fullName,profilePic);
+}
 
 @override
 String toString() {
-  return 'CircleInviterDto(userId: $userId, fullName: $fullName, profilePic: $profilePic)';
+    return 'CircleInviterDto(userId: $userId, fullName: $fullName, profilePic: $profilePic)';
 }
 
 
