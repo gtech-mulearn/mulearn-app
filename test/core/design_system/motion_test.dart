@@ -8,9 +8,14 @@ import 'package:mulearn_app/core/design_system/tokens/mu_tokens.g.dart';
 
 double _scaleOf(WidgetTester tester) {
   final transform = tester.widget<Transform>(
-    find.descendant(of: find.byType(MuPressable), matching: find.byType(Transform)),
+    find.descendant(
+      of: find.byType(MuPressable),
+      matching: find.byType(Transform),
+    ),
   );
-  return transform.transform.storage[0]; // x scale (z stays 1 under Transform.scale)
+  return transform
+      .transform
+      .storage[0]; // x scale (z stays 1 under Transform.scale)
 }
 
 void main() {
@@ -20,7 +25,10 @@ void main() {
       final k = math.pow(2 * math.pi / 0.35, 2);
       expect(s.stiffness, closeTo(k, 1e-6));
       expect(s.damping, closeTo(2 * math.sqrt(k), 1e-6)); // critical
-      expect(MuSprings.sheet.description.damping, lessThan(2 * math.sqrt(MuSprings.sheet.description.stiffness)));
+      expect(
+        MuSprings.sheet.description.damping,
+        lessThan(2 * math.sqrt(MuSprings.sheet.description.stiffness)),
+      );
     });
 
     test('projection follows exponential deceleration', () {
@@ -40,19 +48,27 @@ void main() {
   });
 
   group('MuPressable', () {
-    Widget host({VoidCallback? onTap, bool reduceMotion = false}) => MaterialApp(
-      home: MediaQuery(
-        data: MediaQueryData(disableAnimations: reduceMotion),
-        child: Center(
-          child: MuPressable(onTap: onTap, child: const SizedBox(width: 100, height: 50)),
-        ),
-      ),
-    );
+    Widget host({VoidCallback? onTap, bool reduceMotion = false}) =>
+        MaterialApp(
+          home: MediaQuery(
+            data: MediaQueryData(disableAnimations: reduceMotion),
+            child: Center(
+              child: MuPressable(
+                onTap: onTap,
+                child: const SizedBox(width: 100, height: 50),
+              ),
+            ),
+          ),
+        );
 
-    testWidgets('scales on press, springs back, taps on release', (tester) async {
+    testWidgets('scales on press, springs back, taps on release', (
+      tester,
+    ) async {
       var taps = 0;
       await tester.pumpWidget(host(onTap: () => taps++));
-      final gesture = await tester.startGesture(tester.getCenter(find.byType(MuPressable)));
+      final gesture = await tester.startGesture(
+        tester.getCenter(find.byType(MuPressable)),
+      );
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 120));
       expect(_scaleOf(tester), lessThan(0.99));
@@ -65,14 +81,18 @@ void main() {
 
     testWidgets('disabled does nothing', (tester) async {
       await tester.pumpWidget(host());
-      final gesture = await tester.startGesture(tester.getCenter(find.byType(MuPressable)));
+      final gesture = await tester.startGesture(
+        tester.getCenter(find.byType(MuPressable)),
+      );
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 120));
       expect(_scaleOf(tester), 1);
       await gesture.up();
     });
 
-    testWidgets('a press held while the widget leaves the tree is harmless', (tester) async {
+    testWidgets('a press held while the widget leaves the tree is harmless', (
+      tester,
+    ) async {
       await tester.pumpWidget(host(onTap: () {}));
       await tester.startGesture(tester.getCenter(find.byType(MuPressable)));
       await tester.pump();
@@ -80,10 +100,14 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('reduced motion skips the scale but still taps', (tester) async {
+    testWidgets('reduced motion skips the scale but still taps', (
+      tester,
+    ) async {
       var taps = 0;
       await tester.pumpWidget(host(onTap: () => taps++, reduceMotion: true));
-      final gesture = await tester.startGesture(tester.getCenter(find.byType(MuPressable)));
+      final gesture = await tester.startGesture(
+        tester.getCenter(find.byType(MuPressable)),
+      );
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 120));
       expect(_scaleOf(tester), 1);

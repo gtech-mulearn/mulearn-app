@@ -32,9 +32,14 @@ class TwitchDetailScreen extends ConsumerWidget {
             const MuTopBar.detail(),
             Expanded(
               child: state.when(
-                loading: () => const Center(child: MuDotsLoader(label: 'Loading the episode…')),
-                error: (e, _) =>
-                    ErrorRetryView(error: e, onRetry: () => ref.invalidate(twitchEpisodeProvider(show, id))),
+                loading: () => const Center(
+                  child: MuDotsLoader(label: 'Loading the episode…'),
+                ),
+                error: (e, _) => ErrorRetryView(
+                  error: e,
+                  onRetry: () =>
+                      ref.invalidate(twitchEpisodeProvider(show, id)),
+                ),
                 data: (e) => _Body(episode: e),
               ),
             ),
@@ -58,14 +63,28 @@ class _Body extends StatelessWidget {
     final e = episode;
     final poster = e.posterUrl;
     final status = switch (e.status) {
-      TwitchStatus.ongoing => const MuPill('Today', tone: MuPillTone.volt, icon: LucideIcons.radio),
-      TwitchStatus.upcoming => const MuPill('Upcoming', tone: MuPillTone.cobalt),
+      TwitchStatus.ongoing => const MuPill(
+        'Today',
+        tone: MuPillTone.volt,
+        icon: LucideIcons.radio,
+      ),
+      TwitchStatus.upcoming => const MuPill(
+        'Upcoming',
+        tone: MuPillTone.cobalt,
+      ),
       TwitchStatus.completed => const MuPill('Past episode'),
     };
     final description = e.description ?? '';
     return ListView(
-      physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-      padding: const EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space2, MuSpacing.space5, MuSpacing.space8),
+      physics: const BouncingScrollPhysics(
+        parent: AlwaysScrollableScrollPhysics(),
+      ),
+      padding: const EdgeInsets.fromLTRB(
+        MuSpacing.space5,
+        MuSpacing.space2,
+        MuSpacing.space5,
+        MuSpacing.space8,
+      ),
       children: [
         ExcludeSemantics(
           child: ClipRRect(
@@ -79,41 +98,61 @@ class _Body extends StatelessWidget {
                     CachedNetworkImage(
                       imageUrl: poster,
                       fit: BoxFit.cover,
-                      placeholder: (_, _) => MuGeneratedPoster(text: e.title, fontSize: 40),
-                      errorWidget: (_, _, _) => MuGeneratedPoster(text: e.title, fontSize: 40),
+                      placeholder: (_, _) =>
+                          MuGeneratedPoster(text: e.title, fontSize: 40),
+                      errorWidget: (_, _, _) =>
+                          MuGeneratedPoster(text: e.title, fontSize: 40),
                     )
                   else
                     MuGeneratedPoster(text: e.title, fontSize: 40),
-                  Positioned(left: 12, top: 12, child: MuPill(e.show.label, tone: MuPillTone.paper)),
+                  Positioned(
+                    left: 12,
+                    top: 12,
+                    child: MuPill(e.show.label, tone: MuPillTone.paper),
+                  ),
                 ],
               ),
             ),
           ),
         ),
         const SizedBox(height: MuSpacing.space5),
-        Semantics(header: true, child: Text(e.title, style: mu.text.display.copyWith(fontSize: 30))),
+        Semantics(
+          header: true,
+          child: Text(e.title, style: mu.text.display.copyWith(fontSize: 30)),
+        ),
         const SizedBox(height: MuSpacing.space3),
         Wrap(
           spacing: 6,
           runSpacing: 6,
           children: [
             status,
-            if (e.zone != null) MuPill('${e.zone} zone', icon: LucideIcons.mapPin),
-            for (final ig in e.interestGroups) MuPill(ig, tone: MuPillTone.paper),
+            if (e.zone != null)
+              MuPill('${e.zone} zone', icon: LucideIcons.mapPin),
+            for (final ig in e.interestGroups)
+              MuPill(ig, tone: MuPillTone.paper),
           ],
         ),
         const SizedBox(height: MuSpacing.space5),
         MuFeedGroup(
           children: [
             MuFeedRow(
-              leading: const MuFeedIcon(LucideIcons.calendar, tone: MuFeedTone.event),
+              leading: const MuFeedIcon(
+                LucideIcons.calendar,
+                tone: MuFeedTone.event,
+              ),
               subject: formatDay(e.date),
-              time: e.time == null ? 'Time to be announced' : formatTime(e.startsAt),
+              time: e.time == null
+                  ? 'Time to be announced'
+                  : formatTime(e.startsAt),
               divider: e.performer != null || e.campus != null,
             ),
             if (e.performer != null)
               MuFeedRow(
-                leading: MuAvatar(name: e.performer!, size: MuSizes.avatarMd, ring: false),
+                leading: MuAvatar(
+                  name: e.performer!,
+                  size: MuSizes.avatarMd,
+                  ring: false,
+                ),
                 subject: e.performer!,
                 time: e.designation ?? 'Speaker',
                 divider: e.campus != null,
@@ -122,7 +161,9 @@ class _Body extends StatelessWidget {
               MuFeedRow(
                 leading: const MuFeedIcon(LucideIcons.graduationCap),
                 subject: e.campus!,
-                time: e.show == TwitchShow.grabYourSuperpowers ? 'Hosting college' : 'Campus',
+                time: e.show == TwitchShow.grabYourSuperpowers
+                    ? 'Hosting college'
+                    : 'Campus',
                 divider: false,
               ),
           ],
@@ -154,13 +195,20 @@ class _LinkBar extends ConsumerWidget {
         border: Border(top: BorderSide(color: c.line)),
       ),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space3, MuSpacing.space5, MuSpacing.space3),
+        padding: const EdgeInsets.fromLTRB(
+          MuSpacing.space5,
+          MuSpacing.space3,
+          MuSpacing.space5,
+          MuSpacing.space3,
+        ),
         child: MuButton(
           label: today ? 'Join now' : 'Open link',
           icon: today ? LucideIcons.video : LucideIcons.externalLink,
           variant: today ? MuButtonVariant.volt : MuButtonVariant.ink,
           block: true,
-          onPressed: uri == null ? null : () => unawaited(ref.read(openExternalProvider)(uri)),
+          onPressed: uri == null
+              ? null
+              : () => unawaited(ref.read(openExternalProvider)(uri)),
         ),
       ),
     );

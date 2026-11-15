@@ -20,17 +20,17 @@ class TasksRepositoryImpl implements TasksRepository {
 
   @override
   Future<List<TaskCatalogItem>> getTasks() => _guard(() async {
-        final json = await _remote.fetchTaskList();
-        final result = <TaskCatalogItem>[];
-        for (final entry in _categoryKeys.entries) {
-          final items = json[entry.key];
-          if (items is! List) continue;
-          for (final item in items.cast<Map<String, dynamic>>()) {
-            result.add(TaskListItemDto.fromJson(item).toDomain(entry.value));
-          }
-        }
-        return result;
-      });
+    final json = await _remote.fetchTaskList();
+    final result = <TaskCatalogItem>[];
+    for (final entry in _categoryKeys.entries) {
+      final items = json[entry.key];
+      if (items is! List) continue;
+      for (final item in items.cast<Map<String, dynamic>>()) {
+        result.add(TaskListItemDto.fromJson(item).toDomain(entry.value));
+      }
+    }
+    return result;
+  });
 
   @override
   Future<String?> getMyLevel() => _guard(_remote.fetchMyLevel);

@@ -7,10 +7,17 @@ import '../../tool/gen_tokens.dart';
 
 void main() {
   test('mu_tokens.g.dart is up to date with design/tokens.json', () {
-    final json = jsonDecode(File(tokensPath).readAsStringSync()) as Map<String, dynamic>;
+    final json =
+        jsonDecode(File(tokensPath).readAsStringSync()) as Map<String, dynamic>;
     // Git may check the file out with CRLF line endings on Windows.
-    final committed = File(outputPath).readAsStringSync().replaceAll('\r\n', '\n');
-    expect(committed, generateTokens(json), reason: 'run `dart run tool/gen_tokens.dart`');
+    final committed = File(
+      outputPath,
+    ).readAsStringSync().replaceAll('\r\n', '\n');
+    expect(
+      committed,
+      generateTokens(json),
+      reason: 'run `dart run tool/gen_tokens.dart`',
+    );
   });
 
   test('token names become Dart identifiers', () {

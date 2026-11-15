@@ -15,7 +15,9 @@ import '../support/fake_secure_storage.dart';
 /// Other tests pass `retry: (_, __) => null` themselves, so only this test
 /// sees the production policy.
 void main() {
-  testWidgets('the app scope never auto-retries a failed request', (tester) async {
+  testWidgets('the app scope never auto-retries a failed request', (
+    tester,
+  ) async {
     final adapter = FakeHttpAdapter({
       'GET /api/v1/dashboard/events/x/': (_) => const FakeResponse(500, {
         'hasError': true,
@@ -31,10 +33,17 @@ void main() {
 
     await tester.pumpWidget(
       appProviderScope(
-        overrides: [dioProvider.overrideWithValue(fakeDio(adapter)), tokenStorageProvider.overrideWithValue(tokens)],
+        overrides: [
+          dioProvider.overrideWithValue(fakeDio(adapter)),
+          tokenStorageProvider.overrideWithValue(tokens),
+        ],
         child: MaterialApp(
           home: Consumer(
-            builder: (_, ref, __) => Text(ref.watch(eventDetailProvider('x')).hasError ? 'error' : 'loading'),
+            builder: (_, ref, __) => Text(
+              ref.watch(eventDetailProvider('x')).hasError
+                  ? 'error'
+                  : 'loading',
+            ),
           ),
         ),
       ),
@@ -46,6 +55,11 @@ void main() {
     }
 
     expect(find.text('error'), findsOneWidget);
-    expect(adapter.requests.where((r) => r.uri.path == '/api/v1/dashboard/events/x/').length, 1);
+    expect(
+      adapter.requests
+          .where((r) => r.uri.path == '/api/v1/dashboard/events/x/')
+          .length,
+      1,
+    );
   });
 }

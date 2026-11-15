@@ -69,7 +69,12 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(MuSpacing.space3, MuSpacing.space2, MuSpacing.space5, 0),
+              padding: const EdgeInsets.fromLTRB(
+                MuSpacing.space3,
+                MuSpacing.space2,
+                MuSpacing.space5,
+                0,
+              ),
               child: Row(
                 children: [
                   MuIconButton(
@@ -81,7 +86,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                   Expanded(
                     child: MuSearchField(
                       controller: _queryController,
-                      hint: _who == _Who.campuses ? 'Campus name or code' : 'Name or muid',
+                      hint: _who == _Who.campuses
+                          ? 'Campus name or code'
+                          : 'Name or muid',
                       onChanged: _debouncer.onChanged,
                       onSubmitted: _debouncer.submit,
                     ),
@@ -90,7 +97,12 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space3, MuSpacing.space5, 0),
+              padding: const EdgeInsets.fromLTRB(
+                MuSpacing.space5,
+                MuSpacing.space3,
+                MuSpacing.space5,
+                0,
+              ),
               child: MuSegmented<_Who>(
                 values: _Who.values,
                 selected: _who,
@@ -107,9 +119,13 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                   ? _Results<CampusSearchResult>(
                       key: ValueKey('campuses|$query'),
                       state: ref.watch(campusSearchProvider(query)),
-                      onRefresh: () => ref.refresh(campusSearchProvider(query).future),
-                      onRetry: () => ref.invalidate(campusSearchProvider(query)),
-                      onLoadMore: () => ref.read(campusSearchProvider(query).notifier).loadMore(),
+                      onRefresh: () =>
+                          ref.refresh(campusSearchProvider(query).future),
+                      onRetry: () =>
+                          ref.invalidate(campusSearchProvider(query)),
+                      onLoadMore: () => ref
+                          .read(campusSearchProvider(query).notifier)
+                          .loadMore(),
                       empty: query.isEmpty
                           ? 'No campuses yet.'
                           : 'No campus matches "$query". Try its short code, like CET.',
@@ -123,15 +139,22 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                   : _Results<UserSearchResult>(
                       key: ValueKey('$role|$query'),
                       state: ref.watch(userSearchProvider(query, role)),
-                      onRefresh: () => ref.refresh(userSearchProvider(query, role).future),
-                      onRetry: () => ref.invalidate(userSearchProvider(query, role)),
-                      onLoadMore: () => ref.read(userSearchProvider(query, role).notifier).loadMore(),
+                      onRefresh: () =>
+                          ref.refresh(userSearchProvider(query, role).future),
+                      onRetry: () =>
+                          ref.invalidate(userSearchProvider(query, role)),
+                      onLoadMore: () => ref
+                          .read(userSearchProvider(query, role).notifier)
+                          .loadMore(),
                       empty: _emptyPeople(query, role),
                       list: (items) => [
                         MuFeedGroup(
                           children: [
                             for (var i = 0; i < items.length; i++)
-                              _ResultRow(result: items[i], last: i == items.length - 1),
+                              _ResultRow(
+                                result: items[i],
+                                last: i == items.length - 1,
+                              ),
                           ],
                         ),
                       ],
@@ -175,7 +198,13 @@ class _Results<T> extends StatelessWidget {
           onRefresh: onRefresh,
           child: ListView(
             physics: const AlwaysScrollableScrollPhysics(),
-            children: [MuStateDisplay(variant: MuStateVariant.noResults, size: MuStateSize.sm, description: empty)],
+            children: [
+              MuStateDisplay(
+                variant: MuStateVariant.noResults,
+                size: MuStateSize.sm,
+                description: empty,
+              ),
+            ],
           ),
         );
       }
@@ -183,15 +212,24 @@ class _Results<T> extends StatelessWidget {
         onRefresh: onRefresh,
         child: NotificationListener<ScrollNotification>(
           onNotification: (n) {
-            if (n.metrics.extentAfter < 600 && paged.hasMore && paged.loadMoreError == null) {
+            if (n.metrics.extentAfter < 600 &&
+                paged.hasMore &&
+                paged.loadMoreError == null) {
               unawaited(onLoadMore());
             }
             return false;
           },
           child: ListView(
-            physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+            physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics(),
+            ),
             keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-            padding: const EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space4, MuSpacing.space5, MuSpacing.space8),
+            padding: const EdgeInsets.fromLTRB(
+              MuSpacing.space5,
+              MuSpacing.space4,
+              MuSpacing.space5,
+              MuSpacing.space8,
+            ),
             children: [
               ...list(paged.items),
               if (paged.hasMore || paged.loadMoreError != null)
@@ -218,7 +256,12 @@ class _ResultRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final org = result.organization;
     return MuFeedRow(
-      leading: MuAvatar(name: result.fullName, url: result.profilePicUrl, size: MuSizes.avatarMd, ring: false),
+      leading: MuAvatar(
+        name: result.fullName,
+        url: result.profilePicUrl,
+        size: MuSizes.avatarMd,
+        ring: false,
+      ),
       subject: result.fullName,
       time: [result.muid, if (org != null && org.isNotEmpty) org].join(' · '),
       trailing: MuFeedAmount(muGrouped(result.karma)),
@@ -243,9 +286,16 @@ class _CampusRow extends StatelessWidget {
       caption: [
         if (c.isSchool) 'School',
         if (place.isNotEmpty) place,
-        if (c.learners == 1) '1 learner' else '${muGrouped(c.learners)} learners',
+        if (c.learners == 1)
+          '1 learner'
+        else
+          '${muGrouped(c.learners)} learners',
       ].join(' · '),
-      trailing: Icon(LucideIcons.chevronRight, size: MuSizes.iconSm + 2, color: context.mu.colors.ink3),
+      trailing: Icon(
+        LucideIcons.chevronRight,
+        size: MuSizes.iconSm + 2,
+        color: context.mu.colors.ink3,
+      ),
       onTap: () => context.push(RoutePaths.publicCampusPath(c.id)),
     );
   }

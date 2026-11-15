@@ -5,7 +5,9 @@ import 'package:mulearn_app/core/design_system/theme/mu_theme_data.dart';
 import 'package:mulearn_app/core/design_system/tokens/mu_tokens.g.dart';
 
 void main() {
-  testWidgets('context.mu reads the installed theme, light by default', (tester) async {
+  testWidgets('context.mu reads the installed theme, light by default', (
+    tester,
+  ) async {
     late MuTheme seen;
     Widget probe() => Builder(
       builder: (context) {
@@ -17,7 +19,9 @@ void main() {
     await tester.pumpWidget(MaterialApp(home: probe()));
     expect(seen.colors.chalk, MuPalette.light.chalk);
 
-    await tester.pumpWidget(MaterialApp(theme: MuThemeData.dark(), home: probe()));
+    await tester.pumpWidget(
+      MaterialApp(theme: MuThemeData.dark(), home: probe()),
+    );
     await tester.pumpAndSettle();
     expect(seen.colors.chalk, MuPalette.dark.chalk);
   });
@@ -32,6 +36,9 @@ void main() {
   test('lerp blends colours and keeps text', () {
     final mid = MuTheme.light().lerp(MuTheme.dark(), 0.25);
     expect(mid.text, same(MuTheme.light().text));
-    expect(mid.colors.chalk, Color.lerp(MuPalette.light.chalk, MuPalette.dark.chalk, 0.25));
+    expect(
+      mid.colors.chalk,
+      Color.lerp(MuPalette.light.chalk, MuPalette.dark.chalk, 0.25),
+    );
   });
 }

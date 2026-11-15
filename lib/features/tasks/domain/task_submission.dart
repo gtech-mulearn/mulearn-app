@@ -11,13 +11,19 @@ const String muDefaultTaskChannelId = '782353185552465951';
 /// Where proof for [task] is posted: its channel in the μLearn server, or
 /// the default task channel, exactly like the dashboard.
 Uri taskDiscordUri(TaskCatalogItem task) {
-  final channel = (task.discordId == null || task.discordId!.isEmpty) ? muDefaultTaskChannelId : task.discordId!;
+  final channel = (task.discordId == null || task.discordId!.isEmpty)
+      ? muDefaultTaskChannelId
+      : task.discordId!;
   return Uri.parse('https://discord.com/channels/$muDiscordGuildId/$channel');
 }
 
 /// Search like the dashboard's μJourney: title, hashtag, type, IG, channel
 /// and level, case-insensitive; "level 3" matches too.
-bool taskMatches(TaskCatalogItem task, String query, {required String levelText}) {
+bool taskMatches(
+  TaskCatalogItem task,
+  String query, {
+  required String levelText,
+}) {
   final q = query.trim().toLowerCase();
   if (q.isEmpty) return true;
   return [

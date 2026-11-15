@@ -52,11 +52,15 @@ List<(String, Color, Color)> _markPairs(MuPalette p) => [
 ];
 
 void main() {
-  for (final (name, palette) in [('light', MuPalette.light), ('dark', MuPalette.dark)]) {
+  for (final (name, palette) in [
+    ('light', MuPalette.light),
+    ('dark', MuPalette.dark),
+  ]) {
     test('$name palette: text pairs reach 4.5:1', () {
       final failing = [
         for (final (pair, fg, bg) in _textPairs(palette))
-          if (_contrast(fg, bg) < 4.5) '$pair ${_contrast(fg, bg).toStringAsFixed(2)}',
+          if (_contrast(fg, bg) < 4.5)
+            '$pair ${_contrast(fg, bg).toStringAsFixed(2)}',
       ];
       expect(failing, isEmpty);
     });
@@ -64,7 +68,8 @@ void main() {
     test('$name palette: meaningful marks reach 3:1', () {
       final failing = [
         for (final (pair, fg, bg) in _markPairs(palette))
-          if (_contrast(fg, bg) < 3) '$pair ${_contrast(fg, bg).toStringAsFixed(2)}',
+          if (_contrast(fg, bg) < 3)
+            '$pair ${_contrast(fg, bg).toStringAsFixed(2)}',
       ];
       expect(failing, isEmpty);
     });

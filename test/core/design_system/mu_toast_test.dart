@@ -7,15 +7,25 @@ Widget _host(void Function(BuildContext) onPressed) => MaterialApp(
   home: Scaffold(
     body: Builder(
       builder: (context) => Center(
-        child: TextButton(onPressed: () => onPressed(context), child: const Text('go')),
+        child: TextButton(
+          onPressed: () => onPressed(context),
+          child: const Text('go'),
+        ),
       ),
     ),
   ),
 );
 
 void main() {
-  testWidgets('shows from the top and leaves after its duration', (tester) async {
-    await tester.pumpWidget(_host((c) => MuToast.show(c, message: 'Registered', type: MuToastType.success)));
+  testWidgets('shows from the top and leaves after its duration', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      _host(
+        (c) =>
+            MuToast.show(c, message: 'Registered', type: MuToastType.success),
+      ),
+    );
     await tester.tap(find.text('go'));
     await tester.pumpAndSettle();
     expect(find.text('Registered'), findsOneWidget);
@@ -28,7 +38,9 @@ void main() {
 
   testWidgets('a new toast replaces the old one', (tester) async {
     var n = 0;
-    await tester.pumpWidget(_host((c) => MuToast.show(c, message: 'Toast ${++n}')));
+    await tester.pumpWidget(
+      _host((c) => MuToast.show(c, message: 'Toast ${++n}')),
+    );
     await tester.tap(find.text('go'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('go'));

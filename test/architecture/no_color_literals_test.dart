@@ -11,7 +11,9 @@ void main() {
       r'(?<![A-Za-z_])Colors\.(?!transparent\b)[a-zA-Z]+|(?<![A-Za-z_])Color\(0x|Color\.from(ARGB|RGBO)\(',
     );
     final offenders = <String>[];
-    for (final file in Directory('lib').listSync(recursive: true).whereType<File>()) {
+    for (final file in Directory(
+      'lib',
+    ).listSync(recursive: true).whereType<File>()) {
       final path = file.path.replaceAll(r'\', '/');
       if (!path.endsWith('.dart') ||
           path.endsWith('.g.dart') ||
@@ -23,9 +25,15 @@ void main() {
       final lines = file.readAsLinesSync();
       for (var i = 0; i < lines.length; i++) {
         if (lines[i].trimLeft().startsWith('//')) continue;
-        if (pattern.hasMatch(lines[i])) offenders.add('$path:${i + 1}: ${lines[i].trim()}');
+        if (pattern.hasMatch(lines[i])) {
+          offenders.add('$path:${i + 1}: ${lines[i].trim()}');
+        }
       }
     }
-    expect(offenders, isEmpty, reason: '${offenders.length} literal(s):\n${offenders.join('\n')}');
+    expect(
+      offenders,
+      isEmpty,
+      reason: '${offenders.length} literal(s):\n${offenders.join('\n')}',
+    );
   });
 }

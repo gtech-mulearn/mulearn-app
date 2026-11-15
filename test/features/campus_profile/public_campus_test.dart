@@ -33,13 +33,21 @@ void main() {
     expect(c.rank, 1);
     expect(c.lead?.fullName, 'QA Campus Lead One');
     expect(c.topLearners, hasLength(10));
-    expect(c.clusters.map((x) => x.cluster), containsAll(['coder', 'maker', 'unclustered']));
+    expect(
+      c.clusters.map((x) => x.cluster),
+      containsAll(['coder', 'maker', 'unclustered']),
+    );
 
     final week = CampusProfileRepositoryImpl.parseWeekly(
-      loadFixtureResponse('dev/campus_public_weekly_karma')! as Map<String, dynamic>,
+      loadFixtureResponse('dev/campus_public_weekly_karma')!
+          as Map<String, dynamic>,
     );
     expect(week, hasLength(7));
-    expect(week.first.day.isBefore(week.last.day), isTrue, reason: 'oldest first');
+    expect(
+      week.first.day.isBefore(week.last.day),
+      isTrue,
+      reason: 'oldest first',
+    );
   });
 
   late FakeHttpAdapter adapter;
@@ -49,7 +57,10 @@ void main() {
     await tokens.saveTokens(accessToken: 'a', refreshToken: 'r');
     final container = ProviderContainer(
       retry: (_, _) => null,
-      overrides: [dioProvider.overrideWithValue(fakeDio(adapter)), tokenStorageProvider.overrideWithValue(tokens)],
+      overrides: [
+        dioProvider.overrideWithValue(fakeDio(adapter)),
+        tokenStorageProvider.overrideWithValue(tokens),
+      ],
     );
     addTearDown(container.dispose);
     final router = GoRouter(
@@ -58,9 +69,13 @@ void main() {
         GoRoute(path: '/search', builder: (_, _) => const SearchScreen()),
         GoRoute(
           path: '/campuses/:id',
-          builder: (_, s) => PublicCampusScreen(campusId: s.pathParameters['id']!),
+          builder: (_, s) =>
+              PublicCampusScreen(campusId: s.pathParameters['id']!),
         ),
-        GoRoute(path: '/u/:muid', builder: (_, s) => Text('profile ${s.pathParameters['muid']}')),
+        GoRoute(
+          path: '/u/:muid',
+          builder: (_, s) => Text('profile ${s.pathParameters['muid']}'),
+        ),
       ],
     );
     addTearDown(router.dispose);
@@ -69,7 +84,10 @@ void main() {
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
-        child: MaterialApp.router(theme: MuThemeData.light(), routerConfig: router),
+        child: MaterialApp.router(
+          theme: MuThemeData.light(),
+          routerConfig: router,
+        ),
       ),
     );
     for (var i = 0; i < 8; i++) {
@@ -79,49 +97,75 @@ void main() {
 
   setUp(() {
     adapter = FakeHttpAdapter({
-      'GET /api/v1/dashboard/campus/$_sjc/': (_) => FakeResponse(200, loadFixture('dev/campus_public_detail')),
+      'GET /api/v1/dashboard/campus/$_sjc/': (_) =>
+          FakeResponse(200, loadFixture('dev/campus_public_detail')),
       'GET /api/v1/dashboard/campus/weekly-karma/$_sjc/': (_) =>
           FakeResponse(200, loadFixture('dev/campus_public_weekly_karma')),
       'GET /api/v1/dashboard/organisation/institutes/college/': (_) =>
           FakeResponse(200, loadFixture('dev/campus_search_college')),
-      'GET /api/v1/dashboard/organisation/institutes/school/': (_) => const FakeResponse(500, {'detail': 'boom'}),
+      'GET /api/v1/dashboard/organisation/institutes/school/': (_) =>
+          const FakeResponse(500, {'detail': 'boom'}),
     });
   });
 
-  testWidgets('a campus page shows who it is and opens its learners', (tester) async {
+  testWidgets('a campus page shows who it is and opens its learners', (
+    tester,
+  ) async {
     await pump(tester, '/campuses/$_sjc');
 
-    expect(find.text('St. Josephs Colege of Engineering and Technology'), findsOneWidget);
+    expect(
+      find.text('St. Josephs Colege of Engineering and Technology'),
+      findsOneWidget,
+    );
     expect(find.bySemanticsLabel('Learners, 24'), findsOneWidget);
     expect(find.text('#1 on the campus leaderboard'), findsOneWidget);
     expect(find.text('QA Campus Lead One'), findsOneWidget);
-    expect(find.text('No karma earned at this campus this week yet.'), findsOneWidget);
+    expect(
+      find.text('No karma earned at this campus this week yet.'),
+      findsOneWidget,
+    );
 
     await tester.tap(find.text('Dev Admin'));
     await tester.pumpAndSettle();
     expect(find.text('profile admin@mulearn'), findsOneWidget);
   });
 
-  testWidgets('campus search finds colleges even when schools fail, and opens the campus', (tester) async {
-    await pump(tester, '/search');
+  testWidgets(
+    'campus search finds colleges even when schools fail, and opens the campus',
+    (tester) async {
+      await pump(tester, '/search');
 
-    await tester.tap(find.text('Campuses'));
-    await tester.pump();
-    await tester.enterText(find.byType(TextField), 'Joseph');
-    await tester.testTextInput.receiveAction(TextInputAction.search);
-    for (var i = 0; i < 8; i++) {
-      await tester.pump(const Duration(milliseconds: 50));
-    }
+      await tester.tap(find.text('Campuses'));
+      await tester.pump();
+      await tester.enterText(find.byType(TextField), 'Joseph');
+      await tester.testTextInput.receiveAction(TextInputAction.search);
+      for (var i = 0; i < 8; i++) {
+        await tester.pump(const Duration(milliseconds: 50));
+      }
 
-    final hits = adapter.requests.map((RequestOptions r) => r.uri.path).toList();
-    expect(hits, contains('/api/v1/dashboard/organisation/institutes/college/'));
-    expect(hits, contains('/api/v1/dashboard/organisation/institutes/school/'));
-    expect(find.text('St. Josephs Colege of Engineering and Technology'), findsOneWidget);
+      final hits = adapter.requests
+          .map((RequestOptions r) => r.uri.path)
+          .toList();
+      expect(
+        hits,
+        contains('/api/v1/dashboard/organisation/institutes/college/'),
+      );
+      expect(
+        hits,
+        contains('/api/v1/dashboard/organisation/institutes/school/'),
+      );
+      expect(
+        find.text('St. Josephs Colege of Engineering and Technology'),
+        findsOneWidget,
+      );
 
-    await tester.tap(find.text('St. Josephs Colege of Engineering and Technology'));
-    for (var i = 0; i < 10; i++) {
-      await tester.pump(const Duration(milliseconds: 50));
-    }
-    expect(find.byType(PublicCampusScreen), findsOneWidget);
-  });
+      await tester.tap(
+        find.text('St. Josephs Colege of Engineering and Technology'),
+      );
+      for (var i = 0; i < 10; i++) {
+        await tester.pump(const Duration(milliseconds: 50));
+      }
+      expect(find.byType(PublicCampusScreen), findsOneWidget);
+    },
+  );
 }

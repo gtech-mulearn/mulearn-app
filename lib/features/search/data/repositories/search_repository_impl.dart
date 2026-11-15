@@ -13,9 +13,19 @@ class SearchRepositoryImpl implements SearchRepository {
   final SearchRemoteDataSource _remote;
 
   @override
-  Future<UserSearchPage> searchUsers({required String query, String? role, int pageIndex = 1, int perPage = 30}) async {
+  Future<UserSearchPage> searchUsers({
+    required String query,
+    String? role,
+    int pageIndex = 1,
+    int perPage = 30,
+  }) async {
     try {
-      final json = await _remote.searchUsers(query: query, role: role, pageIndex: pageIndex, perPage: perPage);
+      final json = await _remote.searchUsers(
+        query: query,
+        role: role,
+        pageIndex: pageIndex,
+        perPage: perPage,
+      );
       final results = (json['data'] as List<dynamic>)
           .cast<Map<String, dynamic>>()
           .map((item) => UserSearchResultDto.fromJson(item).toDomain())
@@ -31,14 +41,18 @@ class SearchRepositoryImpl implements SearchRepository {
     }
   }
 
-  static int _int(Object? v) => v is num ? v.toInt() : int.tryParse('${v ?? ''}') ?? 0;
+  static int _int(Object? v) =>
+      v is num ? v.toInt() : int.tryParse('${v ?? ''}') ?? 0;
 
   static String? _str(Object? v) {
     final s = v == null ? '' : '$v'.trim();
     return s.isEmpty ? null : s;
   }
 
-  static CampusSearchResult campusFromJson(Map<String, dynamic> j, {required bool isSchool}) => CampusSearchResult(
+  static CampusSearchResult campusFromJson(
+    Map<String, dynamic> j, {
+    required bool isSchool,
+  }) => CampusSearchResult(
     id: '${j['id']}',
     title: _str(j['title']) ?? 'Campus',
     code: _str(j['code']) ?? '',
@@ -51,14 +65,29 @@ class SearchRepositoryImpl implements SearchRepository {
   );
 
   @override
-  Future<CampusSearchPage> searchCampuses({required String query, int pageIndex = 1, int perPage = 20}) async {
+  Future<CampusSearchPage> searchCampuses({
+    required String query,
+    int pageIndex = 1,
+    int perPage = 20,
+  }) async {
     ApiException? lastError;
     Future<(List<CampusSearchResult>, bool)?> one(String type) async {
       try {
-        final json = await _remote.searchCampuses(type: type, query: query, pageIndex: pageIndex, perPage: perPage);
-        final rows = (json['data'] as List<dynamic>? ?? const []).whereType<Map<String, dynamic>>();
-        final info = PageIndexPaging.parse(json['pagination'] as Map<String, dynamic>?);
-        return ([for (final r in rows) campusFromJson(r, isSchool: type == 'school')], info.hasNext);
+        final json = await _remote.searchCampuses(
+          type: type,
+          query: query,
+          pageIndex: pageIndex,
+          perPage: perPage,
+        );
+        final rows = (json['data'] as List<dynamic>? ?? const [])
+            .whereType<Map<String, dynamic>>();
+        final info = PageIndexPaging.parse(
+          json['pagination'] as Map<String, dynamic>?,
+        );
+        return (
+          [for (final r in rows) campusFromJson(r, isSchool: type == 'school')],
+          info.hasNext,
+        );
       } on DioException catch (e) {
         // Remember the failure; only fail the search if both kinds fail.
         lastError = ApiException.fromDioException(e);
@@ -67,7 +96,12 @@ class SearchRepositoryImpl implements SearchRepository {
     }
 
     final results = await Future.wait([one('college'), one('school')]);
-    if (results.every((r) => r == null)) throw lastError ?? const ApiException(message: 'Search failed.');
-    return CampusSearchPage(results: [for (final r in results) ...?r?.$1], hasMore: results.any((r) => r?.$2 ?? false));
+    if (results.every((r) => r == null)) {
+      throw lastError ?? const ApiException(message: 'Search failed.');
+    }
+    return CampusSearchPage(
+      results: [for (final r in results) ...?r?.$1],
+      hasMore: results.any((r) => r?.$2 ?? false),
+    );
   }
 }

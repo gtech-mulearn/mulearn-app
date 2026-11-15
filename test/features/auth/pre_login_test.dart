@@ -82,7 +82,10 @@ void main() {
       initialLocation: start,
       routes: [
         GoRoute(path: '/welcome', builder: (_, __) => const ArrivalScreen()),
-        GoRoute(path: '/sign-in', builder: (_, __) => const Text('sign in screen')),
+        GoRoute(
+          path: '/sign-in',
+          builder: (_, __) => const Text('sign in screen'),
+        ),
       ],
     );
     addTearDown(router.dispose);
@@ -100,16 +103,27 @@ void main() {
     return router;
   }
 
-  testWidgets('the arrival states real numbers, in the site voice', (tester) async {
+  testWidgets('the arrival states real numbers, in the site voice', (
+    tester,
+  ) async {
     await pump(tester, '/welcome');
     expect(find.text('73,953 LEARNERS · 1,949 CAMPUSES'), findsOneWidget);
-    expect(find.textContaining('peer-led growth', findRichText: true), findsOneWidget);
+    expect(
+      find.textContaining('peer-led growth', findRichText: true),
+      findsOneWidget,
+    );
     expect(find.text('Tap the ring'), findsOneWidget);
   });
 
-  testWidgets('tapping the ring breaks it into the real groups', (tester) async {
+  testWidgets('tapping the ring breaks it into the real groups', (
+    tester,
+  ) async {
     await pump(tester, '/welcome');
-    await tester.tap(find.bySemanticsLabel('Tap to break the ring and see every Interest Group'));
+    await tester.tap(
+      find.bySemanticsLabel(
+        'Tap to break the ring and see every Interest Group',
+      ),
+    );
     await tester.pump(const Duration(seconds: 1));
     expect(find.text('23 Interest Groups. Pick any.'), findsOneWidget);
     expect(find.text('Comics'), findsOneWidget);
@@ -121,22 +135,36 @@ void main() {
     }
   }
 
-  testWidgets('Next walks the four steps; Get started on the last opens sign-in', (tester) async {
-    final router = await pump(tester, '/welcome');
-    for (final step in ['peer-led growth', 'Prove it.', 'Mentor those behind.']) {
-      expect(find.textContaining(step, findRichText: true), findsOneWidget);
-      expect(find.text('Get started'), findsNothing);
-      await tester.tap(find.text('Next'));
-      await frames(tester);
-    }
-    expect(find.textContaining('to capable', findRichText: true), findsOneWidget);
-    expect(router.state.uri.path, '/welcome', reason: 'Next never skips to sign-in');
+  testWidgets(
+    'Next walks the four steps; Get started on the last opens sign-in',
+    (tester) async {
+      final router = await pump(tester, '/welcome');
+      for (final step in [
+        'peer-led growth',
+        'Prove it.',
+        'Mentor those behind.',
+      ]) {
+        expect(find.textContaining(step, findRichText: true), findsOneWidget);
+        expect(find.text('Get started'), findsNothing);
+        await tester.tap(find.text('Next'));
+        await frames(tester);
+      }
+      expect(
+        find.textContaining('to capable', findRichText: true),
+        findsOneWidget,
+      );
+      expect(
+        router.state.uri.path,
+        '/welcome',
+        reason: 'Next never skips to sign-in',
+      );
 
-    await tester.tap(find.text('Get started'));
-    await frames(tester);
-    expect(router.state.uri.path, '/sign-in');
-    expect(await storage.read(key: 'arrival_seen'), '1');
-  });
+      await tester.tap(find.text('Get started'));
+      await frames(tester);
+      expect(router.state.uri.path, '/sign-in');
+      expect(await storage.read(key: 'arrival_seen'), '1');
+    },
+  );
 
   testWidgets('Skip goes to sign-in from any step', (tester) async {
     final router = await pump(tester, '/welcome');
@@ -148,7 +176,9 @@ void main() {
 
   test('arrival-seen reads and writes the device flag', () async {
     final storage = FakeSecureStorage();
-    final c = ProviderContainer(overrides: [secureStorageProvider.overrideWithValue(storage)]);
+    final c = ProviderContainer(
+      overrides: [secureStorageProvider.overrideWithValue(storage)],
+    );
     addTearDown(c.dispose);
     expect(await c.read(arrivalSeenProvider.future), isFalse);
     await c.read(arrivalSeenProvider.notifier).markSeen();

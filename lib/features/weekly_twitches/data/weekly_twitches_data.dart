@@ -10,8 +10,10 @@ import 'package:mulearn_app/features/weekly_twitches/domain/repositories/weekly_
 abstract final class WeeklyTwitchesPaths {
   const WeeklyTwitchesPaths._();
 
-  static String list(TwitchShow show) => '/api/v1/dashboard/media-content/${show.slug}/';
-  static String detail(TwitchShow show, String id) => '/api/v1/dashboard/media-content/${show.slug}/$id/';
+  static String list(TwitchShow show) =>
+      '/api/v1/dashboard/media-content/${show.slug}/';
+  static String detail(TwitchShow show, String id) =>
+      '/api/v1/dashboard/media-content/${show.slug}/$id/';
 }
 
 class WeeklyTwitchesRemoteDataSource {
@@ -19,11 +21,20 @@ class WeeklyTwitchesRemoteDataSource {
 
   final Dio _dio;
 
-  Future<Map<String, dynamic>> fetchList(TwitchShow show, Map<String, Object> query) async =>
-      ApiEnvelope.unwrapObject(await _dio.get<dynamic>(WeeklyTwitchesPaths.list(show), queryParameters: query));
+  Future<Map<String, dynamic>> fetchList(
+    TwitchShow show,
+    Map<String, Object> query,
+  ) async => ApiEnvelope.unwrapObject(
+    await _dio.get<dynamic>(
+      WeeklyTwitchesPaths.list(show),
+      queryParameters: query,
+    ),
+  );
 
   Future<Map<String, dynamic>> fetchDetail(TwitchShow show, String id) async =>
-      ApiEnvelope.unwrapObject(await _dio.get<dynamic>(WeeklyTwitchesPaths.detail(show, id)));
+      ApiEnvelope.unwrapObject(
+        await _dio.get<dynamic>(WeeklyTwitchesPaths.detail(show, id)),
+      );
 }
 
 /// Maps the four read serializers (`OfficeHoursReadSerializer`, …) to
@@ -47,7 +58,11 @@ class WeeklyTwitchesRepositoryImpl implements WeeklyTwitchesRepository {
     if (iso != null) return DateTime(iso.year, iso.month, iso.day);
     final m = RegExp(r'^(\d{1,2})/(\d{1,2})/(\d{4})$').firstMatch(s);
     if (m == null) return null;
-    return DateTime(int.parse(m.group(3)!), int.parse(m.group(2)!), int.parse(m.group(1)!));
+    return DateTime(
+      int.parse(m.group(3)!),
+      int.parse(m.group(2)!),
+      int.parse(m.group(1)!),
+    );
   }
 
   /// `HH:mm[:ss]`.
@@ -91,10 +106,14 @@ class WeeklyTwitchesRepositoryImpl implements WeeklyTwitchesRepository {
 
   static TwitchPage parsePage(TwitchShow show, Map<String, dynamic> json) {
     final data = json['data'];
-    final rows = data is List ? data.whereType<Map<String, dynamic>>() : const <Map<String, dynamic>>[];
+    final rows = data is List
+        ? data.whereType<Map<String, dynamic>>()
+        : const <Map<String, dynamic>>[];
     return (
       items: [for (final r in rows) ?parse(show, r)],
-      hasNext: PageIndexPaging.parse(json['pagination'] as Map<String, dynamic>?).hasNext,
+      hasNext: PageIndexPaging.parse(
+        json['pagination'] as Map<String, dynamic>?,
+      ).hasNext,
     );
   }
 
@@ -124,7 +143,9 @@ class WeeklyTwitchesRepositoryImpl implements WeeklyTwitchesRepository {
   @override
   Future<TwitchEpisode> episode(TwitchShow show, String id) => _guard(() async {
     final episode = parse(show, await _remote.fetchDetail(show, id));
-    if (episode == null) throw const ApiException(message: "This episode couldn't be read.");
+    if (episode == null) {
+      throw const ApiException(message: "This episode couldn't be read.");
+    }
     return episode;
   });
 }

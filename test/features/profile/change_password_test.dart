@@ -20,24 +20,45 @@ void main() {
   group('validateNewPassword', () {
     test('the dashboard rules', () {
       expect(
-        validateNewPassword(current: 'old-pass-1', next: 'short', confirm: 'short'),
+        validateNewPassword(
+          current: 'old-pass-1',
+          next: 'short',
+          confirm: 'short',
+        ),
         'Password must be at least 8 characters',
       );
       expect(
-        validateNewPassword(current: 'same-pass-1', next: 'same-pass-1', confirm: 'same-pass-1'),
+        validateNewPassword(
+          current: 'same-pass-1',
+          next: 'same-pass-1',
+          confirm: 'same-pass-1',
+        ),
         'The new password must be different from the current password.',
       );
       expect(
-        validateNewPassword(current: 'old-pass-1', next: 'new-pass-1', confirm: 'new-pass-2'),
+        validateNewPassword(
+          current: 'old-pass-1',
+          next: 'new-pass-1',
+          confirm: 'new-pass-2',
+        ),
         'Passwords do not match',
       );
-      expect(validateNewPassword(current: 'old-pass-1', next: 'new-pass-1', confirm: 'new-pass-1'), isNull);
+      expect(
+        validateNewPassword(
+          current: 'old-pass-1',
+          next: 'new-pass-1',
+          confirm: 'new-pass-1',
+        ),
+        isNull,
+      );
     });
   });
 
   group('repository', () {
     test('sends current_password and password', () async {
-      final adapter = FakeHttpAdapter({'POST $changePasswordPath': (_) => okEnvelope});
+      final adapter = FakeHttpAdapter({
+        'POST $changePasswordPath': (_) => okEnvelope,
+      });
       final repo = ProfileRepositoryImpl(
         remote: ProfileRemoteDataSource(fakeDio(adapter)),
         locationRemote: LocationRemoteDataSource(fakeDio(adapter)),
@@ -45,12 +66,16 @@ void main() {
 
       await repo.changePassword(current: 'old-pass-1', next: 'new-pass-1');
 
-      expect(adapter.requests.single.data, {'current_password': 'old-pass-1', 'password': 'new-pass-1'});
+      expect(adapter.requests.single.data, {
+        'current_password': 'old-pass-1',
+        'password': 'new-pass-1',
+      });
     });
 
     test("the backend's wrong-password reply surfaces its message", () async {
       final adapter = FakeHttpAdapter({
-        'POST $changePasswordPath': (_) => FakeResponse(400, loadFixture('dev/change_password_wrong_current')),
+        'POST $changePasswordPath': (_) =>
+            FakeResponse(400, loadFixture('dev/change_password_wrong_current')),
       });
       final repo = ProfileRepositoryImpl(
         remote: ProfileRemoteDataSource(fakeDio(adapter)),
@@ -59,7 +84,13 @@ void main() {
 
       await expectLater(
         repo.changePassword(current: 'wrong', next: 'new-pass-1'),
-        throwsA(isA<ApiException>().having((e) => e.message, 'message', 'Current Password is incorrect')),
+        throwsA(
+          isA<ApiException>().having(
+            (e) => e.message,
+            'message',
+            'Current Password is incorrect',
+          ),
+        ),
       );
     });
   });
@@ -71,8 +102,10 @@ void main() {
       String next = 'new-pass-1',
       String confirm = 'new-pass-1',
     }) async {
-      Finder field(String label) =>
-          find.descendant(of: find.widgetWithText(MuTextField, label), matching: find.byType(TextField));
+      Finder field(String label) => find.descendant(
+        of: find.widgetWithText(MuTextField, label),
+        matching: find.byType(TextField),
+      );
       await tester.enterText(field('Current password'), current);
       await tester.enterText(field('New password'), next);
       await tester.enterText(field('Confirm new password'), confirm);
@@ -80,9 +113,12 @@ void main() {
       await settle(tester);
     }
 
-    testWidgets('a wrong current password shows under that field', (tester) async {
+    testWidgets('a wrong current password shows under that field', (
+      tester,
+    ) async {
       final adapter = settingsAdapter({
-        'POST $changePasswordPath': (_) => FakeResponse(400, loadFixture('dev/change_password_wrong_current')),
+        'POST $changePasswordPath': (_) =>
+            FakeResponse(400, loadFixture('dev/change_password_wrong_current')),
       });
       await pumpSettingsApp(
         tester,
@@ -94,7 +130,11 @@ void main() {
       await fill(tester, current: 'wrong-one');
 
       expect(find.text('Current Password is incorrect'), findsOneWidget);
-      expect(find.byType(ChangePasswordScreen), findsOneWidget, reason: 'stays open');
+      expect(
+        find.byType(ChangePasswordScreen),
+        findsOneWidget,
+        reason: 'stays open',
+      );
     });
 
     testWidgets('invalid input is caught before any request', (tester) async {
@@ -109,11 +149,16 @@ void main() {
       await fill(tester, confirm: 'different-1');
 
       expect(find.text('Passwords do not match'), findsOneWidget);
-      expect(adapter.requests.where((RequestOptions r) => r.method == 'POST'), isEmpty);
+      expect(
+        adapter.requests.where((RequestOptions r) => r.method == 'POST'),
+        isEmpty,
+      );
     });
 
     testWidgets('success says so and closes', (tester) async {
-      final adapter = settingsAdapter({'POST $changePasswordPath': (_) => okEnvelope});
+      final adapter = settingsAdapter({
+        'POST $changePasswordPath': (_) => okEnvelope,
+      });
       await pumpSettingsApp(
         tester,
         adapter,

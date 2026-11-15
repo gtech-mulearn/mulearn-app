@@ -14,7 +14,13 @@ void main() {
           body: MuTopBar.greeting(
             greeting: 'Hey Aysha',
             subtitle: 'Thursday, 13 Nov · Level 4',
-            actions: [MuIconButton(icon: LucideIcons.search, onPressed: () {}, tooltip: 'Search')],
+            actions: [
+              MuIconButton(
+                icon: LucideIcons.search,
+                onPressed: () {},
+                tooltip: 'Search',
+              ),
+            ],
           ),
         ),
       ),
@@ -31,7 +37,9 @@ void main() {
           builder: (context) => TextButton(
             onPressed: () => Navigator.of(context).push(
               MaterialPageRoute<void>(
-                builder: (_) => const Scaffold(body: MuTopBar.detail(title: 'Learning Fest 2026')),
+                builder: (_) => const Scaffold(
+                  body: MuTopBar.detail(title: 'Learning Fest 2026'),
+                ),
               ),
             ),
             child: const Text('open'),
@@ -60,11 +68,18 @@ void main() {
     var backs = 0;
     Widget bar(double v) => MaterialApp(
       home: Scaffold(
-        body: MuGlassBar(title: 'Web Development', visibility: v, onBack: () => backs++),
+        body: MuGlassBar(
+          title: 'Web Development',
+          visibility: v,
+          onBack: () => backs++,
+        ),
       ),
     );
     await tester.pumpWidget(bar(1));
-    expect(tester.widget<BackdropFilter>(find.byType(BackdropFilter)).filter, isA<ImageFilter>());
+    expect(
+      tester.widget<BackdropFilter>(find.byType(BackdropFilter)).filter,
+      isA<ImageFilter>(),
+    );
     await tester.tap(find.bySemanticsLabel('Back'));
     await tester.pumpAndSettle();
     expect(backs, 1);

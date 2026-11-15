@@ -48,19 +48,23 @@ class _FakeSocials extends SocialsController {
 }
 
 /// A page with a button that opens the sheet, so pops can be observed.
-Widget _host(List<Override> overrides, void Function(BuildContext) open) => ProviderScope(
-  overrides: overrides,
-  child: MaterialApp(
-    theme: MuThemeData.light(),
-    home: Builder(
-      builder: (context) => Scaffold(
-        body: Center(
-          child: TextButton(onPressed: () => open(context), child: const Text('open')),
+Widget _host(List<Override> overrides, void Function(BuildContext) open) =>
+    ProviderScope(
+      overrides: overrides,
+      child: MaterialApp(
+        theme: MuThemeData.light(),
+        home: Builder(
+          builder: (context) => Scaffold(
+            body: Center(
+              child: TextButton(
+                onPressed: () => open(context),
+                child: const Text('open'),
+              ),
+            ),
+          ),
         ),
       ),
-    ),
-  ),
-);
+    );
 
 Future<void> _settle(WidgetTester tester) async {
   for (var i = 0; i < 6; i++) {
@@ -69,28 +73,41 @@ Future<void> _settle(WidgetTester tester) async {
 }
 
 void main() {
-  testWidgets('share: turning the profile public reveals the QR and Copy link', (tester) async {
-    final fake = _FakeProfile(_profile(isPublic: false));
-    final profile = fake.initial;
-    await tester.pumpWidget(
-      _host([profileControllerProvider.overrideWith(() => fake)], (c) => ShareProfileSheet.show(c, profile)),
-    );
-    await tester.tap(find.text('open'));
-    await _settle(tester);
+  testWidgets(
+    'share: turning the profile public reveals the QR and Copy link',
+    (tester) async {
+      final fake = _FakeProfile(_profile(isPublic: false));
+      final profile = fake.initial;
+      await tester.pumpWidget(
+        _host([
+          profileControllerProvider.overrideWith(() => fake),
+        ], (c) => ShareProfileSheet.show(c, profile)),
+      );
+      await tester.tap(find.text('open'));
+      await _settle(tester);
 
-    expect(find.text('Share profile'), findsOneWidget);
-    expect(find.text('Copy link'), findsNothing);
+      expect(find.text('Share profile'), findsOneWidget);
+      expect(find.text('Copy link'), findsNothing);
 
-    await tester.tap(find.text('Public profile'));
-    await _settle(tester);
+      await tester.tap(find.text('Public profile'));
+      await _settle(tester);
 
-    expect(fake.toggles, [true]);
-    expect(find.bySemanticsLabel('QR code for your profile link'), findsOneWidget);
-    expect(find.text('Copy link'), findsOneWidget);
-    expect(find.textContaining('app.mulearn.org/profile/${profile.muid}'), findsOneWidget);
-  });
+      expect(fake.toggles, [true]);
+      expect(
+        find.bySemanticsLabel('QR code for your profile link'),
+        findsOneWidget,
+      );
+      expect(find.text('Copy link'), findsOneWidget);
+      expect(
+        find.textContaining('app.mulearn.org/profile/${profile.muid}'),
+        findsOneWidget,
+      );
+    },
+  );
 
-  testWidgets('socials: names each network, saves what was typed and closes', (tester) async {
+  testWidgets('socials: names each network, saves what was typed and closes', (
+    tester,
+  ) async {
     final fake = _FakeSocials();
     await tester.pumpWidget(
       _host([socialsControllerProvider.overrideWith(() => fake)], (c) {
@@ -104,7 +121,10 @@ void main() {
     expect(find.text('GitHub'), findsOneWidget);
     expect(find.text('octo'), findsOneWidget);
 
-    await tester.enterText(find.widgetWithText(MuTextField, 'LinkedIn'), '  jane-doe ');
+    await tester.enterText(
+      find.widgetWithText(MuTextField, 'LinkedIn'),
+      '  jane-doe ',
+    );
     await tester.tap(find.text('Save'));
     await _settle(tester);
 
@@ -113,24 +133,40 @@ void main() {
     expect(find.text('Social links'), findsNothing);
   });
 
-  testWidgets('issue credential: without a linked wallet it says how to link one', (tester) async {
-    const achievement = UserAchievement(
-      id: 'ua1',
-      userId: 'u1',
-      isIssued: false,
-      achievement: Achievement(id: 'a1', achievementName: 'QA Starter Badge'),
-    );
-    await tester.pumpWidget(
-      _host([
-        connectedDidsProvider('me@mulearn').overrideWith((_) async => const <String>[]),
-      ], (c) => IssueVcSheet.show(c, achievement: achievement, muid: 'me@mulearn', userName: 'Me')),
-    );
-    await tester.tap(find.text('open'));
-    await _settle(tester);
+  testWidgets(
+    'issue credential: without a linked wallet it says how to link one',
+    (tester) async {
+      const achievement = UserAchievement(
+        id: 'ua1',
+        userId: 'u1',
+        isIssued: false,
+        achievement: Achievement(id: 'a1', achievementName: 'QA Starter Badge'),
+      );
+      await tester.pumpWidget(
+        _host(
+          [
+            connectedDidsProvider(
+              'me@mulearn',
+            ).overrideWith((_) async => const <String>[]),
+          ],
+          (c) => IssueVcSheet.show(
+            c,
+            achievement: achievement,
+            muid: 'me@mulearn',
+            userName: 'Me',
+          ),
+        ),
+      );
+      await tester.tap(find.text('open'));
+      await _settle(tester);
 
-    expect(find.text('QA Starter Badge'), findsOneWidget);
-    expect(find.text('Link a wallet first'), findsOneWidget);
-    expect(find.text('ISSUE CREDENTIAL'), findsOneWidget); // the eyebrow; no button yet
-    expect(find.widgetWithText(MuButton, 'Issue credential'), findsNothing);
-  });
+      expect(find.text('QA Starter Badge'), findsOneWidget);
+      expect(find.text('Link a wallet first'), findsOneWidget);
+      expect(
+        find.text('ISSUE CREDENTIAL'),
+        findsOneWidget,
+      ); // the eyebrow; no button yet
+      expect(find.widgetWithText(MuButton, 'Issue credential'), findsNothing);
+    },
+  );
 }

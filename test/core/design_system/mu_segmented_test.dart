@@ -3,7 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mulearn_app/core/design_system/navigation/mu_segmented.dart';
 
 void main() {
-  testWidgets('segments are selectable buttons and report the tapped option', (tester) async {
+  testWidgets('segments are selectable buttons and report the tapped option', (
+    tester,
+  ) async {
     var selected = 'Students';
     await tester.pumpWidget(
       MaterialApp(
@@ -24,10 +26,16 @@ void main() {
         ),
       ),
     );
-    expect(tester.getSemantics(find.bySemanticsLabel('Students')), isSemantics(isSelected: true, isButton: true));
+    expect(
+      tester.getSemantics(find.bySemanticsLabel('Students')),
+      isSemantics(isSelected: true, isButton: true),
+    );
     await tester.tap(find.bySemanticsLabel('Colleges'));
     await tester.pumpAndSettle();
     expect(selected, 'Colleges');
-    expect(tester.getSemantics(find.bySemanticsLabel('Colleges')), isSemantics(isSelected: true, isButton: true));
+    expect(
+      tester.getSemantics(find.bySemanticsLabel('Colleges')),
+      isSemantics(isSelected: true, isButton: true),
+    );
   });
 }

@@ -2,10 +2,20 @@
 /// Weekly Twitches tabs list them.
 enum TwitchShow {
   /// Talks by people from industry, tagged with Interest Groups.
-  officeHours('office-hours', 'Office Hours', 'Talks with people who do the work', 'OFFICE_HOURS_ANNOUNCED'),
+  officeHours(
+    'office-hours',
+    'Office Hours',
+    'Talks with people who do the work',
+    'OFFICE_HOURS_ANNOUNCED',
+  ),
 
   /// A campus-hosted episode, streamed.
-  saltMangoTree('salt-mango-tree', 'Salt Mango Tree', 'Campus stories, streamed live', 'SALT_MANGO_TREE_ANNOUNCED'),
+  saltMangoTree(
+    'salt-mango-tree',
+    'Salt Mango Tree',
+    'Campus stories, streamed live',
+    'SALT_MANGO_TREE_ANNOUNCED',
+  ),
 
   /// Inspiration Station Radio: a campus-hosted radio episode.
   inspirationStation(
@@ -111,7 +121,13 @@ class TwitchEpisode {
   final List<String> interestGroups;
 
   /// The start as a local date-time (midnight when there's no time).
-  DateTime get startsAt => DateTime(date.year, date.month, date.day, time?.hour ?? 0, time?.minute ?? 0);
+  DateTime get startsAt => DateTime(
+    date.year,
+    date.month,
+    date.day,
+    time?.hour ?? 0,
+    time?.minute ?? 0,
+  );
 
   /// The speaker, with their role when known.
   String? get speaker => performer == null

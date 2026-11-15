@@ -13,11 +13,13 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'search_controller.g.dart';
 
 @riverpod
-SearchRemoteDataSource searchRemoteDataSource(Ref ref) => SearchRemoteDataSource(ref.watch(dioProvider));
+SearchRemoteDataSource searchRemoteDataSource(Ref ref) =>
+    SearchRemoteDataSource(ref.watch(dioProvider));
 
 /// Presentation depends on the [SearchRepository] contract (rules.md §2/§5).
 @riverpod
-SearchRepository searchRepository(Ref ref) => SearchRepositoryImpl(ref.watch(searchRemoteDataSourceProvider));
+SearchRepository searchRepository(Ref ref) =>
+    SearchRepositoryImpl(ref.watch(searchRemoteDataSourceProvider));
 
 /// One page size for every search list, as on the dashboard.
 const searchPerPage = 30;
@@ -37,28 +39,42 @@ class UserSearch extends _$UserSearch {
     ref.keepRecent();
     _pageIndex = 1;
     _inFlight = null;
-    final page = await ref.watch(searchRepositoryProvider).searchUsers(query: query, role: role);
+    final page = await ref
+        .watch(searchRepositoryProvider)
+        .searchUsers(query: query, role: role);
     return PagedState(items: page.results, hasMore: page.hasMore);
   }
 
   /// Loads the next page (or retries it).
-  Future<void> loadMore() => _inFlight ??= _loadNextPage().whenComplete(() => _inFlight = null);
+  Future<void> loadMore() =>
+      _inFlight ??= _loadNextPage().whenComplete(() => _inFlight = null);
 
   Future<void> _loadNextPage() async {
     final current = state.value;
     if (current == null || !current.hasMore) return;
-    state = AsyncData(current.copyWith(isLoadingMore: true, loadMoreError: null));
+    state = AsyncData(
+      current.copyWith(isLoadingMore: true, loadMoreError: null),
+    );
     final next = _pageIndex + 1;
     try {
-      final page = await ref.read(searchRepositoryProvider).searchUsers(query: query, role: role, pageIndex: next);
+      final page = await ref
+          .read(searchRepositoryProvider)
+          .searchUsers(query: query, role: role, pageIndex: next);
       if (!ref.mounted) return;
       _pageIndex = next;
       state = AsyncData(
-        PagedState(items: mergeUniqueBy(current.items, page.results, (u) => u.muid), hasMore: page.hasMore),
+        PagedState(
+          items: mergeUniqueBy(current.items, page.results, (u) => u.muid),
+          hasMore: page.hasMore,
+        ),
       );
     } on Object catch (e, st) {
       appLogger.w('Loading more people failed', error: e, stackTrace: st);
-      if (ref.mounted) state = AsyncData(current.copyWith(isLoadingMore: false, loadMoreError: e));
+      if (ref.mounted) {
+        state = AsyncData(
+          current.copyWith(isLoadingMore: false, loadMoreError: e),
+        );
+      }
     }
   }
 }
@@ -75,33 +91,50 @@ class CampusSearch extends _$CampusSearch {
     ref.keepRecent();
     _pageIndex = 1;
     _inFlight = null;
-    final page = await ref.watch(searchRepositoryProvider).searchCampuses(query: query, perPage: searchPerPage);
+    final page = await ref
+        .watch(searchRepositoryProvider)
+        .searchCampuses(query: query, perPage: searchPerPage);
     return PagedState(items: page.results, hasMore: page.hasMore);
   }
 
   /// Loads the next page (or retries it).
-  Future<void> loadMore() => _inFlight ??= _loadNextPage().whenComplete(() => _inFlight = null);
+  Future<void> loadMore() =>
+      _inFlight ??= _loadNextPage().whenComplete(() => _inFlight = null);
 
   Future<void> _loadNextPage() async {
     final current = state.value;
     if (current == null || !current.hasMore) return;
-    state = AsyncData(current.copyWith(isLoadingMore: true, loadMoreError: null));
+    state = AsyncData(
+      current.copyWith(isLoadingMore: true, loadMoreError: null),
+    );
     final next = _pageIndex + 1;
     try {
       final page = await ref
           .read(searchRepositoryProvider)
-          .searchCampuses(query: query, pageIndex: next, perPage: searchPerPage);
+          .searchCampuses(
+            query: query,
+            pageIndex: next,
+            perPage: searchPerPage,
+          );
       if (!ref.mounted) return;
       _pageIndex = next;
       state = AsyncData(
         PagedState(
-          items: mergeUniqueBy(current.items, page.results, (c) => '${c.isSchool}-${c.id}'),
+          items: mergeUniqueBy(
+            current.items,
+            page.results,
+            (c) => '${c.isSchool}-${c.id}',
+          ),
           hasMore: page.hasMore,
         ),
       );
     } on Object catch (e, st) {
       appLogger.w('Loading more campuses failed', error: e, stackTrace: st);
-      if (ref.mounted) state = AsyncData(current.copyWith(isLoadingMore: false, loadMoreError: e));
+      if (ref.mounted) {
+        state = AsyncData(
+          current.copyWith(isLoadingMore: false, loadMoreError: e),
+        );
+      }
     }
   }
 }

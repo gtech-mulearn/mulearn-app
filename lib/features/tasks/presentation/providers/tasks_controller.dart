@@ -23,4 +23,5 @@ Future<List<TaskCatalogItem>> tasksController(Ref ref) =>
 /// The signed-in user's level name (`"lvl4"`) for the Tasks title and the
 /// "you're here" marker; null when the profile has none.
 @riverpod
-Future<String?> myTaskLevel(Ref ref) => ref.watch(tasksRepositoryProvider).getMyLevel();
+Future<String?> myTaskLevel(Ref ref) =>
+    ref.watch(tasksRepositoryProvider).getMyLevel();

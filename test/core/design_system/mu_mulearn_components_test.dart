@@ -25,21 +25,42 @@ void main() {
         MuLevelPath(
           onOpen: (s) => opened = s,
           stops: const [
-            MuLevelStop(number: 3, title: 'Level 3', state: MuStopState.done, meta: '144 tasks · 9 done'),
-            MuLevelStop(number: 4, title: 'Level 4', state: MuStopState.now, meta: '264 tasks', progress: 0.68),
-            MuLevelStop(number: 5, title: 'Level 5', state: MuStopState.locked, meta: '108 tasks'),
+            MuLevelStop(
+              number: 3,
+              title: 'Level 3',
+              state: MuStopState.done,
+              meta: '144 tasks · 9 done',
+            ),
+            MuLevelStop(
+              number: 4,
+              title: 'Level 4',
+              state: MuStopState.now,
+              meta: '264 tasks',
+              progress: 0.68,
+            ),
+            MuLevelStop(
+              number: 5,
+              title: 'Level 5',
+              state: MuStopState.locked,
+              meta: '108 tasks',
+            ),
           ],
         ),
       ),
     );
-    expect(find.bySemanticsLabel("Level 4, you're here, 264 tasks"), findsOneWidget);
+    expect(
+      find.bySemanticsLabel("Level 4, you're here, 264 tasks"),
+      findsOneWidget,
+    );
     expect(find.bySemanticsLabel('Level 5, locked, 108 tasks'), findsOneWidget);
     expect(find.text("You're here · 68%"), findsOneWidget);
     await tester.tap(find.bySemanticsLabel("Level 4, you're here, 264 tasks"));
     expect(opened?.number, 4);
   });
 
-  testWidgets('podium orders 2-1-3 with #1 tallest; rows scale bars to #1', (tester) async {
+  testWidgets('podium orders 2-1-3 with #1 tallest; rows scale bars to #1', (
+    tester,
+  ) async {
     const top = [
       MuRankEntry(name: 'Nikhil K', karma: 52940),
       MuRankEntry(name: 'Rahul V', karma: 48210),
@@ -65,15 +86,25 @@ void main() {
     final first = tester.getCenter(find.text('Nikhil K')).dx;
     final third = tester.getCenter(find.text('Sneha M')).dx;
     expect(second < first && first < third, isTrue);
-    expect(find.bySemanticsLabel('Rank 1, Nikhil K, 52,940 karma'), findsOneWidget);
-    expect(find.bySemanticsLabel('Rank 14, You · Aysha, CET, 12,480 karma'), findsOneWidget);
-    final bar = tester.widget<FractionallySizedBox>(find.byType(FractionallySizedBox));
+    expect(
+      find.bySemanticsLabel('Rank 1, Nikhil K, 52,940 karma'),
+      findsOneWidget,
+    );
+    expect(
+      find.bySemanticsLabel('Rank 14, You · Aysha, CET, 12,480 karma'),
+      findsOneWidget,
+    );
+    final bar = tester.widget<FractionallySizedBox>(
+      find.byType(FractionallySizedBox),
+    );
     expect(bar.widthFactor, closeTo(12480 / 52940, 1e-9));
     expect(tester.takeException(), isNull);
   });
 
   testWidgets('voice bubble renders its line', (tester) async {
-    await tester.pumpWidget(_host(const MuVoiceBubble('Nobody learns alone', tone: MuVoiceTone.volt)));
+    await tester.pumpWidget(
+      _host(const MuVoiceBubble('Nobody learns alone', tone: MuVoiceTone.volt)),
+    );
     expect(find.text('Nobody learns alone'), findsOneWidget);
   });
 }

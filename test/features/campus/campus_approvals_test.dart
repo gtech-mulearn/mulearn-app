@@ -40,15 +40,21 @@ void main() {
 
   setUp(() {
     adapter = FakeHttpAdapter({
-      'GET $_links': (_) => FakeResponse(200, loadFixture('serializer/campus_org_links_one')),
-      'GET $_events': (_) => FakeResponse(200, loadFixture('serializer/campus_events_pending')),
-      'GET $_invites': (_) => FakeResponse(200, loadFixture('dev/campus_collab_invites_one')),
+      'GET $_links': (_) =>
+          FakeResponse(200, loadFixture('serializer/campus_org_links_one')),
+      'GET $_events': (_) =>
+          FakeResponse(200, loadFixture('serializer/campus_events_pending')),
+      'GET $_invites': (_) =>
+          FakeResponse(200, loadFixture('dev/campus_collab_invites_one')),
     });
   });
 
   Map<String, dynamic> bodyOf(String method, String path) {
-    final r = adapter.requests.lastWhere((RequestOptions r) => r.method == method && r.uri.path == path);
-    return (r.data is String ? jsonDecode(r.data as String) : r.data) as Map<String, dynamic>;
+    final r = adapter.requests.lastWhere(
+      (RequestOptions r) => r.method == method && r.uri.path == path,
+    );
+    return (r.data is String ? jsonDecode(r.data as String) : r.data)
+        as Map<String, dynamic>;
   }
 
   Future<void> settle(WidgetTester tester) async {
@@ -70,7 +76,9 @@ void main() {
           (ref) async => WorkspaceAccess(
             mentor: WorkspaceState.hidden,
             campus: WorkspaceState.open,
-            enablerCampuses: campusLead ? WorkspaceState.hidden : WorkspaceState.open,
+            enablerCampuses: campusLead
+                ? WorkspaceState.hidden
+                : WorkspaceState.open,
             campusLead: campusLead,
           ),
         ),
@@ -79,7 +87,9 @@ void main() {
     addTearDown(container.dispose);
     final router = GoRouter(
       initialLocation: '/a',
-      routes: [GoRoute(path: '/a', builder: (_, __) => const CampusApprovalsScreen())],
+      routes: [
+        GoRoute(path: '/a', builder: (_, __) => const CampusApprovalsScreen()),
+      ],
     );
     addTearDown(router.dispose);
     tester.view.physicalSize = const Size(1080, 5000);
@@ -93,11 +103,18 @@ void main() {
     await settle(tester);
   }
 
-  Future<void> drainToast(WidgetTester tester) => tester.pump(const Duration(seconds: 4));
+  Future<void> drainToast(WidgetTester tester) =>
+      tester.pump(const Duration(seconds: 4));
 
   test('a college link request carries no contact details', () {
-    final row = ((loadFixtureResponse('serializer/campus_org_links_one')! as Map)['data'] as List).first;
-    final link = OrgLinkRequestDto.fromJson(row as Map<String, dynamic>).toDomain();
+    final row =
+        ((loadFixtureResponse('serializer/campus_org_links_one')!
+                    as Map)['data']
+                as List)
+            .first;
+    final link = OrgLinkRequestDto.fromJson(
+      row as Map<String, dynamic>,
+    ).toDomain();
     expect(link.fullName, 'QA Pending Link');
     expect(link.graduationYear, '2028');
     expect(link.toString(), isNot(contains('9999999999')));
@@ -105,12 +122,18 @@ void main() {
   });
 
   test('the recorded collaboration invite parses', () {
-    final row = (loadFixtureResponse('dev/campus_collab_invites_one')! as List).first;
-    final invite = CollabInviteDto.fromJson(row as Map<String, dynamic>).toDomain();
+    final row =
+        (loadFixtureResponse('dev/campus_collab_invites_one')! as List).first;
+    final invite = CollabInviteDto.fromJson(
+      row as Map<String, dynamic>,
+    ).toDomain();
     expect(invite.id, _inviteId);
     expect(invite.eventId, _inviteEvent);
     expect(invite.roleLabel, 'Co-host');
-    expect(invite.entityName, 'St. Josephs Colege of Engineering and Technology');
+    expect(
+      invite.entityName,
+      'St. Josephs Colege of Engineering and Technology',
+    );
   });
 
   testWidgets('a campus lead sees all three sections', (tester) async {
@@ -121,17 +144,28 @@ void main() {
     expect(find.textContaining('CAMPUS EVENTS'), findsOneWidget);
     expect(find.text('Robotics club open day'), findsOneWidget);
     expect(find.textContaining('COLLABORATION INVITES'), findsOneWidget);
-    expect(find.textContaining('[QA] Collaboration invite check'), findsOneWidget);
+    expect(
+      find.textContaining('[QA] Collaboration invite check'),
+      findsOneWidget,
+    );
   });
 
-  testWidgets('an enabler sees campus events only (links and invites are Campus Lead)', (tester) async {
-    await pump(tester, campusLead: false);
+  testWidgets(
+    'an enabler sees campus events only (links and invites are Campus Lead)',
+    (tester) async {
+      await pump(tester, campusLead: false);
 
-    expect(find.textContaining('CAMPUS EVENTS'), findsOneWidget);
-    expect(find.textContaining('COLLEGE LINKS'), findsNothing);
-    expect(find.textContaining('COLLABORATION INVITES'), findsNothing);
-    expect(adapter.requests.where((r) => r.uri.path == _links || r.uri.path == _invites), isEmpty);
-  });
+      expect(find.textContaining('CAMPUS EVENTS'), findsOneWidget);
+      expect(find.textContaining('COLLEGE LINKS'), findsNothing);
+      expect(find.textContaining('COLLABORATION INVITES'), findsNothing);
+      expect(
+        adapter.requests.where(
+          (r) => r.uri.path == _links || r.uri.path == _invites,
+        ),
+        isEmpty,
+      );
+    },
+  );
 
   testWidgets('verify asks first and sends verified: true', (tester) async {
     adapter.routes['PATCH ${_links}link-1/'] = (_) => FakeResponse(200, ok());
@@ -139,7 +173,10 @@ void main() {
 
     await tester.tap(find.widgetWithText(MuButton, 'Verify'));
     await settle(tester);
-    expect(find.textContaining('Verify QA Pending Link as a member of'), findsOneWidget);
+    expect(
+      find.textContaining('Verify QA Pending Link as a member of'),
+      findsOneWidget,
+    );
     // The confirm's button, on top of the row's.
     await tester.tap(find.widgetWithText(MuButton, 'Verify').last);
     await settle(tester);
@@ -148,7 +185,9 @@ void main() {
     await drainToast(tester);
   });
 
-  testWidgets('rejecting an event needs a reason before any request', (tester) async {
+  testWidgets('rejecting an event needs a reason before any request', (
+    tester,
+  ) async {
     adapter.routes['POST /api/v1/dashboard/events/campus/ev-1/reject/'] = (_) =>
         FakeResponse(200, ok('Event rejected.'));
     await pump(tester);
@@ -158,24 +197,32 @@ void main() {
     await tester.tap(find.widgetWithText(MuButton, 'Reject event'));
     await settle(tester);
     expect(find.text('A rejection reason is required.'), findsOneWidget);
-    expect(adapter.requests.where((RequestOptions r) => r.method == 'POST'), isEmpty);
+    expect(
+      adapter.requests.where((RequestOptions r) => r.method == 'POST'),
+      isEmpty,
+    );
 
     await tester.enterText(find.byType(TextField).last, 'Clashes with exams');
     await tester.tap(find.widgetWithText(MuButton, 'Reject event'));
     await settle(tester);
-    expect(bodyOf('POST', '/api/v1/dashboard/events/campus/ev-1/reject/'), {'reason': 'Clashes with exams'});
+    expect(bodyOf('POST', '/api/v1/dashboard/events/campus/ev-1/reject/'), {
+      'reason': 'Clashes with exams',
+    });
     await drainToast(tester);
   });
 
-  testWidgets('an event someone already handled says so and refreshes', (tester) async {
-    adapter.routes['POST /api/v1/dashboard/events/campus/ev-1/approve/'] = (_) => const FakeResponse(400, {
-      'hasError': true,
-      'statusCode': 400,
-      'message': {
-        'general': ['Event is not pending campus approval.'],
-      },
-      'response': <String, dynamic>{},
-    });
+  testWidgets('an event someone already handled says so and refreshes', (
+    tester,
+  ) async {
+    adapter.routes['POST /api/v1/dashboard/events/campus/ev-1/approve/'] =
+        (_) => const FakeResponse(400, {
+          'hasError': true,
+          'statusCode': 400,
+          'message': {
+            'general': ['Event is not pending campus approval.'],
+          },
+          'response': <String, dynamic>{},
+        });
     await pump(tester);
     final loads = adapter.requests.where((r) => r.uri.path == _events).length;
 
@@ -183,25 +230,35 @@ void main() {
     await settle(tester);
 
     expect(find.text('Event is not pending campus approval.'), findsOneWidget);
-    expect(adapter.requests.where((r) => r.uri.path == _events).length, greaterThan(loads));
+    expect(
+      adapter.requests.where((r) => r.uri.path == _events).length,
+      greaterThan(loads),
+    );
     await drainToast(tester);
   });
 
   testWidgets('accepting an invite posts to its event', (tester) async {
-    adapter.routes['POST /api/v1/dashboard/events/manage/$_inviteEvent/collaborators/$_inviteId/accept/'] = (_) =>
-        FakeResponse(200, ok('Invite accepted.'));
+    adapter.routes['POST /api/v1/dashboard/events/manage/$_inviteEvent/collaborators/$_inviteId/accept/'] =
+        (_) => FakeResponse(200, ok('Invite accepted.'));
     await pump(tester);
 
     await tester.tap(find.widgetWithText(MuButton, 'Accept'));
     await settle(tester);
 
-    expect(adapter.requests.where((r) => r.uri.path.endsWith('/$_inviteId/accept/')), hasLength(1));
+    expect(
+      adapter.requests.where((r) => r.uri.path.endsWith('/$_inviteId/accept/')),
+      hasLength(1),
+    );
     await drainToast(tester);
   });
 
-  testWidgets('nothing to review shows the illustrated empty state', (tester) async {
-    adapter.routes['GET $_links'] = (_) => FakeResponse(200, loadFixture('dev/campus_org_links_empty'));
-    adapter.routes['GET $_events'] = (_) => FakeResponse(200, loadFixture('dev/campus_events_pending_empty'));
+  testWidgets('nothing to review shows the illustrated empty state', (
+    tester,
+  ) async {
+    adapter.routes['GET $_links'] = (_) =>
+        FakeResponse(200, loadFixture('dev/campus_org_links_empty'));
+    adapter.routes['GET $_events'] = (_) =>
+        FakeResponse(200, loadFixture('dev/campus_events_pending_empty'));
     adapter.routes['GET $_invites'] = (_) => const FakeResponse(200, {
       'hasError': false,
       'statusCode': 200,

@@ -509,7 +509,7 @@ final class ProjectActionsProvider
   ProjectActions create() => ProjectActions();
 }
 
-String _$projectActionsHash() => r'bef0c55a7d58cef8ec9f535e5ac280e4329292a1';
+String _$projectActionsHash() => r'3024ec5ed2b94c0d37c9e9c6be22a78144b865f9';
 
 /// Every change to a project: one notifier for one busy / error state. Each
 /// success refreshes the project, the viewer's list and the feed. Returns

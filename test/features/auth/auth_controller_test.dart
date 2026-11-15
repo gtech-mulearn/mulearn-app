@@ -15,9 +15,11 @@ class MockAuthRepository extends Mock implements AuthRepository {}
 
 class MockTokenStorage extends Mock implements TokenStorage {}
 
-class MockGoogleNativeSignInDataSource extends Mock implements GoogleNativeSignInDataSource {}
+class MockGoogleNativeSignInDataSource extends Mock
+    implements GoogleNativeSignInDataSource {}
 
-class MockAppleNativeSignInDataSource extends Mock implements AppleNativeSignInDataSource {}
+class MockAppleNativeSignInDataSource extends Mock
+    implements AppleNativeSignInDataSource {}
 
 void main() {
   late MockAuthRepository repository;
@@ -46,25 +48,33 @@ void main() {
     return container;
   }
 
-  test('successful password sign-in flips app auth state to signed-in', () async {
-    when(
-      () => repository.signInWithPassword(
-        emailOrMuid: any(named: 'emailOrMuid'),
-        password: any(named: 'password'),
-      ),
-    ).thenAnswer((_) async => const AuthSession(accessToken: 'a', refreshToken: 'r'));
+  test(
+    'successful password sign-in flips app auth state to signed-in',
+    () async {
+      when(
+        () => repository.signInWithPassword(
+          emailOrMuid: any(named: 'emailOrMuid'),
+          password: any(named: 'password'),
+        ),
+      ).thenAnswer(
+        (_) async => const AuthSession(accessToken: 'a', refreshToken: 'r'),
+      );
 
-    final container = makeContainer();
-    // Resolve initial (signed-out) state.
-    expect(await container.read(appAuthControllerProvider.future), isFalse);
+      final container = makeContainer();
+      // Resolve initial (signed-out) state.
+      expect(await container.read(appAuthControllerProvider.future), isFalse);
 
-    await container
-        .read(authControllerProvider.notifier)
-        .signInWithPassword(emailOrMuid: 'ada@mulearn.org', password: 'secret');
+      await container
+          .read(authControllerProvider.notifier)
+          .signInWithPassword(
+            emailOrMuid: 'ada@mulearn.org',
+            password: 'secret',
+          );
 
-    expect(container.read(authControllerProvider).hasError, isFalse);
-    expect(container.read(appAuthControllerProvider).value, isTrue);
-  });
+      expect(container.read(authControllerProvider).hasError, isFalse);
+      expect(container.read(appAuthControllerProvider).value, isTrue);
+    },
+  );
 
   test('failed password sign-in surfaces error and stays signed-out', () async {
     when(
@@ -80,7 +90,10 @@ void main() {
     await expectLater(
       container
           .read(authControllerProvider.notifier)
-          .signInWithPassword(emailOrMuid: 'ada@mulearn.org', password: 'wrong'),
+          .signInWithPassword(
+            emailOrMuid: 'ada@mulearn.org',
+            password: 'wrong',
+          ),
       throwsException,
     );
 
@@ -94,62 +107,85 @@ void main() {
         emailOrMuid: any(named: 'emailOrMuid'),
         otp: any(named: 'otp'),
       ),
-    ).thenAnswer((_) async => const AuthSession(accessToken: 'a', refreshToken: 'r'));
+    ).thenAnswer(
+      (_) async => const AuthSession(accessToken: 'a', refreshToken: 'r'),
+    );
 
     final container = makeContainer();
     expect(await container.read(appAuthControllerProvider.future), isFalse);
 
-    await container.read(authControllerProvider.notifier).signInWithOtp(emailOrMuid: 'ada@mulearn.org', otp: '1234');
+    await container
+        .read(authControllerProvider.notifier)
+        .signInWithOtp(emailOrMuid: 'ada@mulearn.org', otp: '1234');
 
     expect(container.read(authControllerProvider).hasError, isFalse);
     expect(container.read(appAuthControllerProvider).value, isTrue);
   });
 
-  test('requestOtp propagates errors without touching app auth state', () async {
-    when(() => repository.requestOtp(emailOrMuid: any(named: 'emailOrMuid'))).thenThrow(Exception('rate limited'));
+  test(
+    'requestOtp propagates errors without touching app auth state',
+    () async {
+      when(
+        () => repository.requestOtp(emailOrMuid: any(named: 'emailOrMuid')),
+      ).thenThrow(Exception('rate limited'));
 
-    final container = makeContainer();
-    expect(await container.read(appAuthControllerProvider.future), isFalse);
+      final container = makeContainer();
+      expect(await container.read(appAuthControllerProvider.future), isFalse);
 
-    await expectLater(
-      container.read(authControllerProvider.notifier).requestOtp(emailOrMuid: 'ada@mulearn.org'),
-      throwsException,
-    );
+      await expectLater(
+        container
+            .read(authControllerProvider.notifier)
+            .requestOtp(emailOrMuid: 'ada@mulearn.org'),
+        throwsException,
+      );
 
-    expect(container.read(authControllerProvider).hasError, isTrue);
-    expect(container.read(appAuthControllerProvider).value, isFalse);
-  });
+      expect(container.read(authControllerProvider).hasError, isTrue);
+      expect(container.read(appAuthControllerProvider).value, isFalse);
+    },
+  );
 
-  test('requestPasswordReset succeeds without touching app auth state', () async {
-    when(() => repository.requestPasswordReset(emailOrMuid: any(named: 'emailOrMuid'))).thenAnswer((_) async {});
+  test(
+    'requestPasswordReset succeeds without touching app auth state',
+    () async {
+      when(
+        () => repository.requestPasswordReset(
+          emailOrMuid: any(named: 'emailOrMuid'),
+        ),
+      ).thenAnswer((_) async {});
 
-    final container = makeContainer();
-    expect(await container.read(appAuthControllerProvider.future), isFalse);
+      final container = makeContainer();
+      expect(await container.read(appAuthControllerProvider.future), isFalse);
 
-    await container.read(authControllerProvider.notifier).requestPasswordReset(emailOrMuid: 'ada@mulearn.org');
+      await container
+          .read(authControllerProvider.notifier)
+          .requestPasswordReset(emailOrMuid: 'ada@mulearn.org');
 
-    expect(container.read(authControllerProvider).hasError, isFalse);
-    expect(container.read(appAuthControllerProvider).value, isFalse);
-  });
+      expect(container.read(authControllerProvider).hasError, isFalse);
+      expect(container.read(appAuthControllerProvider).value, isFalse);
+    },
+  );
 
-  test('sign-out delegates to the core session and flips app auth state', () async {
-    final session = FakeSessionActions();
-    final container = ProviderContainer(
-      overrides: [
-        authRepositoryProvider.overrideWithValue(repository),
-        tokenStorageProvider.overrideWithValue(tokenStorage),
-        sessionActionsProvider.overrideWith(() => session),
-      ],
-    );
-    addTearDown(container.dispose);
-    await container.read(appAuthControllerProvider.future);
-    container.read(appAuthControllerProvider.notifier).setSignedIn();
+  test(
+    'sign-out delegates to the core session and flips app auth state',
+    () async {
+      final session = FakeSessionActions();
+      final container = ProviderContainer(
+        overrides: [
+          authRepositoryProvider.overrideWithValue(repository),
+          tokenStorageProvider.overrideWithValue(tokenStorage),
+          sessionActionsProvider.overrideWith(() => session),
+        ],
+      );
+      addTearDown(container.dispose);
+      await container.read(appAuthControllerProvider.future);
+      container.read(appAuthControllerProvider.notifier).setSignedIn();
 
-    await container.read(authControllerProvider.notifier).signOut();
+      await container.read(authControllerProvider.notifier).signOut();
 
-    expect(session.signOutCalls, 1);
-    expect(container.read(appAuthControllerProvider).value, isFalse);
-  });
+      expect(session.signOutCalls, 1);
+      expect(container.read(appAuthControllerProvider).value, isFalse);
+    },
+  );
 
   test('verifyResetToken succeeds without touching app auth state', () async {
     when(() => repository.verifyResetToken(any())).thenAnswer((_) async {});
@@ -157,7 +193,9 @@ void main() {
     final container = makeContainer();
     await container.read(appAuthControllerProvider.future);
 
-    await container.read(authControllerProvider.notifier).verifyResetToken('some-token');
+    await container
+        .read(authControllerProvider.notifier)
+        .verifyResetToken('some-token');
 
     expect(container.read(authControllerProvider).hasError, isFalse);
     expect(container.read(appAuthControllerProvider).value, isFalse);
@@ -174,7 +212,9 @@ void main() {
     final container = makeContainer();
     await container.read(appAuthControllerProvider.future);
 
-    await container.read(authControllerProvider.notifier).resetPassword(token: 'some-token', password: 'new-password');
+    await container
+        .read(authControllerProvider.notifier)
+        .resetPassword(token: 'some-token', password: 'new-password');
 
     expect(container.read(authControllerProvider).hasError, isFalse);
     expect(container.read(appAuthControllerProvider).value, isFalse);
@@ -182,7 +222,9 @@ void main() {
 
   test('signInWithGoogle obtains a native ID token then exchanges it, '
       'flipping app auth state to signed-in', () async {
-    when(() => googleSignIn.signIn()).thenAnswer((_) async => 'google-id-token');
+    when(
+      () => googleSignIn.signIn(),
+    ).thenAnswer((_) async => 'google-id-token');
     when(
       () => repository.signInWithGoogle(idToken: any(named: 'idToken')),
     ).thenAnswer((_) async => const SocialSignedIn());
@@ -190,56 +232,90 @@ void main() {
     final container = makeContainer();
     await container.read(appAuthControllerProvider.future);
 
-    final outcome = await container.read(authControllerProvider.notifier).signInWithGoogle();
+    final outcome = await container
+        .read(authControllerProvider.notifier)
+        .signInWithGoogle();
 
     expect(outcome, isA<SocialSignedIn>());
-    verify(() => repository.signInWithGoogle(idToken: 'google-id-token')).called(1);
+    verify(
+      () => repository.signInWithGoogle(idToken: 'google-id-token'),
+    ).called(1);
     expect(container.read(authControllerProvider).hasError, isFalse);
     expect(container.read(appAuthControllerProvider).value, isTrue);
   });
 
-  test('signInWithGoogle for an unknown email returns NeedsRegistration and stays signed out', () async {
-    when(() => googleSignIn.signIn()).thenAnswer((_) async => 'google-id-token');
-    when(
-      () => repository.signInWithGoogle(idToken: any(named: 'idToken')),
-    ).thenAnswer((_) async => const SocialNeedsRegistration(tempToken: 't', email: 'e@x.org', fullName: 'N'));
+  test(
+    'signInWithGoogle for an unknown email returns NeedsRegistration and stays signed out',
+    () async {
+      when(
+        () => googleSignIn.signIn(),
+      ).thenAnswer((_) async => 'google-id-token');
+      when(
+        () => repository.signInWithGoogle(idToken: any(named: 'idToken')),
+      ).thenAnswer(
+        (_) async => const SocialNeedsRegistration(
+          tempToken: 't',
+          email: 'e@x.org',
+          fullName: 'N',
+        ),
+      );
 
-    final container = makeContainer();
-    await container.read(appAuthControllerProvider.future);
+      final container = makeContainer();
+      await container.read(appAuthControllerProvider.future);
 
-    final outcome = await container.read(authControllerProvider.notifier).signInWithGoogle();
+      final outcome = await container
+          .read(authControllerProvider.notifier)
+          .signInWithGoogle();
 
-    expect(outcome, isA<SocialNeedsRegistration>());
-    expect(container.read(appAuthControllerProvider).value, isFalse);
-  });
+      expect(outcome, isA<SocialNeedsRegistration>());
+      expect(container.read(appAuthControllerProvider).value, isFalse);
+    },
+  );
 
-  test('signInWithGoogle propagates a cancelled native sign-in as an error', () async {
-    when(() => googleSignIn.signIn()).thenThrow(Exception('Sign-in cancelled.'));
+  test(
+    'signInWithGoogle propagates a cancelled native sign-in as an error',
+    () async {
+      when(
+        () => googleSignIn.signIn(),
+      ).thenThrow(Exception('Sign-in cancelled.'));
 
-    final container = makeContainer();
-    await container.read(appAuthControllerProvider.future);
+      final container = makeContainer();
+      await container.read(appAuthControllerProvider.future);
 
-    await expectLater(container.read(authControllerProvider.notifier).signInWithGoogle(), throwsException);
+      await expectLater(
+        container.read(authControllerProvider.notifier).signInWithGoogle(),
+        throwsException,
+      );
 
-    verifyNever(() => repository.signInWithGoogle(idToken: any(named: 'idToken')));
-    expect(container.read(appAuthControllerProvider).value, isFalse);
-  });
+      verifyNever(
+        () => repository.signInWithGoogle(idToken: any(named: 'idToken')),
+      );
+      expect(container.read(appAuthControllerProvider).value, isFalse);
+    },
+  );
 
   test('signInWithApple obtains a native identity token then exchanges it, '
       'flipping app auth state to signed-in', () async {
+    when(() => appleSignIn.signIn()).thenAnswer(
+      (_) async =>
+          (identityToken: 'apple-identity-token', email: 'ada@icloud.com'),
+    );
     when(
-      () => appleSignIn.signIn(),
-    ).thenAnswer((_) async => (identityToken: 'apple-identity-token', email: 'ada@icloud.com'));
-    when(
-      () => repository.signInWithApple(identityToken: any(named: 'identityToken')),
-    ).thenAnswer((_) async => const AuthSession(accessToken: 'a', refreshToken: 'r'));
+      () => repository.signInWithApple(
+        identityToken: any(named: 'identityToken'),
+      ),
+    ).thenAnswer(
+      (_) async => const AuthSession(accessToken: 'a', refreshToken: 'r'),
+    );
 
     final container = makeContainer();
     await container.read(appAuthControllerProvider.future);
 
     await container.read(authControllerProvider.notifier).signInWithApple();
 
-    verify(() => repository.signInWithApple(identityToken: 'apple-identity-token')).called(1);
+    verify(
+      () => repository.signInWithApple(identityToken: 'apple-identity-token'),
+    ).called(1);
     expect(container.read(appAuthControllerProvider).value, isTrue);
   });
 }

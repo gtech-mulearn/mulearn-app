@@ -50,8 +50,10 @@ class TaskDetailScreen extends ConsumerWidget {
             Expanded(
               child: tasksState.when(
                 loading: () => const Center(child: CircularProgressIndicator()),
-                error: (error, _) =>
-                    ErrorRetryView(error: error, onRetry: () => ref.invalidate(tasksControllerProvider)),
+                error: (error, _) => ErrorRetryView(
+                  error: error,
+                  onRetry: () => ref.invalidate(tasksControllerProvider),
+                ),
                 data: (_) => task == null
                     ? const Center(
                         child: SingleChildScrollView(
@@ -75,7 +77,13 @@ class TaskDetailScreen extends ConsumerWidget {
 
 Future<void> _copyHashtag(BuildContext context, TaskCatalogItem task) async {
   await Clipboard.setData(ClipboardData(text: task.hashtag!));
-  if (context.mounted) MuToast.show(context, message: 'Copied ${task.hashtag}', type: MuToastType.success);
+  if (context.mounted) {
+    MuToast.show(
+      context,
+      message: 'Copied ${task.hashtag}',
+      type: MuToastType.success,
+    );
+  }
 }
 
 final _urlPattern = RegExp(r'https?://[^\s)\]>"]+');
@@ -89,31 +97,59 @@ class _Body extends StatelessWidget {
   Widget build(BuildContext context) {
     final mu = context.mu;
     final c = mu.colors;
-    final description = task.description == null ? '' : unescapeLiteralUnicode(task.description!).trim();
-    final links = {for (final m in _urlPattern.allMatches(description)) m.group(0)!}.toList();
-    final level = task.level == null || task.level!.isEmpty ? null : levelLabel(task.level);
-    final hashtag = task.hashtag == null || task.hashtag!.isEmpty ? null : task.hashtag!;
+    final description = task.description == null
+        ? ''
+        : unescapeLiteralUnicode(task.description!).trim();
+    final links = {
+      for (final m in _urlPattern.allMatches(description)) m.group(0)!,
+    }.toList();
+    final level = task.level == null || task.level!.isEmpty
+        ? null
+        : levelLabel(task.level);
+    final hashtag = task.hashtag == null || task.hashtag!.isEmpty
+        ? null
+        : task.hashtag!;
 
     return ListView(
-      physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-      padding: const EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space2, MuSpacing.space5, MuSpacing.space8),
+      physics: const BouncingScrollPhysics(
+        parent: AlwaysScrollableScrollPhysics(),
+      ),
+      padding: const EdgeInsets.fromLTRB(
+        MuSpacing.space5,
+        MuSpacing.space2,
+        MuSpacing.space5,
+        MuSpacing.space8,
+      ),
       children: [
         Semantics(
           header: true,
-          child: Text(task.title, style: mu.text.display.copyWith(fontSize: 38)),
+          child: Text(
+            task.title,
+            style: mu.text.display.copyWith(fontSize: 38),
+          ),
         ),
         const SizedBox(height: MuSpacing.space4),
         Wrap(
           spacing: 6,
           runSpacing: 6,
           children: [
-            if (hashtag != null) MuPill(hashtag, tone: MuPillTone.night, mono: true),
+            if (hashtag != null)
+              MuPill(hashtag, tone: MuPillTone.night, mono: true),
             if (level != null) MuPill(level, tone: MuPillTone.cobalt),
             if (task.completed)
-              MuPill('+${muGrouped(task.karma.toInt())} earned', tone: MuPillTone.success, icon: LucideIcons.check)
+              MuPill(
+                '+${muGrouped(task.karma.toInt())} earned',
+                tone: MuPillTone.success,
+                icon: LucideIcons.check,
+              )
             else
-              MuPill('+${muGrouped(task.karma.toInt())} karma', tone: MuPillTone.volt),
-            if (task.interestGroupName != null && task.interestGroupName!.isNotEmpty) MuPill(task.interestGroupName!),
+              MuPill(
+                '+${muGrouped(task.karma.toInt())} karma',
+                tone: MuPillTone.volt,
+              ),
+            if (task.interestGroupName != null &&
+                task.interestGroupName!.isNotEmpty)
+              MuPill(task.interestGroupName!),
           ],
         ),
         const SizedBox(height: MuSpacing.space6),
@@ -145,8 +181,16 @@ class _Card extends StatelessWidget {
   Widget build(BuildContext context) {
     final mu = context.mu;
     return Container(
-      padding: const EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space4, MuSpacing.space5, MuSpacing.space4),
-      decoration: BoxDecoration(color: mu.colors.surface, borderRadius: BorderRadius.circular(MuRadii.card)),
+      padding: const EdgeInsets.fromLTRB(
+        MuSpacing.space5,
+        MuSpacing.space4,
+        MuSpacing.space5,
+        MuSpacing.space4,
+      ),
+      decoration: BoxDecoration(
+        color: mu.colors.surface,
+        borderRadius: BorderRadius.circular(MuRadii.card),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -183,12 +227,24 @@ class _Markdown extends StatelessWidget {
           h3: mu.text.bodyStrong,
           strong: body.copyWith(color: c.ink, fontWeight: FontWeight.w700),
           em: body.copyWith(fontStyle: FontStyle.italic),
-          a: body.copyWith(color: c.cobaltText, decoration: TextDecoration.underline),
+          a: body.copyWith(
+            color: c.cobaltText,
+            decoration: TextDecoration.underline,
+          ),
           listBullet: body,
-          code: mu.text.codeSm.copyWith(color: c.ink, backgroundColor: c.surfaceSunk),
-          codeblockDecoration: BoxDecoration(color: c.surfaceSunk, borderRadius: BorderRadius.circular(MuRadii.tag)),
+          code: mu.text.codeSm.copyWith(
+            color: c.ink,
+            backgroundColor: c.surfaceSunk,
+          ),
+          codeblockDecoration: BoxDecoration(
+            color: c.surfaceSunk,
+            borderRadius: BorderRadius.circular(MuRadii.tag),
+          ),
           blockquote: body,
-          blockquoteDecoration: BoxDecoration(color: c.surfaceSunk, borderRadius: BorderRadius.circular(MuRadii.tag)),
+          blockquoteDecoration: BoxDecoration(
+            color: c.surfaceSunk,
+            borderRadius: BorderRadius.circular(MuRadii.tag),
+          ),
           blockquotePadding: const EdgeInsets.all(MuSpacing.space3),
         ),
       ),
@@ -213,7 +269,10 @@ class _Resources extends ConsumerWidget {
     final c = mu.colors;
     return Container(
       padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(color: c.cobalt, borderRadius: BorderRadius.circular(MuRadii.card)),
+      decoration: BoxDecoration(
+        color: c.cobalt,
+        borderRadius: BorderRadius.circular(MuRadii.card),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -225,12 +284,17 @@ class _Resources extends ConsumerWidget {
             children: [
               for (final url in links)
                 MuPressable(
-                  onTap: () => unawaited(ref.read(openExternalProvider)(Uri.parse(url))),
+                  onTap: () =>
+                      unawaited(ref.read(openExternalProvider)(Uri.parse(url))),
                   child: Semantics(
                     link: true,
                     label: 'Open ${_label(url)}',
                     excludeSemantics: true,
-                    child: MuPill(_label(url), tone: MuPillTone.paper, icon: LucideIcons.arrowUpRight),
+                    child: MuPill(
+                      _label(url),
+                      tone: MuPillTone.paper,
+                      icon: LucideIcons.arrowUpRight,
+                    ),
                   ),
                 ),
             ],
@@ -253,7 +317,8 @@ class _SubmitBar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final mu = context.mu;
     final c = mu.colors;
-    final needsDiscord = ref.watch(capabilitiesProvider).value?.needsDiscord ?? false;
+    final needsDiscord =
+        ref.watch(capabilitiesProvider).value?.needsDiscord ?? false;
     final canConnect = ref.watch(discordAuthUriProvider) != null;
 
     final Widget child;
@@ -261,11 +326,18 @@ class _SubmitBar extends ConsumerWidget {
       child = Container(
         height: 56,
         alignment: Alignment.center,
-        decoration: BoxDecoration(color: c.successTint, borderRadius: BorderRadius.circular(MuRadii.round)),
+        decoration: BoxDecoration(
+          color: c.successTint,
+          borderRadius: BorderRadius.circular(MuRadii.round),
+        ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(LucideIcons.checkCircle2, color: c.success, size: MuSizes.iconMd),
+            Icon(
+              LucideIcons.checkCircle2,
+              color: c.success,
+              size: MuSizes.iconMd,
+            ),
             const SizedBox(width: MuSpacing.space2),
             Text(
               'Completed · ${muGrouped(task.karma.toInt())} karma earned',
@@ -280,12 +352,15 @@ class _SubmitBar extends ConsumerWidget {
         icon: LucideIcons.messageCircle,
         variant: MuButtonVariant.ink,
         block: true,
-        onPressed: () => unawaited(ref.read(discordConnectFlowProvider.notifier).start()),
+        onPressed: () =>
+            unawaited(ref.read(discordConnectFlowProvider.notifier).start()),
       );
     } else {
       child = Center(
         child: MuSlideToConfirm(
-          label: task.hashtag == null || task.hashtag!.isEmpty ? 'Open Discord to submit' : 'Copy hashtag & open Discord',
+          label: task.hashtag == null || task.hashtag!.isEmpty
+              ? 'Open Discord to submit'
+              : 'Copy hashtag & open Discord',
           confirmedLabel: 'Opened Discord',
           icon: LucideIcons.send,
           onConfirmed: () async {
@@ -299,7 +374,12 @@ class _SubmitBar extends ConsumerWidget {
     }
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space2, MuSpacing.space5, MuSpacing.space3),
+      padding: const EdgeInsets.fromLTRB(
+        MuSpacing.space5,
+        MuSpacing.space2,
+        MuSpacing.space5,
+        MuSpacing.space3,
+      ),
       child: child,
     );
   }

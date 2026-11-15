@@ -11,25 +11,41 @@ const _items = [
   MuNavItem(icon: LucideIcons.user, label: 'You'),
 ];
 
-Widget _host({required int index, required ValueChanged<int> onSelect, double width = 360}) => MaterialApp(
+Widget _host({
+  required int index,
+  required ValueChanged<int> onSelect,
+  double width = 360,
+}) => MaterialApp(
   home: MediaQuery(
     data: MediaQueryData(size: Size(width, 760)),
     child: Scaffold(
       body: const SizedBox(),
-      bottomNavigationBar: MuNavCapsule(items: _items, currentIndex: index, onSelect: onSelect, badges: const {2}),
+      bottomNavigationBar: MuNavCapsule(
+        items: _items,
+        currentIndex: index,
+        onSelect: onSelect,
+        badges: const {2},
+      ),
     ),
   ),
 );
 
 void main() {
-  testWidgets('every tab is a labelled button; the current one is selected', (tester) async {
+  testWidgets('every tab is a labelled button; the current one is selected', (
+    tester,
+  ) async {
     await tester.pumpWidget(_host(index: 0, onSelect: (_) {}));
     for (final item in _items) {
       expect(find.bySemanticsLabel(item.label), findsOneWidget);
     }
     expect(
       tester.getSemantics(find.bySemanticsLabel('Home')),
-      isSemantics(isButton: true, isSelected: true, label: 'Home', hasTapAction: true),
+      isSemantics(
+        isButton: true,
+        isSelected: true,
+        label: 'Home',
+        hasTapAction: true,
+      ),
     );
   });
 
@@ -37,7 +53,8 @@ void main() {
     var index = 0;
     await tester.pumpWidget(
       StatefulBuilder(
-        builder: (context, setState) => _host(index: index, onSelect: (i) => setState(() => index = i)),
+        builder: (context, setState) =>
+            _host(index: index, onSelect: (i) => setState(() => index = i)),
       ),
     );
     await tester.tap(find.bySemanticsLabel('Ranks'));
@@ -64,7 +81,9 @@ void main() {
     await tester.pumpAndSettle();
     expect(tester.takeException(), isNull);
   });
-  testWidgets('at 360dp the selected tab shows its label without overflow', (tester) async {
+  testWidgets('at 360dp the selected tab shows its label without overflow', (
+    tester,
+  ) async {
     tester.view.physicalSize = const Size(360, 760);
     tester.view.devicePixelRatio = 1;
     addTearDown(tester.view.reset);

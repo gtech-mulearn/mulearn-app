@@ -18,21 +18,36 @@ import '../../support/fake_secure_storage.dart';
 import '../../support/fixtures.dart';
 
 const _p = '/api/v1/dashboard/projects';
-const _me = '04afe242-e329-4491-af58-d555abd82e5f'; // QA Student One (dev/user_profile)
+const _me =
+    '04afe242-e329-4491-af58-d555abd82e5f'; // QA Student One (dev/user_profile)
 
 // Dev had no projects on 2026-11-15 (see projects_feed.json), so this row is
 // SYNTHETIC, built field for field from `ProjectSerializer`
 // (api/dashboard/projects/projects_serializer.py, origin/dev).
-Map<String, dynamic> _project({String owner = _me, List<Map<String, dynamic>> votes = const []}) => {
+Map<String, dynamic> _project({
+  String owner = _me,
+  List<Map<String, dynamic>> votes = const [],
+}) => {
   'id': 'p1',
   'title': 'Campus Bus Tracker',
-  'description': 'Live bus positions for the campus shuttle, built with Flutter and a tiny Django API.',
+  'description':
+      'Live bus positions for the campus shuttle, built with Flutter and a tiny Django API.',
   'status': 'published',
   'logo': null,
   'images': <Object>[],
   'links': [
-    {'id': 'l2', 'label': 'Demo', 'url': 'https://bus.example.org', 'position': 1},
-    {'id': 'l1', 'label': 'GitHub', 'url': 'https://github.com/qa/bus', 'position': 0},
+    {
+      'id': 'l2',
+      'label': 'Demo',
+      'url': 'https://bus.example.org',
+      'position': 1,
+    },
+    {
+      'id': 'l1',
+      'label': 'GitHub',
+      'url': 'https://github.com/qa/bus',
+      'position': 0,
+    },
   ],
   'skills': [
     {'id': 's1', 'name': 'Flutter', 'code': 'flutter', 'icon': null},
@@ -82,21 +97,35 @@ void main() {
     final p = ProjectsRepositoryImpl.parse(
       _project(
         votes: [
-          {'id': 'v1', 'vote': 'upvote', 'project': 'p1', 'user_id': _me, 'created_at': '', 'updated_at': ''},
+          {
+            'id': 'v1',
+            'vote': 'upvote',
+            'project': 'p1',
+            'user_id': _me,
+            'created_at': '',
+            'updated_at': '',
+          },
         ],
       ),
     )!;
     expect(p.links.map((l) => l.label), ['GitHub', 'Demo']);
-    expect(p.members.single.muid, isNull, reason: 'an outsider has no profile to open');
+    expect(
+      p.members.single.muid,
+      isNull,
+      reason: 'an outsider has no profile to open',
+    );
     expect(p.upvotes, 1);
     expect(p.upvoteBy(_me)?.id, 'v1');
     expect(p.comments.single.authorName, 'Dev Admin');
 
-    final empty = ProjectsRepositoryImpl.parsePage(loadFixtureResponse('dev/projects_feed')! as Map<String, dynamic>);
+    final empty = ProjectsRepositoryImpl.parsePage(
+      loadFixtureResponse('dev/projects_feed')! as Map<String, dynamic>,
+    );
     expect(empty.items, isEmpty);
 
     final people = ProjectsRepositoryImpl.parsePeople(
-      loadFixtureResponse('dev/user_search_default_p1')! as Map<String, dynamic>,
+      loadFixtureResponse('dev/user_search_default_p1')!
+          as Map<String, dynamic>,
     );
     expect(people, hasLength(30));
     expect(people.first.muid, isNotNull);
@@ -114,14 +143,27 @@ void main() {
           'data': {
             'Projects': [current],
           },
-          'pagination': {'count': 1, 'totalPages': 1, 'isNext': false, 'isPrev': false, 'nextPage': null},
+          'pagination': {
+            'count': 1,
+            'totalPages': 1,
+            'isNext': false,
+            'isPrev': false,
+            'nextPage': null,
+          },
         }),
       ),
       'GET $_p/p1/': (_) => FakeResponse(200, _env({'Project': current})),
       'POST $_p/vote/': (_) {
         current = _project(
           votes: [
-            {'id': 'v9', 'vote': 'upvote', 'project': 'p1', 'user_id': _me, 'created_at': '', 'updated_at': ''},
+            {
+              'id': 'v9',
+              'vote': 'upvote',
+              'project': 'p1',
+              'user_id': _me,
+              'created_at': '',
+              'updated_at': '',
+            },
           ],
         );
         return FakeResponse(200, _env({'Vote': <String, Object>{}}));
@@ -130,8 +172,10 @@ void main() {
         current = _project();
         return FakeResponse(200, _env(null));
       },
-      'GET /api/v1/dashboard/user/search/': (_) => FakeResponse(200, loadFixture('dev/user_search_default_p1')),
-      'POST $_p/p1/members/': (_) => FakeResponse(200, _env({'Member': <String, Object>{}})),
+      'GET /api/v1/dashboard/user/search/': (_) =>
+          FakeResponse(200, loadFixture('dev/user_search_default_p1')),
+      'POST $_p/p1/members/': (_) =>
+          FakeResponse(200, _env({'Member': <String, Object>{}})),
       'GET /api/v1/dashboard/skill/': (_) => FakeResponse(
         200,
         _env({
@@ -159,7 +203,8 @@ void main() {
         dioProvider.overrideWithValue(fakeDio(adapter)),
         tokenStorageProvider.overrideWithValue(tokens),
         myProfilePayloadProvider.overrideWith(
-          (ref) async => loadFixtureResponse('dev/user_profile')! as Map<String, dynamic>,
+          (ref) async =>
+              loadFixtureResponse('dev/user_profile')! as Map<String, dynamic>,
         ),
       ],
     );
@@ -168,7 +213,10 @@ void main() {
       initialLocation: start,
       routes: [
         GoRoute(path: '/projects', builder: (_, _) => const ProjectsScreen()),
-        GoRoute(path: '/projects/new', builder: (_, _) => const ProjectFormScreen()),
+        GoRoute(
+          path: '/projects/new',
+          builder: (_, _) => const ProjectFormScreen(),
+        ),
         GoRoute(
           path: '/projects/:id',
           builder: (_, s) => ProjectDetailScreen(id: s.pathParameters['id']!),
@@ -181,13 +229,18 @@ void main() {
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
-        child: MaterialApp.router(theme: MuThemeData.light(), routerConfig: router),
+        child: MaterialApp.router(
+          theme: MuThemeData.light(),
+          routerConfig: router,
+        ),
       ),
     );
     await settle(tester);
   }
 
-  testWidgets('explore shows the card; upvote and take it back', (tester) async {
+  testWidgets('explore shows the card; upvote and take it back', (
+    tester,
+  ) async {
     await pump(tester, '/projects');
     expect(find.text('Campus Bus Tracker'), findsOneWidget);
 
@@ -200,41 +253,63 @@ void main() {
     await tester.tap(find.widgetWithText(MuButton, 'Upvoted · 1'));
     await settle(tester);
     expect(
-      adapter.requests.where((RequestOptions r) => r.method == 'DELETE' && r.path.endsWith('/vote/v9/')),
+      adapter.requests.where(
+        (RequestOptions r) =>
+            r.method == 'DELETE' && r.path.endsWith('/vote/v9/'),
+      ),
       hasLength(1),
     );
     expect(find.widgetWithText(MuButton, 'Upvote · 0'), findsOneWidget);
   });
 
-  testWidgets('the owner adds teammates by searching members, or by name', (tester) async {
+  testWidgets('the owner adds teammates by searching members, or by name', (
+    tester,
+  ) async {
     await pump(tester, '/projects/p1');
     await tester.tap(find.text('Add'));
     await settle(tester);
-    await tester.enterText(find.descendant(of: find.byType(MuSearchField), matching: find.byType(TextField)), 'af');
+    await tester.enterText(
+      find.descendant(
+        of: find.byType(MuSearchField),
+        matching: find.byType(TextField),
+      ),
+      'af',
+    );
     await tester.pump(const Duration(milliseconds: 400));
     await settle(tester);
-    final searched = adapter.requests.lastWhere((RequestOptions r) => r.path.endsWith('/user/search/'));
+    final searched = adapter.requests.lastWhere(
+      (RequestOptions r) => r.path.endsWith('/user/search/'),
+    );
     expect(searched.queryParameters['search'], 'af');
     expect(find.text('afif shoufeer'), findsOneWidget);
     final inSheet = find.byType(MuFormSheet);
-    expect(find.descendant(of: inSheet, matching: find.text('qamentorone@mulearn')), findsOneWidget);
+    expect(
+      find.descendant(of: inSheet, matching: find.text('qamentorone@mulearn')),
+      findsOneWidget,
+    );
     expect(
       find.descendant(of: inSheet, matching: find.text('qastudentone@mulearn')),
       findsNothing,
       reason: 'the owner is already on the team',
     );
 
-    final add = find.descendant(of: inSheet, matching: find.widgetWithText(MuButton, 'Add')).first;
+    final add = find
+        .descendant(of: inSheet, matching: find.widgetWithText(MuButton, 'Add'))
+        .first;
     await tester.ensureVisible(add);
     await tester.pump();
     await tester.tap(add);
     await settle(tester);
-    final added = adapter.requests.lastWhere((RequestOptions r) => r.method == 'POST' && r.path.endsWith('/members/'));
+    final added = adapter.requests.lastWhere(
+      (RequestOptions r) => r.method == 'POST' && r.path.endsWith('/members/'),
+    );
     expect((added.data as Map)['muid'], isNotNull);
     expect((added.data as Map).containsKey('external_name'), isFalse);
   });
 
-  testWidgets('a new project needs a real description and two links', (tester) async {
+  testWidgets('a new project needs a real description and two links', (
+    tester,
+  ) async {
     await pump(tester, '/projects/new');
     await tester.enterText(find.byType(TextField).at(0), 'Bus Tracker');
     await tester.enterText(find.byType(TextField).at(1), 'Too short');
@@ -242,7 +317,10 @@ void main() {
     await settle(tester);
     expect(find.textContaining('at least 50 characters'), findsOneWidget);
     expect(find.textContaining('Add at least two links'), findsOneWidget);
-    expect(adapter.requests.where((RequestOptions r) => r.method == 'POST'), isEmpty);
+    expect(
+      adapter.requests.where((RequestOptions r) => r.method == 'POST'),
+      isEmpty,
+    );
 
     await tester.enterText(
       find.byType(TextField).at(1),
@@ -253,8 +331,12 @@ void main() {
     await tester.tap(find.text('Flutter'));
     await tester.tap(find.widgetWithText(MuButton, 'Save draft'));
     await settle(tester);
-    final post = adapter.requests.lastWhere((RequestOptions r) => r.method == 'POST' && r.path == '$_p/');
-    final fields = {for (final f in (post.data as FormData).fields) f.key: f.value};
+    final post = adapter.requests.lastWhere(
+      (RequestOptions r) => r.method == 'POST' && r.path == '$_p/',
+    );
+    final fields = {
+      for (final f in (post.data as FormData).fields) f.key: f.value,
+    };
     expect(fields['status'], 'draft');
     expect(fields['links_json'], contains('https://github.com/qa/bus'));
     expect(fields['skill_ids_json'], '["s1"]');

@@ -14,7 +14,10 @@ void main() {
           body: Center(
             child: SizedBox(
               width: 240,
-              child: Builder(builder: (context) => PosterName(name, style: context.mu.text.poster)),
+              child: Builder(
+                builder: (context) =>
+                    PosterName(name, style: context.mu.text.poster),
+              ),
             ),
           ),
         ),
@@ -25,12 +28,21 @@ void main() {
     return text.style!.fontSize!;
   }
 
-  testWidgets('short names are big; long names step down; nothing overflows', (tester) async {
+  testWidgets('short names are big; long names step down; nothing overflows', (
+    tester,
+  ) async {
     final short = await sizeFor(tester, 'Dev Admin');
-    final long = await sizeFor(tester, 'Muhammed Abdul Rahman Kunhikannan Puthiyaveettil');
+    final long = await sizeFor(
+      tester,
+      'Muhammed Abdul Rahman Kunhikannan Puthiyaveettil',
+    );
     final word = await sizeFor(tester, 'Venkataraghavanarasimhan');
     expect(short, 48);
     expect(long, lessThan(short));
-    expect(word, lessThan(short), reason: 'a long single word shrinks rather than breaking');
+    expect(
+      word,
+      lessThan(short),
+      reason: 'a long single word shrinks rather than breaking',
+    );
   });
 }

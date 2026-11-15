@@ -22,6 +22,8 @@ abstract class CampusSearchResult with _$CampusSearchResult {
 /// A page of campus results and whether another follows.
 @freezed
 abstract class CampusSearchPage with _$CampusSearchPage {
-  const factory CampusSearchPage({required List<CampusSearchResult> results, required bool hasMore}) =
-      _CampusSearchPage;
+  const factory CampusSearchPage({
+    required List<CampusSearchResult> results,
+    required bool hasMore,
+  }) = _CampusSearchPage;
 }

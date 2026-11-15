@@ -34,14 +34,29 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('tiles fill by IG category and stack into two columns', (tester) async {
+  testWidgets('tiles fill by IG category and stack into two columns', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       _host(
         MuBento(
           tiles: [
-            MuTile(title: 'IoT & Robotics Circle', category: IgCategory.maker, size: MuTileSize.tall, onTap: () {}),
-            MuTile(title: 'ToDo List', category: IgCategory.coder, onTap: () {}),
-            const MuTile(title: 'Connect Discord', category: IgCategory.creative, size: MuTileSize.short),
+            MuTile(
+              title: 'IoT & Robotics Circle',
+              category: IgCategory.maker,
+              size: MuTileSize.tall,
+              onTap: () {},
+            ),
+            MuTile(
+              title: 'ToDo List',
+              category: IgCategory.coder,
+              onTap: () {},
+            ),
+            const MuTile(
+              title: 'Connect Discord',
+              category: IgCategory.creative,
+              size: MuTileSize.short,
+            ),
           ],
         ),
       ),
@@ -54,10 +69,22 @@ void main() {
     expect(creative.dy, greaterThan(coder.dy));
 
     final fills = tester
-        .widgetList<Container>(find.descendant(of: find.byType(MuTile), matching: find.byType(Container)))
+        .widgetList<Container>(
+          find.descendant(
+            of: find.byType(MuTile),
+            matching: find.byType(Container),
+          ),
+        )
         .map((c) => (c.decoration as BoxDecoration?)?.color)
         .toSet();
-    expect(fills, containsAll([MuPalette.light.igMaker, MuPalette.light.igCoder, MuPalette.light.igCreative]));
+    expect(
+      fills,
+      containsAll([
+        MuPalette.light.igMaker,
+        MuPalette.light.igCoder,
+        MuPalette.light.igCreative,
+      ]),
+    );
     expect(tester.takeException(), isNull);
   });
 
@@ -65,21 +92,41 @@ void main() {
     await tester.pumpWidget(
       _host(
         const MuBento(
-          tiles: [MuTile(title: 'Pick an Interest Group to get your first tasks', size: MuTileSize.wide)],
+          tiles: [
+            MuTile(
+              title: 'Pick an Interest Group to get your first tasks',
+              size: MuTileSize.wide,
+            ),
+          ],
         ),
       ),
     );
     expect(tester.getSize(find.byType(MuTile)).width, 320);
   });
 
-  testWidgets('a tile alone on its row spans the row; pairs share a height', (tester) async {
+  testWidgets('a tile alone on its row spans the row; pairs share a height', (
+    tester,
+  ) async {
     await tester.pumpWidget(
       _host(
         MuBento(
           tiles: [
-            MuTile(title: 'Find a task', category: IgCategory.coder, onTap: () {}),
-            MuTile(title: 'Learning circles', category: IgCategory.maker, meta: 'Learn with a group', onTap: () {}),
-            MuTile(title: 'Internships & gigs', category: IgCategory.creative, onTap: () {}),
+            MuTile(
+              title: 'Find a task',
+              category: IgCategory.coder,
+              onTap: () {},
+            ),
+            MuTile(
+              title: 'Learning circles',
+              category: IgCategory.maker,
+              meta: 'Learn with a group',
+              onTap: () {},
+            ),
+            MuTile(
+              title: 'Internships & gigs',
+              category: IgCategory.creative,
+              onTap: () {},
+            ),
           ],
         ),
       ),
@@ -112,7 +159,12 @@ void main() {
         ),
       ),
     );
-    final box = tester.widget<Container>(find.descendant(of: find.byType(MuPill), matching: find.byType(Container)));
+    final box = tester.widget<Container>(
+      find.descendant(
+        of: find.byType(MuPill),
+        matching: find.byType(Container),
+      ),
+    );
     final fill = (box.decoration! as BoxDecoration).color!;
     expect(fill.computeLuminance(), greaterThan(0.9));
   });

@@ -24,8 +24,14 @@ void main() {
 
   Map<String, dynamic> withStats({int weekly = 120, int streak = 5}) {
     final body = loadFixture('dev/learner_summary');
-    final response = Map<String, dynamic>.of(body['response'] as Map<String, dynamic>);
-    response['stats'] = {...response['stats'] as Map<String, dynamic>, 'weekly_karma': weekly, 'streak_days': streak};
+    final response = Map<String, dynamic>.of(
+      body['response'] as Map<String, dynamic>,
+    );
+    response['stats'] = {
+      ...response['stats'] as Map<String, dynamic>,
+      'weekly_karma': weekly,
+      'streak_days': streak,
+    };
     return {...body, 'response': response};
   }
 
@@ -33,42 +39,65 @@ void main() {
     opened = [];
     summary = withStats();
     adapter = FakeHttpAdapter({
-      'GET /api/v1/dashboard/profile/user-profile/': (_) => FakeResponse(200, loadFixture('dev/user_profile')),
-      'GET /api/v1/dashboard/user/info/': (_) => FakeResponse(200, loadFixture('dev/user_info')),
+      'GET /api/v1/dashboard/profile/user-profile/': (_) =>
+          FakeResponse(200, loadFixture('dev/user_profile')),
+      'GET /api/v1/dashboard/user/info/': (_) =>
+          FakeResponse(200, loadFixture('dev/user_info')),
       'GET $_summaryPath': (_) => FakeResponse(200, summary),
-      'GET /api/v1/leaderboard/students/': (_) => FakeResponse(200, loadFixture('dev/leaderboard_students')),
-      'GET /api/v1/dashboard/events/featured/': (_) => FakeResponse(200, loadFixture('dev/events_featured')),
+      'GET /api/v1/leaderboard/students/': (_) =>
+          FakeResponse(200, loadFixture('dev/leaderboard_students')),
+      'GET /api/v1/dashboard/events/featured/': (_) =>
+          FakeResponse(200, loadFixture('dev/events_featured')),
       'GET /api/v1/notification/unread-count/': (_) => const FakeResponse(200, {
-            'hasError': false,
-            'statusCode': 200,
-            'message': {'general': <String>[]},
-            'response': {'unread_count': 0},
-          }),
+        'hasError': false,
+        'statusCode': 200,
+        'message': {'general': <String>[]},
+        'response': {'unread_count': 0},
+      }),
     });
   });
 
   Future<GoRouter> pumpHome(WidgetTester tester) async {
     final tokens = TokenStorage(FakeSecureStorage());
     await tokens.saveTokens(accessToken: 'a', refreshToken: 'r');
-    final container = ProviderContainer(retry: (_, __) => null, overrides: [
-      dioProvider.overrideWithValue(fakeDio(adapter)),
-      tokenStorageProvider.overrideWithValue(tokens),
-      discordAuthUriProvider.overrideWithValue(Uri.parse('https://discord.com/oauth2/authorize?client_id=1')),
-      openExternalProvider.overrideWithValue((uri) async {
-        opened.add(uri);
-        return true;
-      }),
-    ]);
+    final container = ProviderContainer(
+      retry: (_, __) => null,
+      overrides: [
+        dioProvider.overrideWithValue(fakeDio(adapter)),
+        tokenStorageProvider.overrideWithValue(tokens),
+        discordAuthUriProvider.overrideWithValue(
+          Uri.parse('https://discord.com/oauth2/authorize?client_id=1'),
+        ),
+        openExternalProvider.overrideWithValue((uri) async {
+          opened.add(uri);
+          return true;
+        }),
+      ],
+    );
     addTearDown(container.dispose);
-    final router = GoRouter(initialLocation: '/home', routes: [
-      GoRoute(path: '/home', builder: (_, __) => const HomeScreen()),
-      GoRoute(path: '/meetings/:id', builder: (_, s) => Text('meeting ${s.pathParameters['id']}')),
-      GoRoute(path: '/interest-groups', builder: (_, __) => const Text('groups')),
-    ]);
+    final router = GoRouter(
+      initialLocation: '/home',
+      routes: [
+        GoRoute(path: '/home', builder: (_, __) => const HomeScreen()),
+        GoRoute(
+          path: '/meetings/:id',
+          builder: (_, s) => Text('meeting ${s.pathParameters['id']}'),
+        ),
+        GoRoute(
+          path: '/interest-groups',
+          builder: (_, __) => const Text('groups'),
+        ),
+      ],
+    );
     addTearDown(router.dispose);
     tester.view.physicalSize = const Size(1080, 4000);
     addTearDown(tester.view.resetPhysicalSize);
-    await tester.pumpWidget(UncontrolledProviderScope(container: container, child: MaterialApp.router(routerConfig: router)));
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp.router(routerConfig: router),
+      ),
+    );
     for (var i = 0; i < 8; i++) {
       await tester.pump(const Duration(milliseconds: 50));
     }
@@ -82,12 +111,15 @@ void main() {
     expect(find.textContaining('lvl1'), findsNothing);
   });
 
-  testWidgets("this week's karma and the streak come from the learner summary", (tester) async {
-    await pumpHome(tester);
+  testWidgets(
+    "this week's karma and the streak come from the learner summary",
+    (tester) async {
+      await pumpHome(tester);
 
-    expect(find.text('+120 this week'), findsOneWidget);
-    expect(find.text('5-day streak'), findsOneWidget);
-  });
+      expect(find.text('+120 this week'), findsOneWidget);
+      expect(find.text('5-day streak'), findsOneWidget);
+    },
+  );
 
   testWidgets('no streak, no streak line', (tester) async {
     summary = withStats(streak: 0);
@@ -97,12 +129,17 @@ void main() {
   });
 
   testWidgets('the next meetup opens its meeting', (tester) async {
-    final meeting = (summary['response'] as Map<String, dynamic>)['next_meeting'] as Map<String, dynamic>;
+    final meeting =
+        (summary['response'] as Map<String, dynamic>)['next_meeting']
+            as Map<String, dynamic>;
     await pumpHome(tester);
 
     expect(find.text('Up next'), findsOneWidget);
     expect(find.text(meeting['title'] as String), findsOneWidget);
-    expect(find.textContaining(meeting['circle_name'] as String), findsOneWidget);
+    expect(
+      find.textContaining(meeting['circle_name'] as String),
+      findsOneWidget,
+    );
 
     await tester.tap(find.text(meeting['title'] as String));
     await tester.pumpAndSettle();
@@ -116,24 +153,36 @@ void main() {
     expect(find.text('Up next'), findsNothing);
   });
 
-  testWidgets('setup lists only what is left: Discord here, interest groups already joined', (tester) async {
-    await pumpHome(tester); // dev/user_info: not in the server; dev/user_profile: 3 groups
+  testWidgets(
+    'setup lists only what is left: Discord here, interest groups already joined',
+    (tester) async {
+      await pumpHome(
+        tester,
+      ); // dev/user_info: not in the server; dev/user_profile: 3 groups
 
-    expect(find.text('Get set up'), findsOneWidget);
-    expect(find.text('Connect Discord'), findsOneWidget);
-    expect(find.text('Join interest groups'), findsNothing);
+      expect(find.text('Get set up'), findsOneWidget);
+      expect(find.text('Connect Discord'), findsOneWidget);
+      expect(find.text('Join interest groups'), findsNothing);
 
-    await tester.tap(find.text('Connect Discord'));
-    await tester.pump();
-    expect(opened.single.host, 'discord.com');
-  });
+      await tester.tap(find.text('Connect Discord'));
+      await tester.pump();
+      expect(opened.single.host, 'discord.com');
+    },
+  );
 
-  testWidgets('a failed summary offers a retry and keeps the rest of Home', (tester) async {
+  testWidgets('a failed summary offers a retry and keeps the rest of Home', (
+    tester,
+  ) async {
     adapter.routes['GET $_summaryPath'] = (_) => const FakeResponse(-1, null);
     await pumpHome(tester);
 
     expect(find.text("Couldn't load your week"), findsOneWidget);
     expect(find.text('TOTAL KARMA'), findsOneWidget);
-    expect(adapter.requests.where((RequestOptions r) => r.uri.path == _summaryPath).length, 1);
+    expect(
+      adapter.requests
+          .where((RequestOptions r) => r.uri.path == _summaryPath)
+          .length,
+      1,
+    );
   });
 }

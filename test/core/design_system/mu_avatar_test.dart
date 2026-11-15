@@ -21,22 +21,38 @@ void main() {
 
   test('peer sentences name the first two people', () {
     expect(
-      MuPeerLine.sentence(['Arjun J', 'Sneha M', 'Rahul'], 11, scope: 'from CET'),
+      MuPeerLine.sentence(
+        ['Arjun J', 'Sneha M', 'Rahul'],
+        11,
+        scope: 'from CET',
+      ),
       'Arjun, Sneha & 9 others from CET',
     );
-    expect(MuPeerLine.sentence(['Arjun', 'Sneha'], 3), 'Arjun, Sneha & 1 other');
+    expect(
+      MuPeerLine.sentence(['Arjun', 'Sneha'], 3),
+      'Arjun, Sneha & 1 other',
+    );
     expect(MuPeerLine.sentence(['Arjun', 'Sneha'], 2), 'Arjun and Sneha');
     expect(MuPeerLine.sentence([], 214), '214 people');
   });
 
-  testWidgets('avatar without a photo shows initials and its name to screen readers', (tester) async {
-    await tester.pumpWidget(_host(const MuAvatar(name: 'Aysha Rahman', size: 40)));
-    expect(find.text('AR'), findsOneWidget);
-    expect(find.bySemanticsLabel('Aysha Rahman'), findsOneWidget);
-  });
+  testWidgets(
+    'avatar without a photo shows initials and its name to screen readers',
+    (tester) async {
+      await tester.pumpWidget(
+        _host(const MuAvatar(name: 'Aysha Rahman', size: 40)),
+      );
+      expect(find.text('AR'), findsOneWidget);
+      expect(find.bySemanticsLabel('Aysha Rahman'), findsOneWidget);
+    },
+  );
 
   testWidgets('stack shows three faces then +N', (tester) async {
-    await tester.pumpWidget(_host(const MuAvatarStack(names: ['A B', 'C D', 'E F', 'G H'], extraCount: 5)));
+    await tester.pumpWidget(
+      _host(
+        const MuAvatarStack(names: ['A B', 'C D', 'E F', 'G H'], extraCount: 5),
+      ),
+    );
     expect(find.byType(MuAvatar), findsNWidgets(3));
     expect(find.text('+6'), findsOneWidget);
     expect(find.bySemanticsLabel('9 people'), findsOneWidget);

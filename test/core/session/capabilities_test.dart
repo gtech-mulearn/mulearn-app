@@ -11,20 +11,31 @@ import '../../support/fixtures.dart';
 /// not); mentor approval from GET /dashboard/mentor/status/ (live on dev:
 /// the QA mentor's role link is unverified while its application is APPROVED).
 void main() {
-  CurrentUser user(String fixture) =>
-      CurrentUserDto.fromJson(loadFixture(fixture)['response'] as Map<String, dynamic>).toDomain();
+  CurrentUser user(String fixture) => CurrentUserDto.fromJson(
+    loadFixture(fixture)['response'] as Map<String, dynamic>,
+  ).toDomain();
 
-  final approved = (loadFixture('dev/mentor_status')['response'] as List<dynamic>)
-      .map((j) => MentorApplicationDto.fromJson(j as Map<String, dynamic>).toDomain())
-      .toList();
+  final approved =
+      (loadFixture('dev/mentor_status')['response'] as List<dynamic>)
+          .map(
+            (j) => MentorApplicationDto.fromJson(
+              j as Map<String, dynamic>,
+            ).toDomain(),
+          )
+          .toList();
 
   test('a student is a learner who still needs Discord', () {
     final c = Capabilities.derive(user('dev/user_info'), const []);
 
     expect(c.isLearner, isTrue);
     expect(c.needsDiscord, isTrue);
-    expect([c.isMentor, c.isMentorApproved, c.isEnabler, c.isCampusLead, c.isCompany],
-        everyElement(isFalse));
+    expect([
+      c.isMentor,
+      c.isMentorApproved,
+      c.isEnabler,
+      c.isCampusLead,
+      c.isCompany,
+    ], everyElement(isFalse));
   });
 
   test('a mentor with an approved application is an approved mentor', () {
@@ -57,21 +68,55 @@ void main() {
 
   test('unknown role titles grant nothing', () {
     final c = Capabilities.derive(
-      const CurrentUser(muid: 'x@mulearn', fullName: 'X', roles: ['Pre Member', 'WEB IGLead', 'Admins']),
-      const [MentorApplication(id: 'a', status: 'APPROVED', mentorTier: 'IG_MENTOR')],
+      const CurrentUser(
+        muid: 'x@mulearn',
+        fullName: 'X',
+        roles: ['Pre Member', 'WEB IGLead', 'Admins'],
+      ),
+      const [
+        MentorApplication(id: 'a', status: 'APPROVED', mentorTier: 'IG_MENTOR'),
+      ],
     );
 
-    expect(
-      [c.isLearner, c.isMentor, c.isMentorApproved, c.isEnabler, c.isCampusLead, c.isCompany],
-      everyElement(isFalse),
-    );
+    expect([
+      c.isLearner,
+      c.isMentor,
+      c.isMentorApproved,
+      c.isEnabler,
+      c.isCampusLead,
+      c.isCompany,
+    ], everyElement(isFalse));
     expect(c.needsDiscord, isTrue);
   });
 
-  test('the jobs board is for everyone but mentors and companies, as on the dashboard', () {
-    expect(Capabilities.derive(user('dev/user_info'), const []).canBrowseJobs, isTrue);
-    expect(Capabilities.derive(user('dev/user_info_enabler'), const []).canBrowseJobs, isTrue);
-    expect(Capabilities.derive(user('dev/user_info_campuslead'), const []).canBrowseJobs, isTrue);
-    expect(Capabilities.derive(user('dev/user_info_mentor'), const []).canBrowseJobs, isFalse);
-  });
+  test(
+    'the jobs board is for everyone but mentors and companies, as on the dashboard',
+    () {
+      expect(
+        Capabilities.derive(user('dev/user_info'), const []).canBrowseJobs,
+        isTrue,
+      );
+      expect(
+        Capabilities.derive(
+          user('dev/user_info_enabler'),
+          const [],
+        ).canBrowseJobs,
+        isTrue,
+      );
+      expect(
+        Capabilities.derive(
+          user('dev/user_info_campuslead'),
+          const [],
+        ).canBrowseJobs,
+        isTrue,
+      );
+      expect(
+        Capabilities.derive(
+          user('dev/user_info_mentor'),
+          const [],
+        ).canBrowseJobs,
+        isFalse,
+      );
+    },
+  );
 }

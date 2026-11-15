@@ -42,13 +42,22 @@ Map<String, dynamic> _officeHours({
   'updated_at': '2026-11-01T10:00:00Z',
 };
 
-Map<String, dynamic> _page(List<Map<String, dynamic>> rows, {bool isNext = false}) => {
+Map<String, dynamic> _page(
+  List<Map<String, dynamic>> rows, {
+  bool isNext = false,
+}) => {
   'hasError': false,
   'statusCode': 200,
   'message': {'general': <String>[]},
   'response': {
     'data': rows,
-    'pagination': {'count': rows.length, 'totalPages': 1, 'isNext': isNext, 'isPrev': false, 'nextPage': null},
+    'pagination': {
+      'count': rows.length,
+      'totalPages': 1,
+      'isNext': isNext,
+      'isPrev': false,
+      'nextPage': null,
+    },
   },
 };
 
@@ -69,7 +78,13 @@ void main() {
 
     final oh = WeeklyTwitchesRepositoryImpl.parse(
       TwitchShow.officeHours,
-      _officeHours(id: 'o1', title: 'Shipping daily', date: '21/11/2026', status: 'ongoing', time: null),
+      _officeHours(
+        id: 'o1',
+        title: 'Shipping daily',
+        date: '21/11/2026',
+        status: 'ongoing',
+        time: null,
+      ),
     )!;
     expect(oh.date, DateTime(2026, 11, 21));
     expect(oh.time, isNull);
@@ -77,11 +92,18 @@ void main() {
     expect(oh.speaker, 'Asha Menon · Staff Engineer');
     expect(oh.interestGroups, ['Web Development']);
 
-    expect(WeeklyTwitchesRepositoryImpl.parse(TwitchShow.officeHours, {'id': 'x', 'date': 'soon'}), isNull);
+    expect(
+      WeeklyTwitchesRepositoryImpl.parse(TwitchShow.officeHours, {
+        'id': 'x',
+        'date': 'soon',
+      }),
+      isNull,
+    );
 
     final empty = WeeklyTwitchesRepositoryImpl.parsePage(
       TwitchShow.officeHours,
-      loadFixtureResponse('dev/weekly_twitches_office_hours_empty')! as Map<String, dynamic>,
+      loadFixtureResponse('dev/weekly_twitches_office_hours_empty')!
+          as Map<String, dynamic>,
     );
     expect(empty.items, isEmpty);
     expect(empty.hasNext, isFalse);
@@ -95,18 +117,38 @@ void main() {
         200,
         r.queryParameters['status'] == 'completed'
             ? _page([
-                _officeHours(id: 'p1', title: 'Your first open-source PR', date: '2026-11-01', status: 'completed'),
+                _officeHours(
+                  id: 'p1',
+                  title: 'Your first open-source PR',
+                  date: '2026-11-01',
+                  status: 'completed',
+                ),
               ])
             : _page([
-                _officeHours(id: 'u2', title: 'Later talk', date: '2026-11-28', status: 'upcoming'),
-                _officeHours(id: 'u1', title: 'Shipping daily', date: '2026-11-15', status: 'ongoing'),
+                _officeHours(
+                  id: 'u2',
+                  title: 'Later talk',
+                  date: '2026-11-28',
+                  status: 'upcoming',
+                ),
+                _officeHours(
+                  id: 'u1',
+                  title: 'Shipping daily',
+                  date: '2026-11-15',
+                  status: 'ongoing',
+                ),
               ]),
       ),
       'GET $_base/office-hours/u1/': (_) => FakeResponse(200, {
         'hasError': false,
         'statusCode': 200,
         'message': {'general': <String>[]},
-        'response': _officeHours(id: 'u1', title: 'Shipping daily', date: '2026-11-15', status: 'ongoing'),
+        'response': _officeHours(
+          id: 'u1',
+          title: 'Shipping daily',
+          date: '2026-11-15',
+          status: 'ongoing',
+        ),
       }),
       'GET $_base/salt-mango-tree/': (_) => FakeResponse(200, _page(const [])),
     });
@@ -117,17 +159,25 @@ void main() {
     await tokens.saveTokens(accessToken: 'a', refreshToken: 'r');
     final container = ProviderContainer(
       retry: (_, _) => null,
-      overrides: [dioProvider.overrideWithValue(fakeDio(adapter)), tokenStorageProvider.overrideWithValue(tokens)],
+      overrides: [
+        dioProvider.overrideWithValue(fakeDio(adapter)),
+        tokenStorageProvider.overrideWithValue(tokens),
+      ],
     );
     addTearDown(container.dispose);
     final router = GoRouter(
       initialLocation: '/weekly-twitches',
       routes: [
-        GoRoute(path: '/weekly-twitches', builder: (_, _) => const WeeklyTwitchesScreen()),
+        GoRoute(
+          path: '/weekly-twitches',
+          builder: (_, _) => const WeeklyTwitchesScreen(),
+        ),
         GoRoute(
           path: '/weekly-twitches/:show/:id',
-          builder: (_, s) =>
-              TwitchDetailScreen(show: TwitchShow.from(s.pathParameters['show'])!, id: s.pathParameters['id']!),
+          builder: (_, s) => TwitchDetailScreen(
+            show: TwitchShow.from(s.pathParameters['show'])!,
+            id: s.pathParameters['id']!,
+          ),
         ),
       ],
     );
@@ -137,7 +187,10 @@ void main() {
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
-        child: MaterialApp.router(theme: MuThemeData.light(), routerConfig: router),
+        child: MaterialApp.router(
+          theme: MuThemeData.light(),
+          routerConfig: router,
+        ),
       ),
     );
     for (var i = 0; i < 8; i++) {
@@ -145,28 +198,35 @@ void main() {
     }
   }
 
-  testWidgets('a show lists what is coming up soonest first, then past episodes', (tester) async {
-    await pump(tester);
+  testWidgets(
+    'a show lists what is coming up soonest first, then past episodes',
+    (tester) async {
+      await pump(tester);
 
-    final soon = tester.getTopLeft(find.text('Shipping daily'));
-    final later = tester.getTopLeft(find.text('Later talk'));
-    final past = tester.getTopLeft(find.text('Your first open-source PR'));
-    expect(soon.dy, lessThan(later.dy), reason: 'soonest first');
-    expect(later.dy, lessThan(past.dy), reason: 'past episodes after');
-    expect(find.text('Today'), findsOneWidget);
+      final soon = tester.getTopLeft(find.text('Shipping daily'));
+      final later = tester.getTopLeft(find.text('Later talk'));
+      final past = tester.getTopLeft(find.text('Your first open-source PR'));
+      expect(soon.dy, lessThan(later.dy), reason: 'soonest first');
+      expect(later.dy, lessThan(past.dy), reason: 'past episodes after');
+      expect(find.text('Today'), findsOneWidget);
 
-    final sent = adapter.requests.map((r) => r.queryParameters['status']).toSet();
-    expect(sent, {'upcoming,ongoing', 'completed'});
+      final sent = adapter.requests
+          .map((r) => r.queryParameters['status'])
+          .toSet();
+      expect(sent, {'upcoming,ongoing', 'completed'});
 
-    await tester.tap(find.text('Salt Mango Tree'));
-    for (var i = 0; i < 6; i++) {
-      await tester.pump(const Duration(milliseconds: 50));
-    }
-    expect(find.textContaining('Nothing announced yet'), findsOneWidget);
-    expect(find.text('No past episodes yet.'), findsOneWidget);
-  });
+      await tester.tap(find.text('Salt Mango Tree'));
+      for (var i = 0; i < 6; i++) {
+        await tester.pump(const Duration(milliseconds: 50));
+      }
+      expect(find.textContaining('Nothing announced yet'), findsOneWidget);
+      expect(find.text('No past episodes yet.'), findsOneWidget);
+    },
+  );
 
-  testWidgets('an episode shows who and when, and Join now on the day', (tester) async {
+  testWidgets('an episode shows who and when, and Join now on the day', (
+    tester,
+  ) async {
     await pump(tester);
     await tester.tap(find.text('Shipping daily'));
     for (var i = 0; i < 10; i++) {

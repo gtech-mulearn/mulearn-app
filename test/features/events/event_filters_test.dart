@@ -20,23 +20,40 @@ void main() {
   setUp(() {
     adapter = FakeHttpAdapter({
       'GET $_events': (o) => FakeResponse(
-            200,
-            loadFixture(o.queryParameters.length > 2 ? 'dev/events_filtered' : 'dev/events_page1'),
-          ),
-      'GET /api/v1/dashboard/profile/user-profile/': (_) => FakeResponse(200, loadFixture('dev/user_profile')),
+        200,
+        loadFixture(
+          o.queryParameters.length > 2
+              ? 'dev/events_filtered'
+              : 'dev/events_page1',
+        ),
+      ),
+      'GET /api/v1/dashboard/profile/user-profile/': (_) =>
+          FakeResponse(200, loadFixture('dev/user_profile')),
     });
   });
 
   List<Map<String, dynamic>> queries() => [
-        for (final r in adapter.requests)
-          if (r.uri.path == _events) Map.of(r.queryParameters),
-      ];
+    for (final r in adapter.requests)
+      if (r.uri.path == _events) Map.of(r.queryParameters),
+  ];
 
   test('only the filters that are set are sent', () {
     expect(const EventFilter().query, isEmpty);
     expect(
-      EventFilter(search: ' git ', eventType: 'workshop', igId: 'ig1', from: DateTime(2026, 11, 5), eligibleOnly: true).query,
-      {'search': 'git', 'event_type': 'workshop', 'ig_id': 'ig1', 'start_date': '2026-11-05', 'eligible_only': 'true'},
+      EventFilter(
+        search: ' git ',
+        eventType: 'workshop',
+        igId: 'ig1',
+        from: DateTime(2026, 11, 5),
+        eligibleOnly: true,
+      ).query,
+      {
+        'search': 'git',
+        'event_type': 'workshop',
+        'ig_id': 'ig1',
+        'start_date': '2026-11-05',
+        'eligible_only': 'true',
+      },
     );
   });
 
@@ -47,36 +64,65 @@ void main() {
 
     final page = await c.read(eventsListControllerProvider(f).future);
 
-    expect(queries().single, {'pageIndex': 1, 'perPage': 20, 'event_type': 'workshop', 'eligible_only': 'true'});
+    expect(queries().single, {
+      'pageIndex': 1,
+      'perPage': 20,
+      'event_type': 'workshop',
+      'eligible_only': 'true',
+    });
     expect(page.items, isNotEmpty);
   });
 
   test('every backend event type has a label', () {
-    expect(eventTypeLabels.keys, containsAll(['hackathon', 'workshop', 'networking_event', 'cultural_event']));
+    expect(
+      eventTypeLabels.keys,
+      containsAll([
+        'hackathon',
+        'workshop',
+        'networking_event',
+        'cultural_event',
+      ]),
+    );
     expect(eventTypeLabels['networking_event'], 'Networking Event');
     expect(eventTypeLabels, hasLength(14));
   });
 
   Future<void> pumpScreen(WidgetTester tester) async {
     final c = await eventsContainer(adapter);
-    await tester.pumpWidget(UncontrolledProviderScope(container: c, child: const MaterialApp(home: EventsScreen())));
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: c,
+        child: const MaterialApp(home: EventsScreen()),
+      ),
+    );
     await settle(tester);
   }
 
   // The dashboard's learner events grid: StateDisplay "no-results", default copy.
-  testWidgets('no events shows the illustrated no-results state', (tester) async {
+  testWidgets('no events shows the illustrated no-results state', (
+    tester,
+  ) async {
     adapter.routes['GET $_events'] = (_) => const FakeResponse(200, {
-          'hasError': false,
-          'statusCode': 200,
-          'message': {'general': <String>[]},
-          'response': {
-            'data': <Object>[],
-            'pagination': {'count': 0, 'totalPages': 1, 'isNext': false, 'isPrev': false, 'nextPage': null},
-          },
-        });
+      'hasError': false,
+      'statusCode': 200,
+      'message': {'general': <String>[]},
+      'response': {
+        'data': <Object>[],
+        'pagination': {
+          'count': 0,
+          'totalPages': 1,
+          'isNext': false,
+          'isPrev': false,
+          'nextPage': null,
+        },
+      },
+    });
     await pumpScreen(tester);
 
-    expect(tester.widget<MuStateDisplay>(find.byType(MuStateDisplay)).variant, MuStateVariant.noResults);
+    expect(
+      tester.widget<MuStateDisplay>(find.byType(MuStateDisplay)).variant,
+      MuStateVariant.noResults,
+    );
     expect(find.text('Nothing here. Yet.'), findsOneWidget);
     expect(find.text('Clear filters'), findsNothing);
   });

@@ -21,43 +21,71 @@ void main() {
 
   setUp(() {
     adapter = mentorAdapter();
-    adapter.routes['POST $_create'] =
-        (_) => FakeResponse(200, okEnvelope({'id': 'new-session'}, message: 'Session created successfully.'));
-    adapter.routes['GET $mentorBase/session/list/new-session/'] =
-        (_) => FakeResponse(200, okEnvelope(recordedSession({'id': 'new-session', 'title': 'Career clinic'})));
-    adapter.routes['GET $mentorBase/session/participant/list/new-session/'] = (_) => FakeResponse(200, pagedEnvelope(const []));
+    adapter.routes['POST $_create'] = (_) => FakeResponse(
+      200,
+      okEnvelope({
+        'id': 'new-session',
+      }, message: 'Session created successfully.'),
+    );
+    adapter.routes['GET $mentorBase/session/list/new-session/'] = (_) =>
+        FakeResponse(
+          200,
+          okEnvelope(
+            recordedSession({'id': 'new-session', 'title': 'Career clinic'}),
+          ),
+        );
+    adapter.routes['GET $mentorBase/session/participant/list/new-session/'] =
+        (_) => FakeResponse(200, pagedEnvelope(const []));
   });
 
   Map<String, dynamic> bodyOf(String method, String path) {
-    final r = adapter.requests.lastWhere((RequestOptions r) => r.method == method && r.uri.path == path);
-    return (r.data is String ? jsonDecode(r.data as String) : r.data) as Map<String, dynamic>;
+    final r = adapter.requests.lastWhere(
+      (RequestOptions r) => r.method == method && r.uri.path == path,
+    );
+    return (r.data is String ? jsonDecode(r.data as String) : r.data)
+        as Map<String, dynamic>;
   }
 
-  testWidgets('a new session posts its scope, mode and UTC times, then opens it', (tester) async {
-    final router = await pumpMentor(tester, adapter, '/mentor/sessions');
-    // push() completes only when the route pops; don't wait on it.
-    unawaited(router.push('/mentor/sessions/new'));
-    await settleMentor(tester);
+  testWidgets(
+    'a new session posts its scope, mode and UTC times, then opens it',
+    (tester) async {
+      final router = await pumpMentor(tester, adapter, '/mentor/sessions');
+      // push() completes only when the route pops; don't wait on it.
+      unawaited(router.push('/mentor/sessions/new'));
+      await settleMentor(tester);
 
-    await tester.enterText(find.widgetWithText(TextFormField, 'Title'), 'Career clinic');
-    await tester.enterText(find.widgetWithText(TextFormField, 'Meeting link'), 'https://meet.example/c');
-    await tester.tap(find.text('Create session'));
-    await settleMentor(tester);
+      await tester.enterText(
+        find.widgetWithText(TextFormField, 'Title'),
+        'Career clinic',
+      );
+      await tester.enterText(
+        find.widgetWithText(TextFormField, 'Meeting link'),
+        'https://meet.example/c',
+      );
+      await tester.tap(find.text('Create session'));
+      await settleMentor(tester);
 
-    final body = bodyOf('POST', _create);
-    expect(body['session_type'], 'IG_SESSION');
-    expect(body['entity_id'], '4ff0a5e5-d1ef-44dd-ac13-9a2f9e7717e3');
-    expect(body['title'], 'Career clinic');
-    expect(body['mode'], 'ONLINE');
-    expect(body['venue'], '');
-    expect(body['meeting_link'], 'https://meet.example/c');
-    expect(DateTime.parse(body['starts_at'] as String).isUtc, isTrue);
-    await tester.pump(const Duration(milliseconds: 600)); // the form's route finishes leaving
-    expect(find.byType(MentorSessionDetailScreen), findsOneWidget);
-    expect(find.text('Career clinic'), findsOneWidget);
-    expect(find.text('New session'), findsNothing, reason: 'the form was replaced, not stacked');
-    await tester.pump(const Duration(seconds: 4)); // let the toast go
-  });
+      final body = bodyOf('POST', _create);
+      expect(body['session_type'], 'IG_SESSION');
+      expect(body['entity_id'], '4ff0a5e5-d1ef-44dd-ac13-9a2f9e7717e3');
+      expect(body['title'], 'Career clinic');
+      expect(body['mode'], 'ONLINE');
+      expect(body['venue'], '');
+      expect(body['meeting_link'], 'https://meet.example/c');
+      expect(DateTime.parse(body['starts_at'] as String).isUtc, isTrue);
+      await tester.pump(
+        const Duration(milliseconds: 600),
+      ); // the form's route finishes leaving
+      expect(find.byType(MentorSessionDetailScreen), findsOneWidget);
+      expect(find.text('Career clinic'), findsOneWidget);
+      expect(
+        find.text('New session'),
+        findsNothing,
+        reason: 'the form was replaced, not stacked',
+      );
+      await tester.pump(const Duration(seconds: 4)); // let the toast go
+    },
+  );
 
   testWidgets('a copied meeting link can be pasted in one tap', (tester) async {
     final copied = captureClipboard(tester)..add('https://meet.example/pasted');
@@ -69,60 +97,102 @@ void main() {
     expect(copied, hasLength(1));
   });
 
-  testWidgets("the backend's field error shows under its field", (tester) async {
+  testWidgets("the backend's field error shows under its field", (
+    tester,
+  ) async {
     // Recorded on dev: {general: [], meeting_link: [...]}.
-    adapter.routes['POST $_create'] = (_) => FakeResponse(400, loadFixture('dev/mentor_session_create_bad_mode'));
+    adapter.routes['POST $_create'] = (_) =>
+        FakeResponse(400, loadFixture('dev/mentor_session_create_bad_mode'));
     await pumpMentor(tester, adapter, '/mentor/sessions/new');
 
-    await tester.enterText(find.widgetWithText(TextFormField, 'Title'), 'Career clinic');
-    await tester.enterText(find.widgetWithText(TextFormField, 'Meeting link'), 'https://meet.example/x');
+    await tester.enterText(
+      find.widgetWithText(TextFormField, 'Title'),
+      'Career clinic',
+    );
+    await tester.enterText(
+      find.widgetWithText(TextFormField, 'Meeting link'),
+      'https://meet.example/x',
+    );
     await tester.tap(find.text('Create session'));
     await settleMentor(tester);
 
-    expect(find.text('Meeting link must not be provided for an offline session.'), findsOneWidget);
+    expect(
+      find.text('Meeting link must not be provided for an offline session.'),
+      findsOneWidget,
+    );
   });
 
   // Final review, Important 3: errors keyed to fields the form doesn't show
   // (recurrence_*, non_field_errors, …) were set aside and never rendered.
-  testWidgets("a backend error for a field the form doesn't show is still shown", (tester) async {
+  testWidgets("a backend error for a field the form doesn't show is still shown", (
+    tester,
+  ) async {
     adapter.routes['POST $_create'] = (_) => const FakeResponse(400, {
-          'hasError': true,
-          'statusCode': 400,
-          'message': {
-            'general': <String>[],
-            'recurrence_interval': ['recurrence_interval must be a positive integer when is_recurring is true.'],
-          },
-          'response': <String, dynamic>{},
-        });
+      'hasError': true,
+      'statusCode': 400,
+      'message': {
+        'general': <String>[],
+        'recurrence_interval': [
+          'recurrence_interval must be a positive integer when is_recurring is true.',
+        ],
+      },
+      'response': <String, dynamic>{},
+    });
     await pumpMentor(tester, adapter, '/mentor/sessions/new');
 
-    await tester.enterText(find.widgetWithText(TextFormField, 'Title'), 'Career clinic');
+    await tester.enterText(
+      find.widgetWithText(TextFormField, 'Title'),
+      'Career clinic',
+    );
     await tester.tap(find.text('Create session'));
     await settleMentor(tester);
 
-    expect(find.text('recurrence_interval must be a positive integer when is_recurring is true.'), findsOneWidget);
+    expect(
+      find.text(
+        'recurrence_interval must be a positive integer when is_recurring is true.',
+      ),
+      findsOneWidget,
+    );
   });
 
-  testWidgets('a shown and a hidden field error both reach the mentor, once each', (tester) async {
-    adapter.routes['POST $_create'] = (_) => const FakeResponse(400, {
-          'hasError': true,
-          'statusCode': 400,
-          'message': {
-            'general': <String>[],
-            'title': ['A session with this exact title and start time already exists.'],
-            'non_field_errors': ['You do not have an active mentor grant for this scope.'],
-          },
-          'response': <String, dynamic>{},
-        });
-    await pumpMentor(tester, adapter, '/mentor/sessions/new');
+  testWidgets(
+    'a shown and a hidden field error both reach the mentor, once each',
+    (tester) async {
+      adapter.routes['POST $_create'] = (_) => const FakeResponse(400, {
+        'hasError': true,
+        'statusCode': 400,
+        'message': {
+          'general': <String>[],
+          'title': [
+            'A session with this exact title and start time already exists.',
+          ],
+          'non_field_errors': [
+            'You do not have an active mentor grant for this scope.',
+          ],
+        },
+        'response': <String, dynamic>{},
+      });
+      await pumpMentor(tester, adapter, '/mentor/sessions/new');
 
-    await tester.enterText(find.widgetWithText(TextFormField, 'Title'), 'Career clinic');
-    await tester.tap(find.text('Create session'));
-    await settleMentor(tester);
+      await tester.enterText(
+        find.widgetWithText(TextFormField, 'Title'),
+        'Career clinic',
+      );
+      await tester.tap(find.text('Create session'));
+      await settleMentor(tester);
 
-    expect(find.text('A session with this exact title and start time already exists.'), findsOneWidget);
-    expect(find.text('You do not have an active mentor grant for this scope.'), findsOneWidget);
-  });
+      expect(
+        find.text(
+          'A session with this exact title and start time already exists.',
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.text('You do not have an active mentor grant for this scope.'),
+        findsOneWidget,
+      );
+    },
+  );
 
   testWidgets('a missing title is refused before any request', (tester) async {
     await pumpMentor(tester, adapter, '/mentor/sessions/new');
@@ -131,46 +201,85 @@ void main() {
     await settleMentor(tester);
 
     expect(find.text('Title is required.'), findsOneWidget);
-    expect(adapter.requests.where((RequestOptions r) => r.method == 'POST'), isEmpty);
+    expect(
+      adapter.requests.where((RequestOptions r) => r.method == 'POST'),
+      isEmpty,
+    );
   });
 
   testWidgets('a mentor with nowhere to create is told why', (tester) async {
-    adapter.routes['GET $mentorBase/overview/'] = (_) => FakeResponse(200, okEnvelope({'scopes': <Object>[]}));
+    adapter.routes['GET $mentorBase/overview/'] = (_) =>
+        FakeResponse(200, okEnvelope({'scopes': <Object>[]}));
     await pumpMentor(tester, adapter, '/mentor/sessions/new');
 
     expect(find.text('No mentoring scope yet'), findsOneWidget);
-    expect(tester.widget<MuPrimaryButton>(find.widgetWithText(MuPrimaryButton, 'Create session')).onPressed, isNull);
+    expect(
+      tester
+          .widget<MuPrimaryButton>(
+            find.widgetWithText(MuPrimaryButton, 'Create session'),
+          )
+          .onPressed,
+      isNull,
+    );
   });
 
-  testWidgets('a global mentor picks one of their interest groups', (tester) async {
+  testWidgets('a global mentor picks one of their interest groups', (
+    tester,
+  ) async {
     adapter.routes['GET $mentorBase/overview/'] = (_) => FakeResponse(
-          200,
-          okEnvelope({
-            'scopes': [
-              {'scope_type': 'MENTOR', 'scope_id': '', 'scope_name': 'Global', 'metrics': <String, dynamic>{}},
-            ],
-          }),
-        );
+      200,
+      okEnvelope({
+        'scopes': [
+          {
+            'scope_type': 'MENTOR',
+            'scope_id': '',
+            'scope_name': 'Global',
+            'metrics': <String, dynamic>{},
+          },
+        ],
+      }),
+    );
     await pumpMentor(tester, adapter, '/mentor/sessions/new');
 
-    expect(find.text('Web Development'), findsOneWidget, reason: 'the IG from tasks/ig-dropdown is the target');
+    expect(
+      find.text('Web Development'),
+      findsOneWidget,
+      reason: 'the IG from tasks/ig-dropdown is the target',
+    );
     await tester.enterText(find.widgetWithText(TextFormField, 'Title'), 'AMA');
-    await tester.enterText(find.widgetWithText(TextFormField, 'Meeting link'), 'https://meet.example/a');
+    await tester.enterText(
+      find.widgetWithText(TextFormField, 'Meeting link'),
+      'https://meet.example/a',
+    );
     await tester.tap(find.text('Create session'));
     await settleMentor(tester);
 
-    expect(bodyOf('POST', _create)['entity_id'], '4ff0a5e5-d1ef-44dd-ac13-9a2f9e7717e3');
+    expect(
+      bodyOf('POST', _create)['entity_id'],
+      '4ff0a5e5-d1ef-44dd-ac13-9a2f9e7717e3',
+    );
     expect(bodyOf('POST', _create)['session_type'], 'IG_SESSION');
     await tester.pump(const Duration(seconds: 4)); // let the toast go
   });
 
-  testWidgets('editing prefills the session and patches only editable fields', (tester) async {
-    adapter.routes['PATCH $mentorBase/session/update/$_sessionId/'] =
-        (_) => FakeResponse(200, okEnvelope(<String, dynamic>{}, message: 'Session updated'));
+  testWidgets('editing prefills the session and patches only editable fields', (
+    tester,
+  ) async {
+    adapter.routes['PATCH $mentorBase/session/update/$_sessionId/'] = (_) =>
+        FakeResponse(
+          200,
+          okEnvelope(<String, dynamic>{}, message: 'Session updated'),
+        );
     await pumpMentor(tester, adapter, '/mentor/sessions/$_sessionId/edit');
 
-    expect(find.text('Office hours: debugging your first Flutter app'), findsOneWidget);
-    await tester.enterText(find.widgetWithText(TextFormField, 'Title'), 'Office hours (moved)');
+    expect(
+      find.text('Office hours: debugging your first Flutter app'),
+      findsOneWidget,
+    );
+    await tester.enterText(
+      find.widgetWithText(TextFormField, 'Title'),
+      'Office hours (moved)',
+    );
     await tester.tap(find.text('Save changes'));
     await settleMentor(tester);
 
@@ -181,10 +290,18 @@ void main() {
     await tester.pump(const Duration(seconds: 4)); // let the toast go
   });
 
-  testWidgets('the hub opens New session only when there is a scope', (tester) async {
-    adapter.routes['GET $mentorBase/overview/'] = (_) => FakeResponse(200, okEnvelope({'scopes': <Object>[]}));
+  testWidgets('the hub opens New session only when there is a scope', (
+    tester,
+  ) async {
+    adapter.routes['GET $mentorBase/overview/'] = (_) =>
+        FakeResponse(200, okEnvelope({'scopes': <Object>[]}));
     await pumpMentor(tester, adapter, '/mentor');
 
-    expect(tester.widget<MuButton>(find.widgetWithText(MuButton, 'New session')).onPressed, isNull);
+    expect(
+      tester
+          .widget<MuButton>(find.widgetWithText(MuButton, 'New session'))
+          .onPressed,
+      isNull,
+    );
   });
 }

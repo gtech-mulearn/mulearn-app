@@ -44,7 +44,10 @@ class _ProjectsScreenState extends ConsumerState<ProjectsScreen> {
   bool _onScroll(ScrollNotification n) {
     if (_tab != _Tab.explore) return false;
     final feed = ref.read(projectsFeedProvider(_query)).value;
-    if (n.metrics.extentAfter < 600 && feed != null && feed.hasMore && feed.loadMoreError == null) {
+    if (n.metrics.extentAfter < 600 &&
+        feed != null &&
+        feed.hasMore &&
+        feed.loadMoreError == null) {
       unawaited(ref.read(projectsFeedProvider(_query).notifier).loadMore());
     }
     return false;
@@ -69,8 +72,11 @@ class _ProjectsScreenState extends ConsumerState<ProjectsScreen> {
                 child: NotificationListener<ScrollNotification>(
                   onNotification: _onScroll,
                   child: ListView(
-                    physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-                    keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                    physics: const BouncingScrollPhysics(
+                      parent: AlwaysScrollableScrollPhysics(),
+                    ),
+                    keyboardDismissBehavior:
+                        ScrollViewKeyboardDismissBehavior.onDrag,
                     padding: const EdgeInsets.fromLTRB(
                       MuSpacing.space5,
                       MuSpacing.space2,
@@ -94,8 +100,16 @@ class _ProjectsScreenState extends ConsumerState<ProjectsScreen> {
                         child: Text.rich(
                           TextSpan(
                             children: [
-                              TextSpan(text: 'Built by\n', style: mu.text.displayLight.copyWith(fontSize: 36)),
-                              TextSpan(text: 'learners', style: mu.text.display.copyWith(fontSize: 36)),
+                              TextSpan(
+                                text: 'Built by\n',
+                                style: mu.text.displayLight.copyWith(
+                                  fontSize: 36,
+                                ),
+                              ),
+                              TextSpan(
+                                text: 'learners',
+                                style: mu.text.display.copyWith(fontSize: 36),
+                              ),
                             ],
                           ),
                         ),
@@ -111,7 +125,9 @@ class _ProjectsScreenState extends ConsumerState<ProjectsScreen> {
                         selected: _tab,
                         label: (t) => t == _Tab.explore
                             ? 'Explore'
-                            : ((mine.value?.isEmpty ?? true) ? 'Yours' : 'Yours · ${mine.value!.length}'),
+                            : ((mine.value?.isEmpty ?? true)
+                                  ? 'Yours'
+                                  : 'Yours · ${mine.value!.length}'),
                         onChanged: (t) => setState(() => _tab = t),
                       ),
                       const SizedBox(height: MuSpacing.space4),
@@ -162,17 +178,30 @@ class _ProjectsScreenState extends ConsumerState<ProjectsScreen> {
       .when(
         skipError: true,
         loading: () => const [_Loading()],
-        error: (e, _) => [_Problem(error: e, onRetry: () => ref.invalidate(projectsFeedProvider(_query)))],
+        error: (e, _) => [
+          _Problem(
+            error: e,
+            onRetry: () => ref.invalidate(projectsFeedProvider(_query)),
+          ),
+        ],
         data: (paged) => [
           if (paged.items.isEmpty)
-            MuEmptyLine(_query.isEmpty ? 'No projects yet. Yours could be the first.' : 'No project matches "$_query".')
+            MuEmptyLine(
+              _query.isEmpty
+                  ? 'No projects yet. Yours could be the first.'
+                  : 'No project matches "$_query".',
+            )
           else
-            for (final p in paged.items) ...[ProjectCard(project: p), const SizedBox(height: MuSpacing.space4)],
+            for (final p in paged.items) ...[
+              ProjectCard(project: p),
+              const SizedBox(height: MuSpacing.space4),
+            ],
           if (paged.hasMore || paged.loadMoreError != null)
             MuLoadMoreFooter(
               isLoading: paged.isLoadingMore,
               error: paged.loadMoreError,
-              onRetry: () => ref.read(projectsFeedProvider(_query).notifier).loadMore(),
+              onRetry: () =>
+                  ref.read(projectsFeedProvider(_query).notifier).loadMore(),
             ),
         ],
       );
@@ -180,9 +209,15 @@ class _ProjectsScreenState extends ConsumerState<ProjectsScreen> {
   List<Widget> _yours(AsyncValue<List<Project>> mine) => mine.when(
     skipError: true,
     loading: () => const [_Loading()],
-    error: (e, _) => [_Problem(error: e, onRetry: () => ref.invalidate(myProjectsProvider))],
+    error: (e, _) => [
+      _Problem(error: e, onRetry: () => ref.invalidate(myProjectsProvider)),
+    ],
     data: (items) => items.isEmpty
-        ? const [MuEmptyLine('Nothing here yet. Start one: a draft stays yours until you publish it.')]
+        ? const [
+            MuEmptyLine(
+              'Nothing here yet. Start one: a draft stays yours until you publish it.',
+            ),
+          ]
         : [
             MuFeedGroup(
               children: [
@@ -195,9 +230,14 @@ class _ProjectsScreenState extends ConsumerState<ProjectsScreen> {
                       '${items[i].comments.length} comment${items[i].comments.length == 1 ? '' : 's'}',
                     ].join(' · '),
                     actions: [_statusPill(items[i].status)],
-                    trailing: Icon(LucideIcons.chevronRight, size: MuSizes.iconSm + 2, color: context.mu.colors.ink3),
+                    trailing: Icon(
+                      LucideIcons.chevronRight,
+                      size: MuSizes.iconSm + 2,
+                      color: context.mu.colors.ink3,
+                    ),
                     divider: i < items.length - 1,
-                    onTap: () => context.push(RoutePaths.projectPath(items[i].id)),
+                    onTap: () =>
+                        context.push(RoutePaths.projectPath(items[i].id)),
                   ),
               ],
             ),
@@ -206,7 +246,11 @@ class _ProjectsScreenState extends ConsumerState<ProjectsScreen> {
 }
 
 Widget _statusPill(ProjectStatus s) => switch (s) {
-  ProjectStatus.published => const MuPill('Published', tone: MuPillTone.success, icon: LucideIcons.globe),
+  ProjectStatus.published => const MuPill(
+    'Published',
+    tone: MuPillTone.success,
+    icon: LucideIcons.globe,
+  ),
   ProjectStatus.draft => const MuPill('Draft', icon: LucideIcons.pencil),
   ProjectStatus.archived => const MuPill('Archived', icon: LucideIcons.archive),
 };
@@ -231,7 +275,12 @@ class _Problem extends StatelessWidget {
   Widget build(BuildContext context) => Row(
     children: [
       Expanded(child: MuEmptyLine(ApiException.messageFor(error))),
-      MuButton(label: 'Retry', variant: MuButtonVariant.ghost, size: MuButtonSize.small, onPressed: onRetry),
+      MuButton(
+        label: 'Retry',
+        variant: MuButtonVariant.ghost,
+        size: MuButtonSize.small,
+        onPressed: onRetry,
+      ),
     ],
   );
 }
@@ -244,7 +293,12 @@ class _Logo extends StatelessWidget {
   final double size;
 
   @override
-  Widget build(BuildContext context) => MuAvatar(name: project.title, url: project.logoUrl, size: size, ring: false);
+  Widget build(BuildContext context) => MuAvatar(
+    name: project.title,
+    url: project.logoUrl,
+    size: size,
+    ring: false,
+  );
 }
 
 /// A published project as a card: its first screenshot (or a generated
@@ -284,7 +338,8 @@ class ProjectCard extends StatelessWidget {
                     : CachedNetworkImage(
                         imageUrl: cover,
                         fit: BoxFit.cover,
-                        errorWidget: (_, _, _) => MuGeneratedPoster(text: p.title, fontSize: 30),
+                        errorWidget: (_, _, _) =>
+                            MuGeneratedPoster(text: p.title, fontSize: 30),
                       ),
               ),
               Padding(
@@ -292,21 +347,40 @@ class ProjectCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(p.title, style: mu.text.title3, maxLines: 2, overflow: TextOverflow.ellipsis),
+                    Text(
+                      p.title,
+                      style: mu.text.title3,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                     const SizedBox(height: 2),
                     Text('by ${p.ownerName}', style: mu.text.caption),
                     if (p.skills.isNotEmpty) ...[
                       const SizedBox(height: MuSpacing.space3),
-                      Wrap(spacing: 6, runSpacing: 6, children: [for (final s in p.skills.take(4)) MuPill(s.name)]),
+                      Wrap(
+                        spacing: 6,
+                        runSpacing: 6,
+                        children: [
+                          for (final s in p.skills.take(4)) MuPill(s.name),
+                        ],
+                      ),
                     ],
                     const SizedBox(height: MuSpacing.space3),
                     Row(
                       children: [
-                        Icon(LucideIcons.arrowBigUp, size: MuSizes.iconSm + 2, color: c.ink2),
+                        Icon(
+                          LucideIcons.arrowBigUp,
+                          size: MuSizes.iconSm + 2,
+                          color: c.ink2,
+                        ),
                         const SizedBox(width: 4),
                         Text('${p.upvotes}', style: mu.text.label),
                         const SizedBox(width: MuSpacing.space4),
-                        Icon(LucideIcons.messageCircle, size: MuSizes.iconSm, color: c.ink2),
+                        Icon(
+                          LucideIcons.messageCircle,
+                          size: MuSizes.iconSm,
+                          color: c.ink2,
+                        ),
                         const SizedBox(width: 4),
                         Text('${p.comments.length}', style: mu.text.label),
                       ],

@@ -7,7 +7,10 @@ Widget _host(Future<void> Function(BuildContext) open) => MaterialApp(
   home: Scaffold(
     body: Builder(
       builder: (context) => Center(
-        child: TextButton(onPressed: () => open(context), child: const Text('open')),
+        child: TextButton(
+          onPressed: () => open(context),
+          child: const Text('open'),
+        ),
       ),
     ),
   ),
@@ -23,7 +26,13 @@ void main() {
             eyebrow: 'One step',
             title: 'Sign in to register for IoT Build Night',
             body: "We'll bring you straight back here.",
-            actions: [MuButton(label: 'Continue with Google', block: true, onPressed: () {})],
+            actions: [
+              MuButton(
+                label: 'Continue with Google',
+                block: true,
+                onPressed: () {},
+              ),
+            ],
           ),
         ),
       ),
@@ -31,14 +40,19 @@ void main() {
     await tester.tap(find.text('open'));
     await tester.pumpAndSettle();
     expect(find.text('ONE STEP'), findsOneWidget);
-    expect(find.text('Sign in to register for IoT Build Night'), findsOneWidget);
+    expect(
+      find.text('Sign in to register for IoT Build Night'),
+      findsOneWidget,
+    );
 
     await tester.tapAt(const Offset(10, 10));
     await tester.pumpAndSettle();
     expect(find.text('Sign in to register for IoT Build Night'), findsNothing);
   });
 
-  testWidgets('confirm resolves true on confirm, false on cancel', (tester) async {
+  testWidgets('confirm resolves true on confirm, false on cancel', (
+    tester,
+  ) async {
     bool? result;
     await tester.pumpWidget(
       _host(
@@ -66,7 +80,14 @@ void main() {
 
   testWidgets('a destructive confirm ignores scrim taps', (tester) async {
     await tester.pumpWidget(
-      _host((context) => showMuConfirm(context, title: 'Delete session?', confirmLabel: 'Delete', destructive: true)),
+      _host(
+        (context) => showMuConfirm(
+          context,
+          title: 'Delete session?',
+          confirmLabel: 'Delete',
+          destructive: true,
+        ),
+      ),
     );
     await tester.tap(find.text('open'));
     await tester.pumpAndSettle();

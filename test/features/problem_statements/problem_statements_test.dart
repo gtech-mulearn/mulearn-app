@@ -19,7 +19,8 @@ import '../../support/fake_secure_storage.dart';
 import '../../support/fixtures.dart';
 
 const _base = '/api/v1/dashboard/problem-statements/';
-const _open = '030157e3-580b-44ca-bbec-00182289fb41'; // "muLearn Platform Challenge", open until 31 Dec
+const _open =
+    '030157e3-580b-44ca-bbec-00182289fb41'; // "muLearn Platform Challenge", open until 31 Dec
 
 /// The learner feed, detail and interaction endpoints, recorded on dev
 /// 2026-11-15 as the QA student (7 published statements, none joined).
@@ -27,10 +28,13 @@ const _open = '030157e3-580b-44ca-bbec-00182289fb41'; // "muLearn Platform Chall
 void main() {
   test('statements parse with their company, counts, deadline and status', () {
     final page = ProblemStatementsRepositoryImpl.parsePage(
-      loadFixtureResponse('dev/problem_statements_feed')! as Map<String, dynamic>,
+      loadFixtureResponse('dev/problem_statements_feed')!
+          as Map<String, dynamic>,
     );
     expect(page.items, hasLength(7));
-    final fraud = page.items.firstWhere((s) => s.title == 'Build a Fraud Detection Model');
+    final fraud = page.items.firstWhere(
+      (s) => s.title == 'Build a Fraud Detection Model',
+    );
     expect(fraud.companyName, 'company 1');
     expect(fraud.isOpen, isTrue);
     expect(fraud.trying, 1);
@@ -41,7 +45,8 @@ void main() {
     expect(page.items.where((s) => !s.isOpen), isNotEmpty);
 
     final none = ProblemStatementsRepositoryImpl.parseParticipation(
-      loadFixtureResponse('dev/problem_statement_interaction_none')! as Map<String, dynamic>,
+      loadFixtureResponse('dev/problem_statement_interaction_none')!
+          as Map<String, dynamic>,
     );
     expect(none.status, isNull);
     expect(PsStatus.parse('Submitted'), PsStatus.submitted);
@@ -60,21 +65,32 @@ void main() {
   setUp(() {
     mine = {'status': null, 'submission_url': null, 'submitted_at': null};
     Map<String, dynamic> detail() {
-      final d = jsonDecode(jsonEncode(loadFixtureResponse('dev/problem_statement_detail'))) as Map<String, dynamic>;
+      final d =
+          jsonDecode(
+                jsonEncode(loadFixtureResponse('dev/problem_statement_detail')),
+              )
+              as Map<String, dynamic>;
       d['my_interaction'] = mine['status'];
       return d;
     }
 
     adapter = FakeHttpAdapter({
       'GET $_base': (RequestOptions r) {
-        final feed = jsonDecode(jsonEncode(loadFixtureResponse('dev/problem_statements_feed'))) as Map<String, dynamic>;
+        final feed =
+            jsonDecode(
+                  jsonEncode(
+                    loadFixtureResponse('dev/problem_statements_feed'),
+                  ),
+                )
+                as Map<String, dynamic>;
         for (final row in (feed['data'] as List).cast<Map<String, dynamic>>()) {
           if (row['id'] == _open) row['my_interaction'] = mine['status'];
         }
         return FakeResponse(200, envelope(feed));
       },
       'GET $_base$_open/': (_) => FakeResponse(200, envelope(detail())),
-      'GET $_base$_open/interaction/': (_) => FakeResponse(200, envelope(Map.of(mine))),
+      'GET $_base$_open/interaction/': (_) =>
+          FakeResponse(200, envelope(Map.of(mine))),
       'PUT $_base$_open/interaction/': (_) {
         mine['status'] = 'Trying';
         return FakeResponse(200, envelope({'status': 'Trying'}));
@@ -117,10 +133,14 @@ void main() {
     final router = GoRouter(
       initialLocation: start,
       routes: [
-        GoRoute(path: '/problem-statements', builder: (_, _) => const ProblemStatementsScreen()),
+        GoRoute(
+          path: '/problem-statements',
+          builder: (_, _) => const ProblemStatementsScreen(),
+        ),
         GoRoute(
           path: '/problem-statements/:id',
-          builder: (_, s) => ProblemStatementDetailScreen(id: s.pathParameters['id']!),
+          builder: (_, s) =>
+              ProblemStatementDetailScreen(id: s.pathParameters['id']!),
         ),
       ],
     );
@@ -130,27 +150,39 @@ void main() {
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
-        child: MaterialApp.router(theme: MuThemeData.light(), routerConfig: router),
+        child: MaterialApp.router(
+          theme: MuThemeData.light(),
+          routerConfig: router,
+        ),
       ),
     );
     await settle(tester);
   }
 
-  testWidgets('Browse lists the feed with deadlines; Participating starts empty', (tester) async {
-    await pump(tester, '/problem-statements');
+  testWidgets(
+    'Browse lists the feed with deadlines; Participating starts empty',
+    (tester) async {
+      await pump(tester, '/problem-statements');
 
-    expect(find.text('muLearn Platform Challenge'), findsOneWidget);
-    expect(find.text('Build a Fraud Detection Model'), findsOneWidget);
-    expect(find.textContaining('Closes '), findsNWidgets(2), reason: 'the two open ones with a deadline');
-    expect(find.text('No deadline'), findsOneWidget);
-    expect(find.text('Closed'), findsWidgets);
+      expect(find.text('muLearn Platform Challenge'), findsOneWidget);
+      expect(find.text('Build a Fraud Detection Model'), findsOneWidget);
+      expect(
+        find.textContaining('Closes '),
+        findsNWidgets(2),
+        reason: 'the two open ones with a deadline',
+      );
+      expect(find.text('No deadline'), findsOneWidget);
+      expect(find.text('Closed'), findsWidgets);
 
-    await tester.tap(find.text('Participating'));
-    await settle(tester);
-    expect(find.textContaining("You're not on any yet"), findsOneWidget);
-  });
+      await tester.tap(find.text('Participating'));
+      await settle(tester);
+      expect(find.textContaining("You're not on any yet"), findsOneWidget);
+    },
+  );
 
-  testWidgets('try it, submit a link, withdraw: each step shows the next one', (tester) async {
+  testWidgets('try it, submit a link, withdraw: each step shows the next one', (
+    tester,
+  ) async {
     await pump(tester, '/problem-statements/$_open');
 
     expect(find.text('muLearn Platform Challenge'), findsOneWidget);
@@ -165,8 +197,14 @@ void main() {
     await tester.enterText(find.byType(TextField), 'github.com/me/tracker');
     await tester.tap(find.widgetWithText(MuButton, 'Submit'));
     await settle(tester);
-    final put = adapter.requests.lastWhere((RequestOptions r) => r.method == 'PUT');
-    expect((put.data as Map)['submission_url'], 'https://github.com/me/tracker', reason: 'https added');
+    final put = adapter.requests.lastWhere(
+      (RequestOptions r) => r.method == 'PUT',
+    );
+    expect(
+      (put.data as Map)['submission_url'],
+      'https://github.com/me/tracker',
+      reason: 'https added',
+    );
     expect(find.text('Your solution'), findsOneWidget);
     expect(find.widgetWithText(MuButton, 'Update link'), findsOneWidget);
 
@@ -174,7 +212,10 @@ void main() {
     await settle(tester);
     await tester.tap(find.widgetWithText(MuButton, 'Withdraw').last);
     await settle(tester);
-    expect(adapter.requests.where((RequestOptions r) => r.method == 'DELETE'), hasLength(1));
+    expect(
+      adapter.requests.where((RequestOptions r) => r.method == 'DELETE'),
+      hasLength(1),
+    );
     expect(find.widgetWithText(MuButton, 'Submit solution'), findsOneWidget);
   });
 }

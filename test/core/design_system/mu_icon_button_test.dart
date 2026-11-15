@@ -11,7 +11,9 @@ void main() {
         body: MuIconButton(
           icon: LucideIcons.bell,
           onPressed: () {},
-          tooltip: count == 0 ? 'Notifications' : 'Notifications, $count unread',
+          tooltip: count == 0
+              ? 'Notifications'
+              : 'Notifications, $count unread',
           badgeCount: count,
         ),
       ),
@@ -34,7 +36,9 @@ void main() {
 
     expect(find.bySemanticsLabel('Notifications, 3 unread'), findsOneWidget);
   });
-  testWidgets('variants fill from the palette; the hit area is 48dp', (tester) async {
+  testWidgets('variants fill from the palette; the hit area is 48dp', (
+    tester,
+  ) async {
     for (final (variant, fill) in [
       (MuIconButtonVariant.night, MuPalette.light.night),
       (MuIconButtonVariant.cobalt, MuPalette.light.cobalt),
@@ -44,16 +48,29 @@ void main() {
         MaterialApp(
           home: Scaffold(
             body: Center(
-              child: MuIconButton(icon: LucideIcons.qrCode, onPressed: () {}, tooltip: 'Scan', variant: variant),
+              child: MuIconButton(
+                icon: LucideIcons.qrCode,
+                onPressed: () {},
+                tooltip: 'Scan',
+                variant: variant,
+              ),
             ),
           ),
         ),
       );
       final colors = tester
-          .widgetList<Container>(find.descendant(of: find.byType(MuIconButton), matching: find.byType(Container)))
+          .widgetList<Container>(
+            find.descendant(
+              of: find.byType(MuIconButton),
+              matching: find.byType(Container),
+            ),
+          )
           .map((c) => (c.decoration as BoxDecoration?)?.color);
       expect(colors, contains(fill));
-      expect(tester.getSize(find.byType(MuIconButton)), const Size.square(MuSizes.touchMin));
+      expect(
+        tester.getSize(find.byType(MuIconButton)),
+        const Size.square(MuSizes.touchMin),
+      );
     }
   });
 
@@ -63,7 +80,11 @@ void main() {
       MaterialApp(
         home: Scaffold(
           body: Center(
-            child: MuIconButton(icon: LucideIcons.bell, onPressed: () => taps++, tooltip: 'Bell'),
+            child: MuIconButton(
+              icon: LucideIcons.bell,
+              onPressed: () => taps++,
+              tooltip: 'Bell',
+            ),
           ),
         ),
       ),

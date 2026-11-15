@@ -16,7 +16,10 @@ import '../../support/fixtures.dart';
 /// The IG sticker wall: dev/ig_list (23 groups with categories) and
 /// dev/user_profile (the student is in Ui Ux, Web Development and AI).
 List<InterestGroupSummary> _catalog() => [
-  for (final row in (loadFixtureResponse('dev/ig_list')! as Map<String, dynamic>)['interestGroup'] as List<dynamic>)
+  for (final row
+      in (loadFixtureResponse('dev/ig_list')!
+              as Map<String, dynamic>)['interestGroup']
+          as List<dynamic>)
     InterestGroupSummaryDto.fromJson(row as Map<String, dynamic>).toDomain(),
 ];
 
@@ -25,7 +28,8 @@ void main() {
 
   Future<void> pump(WidgetTester tester) async {
     adapter = FakeHttpAdapter({
-      'GET /api/v1/dashboard/profile/user-profile/': (_) => FakeResponse(200, loadFixture('dev/user_profile')),
+      'GET /api/v1/dashboard/profile/user-profile/': (_) =>
+          FakeResponse(200, loadFixture('dev/user_profile')),
     });
     final tokens = TokenStorage(FakeSecureStorage());
     await tokens.saveTokens(accessToken: 'a', refreshToken: 'r');
@@ -46,7 +50,10 @@ void main() {
     await tester.pumpWidget(
       UncontrolledProviderScope(
         container: container,
-        child: MaterialApp(theme: MuThemeData.light(), home: const InterestGroupsScreen()),
+        child: MaterialApp(
+          theme: MuThemeData.light(),
+          home: const InterestGroupsScreen(),
+        ),
       ),
     );
     for (var i = 0; i < 8; i++) {
@@ -60,7 +67,10 @@ void main() {
     expect(find.text('YOURS · 3 OF 3'), findsOneWidget);
     expect(find.text('MORE TO EXPLORE'), findsOneWidget);
     final yoursTop = tester.getTopLeft(find.text('Web Development')).dy;
-    expect(yoursTop, lessThan(tester.getTopLeft(find.text('MORE TO EXPLORE')).dy));
+    expect(
+      yoursTop,
+      lessThan(tester.getTopLeft(find.text('MORE TO EXPLORE')).dy),
+    );
     expect(find.byType(MuIgSticker), findsNWidgets(23));
   });
 
@@ -75,18 +85,26 @@ void main() {
     await tester.enterText(find.byType(TextField), '');
     await tester.tap(find.widgetWithText(MuFilterChip, 'Maker'));
     await tester.pump();
-    expect(find.byType(MuIgSticker), findsNWidgets(2)); // IoT and Robotics, Space
+    expect(
+      find.byType(MuIgSticker),
+      findsNWidgets(2),
+    ); // IoT and Robotics, Space
     expect(find.text('Space'), findsOneWidget);
     expect(find.text('Civil'), findsNothing);
   });
 
-  testWidgets('at three groups, Join says why instead of calling the backend', (tester) async {
+  testWidgets('at three groups, Join says why instead of calling the backend', (
+    tester,
+  ) async {
     await pump(tester);
 
     await tester.tap(find.bySemanticsLabel('Join Data Science'));
     await tester.pump(const Duration(milliseconds: 300));
 
-    expect(find.text("You're in 3 of 3 groups. Leave one to join another."), findsOneWidget);
+    expect(
+      find.text("You're in 3 of 3 groups. Leave one to join another."),
+      findsOneWidget,
+    );
     expect(adapter.requests.where((r) => r.method == 'POST'), isEmpty);
     await tester.pump(const Duration(seconds: 5)); // let the toast leave
   });

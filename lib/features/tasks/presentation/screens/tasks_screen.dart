@@ -72,7 +72,10 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
         child: tasksState.when(
           skipError: true,
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, _) => ErrorRetryView(error: error, onRetry: () => ref.invalidate(tasksControllerProvider)),
+          error: (error, _) => ErrorRetryView(
+            error: error,
+            onRetry: () => ref.invalidate(tasksControllerProvider),
+          ),
           data: (tasks) => MuRefresh(
             onRefresh: () {
               ref.invalidate(myTaskLevelProvider);
@@ -85,13 +88,18 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
     );
   }
 
-  Widget _body(BuildContext context, List<TaskCatalogItem> tasks, String? myLevel) {
+  Widget _body(
+    BuildContext context,
+    List<TaskCatalogItem> tasks,
+    String? myLevel,
+  ) {
     final mu = context.mu;
     final inTab = tasks.where((t) => t.category == _tab).toList();
     final igs = <String>{
       if (_tab == TaskCategory.becomeExpert)
         for (final t in inTab)
-          if (t.interestGroupName != null && t.interestGroupName!.isNotEmpty) t.interestGroupName!,
+          if (t.interestGroupName != null && t.interestGroupName!.isNotEmpty)
+            t.interestGroupName!,
     }.toList()..sort();
     final ig = igs.contains(_ig) ? _ig : null;
 
@@ -115,13 +123,21 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
       });
     final mine = myLevel;
     final done = shown.where((t) => t.completed).length;
-    final filtered = _query.trim().isNotEmpty || _status != _Status.all || ig != null;
+    final filtered =
+        _query.trim().isNotEmpty || _status != _Status.all || ig != null;
 
     return CustomScrollView(
-      physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+      physics: const BouncingScrollPhysics(
+        parent: AlwaysScrollableScrollPhysics(),
+      ),
       slivers: [
         SliverPadding(
-          padding: const EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space4, MuSpacing.space5, 0),
+          padding: const EdgeInsets.fromLTRB(
+            MuSpacing.space5,
+            MuSpacing.space4,
+            MuSpacing.space5,
+            0,
+          ),
           sliver: SliverToBoxAdapter(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -131,8 +147,14 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
                   child: Text.rich(
                     TextSpan(
                       children: [
-                        TextSpan(text: 'Tasks for\n', style: mu.text.displayLight.copyWith(fontSize: 36)),
-                        TextSpan(text: mine ?? 'you', style: mu.text.display.copyWith(fontSize: 36)),
+                        TextSpan(
+                          text: 'Tasks for\n',
+                          style: mu.text.displayLight.copyWith(fontSize: 36),
+                        ),
+                        TextSpan(
+                          text: mine ?? 'you',
+                          style: mu.text.display.copyWith(fontSize: 36),
+                        ),
                       ],
                     ),
                   ),
@@ -162,7 +184,10 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
             height: MuSizes.touchMin + MuSpacing.space3 * 2,
             child: ListView(
               scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: MuSpacing.space5, vertical: MuSpacing.space3),
+              padding: const EdgeInsets.symmetric(
+                horizontal: MuSpacing.space5,
+                vertical: MuSpacing.space3,
+              ),
               children: [
                 for (final s in _Status.values) ...[
                   MuFilterChip(
@@ -177,13 +202,20 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
                   const SizedBox(width: MuSpacing.space2),
                 ],
                 if (igs.isNotEmpty) ...[
-                  Center(child: Container(width: 1, height: 24, color: mu.colors.lineStrong)),
+                  Center(
+                    child: Container(
+                      width: 1,
+                      height: 24,
+                      color: mu.colors.lineStrong,
+                    ),
+                  ),
                   const SizedBox(width: MuSpacing.space2),
                   for (final name in igs) ...[
                     MuFilterChip(
                       label: name,
                       selected: ig == name,
-                      onTap: () => setState(() => _ig = ig == name ? null : name),
+                      onTap: () =>
+                          setState(() => _ig = ig == name ? null : name),
                     ),
                     const SizedBox(width: MuSpacing.space2),
                   ],
@@ -193,7 +225,12 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
           ),
         ),
         SliverPadding(
-          padding: const EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space1, MuSpacing.space5, 0),
+          padding: const EdgeInsets.fromLTRB(
+            MuSpacing.space5,
+            MuSpacing.space1,
+            MuSpacing.space5,
+            0,
+          ),
           sliver: SliverToBoxAdapter(
             child: Text(
               [
@@ -223,13 +260,20 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
           SliverToBoxAdapter(
             child: MuStateDisplay(
               variant: MuStateVariant.noTasks,
-              description: _tab == TaskCategory.becomeExpert ? 'Join an Interest Group to see its expert tasks.' : null,
+              description: _tab == TaskCategory.becomeExpert
+                  ? 'Join an Interest Group to see its expert tasks.'
+                  : null,
             ),
           )
         else
           for (final key in keys) ...[
             SliverPadding(
-              padding: const EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space8, MuSpacing.space5, MuSpacing.space3),
+              padding: const EdgeInsets.fromLTRB(
+                MuSpacing.space5,
+                MuSpacing.space8,
+                MuSpacing.space5,
+                MuSpacing.space3,
+              ),
               sliver: SliverToBoxAdapter(
                 child: _GroupHeader(
                   title: key ?? 'Any level',
@@ -242,19 +286,26 @@ class _TasksScreenState extends ConsumerState<TasksScreen> {
               padding: const EdgeInsets.symmetric(horizontal: MuSpacing.space5),
               sliver: SliverList.separated(
                 itemCount: groups[key]!.length,
-                separatorBuilder: (_, _) => const SizedBox(height: MuSpacing.space4),
+                separatorBuilder: (_, _) =>
+                    const SizedBox(height: MuSpacing.space4),
                 itemBuilder: (_, i) => _TaskCard(task: groups[key]![i]),
               ),
             ),
           ],
-        const SliverToBoxAdapter(child: SizedBox(height: MuSpacing.navClearance)),
+        const SliverToBoxAdapter(
+          child: SizedBox(height: MuSpacing.navClearance),
+        ),
       ],
     );
   }
 }
 
 class _GroupHeader extends StatelessWidget {
-  const _GroupHeader({required this.title, required this.tasks, required this.here});
+  const _GroupHeader({
+    required this.title,
+    required this.tasks,
+    required this.here,
+  });
 
   final String title;
   final List<TaskCatalogItem> tasks;

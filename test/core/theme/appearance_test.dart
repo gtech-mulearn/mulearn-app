@@ -9,7 +9,9 @@ import '../../support/fake_secure_storage.dart';
 void main() {
   test('follows the phone until a choice is made, then remembers it', () async {
     final storage = FakeSecureStorage();
-    final first = ProviderContainer(overrides: [secureStorageProvider.overrideWithValue(storage)]);
+    final first = ProviderContainer(
+      overrides: [secureStorageProvider.overrideWithValue(storage)],
+    );
     addTearDown(first.dispose);
 
     expect(first.read(appearanceProvider), ThemeMode.system);
@@ -17,7 +19,9 @@ void main() {
     expect(first.read(appearanceProvider), ThemeMode.dark);
 
     // A fresh start reads the stored choice back.
-    final second = ProviderContainer(overrides: [secureStorageProvider.overrideWithValue(storage)]);
+    final second = ProviderContainer(
+      overrides: [secureStorageProvider.overrideWithValue(storage)],
+    );
     addTearDown(second.dispose);
     second.read(appearanceProvider);
     await Future<void>.delayed(Duration.zero);

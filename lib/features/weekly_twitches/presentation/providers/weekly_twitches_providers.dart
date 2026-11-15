@@ -11,7 +11,9 @@ part 'weekly_twitches_providers.g.dart';
 
 @riverpod
 WeeklyTwitchesRepository weeklyTwitchesRepository(Ref ref) =>
-    WeeklyTwitchesRepositoryImpl(WeeklyTwitchesRemoteDataSource(ref.watch(dioProvider)));
+    WeeklyTwitchesRepositoryImpl(
+      WeeklyTwitchesRemoteDataSource(ref.watch(dioProvider)),
+    );
 
 /// Today's and upcoming episodes of [show], soonest first. A show announces
 /// a handful a month, so one page of 50 covers it.
@@ -19,7 +21,11 @@ WeeklyTwitchesRepository weeklyTwitchesRepository(Ref ref) =>
 Future<List<TwitchEpisode>> twitchesComingUp(Ref ref, TwitchShow show) async {
   final page = await ref
       .watch(weeklyTwitchesRepositoryProvider)
-      .episodes(show, statuses: {TwitchStatus.upcoming, TwitchStatus.ongoing}, perPage: 50);
+      .episodes(
+        show,
+        statuses: {TwitchStatus.upcoming, TwitchStatus.ongoing},
+        perPage: 50,
+      );
   return [...page.items]..sort((a, b) => a.startsAt.compareTo(b.startsAt));
 }
 
@@ -33,17 +39,22 @@ class TwitchesPast extends _$TwitchesPast {
   Future<PagedState<TwitchEpisode>> build(TwitchShow show) async {
     _pageIndex = 1;
     _inFlight = null;
-    final page = await ref.watch(weeklyTwitchesRepositoryProvider).episodes(show, statuses: {TwitchStatus.completed});
+    final page = await ref
+        .watch(weeklyTwitchesRepositoryProvider)
+        .episodes(show, statuses: {TwitchStatus.completed});
     return PagedState(items: page.items, hasMore: page.hasNext);
   }
 
   /// Loads the next page (or retries it); concurrent calls share one request.
-  Future<void> loadMore() => _inFlight ??= _loadNextPage().whenComplete(() => _inFlight = null);
+  Future<void> loadMore() =>
+      _inFlight ??= _loadNextPage().whenComplete(() => _inFlight = null);
 
   Future<void> _loadNextPage() async {
     final current = state.value;
     if (current == null || !current.hasMore) return;
-    state = AsyncData(current.copyWith(isLoadingMore: true, loadMoreError: null));
+    state = AsyncData(
+      current.copyWith(isLoadingMore: true, loadMoreError: null),
+    );
     final next = _pageIndex + 1;
     try {
       final page = await ref
@@ -52,12 +63,21 @@ class TwitchesPast extends _$TwitchesPast {
       if (!ref.mounted) return;
       _pageIndex = next;
       state = AsyncData(
-        PagedState(items: mergeUniqueBy(current.items, page.items, (e) => e.id), hasMore: page.hasNext),
+        PagedState(
+          items: mergeUniqueBy(current.items, page.items, (e) => e.id),
+          hasMore: page.hasNext,
+        ),
       );
     } on Object catch (e, st) {
-      appLogger.w('Loading more past episodes failed', error: e, stackTrace: st);
+      appLogger.w(
+        'Loading more past episodes failed',
+        error: e,
+        stackTrace: st,
+      );
       if (!ref.mounted) return;
-      state = AsyncData(current.copyWith(isLoadingMore: false, loadMoreError: e));
+      state = AsyncData(
+        current.copyWith(isLoadingMore: false, loadMoreError: e),
+      );
     }
   }
 }

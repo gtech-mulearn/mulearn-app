@@ -20,54 +20,76 @@ void main() {
   late FakeHttpAdapter adapter;
 
   FakeResponse empty() => const FakeResponse(200, {
-        'hasError': false,
-        'statusCode': 200,
-        'message': {'general': <String>[]},
-        'response': {
-          'data': <Object>[],
-          'pagination': {'count': 0, 'totalPages': 1, 'isNext': false, 'isPrev': false, 'nextPage': null},
-        },
-      });
+    'hasError': false,
+    'statusCode': 200,
+    'message': {'general': <String>[]},
+    'response': {
+      'data': <Object>[],
+      'pagination': {
+        'count': 0,
+        'totalPages': 1,
+        'isNext': false,
+        'isPrev': false,
+        'nextPage': null,
+      },
+    },
+  });
 
   setUp(() {
     adapter = FakeHttpAdapter({
       'GET $_list': (o) => o.queryParameters['search'] == 'nothing-matches'
           ? empty()
           : o.queryParameters.containsKey('search')
-              ? FakeResponse(200, loadFixture('dev/circles_filtered'))
-              : FakeResponse(200, loadFixture('dev/circles_page1')),
-      'GET /api/v1/dashboard/learningcircle/user-circles/': (_) => FakeResponse(200, loadFixture('dev/user_circles')),
-      'GET /api/v1/dashboard/learningcircle/invite/status/': (_) => FakeResponse(200, loadFixture('dev/my_invites')),
-      'GET /api/v1/dashboard/ig/list/': (_) => FakeResponse(200, loadFixture('dev/ig_list')),
+          ? FakeResponse(200, loadFixture('dev/circles_filtered'))
+          : FakeResponse(200, loadFixture('dev/circles_page1')),
+      'GET /api/v1/dashboard/learningcircle/user-circles/': (_) =>
+          FakeResponse(200, loadFixture('dev/user_circles')),
+      'GET /api/v1/dashboard/learningcircle/invite/status/': (_) =>
+          FakeResponse(200, loadFixture('dev/my_invites')),
+      'GET /api/v1/dashboard/ig/list/': (_) =>
+          FakeResponse(200, loadFixture('dev/ig_list')),
     });
   });
 
   Future<ProviderContainer> container() async {
     final tokens = TokenStorage(FakeSecureStorage());
     await tokens.saveTokens(accessToken: 'a', refreshToken: 'r');
-    final c = ProviderContainer(retry: (_, __) => null, overrides: [
-      dioProvider.overrideWithValue(fakeDio(adapter)),
-      tokenStorageProvider.overrideWithValue(tokens),
-    ]);
+    final c = ProviderContainer(
+      retry: (_, __) => null,
+      overrides: [
+        dioProvider.overrideWithValue(fakeDio(adapter)),
+        tokenStorageProvider.overrideWithValue(tokens),
+      ],
+    );
     addTearDown(c.dispose);
     return c;
   }
 
   List<Map<String, dynamic>> listQueries() => [
-        for (final r in adapter.requests)
-          if (r.uri.path == _list) Map.of(r.queryParameters),
-      ];
+    for (final r in adapter.requests)
+      if (r.uri.path == _list) Map.of(r.queryParameters),
+  ];
 
   test('the query carries only the filters that are set', () async {
     final c = await container();
     c.listen(circlesListControllerProvider(const CircleFilter()), (_, __) {});
     await c.read(circlesListControllerProvider(const CircleFilter()).future);
-    const filtered = CircleFilter(status: 'not_joined', igId: 'ig1', search: 'Club');
+    const filtered = CircleFilter(
+      status: 'not_joined',
+      igId: 'ig1',
+      search: 'Club',
+    );
     c.listen(circlesListControllerProvider(filtered), (_, __) {});
     await c.read(circlesListControllerProvider(filtered).future);
 
     expect(listQueries().first, {'pageIndex': 1, 'perPage': 20});
-    expect(listQueries().last, {'pageIndex': 1, 'perPage': 20, 'status': 'not_joined', 'ig': 'ig1', 'search': 'Club'});
+    expect(listQueries().last, {
+      'pageIndex': 1,
+      'perPage': 20,
+      'status': 'not_joined',
+      'ig': 'ig1',
+      'search': 'Club',
+    });
   });
 
   test('a blank search is not sent', () async {
@@ -83,16 +105,27 @@ void main() {
     final c = await container();
     tester.view.physicalSize = const Size(1080, 5000);
     addTearDown(tester.view.resetPhysicalSize);
-    await tester.pumpWidget(UncontrolledProviderScope(container: c, child: const MaterialApp(home: LearningCirclesScreen())));
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: c,
+        child: const MaterialApp(home: LearningCirclesScreen()),
+      ),
+    );
     for (var i = 0; i < 8; i++) {
       await tester.pump(const Duration(milliseconds: 50));
     }
     // The filters sit below the user's circles and invitations.
-    await tester.scrollUntilVisible(find.byType(TextField), 300, scrollable: find.byType(Scrollable).first);
+    await tester.scrollUntilVisible(
+      find.byType(TextField),
+      300,
+      scrollable: find.byType(Scrollable).first,
+    );
     await tester.pump();
   }
 
-  testWidgets('discovery starts on circles the user has not joined', (tester) async {
+  testWidgets('discovery starts on circles the user has not joined', (
+    tester,
+  ) async {
     await pumpScreen(tester);
 
     expect(listQueries().first['status'], 'not_joined');
@@ -132,15 +165,24 @@ void main() {
     expect(listQueries().last['status'], 'pending');
   });
 
-  testWidgets('nothing to discover uses the dashboard circle-list copy', (tester) async {
+  testWidgets('nothing to discover uses the dashboard circle-list copy', (
+    tester,
+  ) async {
     adapter.routes['GET $_list'] = (_) => empty();
     await pumpScreen(tester);
 
     expect(find.text('No Learning Circles Yet'), findsOneWidget);
-    expect(find.text('Be the first to create a Learning Circle and start collaborating with peers!'), findsOneWidget);
+    expect(
+      find.text(
+        'Be the first to create a Learning Circle and start collaborating with peers!',
+      ),
+      findsOneWidget,
+    );
   });
 
-  testWidgets('no match says so and offers to clear the filters', (tester) async {
+  testWidgets('no match says so and offers to clear the filters', (
+    tester,
+  ) async {
     await pumpScreen(tester);
 
     await tester.enterText(find.byType(TextField), 'nothing-matches');
