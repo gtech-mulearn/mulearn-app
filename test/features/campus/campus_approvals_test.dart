@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/network/dio_provider.dart';
 import 'package:mulearn_app/core/session/workspace_access.dart';
 import 'package:mulearn_app/core/storage/secure_storage_provider.dart';
@@ -29,11 +30,13 @@ void main() {
   late FakeHttpAdapter adapter;
 
   Map<String, dynamic> ok([String message = '']) => {
-        'hasError': false,
-        'statusCode': 200,
-        'message': {'general': message.isEmpty ? <String>[] : [message]},
-        'response': <String, dynamic>{},
-      };
+    'hasError': false,
+    'statusCode': 200,
+    'message': {
+      'general': message.isEmpty ? <String>[] : [message],
+    },
+    'response': <String, dynamic>{},
+  };
 
   setUp(() {
     adapter = FakeHttpAdapter({
@@ -57,25 +60,36 @@ void main() {
   Future<void> pump(WidgetTester tester, {bool campusLead = true}) async {
     final tokens = TokenStorage(FakeSecureStorage());
     await tokens.saveTokens(accessToken: 'a', refreshToken: 'r');
-    final container = ProviderContainer(retry: (_, __) => null, overrides: [
-      dioProvider.overrideWithValue(fakeDio(adapter)),
-      tokenStorageProvider.overrideWithValue(tokens),
-      clockProvider.overrideWithValue(() => DateTime.utc(2026, 11, 13, 9)),
-      workspaceAccessProvider.overrideWith(
-        (ref) async => WorkspaceAccess(
-          mentor: WorkspaceState.hidden,
-          campus: WorkspaceState.open,
-          enablerCampuses: campusLead ? WorkspaceState.hidden : WorkspaceState.open,
-          campusLead: campusLead,
+    final container = ProviderContainer(
+      retry: (_, __) => null,
+      overrides: [
+        dioProvider.overrideWithValue(fakeDio(adapter)),
+        tokenStorageProvider.overrideWithValue(tokens),
+        clockProvider.overrideWithValue(() => DateTime.utc(2026, 11, 13, 9)),
+        workspaceAccessProvider.overrideWith(
+          (ref) async => WorkspaceAccess(
+            mentor: WorkspaceState.hidden,
+            campus: WorkspaceState.open,
+            enablerCampuses: campusLead ? WorkspaceState.hidden : WorkspaceState.open,
+            campusLead: campusLead,
+          ),
         ),
-      ),
-    ]);
+      ],
+    );
     addTearDown(container.dispose);
-    final router = GoRouter(initialLocation: '/a', routes: [GoRoute(path: '/a', builder: (_, __) => const CampusApprovalsScreen())]);
+    final router = GoRouter(
+      initialLocation: '/a',
+      routes: [GoRoute(path: '/a', builder: (_, __) => const CampusApprovalsScreen())],
+    );
     addTearDown(router.dispose);
     tester.view.physicalSize = const Size(1080, 5000);
     addTearDown(tester.view.resetPhysicalSize);
-    await tester.pumpWidget(UncontrolledProviderScope(container: container, child: MaterialApp.router(routerConfig: router)));
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp.router(routerConfig: router),
+      ),
+    );
     await settle(tester);
   }
 
@@ -123,10 +137,11 @@ void main() {
     adapter.routes['PATCH ${_links}link-1/'] = (_) => FakeResponse(200, ok());
     await pump(tester);
 
-    await tester.tap(find.text('Verify'));
+    await tester.tap(find.widgetWithText(MuButton, 'Verify'));
     await settle(tester);
     expect(find.textContaining('Verify QA Pending Link as a member of'), findsOneWidget);
-    await tester.tap(find.descendant(of: find.byType(AlertDialog), matching: find.text('Verify')));
+    // The confirm's button, on top of the row's.
+    await tester.tap(find.widgetWithText(MuButton, 'Verify').last);
     await settle(tester);
 
     expect(bodyOf('PATCH', '${_links}link-1/'), {'verified': true});
@@ -134,18 +149,19 @@ void main() {
   });
 
   testWidgets('rejecting an event needs a reason before any request', (tester) async {
-    adapter.routes['POST /api/v1/dashboard/events/campus/ev-1/reject/'] = (_) => FakeResponse(200, ok('Event rejected.'));
+    adapter.routes['POST /api/v1/dashboard/events/campus/ev-1/reject/'] = (_) =>
+        FakeResponse(200, ok('Event rejected.'));
     await pump(tester);
 
-    await tester.tap(find.widgetWithText(TextButton, 'Reject').first);
+    await tester.tap(find.widgetWithText(MuButton, 'Reject').first);
     await settle(tester);
-    await tester.tap(find.widgetWithText(FilledButton, 'Reject event'));
+    await tester.tap(find.widgetWithText(MuButton, 'Reject event'));
     await settle(tester);
     expect(find.text('A rejection reason is required.'), findsOneWidget);
     expect(adapter.requests.where((RequestOptions r) => r.method == 'POST'), isEmpty);
 
     await tester.enterText(find.byType(TextField).last, 'Clashes with exams');
-    await tester.tap(find.widgetWithText(FilledButton, 'Reject event'));
+    await tester.tap(find.widgetWithText(MuButton, 'Reject event'));
     await settle(tester);
     expect(bodyOf('POST', '/api/v1/dashboard/events/campus/ev-1/reject/'), {'reason': 'Clashes with exams'});
     await drainToast(tester);
@@ -153,15 +169,17 @@ void main() {
 
   testWidgets('an event someone already handled says so and refreshes', (tester) async {
     adapter.routes['POST /api/v1/dashboard/events/campus/ev-1/approve/'] = (_) => const FakeResponse(400, {
-          'hasError': true,
-          'statusCode': 400,
-          'message': {'general': ['Event is not pending campus approval.']},
-          'response': <String, dynamic>{},
-        });
+      'hasError': true,
+      'statusCode': 400,
+      'message': {
+        'general': ['Event is not pending campus approval.'],
+      },
+      'response': <String, dynamic>{},
+    });
     await pump(tester);
     final loads = adapter.requests.where((r) => r.uri.path == _events).length;
 
-    await tester.tap(find.widgetWithText(FilledButton, 'Approve').first);
+    await tester.tap(find.widgetWithText(MuButton, 'Approve').first);
     await settle(tester);
 
     expect(find.text('Event is not pending campus approval.'), findsOneWidget);
@@ -170,11 +188,11 @@ void main() {
   });
 
   testWidgets('accepting an invite posts to its event', (tester) async {
-    adapter.routes['POST /api/v1/dashboard/events/manage/$_inviteEvent/collaborators/$_inviteId/accept/'] =
-        (_) => FakeResponse(200, ok('Invite accepted.'));
+    adapter.routes['POST /api/v1/dashboard/events/manage/$_inviteEvent/collaborators/$_inviteId/accept/'] = (_) =>
+        FakeResponse(200, ok('Invite accepted.'));
     await pump(tester);
 
-    await tester.tap(find.widgetWithText(FilledButton, 'Accept'));
+    await tester.tap(find.widgetWithText(MuButton, 'Accept'));
     await settle(tester);
 
     expect(adapter.requests.where((r) => r.uri.path.endsWith('/$_inviteId/accept/')), hasLength(1));
@@ -185,11 +203,11 @@ void main() {
     adapter.routes['GET $_links'] = (_) => FakeResponse(200, loadFixture('dev/campus_org_links_empty'));
     adapter.routes['GET $_events'] = (_) => FakeResponse(200, loadFixture('dev/campus_events_pending_empty'));
     adapter.routes['GET $_invites'] = (_) => const FakeResponse(200, {
-          'hasError': false,
-          'statusCode': 200,
-          'message': {'general': <String>[]},
-          'response': <Object>[],
-        });
+      'hasError': false,
+      'statusCode': 200,
+      'message': {'general': <String>[]},
+      'response': <Object>[],
+    });
     await pump(tester);
 
     expect(find.byType(MuStateDisplay), findsOneWidget);
