@@ -1,11 +1,12 @@
 # Pull request validation (and a quick check on feature-branch pushes).
 #
-#   pull_request (any base, incl. dev and main):
+#   pull_request:
 #     format check of the files the PR changes (blocking), flutter analyze,
-#     flutter test, then an unsigned release build of the dev flavor to prove
-#     the Android build still works. Nothing is uploaded or published, and no
+#     flutter test. PRs into staging or master also get an unsigned release
+#     build of the dev flavor, to prove the Android build still works; PRs
+#     into dev don't build anything. Nothing is uploaded or published and no
 #     secrets are used, so PRs from forks are safe to run.
-#   push to any branch except dev/main (those have their own build workflows):
+#   push to any branch except dev/staging/master:
 #     analyze + test (+ whole-repo format report); no APK build.
 #
 # Docs: docs/CI-CD.md
@@ -16,7 +17,8 @@ on:
   push:
     branches-ignore:
       - dev
-      - main
+      - staging
+      - master
 
 # Only the newest commit of a PR / branch matters.
 concurrency:
@@ -27,10 +29,10 @@ permissions:
   contents: read
 
 # Two callers with different names on purpose: branch protection requires
-# "Android / Validate" and "Android / Build APK", and only PR runs may produce
-# those names. (A push run's skipped build job would otherwise post a
-# same-named "skipped" check on the PR's commit, which GitHub counts as
-# passing.)
+# "Android / Validate" (and "Android / Build APK" on staging and master), and
+# only PR runs may produce those names. (A push run's skipped build job would
+# otherwise post a same-named "skipped" check on the PR's commit, which GitHub
+# counts as passing.)
 jobs:
   android:
     name: Android
@@ -38,12 +40,14 @@ jobs:
     uses: ./.github/workflows/android-build.yml
     with:
       channel: ci
-      # Blocking format check of the PR's changed files — except the dev →
-      # main promotion PR: everything on dev already passed this gate on its
-      # way in, so re-checking would only re-flag pre-gate debt (report only).
-      # (Inverted on purpose: `cond && '' || sha` would always give sha.)
-      format-base: ${{ (github.head_ref != 'dev' || github.event.pull_request.head.repo.full_name != github.repository) && github.event.pull_request.base.sha || '' }}
-      build: true
+      # Blocking format check of the PR's changed files — except promotion
+      # PRs (dev → staging, staging → master): everything in them already
+      # passed this gate on its way into dev, so re-checking would only
+      # re-flag pre-gate debt; they get the whole-repo report instead.
+      # (Written so the truthy branch is the SHA: `cond && '' || sha` would
+      # always give sha.)
+      format-base: ${{ ((github.head_ref != 'dev' && github.head_ref != 'staging') || github.event.pull_request.head.repo.full_name != github.repository) && github.event.pull_request.base.sha || '' }}
+      build: ${{ github.base_ref == 'staging' || github.base_ref == 'master' }}
       signing: none
 
   branch:
