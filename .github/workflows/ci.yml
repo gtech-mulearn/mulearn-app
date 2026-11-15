@@ -26,12 +26,26 @@ concurrency:
 permissions:
   contents: read
 
+# Two callers with different names on purpose: branch protection requires
+# "Android / Validate" and "Android / Build APK", and only PR runs may produce
+# those names. (A push run's skipped build job would otherwise post a
+# same-named "skipped" check on the PR's commit, which GitHub counts as
+# passing.)
 jobs:
   android:
     name: Android
+    if: github.event_name == 'pull_request'
     uses: ./.github/workflows/android-build.yml
     with:
       channel: ci
-      format-base: ${{ github.event.pull_request.base.sha || '' }}
-      build: ${{ github.event_name == 'pull_request' }}
+      format-base: ${{ github.event.pull_request.base.sha }}
+      build: true
       signing: none
+
+  branch:
+    name: Branch check
+    if: github.event_name == 'push'
+    uses: ./.github/workflows/android-build.yml
+    with:
+      channel: ci
+      build: false
