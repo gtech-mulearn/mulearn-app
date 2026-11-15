@@ -22,20 +22,36 @@ class ProfileKarmaTab extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final logState = publicMuid == null ? ref.watch(userLogProvider) : ref.watch(publicUserLogProvider(publicMuid!));
-    final badges = ref.watch(badgesProvider(publicMuid ?? profile.muid)).value?.completedTasks ?? const <String>[];
+    final logState = publicMuid == null
+        ? ref.watch(userLogProvider)
+        : ref.watch(publicUserLogProvider(publicMuid!));
+    final badges =
+        ref
+            .watch(badgesProvider(publicMuid ?? profile.muid))
+            .value
+            ?.completedTasks ??
+        const <String>[];
 
     // A plain column: it lives inside the profile's single scroll.
     return Padding(
-      padding: const EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space2, MuSpacing.space5, MuSpacing.navClearance),
+      padding: const EdgeInsets.fromLTRB(
+        MuSpacing.space5,
+        MuSpacing.space2,
+        MuSpacing.space5,
+        MuSpacing.navClearance,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           _Card(
             title: 'Activity',
             child: logState.when(
-              loading: () => const SizedBox(height: 120, child: Center(child: CircularProgressIndicator())),
-              error: (e, _) => Text(ApiException.messageFor(e), style: context.mu.text.body),
+              loading: () => const SizedBox(
+                height: 120,
+                child: Center(child: CircularProgressIndicator()),
+              ),
+              error: (e, _) =>
+                  Text(ApiException.messageFor(e), style: context.mu.text.body),
               data: (entries) => _Heatmap(entries: entries),
             ),
           ),
@@ -56,7 +72,10 @@ class ProfileKarmaTab extends ConsumerWidget {
               loading: () => const SizedBox.shrink(),
               error: (_, _) => const SizedBox.shrink(),
               data: (entries) => entries.isEmpty
-                  ? Text('No karma yet. Finish a task to earn some.', style: context.mu.text.body)
+                  ? Text(
+                      'No karma yet. Finish a task to earn some.',
+                      style: context.mu.text.body,
+                    )
                   : _Ledger(entries: entries),
             ),
           ),
@@ -80,14 +99,20 @@ class _Card extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: MuSpacing.space4),
       child: Container(
         padding: const EdgeInsets.all(MuSpacing.space5),
-        decoration: BoxDecoration(color: mu.colors.surface, borderRadius: BorderRadius.circular(MuRadii.card)),
+        decoration: BoxDecoration(
+          color: mu.colors.surface,
+          borderRadius: BorderRadius.circular(MuRadii.card),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
                 Expanded(
-                  child: Semantics(header: true, child: Text(title, style: mu.text.title3)),
+                  child: Semantics(
+                    header: true,
+                    child: Text(title, style: mu.text.title3),
+                  ),
                 ),
                 if (trailing != null) Text(trailing!, style: mu.text.caption),
               ],
@@ -110,7 +135,20 @@ class _Heatmap extends StatelessWidget {
 
   final List<UserLogEntry> entries;
 
-  static const _months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  static const _months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
   static const _gap = 3.0;
   static const _targetCell = 12.0;
   static const _labelH = 14.0;
@@ -121,7 +159,8 @@ class _Heatmap extends StatelessWidget {
     final c = mu.colors;
     final scale = [
       c.surfaceSunk,
-      for (final t in const [0.3, 0.55, 0.8, 1.0]) Color.lerp(c.surfaceSunk, c.cobalt, t)!,
+      for (final t in const [0.3, 0.55, 0.8, 1.0])
+        Color.lerp(c.surfaceSunk, c.cobalt, t)!,
     ];
 
     final totals = <DateTime, num>{};
@@ -138,16 +177,27 @@ class _Heatmap extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, box) {
         final width = box.maxWidth;
-        final weeks = ((width + _gap) / (_targetCell + _gap)).floor().clamp(4, 53);
+        final weeks = ((width + _gap) / (_targetCell + _gap)).floor().clamp(
+          4,
+          53,
+        );
         final cell = (width - (weeks - 1) * _gap) / weeks;
         final first = thisMonday.subtract(Duration(days: (weeks - 1) * 7));
         final columns = [
-          for (var w = 0; w < weeks; w++) [for (var d = 0; d < 7; d++) first.add(Duration(days: w * 7 + d))],
+          for (var w = 0; w < weeks; w++)
+            [for (var d = 0; d < 7; d++) first.add(Duration(days: w * 7 + d))],
         ];
-        final inRange = totals.entries.where((e) => !e.key.isBefore(first) && !e.key.isAfter(today));
-        final busiest = inRange.fold<num>(0, (a, e) => e.value > a ? e.value : a);
+        final inRange = totals.entries.where(
+          (e) => !e.key.isBefore(first) && !e.key.isAfter(today),
+        );
+        final busiest = inRange.fold<num>(
+          0,
+          (a, e) => e.value > a ? e.value : a,
+        );
         final total = inRange.fold<num>(0, (a, e) => a + e.value);
-        int bucket(num v) => (v <= 0 || busiest <= 0) ? 0 : ((v / busiest) * 4).ceil().clamp(1, 4);
+        int bucket(num v) => (v <= 0 || busiest <= 0)
+            ? 0
+            : ((v / busiest) * 4).ceil().clamp(1, 4);
         final monthsShown = (weeks * 7 / 30.4).round();
 
         // Month labels sit over the first week that starts in that month;
@@ -163,7 +213,10 @@ class _Heatmap extends StatelessWidget {
             Positioned(
               left: x,
               top: 0,
-              child: Text(_months[m - 1], style: mu.text.caption.copyWith(fontSize: 10)),
+              child: Text(
+                _months[m - 1],
+                style: mu.text.caption.copyWith(fontSize: 10),
+              ),
             ),
           );
           lastEnd = x + 24;
@@ -177,7 +230,10 @@ class _Heatmap extends StatelessWidget {
                 children: [
                   TextSpan(
                     text: muGrouped(total.round()),
-                    style: mu.text.numeral.copyWith(fontSize: 22, color: c.voltText),
+                    style: mu.text.numeral.copyWith(
+                      fontSize: 22,
+                      color: c.voltText,
+                    ),
                   ),
                   TextSpan(
                     text: '  karma in the last $monthsShown months',
@@ -202,21 +258,29 @@ class _Heatmap extends StatelessWidget {
                     children: [
                       for (var w = 0; w < columns.length; w++)
                         Padding(
-                          padding: EdgeInsets.only(right: w == columns.length - 1 ? 0 : _gap),
+                          padding: EdgeInsets.only(
+                            right: w == columns.length - 1 ? 0 : _gap,
+                          ),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               for (var d = 0; d < 7; d++)
                                 Padding(
-                                  padding: EdgeInsets.only(bottom: d == 6 ? 0 : _gap),
+                                  padding: EdgeInsets.only(
+                                    bottom: d == 6 ? 0 : _gap,
+                                  ),
                                   child: Container(
                                     width: cell,
                                     height: cell,
                                     decoration: BoxDecoration(
                                       color: columns[w][d].isAfter(today)
                                           ? Colors.transparent
-                                          : scale[bucket(totals[columns[w][d]] ?? 0)],
-                                      borderRadius: BorderRadius.circular(cell / 4),
+                                          : scale[bucket(
+                                              totals[columns[w][d]] ?? 0,
+                                            )],
+                                      borderRadius: BorderRadius.circular(
+                                        cell / 4,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -239,7 +303,10 @@ class _Heatmap extends StatelessWidget {
                     width: 11,
                     height: 11,
                     margin: const EdgeInsets.symmetric(horizontal: 2),
-                    decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(3)),
+                    decoration: BoxDecoration(
+                      color: color,
+                      borderRadius: BorderRadius.circular(3),
+                    ),
                   ),
                 const SizedBox(width: 6),
                 Text('More', style: mu.text.caption),
@@ -262,7 +329,8 @@ class _Distribution extends StatelessWidget {
   Widget build(BuildContext context) {
     final mu = context.mu;
     final c = mu.colors;
-    final rows = entries.where((e) => e.karma > 0).toList()..sort((a, b) => b.karma.compareTo(a.karma));
+    final rows = entries.where((e) => e.karma > 0).toList()
+      ..sort((a, b) => b.karma.compareTo(a.karma));
     final max = rows.first.karma;
     return Column(
       children: [
@@ -278,9 +346,19 @@ class _Distribution extends StatelessWidget {
                   Row(
                     children: [
                       Expanded(
-                        child: Text(e.taskType, style: mu.text.label, maxLines: 1, overflow: TextOverflow.ellipsis),
+                        child: Text(
+                          e.taskType,
+                          style: mu.text.label,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
                       ),
-                      Text(muGrouped(e.karma.round()), style: mu.text.code.copyWith(fontWeight: FontWeight.w700)),
+                      Text(
+                        muGrouped(e.karma.round()),
+                        style: mu.text.code.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 6),
@@ -290,7 +368,9 @@ class _Distribution extends StatelessWidget {
                       height: 8,
                       child: Stack(
                         children: [
-                          Positioned.fill(child: ColoredBox(color: c.surfaceSunk)),
+                          Positioned.fill(
+                            child: ColoredBox(color: c.surfaceSunk),
+                          ),
                           FractionallySizedBox(
                             // Grow from the start edge (the default centres the bar).
                             alignment: AlignmentDirectional.centerStart,
@@ -323,7 +403,8 @@ class _Badges extends StatelessWidget {
       spacing: 6,
       runSpacing: 6,
       children: [
-        for (final n in names.take(shown)) MuPill(n, tone: MuPillTone.success, icon: LucideIcons.check),
+        for (final n in names.take(shown))
+          MuPill(n, tone: MuPillTone.success, icon: LucideIcons.check),
         if (names.length > shown) MuPill('+${names.length - shown} more'),
       ],
     );
@@ -341,7 +422,8 @@ class _Ledger extends StatelessWidget {
     final mu = context.mu;
     final c = mu.colors;
     final now = DateTime.now();
-    final sorted = [...entries]..sort((a, b) => b.createdDate.compareTo(a.createdDate));
+    final sorted = [...entries]
+      ..sort((a, b) => b.createdDate.compareTo(a.createdDate));
     return Column(
       children: [
         for (var i = 0; i < sorted.length; i++) ...[
@@ -351,27 +433,47 @@ class _Ledger extends StatelessWidget {
               final e = sorted[i];
               final negative = e.karma < 0;
               final when = DateTime.tryParse(e.createdDate)?.toLocal();
-              final amount = '${negative ? '−' : '+'}${muGrouped(e.karma.abs().round())}';
+              final amount =
+                  '${negative ? '−' : '+'}${muGrouped(e.karma.abs().round())}';
               return Semantics(
-                label: '${e.taskName}, $amount karma${when == null ? '' : ', ${formatAgo(when, now)}'}',
+                label:
+                    '${e.taskName}, $amount karma${when == null ? '' : ', ${formatAgo(when, now)}'}',
                 excludeSemantics: true,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: MuSpacing.space3),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: MuSpacing.space3,
+                  ),
                   child: Row(
                     children: [
                       Container(
                         width: 36,
                         height: 36,
-                        decoration: BoxDecoration(color: negative ? c.dangerTint : c.volt, shape: BoxShape.circle),
-                        child: Icon(LucideIcons.zap, size: MuSizes.iconSm, color: negative ? c.danger : c.onVolt),
+                        decoration: BoxDecoration(
+                          color: negative ? c.dangerTint : c.volt,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          LucideIcons.zap,
+                          size: MuSizes.iconSm,
+                          color: negative ? c.danger : c.onVolt,
+                        ),
                       ),
                       const SizedBox(width: MuSpacing.space3),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(e.taskName, style: mu.text.bodyStrong, maxLines: 2, overflow: TextOverflow.ellipsis),
-                            if (when != null) Text(formatAgo(when, now), style: mu.text.caption),
+                            Text(
+                              e.taskName,
+                              style: mu.text.bodyStrong,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            if (when != null)
+                              Text(
+                                formatAgo(when, now),
+                                style: mu.text.caption,
+                              ),
                           ],
                         ),
                       ),

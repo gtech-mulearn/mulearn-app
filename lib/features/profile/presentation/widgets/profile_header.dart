@@ -32,7 +32,13 @@ const _levelNames = [
 /// settings as glass tools, tap the muid to copy it. Someone else's: a back
 /// button and the muid copy only.
 class ProfileHeader extends ConsumerWidget {
-  const ProfileHeader({required this.profile, this.isOwn = true, this.onEdit, this.onShare, super.key});
+  const ProfileHeader({
+    required this.profile,
+    this.isOwn = true,
+    this.onEdit,
+    this.onShare,
+    super.key,
+  });
 
   final UserProfile profile;
   final bool isOwn;
@@ -50,15 +56,27 @@ class ProfileHeader extends ConsumerWidget {
     final raw = await picked.readAsBytes();
     if (!context.mounted) return;
     // Frame it first: the cover is a 3:1 banner, as on the dashboard.
-    final bytes = await showMuImageCropper(context, bytes: raw, aspect: 3, title: 'Adjust cover', maxWidth: 1800);
+    final bytes = await showMuImageCropper(
+      context,
+      bytes: raw,
+      aspect: 3,
+      title: 'Adjust cover',
+      maxWidth: 1800,
+    );
     if (bytes == null) return;
     if (bytes.lengthInBytes > coverPicMaxBytes) {
       if (context.mounted) {
-        MuToast.show(context, message: 'Cover image must be under 5 MB.', type: MuToastType.error);
+        MuToast.show(
+          context,
+          message: 'Cover image must be under 5 MB.',
+          type: MuToastType.error,
+        );
       }
       return;
     }
-    await ref.read(coverPhotoControllerProvider.notifier).upload(bytes, 'cover.jpg');
+    await ref
+        .read(coverPhotoControllerProvider.notifier)
+        .upload(bytes, 'cover.jpg');
   }
 
   Future<void> _deleteCover(BuildContext context, WidgetRef ref) async {
@@ -69,10 +87,15 @@ class ProfileHeader extends ConsumerWidget {
       confirmLabel: 'Remove',
       destructive: true,
     );
-    if (confirmed) await ref.read(coverPhotoControllerProvider.notifier).delete();
+    if (confirmed) {
+      await ref.read(coverPhotoControllerProvider.notifier).delete();
+    }
   }
 
-  Future<void> _pickAndUploadProfilePic(BuildContext context, WidgetRef ref) async {
+  Future<void> _pickAndUploadProfilePic(
+    BuildContext context,
+    WidgetRef ref,
+  ) async {
     final picked = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (picked == null) return;
     final raw = await picked.readAsBytes();
@@ -87,12 +110,20 @@ class ProfileHeader extends ConsumerWidget {
       maxWidth: 800,
     );
     if (bytes == null) return;
-    await ref.read(profileImageControllerProvider.notifier).upload(bytes, 'profile.jpg');
+    await ref
+        .read(profileImageControllerProvider.notifier)
+        .upload(bytes, 'profile.jpg');
   }
 
   Future<void> _copyMuid(BuildContext context) async {
     await Clipboard.setData(ClipboardData(text: profile.muid));
-    if (context.mounted) MuToast.show(context, message: 'Copied ${profile.muid}', type: MuToastType.success);
+    if (context.mounted) {
+      MuToast.show(
+        context,
+        message: 'Copied ${profile.muid}',
+        type: MuToastType.success,
+      );
+    }
   }
 
   @override
@@ -101,25 +132,38 @@ class ProfileHeader extends ConsumerWidget {
       // A failed upload/delete must never vanish silently.
       ref.listen(coverPhotoControllerProvider, (_, next) {
         if (next.hasError && !next.isLoading) {
-          MuToast.show(context, message: ApiException.messageFor(next.error!), type: MuToastType.error);
+          MuToast.show(
+            context,
+            message: ApiException.messageFor(next.error!),
+            type: MuToastType.error,
+          );
         }
       });
     }
     final mu = context.mu;
     final c = mu.colors;
-    final coverPending = isOwn && ref.watch(coverPhotoControllerProvider).isLoading;
-    final hasCover = profile.coverPicUrl != null && profile.coverPicUrl!.isNotEmpty;
+    final coverPending =
+        isOwn && ref.watch(coverPhotoControllerProvider).isLoading;
+    final hasCover =
+        profile.coverPicUrl != null && profile.coverPicUrl!.isNotEmpty;
 
     final levelN = (profile.level != null && profile.level!.length > 3)
         ? int.tryParse(profile.level!.substring(3)) ?? 1
         : 1;
-    final levelName = (levelN >= 1 && levelN <= _levelNames.length) ? _levelNames[levelN - 1] : null;
-    final name = profile.fullName.trim().isEmpty ? profile.muid : profile.fullName.trim();
+    final levelName = (levelN >= 1 && levelN <= _levelNames.length)
+        ? _levelNames[levelN - 1]
+        : null;
+    final name = profile.fullName.trim().isEmpty
+        ? profile.muid
+        : profile.fullName.trim();
     // Artifact ProfilePoster: "Web Development · CET" (top interest, campus);
     // the level has its own pill below. With no interest yet, the level's
     // name stands in.
     final role = [
-      if (profile.interestGroups.isNotEmpty) profile.interestGroups.first.name else ?levelName,
+      if (profile.interestGroups.isNotEmpty)
+        profile.interestGroups.first.name
+      else
+        ?levelName,
       if ((profile.collegeCode ?? '').isNotEmpty) profile.collegeCode!,
     ].join(' · ');
     final top = MediaQuery.paddingOf(context).top;
@@ -128,10 +172,17 @@ class ProfileHeader extends ConsumerWidget {
     // Tools row: status inset + 4 + 48. With a cover, the name starts where
     // the banner ends (less its fade), so it never sits on the photo.
     final toolsBottom = top + MuSpacing.space1 + MuSizes.touchMin;
-    final nameGap = hasCover ? math.max(MuSpacing.space4, bannerH - toolsBottom - 12) : MuSpacing.space4;
+    final nameGap = hasCover
+        ? math.max(MuSpacing.space4, bannerH - toolsBottom - 12)
+        : MuSpacing.space4;
 
     Widget glass(IconData icon, String tooltip, VoidCallback onTap) =>
-        MuIconButton(icon: icon, tooltip: tooltip, variant: MuIconButtonVariant.glass, onPressed: onTap);
+        MuIconButton(
+          icon: icon,
+          tooltip: tooltip,
+          variant: MuIconButtonVariant.glass,
+          onPressed: onTap,
+        );
 
     final photo = Container(
       width: _photoSize,
@@ -163,7 +214,11 @@ class ProfileHeader extends ConsumerWidget {
             Positioned.fill(
               child: ClipRect(
                 child: ImageFiltered(
-                  imageFilter: ui.ImageFilter.blur(sigmaX: 36, sigmaY: 36, tileMode: TileMode.clamp),
+                  imageFilter: ui.ImageFilter.blur(
+                    sigmaX: 36,
+                    sigmaY: 36,
+                    tileMode: TileMode.clamp,
+                  ),
                   child: Transform.scale(
                     scale: 1.25,
                     child: CachedNetworkImage(
@@ -175,7 +230,9 @@ class ProfileHeader extends ConsumerWidget {
                 ),
               ),
             ),
-            Positioned.fill(child: ColoredBox(color: c.night.withValues(alpha: 0.55))),
+            Positioned.fill(
+              child: ColoredBox(color: c.night.withValues(alpha: 0.55)),
+            ),
             Positioned(
               top: 0,
               left: 0,
@@ -206,7 +263,10 @@ class ProfileHeader extends ConsumerWidget {
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
                           stops: const [0, 0.45],
-                          colors: [c.night.withValues(alpha: 0.45), c.night.withValues(alpha: 0)],
+                          colors: [
+                            c.night.withValues(alpha: 0.45),
+                            c.night.withValues(alpha: 0),
+                          ],
                         ),
                       ),
                     ),
@@ -223,18 +283,31 @@ class ProfileHeader extends ConsumerWidget {
                     button: true,
                     label: 'Change profile photo',
                     excludeSemantics: true,
-                    child: MuPressable(onTap: () => _pickAndUploadProfilePic(context, ref), child: photo),
+                    child: MuPressable(
+                      onTap: () => _pickAndUploadProfilePic(context, ref),
+                      child: photo,
+                    ),
                   )
                 : ExcludeSemantics(child: photo),
           ),
           Padding(
-            padding: EdgeInsets.fromLTRB(MuSpacing.space3, top + MuSpacing.space1, MuSpacing.space3, sheetOverlap + 20),
+            padding: EdgeInsets.fromLTRB(
+              MuSpacing.space3,
+              top + MuSpacing.space1,
+              MuSpacing.space3,
+              sheetOverlap + 20,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   children: [
-                    if (!isOwn) glass(LucideIcons.arrowLeft, 'Back', () => Navigator.of(context).maybePop()),
+                    if (!isOwn)
+                      glass(
+                        LucideIcons.arrowLeft,
+                        'Back',
+                        () => Navigator.of(context).maybePop(),
+                      ),
                     const Spacer(),
                     if (isOwn) ...[
                       if (coverPending)
@@ -242,7 +315,10 @@ class ProfileHeader extends ConsumerWidget {
                           padding: const EdgeInsets.all(MuSpacing.space3),
                           child: SizedBox.square(
                             dimension: 20,
-                            child: CircularProgressIndicator(strokeWidth: 2, color: c.onCobalt),
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: c.onCobalt,
+                            ),
                           ),
                         )
                       else
@@ -254,8 +330,15 @@ class ProfileHeader extends ConsumerWidget {
                             _ => _deleteCover(context, ref),
                           },
                           itemBuilder: (_) => [
-                            const PopupMenuItem(value: 'change', child: Text('Change cover')),
-                            if (hasCover) const PopupMenuItem(value: 'remove', child: Text('Remove cover')),
+                            const PopupMenuItem(
+                              value: 'change',
+                              child: Text('Change cover'),
+                            ),
+                            if (hasCover)
+                              const PopupMenuItem(
+                                value: 'remove',
+                                child: Text('Remove cover'),
+                              ),
                           ],
                           // Same glass circle as the tools beside it.
                           child: SizedBox.square(
@@ -268,14 +351,24 @@ class ProfileHeader extends ConsumerWidget {
                                   color: c.onCobalt.withValues(alpha: 0.18),
                                   shape: BoxShape.circle,
                                 ),
-                                child: Icon(LucideIcons.image, color: c.onCobalt, size: MuSizes.iconMd),
+                                child: Icon(
+                                  LucideIcons.image,
+                                  color: c.onCobalt,
+                                  size: MuSizes.iconMd,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      if (onEdit != null) glass(LucideIcons.pencil, 'Edit profile', onEdit!),
-                      if (onShare != null) glass(LucideIcons.share2, 'Share profile', onShare!),
-                      glass(LucideIcons.settings, 'Settings', () => context.push(RoutePaths.settings)),
+                      if (onEdit != null)
+                        glass(LucideIcons.pencil, 'Edit profile', onEdit!),
+                      if (onShare != null)
+                        glass(LucideIcons.share2, 'Share profile', onShare!),
+                      glass(
+                        LucideIcons.settings,
+                        'Settings',
+                        () => context.push(RoutePaths.settings),
+                      ),
                     ],
                   ],
                 ),
@@ -291,13 +384,19 @@ class ProfileHeader extends ConsumerWidget {
                     children: [
                       Semantics(
                         header: true,
-                        child: PosterName(name, style: mu.text.poster.copyWith(color: c.onCobalt)),
+                        child: PosterName(
+                          name,
+                          style: mu.text.poster.copyWith(color: c.onCobalt),
+                        ),
                       ),
                       const SizedBox(height: MuSpacing.space2),
                       if (role.isNotEmpty)
                         Text(
                           role,
-                          style: mu.text.body.copyWith(fontSize: 14, color: c.onCobalt.withValues(alpha: 0.9)),
+                          style: mu.text.body.copyWith(
+                            fontSize: 14,
+                            color: c.onCobalt.withValues(alpha: 0.9),
+                          ),
                         ),
                       const SizedBox(height: MuSpacing.space3),
                       Wrap(
@@ -311,19 +410,27 @@ class ProfileHeader extends ConsumerWidget {
                             excludeSemantics: true,
                             child: MuPressable(
                               onTap: () => _copyMuid(context),
-                              child: MuPill(profile.muid, tone: MuPillTone.paper, mono: true),
+                              child: MuPill(
+                                profile.muid,
+                                tone: MuPillTone.paper,
+                                mono: true,
+                              ),
                             ),
                           ),
                           // Visibility as a compact glyph so the tags stay on
                           // one line, as on the poster.
                           if (isOwn)
                             Semantics(
-                              label: profile.isPublic ? 'Public profile' : 'Private profile',
+                              label: profile.isPublic
+                                  ? 'Public profile'
+                                  : 'Private profile',
                               excludeSemantics: true,
                               child: MuPill(
                                 '',
                                 tone: MuPillTone.paper,
-                                icon: profile.isPublic ? LucideIcons.globe : LucideIcons.lock,
+                                icon: profile.isPublic
+                                    ? LucideIcons.globe
+                                    : LucideIcons.lock,
                               ),
                             ),
                         ],
@@ -406,7 +513,10 @@ class _Initials extends StatelessWidget {
   Widget build(BuildContext context) => Center(
     child: Text(
       MuAvatar.initialsOf(name),
-      style: context.mu.text.poster.copyWith(fontSize: 44, color: context.mu.colors.onVolt),
+      style: context.mu.text.poster.copyWith(
+        fontSize: 44,
+        color: context.mu.colors.onVolt,
+      ),
     ),
   );
 }

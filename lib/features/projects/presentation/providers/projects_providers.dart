@@ -33,28 +33,42 @@ class ProjectsFeed extends _$ProjectsFeed {
     ref.keepRecent();
     _pageIndex = 1;
     _inFlight = null;
-    final page = await ref.watch(projectsRepositoryProvider).feed(search: search);
+    final page = await ref
+        .watch(projectsRepositoryProvider)
+        .feed(search: search);
     return PagedState(items: page.items, hasMore: page.hasNext);
   }
 
   /// Loads the next page (or retries it); concurrent calls share one request.
-  Future<void> loadMore() => _inFlight ??= _loadNextPage().whenComplete(() => _inFlight = null);
+  Future<void> loadMore() =>
+      _inFlight ??= _loadNextPage().whenComplete(() => _inFlight = null);
 
   Future<void> _loadNextPage() async {
     final current = state.value;
     if (current == null || !current.hasMore) return;
-    state = AsyncData(current.copyWith(isLoadingMore: true, loadMoreError: null));
+    state = AsyncData(
+      current.copyWith(isLoadingMore: true, loadMoreError: null),
+    );
     final next = _pageIndex + 1;
     try {
-      final page = await ref.read(projectsRepositoryProvider).feed(search: search, pageIndex: next);
+      final page = await ref
+          .read(projectsRepositoryProvider)
+          .feed(search: search, pageIndex: next);
       if (!ref.mounted) return;
       _pageIndex = next;
       state = AsyncData(
-        PagedState(items: mergeUniqueBy(current.items, page.items, (p) => p.id), hasMore: page.hasNext),
+        PagedState(
+          items: mergeUniqueBy(current.items, page.items, (p) => p.id),
+          hasMore: page.hasNext,
+        ),
       );
     } on Object catch (e, st) {
       appLogger.w('Loading more projects failed', error: e, stackTrace: st);
-      if (ref.mounted) state = AsyncData(current.copyWith(isLoadingMore: false, loadMoreError: e));
+      if (ref.mounted) {
+        state = AsyncData(
+          current.copyWith(isLoadingMore: false, loadMoreError: e),
+        );
+      }
     }
   }
 }
@@ -69,7 +83,8 @@ Future<List<Project>> myProjects(Ref ref) async {
 
 /// One project.
 @Riverpod(retry: noRetry)
-Future<Project> project(Ref ref, String id) => ref.watch(projectsRepositoryProvider).detail(id);
+Future<Project> project(Ref ref, String id) =>
+    ref.watch(projectsRepositoryProvider).detail(id);
 
 /// μLearn members matching [query], for the team picker; nothing under two
 /// characters. Each query is kept a while, so retyping costs no request and
@@ -83,7 +98,8 @@ Future<List<ProjectMember>> projectPeopleSearch(Ref ref, String query) async {
 
 /// Skills to tag a project with.
 @Riverpod(retry: noRetry)
-Future<List<ProjectSkill>> projectSkills(Ref ref) => ref.watch(projectsRepositoryProvider).skills();
+Future<List<ProjectSkill>> projectSkills(Ref ref) =>
+    ref.watch(projectsRepositoryProvider).skills();
 
 /// Every change to a project: one notifier for one busy / error state. Each
 /// success refreshes the project, the viewer's list and the feed. Returns
@@ -93,13 +109,19 @@ class ProjectActions extends _$ProjectActions {
   @override
   Future<void> build() async {}
 
-  Future<T?> _run<T>(String? projectId, Future<T> Function(ProjectsRepository repo) action) async {
+  Future<T?> _run<T>(
+    String? projectId,
+    Future<T> Function(ProjectsRepository repo) action,
+  ) async {
     final repo = ref.read(projectsRepositoryProvider);
-    final link = ref.keepAlive(); // finish the refresh even if the screen closes
+    final link = ref
+        .keepAlive(); // finish the refresh even if the screen closes
     state = const AsyncLoading();
     try {
       T? value;
-      final result = await AsyncValue.guard(() async => value = await action(repo));
+      final result = await AsyncValue.guard(
+        () async => value = await action(repo),
+      );
       if (projectId != null) ref.invalidate(projectProvider(projectId));
       ref
         ..invalidate(myProjectsProvider)
@@ -112,8 +134,10 @@ class ProjectActions extends _$ProjectActions {
   }
 
   /// The new project, or null.
-  Future<Project?> create(ProjectDraft draft) => _run(null, (repo) => repo.create(draft));
-  Future<Project?> edit(String id, ProjectDraft draft) => _run(id, (repo) => repo.update(id, draft));
+  Future<Project?> create(ProjectDraft draft) =>
+      _run(null, (repo) => repo.create(draft));
+  Future<Project?> edit(String id, ProjectDraft draft) =>
+      _run(id, (repo) => repo.update(id, draft));
 
   Future<bool> delete(String id) async =>
       await _run(id, (repo) async {
@@ -122,24 +146,43 @@ class ProjectActions extends _$ProjectActions {
       }) ??
       false;
 
-  Future<bool> _ok(String id, Future<void> Function(ProjectsRepository repo) action) async =>
+  Future<bool> _ok(
+    String id,
+    Future<void> Function(ProjectsRepository repo) action,
+  ) async =>
       await _run(id, (repo) async {
         await action(repo);
         return true;
       }) ??
       false;
 
-  Future<bool> setStatus(String id, ProjectStatus status) => _ok(id, (repo) => repo.setStatus(id, status));
-  Future<bool> addMember(String id, {String? muid, String? externalName, String? role}) =>
-      _ok(id, (repo) => repo.addMember(id, muid: muid, externalName: externalName, role: role));
-  Future<bool> removeMember(String id, String memberId) => _ok(id, (repo) => repo.removeMember(id, memberId));
+  Future<bool> setStatus(String id, ProjectStatus status) =>
+      _ok(id, (repo) => repo.setStatus(id, status));
+  Future<bool> addMember(
+    String id, {
+    String? muid,
+    String? externalName,
+    String? role,
+  }) => _ok(
+    id,
+    (repo) =>
+        repo.addMember(id, muid: muid, externalName: externalName, role: role),
+  );
+  Future<bool> removeMember(String id, String memberId) =>
+      _ok(id, (repo) => repo.removeMember(id, memberId));
 
   /// Upvotes, or takes the viewer's upvote back.
   Future<bool> toggleUpvote(Project project, String viewerId) {
     final mine = project.upvoteBy(viewerId);
-    return _ok(project.id, (repo) => mine == null ? repo.upvote(project.id) : repo.removeVote(mine.id));
+    return _ok(
+      project.id,
+      (repo) =>
+          mine == null ? repo.upvote(project.id) : repo.removeVote(mine.id),
+    );
   }
 
-  Future<bool> comment(String id, String text) => _ok(id, (repo) => repo.comment(id, text));
-  Future<bool> deleteComment(String id, String commentId) => _ok(id, (repo) => repo.deleteComment(commentId));
+  Future<bool> comment(String id, String text) =>
+      _ok(id, (repo) => repo.comment(id, text));
+  Future<bool> deleteComment(String id, String commentId) =>
+      _ok(id, (repo) => repo.deleteComment(commentId));
 }

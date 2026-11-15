@@ -18,7 +18,10 @@ class ShareProfileSheet extends ConsumerWidget {
 
   /// Opens the sheet over [context].
   static Future<void> show(BuildContext context, UserProfile profile) =>
-      showMuSheet<void>(context, builder: (_) => ShareProfileSheet(profile: profile));
+      showMuSheet<void>(
+        context,
+        builder: (_) => ShareProfileSheet(profile: profile),
+      );
 
   // The production dashboard is app.mulearn.org (mulearn-dashboard.vercel.app
   // is a preview alias). Confirmed live: `/profile/{muid}`, not `/u/{muid}`.
@@ -29,7 +32,9 @@ class ShareProfileSheet extends ConsumerWidget {
     final mu = context.mu;
     final c = mu.colors;
     // Watch the live value so the switch and QR follow a toggle.
-    final isPublic = ref.watch(profileControllerProvider).value?.isPublic ?? profile.isPublic;
+    final isPublic =
+        ref.watch(profileControllerProvider).value?.isPublic ??
+        profile.isPublic;
     final profileUrl = '$_profileUrlBase/${profile.muid}';
     final qrUrl =
         'https://quickchart.io/qr'
@@ -39,10 +44,16 @@ class ShareProfileSheet extends ConsumerWidget {
 
     Future<void> toggle({required bool value}) async {
       try {
-        await ref.read(profileControllerProvider.notifier).togglePublic(isPublic: value);
+        await ref
+            .read(profileControllerProvider.notifier)
+            .togglePublic(isPublic: value);
       } on Object catch (e) {
         if (context.mounted) {
-          MuToast.show(context, message: ApiException.messageFor(e), type: MuToastType.error);
+          MuToast.show(
+            context,
+            message: ApiException.messageFor(e),
+            type: MuToastType.error,
+          );
         }
       }
     }
@@ -50,20 +61,34 @@ class ShareProfileSheet extends ConsumerWidget {
     Future<void> copy() async {
       await Clipboard.setData(ClipboardData(text: profileUrl));
       if (context.mounted) {
-        MuToast.show(context, message: 'Link copied', type: MuToastType.success);
+        MuToast.show(
+          context,
+          message: 'Link copied',
+          type: MuToastType.success,
+        );
       }
     }
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(MuSpacing.space5, 0, MuSpacing.space5, MuSpacing.space5),
+      padding: const EdgeInsets.fromLTRB(
+        MuSpacing.space5,
+        0,
+        MuSpacing.space5,
+        MuSpacing.space5,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Semantics(header: true, child: Text('Share profile', style: mu.text.title2)),
+          Semantics(
+            header: true,
+            child: Text('Share profile', style: mu.text.title2),
+          ),
           const SizedBox(height: MuSpacing.space3),
           MuSwitchTile(
             label: 'Public profile',
-            subtitle: isPublic ? 'Anyone with the link can see it.' : 'Only you can see it. Turn on to share.',
+            subtitle: isPublic
+                ? 'Anyone with the link can see it.'
+                : 'Only you can see it. Turn on to share.',
             value: isPublic,
             onChanged: (value) => toggle(value: value),
           ),
@@ -93,13 +118,16 @@ class ShareProfileSheet extends ConsumerWidget {
                               imageUrl: qrUrl,
                               width: 196,
                               height: 196,
-                              placeholder: (_, _) => const SizedBox.square(dimension: 196),
+                              placeholder: (_, _) =>
+                                  const SizedBox.square(dimension: 196),
                               errorWidget: (_, _, _) => SizedBox.square(
                                 dimension: 196,
                                 child: Center(
                                   child: Text(
                                     "Couldn't load the QR",
-                                    style: mu.text.caption.copyWith(color: c.inkPrint),
+                                    style: mu.text.caption.copyWith(
+                                      color: c.inkPrint,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -110,14 +138,20 @@ class ShareProfileSheet extends ConsumerWidget {
                       const SizedBox(height: MuSpacing.space4),
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
-                        constraints: const BoxConstraints(minHeight: MuSizes.fieldH),
+                        constraints: const BoxConstraints(
+                          minHeight: MuSizes.fieldH,
+                        ),
                         decoration: BoxDecoration(
                           color: c.surfaceSunk,
                           borderRadius: BorderRadius.circular(MuRadii.control),
                         ),
                         child: Row(
                           children: [
-                            Icon(LucideIcons.link, size: MuSizes.iconSm, color: c.ink3),
+                            Icon(
+                              LucideIcons.link,
+                              size: MuSizes.iconSm,
+                              color: c.ink3,
+                            ),
                             const SizedBox(width: MuSpacing.space2),
                             Expanded(
                               child: Text(
@@ -131,7 +165,12 @@ class ShareProfileSheet extends ConsumerWidget {
                         ),
                       ),
                       const SizedBox(height: MuSpacing.space4),
-                      MuButton(label: 'Copy link', icon: LucideIcons.copy, block: true, onPressed: copy),
+                      MuButton(
+                        label: 'Copy link',
+                        icon: LucideIcons.copy,
+                        block: true,
+                        onPressed: copy,
+                      ),
                     ],
                   ),
           ),

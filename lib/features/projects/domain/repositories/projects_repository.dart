@@ -16,7 +16,12 @@ abstract interface class ProjectsRepository {
   Future<void> setStatus(String id, ProjectStatus status);
 
   /// Adds a μLearn member by [muid], or someone outside by [externalName].
-  Future<void> addMember(String projectId, {String? muid, String? externalName, String? role});
+  Future<void> addMember(
+    String projectId, {
+    String? muid,
+    String? externalName,
+    String? role,
+  });
   Future<void> removeMember(String projectId, String memberId);
 
   Future<void> upvote(String projectId);

@@ -37,7 +37,12 @@ class IssueVcSheet extends ConsumerStatefulWidget {
     String? userEmail,
   }) => showMuSheet<void>(
     context,
-    builder: (_) => IssueVcSheet(achievement: achievement, muid: muid, userName: userName, userEmail: userEmail),
+    builder: (_) => IssueVcSheet(
+      achievement: achievement,
+      muid: muid,
+      userName: userName,
+      userEmail: userEmail,
+    ),
   );
 
   @override
@@ -76,7 +81,8 @@ class _IssueVcSheetState extends ConsumerState<IssueVcSheet> {
     final c = mu.colors;
     final issuance = ref.watch(vcIssuanceControllerProvider);
     final name = widget.achievement.achievement.achievementName;
-    final issuedUrl = widget.achievement.isIssued && widget.achievement.vcUrl != null
+    final issuedUrl =
+        widget.achievement.isIssued && widget.achievement.vcUrl != null
         ? widget.achievement.vcUrl
         : issuance.value?.firstOrNull?.message;
 
@@ -129,7 +135,9 @@ class _IssueVcSheetState extends ConsumerState<IssueVcSheet> {
                     groupValue: did,
                     title: _short(d),
                     icon: LucideIcons.wallet,
-                    onChanged: issuance.isLoading ? null : (v) => setState(() => _selectedDid = v),
+                    onChanged: issuance.isLoading
+                        ? null
+                        : (v) => setState(() => _selectedDid = v),
                   ),
                   const SizedBox(height: MuSpacing.space2),
                 ],
@@ -137,7 +145,10 @@ class _IssueVcSheetState extends ConsumerState<IssueVcSheet> {
                 _DidRow(did: did),
               if (issuance.hasError) ...[
                 const SizedBox(height: MuSpacing.space3),
-                Text(ApiException.messageFor(issuance.error!), style: mu.text.caption.copyWith(color: c.danger)),
+                Text(
+                  ApiException.messageFor(issuance.error!),
+                  style: mu.text.caption.copyWith(color: c.danger),
+                ),
               ],
               const SizedBox(height: MuSpacing.space4),
               MuButton(
@@ -154,11 +165,20 @@ class _IssueVcSheetState extends ConsumerState<IssueVcSheet> {
     }
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(MuSpacing.space5, 0, MuSpacing.space5, MuSpacing.space5),
+      padding: const EdgeInsets.fromLTRB(
+        MuSpacing.space5,
+        0,
+        MuSpacing.space5,
+        MuSpacing.space5,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text((issuedUrl != null ? 'Credential' : 'Issue credential').toUpperCase(), style: mu.text.eyebrow),
+          Text(
+            (issuedUrl != null ? 'Credential' : 'Issue credential')
+                .toUpperCase(),
+            style: mu.text.eyebrow,
+          ),
           const SizedBox(height: 6),
           Semantics(header: true, child: Text(name, style: mu.text.title2)),
           const SizedBox(height: MuSpacing.space4),
@@ -168,8 +188,9 @@ class _IssueVcSheetState extends ConsumerState<IssueVcSheet> {
     );
   }
 
-  static String _short(String did) =>
-      did.length > 32 ? '${did.substring(0, 20)}…${did.substring(did.length - 8)}' : did;
+  static String _short(String did) => did.length > 32
+      ? '${did.substring(0, 20)}…${did.substring(did.length - 8)}'
+      : did;
 }
 
 class _DidRow extends StatelessWidget {
@@ -186,7 +207,10 @@ class _DidRow extends StatelessWidget {
       excludeSemantics: true,
       child: Container(
         padding: const EdgeInsets.all(MuSpacing.space4),
-        decoration: BoxDecoration(color: c.surfaceSunk, borderRadius: BorderRadius.circular(MuRadii.control)),
+        decoration: BoxDecoration(
+          color: c.surfaceSunk,
+          borderRadius: BorderRadius.circular(MuRadii.control),
+        ),
         child: Row(
           children: [
             Icon(LucideIcons.wallet, size: MuSizes.iconSm, color: c.ink3),
@@ -207,7 +231,12 @@ class _DidRow extends StatelessWidget {
 }
 
 class _Message extends StatelessWidget {
-  const _Message({required this.icon, required this.title, required this.body, this.action});
+  const _Message({
+    required this.icon,
+    required this.title,
+    required this.body,
+    this.action,
+  });
 
   final IconData icon;
   final String title;
@@ -224,14 +253,20 @@ class _Message extends StatelessWidget {
         Container(
           width: 44,
           height: 44,
-          decoration: BoxDecoration(color: c.surfaceSunk, shape: BoxShape.circle),
+          decoration: BoxDecoration(
+            color: c.surfaceSunk,
+            shape: BoxShape.circle,
+          ),
           child: Icon(icon, size: MuSizes.iconMd, color: c.ink2),
         ),
         const SizedBox(height: MuSpacing.space3),
         Text(title, style: mu.text.title3),
         const SizedBox(height: MuSpacing.space1),
         Text(body, style: mu.text.body.copyWith(color: c.ink2)),
-        if (action != null) ...[const SizedBox(height: MuSpacing.space4), action!],
+        if (action != null) ...[
+          const SizedBox(height: MuSpacing.space4),
+          action!,
+        ],
       ],
     );
   }
@@ -250,9 +285,18 @@ class _Issued extends StatelessWidget {
       children: [
         Row(
           children: [
-            Icon(LucideIcons.badgeCheck, size: MuSizes.iconMd, color: c.success),
+            Icon(
+              LucideIcons.badgeCheck,
+              size: MuSizes.iconMd,
+              color: c.success,
+            ),
             const SizedBox(width: MuSpacing.space2),
-            Expanded(child: Text('Issued. Scan to add it to your wallet.', style: mu.text.bodyStrong)),
+            Expanded(
+              child: Text(
+                'Issued. Scan to add it to your wallet.',
+                style: mu.text.bodyStrong,
+              ),
+            ),
           ],
         ),
         const SizedBox(height: MuSpacing.space4),

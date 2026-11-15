@@ -67,7 +67,9 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
     final profile = widget.profile;
     final isOwn = widget.isOwn;
     final top = MediaQuery.paddingOf(context).top;
-    final email = isOwn ? ref.watch(editableProfileControllerProvider).value?.email : null;
+    final email = isOwn
+        ? ref.watch(editableProfileControllerProvider).value?.email
+        : null;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       // White status-bar icons over the cobalt hero.
@@ -77,7 +79,9 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
           NotificationListener<ScrollNotification>(
             onNotification: (n) => _onScroll(n, top),
             child: CustomScrollView(
-              physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+              physics: const BouncingScrollPhysics(
+                parent: AlwaysScrollableScrollPhysics(),
+              ),
               slivers: [
                 SliverToBoxAdapter(
                   child: Column(
@@ -87,8 +91,12 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                         key: _heroKey,
                         profile: profile,
                         isOwn: isOwn,
-                        onEdit: isOwn ? () => EditProfileSheet.show(context, profile) : null,
-                        onShare: isOwn ? () => ShareProfileSheet.show(context, profile) : null,
+                        onEdit: isOwn
+                            ? () => EditProfileSheet.show(context, profile)
+                            : null,
+                        onShare: isOwn
+                            ? () => ShareProfileSheet.show(context, profile)
+                            : null,
                       ),
                       // The sheet overlaps the hero: its rounded top is drawn up into
                       // the hero's bottom padding, so nothing leaves a gap below.
@@ -103,14 +111,17 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                             child: DecoratedBox(
                               decoration: BoxDecoration(
                                 color: ProfileSheet.colorOf(context),
-                                borderRadius: const BorderRadius.vertical(top: Radius.circular(MuRadii.panel)),
+                                borderRadius: const BorderRadius.vertical(
+                                  top: Radius.circular(MuRadii.panel),
+                                ),
                               ),
                             ),
                           ),
                           ProfileSheet(
                             profile: profile,
                             isOwn: isOwn,
-                            onKarma: () => setState(() => _section = _Section.karma),
+                            onKarma: () =>
+                                setState(() => _section = _Section.karma),
                           ),
                         ],
                       ),
@@ -127,7 +138,10 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                 ),
                 SliverToBoxAdapter(
                   child: switch (_section) {
-                    _Section.karma => ProfileKarmaTab(profile: profile, publicMuid: isOwn ? null : profile.muid),
+                    _Section.karma => ProfileKarmaTab(
+                      profile: profile,
+                      publicMuid: isOwn ? null : profile.muid,
+                    ),
                     _Section.achievements => AchievementsTab(
                       muid: profile.muid,
                       userName: profile.fullName,
@@ -163,7 +177,11 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
 /// spacing at rest, the status-bar height once pinned, so it paints over
 /// the status bar instead of letting the sheet show through.
 class _SectionBar extends SliverPersistentHeaderDelegate {
-  _SectionBar({required this.top, required this.selected, required this.onChanged});
+  _SectionBar({
+    required this.top,
+    required this.selected,
+    required this.onChanged,
+  });
 
   final double top;
   final _Section selected;
@@ -178,11 +196,20 @@ class _SectionBar extends SliverPersistentHeaderDelegate {
   double get maxExtent => _bar + top;
 
   @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
     return ColoredBox(
       color: context.mu.colors.chalk,
       child: Padding(
-        padding: EdgeInsets.fromLTRB(MuSpacing.space5, top + MuSpacing.space2, MuSpacing.space5, MuSpacing.space2),
+        padding: EdgeInsets.fromLTRB(
+          MuSpacing.space5,
+          top + MuSpacing.space2,
+          MuSpacing.space5,
+          MuSpacing.space2,
+        ),
         child: MuSegmented<_Section>(
           values: _Section.values,
           selected: selected,
@@ -194,5 +221,6 @@ class _SectionBar extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  bool shouldRebuild(covariant _SectionBar old) => old.top != top || old.selected != selected;
+  bool shouldRebuild(covariant _SectionBar old) =>
+      old.top != top || old.selected != selected;
 }

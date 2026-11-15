@@ -8,8 +8,10 @@ enum ProjectStatus {
   final String wire;
   final String label;
 
-  static ProjectStatus parse(Object? v) =>
-      values.firstWhere((s) => s.wire == '${v ?? ''}'.toLowerCase(), orElse: () => draft);
+  static ProjectStatus parse(Object? v) => values.firstWhere(
+    (s) => s.wire == '${v ?? ''}'.toLowerCase(),
+    orElse: () => draft,
+  );
 }
 
 typedef ProjectLink = ({String label, String url});
@@ -17,7 +19,13 @@ typedef ProjectSkill = ({String id, String name});
 
 /// Someone on the project: a μLearn member (with muid) or a named outsider.
 class ProjectMember {
-  const ProjectMember({required this.id, required this.name, this.muid, this.photoUrl, this.role});
+  const ProjectMember({
+    required this.id,
+    required this.name,
+    this.muid,
+    this.photoUrl,
+    this.role,
+  });
 
   final String id;
   final String name;
@@ -90,8 +98,9 @@ class Project {
   int get upvotes => votes.where((v) => v.up).length;
 
   /// The viewer's own upvote, to take it back.
-  ProjectVote? upvoteBy(String? userId) =>
-      userId == null ? null : votes.where((v) => v.up && v.userId == userId).firstOrNull;
+  ProjectVote? upvoteBy(String? userId) => userId == null
+      ? null
+      : votes.where((v) => v.up && v.userId == userId).firstOrNull;
 }
 
 /// What the create / edit form sends. Images replace the current ones when

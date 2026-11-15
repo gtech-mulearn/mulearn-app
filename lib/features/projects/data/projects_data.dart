@@ -16,7 +16,8 @@ abstract final class ProjectPaths {
   static String detail(String id) => '$_base/$id/';
   static String status(String id) => '$_base/$id/status/';
   static String members(String id) => '$_base/$id/members/';
-  static String member(String id, String memberId) => '$_base/$id/members/$memberId/';
+  static String member(String id, String memberId) =>
+      '$_base/$id/members/$memberId/';
   static const String vote = '$_base/vote/';
   static String voteById(String id) => '$_base/vote/$id/';
   static const String comment = '$_base/comment/';
@@ -35,18 +36,24 @@ class ProjectsRemoteDataSource {
   final Dio _dio;
 
   Future<Map<String, dynamic>> list(Map<String, Object> query) async =>
-      ApiEnvelope.unwrapObject(await _dio.get<dynamic>(ProjectPaths.list, queryParameters: query));
+      ApiEnvelope.unwrapObject(
+        await _dio.get<dynamic>(ProjectPaths.list, queryParameters: query),
+      );
 
   Future<Map<String, dynamic>> detail(String id) async =>
-      ApiEnvelope.unwrapObject(await _dio.get<dynamic>(ProjectPaths.detail(id)));
+      ApiEnvelope.unwrapObject(
+        await _dio.get<dynamic>(ProjectPaths.detail(id)),
+      );
 
-  Future<Map<String, dynamic>> save(String? id, FormData form) async => ApiEnvelope.unwrapObject(
-    id == null
-        ? await _dio.post<dynamic>(ProjectPaths.list, data: form)
-        : await _dio.put<dynamic>(ProjectPaths.detail(id), data: form),
-  );
+  Future<Map<String, dynamic>> save(String? id, FormData form) async =>
+      ApiEnvelope.unwrapObject(
+        id == null
+            ? await _dio.post<dynamic>(ProjectPaths.list, data: form)
+            : await _dio.put<dynamic>(ProjectPaths.detail(id), data: form),
+      );
 
-  Future<void> delete(String id) => _dio.delete<dynamic>(ProjectPaths.detail(id));
+  Future<void> delete(String id) =>
+      _dio.delete<dynamic>(ProjectPaths.detail(id));
 
   Future<void> status(String id, String status) =>
       _dio.patch<dynamic>(ProjectPaths.status(id), data: {'status': status});
@@ -54,27 +61,42 @@ class ProjectsRemoteDataSource {
   Future<void> addMember(String id, Map<String, Object> body) =>
       _dio.post<dynamic>(ProjectPaths.members(id), data: body);
 
-  Future<void> removeMember(String id, String memberId) => _dio.delete<dynamic>(ProjectPaths.member(id, memberId));
+  Future<void> removeMember(String id, String memberId) =>
+      _dio.delete<dynamic>(ProjectPaths.member(id, memberId));
 
-  Future<void> vote(String projectId) =>
-      _dio.post<dynamic>(ProjectPaths.vote, data: {'project': projectId, 'vote': 'upvote'});
-
-  Future<void> deleteVote(String id) => _dio.delete<dynamic>(ProjectPaths.voteById(id));
-
-  Future<void> comment(String projectId, String text) =>
-      _dio.post<dynamic>(ProjectPaths.comment, data: {'project': projectId, 'comment': text});
-
-  Future<void> deleteComment(String id) => _dio.delete<dynamic>(ProjectPaths.commentById(id));
-
-  Future<Map<String, dynamic>> people(String query) async => ApiEnvelope.unwrapObject(
-    await _dio.get<dynamic>(
-      ProjectPaths.people,
-      queryParameters: {'search': query, ...PageIndexPaging.query(1, perPage: 10)},
-    ),
+  Future<void> vote(String projectId) => _dio.post<dynamic>(
+    ProjectPaths.vote,
+    data: {'project': projectId, 'vote': 'upvote'},
   );
 
-  Future<Map<String, dynamic>> skills() async =>
-      ApiEnvelope.unwrapObject(await _dio.get<dynamic>(ProjectPaths.skills, queryParameters: {'perPage': 200}));
+  Future<void> deleteVote(String id) =>
+      _dio.delete<dynamic>(ProjectPaths.voteById(id));
+
+  Future<void> comment(String projectId, String text) => _dio.post<dynamic>(
+    ProjectPaths.comment,
+    data: {'project': projectId, 'comment': text},
+  );
+
+  Future<void> deleteComment(String id) =>
+      _dio.delete<dynamic>(ProjectPaths.commentById(id));
+
+  Future<Map<String, dynamic>> people(String query) async =>
+      ApiEnvelope.unwrapObject(
+        await _dio.get<dynamic>(
+          ProjectPaths.people,
+          queryParameters: {
+            'search': query,
+            ...PageIndexPaging.query(1, perPage: 10),
+          },
+        ),
+      );
+
+  Future<Map<String, dynamic>> skills() async => ApiEnvelope.unwrapObject(
+    await _dio.get<dynamic>(
+      ProjectPaths.skills,
+      queryParameters: {'perPage': 200},
+    ),
+  );
 }
 
 class ProjectsRepositoryImpl implements ProjectsRepository {
@@ -88,14 +110,19 @@ class ProjectsRepositoryImpl implements ProjectsRepository {
     return s.isEmpty ? null : s;
   }
 
-  static Iterable<Map<String, dynamic>> _maps(Object? v) =>
-      v is List ? v.whereType<Map<String, dynamic>>() : const <Map<String, dynamic>>[];
+  static Iterable<Map<String, dynamic>> _maps(Object? v) => v is List
+      ? v.whereType<Map<String, dynamic>>()
+      : const <Map<String, dynamic>>[];
 
   static Project? parse(Map<String, dynamic> j) {
     final id = _str(j['id']);
     if (id == null) return null;
     final links = [for (final l in _maps(j['links'])) l]
-      ..sort((a, b) => ((a['position'] as num?) ?? 0).compareTo((b['position'] as num?) ?? 0));
+      ..sort(
+        (a, b) => ((a['position'] as num?) ?? 0).compareTo(
+          (b['position'] as num?) ?? 0,
+        ),
+      );
     return Project(
       id: id,
       title: _str(j['title']) ?? 'Untitled project',
@@ -104,23 +131,28 @@ class ProjectsRepositoryImpl implements ProjectsRepository {
       ownerName: _str(j['created_by']) ?? 'A μLearner',
       ownerId: _str(j['created_by_id']),
       ownerMuid: _str(j['created_by_muid']),
-      createdAt: DateTime.tryParse(_str(j['created_at']) ?? '')?.toLocal() ?? DateTime.fromMillisecondsSinceEpoch(0),
+      createdAt:
+          DateTime.tryParse(_str(j['created_at']) ?? '')?.toLocal() ??
+          DateTime.fromMillisecondsSinceEpoch(0),
       logoUrl: _str(j['logo']),
       images: [for (final i in _maps(j['images'])) ?_str(i['image'])],
       links: [
         for (final l in links)
-          if (_str(l['url']) != null) (label: _str(l['label']) ?? _str(l['url'])!, url: _str(l['url'])!),
+          if (_str(l['url']) != null)
+            (label: _str(l['label']) ?? _str(l['url'])!, url: _str(l['url'])!),
       ],
       skills: [
         for (final s in _maps(j['skills']))
-          if (_str(s['id']) != null) (id: _str(s['id'])!, name: _str(s['name']) ?? ''),
+          if (_str(s['id']) != null)
+            (id: _str(s['id'])!, name: _str(s['name']) ?? ''),
       ],
       members: [
         for (final m in _maps(j['members']))
           if (_str(m['id']) != null)
             ProjectMember(
               id: _str(m['id'])!,
-              name: _str(m['full_name']) ?? _str(m['external_name']) ?? 'Member',
+              name:
+                  _str(m['full_name']) ?? _str(m['external_name']) ?? 'Member',
               muid: m['is_linked'] == true ? _str(m['muid']) : null,
               photoUrl: _str(m['profile_pic']),
               role: _str(m['role']),
@@ -128,7 +160,12 @@ class ProjectsRepositoryImpl implements ProjectsRepository {
       ],
       votes: [
         for (final v in _maps(j['votes']))
-          if (_str(v['id']) != null) (id: _str(v['id'])!, up: v['vote'] == 'upvote', userId: _str(v['user_id'])),
+          if (_str(v['id']) != null)
+            (
+              id: _str(v['id'])!,
+              up: v['vote'] == 'upvote',
+              userId: _str(v['user_id']),
+            ),
       ],
       comments: [
         for (final c in _maps(j['comments']))
@@ -138,7 +175,9 @@ class ProjectsRepositoryImpl implements ProjectsRepository {
               text: _str(c['comment'])!,
               authorName: _str(c['user']) ?? 'A μLearner',
               authorId: _str(c['user_id']),
-              at: DateTime.tryParse(_str(c['created_at']) ?? '')?.toLocal() ?? DateTime.fromMillisecondsSinceEpoch(0),
+              at:
+                  DateTime.tryParse(_str(c['created_at']) ?? '')?.toLocal() ??
+                  DateTime.fromMillisecondsSinceEpoch(0),
             ),
       ]..sort((a, b) => a.at.compareTo(b.at)),
     );
@@ -150,7 +189,9 @@ class ProjectsRepositoryImpl implements ProjectsRepository {
     final rows = data is Map<String, dynamic> ? data['Projects'] : null;
     return (
       items: [for (final r in _maps(rows)) ?parse(r)],
-      hasNext: PageIndexPaging.parse(json['pagination'] as Map<String, dynamic>?).hasNext,
+      hasNext: PageIndexPaging.parse(
+        json['pagination'] as Map<String, dynamic>?,
+      ).hasNext,
     );
   }
 
@@ -162,8 +203,13 @@ class ProjectsRepositoryImpl implements ProjectsRepository {
       for (final l in d.links) {'label': l.label, 'url': l.url},
     ]),
     'skill_ids_json': jsonEncode(d.skillIds),
-    if (d.logo != null) 'logo': MultipartFile.fromBytes(d.logo!.bytes, filename: d.logo!.name),
-    if (d.images.isNotEmpty) 'images': [for (final i in d.images) MultipartFile.fromBytes(i.bytes, filename: i.name)],
+    if (d.logo != null)
+      'logo': MultipartFile.fromBytes(d.logo!.bytes, filename: d.logo!.name),
+    if (d.images.isNotEmpty)
+      'images': [
+        for (final i in d.images)
+          MultipartFile.fromBytes(i.bytes, filename: i.name),
+      ],
   }, ListFormat.multiCompatible);
 
   Future<T> _guard<T>(Future<T> Function() body) async {
@@ -177,7 +223,9 @@ class ProjectsRepositoryImpl implements ProjectsRepository {
   Project _one(Map<String, dynamic> json) {
     final p = json['Project'];
     final project = p is Map<String, dynamic> ? parse(p) : null;
-    if (project == null) throw const ApiException(message: "This project couldn't be read.");
+    if (project == null) {
+      throw const ApiException(message: "This project couldn't be read.");
+    }
     return project;
   }
 
@@ -193,14 +241,21 @@ class ProjectsRepositoryImpl implements ProjectsRepository {
 
   @override
   Future<List<Project>> byMember(String muid) => _guard(
-    () async => parsePage(await _remote.list({'muid': muid, ...PageIndexPaging.query(1, perPage: _mine)})).items,
+    () async => parsePage(
+      await _remote.list({
+        'muid': muid,
+        ...PageIndexPaging.query(1, perPage: _mine),
+      }),
+    ).items,
   );
 
   @override
-  Future<Project> detail(String id) => _guard(() async => _one(await _remote.detail(id)));
+  Future<Project> detail(String id) =>
+      _guard(() async => _one(await _remote.detail(id)));
 
   @override
-  Future<Project> create(ProjectDraft draft) => _guard(() async => _one(await _remote.save(null, form(draft))));
+  Future<Project> create(ProjectDraft draft) =>
+      _guard(() async => _one(await _remote.save(null, form(draft))));
 
   @override
   Future<Project> update(String id, ProjectDraft draft) =>
@@ -210,10 +265,16 @@ class ProjectsRepositoryImpl implements ProjectsRepository {
   Future<void> delete(String id) => _guard(() => _remote.delete(id));
 
   @override
-  Future<void> setStatus(String id, ProjectStatus status) => _guard(() => _remote.status(id, status.wire));
+  Future<void> setStatus(String id, ProjectStatus status) =>
+      _guard(() => _remote.status(id, status.wire));
 
   @override
-  Future<void> addMember(String projectId, {String? muid, String? externalName, String? role}) => _guard(
+  Future<void> addMember(
+    String projectId, {
+    String? muid,
+    String? externalName,
+    String? role,
+  }) => _guard(
     () => _remote.addMember(projectId, {
       if (muid != null) 'muid': muid else 'external_name': externalName ?? '',
       if ((role ?? '').trim().isNotEmpty) 'role': role!.trim(),
@@ -225,21 +286,26 @@ class ProjectsRepositoryImpl implements ProjectsRepository {
       _guard(() => _remote.removeMember(projectId, memberId));
 
   @override
-  Future<void> upvote(String projectId) => _guard(() => _remote.vote(projectId));
+  Future<void> upvote(String projectId) =>
+      _guard(() => _remote.vote(projectId));
 
   @override
-  Future<void> removeVote(String voteId) => _guard(() => _remote.deleteVote(voteId));
+  Future<void> removeVote(String voteId) =>
+      _guard(() => _remote.deleteVote(voteId));
 
   @override
-  Future<void> comment(String projectId, String text) => _guard(() => _remote.comment(projectId, text));
+  Future<void> comment(String projectId, String text) =>
+      _guard(() => _remote.comment(projectId, text));
 
   @override
-  Future<void> deleteComment(String commentId) => _guard(() => _remote.deleteComment(commentId));
+  Future<void> deleteComment(String commentId) =>
+      _guard(() => _remote.deleteComment(commentId));
 
   /// `{skills: [{id, name, …}], pagination}`.
   static List<ProjectSkill> parseSkills(Map<String, dynamic> json) => [
     for (final s in _maps(json['skills']))
-      if (_str(s['id']) != null && _str(s['name']) != null) (id: _str(s['id'])!, name: _str(s['name'])!),
+      if (_str(s['id']) != null && _str(s['name']) != null)
+        (id: _str(s['id'])!, name: _str(s['name'])!),
   ];
 
   /// `user/search/`: `{data: [{muid, full_name, profile_pic, …}], pagination}`.
@@ -255,8 +321,10 @@ class ProjectsRepositoryImpl implements ProjectsRepository {
   ];
 
   @override
-  Future<List<ProjectMember>> findPeople(String query) => _guard(() async => parsePeople(await _remote.people(query)));
+  Future<List<ProjectMember>> findPeople(String query) =>
+      _guard(() async => parsePeople(await _remote.people(query)));
 
   @override
-  Future<List<ProjectSkill>> skills() => _guard(() async => parseSkills(await _remote.skills()));
+  Future<List<ProjectSkill>> skills() =>
+      _guard(() async => parseSkills(await _remote.skills()));
 }

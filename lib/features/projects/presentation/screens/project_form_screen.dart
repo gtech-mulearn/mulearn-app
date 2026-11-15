@@ -39,7 +39,10 @@ class ProjectFormScreen extends ConsumerWidget {
                         .watch(projectProvider(id))
                         .when(
                           loading: () => const Center(child: MuDotsLoader()),
-                          error: (e, _) => ErrorRetryView(error: e, onRetry: () => ref.invalidate(projectProvider(id))),
+                          error: (e, _) => ErrorRetryView(
+                            error: e,
+                            onRetry: () => ref.invalidate(projectProvider(id)),
+                          ),
                           data: (p) => _Form(initial: p),
                         ),
             ),
@@ -51,7 +54,9 @@ class ProjectFormScreen extends ConsumerWidget {
 }
 
 class _LinkRow {
-  _LinkRow([ProjectLink? l]) : label = TextEditingController(text: l?.label), url = TextEditingController(text: l?.url);
+  _LinkRow([ProjectLink? l])
+    : label = TextEditingController(text: l?.label),
+      url = TextEditingController(text: l?.url);
 
   final TextEditingController label;
   final TextEditingController url;
@@ -84,7 +89,9 @@ class _FormState extends ConsumerState<_Form> {
     for (final l in widget.initial?.links ?? const <ProjectLink>[]) _LinkRow(l),
     for (var i = widget.initial?.links.length ?? 0; i < 2; i++) _LinkRow(),
   ];
-  late final Set<String> _skills = {for (final s in widget.initial?.skills ?? const <ProjectSkill>[]) s.id};
+  late final Set<String> _skills = {
+    for (final s in widget.initial?.skills ?? const <ProjectSkill>[]) s.id,
+  };
   _Picked? _logo;
   List<_Picked> _images = const [];
   String? _linksError;
@@ -100,7 +107,10 @@ class _FormState extends ConsumerState<_Form> {
   }
 
   Future<void> _pickLogo() async {
-    final f = await ImagePicker().pickImage(source: ImageSource.gallery, maxWidth: 800);
+    final f = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      maxWidth: 800,
+    );
     if (f == null) return;
     final bytes = await f.readAsBytes();
     if (mounted) setState(() => _logo = (bytes: bytes, name: f.name));
@@ -109,20 +119,27 @@ class _FormState extends ConsumerState<_Form> {
   Future<void> _pickImages() async {
     final files = await ImagePicker().pickMultiImage(maxWidth: 1800, limit: 6);
     if (files.isEmpty) return;
-    final picked = [for (final f in files) (bytes: await f.readAsBytes(), name: f.name)];
+    final picked = [
+      for (final f in files) (bytes: await f.readAsBytes(), name: f.name),
+    ];
     if (mounted) setState(() => _images = picked);
   }
 
-  static String _https(String u) => u.startsWith('http://') || u.startsWith('https://') ? u : 'https://$u';
+  static String _https(String u) =>
+      u.startsWith('http://') || u.startsWith('https://') ? u : 'https://$u';
 
   Future<void> _save() async {
     final filled = [
       for (final l in _links)
         if (l.url.text.trim().isNotEmpty) l,
     ];
-    final linksError = filled.length < 2 ? 'Add at least two links, like the repo and a demo.' : null;
+    final linksError = filled.length < 2
+        ? 'Add at least two links, like the repo and a demo.'
+        : null;
     setState(() => _linksError = linksError);
-    if (!(_formKey.currentState?.validate() ?? false) || linksError != null) return;
+    if (!(_formKey.currentState?.validate() ?? false) || linksError != null) {
+      return;
+    }
     final draft = ProjectDraft(
       title: _title.text.trim(),
       description: _about.text.trim(),
@@ -130,7 +147,9 @@ class _FormState extends ConsumerState<_Form> {
       links: [
         for (final l in filled)
           (
-            label: l.label.text.trim().isEmpty ? Uri.parse(_https(l.url.text.trim())).host : l.label.text.trim(),
+            label: l.label.text.trim().isEmpty
+                ? Uri.parse(_https(l.url.text.trim())).host
+                : l.label.text.trim(),
             url: _https(l.url.text.trim()),
           ),
       ],
@@ -139,12 +158,16 @@ class _FormState extends ConsumerState<_Form> {
       images: _images,
     );
     final actions = ref.read(projectActionsProvider.notifier);
-    final saved = widget.initial == null ? await actions.create(draft) : await actions.edit(widget.initial!.id, draft);
+    final saved = widget.initial == null
+        ? await actions.create(draft)
+        : await actions.edit(widget.initial!.id, draft);
     if (!mounted) return;
     if (saved == null) {
       MuToast.show(
         context,
-        message: ApiException.messageFor(ref.read(projectActionsProvider).error ?? "Couldn't save"),
+        message: ApiException.messageFor(
+          ref.read(projectActionsProvider).error ?? "Couldn't save",
+        ),
         type: MuToastType.error,
       );
       return;
@@ -152,7 +175,9 @@ class _FormState extends ConsumerState<_Form> {
     MuToast.show(
       context,
       message: widget.initial == null
-          ? (saved.status == ProjectStatus.published ? 'Project published' : 'Draft saved')
+          ? (saved.status == ProjectStatus.published
+                ? 'Project published'
+                : 'Draft saved')
           : 'Project saved',
       type: MuToastType.success,
     );
@@ -191,7 +216,8 @@ class _FormState extends ConsumerState<_Form> {
                   hint: 'A short name',
                   maxLength: 50,
                   textCapitalization: TextCapitalization.words,
-                  validator: (v) => (v ?? '').trim().isEmpty ? 'Give it a name.' : null,
+                  validator: (v) =>
+                      (v ?? '').trim().isEmpty ? 'Give it a name.' : null,
                 ),
                 const SizedBox(height: MuSpacing.space3),
                 MuTextField(
@@ -203,14 +229,17 @@ class _FormState extends ConsumerState<_Form> {
                   textCapitalization: TextCapitalization.sentences,
                   validator: (v) {
                     final n = (v ?? '').trim().length;
-                    return n < 50 ? 'A little more: at least 50 characters (${50 - n} to go).' : null;
+                    return n < 50
+                        ? 'A little more: at least 50 characters (${50 - n} to go).'
+                        : null;
                   },
                 ),
                 const SizedBox(height: MuSpacing.space3),
                 MuSegmented<ProjectStatus>(
                   values: const [ProjectStatus.draft, ProjectStatus.published],
                   selected: _status,
-                  label: (s) => s == ProjectStatus.draft ? 'Save as draft' : 'Publish',
+                  label: (s) =>
+                      s == ProjectStatus.draft ? 'Save as draft' : 'Publish',
                   onChanged: (s) => setState(() => _status = s),
                 ),
                 const SizedBox(height: MuSpacing.space1),
@@ -220,14 +249,21 @@ class _FormState extends ConsumerState<_Form> {
                       : 'Everyone can see it, upvote it and comment.',
                   style: mu.text.caption,
                 ),
-                const MuFormSection('Links', note: 'At least two: the code, a demo, a write-up.'),
+                const MuFormSection(
+                  'Links',
+                  note: 'At least two: the code, a demo, a write-up.',
+                ),
                 for (final (i, l) in _links.indexed) ...[
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(
                         width: 110,
-                        child: MuTextField(label: 'Label', controller: l.label, hint: i == 0 ? 'GitHub' : 'Demo'),
+                        child: MuTextField(
+                          label: 'Label',
+                          controller: l.label,
+                          hint: i == 0 ? 'GitHub' : 'Demo',
+                        ),
                       ),
                       const SizedBox(width: MuSpacing.space2),
                       Expanded(
@@ -239,7 +275,10 @@ class _FormState extends ConsumerState<_Form> {
                           validator: (v) {
                             final s = (v ?? '').trim();
                             if (s.isEmpty) return null;
-                            return Uri.tryParse(_https(s))?.host.contains('.') ?? false
+                            return Uri.tryParse(
+                                      _https(s),
+                                    )?.host.contains('.') ??
+                                    false
                                 ? null
                                 : 'That link looks incomplete';
                           },
@@ -252,14 +291,19 @@ class _FormState extends ConsumerState<_Form> {
                             icon: LucideIcons.x,
                             tooltip: 'Remove link',
                             variant: MuIconButtonVariant.sunk,
-                            onPressed: () => setState(() => _links.removeAt(i).dispose()),
+                            onPressed: () =>
+                                setState(() => _links.removeAt(i).dispose()),
                           ),
                         ),
                     ],
                   ),
                   const SizedBox(height: MuSpacing.space2),
                 ],
-                if (_linksError != null) Text(_linksError!, style: mu.text.caption.copyWith(color: c.danger)),
+                if (_linksError != null)
+                  Text(
+                    _linksError!,
+                    style: mu.text.caption.copyWith(color: c.danger),
+                  ),
                 Align(
                   alignment: AlignmentDirectional.centerStart,
                   child: MuButton(
@@ -273,7 +317,11 @@ class _FormState extends ConsumerState<_Form> {
                 const MuFormSection('Skills'),
                 ...skills.when(
                   loading: () => const [MuDotsLoader()],
-                  error: (_, _) => const [MuEmptyLine("Skills couldn't load. You can add them later.")],
+                  error: (_, _) => const [
+                    MuEmptyLine(
+                      "Skills couldn't load. You can add them later.",
+                    ),
+                  ],
                   data: (list) => list.isEmpty
                       ? const [MuEmptyLine('No skills to pick from yet.')]
                       : [
@@ -285,8 +333,11 @@ class _FormState extends ConsumerState<_Form> {
                                 MuFilterChip(
                                   label: s.name,
                                   selected: _skills.contains(s.id),
-                                  onTap: () =>
-                                      setState(() => _skills.contains(s.id) ? _skills.remove(s.id) : _skills.add(s.id)),
+                                  onTap: () => setState(
+                                    () => _skills.contains(s.id)
+                                        ? _skills.remove(s.id)
+                                        : _skills.add(s.id),
+                                  ),
                                 ),
                             ],
                           ),
@@ -306,13 +357,18 @@ class _FormState extends ConsumerState<_Form> {
                       child: _logo != null
                           ? Image.memory(_logo!.bytes, fit: BoxFit.cover)
                           : widget.initial?.logoUrl != null
-                          ? CachedNetworkImage(imageUrl: widget.initial!.logoUrl!, fit: BoxFit.cover)
+                          ? CachedNetworkImage(
+                              imageUrl: widget.initial!.logoUrl!,
+                              fit: BoxFit.cover,
+                            )
                           : Icon(LucideIcons.image, color: c.ink3),
                     ),
                     const SizedBox(width: MuSpacing.space3),
                     Expanded(child: Text('Logo', style: mu.text.bodyStrong)),
                     MuButton(
-                      label: _logo == null && widget.initial?.logoUrl == null ? 'Choose' : 'Change',
+                      label: _logo == null && widget.initial?.logoUrl == null
+                          ? 'Choose'
+                          : 'Change',
                       variant: MuButtonVariant.outline,
                       size: MuButtonSize.small,
                       onPressed: _pickLogo,
@@ -325,15 +381,24 @@ class _FormState extends ConsumerState<_Form> {
                     height: 90,
                     child: ListView.separated(
                       scrollDirection: Axis.horizontal,
-                      itemCount: _images.isNotEmpty ? _images.length : existing.length,
-                      separatorBuilder: (_, _) => const SizedBox(width: MuSpacing.space2),
+                      itemCount: _images.isNotEmpty
+                          ? _images.length
+                          : existing.length,
+                      separatorBuilder: (_, _) =>
+                          const SizedBox(width: MuSpacing.space2),
                       itemBuilder: (_, i) => ClipRRect(
                         borderRadius: BorderRadius.circular(MuRadii.control),
                         child: AspectRatio(
                           aspectRatio: 16 / 10,
                           child: _images.isNotEmpty
-                              ? Image.memory(_images[i].bytes, fit: BoxFit.cover)
-                              : CachedNetworkImage(imageUrl: existing[i], fit: BoxFit.cover),
+                              ? Image.memory(
+                                  _images[i].bytes,
+                                  fit: BoxFit.cover,
+                                )
+                              : CachedNetworkImage(
+                                  imageUrl: existing[i],
+                                  fit: BoxFit.cover,
+                                ),
                         ),
                       ),
                     ),
@@ -350,7 +415,9 @@ class _FormState extends ConsumerState<_Form> {
                       ),
                     ),
                     MuButton(
-                      label: _images.isEmpty && existing.isEmpty ? 'Add screenshots' : 'Choose new',
+                      label: _images.isEmpty && existing.isEmpty
+                          ? 'Add screenshots'
+                          : 'Choose new',
                       icon: LucideIcons.image,
                       variant: MuButtonVariant.outline,
                       size: MuButtonSize.small,
@@ -375,7 +442,9 @@ class _FormState extends ConsumerState<_Form> {
               ),
               child: MuButton(
                 label: widget.initial == null
-                    ? (_status == ProjectStatus.published ? 'Publish project' : 'Save draft')
+                    ? (_status == ProjectStatus.published
+                          ? 'Publish project'
+                          : 'Save draft')
                     : 'Save changes',
                 block: true,
                 loading: busy,
