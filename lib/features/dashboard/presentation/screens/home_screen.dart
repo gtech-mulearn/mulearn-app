@@ -255,9 +255,9 @@ class _UpNext extends ConsumerWidget {
       ),
       if (canBrowseJobs)
         MuTile(
-          title: 'Put your karma to work',
+          title: 'Internships & gigs',
           category: IgCategory.coder,
-          meta: 'Internships and gigs from verified companies',
+          meta: 'Put your karma to work',
           onTap: () => context.push(RoutePaths.opportunities),
         ),
     ];

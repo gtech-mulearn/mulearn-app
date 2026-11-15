@@ -71,6 +71,38 @@ void main() {
     );
     expect(tester.getSize(find.byType(MuTile)).width, 320);
   });
+
+  testWidgets('a tile alone on its row spans the row; pairs share a height', (tester) async {
+    await tester.pumpWidget(
+      _host(
+        MuBento(
+          tiles: [
+            MuTile(title: 'Find a task', category: IgCategory.coder, onTap: () {}),
+            MuTile(title: 'Learning circles', category: IgCategory.maker, meta: 'Learn with a group', onTap: () {}),
+            MuTile(title: 'Internships & gigs', category: IgCategory.creative, onTap: () {}),
+          ],
+        ),
+      ),
+    );
+    final a = tester.getRect(find.widgetWithText(MuTile, 'Find a task'));
+    final b = tester.getRect(find.widgetWithText(MuTile, 'Learning circles'));
+    final c = tester.getRect(find.widgetWithText(MuTile, 'Internships & gigs'));
+    expect(a.height, b.height);
+    expect(a.top, b.top);
+    expect(c.width, 320, reason: 'the odd one out takes the whole row');
+    expect(tester.takeException(), isNull);
+  });
+
+  testWidgets('a single tile of any size fills the board', (tester) async {
+    await tester.pumpWidget(
+      _host(
+        const MuBento(
+          tiles: [MuTile(title: 'Connect Discord', size: MuTileSize.short)],
+        ),
+      ),
+    );
+    expect(tester.getSize(find.byType(MuTile)).width, 320);
+  });
   testWidgets('paper pills stay white in dark theme', (tester) async {
     await tester.pumpWidget(
       MaterialApp(

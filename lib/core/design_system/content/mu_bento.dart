@@ -160,63 +160,74 @@ class MuTile extends StatelessWidget {
   }
 }
 
-/// Two columns of [MuTile]s with 12dp gaps. Each tile goes to the shorter
-/// column (tall tiles count twice); wide tiles span both and start a new band.
+/// [MuTile]s in rows of two with 12dp gaps, so the board fills its width
+/// whatever the count:
+///
+/// * two square or short tiles share a row, at the same height;
+/// * a tall tile takes the left half with up to two tiles stacked beside it,
+///   stretched to its height;
+/// * a tile left alone on its row (an odd one out, a tall tile with nothing
+///   to sit beside it, a wide tile) spans the whole row.
 class MuBento extends StatelessWidget {
-  /// A board of up to four tiles.
+  /// A board of tiles, in reading order.
   const MuBento({required this.tiles, super.key});
 
   /// Tiles in reading order.
   final List<MuTile> tiles;
 
+  static bool _pairs(MuTile t) => t.size == MuTileSize.square || t.size == MuTileSize.short;
+
   @override
   Widget build(BuildContext context) {
     final bands = <Widget>[];
-    var left = <Widget>[];
-    var right = <Widget>[];
-    var lh = 0.0;
-    var rh = 0.0;
-
-    void flush() {
-      if (left.isEmpty && right.isEmpty) return;
-      bands.add(
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(child: Column(children: _gapped(left))),
-            const SizedBox(width: MuSpacing.space3),
-            Expanded(child: Column(children: _gapped(right))),
-          ],
-        ),
-      );
-      left = [];
-      right = [];
-      lh = 0;
-      rh = 0;
-    }
-
-    for (final t in tiles) {
-      if (t.size == MuTileSize.wide) {
-        flush();
-        bands.add(t);
-        continue;
-      }
-      final weight = switch (t.size) {
-        MuTileSize.tall => 2.0,
-        MuTileSize.square => 1.0,
-        _ => 0.6,
-      };
-      if (lh <= rh) {
-        left.add(t);
-        lh += weight;
+    var i = 0;
+    while (i < tiles.length) {
+      final t = tiles[i];
+      if (t.size == MuTileSize.tall) {
+        final beside = <MuTile>[];
+        var j = i + 1;
+        while (j < tiles.length && beside.length < 2 && _pairs(tiles[j])) {
+          beside.add(tiles[j++]);
+        }
+        bands.add(
+          beside.isEmpty
+              ? t
+              : _row(
+                  t,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      for (var k = 0; k < beside.length; k++) ...[
+                        if (k > 0) const SizedBox(height: MuSpacing.space3),
+                        Expanded(child: beside[k]),
+                      ],
+                    ],
+                  ),
+                ),
+        );
+        i = j;
+      } else if (_pairs(t) && i + 1 < tiles.length && _pairs(tiles[i + 1])) {
+        bands.add(_row(t, tiles[i + 1]));
+        i += 2;
       } else {
-        right.add(t);
-        rh += weight;
+        bands.add(t);
+        i++;
       }
     }
-    flush();
     return Column(children: _gapped(bands));
   }
+
+  /// Two halves of one row, as tall as the taller.
+  static Widget _row(Widget a, Widget b) => IntrinsicHeight(
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Expanded(child: a),
+        const SizedBox(width: MuSpacing.space3),
+        Expanded(child: b),
+      ],
+    ),
+  );
 
   static List<Widget> _gapped(List<Widget> children) => [
     for (var i = 0; i < children.length; i++) ...[
