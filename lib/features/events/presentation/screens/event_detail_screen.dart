@@ -1,231 +1,49 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:mulearn_app/core/design_system/feedback/mu_toast.dart';
+import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
-import 'package:mulearn_app/core/theme/mu_radius.dart';
-import 'package:mulearn_app/core/theme/mu_space.dart';
-import 'package:mulearn_app/core/theme/mulearn_colors.dart';
-import 'package:mulearn_app/core/theme/mulearn_typography.dart';
+import 'package:mulearn_app/core/utils/date_format.dart';
+import 'package:mulearn_app/core/utils/external_links.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
-import 'package:mulearn_app/core/widgets/mu_buttons.dart';
-import 'package:mulearn_app/core/widgets/mu_card.dart';
-import 'package:mulearn_app/core/widgets/mu_chip.dart';
-import 'package:mulearn_app/core/widgets/mu_section_header.dart';
+import 'package:mulearn_app/features/events/domain/entities/event.dart';
+import 'package:mulearn_app/features/events/domain/entities/event_filter.dart';
 import 'package:mulearn_app/features/events/domain/entities/event_linked_task.dart';
 import 'package:mulearn_app/features/events/presentation/providers/events_controller.dart';
-import 'package:url_launcher/url_launcher.dart';
 
-/// Full detail for a single event — banner, description, venue,
-/// organizer, and an interest/RSVP toggle.
+/// One event, read like the ticket it came from: the poster, the title in
+/// display type, when and where, who runs it, what it's about and the tasks
+/// that earn karma there. The action sits pinned at the bottom like the
+/// ticket stub: Register (when there's a form) with interest beside it.
 class EventDetailScreen extends ConsumerWidget {
   const EventDetailScreen({required this.eventId, super.key});
 
   final String eventId;
 
-  String _formatDateRange(String startIso, String endIso) {
-    final start = DateTime.tryParse(startIso)?.toLocal();
-    final end = DateTime.tryParse(endIso)?.toLocal();
-    if (start == null) return '';
-    const months = [
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', //
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
-    ];
-    final startLabel =
-        '${months[start.month - 1]} ${start.day}, ${start.year}';
-    if (end == null || end.difference(start).inDays < 1) return startLabel;
-    final endLabel = '${months[end.month - 1]} ${end.day}, ${end.year}';
-    return '$startLabel – $endLabel';
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final detailState = ref.watch(eventDetailProvider(eventId));
-    final interestState = ref.watch(eventInterestControllerProvider);
-    final isBusy = interestState.isLoading;
+    final event = detailState.value;
 
     return Scaffold(
-      backgroundColor: MuColors.canvas,
-      appBar: AppBar(title: const Text('Event')),
-      body: detailState.when(
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, _) => ErrorRetryView(
-          error: error,
-          onRetry: () => ref.invalidate(eventDetailProvider(eventId)),
-        ),
-        data: (event) => ListView(
-          padding: EdgeInsets.zero,
+      backgroundColor: context.mu.colors.chalk,
+      body: SafeArea(
+        child: Column(
           children: [
-            AspectRatio(
-              aspectRatio: 16 / 9,
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  const DecoratedBox(
-                    decoration: BoxDecoration(gradient: MuColors.karmaGradient),
-                  ),
-                  if ((event.bannerImage ?? event.coverImage) != null)
-                    CachedNetworkImage(
-                      imageUrl: (event.bannerImage ?? event.coverImage)!,
-                      fit: BoxFit.cover,
-                      errorWidget: (_, __, ___) => const DecoratedBox(
-                        decoration: BoxDecoration(gradient: MuColors.karmaGradient),
-                      ),
-                    ),
-                  Positioned(
-                    right: MuSpace.m,
-                    top: MuSpace.m,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                      decoration: BoxDecoration(
-                        color: MuColors.imageScrim,
-                        borderRadius: BorderRadius.circular(MuRadius.chip),
-                      ),
-                      child: Text(
-                        event.venue.venueType == 'online' ? 'ONLINE' : 'IN PERSON',
-                        style: MuType.tag.copyWith(color: MuColors.surface),
-                      ),
-                    ),
-                  ),
-                ],
+            const MuTopBar.detail(),
+            Expanded(
+              child: detailState.when(
+                loading: () => const Center(child: MuDotsLoader(label: 'Loading the event…')),
+                error: (error, _) =>
+                    ErrorRetryView(error: error, onRetry: () => ref.invalidate(eventDetailProvider(eventId))),
+                data: (e) => _Body(event: e),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(MuSpace.screenH),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(event.title, style: MuType.headline.copyWith(fontSize: 26)),
-                  const SizedBox(height: MuSpace.s),
-                  Wrap(
-                    spacing: MuSpace.xs,
-                    runSpacing: MuSpace.xs,
-                    children: event.tags.map((t) => MuTagChip(label: t)).toList(),
-                  ),
-                  const SizedBox(height: MuSpace.m),
-                  Row(
-                    children: [
-                      const Icon(LucideIcons.calendar, size: 18, color: MuColors.inkSecondary),
-                      const SizedBox(width: MuSpace.s),
-                      Text(
-                        _formatDateRange(event.startDatetime, event.endDatetime),
-                        style: MuType.body,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: MuSpace.s),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Icon(LucideIcons.mapPin, size: 18, color: MuColors.inkSecondary),
-                      const SizedBox(width: MuSpace.s),
-                      Expanded(
-                        child: Text(
-                          event.venue.venueType == 'online'
-                              ? (event.venue.venuePlatform?.isNotEmpty ?? false)
-                                  ? 'Online · ${event.venue.venuePlatform}'
-                                  : 'Online'
-                              : [
-                                  event.venue.venueAddress,
-                                  event.venue.venueCity,
-                                ].where((s) => s != null && s.isNotEmpty).join(', '),
-                          style: MuType.body,
-                        ),
-                      ),
-                    ],
-                  ),
-                  if (event.minKarma != null && event.minKarma! > 0) ...[
-                    const SizedBox(height: MuSpace.s),
-                    Row(
-                      children: [
-                        const Icon(LucideIcons.zap, size: 18, color: MuColors.inkSecondary),
-                        const SizedBox(width: MuSpace.s),
-                        Text('${event.minKarma} karma required', style: MuType.body),
-                      ],
-                    ),
-                  ],
-                  const SizedBox(height: MuSpace.l),
-                  // Eligibility up front (UX-07): the backend's own reason,
-                  // before any tap, with the actions disabled.
-                  if (!event.canRegister && event.blockedReason != null) ...[
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(MuSpace.m),
-                      decoration: BoxDecoration(
-                        color: MuColors.warningBg,
-                        borderRadius: BorderRadius.circular(MuRadius.inner),
-                      ),
-                      child: Row(
-                        children: [
-                          const Icon(LucideIcons.info, size: 18, color: MuColors.warning),
-                          const SizedBox(width: MuSpace.s),
-                          Expanded(
-                            child: Text(event.blockedReason!, style: MuType.body.copyWith(color: MuColors.warning)),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: MuSpace.m),
-                  ],
-                  Row(
-                    children: [
-                      Expanded(
-                        child: MuPrimaryButton(
-                          label: isBusy
-                              ? 'Please wait…'
-                              : (event.isInterested ? 'Interested' : "I'm interested"),
-                          icon: event.isInterested ? LucideIcons.check : LucideIcons.star,
-                          onPressed: isBusy || !event.canRegister
-                              ? null
-                              : () => ref
-                                  .read(eventInterestControllerProvider.notifier)
-                                  .toggle(eventId, interested: !event.isInterested),
-                        ),
-                      ),
-                      if (event.registrationUrl != null &&
-                          event.registrationUrl!.isNotEmpty) ...[
-                        const SizedBox(width: MuSpace.s),
-                        Expanded(
-                          child: MuGhostButton(
-                            label: 'Register',
-                            onPressed: event.canRegister
-                                ? () => launchUrl(
-                                      Uri.parse(event.registrationUrl!),
-                                      mode: LaunchMode.externalApplication,
-                                    )
-                                : null,
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
-                  if (interestState.hasError) ...[
-                    const SizedBox(height: MuSpace.s),
-                    Text(
-                      ApiException.messageFor(interestState.error!),
-                      style: MuType.caption.copyWith(color: MuColors.error),
-                    ),
-                  ],
-                  if (event.description != null) ...[
-                    const SizedBox(height: MuSpace.xxl),
-                    const MuSectionHeader(title: 'About'),
-                    const SizedBox(height: MuSpace.m),
-                    Text(event.description!, style: MuType.body),
-                  ],
-                  if (event.linkedTasks.isNotEmpty) ...[
-                    const SizedBox(height: MuSpace.xxl),
-                    const MuSectionHeader(title: 'Tasks for this event'),
-                    const SizedBox(height: MuSpace.m),
-                    for (final task in event.linkedTasks) ...[
-                      _LinkedTaskTile(task: task),
-                      const SizedBox(height: MuSpace.s),
-                    ],
-                  ],
-                ],
-              ),
-            ),
+            if (event != null) _StubBar(event: event),
           ],
         ),
       ),
@@ -233,46 +51,277 @@ class EventDetailScreen extends ConsumerWidget {
   }
 }
 
-/// A task linked to the event: title, hashtag (copy it into the Discord
-/// post) and karma.
-class _LinkedTaskTile extends StatelessWidget {
-  const _LinkedTaskTile({required this.task});
+String? _place(Event e) {
+  final v = e.venue;
+  if (v.venueType == 'online') {
+    return (v.venuePlatform?.isNotEmpty ?? false) ? 'Online · ${v.venuePlatform}' : 'Online';
+  }
+  final parts = [v.venueAddress, v.venueCity].where((s) => s != null && s.trim().isNotEmpty).join(', ');
+  return parts.isEmpty ? null : parts;
+}
+
+String? _organiser(Event e) {
+  final o = e.organizer;
+  return switch (o.organiserType) {
+    'admin' => 'μLearn Foundation',
+    'global_ig' || 'campus_ig' => o.organiserIg?.name,
+    'campus' => o.organiserCampus?.title,
+    'company' || 'partner' => o.organiserCompany?.title,
+    _ => null,
+  };
+}
+
+class _Body extends ConsumerWidget {
+  const _Body({required this.event});
+
+  final Event event;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final mu = context.mu;
+    final c = mu.colors;
+    final start = DateTime.tryParse(event.startDatetime)?.toLocal();
+    final end = DateTime.tryParse(event.endDatetime)?.toLocal();
+    final kind = eventTypeLabels[event.eventType] ?? event.categoryName;
+    final online = event.venue.venueType == 'online';
+    final place = _place(event);
+    final mapsUrl = event.venue.venueMapsUrl;
+    final organiser = _organiser(event);
+    final poster = event.bannerImage ?? event.coverImage;
+    final description = event.description?.trim() ?? '';
+    final deadline = DateTime.tryParse(event.registrationDeadline ?? '')?.toLocal();
+
+    return ListView(
+      physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+      padding: const EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space2, MuSpacing.space5, MuSpacing.space8),
+      children: [
+        ExcludeSemantics(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(MuRadii.card),
+            child: AspectRatio(
+              aspectRatio: 16 / 10,
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  if (poster != null && poster.isNotEmpty)
+                    CachedNetworkImage(
+                      imageUrl: poster,
+                      fit: BoxFit.cover,
+                      placeholder: (_, _) => MuGeneratedPoster(text: event.title, fontSize: 44),
+                      errorWidget: (_, _, _) => MuGeneratedPoster(text: event.title, fontSize: 44),
+                    )
+                  else
+                    MuGeneratedPoster(text: event.title, fontSize: 44),
+                  Positioned(
+                    left: 12,
+                    top: 12,
+                    child: MuPill('${muGrouped(event.interestCount)} interested', tone: MuPillTone.night),
+                  ),
+                  if (kind != null) Positioned(right: 12, top: 12, child: MuPill(kind, tone: MuPillTone.paper)),
+                ],
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: MuSpacing.space5),
+        Semantics(header: true, child: Text(event.title, style: mu.text.display.copyWith(fontSize: 32))),
+        const SizedBox(height: MuSpacing.space3),
+        Wrap(
+          spacing: 6,
+          runSpacing: 6,
+          children: [
+            MuPill(online ? 'Online' : 'In person', icon: online ? LucideIcons.wifi : LucideIcons.mapPin),
+            if (event.minKarma != null && event.minKarma! > 0)
+              MuPill('${muGrouped(event.minKarma!)}+ karma', tone: MuPillTone.volt),
+            if (event.userLimit != null && event.userLimit! > 0) MuPill('${muGrouped(event.userLimit!)} seats'),
+            if (event.isFeatured) const MuPill('Featured', tone: MuPillTone.cobalt, icon: LucideIcons.sparkles),
+            for (final t in event.tags) MuPill('#$t'),
+          ],
+        ),
+        if (!event.canRegister && event.blockedReason != null) ...[
+          const SizedBox(height: MuSpacing.space4),
+          Container(
+            padding: const EdgeInsets.all(MuSpacing.space4),
+            decoration: BoxDecoration(color: c.warningTint, borderRadius: BorderRadius.circular(MuRadii.control)),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(LucideIcons.info, size: MuSizes.iconSm + 2, color: c.warning),
+                const SizedBox(width: MuSpacing.space2),
+                Expanded(
+                  child: Text(event.blockedReason!, style: mu.text.body.copyWith(color: c.ink)),
+                ),
+              ],
+            ),
+          ),
+        ],
+        const SizedBox(height: MuSpacing.space5),
+        MuFeedGroup(
+          children: [
+            if (start != null)
+              MuFeedRow(
+                leading: const MuFeedIcon(LucideIcons.calendar, tone: MuFeedTone.event),
+                subject: end == null ? formatDay(start) : formatRange(start, end),
+                time: end == null ? formatTime(start) : '${formatTime(start)} – ${formatTime(end)}',
+              ),
+            MuFeedRow(
+              leading: MuFeedIcon(online ? LucideIcons.wifi : LucideIcons.mapPin, tone: MuFeedTone.event),
+              subject: place ?? 'Venue to be announced',
+              time: online
+                  ? 'The link arrives once you register'
+                  : (mapsUrl?.isNotEmpty ?? false)
+                  ? 'Open in Maps'
+                  : null,
+              trailing: !online && (mapsUrl?.isNotEmpty ?? false)
+                  ? Icon(LucideIcons.arrowUpRight, size: MuSizes.iconSm, color: c.ink3)
+                  : null,
+              onTap: !online && (mapsUrl?.isNotEmpty ?? false) ? () => unawaited(_open(ref, mapsUrl!)) : null,
+              divider: organiser != null || deadline != null,
+            ),
+            if (organiser != null)
+              MuFeedRow(
+                leading: const MuFeedIcon(LucideIcons.users),
+                subject: organiser,
+                time: 'Organiser',
+                divider: deadline != null,
+              ),
+            if (deadline != null)
+              MuFeedRow(
+                leading: const MuFeedIcon(LucideIcons.clock, tone: MuFeedTone.pending),
+                subject: 'Register by ${formatDay(deadline)}',
+                time: formatTime(deadline),
+                divider: false,
+              ),
+          ],
+        ),
+        if (description.isNotEmpty) ...[
+          const SizedBox(height: MuSpacing.space6),
+          Semantics(header: true, child: Text('ABOUT', style: mu.text.eyebrow)),
+          const SizedBox(height: MuSpacing.space2),
+          Text(description, style: mu.text.bodyLg.copyWith(color: c.ink2)),
+        ],
+        if (event.linkedTasks.isNotEmpty) ...[
+          const SizedBox(height: MuSpacing.space6),
+          Semantics(header: true, child: Text('TASKS FOR THIS EVENT', style: mu.text.eyebrow)),
+          const SizedBox(height: MuSpacing.space1),
+          Text(
+            'Post your proof on Discord with the hashtag to earn karma.',
+            style: mu.text.caption.copyWith(color: c.ink3),
+          ),
+          const SizedBox(height: MuSpacing.space3),
+          MuFeedGroup(
+            children: [
+              for (var i = 0; i < event.linkedTasks.length; i++)
+                _LinkedTaskRow(task: event.linkedTasks[i], last: i == event.linkedTasks.length - 1),
+            ],
+          ),
+        ],
+      ],
+    );
+  }
+}
+
+Future<void> _open(WidgetRef ref, String url) async {
+  final uri = Uri.tryParse(url);
+  if (uri != null) await ref.read(openExternalProvider)(uri);
+}
+
+/// A task linked to the event: tap copies its hashtag for the Discord post.
+class _LinkedTaskRow extends StatelessWidget {
+  const _LinkedTaskRow({required this.task, required this.last});
 
   final EventLinkedTask task;
+  final bool last;
 
   @override
   Widget build(BuildContext context) {
     final hashtag = task.hashtag;
     final karma = task.karma;
-    return MuCard(
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(task.title, style: MuType.bodyMed),
-                if (hashtag != null && hashtag.isNotEmpty) ...[
-                  const SizedBox(height: 2),
-                  Text(hashtag, style: MuType.caption.copyWith(color: MuColors.primary)),
+    final hasTag = hashtag != null && hashtag.isNotEmpty;
+    return MuFeedRow(
+      leading: const MuFeedIcon(LucideIcons.target, tone: MuFeedTone.karma),
+      subject: task.title,
+      time: hasTag ? '$hashtag · tap to copy' : task.igName,
+      trailing: karma == null ? null : MuFeedAmount('+${karma.toInt()} karma'),
+      divider: !last,
+      onTap: !hasTag
+          ? null
+          : () async {
+              await Clipboard.setData(ClipboardData(text: hashtag));
+              if (context.mounted) MuToast.show(context, message: 'Copied $hashtag', type: MuToastType.success);
+            },
+    );
+  }
+}
+
+/// The ticket stub, pinned: Register opens the event's form when it has
+/// one, with interest as the quieter choice beside it; otherwise interest
+/// is the action. Both are off, with the reason above, when the event
+/// can't take registrations.
+class _StubBar extends ConsumerWidget {
+  const _StubBar({required this.event});
+
+  final Event event;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final mu = context.mu;
+    final c = mu.colors;
+    final interestState = ref.watch(eventInterestControllerProvider);
+    final busy = interestState.isLoading;
+    final interested = event.isInterested;
+    final open = event.canRegister;
+    final form = event.registrationUrl;
+    final hasForm = form != null && form.isNotEmpty;
+
+    void toggle() =>
+        unawaited(ref.read(eventInterestControllerProvider.notifier).toggle(event.id, interested: !interested));
+
+    final interest = MuButton(
+      label: interested ? 'Interested' : "I'm interested",
+      icon: interested ? LucideIcons.check : LucideIcons.star,
+      variant: hasForm || interested ? MuButtonVariant.outline : MuButtonVariant.ink,
+      block: true,
+      loading: busy,
+      onPressed: open && !busy ? toggle : null,
+    );
+
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: c.chalk,
+        border: Border(top: BorderSide(color: c.line)),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space3, MuSpacing.space5, MuSpacing.space3),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            if (interestState.hasError) ...[
+              Text(ApiException.messageFor(interestState.error!), style: mu.text.caption.copyWith(color: c.danger)),
+              const SizedBox(height: MuSpacing.space2),
+            ],
+            if (hasForm)
+              Row(
+                children: [
+                  Expanded(flex: 4, child: interest),
+                  const SizedBox(width: MuSpacing.space2),
+                  Expanded(
+                    flex: 5,
+                    child: MuButton(
+                      label: 'Register',
+                      variant: MuButtonVariant.ink,
+                      knob: true,
+                      block: true,
+                      onPressed: open ? () => unawaited(_open(ref, form)) : null,
+                    ),
+                  ),
                 ],
-                if (karma != null) ...[
-                  const SizedBox(height: 2),
-                  Text('+${karma.toInt()} karma', style: MuType.caption.copyWith(color: MuColors.karmaAccent)),
-                ],
-              ],
-            ),
-          ),
-          if (hashtag != null && hashtag.isNotEmpty)
-            IconButton(
-              tooltip: 'Copy hashtag',
-              icon: const Icon(LucideIcons.copy, size: 18),
-              onPressed: () async {
-                await Clipboard.setData(ClipboardData(text: hashtag));
-                if (context.mounted) MuToast.show(context, message: 'Copied $hashtag', type: MuToastType.success);
-              },
-            ),
-        ],
+              )
+            else
+              interest,
+          ],
+        ),
       ),
     );
   }

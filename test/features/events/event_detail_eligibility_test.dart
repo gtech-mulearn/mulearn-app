@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mulearn_app/core/widgets/mu_buttons.dart';
+import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/features/events/data/dtos/event_dto.dart';
 import 'package:mulearn_app/features/events/presentation/screens/event_detail_screen.dart';
 
@@ -30,7 +30,9 @@ void main() {
   });
 
   test('only live linked tasks are listed', () {
-    final pending = EventDto.fromJson(loadFixtureResponse('dev/event_detail_linked_tasks')! as Map<String, dynamic>).toDomain();
+    final pending = EventDto.fromJson(
+      loadFixtureResponse('dev/event_detail_linked_tasks')! as Map<String, dynamic>,
+    ).toDomain();
     final live = EventDto.fromJson(withActiveTask()['response'] as Map<String, dynamic>).toDomain();
 
     expect(pending.linkedTasks, isEmpty, reason: 'the seeded task awaits admin approval (active: false)');
@@ -43,9 +45,17 @@ void main() {
   Future<void> pumpDetail(WidgetTester tester, String id, Map<String, dynamic> body) async {
     final adapter = FakeHttpAdapter({'GET /api/v1/dashboard/events/$id/': (_) => FakeResponse(200, body)});
     final c = await eventsContainer(adapter);
-    tester.view.physicalSize = const Size(1080, 4000);
+    tester.view.physicalSize = const Size(1080, 9000);
     addTearDown(tester.view.resetPhysicalSize);
-    await tester.pumpWidget(UncontrolledProviderScope(container: c, child: MaterialApp(home: EventDetailScreen(eventId: id))));
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: c,
+        child: MaterialApp(
+          theme: MuThemeData.light(),
+          home: EventDetailScreen(eventId: id),
+        ),
+      ),
+    );
     await settle(tester);
   }
 
@@ -53,10 +63,10 @@ void main() {
     await pumpDetail(tester, '01882a2e-2501-409a-8e15-440903a9c036', loadFixture('dev/event_detail_blocked'));
 
     expect(find.text('This event has already completed.'), findsOneWidget);
-    final interested = tester.widget<MuPrimaryButton>(find.byType(MuPrimaryButton));
-    expect(interested.onPressed, isNull);
-    for (final ghost in tester.widgetList<MuGhostButton>(find.byType(MuGhostButton))) {
-      expect(ghost.onPressed, isNull, reason: 'Register is disabled too');
+    final buttons = tester.widgetList<MuButton>(find.byType(MuButton)).toList();
+    expect(buttons, isNotEmpty);
+    for (final b in buttons) {
+      expect(b.onPressed, isNull, reason: '${b.label} is off while the event is closed');
     }
   });
 
@@ -64,8 +74,8 @@ void main() {
     await pumpDetail(tester, '3d2eba4f-915d-40b9-bc28-dc04c98ed4a9', withActiveTask());
 
     expect(find.text('TASKS FOR THIS EVENT'), findsOneWidget);
-    expect(find.text('Share one takeaway from the evening'), findsOneWidget);
-    expect(find.text('#wit-takeaway'), findsOneWidget);
+    expect(find.textContaining('Share one takeaway from the evening', findRichText: true), findsOneWidget);
+    expect(find.text('#wit-takeaway · tap to copy'), findsOneWidget);
     expect(find.text('+50 karma'), findsOneWidget);
   });
 

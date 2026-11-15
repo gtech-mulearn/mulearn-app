@@ -111,11 +111,11 @@ class MuEventTicket extends StatelessWidget {
               CachedNetworkImage(
                 imageUrl: posterUrl!,
                 fit: BoxFit.cover,
-                placeholder: (_, _) => _GeneratedPoster(text: posterTitle ?? title),
-                errorWidget: (_, _, _) => _GeneratedPoster(text: posterTitle ?? title),
+                placeholder: (_, _) => MuGeneratedPoster(text: posterTitle ?? title),
+                errorWidget: (_, _, _) => MuGeneratedPoster(text: posterTitle ?? title),
               )
             else
-              _GeneratedPoster(text: posterTitle ?? title),
+              MuGeneratedPoster(text: posterTitle ?? title),
             if (capacity != null) Positioned(left: 10, top: 10, child: capacity!),
             if (kind != null) Positioned(right: 10, top: 10, child: kind!),
           ],
@@ -221,8 +221,12 @@ class _DashPainter extends CustomPainter {
 
 /// A poster when the event has no cover: its short title in the poster
 /// style over cobalt with a volt and a sticker disc.
-class _GeneratedPoster extends StatelessWidget {
-  const _GeneratedPoster({required this.text});
+class MuGeneratedPoster extends StatelessWidget {
+  /// A poster for [text].
+  const MuGeneratedPoster({required this.text, this.fontSize = 34, super.key});
+
+  /// Poster type size: 34 on a ticket, larger on a detail hero.
+  final double fontSize;
 
   final String text;
 
@@ -258,7 +262,7 @@ class _GeneratedPoster extends StatelessWidget {
               padding: const EdgeInsets.all(14),
               child: Text(
                 text.toUpperCase(),
-                style: mu.text.poster.copyWith(fontSize: 34, color: c.onCobalt),
+                style: mu.text.poster.copyWith(fontSize: fontSize, color: c.onCobalt),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
