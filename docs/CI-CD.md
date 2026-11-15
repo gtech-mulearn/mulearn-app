@@ -345,7 +345,7 @@ Open the failed run; the first red step says which stage failed.
 
 | Symptom | Cause / fix |
 |---|---|
-| **Check formatting** fails on a PR | Files the PR changed aren't `dart format`ted. Run the command printed in the log — `dart format <files>` — and push. Format named files only, never a folder (that rewrites generated code). |
+| **Check formatting** fails on a PR | Files the PR changed aren't `dart format`ted (the `dev` → `main` promotion PR only gets a report: its changes were already gated on the way into `dev`). Run the command printed in the log — `dart format <files>` — and push. Format named files only, never a folder (that rewrites generated code). |
 | **Analyze** or **Test** fails | Reproduce with `flutter analyze` / `flutter test` locally (same Flutter 3.47.9). Nothing is built or published until they pass. |
 | **Install dependencies** fails with a lockfile error | `pubspec.lock` doesn't match `pubspec.yaml`. Run `flutter pub get` locally and commit the lock file. |
 | `Missing signing secret(s)` (stable/release) | Production environment secrets missing or misnamed — see [Secrets](#secrets). |
