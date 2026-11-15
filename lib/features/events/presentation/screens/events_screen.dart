@@ -135,6 +135,12 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
                   Expanded(
                     child: Semantics(header: true, child: Text('Events', style: mu.text.title1)),
                   ),
+                  MuIconButton(
+                    icon: LucideIcons.radio,
+                    tooltip: 'Weekly Twitches',
+                    onPressed: () => context.push(RoutePaths.weeklyTwitches),
+                  ),
+                  const SizedBox(width: MuSpacing.space2),
                   if (ref.watch(capabilitiesProvider).value?.canBrowseJobs ?? false) ...[
                     MuIconButton(
                       icon: LucideIcons.briefcase,

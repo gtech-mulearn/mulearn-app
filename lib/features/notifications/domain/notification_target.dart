@@ -40,6 +40,15 @@ NotificationTarget? _fromRedirectUrl(String? url, Uri base) {
 final _circle = RegExp(r'^/dashboard/learning-circle/?([^/]*)/?$');
 final _event = RegExp(r'^/dashboard/events/?([^/]*)/?$');
 
+/// The notification type announcing each Weekly Twitches show, to its route
+/// segment (`TwitchShow` in the weekly_twitches feature).
+const _twitchShows = {
+  'OFFICE_HOURS_ANNOUNCED': 'office-hours',
+  'SALT_MANGO_TREE_ANNOUNCED': 'salt-mango-tree',
+  'INSPIRATION_STATION_ANNOUNCED': 'inspiration-station',
+  'GRAB_YOUR_SUPERPOWERS_ANNOUNCED': 'grab-your-superpowers',
+};
+
 NotificationTarget _fromPath(String pathAndQuery, Uri base) {
   final path = Uri.parse(pathAndQuery).path;
   final circle = _circle.firstMatch(path);
@@ -53,6 +62,10 @@ NotificationTarget _fromPath(String pathAndQuery, Uri base) {
     return AppRoute(id.isEmpty ? RoutePaths.events : RoutePaths.eventDetailPath(id));
   }
   if (path == '/dashboard/profile' || path == '/dashboard/profile/') return const AppRoute(RoutePaths.profile);
+  if (path == '/dashboard/weekly-twitches' || path == '/dashboard/weekly-twitches/') {
+    return const AppRoute(RoutePaths.weeklyTwitches);
+  }
+  if (path == '/dashboard/jobs' || path == '/dashboard/jobs/') return const AppRoute(RoutePaths.opportunities);
   return WebPage(base.resolve(pathAndQuery));
 }
 
@@ -78,7 +91,7 @@ NotificationTarget? _fromType(AppNotification n, Uri base) {
   if (type == 'ADMIN_COMPANY_PENDING') return web('/dashboard/management/manage-companies');
   if (type == 'COMPANY_DELEGATE_REVOKED') return web('/dashboard');
   if (type == 'COMPANY_REJECTED') return web('/dashboard/company/profile/edit');
-  if (type == 'JOB_APPLICATION_STATUS') return web('/dashboard/jobs');
+  if (type == 'JOB_APPLICATION_STATUS') return const AppRoute(RoutePaths.opportunities);
   if (type == 'COMPANY_MENTOR_APPLICATION_SUBMITTED') return web('/dashboard/company/mentors');
 
   switch (n.entityType) {
@@ -93,11 +106,13 @@ NotificationTarget? _fromType(AppNotification n, Uri base) {
     case 'job':
       return web(id == null ? '/dashboard/company/jobs' : '/dashboard/company/jobs/${Uri.encodeComponent(id)}');
     case 'job_application':
-      return web('/dashboard/jobs');
+      return const AppRoute(RoutePaths.opportunities);
     case 'karma_activity_log':
       return const AppRoute(RoutePaths.profile);
     case 'media_content':
-      return web('/dashboard/weekly-twitches');
+      final show = _twitchShows[type];
+      if (show == null) return const AppRoute(RoutePaths.weeklyTwitches);
+      return AppRoute(id == null ? RoutePaths.weeklyTwitchesShowPath(show) : RoutePaths.weeklyTwitchPath(show, id));
   }
   return null;
 }

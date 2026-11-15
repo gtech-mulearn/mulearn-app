@@ -55,6 +55,9 @@ import 'package:mulearn_app/features/search/presentation/screens/search_screen.d
 import 'package:mulearn_app/features/splash/presentation/screens/splash_screen.dart';
 import 'package:mulearn_app/features/tasks/presentation/screens/task_detail_screen.dart';
 import 'package:mulearn_app/features/tasks/presentation/screens/tasks_screen.dart';
+import 'package:mulearn_app/features/weekly_twitches/domain/entities/twitch.dart';
+import 'package:mulearn_app/features/weekly_twitches/presentation/screens/twitch_detail_screen.dart';
+import 'package:mulearn_app/features/weekly_twitches/presentation/screens/weekly_twitches_screen.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'app_router.g.dart';
@@ -123,6 +126,18 @@ GoRouter goRouter(Ref ref) {
       ),
       GoRoute(path: RoutePaths.calendar, builder: (_, __) => const CalendarScreen()),
       GoRoute(path: RoutePaths.opportunities, builder: (_, __) => const OpportunitiesScreen()),
+      GoRoute(
+        path: RoutePaths.weeklyTwitches,
+        builder: (_, state) =>
+            WeeklyTwitchesScreen(initial: TwitchShow.from(state.uri.queryParameters['show']) ?? TwitchShow.officeHours),
+      ),
+      GoRoute(
+        path: RoutePaths.weeklyTwitch,
+        builder: (_, state) => TwitchDetailScreen(
+          show: TwitchShow.from(state.pathParameters['show']) ?? TwitchShow.officeHours,
+          id: state.pathParameters['id']!,
+        ),
+      ),
       GoRoute(path: RoutePaths.learningCircles, builder: (_, __) => const LearningCirclesScreen()),
       GoRoute(path: RoutePaths.createLearningCircle, builder: (_, __) => const CreateLearningCircleScreen()),
       GoRoute(path: RoutePaths.notifications, builder: (_, __) => const NotificationsScreen()),

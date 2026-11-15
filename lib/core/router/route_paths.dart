@@ -76,6 +76,12 @@ abstract final class RoutePaths {
   /// Jobs, internships and gigs from verified companies, and your applications.
   static const String opportunities = '/opportunities';
 
+  /// Weekly Twitches; `?show=<slug>` opens on a show.
+  static const String weeklyTwitches = '/weekly-twitches';
+  static String weeklyTwitchesShowPath(String show) => '/weekly-twitches?show=$show';
+  static const String weeklyTwitch = '/weekly-twitches/:show/:id';
+  static String weeklyTwitchPath(String show, String id) => '/weekly-twitches/$show/$id';
+
   static const String learningCircles = '/circles';
   static const String createLearningCircle = '/circles/create';
   static const String learningCircleDetail = '/circles/:id';
