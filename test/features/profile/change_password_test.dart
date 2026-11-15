@@ -13,6 +13,10 @@ import '../../support/fake_http_adapter.dart';
 import '../../support/fixtures.dart';
 import 'settings_test_support.dart';
 
+// Made-up values for a fake HTTP adapter, named so they read as test data.
+const _oldTestValue = 'old-test-value-1';
+const _newTestValue = 'new-test-value-1';
+
 /// POST /dashboard/profile/change-password/ {current_password, password}
 /// (ResetPasswordAPI, profile_view.py:622). Rules copied from the
 /// dashboard's ChangePasswordRequestSchema (settings.schema.ts).
@@ -21,7 +25,7 @@ void main() {
     test('the dashboard rules', () {
       expect(
         validateNewPassword(
-          current: 'old-pass-1',
+          current: _oldTestValue,
           next: 'short',
           confirm: 'short',
         ),
@@ -37,17 +41,17 @@ void main() {
       );
       expect(
         validateNewPassword(
-          current: 'old-pass-1',
-          next: 'new-pass-1',
+          current: _oldTestValue,
+          next: _newTestValue,
           confirm: 'new-pass-2',
         ),
         'Passwords do not match',
       );
       expect(
         validateNewPassword(
-          current: 'old-pass-1',
-          next: 'new-pass-1',
-          confirm: 'new-pass-1',
+          current: _oldTestValue,
+          next: _newTestValue,
+          confirm: _newTestValue,
         ),
         isNull,
       );
@@ -64,11 +68,11 @@ void main() {
         locationRemote: LocationRemoteDataSource(fakeDio(adapter)),
       );
 
-      await repo.changePassword(current: 'old-pass-1', next: 'new-pass-1');
+      await repo.changePassword(current: _oldTestValue, next: _newTestValue);
 
       expect(adapter.requests.single.data, {
-        'current_password': 'old-pass-1',
-        'password': 'new-pass-1',
+        'current_password': _oldTestValue,
+        'password': _newTestValue,
       });
     });
 
@@ -83,7 +87,7 @@ void main() {
       );
 
       await expectLater(
-        repo.changePassword(current: 'wrong', next: 'new-pass-1'),
+        repo.changePassword(current: 'wrong', next: _newTestValue),
         throwsA(
           isA<ApiException>().having(
             (e) => e.message,
@@ -98,9 +102,9 @@ void main() {
   group('screen', () {
     Future<void> fill(
       WidgetTester tester, {
-      String current = 'old-pass-1',
-      String next = 'new-pass-1',
-      String confirm = 'new-pass-1',
+      String current = _oldTestValue,
+      String next = _newTestValue,
+      String confirm = _newTestValue,
     }) async {
       Finder field(String label) => find.descendant(
         of: find.widgetWithText(MuTextField, label),
