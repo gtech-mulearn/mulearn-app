@@ -172,3 +172,68 @@ abstract class _$SearchController
     element.handleValue(ref, created);
   }
 }
+
+/// Campus search (colleges and schools), page by page ("load more").
+
+@ProviderFor(CampusSearchController)
+const campusSearchControllerProvider = CampusSearchControllerProvider._();
+
+/// Campus search (colleges and schools), page by page ("load more").
+final class CampusSearchControllerProvider
+    extends
+        $AsyncNotifierProvider<
+          CampusSearchController,
+          List<CampusSearchResult>
+        > {
+  /// Campus search (colleges and schools), page by page ("load more").
+  const CampusSearchControllerProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'campusSearchControllerProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$campusSearchControllerHash();
+
+  @$internal
+  @override
+  CampusSearchController create() => CampusSearchController();
+}
+
+String _$campusSearchControllerHash() =>
+    r'7639868ec1858bc1f99f2cfe54419202db1c2777';
+
+/// Campus search (colleges and schools), page by page ("load more").
+
+abstract class _$CampusSearchController
+    extends $AsyncNotifier<List<CampusSearchResult>> {
+  FutureOr<List<CampusSearchResult>> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref =
+        this.ref
+            as $Ref<
+              AsyncValue<List<CampusSearchResult>>,
+              List<CampusSearchResult>
+            >;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<
+                AsyncValue<List<CampusSearchResult>>,
+                List<CampusSearchResult>
+              >,
+              AsyncValue<List<CampusSearchResult>>,
+              Object?,
+              Object?
+            >;
+    element.handleValue(ref, created);
+  }
+}

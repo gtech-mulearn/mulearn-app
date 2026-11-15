@@ -210,6 +210,10 @@ abstract final class ApiPaths {
   /// the param.
   static const String userSearch = '/api/v1/dashboard/user/search/';
 
+  /// `GET ?search=&pageIndex=&perPage=` — campuses by type (InstitutionAPI):
+  /// `college` or `school`; the dashboard's campus search queries both.
+  static String institutes(String type) => '/api/v1/dashboard/organisation/institutes/$type/';
+
   // --- Registration (rules.md §3/§9: confirmed against the live dashboard
   // frontend, not the OpenAPI schema) ---
 

@@ -57,6 +57,10 @@ abstract final class RoutePaths {
   static const String publicProfile = '/u/:muid';
   static String publicProfilePath(String muid) => '/u/$muid';
 
+  /// A college's public page (the dashboard's /dashboard/campus/:id).
+  static const String publicCampus = '/campuses/:id';
+  static String publicCampusPath(String id) => '/campuses/$id';
+
   static const String search = '/search';
 
   static const String interestGroups = '/interest-groups';

@@ -24,6 +24,7 @@ import 'package:mulearn_app/features/campus/presentation/screens/campus_student_
 import 'package:mulearn_app/features/campus/presentation/screens/campus_students_screen.dart';
 import 'package:mulearn_app/features/campus/presentation/screens/enabler_campus_screen.dart';
 import 'package:mulearn_app/features/campus/presentation/screens/enabler_campuses_screen.dart';
+import 'package:mulearn_app/features/campus_profile/presentation/screens/public_campus_screen.dart';
 import 'package:mulearn_app/features/dashboard/presentation/screens/home_screen.dart';
 import 'package:mulearn_app/features/events/presentation/screens/event_detail_screen.dart';
 import 'package:mulearn_app/features/events/presentation/screens/events_screen.dart';
@@ -102,6 +103,10 @@ GoRouter goRouter(Ref ref) {
       GoRoute(path: RoutePaths.registerDetails, builder: (_, __) => const RegisterDetailsScreen()),
       GoRoute(path: RoutePaths.onboardingInterests, builder: (_, __) => const OnboardingInterestsScreen()),
       GoRoute(path: RoutePaths.search, builder: (_, __) => const SearchScreen()),
+      GoRoute(
+        path: RoutePaths.publicCampus,
+        builder: (_, state) => PublicCampusScreen(campusId: state.pathParameters['id']!),
+      ),
       GoRoute(
         path: RoutePaths.publicProfile,
         builder: (_, state) => PublicProfileScreen(muid: state.pathParameters['muid']!),

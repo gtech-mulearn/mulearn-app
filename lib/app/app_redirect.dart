@@ -52,6 +52,7 @@ bool _isSignedInScreen(String path) =>
     _allowedSignedInExtra.contains(path) ||
     _isWorkspace(path) ||
     path.startsWith('/u/') ||
+    path.startsWith('/campuses/') ||
     path.startsWith('/interest-groups/') ||
     path.startsWith('/events/') ||
     path.startsWith('/circles/') ||

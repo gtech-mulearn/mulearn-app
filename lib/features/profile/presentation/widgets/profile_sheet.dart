@@ -105,6 +105,7 @@ class ProfileSheet extends ConsumerWidget {
           const SizedBox(height: MuSpacing.space6),
           _Campus(
             code: profile.collegeCode,
+            collegeId: profile.collegeId,
             department: department,
             joinedYear: profile.joined.length >= 4 ? profile.joined.substring(0, 4) : null,
           ),
@@ -223,9 +224,12 @@ class _Stat extends StatelessWidget {
 
 /// The campus as a stamped seal (artifact: CampusCrest).
 class _Campus extends StatelessWidget {
-  const _Campus({required this.code, required this.department, required this.joinedYear});
+  const _Campus({required this.code, required this.collegeId, required this.department, required this.joinedYear});
 
   final String? code;
+
+  /// Opens the campus's public page when set.
+  final String? collegeId;
   final String? department;
   final String? joinedYear;
 
@@ -233,7 +237,16 @@ class _Campus extends StatelessWidget {
   Widget build(BuildContext context) {
     final hasCode = (code ?? '').isNotEmpty;
     final lines = [?department, if (joinedYear != null) 'Member since $joinedYear'];
-    return MuCampusCrest(code: code, name: hasCode ? code! : 'No campus yet', caption: lines.join(' · '));
+    final id = collegeId;
+    return MuCampusCrest(
+      code: code,
+      name: hasCode ? code! : 'No campus yet',
+      caption: lines.join(' · '),
+      trailing: id == null || id.isEmpty
+          ? null
+          : Icon(LucideIcons.chevronRight, size: MuSizes.iconSm + 2, color: context.mu.colors.ink3),
+      onTap: id == null || id.isEmpty ? null : () => context.push(RoutePaths.publicCampusPath(id)),
+    );
   }
 }
 

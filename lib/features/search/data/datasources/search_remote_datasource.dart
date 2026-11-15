@@ -19,12 +19,21 @@ class SearchRemoteDataSource {
   }) async {
     final response = await _dio.get<dynamic>(
       ApiPaths.userSearch,
-      queryParameters: {
-        'search': query,
-        if (role != null) 'role': role,
-        'pageIndex': pageIndex,
-        'perPage': perPage,
-      },
+      queryParameters: {'search': query, if (role != null) 'role': role, 'pageIndex': pageIndex, 'perPage': perPage},
+    );
+    return ApiEnvelope.unwrapObject(response);
+  }
+
+  /// `GET organisation/institutes/<college|school>/`.
+  Future<Map<String, dynamic>> searchCampuses({
+    required String type,
+    required String query,
+    required int pageIndex,
+    required int perPage,
+  }) async {
+    final response = await _dio.get<dynamic>(
+      ApiPaths.institutes(type),
+      queryParameters: {'search': query, 'pageIndex': pageIndex, 'perPage': perPage},
     );
     return ApiEnvelope.unwrapObject(response);
   }
