@@ -449,6 +449,11 @@ final class EventsInGroupFamily extends $Family
 /// Joins or leaves one group through its own endpoints (FEAT-08) — no
 /// full-list rewrite, so a group joined elsewhere can't be dropped — then
 /// refreshes the shared profile so every card (and Profile) shows it.
+///
+/// Stays loading until the refreshed profile has landed and the member ids
+/// are rebuilt from it. Settling earlier left a window (as long as the slow
+/// `user-profile` request) where the old ids still said "not a member" and
+/// the button read Join again right after joining.
 
 @ProviderFor(InterestGroupMembershipController)
 const interestGroupMembershipControllerProvider =
@@ -457,11 +462,21 @@ const interestGroupMembershipControllerProvider =
 /// Joins or leaves one group through its own endpoints (FEAT-08) — no
 /// full-list rewrite, so a group joined elsewhere can't be dropped — then
 /// refreshes the shared profile so every card (and Profile) shows it.
+///
+/// Stays loading until the refreshed profile has landed and the member ids
+/// are rebuilt from it. Settling earlier left a window (as long as the slow
+/// `user-profile` request) where the old ids still said "not a member" and
+/// the button read Join again right after joining.
 final class InterestGroupMembershipControllerProvider
     extends $AsyncNotifierProvider<InterestGroupMembershipController, void> {
   /// Joins or leaves one group through its own endpoints (FEAT-08) — no
   /// full-list rewrite, so a group joined elsewhere can't be dropped — then
   /// refreshes the shared profile so every card (and Profile) shows it.
+  ///
+  /// Stays loading until the refreshed profile has landed and the member ids
+  /// are rebuilt from it. Settling earlier left a window (as long as the slow
+  /// `user-profile` request) where the old ids still said "not a member" and
+  /// the button read Join again right after joining.
   const InterestGroupMembershipControllerProvider._()
     : super(
         from: null,
@@ -484,11 +499,16 @@ final class InterestGroupMembershipControllerProvider
 }
 
 String _$interestGroupMembershipControllerHash() =>
-    r'2b392660e9a46b3abf3c01af5655408b1e63833c';
+    r'd02c1b5b01bbc595822f204a8254c712bbb3ef30';
 
 /// Joins or leaves one group through its own endpoints (FEAT-08) — no
 /// full-list rewrite, so a group joined elsewhere can't be dropped — then
 /// refreshes the shared profile so every card (and Profile) shows it.
+///
+/// Stays loading until the refreshed profile has landed and the member ids
+/// are rebuilt from it. Settling earlier left a window (as long as the slow
+/// `user-profile` request) where the old ids still said "not a member" and
+/// the button read Join again right after joining.
 
 abstract class _$InterestGroupMembershipController
     extends $AsyncNotifier<void> {
