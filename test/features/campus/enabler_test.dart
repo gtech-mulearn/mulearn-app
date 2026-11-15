@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/network/dio_provider.dart';
 import 'package:mulearn_app/core/storage/secure_storage_provider.dart';
 import 'package:mulearn_app/core/utils/clock.dart';
@@ -48,20 +49,34 @@ void main() {
   Future<void> pump(WidgetTester tester, String location) async {
     final tokens = TokenStorage(FakeSecureStorage());
     await tokens.saveTokens(accessToken: 'a', refreshToken: 'r');
-    final container = ProviderContainer(retry: (_, __) => null, overrides: [
-      dioProvider.overrideWithValue(fakeDio(adapter)),
-      tokenStorageProvider.overrideWithValue(tokens),
-      clockProvider.overrideWithValue(() => DateTime.utc(2026, 11, 13, 14)),
-    ]);
+    final container = ProviderContainer(
+      retry: (_, __) => null,
+      overrides: [
+        dioProvider.overrideWithValue(fakeDio(adapter)),
+        tokenStorageProvider.overrideWithValue(tokens),
+        clockProvider.overrideWithValue(() => DateTime.utc(2026, 11, 13, 14)),
+      ],
+    );
     addTearDown(container.dispose);
-    final router = GoRouter(initialLocation: location, routes: [
-      GoRoute(path: '/enabler/campuses', builder: (_, __) => const EnablerCampusesScreen()),
-      GoRoute(path: '/enabler/campuses/:id', builder: (_, s) => EnablerCampusScreen(campusId: s.pathParameters['id']!)),
-    ]);
+    final router = GoRouter(
+      initialLocation: location,
+      routes: [
+        GoRoute(path: '/enabler/campuses', builder: (_, __) => const EnablerCampusesScreen()),
+        GoRoute(
+          path: '/enabler/campuses/:id',
+          builder: (_, s) => EnablerCampusScreen(campusId: s.pathParameters['id']!),
+        ),
+      ],
+    );
     addTearDown(router.dispose);
     tester.view.physicalSize = const Size(1080, 4000);
     addTearDown(tester.view.resetPhysicalSize);
-    await tester.pumpWidget(UncontrolledProviderScope(container: container, child: MaterialApp.router(routerConfig: router)));
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp.router(routerConfig: router),
+      ),
+    );
     await settle(tester);
   }
 
@@ -78,7 +93,9 @@ void main() {
   testWidgets('the campuses list shows the totals and each campus', (tester) async {
     await pump(tester, '/enabler/campuses');
 
-    expect(find.text('1 campus · 23 students · 0 karma'), findsOneWidget);
+    // The totals as tiles: 1 campus, 23 students, 0 karma.
+    expect(find.bySemanticsLabel('Students, 23'), findsOneWidget);
+    expect(find.bySemanticsLabel('Campuses, 1'), findsOneWidget);
     expect(find.text('St. Josephs Colege of Engineering and Technology'), findsOneWidget);
     expect(find.text('SJC · Central Zone · College'), findsOneWidget);
 
@@ -110,17 +127,19 @@ void main() {
 
   testWidgets('a note is saved with its priority, and the list reloads', (tester) async {
     adapter.routes['POST $_notes'] = (_) => const FakeResponse(200, {
-          'hasError': false,
-          'statusCode': 200,
-          'message': {'general': ['Note added successfully']},
-          'response': <String, dynamic>{},
-        });
+      'hasError': false,
+      'statusCode': 200,
+      'message': {
+        'general': ['Note added successfully'],
+      },
+      'response': <String, dynamic>{},
+    });
     await pump(tester, '/enabler/campuses/$_campus');
     final loads = adapter.requests.where((r) => r.uri.path == _notes && r.method == 'GET').length;
 
     await tester.tap(find.text('Add note'));
     await settle(tester);
-    await tester.enterText(find.widgetWithText(TextField, 'Note'), '  Visited the IoT lab  ');
+    await tester.enterText(find.widgetWithText(MuTextField, 'Note'), '  Visited the IoT lab  ');
     await tester.tap(find.text('High'));
     await tester.tap(find.text('Save note'));
     await settle(tester);
@@ -136,13 +155,13 @@ void main() {
   // Its PATCH rejects its own note_id on dev, so notes are deleted, not closed.
   const noteId = '5006a41f-2072-4eec-9ae4-ece76cdc9caf';
   FakeResponse ok(String message) => FakeResponse(200, {
-        'hasError': false,
-        'statusCode': 200,
-        'message': {
-          'general': [message],
-        },
-        'response': <String, dynamic>{},
-      });
+    'hasError': false,
+    'statusCode': 200,
+    'message': {
+      'general': [message],
+    },
+    'response': <String, dynamic>{},
+  });
 
   testWidgets('a note is deleted only after confirming', (tester) async {
     adapter.routes['DELETE $_notes'] = (_) => ok('Note deleted successfully');
@@ -155,7 +174,7 @@ void main() {
     expect(find.text('Delete this note?'), findsOneWidget);
     expect(adapter.requests.where((RequestOptions r) => r.method == 'DELETE'), isEmpty);
 
-    await tester.tap(find.descendant(of: find.byType(AlertDialog), matching: find.text('Delete')));
+    await tester.tap(find.widgetWithText(MuButton, 'Delete'));
     await settle(tester);
 
     expect(bodyOf('DELETE', _notes), {'note_id': noteId});
@@ -170,7 +189,7 @@ void main() {
 
     await tester.tap(find.text('Add note'));
     await settle(tester);
-    await tester.enterText(find.widgetWithText(TextField, 'Note'), 'Hello');
+    await tester.enterText(find.widgetWithText(MuTextField, 'Note'), 'Hello');
     await tester.tap(find.text('Save note'));
     await settle(tester);
 
