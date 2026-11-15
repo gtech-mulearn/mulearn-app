@@ -2,8 +2,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mulearn_app/core/data/location_remote_datasource.dart';
+import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
-import 'package:mulearn_app/core/widgets/mu_buttons.dart';
 import 'package:mulearn_app/features/profile/data/datasources/profile_remote_datasource.dart';
 import 'package:mulearn_app/features/profile/data/repositories/profile_repository_impl.dart';
 import 'package:mulearn_app/features/profile/domain/password_rules.dart';
@@ -19,12 +19,18 @@ import 'settings_test_support.dart';
 void main() {
   group('validateNewPassword', () {
     test('the dashboard rules', () {
-      expect(validateNewPassword(current: 'old-pass-1', next: 'short', confirm: 'short'),
-          'Password must be at least 8 characters');
-      expect(validateNewPassword(current: 'same-pass-1', next: 'same-pass-1', confirm: 'same-pass-1'),
-          'The new password must be different from the current password.');
-      expect(validateNewPassword(current: 'old-pass-1', next: 'new-pass-1', confirm: 'new-pass-2'),
-          'Passwords do not match');
+      expect(
+        validateNewPassword(current: 'old-pass-1', next: 'short', confirm: 'short'),
+        'Password must be at least 8 characters',
+      );
+      expect(
+        validateNewPassword(current: 'same-pass-1', next: 'same-pass-1', confirm: 'same-pass-1'),
+        'The new password must be different from the current password.',
+      );
+      expect(
+        validateNewPassword(current: 'old-pass-1', next: 'new-pass-1', confirm: 'new-pass-2'),
+        'Passwords do not match',
+      );
       expect(validateNewPassword(current: 'old-pass-1', next: 'new-pass-1', confirm: 'new-pass-1'), isNull);
     });
   });
@@ -59,11 +65,18 @@ void main() {
   });
 
   group('screen', () {
-    Future<void> fill(WidgetTester tester, {String current = 'old-pass-1', String next = 'new-pass-1', String confirm = 'new-pass-1'}) async {
-      await tester.enterText(find.widgetWithText(TextFormField, 'Current password'), current);
-      await tester.enterText(find.widgetWithText(TextFormField, 'New password'), next);
-      await tester.enterText(find.widgetWithText(TextFormField, 'Confirm new password'), confirm);
-      await tester.tap(find.widgetWithText(MuPrimaryButton, 'Change password'));
+    Future<void> fill(
+      WidgetTester tester, {
+      String current = 'old-pass-1',
+      String next = 'new-pass-1',
+      String confirm = 'new-pass-1',
+    }) async {
+      Finder field(String label) =>
+          find.descendant(of: find.widgetWithText(MuTextField, label), matching: find.byType(TextField));
+      await tester.enterText(field('Current password'), current);
+      await tester.enterText(field('New password'), next);
+      await tester.enterText(field('Confirm new password'), confirm);
+      await tester.tap(find.widgetWithText(MuButton, 'Change password'));
       await settle(tester);
     }
 
@@ -71,8 +84,12 @@ void main() {
       final adapter = settingsAdapter({
         'POST $changePasswordPath': (_) => FakeResponse(400, loadFixture('dev/change_password_wrong_current')),
       });
-      await pumpSettingsApp(tester, adapter,
-          location: '/settings/password', routes: {'/settings/password': () => const ChangePasswordScreen()});
+      await pumpSettingsApp(
+        tester,
+        adapter,
+        location: '/settings/password',
+        routes: {'/settings/password': () => const ChangePasswordScreen()},
+      );
 
       await fill(tester, current: 'wrong-one');
 
@@ -82,8 +99,12 @@ void main() {
 
     testWidgets('invalid input is caught before any request', (tester) async {
       final adapter = settingsAdapter();
-      await pumpSettingsApp(tester, adapter,
-          location: '/settings/password', routes: {'/settings/password': () => const ChangePasswordScreen()});
+      await pumpSettingsApp(
+        tester,
+        adapter,
+        location: '/settings/password',
+        routes: {'/settings/password': () => const ChangePasswordScreen()},
+      );
 
       await fill(tester, confirm: 'different-1');
 
@@ -93,8 +114,12 @@ void main() {
 
     testWidgets('success says so and closes', (tester) async {
       final adapter = settingsAdapter({'POST $changePasswordPath': (_) => okEnvelope});
-      await pumpSettingsApp(tester, adapter,
-          location: '/settings/password', routes: {'/settings/password': () => const ChangePasswordScreen()});
+      await pumpSettingsApp(
+        tester,
+        adapter,
+        location: '/settings/password',
+        routes: {'/settings/password': () => const ChangePasswordScreen()},
+      );
 
       await fill(tester);
 
