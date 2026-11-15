@@ -54,7 +54,11 @@ app.*.map.json
 /android/app/release
 
 # Android release signing — never commit keystores or their credentials.
-# CI recreates these from GitHub Secrets (see .github/workflows/release-*.yml).
-/android/key.properties
-/android/app/*.jks
+# CI recreates these from environment secrets (see docs/CI-CD.md).
+key.properties
+*.jks
 *.keystore
+
+# Build outputs — CI publishes APKs/AABs as artifacts and releases.
+*.apk
+*.aab
