@@ -97,7 +97,8 @@ class MuTextField extends StatefulWidget {
 }
 
 class _MuTextFieldState extends State<MuTextField> {
-  late final TextEditingController _controller = widget.controller ?? TextEditingController(text: widget.initialValue);
+  late final TextEditingController _controller =
+      widget.controller ?? TextEditingController(text: widget.initialValue);
   late final FocusNode _focus = widget.focusNode ?? FocusNode();
   final _fieldKey = GlobalKey<FormFieldState<String>>();
   bool _hidden = true;
@@ -211,7 +212,11 @@ class _MuTextFieldState extends State<MuTextField> {
                     onTap: () => setState(() => _hidden = !_hidden),
                     child: SizedBox.square(
                       dimension: MuSizes.touchMin,
-                      child: Icon(_hidden ? LucideIcons.eye : LucideIcons.eyeOff, size: 20, color: c.ink3),
+                      child: Icon(
+                        _hidden ? LucideIcons.eye : LucideIcons.eyeOff,
+                        size: 20,
+                        color: c.ink3,
+                      ),
                     ),
                   ),
                 )

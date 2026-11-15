@@ -11,7 +11,12 @@ class WelcomeRemoteDataSource {
 
   static int? _int(Object? v) => v is num ? v.toInt() : int.tryParse('$v');
 
-  static int? _countWhere(Object? list, String key, String match, String countKey) {
+  static int? _countWhere(
+    Object? list,
+    String key,
+    String match,
+    String countKey,
+  ) {
     if (list is! List) return null;
     for (final row in list.whereType<Map<String, dynamic>>()) {
       if ('${row[key]}'.toLowerCase() == match) return _int(row[countKey]);
@@ -20,19 +25,38 @@ class WelcomeRemoteDataSource {
   }
 
   Future<PublicStats> fetchStats() async {
-    final json = ApiEnvelope.unwrapObject(await _dio.get<dynamic>(ApiPaths.publicGlobalCount));
+    final json = ApiEnvelope.unwrapObject(
+      await _dio.get<dynamic>(ApiPaths.publicGlobalCount),
+    );
     return PublicStats(
       members: _int(json['members']),
-      campuses: _countWhere(json['org_type_counts'], 'org_type', 'college', 'org_count'),
-      companies: _countWhere(json['org_type_counts'], 'org_type', 'company', 'org_count'),
-      mentors: _countWhere(json['enablers_mentors_count'], 'role__title', 'mentor', 'role_count'),
+      campuses: _countWhere(
+        json['org_type_counts'],
+        'org_type',
+        'college',
+        'org_count',
+      ),
+      companies: _countWhere(
+        json['org_type_counts'],
+        'org_type',
+        'company',
+        'org_count',
+      ),
+      mentors: _countWhere(
+        json['enablers_mentors_count'],
+        'role__title',
+        'mentor',
+        'role_count',
+      ),
       interestGroups: _int(json['ig_count']),
       circles: _int(json['learning_circle_count']),
     );
   }
 
   Future<List<GuestEvent>> fetchFeaturedEvents() async {
-    final json = ApiEnvelope.unwrapObject(await _dio.get<dynamic>(ApiPaths.publicFeaturedEvents));
+    final json = ApiEnvelope.unwrapObject(
+      await _dio.get<dynamic>(ApiPaths.publicFeaturedEvents),
+    );
     final data = json['data'];
     if (data is! List) return const [];
     return [
@@ -59,7 +83,9 @@ class WelcomeRemoteDataSource {
   }
 
   Future<List<GuestInterestGroup>> fetchInterestGroups() async {
-    final json = ApiEnvelope.unwrapObject(await _dio.get<dynamic>(ApiPaths.publicInterestGroups));
+    final json = ApiEnvelope.unwrapObject(
+      await _dio.get<dynamic>(ApiPaths.publicInterestGroups),
+    );
     final list = json['interestGroups'];
     if (list is! List) return const [];
     return [

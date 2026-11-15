@@ -20,7 +20,8 @@ class InterestGroupsScreen extends ConsumerStatefulWidget {
   const InterestGroupsScreen({super.key});
 
   @override
-  ConsumerState<InterestGroupsScreen> createState() => _InterestGroupsScreenState();
+  ConsumerState<InterestGroupsScreen> createState() =>
+      _InterestGroupsScreenState();
 }
 
 class _InterestGroupsScreenState extends ConsumerState<InterestGroupsScreen> {
@@ -40,7 +41,13 @@ class _InterestGroupsScreenState extends ConsumerState<InterestGroupsScreen> {
   Future<void> _toggle(InterestGroupSummary group, {required bool join}) async {
     setState(() => _pending = group.id);
     try {
-      await toggleIgMembership(context, ref, id: group.id, name: group.name, join: join);
+      await toggleIgMembership(
+        context,
+        ref,
+        id: group.id,
+        name: group.name,
+        join: join,
+      );
     } finally {
       if (mounted) setState(() => _pending = null);
     }
@@ -51,7 +58,8 @@ class _InterestGroupsScreenState extends ConsumerState<InterestGroupsScreen> {
     final mu = context.mu;
     final c = mu.colors;
     final catalogState = ref.watch(interestGroupsCatalogProvider);
-    final myIds = ref.watch(myInterestGroupIdsProvider).value ?? const <String>[];
+    final myIds =
+        ref.watch(myInterestGroupIdsProvider).value ?? const <String>[];
 
     return Scaffold(
       backgroundColor: c.chalk,
@@ -59,17 +67,24 @@ class _InterestGroupsScreenState extends ConsumerState<InterestGroupsScreen> {
         bottom: false,
         child: catalogState.when(
           skipError: true,
-          loading: () => const Center(child: MuDotsLoader(label: 'Loading groups…')),
-          error: (error, _) =>
-              ErrorRetryView(error: error, onRetry: () => ref.invalidate(interestGroupsCatalogProvider)),
+          loading: () =>
+              const Center(child: MuDotsLoader(label: 'Loading groups…')),
+          error: (error, _) => ErrorRetryView(
+            error: error,
+            onRetry: () => ref.invalidate(interestGroupsCatalogProvider),
+          ),
           data: (groups) {
-            final categories = {for (final g in groups) IgCategory.parse(g.category)}.toList()
-              ..sort((a, b) => a.index.compareTo(b.index));
+            final categories = {
+              for (final g in groups) IgCategory.parse(g.category),
+            }.toList()..sort((a, b) => a.index.compareTo(b.index));
             final q = _query.trim().toLowerCase();
             final shown = [
               for (final g in groups)
-                if ((_category == null || IgCategory.parse(g.category) == _category) &&
-                    (q.isEmpty || g.name.toLowerCase().contains(q) || (g.code ?? '').toLowerCase().contains(q)))
+                if ((_category == null ||
+                        IgCategory.parse(g.category) == _category) &&
+                    (q.isEmpty ||
+                        g.name.toLowerCase().contains(q) ||
+                        (g.code ?? '').toLowerCase().contains(q)))
                   g,
             ];
             final yours = [
@@ -87,16 +102,27 @@ class _InterestGroupsScreenState extends ConsumerState<InterestGroupsScreen> {
                 ref.refresh(myProfilePayloadProvider.future),
               ]),
               child: CustomScrollView(
-                physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+                physics: const BouncingScrollPhysics(
+                  parent: AlwaysScrollableScrollPhysics(),
+                ),
                 slivers: [
                   SliverPadding(
-                    padding: const EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space2, MuSpacing.space5, 0),
+                    padding: const EdgeInsets.fromLTRB(
+                      MuSpacing.space5,
+                      MuSpacing.space2,
+                      MuSpacing.space5,
+                      0,
+                    ),
                     sliver: SliverToBoxAdapter(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           if (Navigator.of(context).canPop()) ...[
-                            MuIconButton(icon: LucideIcons.arrowLeft, tooltip: 'Back', onPressed: () => context.pop()),
+                            MuIconButton(
+                              icon: LucideIcons.arrowLeft,
+                              tooltip: 'Back',
+                              onPressed: () => context.pop(),
+                            ),
                             const SizedBox(height: MuSpacing.space3),
                           ],
                           Semantics(
@@ -104,8 +130,18 @@ class _InterestGroupsScreenState extends ConsumerState<InterestGroupsScreen> {
                             child: Text.rich(
                               TextSpan(
                                 children: [
-                                  TextSpan(text: 'Pick your\n', style: mu.text.displayLight.copyWith(fontSize: 36)),
-                                  TextSpan(text: 'corner', style: mu.text.display.copyWith(fontSize: 36)),
+                                  TextSpan(
+                                    text: 'Pick your\n',
+                                    style: mu.text.displayLight.copyWith(
+                                      fontSize: 36,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: 'corner',
+                                    style: mu.text.display.copyWith(
+                                      fontSize: 36,
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -131,7 +167,10 @@ class _InterestGroupsScreenState extends ConsumerState<InterestGroupsScreen> {
                         height: MuSizes.touchMin + MuSpacing.space3 * 2,
                         child: ListView(
                           scrollDirection: Axis.horizontal,
-                          padding: const EdgeInsets.symmetric(horizontal: MuSpacing.space5, vertical: MuSpacing.space3),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: MuSpacing.space5,
+                            vertical: MuSpacing.space3,
+                          ),
                           children: [
                             MuFilterChip(
                               label: 'All',
@@ -143,7 +182,10 @@ class _InterestGroupsScreenState extends ConsumerState<InterestGroupsScreen> {
                               MuFilterChip(
                                 label: _categoryLabel(cat),
                                 selected: _category == cat,
-                                onTap: () => setState(() => _category = _category == cat ? null : cat),
+                                onTap: () => setState(
+                                  () =>
+                                      _category = _category == cat ? null : cat,
+                                ),
                               ),
                             ],
                           ],
@@ -151,7 +193,9 @@ class _InterestGroupsScreenState extends ConsumerState<InterestGroupsScreen> {
                       ),
                     )
                   else
-                    const SliverToBoxAdapter(child: SizedBox(height: MuSpacing.space4)),
+                    const SliverToBoxAdapter(
+                      child: SizedBox(height: MuSpacing.space4),
+                    ),
                   if (shown.isEmpty)
                     SliverToBoxAdapter(
                       child: MuStateDisplay(
@@ -177,7 +221,9 @@ class _InterestGroupsScreenState extends ConsumerState<InterestGroupsScreen> {
                       pending: _pending,
                       onToggle: _toggle,
                     ),
-                  const SliverToBoxAdapter(child: SizedBox(height: MuSpacing.navClearance)),
+                  const SliverToBoxAdapter(
+                    child: SizedBox(height: MuSpacing.navClearance),
+                  ),
                 ],
               ),
             );
@@ -210,13 +256,19 @@ class _Section extends StatelessWidget {
   final List<InterestGroupSummary> groups;
   final bool joined;
   final String? pending;
-  final Future<void> Function(InterestGroupSummary, {required bool join}) onToggle;
+  final Future<void> Function(InterestGroupSummary, {required bool join})
+  onToggle;
 
   @override
   Widget build(BuildContext context) {
     final mu = context.mu;
     return SliverPadding(
-      padding: const EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space4, MuSpacing.space5, MuSpacing.space4),
+      padding: const EdgeInsets.fromLTRB(
+        MuSpacing.space5,
+        MuSpacing.space4,
+        MuSpacing.space5,
+        MuSpacing.space4,
+      ),
       sliver: SliverToBoxAdapter(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -241,8 +293,12 @@ class _Section extends StatelessWidget {
                         members: groups[i].memberCount,
                         joined: joined,
                         joining: pending == groups[i].id,
-                        onTap: () => context.push(RoutePaths.interestGroupDetailPath(groups[i].id)),
-                        onJoin: pending != null ? () {} : () => onToggle(groups[i], join: !joined),
+                        onTap: () => context.push(
+                          RoutePaths.interestGroupDetailPath(groups[i].id),
+                        ),
+                        onJoin: pending != null
+                            ? () {}
+                            : () => onToggle(groups[i], join: !joined),
                       ),
                   ],
                 );

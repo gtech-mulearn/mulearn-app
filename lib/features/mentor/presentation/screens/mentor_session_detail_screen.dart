@@ -51,14 +51,17 @@ class MentorSessionDetailScreen extends ConsumerWidget {
             IconButton(
               tooltip: 'Edit session',
               icon: const Icon(LucideIcons.pencil, size: 20),
-              onPressed: () => context.push(RoutePaths.mentorSessionEditPath(sessionId)),
+              onPressed: () =>
+                  context.push(RoutePaths.mentorSessionEditPath(sessionId)),
             ),
           if (loaded != null)
             PopupMenuButton<String>(
               tooltip: 'More',
               icon: const Icon(LucideIcons.moreVertical, size: 20),
               onSelected: (_) => unawaited(_delete(context, ref, loaded)),
-              itemBuilder: (_) => const [PopupMenuItem(value: 'delete', child: Text('Delete session'))],
+              itemBuilder: (_) => const [
+                PopupMenuItem(value: 'delete', child: Text('Delete session')),
+              ],
             ),
         ],
       ),
@@ -66,15 +69,25 @@ class MentorSessionDetailScreen extends ConsumerWidget {
         skipError: true,
         skipLoadingOnReload: true,
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, _) => ErrorRetryView(error: e, onRetry: () => ref.invalidate(mentorSessionProvider(sessionId))),
+        error: (e, _) => ErrorRetryView(
+          error: e,
+          onRetry: () => ref.invalidate(mentorSessionProvider(sessionId)),
+        ),
         data: (s) => MuRefresh(
           onRefresh: () => Future.wait([
             ref.refresh(mentorSessionProvider(sessionId).future),
-            ref.refresh(sessionParticipantsControllerProvider(sessionId).future),
+            ref.refresh(
+              sessionParticipantsControllerProvider(sessionId).future,
+            ),
           ]),
           child: ListView(
             physics: const AlwaysScrollableScrollPhysics(),
-            padding: const EdgeInsets.fromLTRB(MuSpace.screenH, MuSpace.m, MuSpace.screenH, MuSpace.xxl),
+            padding: const EdgeInsets.fromLTRB(
+              MuSpace.screenH,
+              MuSpace.m,
+              MuSpace.screenH,
+              MuSpace.xxl,
+            ),
             children: [
               _Header(session: s),
               if (s.status == SessionStatus.scheduled) ...[
@@ -94,30 +107,56 @@ class MentorSessionDetailScreen extends ConsumerWidget {
     );
   }
 
-  Future<void> _delete(BuildContext context, WidgetRef ref, MentorSession s) async {
+  Future<void> _delete(
+    BuildContext context,
+    WidgetRef ref,
+    MentorSession s,
+  ) async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: const Text('Delete this session?'),
         content: Text('“${s.title}” will be removed for everyone.'),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(dialogContext, false), child: const Text('Cancel')),
-          TextButton(onPressed: () => Navigator.pop(dialogContext, true), child: const Text('Delete')),
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: const Text('Delete'),
+          ),
         ],
       ),
     );
     if (confirmed != true || !context.mounted) return;
     try {
-      final message = await ref.read(sessionActionsProvider.notifier).delete(s.id);
+      final message = await ref
+          .read(sessionActionsProvider.notifier)
+          .delete(s.id);
       if (!context.mounted) return;
-      MuToast.show(context, message: message.isEmpty ? 'Session deleted' : message, type: MuToastType.success);
+      MuToast.show(
+        context,
+        message: message.isEmpty ? 'Session deleted' : message,
+        type: MuToastType.success,
+      );
       context.canPop() ? context.pop() : context.go(RoutePaths.mentorSessions);
     } on Object catch (e) {
-      if (context.mounted) MuToast.show(context, message: ApiException.messageFor(e), type: MuToastType.error);
+      if (context.mounted) {
+        MuToast.show(
+          context,
+          message: ApiException.messageFor(e),
+          type: MuToastType.error,
+        );
+      }
     }
   }
 
-  Future<void> _complete(BuildContext context, WidgetRef ref, MentorSession s) async {
+  Future<void> _complete(
+    BuildContext context,
+    WidgetRef ref,
+    MentorSession s,
+  ) async {
     final now = ref.read(clockProvider)();
     final early = !hasStarted(s, now);
     final ok = await showDialog<bool>(
@@ -131,19 +170,37 @@ class MentorSessionDetailScreen extends ConsumerWidget {
               : 'Your time is recorded as contributed minutes and you are marked attended.',
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(dialogContext, false), child: const Text('Cancel')),
-          TextButton(onPressed: () => Navigator.pop(dialogContext, true), child: const Text('Complete')),
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext, true),
+            child: const Text('Complete'),
+          ),
         ],
       ),
     );
     if (ok != true || !context.mounted) return;
     try {
-      final message = await ref.read(sessionCompletionProvider.notifier).complete(sessionId);
+      final message = await ref
+          .read(sessionCompletionProvider.notifier)
+          .complete(sessionId);
       if (context.mounted) {
-        MuToast.show(context, message: message.isEmpty ? 'Session completed' : message, type: MuToastType.success);
+        MuToast.show(
+          context,
+          message: message.isEmpty ? 'Session completed' : message,
+          type: MuToastType.success,
+        );
       }
     } on Object catch (e) {
-      if (context.mounted) MuToast.show(context, message: ApiException.messageFor(e), type: MuToastType.error);
+      if (context.mounted) {
+        MuToast.show(
+          context,
+          message: ApiException.messageFor(e),
+          type: MuToastType.error,
+        );
+      }
     }
   }
 }
@@ -170,18 +227,29 @@ class _Header extends ConsumerWidget {
               MuTagChip(label: statusLabel(s.status)),
               const SizedBox(width: MuSpace.s),
               Flexible(
-                child: Text(sessionModeLabel(s.mode), style: MuType.caption, overflow: TextOverflow.ellipsis),
+                child: Text(
+                  sessionModeLabel(s.mode),
+                  style: MuType.caption,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ],
           ),
           const SizedBox(height: MuSpace.s),
           Text(s.title, style: MuType.title),
-          if (s.entityName.isNotEmpty) Text(s.entityName, style: MuType.caption),
+          if (s.entityName.isNotEmpty)
+            Text(s.entityName, style: MuType.caption),
           const SizedBox(height: MuSpace.m),
           // Relative first ("Starts in 10 min", "Live now"), then the exact time.
           if (scheduled)
-            Text(formatWhen(starts: starts, ends: ends, now: now.toLocal()), style: MuType.bodyMed),
-          Text(formatRange(starts, ends), style: scheduled ? MuType.caption : MuType.bodyMed),
+            Text(
+              formatWhen(starts: starts, ends: ends, now: now.toLocal()),
+              style: MuType.bodyMed,
+            ),
+          Text(
+            formatRange(starts, ends),
+            style: scheduled ? MuType.caption : MuType.bodyMed,
+          ),
           if (s.meetingLink != null) ...[
             const SizedBox(height: MuSpace.m),
             MeetingLinkActions(session: s),
@@ -192,7 +260,10 @@ class _Header extends ConsumerWidget {
           ],
           if (s.description.isNotEmpty) ...[
             const SizedBox(height: MuSpace.m),
-            Text(s.description, style: MuType.body.copyWith(color: MuColors.inkSecondary)),
+            Text(
+              s.description,
+              style: MuType.body.copyWith(color: MuColors.inkSecondary),
+            ),
           ],
         ],
       ),
@@ -206,15 +277,30 @@ class _Participants extends ConsumerWidget {
   final MentorSession session;
 
   Future<void> _add(BuildContext context, WidgetRef ref) async {
-    final muid = await showDialog<String>(context: context, builder: (_) => const _MuidDialog());
+    final muid = await showDialog<String>(
+      context: context,
+      builder: (_) => const _MuidDialog(),
+    );
     if (muid == null || muid.isEmpty || !context.mounted) return;
     try {
-      final message = await ref.read(sessionParticipantsControllerProvider(session.id).notifier).add(muid);
+      final message = await ref
+          .read(sessionParticipantsControllerProvider(session.id).notifier)
+          .add(muid);
       if (context.mounted) {
-        MuToast.show(context, message: message.isEmpty ? 'Participant added' : message, type: MuToastType.success);
+        MuToast.show(
+          context,
+          message: message.isEmpty ? 'Participant added' : message,
+          type: MuToastType.success,
+        );
       }
     } on Object catch (e) {
-      if (context.mounted) MuToast.show(context, message: ApiException.messageFor(e), type: MuToastType.error);
+      if (context.mounted) {
+        MuToast.show(
+          context,
+          message: ApiException.messageFor(e),
+          type: MuToastType.error,
+        );
+      }
     }
   }
 
@@ -229,7 +315,8 @@ class _Participants extends ConsumerWidget {
           children: [
             Expanded(
               child: Text(
-                (count == null ? 'Participants' : 'Participants ($count)').toUpperCase(),
+                (count == null ? 'Participants' : 'Participants ($count)')
+                    .toUpperCase(),
                 style: MuType.eyebrow,
               ),
             ),
@@ -251,7 +338,9 @@ class _Participants extends ConsumerWidget {
           ),
           error: (e, _) => ErrorRetryView(
             error: e,
-            onRetry: () => ref.invalidate(sessionParticipantsControllerProvider(session.id)),
+            onRetry: () => ref.invalidate(
+              sessionParticipantsControllerProvider(session.id),
+            ),
           ),
           data: (data) {
             // Learners first; the mentor's own row last.
@@ -265,7 +354,12 @@ class _Participants extends ConsumerWidget {
                 style: MuType.body.copyWith(color: MuColors.inkSecondary),
               );
             }
-            return Column(children: [for (final p in rows) _ParticipantRow(sessionId: session.id, participant: p)]);
+            return Column(
+              children: [
+                for (final p in rows)
+                  _ParticipantRow(sessionId: session.id, participant: p),
+              ],
+            );
           },
         ),
       ],
@@ -295,20 +389,29 @@ class _MuidDialogState extends State<_MuidDialog> {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-        title: const Text('Add participant'),
-        content: TextFormField(
-          controller: _controller,
-          autofocus: true,
-          autocorrect: false,
-          keyboardType: TextInputType.emailAddress,
-          decoration: const InputDecoration(labelText: 'muID', hintText: 'name@mulearn'),
-          onFieldSubmitted: (v) => Navigator.pop(context, v.trim()),
-        ),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text('Cancel')),
-          TextButton(onPressed: () => Navigator.pop(context, _controller.text.trim()), child: const Text('Add')),
-        ],
-      );
+    title: const Text('Add participant'),
+    content: TextFormField(
+      controller: _controller,
+      autofocus: true,
+      autocorrect: false,
+      keyboardType: TextInputType.emailAddress,
+      decoration: const InputDecoration(
+        labelText: 'muID',
+        hintText: 'name@mulearn',
+      ),
+      onFieldSubmitted: (v) => Navigator.pop(context, v.trim()),
+    ),
+    actions: [
+      TextButton(
+        onPressed: () => Navigator.pop(context),
+        child: const Text('Cancel'),
+      ),
+      TextButton(
+        onPressed: () => Navigator.pop(context, _controller.text.trim()),
+        child: const Text('Add'),
+      ),
+    ],
+  );
 }
 
 /// A participant. The whole row opens the attendance sheet.
@@ -322,17 +425,29 @@ class _ParticipantRow extends ConsumerWidget {
     final result = await showAttendanceSheet(context, participant);
     if (result == null || !context.mounted) return;
     try {
-      final message = await ref.read(sessionParticipantsControllerProvider(sessionId).notifier).setAttendance(
+      final message = await ref
+          .read(sessionParticipantsControllerProvider(sessionId).notifier)
+          .setAttendance(
             participant.linkId,
             attendance: result.attendance,
             contributedMinutes: result.minutes,
             progressNote: result.note,
           );
       if (context.mounted) {
-        MuToast.show(context, message: message.isEmpty ? 'Attendance saved' : message, type: MuToastType.success);
+        MuToast.show(
+          context,
+          message: message.isEmpty ? 'Attendance saved' : message,
+          type: MuToastType.success,
+        );
       }
     } on Object catch (e) {
-      if (context.mounted) MuToast.show(context, message: ApiException.messageFor(e), type: MuToastType.error);
+      if (context.mounted) {
+        MuToast.show(
+          context,
+          message: ApiException.messageFor(e),
+          type: MuToastType.error,
+        );
+      }
     }
   }
 
@@ -349,32 +464,48 @@ class _ParticipantRow extends ConsumerWidget {
       padding: const EdgeInsets.only(top: MuSpace.s),
       child: MuCard(
         onTap: () => unawaited(_edit(context, ref)),
-        padding: const EdgeInsets.fromLTRB(MuSpace.l, MuSpace.m, MuSpace.xs, MuSpace.m),
+        padding: const EdgeInsets.fromLTRB(
+          MuSpace.l,
+          MuSpace.m,
+          MuSpace.xs,
+          MuSpace.m,
+        ),
         child: Row(
           children: [
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(mentor ? 'You' : (p.fullName.isEmpty ? p.muid : p.fullName), style: MuType.bodyMed),
-                  if (!mentor && p.muid.isNotEmpty) Text(p.muid, style: MuType.caption),
+                  Text(
+                    mentor ? 'You' : (p.fullName.isEmpty ? p.muid : p.fullName),
+                    style: MuType.bodyMed,
+                  ),
+                  if (!mentor && p.muid.isNotEmpty)
+                    Text(p.muid, style: MuType.caption),
                   const SizedBox(height: MuSpace.xs),
                   Wrap(
                     spacing: MuSpace.s,
                     crossAxisAlignment: WrapCrossAlignment.center,
                     children: [
                       MuTagChip(label: p.attendance.label, style: style),
-                      if (p.contributedMinutes != null) Text('${p.contributedMinutes}m', style: MuType.caption),
+                      if (p.contributedMinutes != null)
+                        Text('${p.contributedMinutes}m', style: MuType.caption),
                     ],
                   ),
-                  if (p.progressNote != null) Text('Note: ${p.progressNote}', style: MuType.caption),
-                  if (p.feedback != null) Text('Feedback: ${p.feedback}', style: MuType.caption),
+                  if (p.progressNote != null)
+                    Text('Note: ${p.progressNote}', style: MuType.caption),
+                  if (p.feedback != null)
+                    Text('Feedback: ${p.feedback}', style: MuType.caption),
                 ],
               ),
             ),
             IconButton(
               tooltip: 'Edit attendance',
-              icon: const Icon(LucideIcons.chevronRight, size: 18, color: MuColors.inkSecondary),
+              icon: const Icon(
+                LucideIcons.chevronRight,
+                size: 18,
+                color: MuColors.inkSecondary,
+              ),
               onPressed: () => unawaited(_edit(context, ref)),
             ),
           ],

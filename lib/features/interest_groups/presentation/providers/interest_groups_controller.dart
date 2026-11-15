@@ -17,7 +17,9 @@ InterestGroupsRemoteDataSource interestGroupsRemoteDataSource(Ref ref) =>
 /// (rules.md §2/§5).
 @riverpod
 InterestGroupsRepository interestGroupsRepository(Ref ref) =>
-    InterestGroupsRepositoryImpl(ref.watch(interestGroupsRemoteDataSourceProvider));
+    InterestGroupsRepositoryImpl(
+      ref.watch(interestGroupsRemoteDataSourceProvider),
+    );
 
 @riverpod
 Future<List<InterestGroupSummary>> interestGroupsCatalog(Ref ref) =>
@@ -30,7 +32,9 @@ Future<InterestGroupSummary> interestGroupDetail(Ref ref, String id) =>
 @Riverpod(retry: noRetry)
 Future<List<String>> myInterestGroupIds(Ref ref) async {
   final repository = ref.watch(interestGroupsRepositoryProvider);
-  return repository.groupIdsFromPayload(await ref.watch(myProfilePayloadProvider.future));
+  return repository.groupIdsFromPayload(
+    await ref.watch(myProfilePayloadProvider.future),
+  );
 }
 
 /// The most interest groups a learner can be in (dash_ig_view.py:1275).
@@ -55,7 +59,8 @@ Future<List<IgEventRef>> eventsInGroup(Ref ref, String igId) =>
 /// `user-profile` request) where the old ids still said "not a member" and
 /// the button read Join again right after joining.
 @riverpod
-class InterestGroupMembershipController extends _$InterestGroupMembershipController {
+class InterestGroupMembershipController
+    extends _$InterestGroupMembershipController {
   @override
   Future<void> build() async {}
 
@@ -64,7 +69,9 @@ class InterestGroupMembershipController extends _$InterestGroupMembershipControl
     final link = ref.keepAlive(); // finish the refresh even if the page closes
     state = const AsyncLoading();
     try {
-      final result = await AsyncValue.guard(() => join ? repo.join(groupId) : repo.leave(groupId));
+      final result = await AsyncValue.guard(
+        () => join ? repo.join(groupId) : repo.leave(groupId),
+      );
       if (!result.hasError) {
         ref
           ..invalidate(myProfilePayloadProvider)

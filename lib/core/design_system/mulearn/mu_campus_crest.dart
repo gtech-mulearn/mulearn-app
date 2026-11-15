@@ -9,7 +9,12 @@ import 'package:mulearn_app/core/design_system/tokens/mu_tokens.g.dart';
 /// are fetched or guessed. `night` by default; [tone] gives it an IG fill.
 class MuCampusSeal extends StatelessWidget {
   /// A seal for [code] (null shows a school icon).
-  const MuCampusSeal({required this.code, this.tone, this.size = 56, super.key});
+  const MuCampusSeal({
+    required this.code,
+    this.tone,
+    this.size = 56,
+    super.key,
+  });
 
   final String? code;
 
@@ -28,7 +33,11 @@ class MuCampusSeal extends StatelessWidget {
       child: SizedBox.square(
         dimension: size,
         child: CustomPaint(
-          painter: _SealPainter(fill: fill, ring: ink.withValues(alpha: 0.35), radius: size * 16 / 56),
+          painter: _SealPainter(
+            fill: fill,
+            ring: ink.withValues(alpha: 0.35),
+            radius: size * 16 / 56,
+          ),
           child: Center(
             child: text.isEmpty
                 ? Icon(LucideIcons.school, size: size * 0.4, color: ink)
@@ -89,8 +98,14 @@ class MuCampusCrest extends StatelessWidget {
     final mu = context.mu;
     final c = mu.colors;
     final row = Container(
-      padding: const EdgeInsets.symmetric(horizontal: MuSpacing.space4, vertical: 14),
-      decoration: BoxDecoration(color: c.surface, borderRadius: BorderRadius.circular(MuRadii.card)),
+      padding: const EdgeInsets.symmetric(
+        horizontal: MuSpacing.space4,
+        vertical: 14,
+      ),
+      decoration: BoxDecoration(
+        color: c.surface,
+        borderRadius: BorderRadius.circular(MuRadii.card),
+      ),
       child: Row(
         children: [
           MuCampusSeal(code: code, tone: tone),
@@ -99,10 +114,20 @@ class MuCampusCrest extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(name, maxLines: 2, overflow: TextOverflow.ellipsis, style: mu.text.title3),
+                Text(
+                  name,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: mu.text.title3,
+                ),
                 if (caption != null && caption!.isNotEmpty) ...[
                   const SizedBox(height: 2),
-                  Text(caption!, maxLines: 2, overflow: TextOverflow.ellipsis, style: mu.text.caption),
+                  Text(
+                    caption!,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: mu.text.caption,
+                  ),
                 ],
               ],
             ),
@@ -113,7 +138,14 @@ class MuCampusCrest extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text('#$rank', style: mu.text.numeral.copyWith(fontSize: 24)),
-                if (scope != null) Text(scope!, style: mu.text.caption.copyWith(fontSize: 11, color: c.ink3)),
+                if (scope != null)
+                  Text(
+                    scope!,
+                    style: mu.text.caption.copyWith(
+                      fontSize: 11,
+                      color: c.ink3,
+                    ),
+                  ),
               ],
             ),
           ] else if (trailing != null) ...[
@@ -126,13 +158,21 @@ class MuCampusCrest extends StatelessWidget {
     return Semantics(
       container: true,
       button: onTap != null,
-      label: [name, ?caption, if (rank != null) 'rank $rank${scope == null ? '' : ' $scope'}'].join(', '),
+      label: [
+        name,
+        ?caption,
+        if (rank != null) 'rank $rank${scope == null ? '' : ' $scope'}',
+      ].join(', '),
       excludeSemantics: true,
       child: onTap == null
           ? row
           : Material(
               type: MaterialType.transparency,
-              child: InkWell(onTap: onTap, borderRadius: BorderRadius.circular(MuRadii.card), child: row),
+              child: InkWell(
+                onTap: onTap,
+                borderRadius: BorderRadius.circular(MuRadii.card),
+                child: row,
+              ),
             ),
     );
   }
@@ -148,11 +188,15 @@ class _SealPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final outer = RRect.fromRectAndRadius(Offset.zero & size, Radius.circular(radius));
+    final outer = RRect.fromRectAndRadius(
+      Offset.zero & size,
+      Radius.circular(radius),
+    );
     canvas.drawRRect(outer, Paint()..color = fill);
     final inset = size.width * 4 / 56;
     final inner = RRect.fromRectAndRadius(
-      Offset(inset, inset) & Size(size.width - inset * 2, size.height - inset * 2),
+      Offset(inset, inset) &
+          Size(size.width - inset * 2, size.height - inset * 2),
       Radius.circular(radius - inset),
     );
     final paint = Paint()
@@ -167,5 +211,6 @@ class _SealPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_SealPainter old) => old.fill != fill || old.ring != ring || old.radius != radius;
+  bool shouldRepaint(_SealPainter old) =>
+      old.fill != fill || old.ring != ring || old.radius != radius;
 }

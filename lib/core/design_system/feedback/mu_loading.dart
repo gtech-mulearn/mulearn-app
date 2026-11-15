@@ -11,7 +11,11 @@ import 'package:mulearn_app/core/design_system/tokens/mu_tokens.g.dart';
 /// loader.
 class MuDelayed extends StatefulWidget {
   /// Waits [delay] before showing [child].
-  const MuDelayed({required this.child, this.delay = const Duration(milliseconds: 300), super.key});
+  const MuDelayed({
+    required this.child,
+    this.delay = const Duration(milliseconds: 300),
+    super.key,
+  });
 
   final Widget child;
   final Duration delay;
@@ -39,7 +43,8 @@ class _MuDelayedState extends State<MuDelayed> {
   }
 
   @override
-  Widget build(BuildContext context) => _show ? widget.child : const SizedBox.shrink();
+  Widget build(BuildContext context) =>
+      _show ? widget.child : const SizedBox.shrink();
 }
 
 /// One block of a skeleton in `surface-sunk`, with a shimmer passing left
@@ -47,7 +52,12 @@ class _MuDelayedState extends State<MuDelayed> {
 /// real component's layout.
 class MuSkeletonBox extends StatefulWidget {
   /// A skeleton block.
-  const MuSkeletonBox({this.width, this.height = 16, this.radius = MuRadii.tag, super.key});
+  const MuSkeletonBox({
+    this.width,
+    this.height = 16,
+    this.radius = MuRadii.tag,
+    super.key,
+  });
 
   final double? width;
   final double height;
@@ -57,8 +67,12 @@ class MuSkeletonBox extends StatefulWidget {
   State<MuSkeletonBox> createState() => _MuSkeletonBoxState();
 }
 
-class _MuSkeletonBoxState extends State<MuSkeletonBox> with SingleTickerProviderStateMixin {
-  late final AnimationController _t = AnimationController(vsync: this, duration: const Duration(milliseconds: 1400));
+class _MuSkeletonBoxState extends State<MuSkeletonBox>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _t = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 1400),
+  );
 
   @override
   void didChangeDependencies() {
@@ -93,7 +107,11 @@ class _MuSkeletonBoxState extends State<MuSkeletonBox> with SingleTickerProvider
               gradient: LinearGradient(
                 begin: Alignment(x - 1, 0),
                 end: Alignment(x + 1, 0),
-                colors: [c.surfaceSunk, Color.lerp(c.surfaceSunk, c.surface, 0.6)!, c.surfaceSunk],
+                colors: [
+                  c.surfaceSunk,
+                  Color.lerp(c.surfaceSunk, c.surface, 0.6)!,
+                  c.surfaceSunk,
+                ],
               ),
             ),
           );
@@ -115,8 +133,12 @@ class MuDotsLoader extends StatefulWidget {
   State<MuDotsLoader> createState() => _MuDotsLoaderState();
 }
 
-class _MuDotsLoaderState extends State<MuDotsLoader> with SingleTickerProviderStateMixin {
-  late final AnimationController _t = AnimationController(vsync: this, duration: const Duration(milliseconds: 900));
+class _MuDotsLoaderState extends State<MuDotsLoader>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _t = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 900),
+  );
 
   @override
   void didChangeDependencies() {
@@ -160,7 +182,10 @@ class _MuDotsLoaderState extends State<MuDotsLoader> with SingleTickerProviderSt
                     child: Container(
                       width: 9,
                       height: 9,
-                      decoration: BoxDecoration(color: colors[i], shape: BoxShape.circle),
+                      decoration: BoxDecoration(
+                        color: colors[i],
+                        shape: BoxShape.circle,
+                      ),
                     ),
                   ),
                 ],
@@ -170,7 +195,10 @@ class _MuDotsLoaderState extends State<MuDotsLoader> with SingleTickerProviderSt
           if (widget.label != null) ...[
             const SizedBox(width: MuSpacing.space3),
             Flexible(
-              child: Text(widget.label!, style: mu.text.body.copyWith(color: c.ink2)),
+              child: Text(
+                widget.label!,
+                style: mu.text.body.copyWith(color: c.ink2),
+              ),
             ),
           ],
         ],
@@ -179,5 +207,7 @@ class _MuDotsLoaderState extends State<MuDotsLoader> with SingleTickerProviderSt
   }
 
   /// Up and back down in the first half of the cycle, resting after.
-  static double _hop(double t) => t < 0.5 ? Curves.easeInOut.transform(t < 0.25 ? t * 4 : (0.5 - t) * 4) : 0;
+  static double _hop(double t) => t < 0.5
+      ? Curves.easeInOut.transform(t < 0.25 ? t * 4 : (0.5 - t) * 4)
+      : 0;
 }

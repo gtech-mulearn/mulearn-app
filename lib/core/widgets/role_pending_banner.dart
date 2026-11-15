@@ -24,14 +24,20 @@ class RolePendingBanner extends StatelessWidget {
         decoration: BoxDecoration(
           color: context.mu.colors.warningTint,
           borderRadius: BorderRadius.circular(MuRadius.inner),
-          border: Border.all(color: context.mu.colors.warning.withValues(alpha: 0.3)),
+          border: Border.all(
+            color: context.mu.colors.warning.withValues(alpha: 0.3),
+          ),
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
               padding: const EdgeInsets.only(top: 2),
-              child: Icon(LucideIcons.alertCircle, size: 18, color: context.mu.colors.warning),
+              child: Icon(
+                LucideIcons.alertCircle,
+                size: 18,
+                color: context.mu.colors.warning,
+              ),
             ),
             const SizedBox(width: MuSpace.s),
             Expanded(
@@ -40,13 +46,18 @@ class RolePendingBanner extends StatelessWidget {
                 children: [
                   Text(
                     '$role account pending verification',
-                    style: context.mu.text.body.copyWith(color: context.mu.colors.warning, fontWeight: FontWeight.w600),
+                    style: context.mu.text.body.copyWith(
+                      color: context.mu.colors.warning,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                   const SizedBox(height: 2),
                   Text(
                     'Your ${role.toLowerCase()} profile is awaiting admin approval. '
                     'You will be notified once your account is verified.',
-                    style: context.mu.text.body.copyWith(color: context.mu.colors.warning),
+                    style: context.mu.text.body.copyWith(
+                      color: context.mu.colors.warning,
+                    ),
                   ),
                 ],
               ),

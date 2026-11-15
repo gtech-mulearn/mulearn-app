@@ -24,32 +24,54 @@ class EnablerCampusesScreen extends ConsumerWidget {
           .when(
             skipError: true,
             skipLoadingOnReload: true,
-            loading: () => const Center(child: MuDotsLoader(label: 'Loading your campuses…')),
-            error: (e, _) => ErrorRetryView(error: e, onRetry: () => ref.invalidate(enablerCampusesProvider)),
+            loading: () => const Center(
+              child: MuDotsLoader(label: 'Loading your campuses…'),
+            ),
+            error: (e, _) => ErrorRetryView(
+              error: e,
+              onRetry: () => ref.invalidate(enablerCampusesProvider),
+            ),
             data: (campuses) => MuRefresh(
               onRefresh: () => Future.wait([
                 ref.refresh(enablerCampusesProvider.future),
                 ref.refresh(enablerSummaryProvider.future),
               ]),
               child: ListView(
-                physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+                physics: const BouncingScrollPhysics(
+                  parent: AlwaysScrollableScrollPhysics(),
+                ),
                 padding: muListPadding,
                 children: [
-                  Semantics(header: true, child: Text('My campuses', style: mu.text.display.copyWith(fontSize: 32))),
+                  Semantics(
+                    header: true,
+                    child: Text(
+                      'My campuses',
+                      style: mu.text.display.copyWith(fontSize: 32),
+                    ),
+                  ),
                   if (summary != null) ...[
                     const SizedBox(height: MuSpacing.space4),
                     Row(
                       children: [
                         Expanded(
-                          child: MuStatTile(label: 'Campuses', value: muGrouped(summary.campuses)),
+                          child: MuStatTile(
+                            label: 'Campuses',
+                            value: muGrouped(summary.campuses),
+                          ),
                         ),
                         const SizedBox(width: MuSpacing.space2),
                         Expanded(
-                          child: MuStatTile(label: 'Students', value: muGrouped(summary.students)),
+                          child: MuStatTile(
+                            label: 'Students',
+                            value: muGrouped(summary.students),
+                          ),
                         ),
                         const SizedBox(width: MuSpacing.space2),
                         Expanded(
-                          child: MuStatTile(label: 'Karma', value: muGrouped(summary.karma)),
+                          child: MuStatTile(
+                            label: 'Karma',
+                            value: muGrouped(summary.karma),
+                          ),
                         ),
                       ],
                     ),
@@ -71,8 +93,14 @@ class EnablerCampusesScreen extends ConsumerWidget {
                         campuses[i].zone,
                         campuses[i].orgType,
                       ].where((x) => x.isNotEmpty).join(' · '),
-                      trailing: Icon(LucideIcons.chevronRight, size: MuSizes.iconSm + 2, color: mu.colors.ink3),
-                      onTap: () => context.push(RoutePaths.enablerCampusPath(campuses[i].id)),
+                      trailing: Icon(
+                        LucideIcons.chevronRight,
+                        size: MuSizes.iconSm + 2,
+                        color: mu.colors.ink3,
+                      ),
+                      onTap: () => context.push(
+                        RoutePaths.enablerCampusPath(campuses[i].id),
+                      ),
                     ),
                   ],
                 ],

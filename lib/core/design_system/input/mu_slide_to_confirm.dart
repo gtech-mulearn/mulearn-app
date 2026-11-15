@@ -42,12 +42,15 @@ class MuSlideToConfirm extends StatefulWidget {
 
 enum _Phase { idle, running, done }
 
-class _MuSlideToConfirmState extends State<MuSlideToConfirm> with SingleTickerProviderStateMixin {
+class _MuSlideToConfirmState extends State<MuSlideToConfirm>
+    with SingleTickerProviderStateMixin {
   static const double _height = 64;
   static const double _pad = 6;
   static const double _thumb = 52;
 
-  late final AnimationController _x = AnimationController.unbounded(vsync: this);
+  late final AnimationController _x = AnimationController.unbounded(
+    vsync: this,
+  );
   double _travel = 0;
   double _drag = 0; // finger position along the travel, unclamped
   _Phase _phase = _Phase.idle;
@@ -60,7 +63,9 @@ class _MuSlideToConfirmState extends State<MuSlideToConfirm> with SingleTickerPr
 
   double _shown(double raw) {
     if (raw < 0) return -rubberband(-raw, _travel, constant: 0.2);
-    if (raw > _travel) return _travel + rubberband(raw - _travel, _travel, constant: 0.2);
+    if (raw > _travel) {
+      return _travel + rubberband(raw - _travel, _travel, constant: 0.2);
+    }
     return raw;
   }
 
@@ -70,7 +75,11 @@ class _MuSlideToConfirmState extends State<MuSlideToConfirm> with SingleTickerPr
       _x.value = target;
       return;
     }
-    unawaited(_x.animateWith(SpringSimulation(spec.description, _x.value, target, velocity)));
+    unawaited(
+      _x.animateWith(
+        SpringSimulation(spec.description, _x.value, target, velocity),
+      ),
+    );
   }
 
   void _onStart(DragStartDetails _) {
@@ -88,7 +97,8 @@ class _MuSlideToConfirmState extends State<MuSlideToConfirm> with SingleTickerPr
   void _onEnd(DragEndDetails d) {
     if (_phase != _Phase.idle) return;
     final v = d.velocity.pixelsPerSecond.dx;
-    final commits = _x.value >= _travel * 0.82 || _x.value + project(v) >= _travel;
+    final commits =
+        _x.value >= _travel * 0.82 || _x.value + project(v) >= _travel;
     if (commits) {
       unawaited(_confirm(velocity: v));
     } else {
@@ -146,21 +156,29 @@ class _MuSlideToConfirmState extends State<MuSlideToConfirm> with SingleTickerPr
                 child: AnimatedBuilder(
                   animation: _x,
                   builder: (context, _) {
-                    final progress = _travel <= 0 ? 0.0 : (_x.value / _travel).clamp(0.0, 1.0);
+                    final progress = _travel <= 0
+                        ? 0.0
+                        : (_x.value / _travel).clamp(0.0, 1.0);
                     return Stack(
                       children: [
                         Positioned.fill(
                           left: _thumb,
                           child: Center(
                             child: Opacity(
-                              opacity: done ? 1 : (1 - progress * 1.4).clamp(0.0, 1.0),
+                              opacity: done
+                                  ? 1
+                                  : (1 - progress * 1.4).clamp(0.0, 1.0),
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Flexible(
                                     child: Text(
-                                      done ? widget.confirmedLabel : widget.label,
-                                      style: mu.text.bodyStrong.copyWith(color: done ? c.surface : c.onNight2),
+                                      done
+                                          ? widget.confirmedLabel
+                                          : widget.label,
+                                      style: mu.text.bodyStrong.copyWith(
+                                        color: done ? c.surface : c.onNight2,
+                                      ),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                     ),
@@ -170,7 +188,9 @@ class _MuSlideToConfirmState extends State<MuSlideToConfirm> with SingleTickerPr
                                     Text(
                                       '›››',
                                       style: mu.text.bodyStrong.copyWith(
-                                        color: c.onNight2.withValues(alpha: c.onNight2.a * 0.6),
+                                        color: c.onNight2.withValues(
+                                          alpha: c.onNight2.a * 0.6,
+                                        ),
                                       ),
                                     ),
                                   ],
@@ -185,15 +205,29 @@ class _MuSlideToConfirmState extends State<MuSlideToConfirm> with SingleTickerPr
                           child: Container(
                             width: _thumb,
                             height: _thumb,
-                            decoration: BoxDecoration(color: done ? c.surface : c.volt, shape: BoxShape.circle),
+                            decoration: BoxDecoration(
+                              color: done ? c.surface : c.volt,
+                              shape: BoxShape.circle,
+                            ),
                             child: Center(
                               child: switch (_phase) {
                                 _Phase.running => SizedBox.square(
                                   dimension: 22,
-                                  child: CircularProgressIndicator(strokeWidth: 2.4, color: c.onVolt),
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2.4,
+                                    color: c.onVolt,
+                                  ),
                                 ),
-                                _Phase.done => Icon(LucideIcons.check, color: c.success, size: MuSizes.iconMd),
-                                _Phase.idle => Icon(widget.icon, color: c.onVolt, size: MuSizes.iconMd),
+                                _Phase.done => Icon(
+                                  LucideIcons.check,
+                                  color: c.success,
+                                  size: MuSizes.iconMd,
+                                ),
+                                _Phase.idle => Icon(
+                                  widget.icon,
+                                  color: c.onVolt,
+                                  size: MuSizes.iconMd,
+                                ),
                               },
                             ),
                           ),

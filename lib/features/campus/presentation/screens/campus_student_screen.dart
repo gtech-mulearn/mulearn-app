@@ -39,20 +39,33 @@ class CampusStudentScreen extends ConsumerWidget {
         onPressed: () => context.push(RoutePaths.publicProfilePath(muid)),
       ),
       body: MuRefresh(
-        onRefresh: () => ref.refresh(studentActivityControllerProvider(muid).future),
+        onRefresh: () =>
+            ref.refresh(studentActivityControllerProvider(muid).future),
         child: NotificationListener<ScrollNotification>(
           onNotification: (n) {
             final paged = activity.value;
-            if (n.metrics.extentAfter < 400 && paged != null && paged.hasMore && paged.loadMoreError == null) {
-              unawaited(ref.read(studentActivityControllerProvider(muid).notifier).loadMore());
+            if (n.metrics.extentAfter < 400 &&
+                paged != null &&
+                paged.hasMore &&
+                paged.loadMoreError == null) {
+              unawaited(
+                ref
+                    .read(studentActivityControllerProvider(muid).notifier)
+                    .loadMore(),
+              );
             }
             return false;
           },
           child: ListView(
-            physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+            physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics(),
+            ),
             padding: muListPadding,
             children: [
-              if (student case final s?) _Header(student: s) else _MuidHeader(muid: muid),
+              if (student case final s?)
+                _Header(student: s)
+              else
+                _MuidHeader(muid: muid),
               const SizedBox(height: MuSpacing.space4),
               Align(
                 alignment: AlignmentDirectional.centerStart,
@@ -61,7 +74,8 @@ class CampusStudentScreen extends ConsumerWidget {
                   icon: LucideIcons.user,
                   variant: MuButtonVariant.outline,
                   size: MuButtonSize.small,
-                  onPressed: () => context.push(RoutePaths.publicProfilePath(muid)),
+                  onPressed: () =>
+                      context.push(RoutePaths.publicProfilePath(muid)),
                 ),
               ),
               const MuSectionEyebrow('Activity'),
@@ -70,26 +84,43 @@ class CampusStudentScreen extends ConsumerWidget {
                 skipLoadingOnReload: true,
                 loading: () => const Padding(
                   padding: EdgeInsets.all(MuSpacing.space5),
-                  child: Center(child: MuDotsLoader(label: 'Loading activity…')),
+                  child: Center(
+                    child: MuDotsLoader(label: 'Loading activity…'),
+                  ),
                 ),
-                error: (e, _) =>
-                    ErrorRetryView(error: e, onRetry: () => ref.invalidate(studentActivityControllerProvider(muid))),
+                error: (e, _) => ErrorRetryView(
+                  error: e,
+                  onRetry: () =>
+                      ref.invalidate(studentActivityControllerProvider(muid)),
+                ),
                 data: (paged) => paged.items.isEmpty
-                    ? Text('No activity yet.', style: mu.text.body.copyWith(color: mu.colors.ink3))
+                    ? Text(
+                        'No activity yet.',
+                        style: mu.text.body.copyWith(color: mu.colors.ink3),
+                      )
                     : Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           MuFeedGroup(
                             children: [
                               for (var i = 0; i < paged.items.length; i++)
-                                _ActivityRow(activity: paged.items[i], last: i == paged.items.length - 1),
+                                _ActivityRow(
+                                  activity: paged.items[i],
+                                  last: i == paged.items.length - 1,
+                                ),
                             ],
                           ),
                           if (paged.hasMore || paged.loadMoreError != null)
                             MuLoadMoreFooter(
                               isLoading: paged.isLoadingMore,
                               error: paged.loadMoreError,
-                              onRetry: () => ref.read(studentActivityControllerProvider(muid).notifier).loadMore(),
+                              onRetry: () => ref
+                                  .read(
+                                    studentActivityControllerProvider(
+                                      muid,
+                                    ).notifier,
+                                  )
+                                  .loadMore(),
                             ),
                         ],
                       ),
@@ -116,7 +147,10 @@ class _MuidHeader extends StatelessWidget {
       children: [
         Semantics(header: true, child: Text(muid, style: mu.text.title1)),
         const SizedBox(height: MuSpacing.space1),
-        Text('Open them from Students to see their karma, level and rank.', style: mu.text.caption),
+        Text(
+          'Open them from Students to see their karma, level and rank.',
+          style: mu.text.caption,
+        ),
       ],
     );
   }
@@ -144,13 +178,17 @@ class _Header extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Semantics(header: true, child: Text(name, style: mu.text.title1)),
+                  Semantics(
+                    header: true,
+                    child: Text(name, style: mu.text.title1),
+                  ),
                   Text(s.muid, style: mu.text.caption),
                   if (s.department != null || s.graduationYear != null)
                     Text(
                       [
                         if (s.department != null) s.department!,
-                        if (s.graduationYear != null) 'Class of ${s.graduationYear}',
+                        if (s.graduationYear != null)
+                          'Class of ${s.graduationYear}',
                       ].join(' · '),
                       style: mu.text.caption,
                     ),
@@ -167,11 +205,17 @@ class _Header extends ConsumerWidget {
             ),
             const SizedBox(width: MuSpacing.space2),
             Expanded(
-              child: MuStatTile(label: 'Level', value: s.level.isEmpty ? '—' : levelLabel(s.level)),
+              child: MuStatTile(
+                label: 'Level',
+                value: s.level.isEmpty ? '—' : levelLabel(s.level),
+              ),
             ),
             const SizedBox(width: MuSpacing.space2),
             Expanded(
-              child: MuStatTile(label: 'Rank', value: s.rank == null ? '—' : '#${s.rank}'),
+              child: MuStatTile(
+                label: 'Rank',
+                value: s.rank == null ? '—' : '#${s.rank}',
+              ),
             ),
           ],
         ),
@@ -180,12 +224,26 @@ class _Header extends ConsumerWidget {
           spacing: 6,
           runSpacing: 6,
           children: [
-            if (s.isAlumni) const MuPill('Alumni', icon: LucideIcons.graduationCap),
-            MuPill('${s.igCount} ${s.igCount == 1 ? 'group' : 'groups'}', icon: LucideIcons.layers),
-            MuPill('${s.lcCount} ${s.lcCount == 1 ? 'circle' : 'circles'}', icon: LucideIcons.users),
-            if (s.joinedAt != null) MuPill('Joined ${formatDay(s.joinedAt!.toLocal())}', icon: LucideIcons.calendar),
+            if (s.isAlumni)
+              const MuPill('Alumni', icon: LucideIcons.graduationCap),
+            MuPill(
+              '${s.igCount} ${s.igCount == 1 ? 'group' : 'groups'}',
+              icon: LucideIcons.layers,
+            ),
+            MuPill(
+              '${s.lcCount} ${s.lcCount == 1 ? 'circle' : 'circles'}',
+              icon: LucideIcons.users,
+            ),
+            if (s.joinedAt != null)
+              MuPill(
+                'Joined ${formatDay(s.joinedAt!.toLocal())}',
+                icon: LucideIcons.calendar,
+              ),
             if (s.lastKarmaAt != null)
-              MuPill('Last karma ${formatAgo(s.lastKarmaAt!.toLocal(), now)}', icon: LucideIcons.zap),
+              MuPill(
+                'Last karma ${formatAgo(s.lastKarmaAt!.toLocal(), now)}',
+                icon: LucideIcons.zap,
+              ),
           ],
         ),
       ],
@@ -218,14 +276,29 @@ class _ActivityRow extends ConsumerWidget {
         },
       ),
       subject: a.taskName,
-      time: [if (a.igName != null) a.igName!, formatAgo(a.createdAt.toLocal(), now)].join(' · '),
+      time: [
+        if (a.igName != null) a.igName!,
+        formatAgo(a.createdAt.toLocal(), now),
+      ].join(' · '),
       trailing: MuFeedAmount('+${a.karma}'),
       divider: !last,
       actions: [
         switch (status) {
-          'approved' => MuPill(a.status, tone: MuPillTone.success, icon: LucideIcons.check),
-          'rejected' => MuPill(a.status, tone: MuPillTone.danger, icon: LucideIcons.x),
-          _ => MuPill(a.status, tone: MuPillTone.warning, icon: LucideIcons.clock),
+          'approved' => MuPill(
+            a.status,
+            tone: MuPillTone.success,
+            icon: LucideIcons.check,
+          ),
+          'rejected' => MuPill(
+            a.status,
+            tone: MuPillTone.danger,
+            icon: LucideIcons.x,
+          ),
+          _ => MuPill(
+            a.status,
+            tone: MuPillTone.warning,
+            icon: LucideIcons.clock,
+          ),
         },
       ],
     );

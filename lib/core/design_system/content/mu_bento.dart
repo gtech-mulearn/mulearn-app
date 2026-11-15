@@ -104,7 +104,10 @@ class MuTile extends StatelessWidget {
     final tile = Container(
       constraints: BoxConstraints(minHeight: minHeight),
       padding: const EdgeInsets.all(MuSpacing.space4),
-      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(MuRadii.card)),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(MuRadii.card),
+      ),
       child: Stack(
         // The corner arrow sits slightly into the padding; don't clip it.
         clipBehavior: Clip.none,
@@ -115,17 +118,25 @@ class MuTile extends StatelessWidget {
             children: [
               if (pill != null) ...[
                 Padding(
-                  padding: EdgeInsetsDirectional.only(end: onTap != null ? 36 : 0),
+                  padding: EdgeInsetsDirectional.only(
+                    end: onTap != null ? 36 : 0,
+                  ),
                   child: pill,
                 ),
                 const SizedBox(height: 6),
               ],
               Padding(
                 // Keep the title clear of the corner arrow when there's no pill above it.
-                padding: EdgeInsetsDirectional.only(end: onTap != null && pill == null ? 36 : 0),
+                padding: EdgeInsetsDirectional.only(
+                  end: onTap != null && pill == null ? 36 : 0,
+                ),
                 child: Text(
                   title,
-                  style: mu.text.title2.copyWith(fontSize: 20, height: 1.1, color: ink),
+                  style: mu.text.title2.copyWith(
+                    fontSize: 20,
+                    height: 1.1,
+                    color: ink,
+                  ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -134,11 +145,18 @@ class MuTile extends StatelessWidget {
                 const SizedBox(height: 6),
                 Text(
                   meta!,
-                  style: mu.text.label.copyWith(color: ink.withValues(alpha: 0.82), fontWeight: FontWeight.w500),
+                  style: mu.text.label.copyWith(
+                    color: ink.withValues(alpha: 0.82),
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ],
               if (footer != null) ...[
-                SizedBox(height: size == MuTileSize.tall ? MuSpacing.space6 : MuSpacing.space3),
+                SizedBox(
+                  height: size == MuTileSize.tall
+                      ? MuSpacing.space6
+                      : MuSpacing.space3,
+                ),
                 footer!,
               ],
             ],
@@ -152,7 +170,9 @@ class MuTile extends StatelessWidget {
                   width: 32,
                   height: 32,
                   decoration: BoxDecoration(
-                    color: fill == MuTileFill.night ? c.volt : c.night.withValues(alpha: 0.9),
+                    color: fill == MuTileFill.night
+                        ? c.volt
+                        : c.night.withValues(alpha: 0.9),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
@@ -189,7 +209,8 @@ class MuBento extends StatelessWidget {
   /// Tiles in reading order.
   final List<MuTile> tiles;
 
-  static bool _pairs(MuTile t) => t.size == MuTileSize.square || t.size == MuTileSize.short;
+  static bool _pairs(MuTile t) =>
+      t.size == MuTileSize.square || t.size == MuTileSize.short;
 
   @override
   Widget build(BuildContext context) {
@@ -224,7 +245,9 @@ class MuBento extends StatelessWidget {
         bands.add(_row(t, tiles[i + 1]));
         i += 2;
       } else {
-        bands.add(t.size == MuTileSize.square ? t.resized(MuTileSize.short) : t);
+        bands.add(
+          t.size == MuTileSize.square ? t.resized(MuTileSize.short) : t,
+        );
         i++;
       }
     }

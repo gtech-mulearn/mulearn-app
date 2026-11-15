@@ -19,7 +19,8 @@ class ConnectDiscordScreen extends ConsumerStatefulWidget {
   final String? code;
 
   @override
-  ConsumerState<ConnectDiscordScreen> createState() => _ConnectDiscordScreenState();
+  ConsumerState<ConnectDiscordScreen> createState() =>
+      _ConnectDiscordScreenState();
 }
 
 class _ConnectDiscordScreenState extends ConsumerState<ConnectDiscordScreen> {
@@ -30,7 +31,13 @@ class _ConnectDiscordScreenState extends ConsumerState<ConnectDiscordScreen> {
     super.initState();
     if (_hasCode) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) unawaited(ref.read(discordConnectControllerProvider.notifier).connect(widget.code!));
+        if (mounted) {
+          unawaited(
+            ref
+                .read(discordConnectControllerProvider.notifier)
+                .connect(widget.code!),
+          );
+        }
       });
     }
   }
@@ -43,17 +50,30 @@ class _ConnectDiscordScreenState extends ConsumerState<ConnectDiscordScreen> {
     super.didUpdateWidget(oldWidget);
     if (_hasCode && widget.code != oldWidget.code) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        if (mounted) unawaited(ref.read(discordConnectControllerProvider.notifier).connect(widget.code!));
+        if (mounted) {
+          unawaited(
+            ref
+                .read(discordConnectControllerProvider.notifier)
+                .connect(widget.code!),
+          );
+        }
       });
     }
   }
 
-  void _startFlow() => unawaited(ref.read(discordConnectFlowProvider.notifier).start());
+  void _startFlow() =>
+      unawaited(ref.read(discordConnectFlowProvider.notifier).start());
 
   /// Opened from a link, the screen is the whole stack: leave to Home.
-  void _leave() => context.canPop() ? context.pop() : context.go(RoutePaths.home);
+  void _leave() =>
+      context.canPop() ? context.pop() : context.go(RoutePaths.home);
 
-  Widget get _notNow => MuButton(label: 'Not now', variant: MuButtonVariant.ghost, block: true, onPressed: _leave);
+  Widget get _notNow => MuButton(
+    label: 'Not now',
+    variant: MuButtonVariant.ghost,
+    block: true,
+    onPressed: _leave,
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -65,9 +85,15 @@ class _ConnectDiscordScreenState extends ConsumerState<ConnectDiscordScreen> {
         icon: LucideIcons.messageCircle,
         tone: MuFeedTone.event,
         title: 'Join the μLearn Discord',
-        message: 'Link your Discord account to join the server, where task proof is posted and karma is counted.',
+        message:
+            'Link your Discord account to join the server, where task proof is posted and karma is counted.',
         actions: [
-          if (available) MuButton(label: 'Connect Discord', block: true, onPressed: _startFlow),
+          if (available)
+            MuButton(
+              label: 'Connect Discord',
+              block: true,
+              onPressed: _startFlow,
+            ),
           _notNow,
         ],
       );
@@ -81,7 +107,8 @@ class _ConnectDiscordScreenState extends ConsumerState<ConnectDiscordScreen> {
           title: "Couldn't connect Discord",
           message: ApiException.messageFor(error),
           actions: [
-            if (available) MuButton(label: 'Try again', block: true, onPressed: _startFlow),
+            if (available)
+              MuButton(label: 'Try again', block: true, onPressed: _startFlow),
             _notNow,
           ],
         ),
@@ -97,9 +124,16 @@ class _ConnectDiscordScreenState extends ConsumerState<ConnectDiscordScreen> {
                     label: 'Open the μLearn server',
                     block: true,
                     knob: true,
-                    onPressed: () => unawaited(ref.read(openExternalProvider)(discordServerInvite)),
+                    onPressed: () => unawaited(
+                      ref.read(openExternalProvider)(discordServerInvite),
+                    ),
                   ),
-                  MuButton(label: 'Done', variant: MuButtonVariant.ghost, block: true, onPressed: _leave),
+                  MuButton(
+                    label: 'Done',
+                    variant: MuButtonVariant.ghost,
+                    block: true,
+                    onPressed: _leave,
+                  ),
                 ],
               ),
       );
@@ -113,7 +147,10 @@ class _ConnectDiscordScreenState extends ConsumerState<ConnectDiscordScreen> {
           children: [
             MuTopBar.detail(title: 'Discord', onBack: _leave),
             Expanded(
-              child: Padding(padding: const EdgeInsets.all(MuSpacing.space5), child: body),
+              child: Padding(
+                padding: const EdgeInsets.all(MuSpacing.space5),
+                child: body,
+              ),
             ),
           ],
         ),
@@ -126,7 +163,9 @@ class _Connecting extends StatelessWidget {
   const _Connecting();
 
   @override
-  Widget build(BuildContext context) => const Center(child: MuDotsLoader(label: 'Connecting your Discord account…'));
+  Widget build(BuildContext context) => const Center(
+    child: MuDotsLoader(label: 'Connecting your Discord account…'),
+  );
 }
 
 class _Outcome extends StatelessWidget {
@@ -157,7 +196,11 @@ class _Outcome extends StatelessWidget {
         const SizedBox(height: MuSpacing.space10),
         Semantics(
           header: true,
-          child: Text(title, style: mu.text.title1, textAlign: TextAlign.center),
+          child: Text(
+            title,
+            style: mu.text.title1,
+            textAlign: TextAlign.center,
+          ),
         ),
         const SizedBox(height: MuSpacing.space2),
         Text(
@@ -166,7 +209,10 @@ class _Outcome extends StatelessWidget {
           textAlign: TextAlign.center,
         ),
         const Spacer(),
-        for (final a in actions) ...[a, const SizedBox(height: MuSpacing.space2)],
+        for (final a in actions) ...[
+          a,
+          const SizedBox(height: MuSpacing.space2),
+        ],
       ],
     );
   }

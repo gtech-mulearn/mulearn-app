@@ -10,13 +10,18 @@ class ProfileImageController extends _$ProfileImageController {
   Future<void> build() async {}
 
   Future<void> upload(List<int> bytes, String filename) async {
-    final link = ref.keepAlive(); // finish the follow-up refresh even if the screen closes
+    final link = ref
+        .keepAlive(); // finish the follow-up refresh even if the screen closes
     state = const AsyncLoading();
     final result = await AsyncValue.guard(() async {
       final profile = await ref.read(profileControllerProvider.future);
       await ref
           .read(profileRepositoryProvider)
-          .updateProfileImage(bytes: bytes, filename: filename, userId: profile.id);
+          .updateProfileImage(
+            bytes: bytes,
+            filename: filename,
+            userId: profile.id,
+          );
       ref.invalidate(myProfilePayloadProvider);
       // features/dashboard caches its own read-model of the same endpoint
       // (rules.md §2: no direct cross-feature import) — signal it via the

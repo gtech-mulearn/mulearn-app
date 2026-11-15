@@ -22,7 +22,10 @@ sealed class NotificationTarget with _$NotificationTarget {
 /// backend sends it to everyone in the event's scope
 /// (`Audience.event_scope`), while the dashboard links it to the organiser's
 /// manage page.
-NotificationTarget notificationTarget(AppNotification n, {required Uri dashboardBase}) {
+NotificationTarget notificationTarget(
+  AppNotification n, {
+  required Uri dashboardBase,
+}) {
   final fromUrl = _fromRedirectUrl(n.redirectUrl?.trim(), dashboardBase);
   if (fromUrl != null) return fromUrl;
   return _fromType(n, dashboardBase) ?? const NoTarget();
@@ -54,18 +57,29 @@ NotificationTarget _fromPath(String pathAndQuery, Uri base) {
   final circle = _circle.firstMatch(path);
   if (circle != null) {
     final id = circle.group(1)!;
-    return AppRoute(id.isEmpty ? RoutePaths.learningCircles : RoutePaths.learningCircleDetailPath(id));
+    return AppRoute(
+      id.isEmpty
+          ? RoutePaths.learningCircles
+          : RoutePaths.learningCircleDetailPath(id),
+    );
   }
   final event = _event.firstMatch(path);
   if (event != null) {
     final id = event.group(1)!;
-    return AppRoute(id.isEmpty ? RoutePaths.events : RoutePaths.eventDetailPath(id));
+    return AppRoute(
+      id.isEmpty ? RoutePaths.events : RoutePaths.eventDetailPath(id),
+    );
   }
-  if (path == '/dashboard/profile' || path == '/dashboard/profile/') return const AppRoute(RoutePaths.profile);
-  if (path == '/dashboard/weekly-twitches' || path == '/dashboard/weekly-twitches/') {
+  if (path == '/dashboard/profile' || path == '/dashboard/profile/') {
+    return const AppRoute(RoutePaths.profile);
+  }
+  if (path == '/dashboard/weekly-twitches' ||
+      path == '/dashboard/weekly-twitches/') {
     return const AppRoute(RoutePaths.weeklyTwitches);
   }
-  if (path == '/dashboard/jobs' || path == '/dashboard/jobs/') return const AppRoute(RoutePaths.opportunities);
+  if (path == '/dashboard/jobs' || path == '/dashboard/jobs/') {
+    return const AppRoute(RoutePaths.opportunities);
+  }
   return WebPage(base.resolve(pathAndQuery));
 }
 
@@ -85,26 +99,48 @@ NotificationTarget? _fromType(AppNotification n, Uri base) {
   if (type == 'EVENT_PUBLISHED' || type == 'EVENT_CANCELLED') {
     return id == null ? null : AppRoute(RoutePaths.eventDetailPath(id));
   }
-  if (_manageEventTypes.contains(type) || type.startsWith('EVENT_CO_OWNER_') || type.startsWith('EVENT_COLLAB_')) {
-    return web(id == null ? '/dashboard/manage-events' : '/dashboard/manage-events/${Uri.encodeComponent(id)}');
+  if (_manageEventTypes.contains(type) ||
+      type.startsWith('EVENT_CO_OWNER_') ||
+      type.startsWith('EVENT_COLLAB_')) {
+    return web(
+      id == null
+          ? '/dashboard/manage-events'
+          : '/dashboard/manage-events/${Uri.encodeComponent(id)}',
+    );
   }
-  if (type == 'ADMIN_COMPANY_PENDING') return web('/dashboard/management/manage-companies');
+  if (type == 'ADMIN_COMPANY_PENDING') {
+    return web('/dashboard/management/manage-companies');
+  }
   if (type == 'COMPANY_DELEGATE_REVOKED') return web('/dashboard');
   if (type == 'COMPANY_REJECTED') return web('/dashboard/company/profile/edit');
-  if (type == 'JOB_APPLICATION_STATUS') return const AppRoute(RoutePaths.opportunities);
-  if (type == 'COMPANY_MENTOR_APPLICATION_SUBMITTED') return web('/dashboard/company/mentors');
+  if (type == 'JOB_APPLICATION_STATUS') {
+    return const AppRoute(RoutePaths.opportunities);
+  }
+  if (type == 'COMPANY_MENTOR_APPLICATION_SUBMITTED') {
+    return web('/dashboard/company/mentors');
+  }
 
   switch (n.entityType) {
     case 'learning_circle':
-      return id == null ? null : AppRoute(RoutePaths.learningCircleDetailPath(id));
+      return id == null
+          ? null
+          : AppRoute(RoutePaths.learningCircleDetailPath(id));
     case 'company_admin_link':
       return web('/dashboard/company/admin');
     case 'company':
-      return web(type.startsWith('COMPANY_DELEGATE_') ? '/dashboard/company/admin' : '/dashboard/company');
+      return web(
+        type.startsWith('COMPANY_DELEGATE_')
+            ? '/dashboard/company/admin'
+            : '/dashboard/company',
+      );
     case 'mentor_application':
       return const AppRoute(RoutePaths.home);
     case 'job':
-      return web(id == null ? '/dashboard/company/jobs' : '/dashboard/company/jobs/${Uri.encodeComponent(id)}');
+      return web(
+        id == null
+            ? '/dashboard/company/jobs'
+            : '/dashboard/company/jobs/${Uri.encodeComponent(id)}',
+      );
     case 'job_application':
       return const AppRoute(RoutePaths.opportunities);
     case 'karma_activity_log':
@@ -112,7 +148,11 @@ NotificationTarget? _fromType(AppNotification n, Uri base) {
     case 'media_content':
       final show = _twitchShows[type];
       if (show == null) return const AppRoute(RoutePaths.weeklyTwitches);
-      return AppRoute(id == null ? RoutePaths.weeklyTwitchesShowPath(show) : RoutePaths.weeklyTwitchPath(show, id));
+      return AppRoute(
+        id == null
+            ? RoutePaths.weeklyTwitchesShowPath(show)
+            : RoutePaths.weeklyTwitchPath(show, id),
+      );
   }
   return null;
 }

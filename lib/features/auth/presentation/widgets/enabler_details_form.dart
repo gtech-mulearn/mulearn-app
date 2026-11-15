@@ -38,7 +38,9 @@ class _EnablerDetailsFormState extends ConsumerState<EnablerDetailsForm> {
           .submitGeneric(
             role: RegistrationRole.enabler,
             college: _college,
-            customCollege: _college == muOtherOptionValue ? _customCollegeController.text.trim() : null,
+            customCollege: _college == muOtherOptionValue
+                ? _customCollegeController.text.trim()
+                : null,
           );
       widget.onSubmitted();
     } on Object catch (_) {
@@ -59,15 +61,22 @@ class _EnablerDetailsFormState extends ConsumerState<EnablerDetailsForm> {
           MuSelectField(
             label: 'College',
             hint: 'Search your college',
-            options: [for (final o in colleges.value ?? const <ReferenceOption>[]) MuOption(o.id, o.title)],
+            options: [
+              for (final o in colleges.value ?? const <ReferenceOption>[])
+                MuOption(o.id, o.title),
+            ],
             loading: colleges.isLoading,
-            error: colleges.hasError ? "Couldn't load colleges. Go back and try again." : null,
+            error: colleges.hasError
+                ? "Couldn't load colleges. Go back and try again."
+                : null,
             enabled: !loading,
             allowOther: true,
             otherLabel: 'My college is not listed',
             value: _college,
             onChanged: (v) => setState(() => _college = v),
-            validator: (_) => (_college ?? '').isEmpty ? 'Pick your college to continue.' : null,
+            validator: (_) => (_college ?? '').isEmpty
+                ? 'Pick your college to continue.'
+                : null,
           ),
           if (_college == muOtherOptionValue) ...[
             const SizedBox(height: MuSpacing.space4),
@@ -76,7 +85,9 @@ class _EnablerDetailsFormState extends ConsumerState<EnablerDetailsForm> {
               controller: _customCollegeController,
               enabled: !loading,
               textCapitalization: TextCapitalization.words,
-              validator: (v) => (v?.trim().length ?? 0) < 3 ? 'Use at least 3 characters.' : null,
+              validator: (v) => (v?.trim().length ?? 0) < 3
+                  ? 'Use at least 3 characters.'
+                  : null,
             ),
           ],
           const SizedBox(height: MuSpacing.space6),

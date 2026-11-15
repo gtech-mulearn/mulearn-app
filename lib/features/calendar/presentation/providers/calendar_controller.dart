@@ -22,5 +22,4 @@ Future<List<CalendarEntry>> calendarEntries(
   Ref ref, {
   required DateTime start,
   required DateTime end,
-}) =>
-    ref.watch(calendarRepositoryProvider).getEntries(start: start, end: end);
+}) => ref.watch(calendarRepositoryProvider).getEntries(start: start, end: end);

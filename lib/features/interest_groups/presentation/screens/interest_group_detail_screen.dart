@@ -41,9 +41,14 @@ class InterestGroupDetailScreen extends ConsumerWidget {
             Expanded(
               child: detailState.when(
                 skipLoadingOnRefresh: true,
-                loading: () => const Center(child: MuDotsLoader(label: 'Loading the group…')),
-                error: (error, _) =>
-                    ErrorRetryView(error: error, onRetry: () => ref.invalidate(interestGroupDetailProvider(groupId))),
+                loading: () => const Center(
+                  child: MuDotsLoader(label: 'Loading the group…'),
+                ),
+                error: (error, _) => ErrorRetryView(
+                  error: error,
+                  onRetry: () =>
+                      ref.invalidate(interestGroupDetailProvider(groupId)),
+                ),
                 data: (g) => _Body(group: g),
               ),
             ),
@@ -65,16 +70,27 @@ class _Body extends ConsumerWidget {
     final about = group.about?.trim() ?? '';
     final people = group.leads.isNotEmpty || group.mentors.isNotEmpty;
     return ListView(
-      physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-      padding: const EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space2, MuSpacing.space5, MuSpacing.space8),
+      physics: const BouncingScrollPhysics(
+        parent: AlwaysScrollableScrollPhysics(),
+      ),
+      padding: const EdgeInsets.fromLTRB(
+        MuSpacing.space5,
+        MuSpacing.space2,
+        MuSpacing.space5,
+        MuSpacing.space8,
+      ),
       children: [
         _Hero(group: group),
-        if (group.officeHours != null && group.officeHours!.trim().isNotEmpty) ...[
+        if (group.officeHours != null &&
+            group.officeHours!.trim().isNotEmpty) ...[
           const SizedBox(height: MuSpacing.space4),
           MuFeedGroup(
             children: [
               MuFeedRow(
-                leading: const MuFeedIcon(LucideIcons.clock, tone: MuFeedTone.event),
+                leading: const MuFeedIcon(
+                  LucideIcons.clock,
+                  tone: MuFeedTone.event,
+                ),
                 subject: group.officeHours!,
                 time: 'Office hours',
                 divider: false,
@@ -94,18 +110,31 @@ class _Body extends ConsumerWidget {
         ],
         if (group.prerequisites.isNotEmpty) ...[
           const _Eyebrow('BEFORE YOU START'),
-          Wrap(spacing: 6, runSpacing: 6, children: [for (final p in group.prerequisites) MuPill(p)]),
+          Wrap(
+            spacing: 6,
+            runSpacing: 6,
+            children: [for (final p in group.prerequisites) MuPill(p)],
+          ),
         ],
         if (group.careerOpportunities.isNotEmpty) ...[
           const _Eyebrow('WHERE IT LEADS'),
           Wrap(
             spacing: 6,
             runSpacing: 6,
-            children: [for (final p in group.careerOpportunities) MuPill(p, tone: MuPillTone.cobalt)],
+            children: [
+              for (final p in group.careerOpportunities)
+                MuPill(p, tone: MuPillTone.cobalt),
+            ],
           ),
         ],
-        if (group.leads.isNotEmpty) ...[const _Eyebrow('COMMUNITY LEADS'), _People(people: group.leads)],
-        if (group.mentors.isNotEmpty) ...[const _Eyebrow('MENTORS'), _People(people: group.mentors)],
+        if (group.leads.isNotEmpty) ...[
+          const _Eyebrow('COMMUNITY LEADS'),
+          _People(people: group.leads),
+        ],
+        if (group.mentors.isNotEmpty) ...[
+          const _Eyebrow('MENTORS'),
+          _People(people: group.mentors),
+        ],
         if (people) ...[
           const SizedBox(height: MuSpacing.space4),
           Text(
@@ -125,8 +154,14 @@ class _Eyebrow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(top: MuSpacing.space8, bottom: MuSpacing.space3),
-    child: Semantics(header: true, child: Text(text, style: context.mu.text.eyebrow)),
+    padding: const EdgeInsets.only(
+      top: MuSpacing.space8,
+      bottom: MuSpacing.space3,
+    ),
+    child: Semantics(
+      header: true,
+      child: Text(text, style: context.mu.text.eyebrow),
+    ),
   );
 }
 
@@ -146,11 +181,15 @@ class _Hero extends StatelessWidget {
     final code = group.code?.trim();
     final icon = group.iconImage ?? group.icon;
     final leads = group.leads;
-    final label = [if (code != null && code.isNotEmpty) code.toUpperCase(), category.name.toUpperCase()].join(' · ');
+    final label = [
+      if (code != null && code.isNotEmpty) code.toUpperCase(),
+      category.name.toUpperCase(),
+    ].join(' · ');
 
     return Semantics(
       container: true,
-      label: '${group.name}, ${category.name} Interest Group, ${group.memberCount} members',
+      label:
+          '${group.name}, ${category.name} Interest Group, ${group.memberCount} members',
       excludeSemantics: true,
       child: Container(
         padding: const EdgeInsets.all(MuSpacing.space5),
@@ -169,7 +208,12 @@ class _Hero extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: Text(label, style: mu.text.codeSm.copyWith(color: ink.withValues(alpha: 0.75))),
+                  child: Text(
+                    label,
+                    style: mu.text.codeSm.copyWith(
+                      color: ink.withValues(alpha: 0.75),
+                    ),
+                  ),
                 ),
                 if (icon != null && icon.isNotEmpty)
                   ClipOval(
@@ -184,7 +228,14 @@ class _Hero extends StatelessWidget {
               ],
             ),
             const SizedBox(height: MuSpacing.space8),
-            Text(group.name, style: mu.text.display.copyWith(fontSize: 38, height: 1, color: ink)),
+            Text(
+              group.name,
+              style: mu.text.display.copyWith(
+                fontSize: 38,
+                height: 1,
+                color: ink,
+              ),
+            ),
             const SizedBox(height: MuSpacing.space6),
             Row(
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -193,10 +244,15 @@ class _Hero extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(muGrouped(group.memberCount), style: mu.text.numeral.copyWith(color: ink)),
+                      Text(
+                        muGrouped(group.memberCount),
+                        style: mu.text.numeral.copyWith(color: ink),
+                      ),
                       Text(
                         group.memberCount == 1 ? 'member' : 'members',
-                        style: mu.text.caption.copyWith(color: ink.withValues(alpha: 0.75)),
+                        style: mu.text.caption.copyWith(
+                          color: ink.withValues(alpha: 0.75),
+                        ),
                       ),
                     ],
                   ),
@@ -239,7 +295,10 @@ class _About extends ConsumerWidget {
         h3: mu.text.title3,
         strong: body.copyWith(color: c.ink, fontWeight: FontWeight.w700),
         em: body.copyWith(fontStyle: FontStyle.italic),
-        a: body.copyWith(color: c.cobaltText, decoration: TextDecoration.underline),
+        a: body.copyWith(
+          color: c.cobaltText,
+          decoration: TextDecoration.underline,
+        ),
         listBullet: body,
         blockquote: body.copyWith(color: c.ink3),
         blockquoteDecoration: BoxDecoration(
@@ -248,7 +307,10 @@ class _About extends ConsumerWidget {
           border: Border(left: BorderSide(color: c.cobalt, width: 3)),
         ),
         blockquotePadding: const EdgeInsets.all(MuSpacing.space3),
-        code: mu.text.codeSm.copyWith(color: c.ink, backgroundColor: c.surfaceSunk),
+        code: mu.text.codeSm.copyWith(
+          color: c.ink,
+          backgroundColor: c.surfaceSunk,
+        ),
       ),
     );
   }
@@ -262,7 +324,8 @@ class _GroupCircles extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final circles = ref.watch(circlesInGroupProvider(groupId)).value ?? const [];
+    final circles =
+        ref.watch(circlesInGroupProvider(groupId)).value ?? const [];
     if (circles.isEmpty) return const SizedBox.shrink();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -272,14 +335,21 @@ class _GroupCircles extends ConsumerWidget {
           children: [
             for (var i = 0; i < circles.length; i++)
               MuFeedRow(
-                leading: const MuFeedIcon(LucideIcons.users, tone: MuFeedTone.done),
+                leading: const MuFeedIcon(
+                  LucideIcons.users,
+                  tone: MuFeedTone.done,
+                ),
                 subject: circles[i].title,
                 time: circles[i].totalMembers == null
                     ? null
-                    : (circles[i].totalMembers == 1 ? '1 member' : '${circles[i].totalMembers} members'),
+                    : (circles[i].totalMembers == 1
+                          ? '1 member'
+                          : '${circles[i].totalMembers} members'),
                 trailing: const _Chevron(),
                 divider: i < circles.length - 1,
-                onTap: () => context.push(RoutePaths.learningCircleDetailPath(circles[i].id)),
+                onTap: () => context.push(
+                  RoutePaths.learningCircleDetailPath(circles[i].id),
+                ),
               ),
           ],
         ),
@@ -306,12 +376,18 @@ class _GroupEvents extends ConsumerWidget {
           children: [
             for (var i = 0; i < events.length; i++)
               MuFeedRow(
-                leading: const MuFeedIcon(LucideIcons.ticket, tone: MuFeedTone.event),
+                leading: const MuFeedIcon(
+                  LucideIcons.ticket,
+                  tone: MuFeedTone.event,
+                ),
                 subject: events[i].title,
-                time: events[i].startsAt == null ? null : formatDayTime(events[i].startsAt!.toLocal()),
+                time: events[i].startsAt == null
+                    ? null
+                    : formatDayTime(events[i].startsAt!.toLocal()),
                 trailing: const _Chevron(),
                 divider: i < events.length - 1,
-                onTap: () => context.push(RoutePaths.eventDetailPath(events[i].id)),
+                onTap: () =>
+                    context.push(RoutePaths.eventDetailPath(events[i].id)),
               ),
           ],
         ),
@@ -324,8 +400,11 @@ class _Chevron extends StatelessWidget {
   const _Chevron();
 
   @override
-  Widget build(BuildContext context) =>
-      Icon(LucideIcons.chevronRight, size: MuSizes.iconSm + 2, color: context.mu.colors.ink3);
+  Widget build(BuildContext context) => Icon(
+    LucideIcons.chevronRight,
+    size: MuSizes.iconSm + 2,
+    color: context.mu.colors.ink3,
+  );
 }
 
 class _ImpactProject extends ConsumerWidget {
@@ -340,7 +419,10 @@ class _ImpactProject extends ConsumerWidget {
     final description = project.description?.trim() ?? '';
     return Container(
       padding: const EdgeInsets.all(MuSpacing.space4),
-      decoration: BoxDecoration(color: c.surface, borderRadius: BorderRadius.circular(MuRadii.card)),
+      decoration: BoxDecoration(
+        color: c.surface,
+        borderRadius: BorderRadius.circular(MuRadii.card),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -363,7 +445,9 @@ class _ImpactProject extends ConsumerWidget {
                     size: MuButtonSize.small,
                     onPressed: () {
                       final uri = Uri.tryParse(link.url);
-                      if (uri != null) unawaited(ref.read(openExternalProvider)(uri));
+                      if (uri != null) {
+                        unawaited(ref.read(openExternalProvider)(uri));
+                      }
                     },
                   ),
               ],
@@ -386,12 +470,17 @@ class _People extends StatelessWidget {
       children: [
         for (var i = 0; i < people.length; i++)
           MuFeedRow(
-            leading: MuAvatar(name: people[i].fullName, url: people[i].profilePicUrl, size: MuSizes.avatarMd),
+            leading: MuAvatar(
+              name: people[i].fullName,
+              url: people[i].profilePicUrl,
+              size: MuSizes.avatarMd,
+            ),
             subject: people[i].fullName,
             time: people[i].muid,
             trailing: const _Chevron(),
             divider: i < people.length - 1,
-            onTap: () => context.push(RoutePaths.publicProfilePath(people[i].muid)),
+            onTap: () =>
+                context.push(RoutePaths.publicProfilePath(people[i].muid)),
           ),
       ],
     );
@@ -411,12 +500,15 @@ class _JoinBar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final mu = context.mu;
     final c = mu.colors;
-    final myIds = ref.watch(myInterestGroupIdsProvider).value ?? const <String>[];
+    final myIds =
+        ref.watch(myInterestGroupIdsProvider).value ?? const <String>[];
     final busy = ref.watch(interestGroupMembershipControllerProvider).isLoading;
     final joined = myIds.contains(id);
     final atCap = !joined && myIds.length >= maxLearnerGroups;
 
-    void toggle() => unawaited(toggleIgMembership(context, ref, id: id, name: name, join: !joined));
+    void toggle() => unawaited(
+      toggleIgMembership(context, ref, id: id, name: name, join: !joined),
+    );
 
     final Widget child;
     if (joined) {
@@ -454,7 +546,12 @@ class _JoinBar extends ConsumerWidget {
         border: Border(top: BorderSide(color: c.line)),
       ),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space3, MuSpacing.space5, MuSpacing.space3),
+        padding: const EdgeInsets.fromLTRB(
+          MuSpacing.space5,
+          MuSpacing.space3,
+          MuSpacing.space5,
+          MuSpacing.space3,
+        ),
         child: child,
       ),
     );

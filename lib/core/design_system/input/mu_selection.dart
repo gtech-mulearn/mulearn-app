@@ -56,7 +56,10 @@ class MuRadioMark extends StatelessWidget {
       height: 22,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        border: Border.all(color: selected ? c.cobalt : c.ink3, width: selected ? 7 : 1.5),
+        border: Border.all(
+          color: selected ? c.cobalt : c.ink3,
+          width: selected ? 7 : 1.5,
+        ),
       ),
     );
   }
@@ -65,7 +68,13 @@ class MuRadioMark extends StatelessWidget {
 /// A row with a checkbox and a label; the whole row toggles.
 class MuCheckboxTile extends StatelessWidget {
   /// A labelled checkbox.
-  const MuCheckboxTile({required this.label, required this.value, required this.onChanged, this.subtitle, super.key});
+  const MuCheckboxTile({
+    required this.label,
+    required this.value,
+    required this.onChanged,
+    this.subtitle,
+    super.key,
+  });
 
   final String label;
   final String? subtitle;
@@ -100,8 +109,12 @@ class MuSwitch extends StatefulWidget {
   State<MuSwitch> createState() => _MuSwitchState();
 }
 
-class _MuSwitchState extends State<MuSwitch> with SingleTickerProviderStateMixin {
-  late final AnimationController _t = AnimationController.unbounded(vsync: this, value: widget.value ? 1 : 0);
+class _MuSwitchState extends State<MuSwitch>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _t = AnimationController.unbounded(
+    vsync: this,
+    value: widget.value ? 1 : 0,
+  );
 
   @override
   void didUpdateWidget(MuSwitch old) {
@@ -111,7 +124,14 @@ class _MuSwitchState extends State<MuSwitch> with SingleTickerProviderStateMixin
     if (MediaQuery.maybeDisableAnimationsOf(context) ?? false) {
       _t.value = target;
     } else {
-      _t.animateWith(SpringSimulation(MuSprings.standard.description, _t.value, target, _t.velocity));
+      _t.animateWith(
+        SpringSimulation(
+          MuSprings.standard.description,
+          _t.value,
+          target,
+          _t.velocity,
+        ),
+      );
     }
   }
 
@@ -135,14 +155,20 @@ class _MuSwitchState extends State<MuSwitch> with SingleTickerProviderStateMixin
           decoration: BoxDecoration(
             color: Color.lerp(c.surfaceSunk, c.night, t),
             borderRadius: BorderRadius.circular(MuRadii.round),
-            border: Border.all(color: c.lineStrong.withValues(alpha: 1 - t), width: 1.5),
+            border: Border.all(
+              color: c.lineStrong.withValues(alpha: 1 - t),
+              width: 1.5,
+            ),
           ),
           child: Align(
             alignment: Alignment(-1 + 2 * _t.value, 0),
             child: Container(
               width: 22,
               height: 22,
-              decoration: BoxDecoration(color: Color.lerp(c.ink3, c.volt, t), shape: BoxShape.circle),
+              decoration: BoxDecoration(
+                color: Color.lerp(c.ink3, c.volt, t),
+                shape: BoxShape.circle,
+              ),
             ),
           ),
         );
@@ -154,7 +180,13 @@ class _MuSwitchState extends State<MuSwitch> with SingleTickerProviderStateMixin
 /// A settings row with a switch; the whole row toggles.
 class MuSwitchTile extends StatelessWidget {
   /// A labelled switch.
-  const MuSwitchTile({required this.label, required this.value, required this.onChanged, this.subtitle, super.key});
+  const MuSwitchTile({
+    required this.label,
+    required this.value,
+    required this.onChanged,
+    this.subtitle,
+    super.key,
+  });
 
   final String label;
   final String? subtitle;
@@ -223,7 +255,10 @@ class MuRadioCard<T> extends StatelessWidget {
           decoration: BoxDecoration(
             color: c.surface,
             borderRadius: BorderRadius.circular(MuRadii.card),
-            border: Border.all(color: on ? c.cobalt : c.line, width: on ? 2 : 1),
+            border: Border.all(
+              color: on ? c.cobalt : c.line,
+              width: on ? 2 : 1,
+            ),
           ),
           child: Row(
             children: [
@@ -232,8 +267,15 @@ class MuRadioCard<T> extends StatelessWidget {
                   duration: const Duration(milliseconds: 160),
                   width: 44,
                   height: 44,
-                  decoration: BoxDecoration(color: on ? c.cobaltTint : c.surfaceSunk, shape: BoxShape.circle),
-                  child: Icon(icon, size: MuSizes.iconMd, color: on ? c.cobaltText : c.ink2),
+                  decoration: BoxDecoration(
+                    color: on ? c.cobaltTint : c.surfaceSunk,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    icon,
+                    size: MuSizes.iconMd,
+                    color: on ? c.cobaltText : c.ink2,
+                  ),
                 ),
                 const SizedBox(width: MuSpacing.space3),
               ],
@@ -244,7 +286,13 @@ class MuRadioCard<T> extends StatelessWidget {
                     Text(title, style: mu.text.title3),
                     if (subtitle != null) ...[
                       const SizedBox(height: 2),
-                      Text(subtitle!, style: mu.text.body.copyWith(fontSize: 14, color: c.ink2)),
+                      Text(
+                        subtitle!,
+                        style: mu.text.body.copyWith(
+                          fontSize: 14,
+                          color: c.ink2,
+                        ),
+                      ),
                     ],
                   ],
                 ),
@@ -286,10 +334,16 @@ class MuChecklist extends StatelessWidget {
         for (var i = 0; i < items.length; i++)
           DecoratedBox(
             decoration: BoxDecoration(
-              border: i == items.length - 1 ? null : Border(bottom: BorderSide(color: c.line)),
+              border: i == items.length - 1
+                  ? null
+                  : Border(bottom: BorderSide(color: c.line)),
             ),
             child: _Row(
-              semantics: (items[i].label, checked: items[i].done, toggled: null),
+              semantics: (
+                items[i].label,
+                checked: items[i].done,
+                toggled: null,
+              ),
               onTap: onToggle == null ? null : () => onToggle!(i),
               leading: MuCheckbox(value: items[i].done),
               title: items[i].label,
@@ -345,17 +399,26 @@ class _Row extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: MuSpacing.space3),
             child: Row(
               children: [
-                if (leading != null) ...[leading!, const SizedBox(width: MuSpacing.space3)],
+                if (leading != null) ...[
+                  leading!,
+                  const SizedBox(width: MuSpacing.space3),
+                ],
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(title, style: titleStyle),
-                      if (subtitle != null) ...[const SizedBox(height: 2), Text(subtitle!, style: mu.text.caption)],
+                      if (subtitle != null) ...[
+                        const SizedBox(height: 2),
+                        Text(subtitle!, style: mu.text.caption),
+                      ],
                     ],
                   ),
                 ),
-                if (trailing != null) ...[const SizedBox(width: MuSpacing.space3), trailing!],
+                if (trailing != null) ...[
+                  const SizedBox(width: MuSpacing.space3),
+                  trailing!,
+                ],
               ],
             ),
           ),

@@ -23,12 +23,18 @@ class CampusApprovalsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final mu = context.mu;
     final lead = ref.watch(workspaceAccessProvider).value?.campusLead ?? false;
-    final links = lead ? ref.watch(orgLinkRequestsProvider) : const AsyncData(<OrgLinkRequest>[]);
+    final links = lead
+        ? ref.watch(orgLinkRequestsProvider)
+        : const AsyncData(<OrgLinkRequest>[]);
     final events = ref.watch(pendingCampusEventsProvider);
-    final invites = lead ? ref.watch(collabInvitesProvider) : const AsyncData(<CollabInvite>[]);
+    final invites = lead
+        ? ref.watch(collabInvitesProvider)
+        : const AsyncData(<CollabInvite>[]);
     final loading = links.isLoading || events.isLoading || invites.isLoading;
     final empty =
-        (links.value?.isEmpty ?? false) && (events.value?.isEmpty ?? false) && (invites.value?.isEmpty ?? false);
+        (links.value?.isEmpty ?? false) &&
+        (events.value?.isEmpty ?? false) &&
+        (invites.value?.isEmpty ?? false);
 
     return MuWorkspacePage(
       body: MuRefresh(
@@ -38,27 +44,44 @@ class CampusApprovalsScreen extends ConsumerWidget {
           if (lead) ref.refresh(collabInvitesProvider.future),
         ]),
         child: ListView(
-          physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+          physics: const BouncingScrollPhysics(
+            parent: AlwaysScrollableScrollPhysics(),
+          ),
           padding: muListPadding,
           children: [
-            Semantics(header: true, child: Text('Approvals', style: mu.text.display.copyWith(fontSize: 32))),
+            Semantics(
+              header: true,
+              child: Text(
+                'Approvals',
+                style: mu.text.display.copyWith(fontSize: 32),
+              ),
+            ),
             const SizedBox(height: MuSpacing.space4),
             if (!empty)
               Row(
                 children: [
                   if (lead) ...[
                     Expanded(
-                      child: MuStatTile(label: 'Links', value: '${links.value?.length ?? '–'}'),
+                      child: MuStatTile(
+                        label: 'Links',
+                        value: '${links.value?.length ?? '–'}',
+                      ),
                     ),
                     const SizedBox(width: MuSpacing.space2),
                   ],
                   Expanded(
-                    child: MuStatTile(label: 'Events', value: '${events.value?.length ?? '–'}'),
+                    child: MuStatTile(
+                      label: 'Events',
+                      value: '${events.value?.length ?? '–'}',
+                    ),
                   ),
                   if (lead) ...[
                     const SizedBox(width: MuSpacing.space2),
                     Expanded(
-                      child: MuStatTile(label: 'Invites', value: '${invites.value?.length ?? '–'}'),
+                      child: MuStatTile(
+                        label: 'Invites',
+                        value: '${invites.value?.length ?? '–'}',
+                      ),
                     ),
                   ],
                 ],
@@ -72,7 +95,8 @@ class CampusApprovalsScreen extends ConsumerWidget {
               const MuStateDisplay(
                 variant: MuStateVariant.noResults,
                 title: 'Nothing to review',
-                description: 'College links, campus events and invites that need you appear here.',
+                description:
+                    'College links, campus events and invites that need you appear here.',
               ),
             if (lead)
               _Section<OrgLinkRequest>(
@@ -125,20 +149,39 @@ class _Section<T> extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         MuSectionEyebrow('$title (${items.length})'),
-        MuFeedGroup(children: [for (var i = 0; i < items.length; i++) row(items[i], last: i == items.length - 1)]),
+        MuFeedGroup(
+          children: [
+            for (var i = 0; i < items.length; i++)
+              row(items[i], last: i == items.length - 1),
+          ],
+        ),
       ],
     );
   }
 }
 
-Future<void> _act(BuildContext context, Future<String> Function() action, String fallback) async {
+Future<void> _act(
+  BuildContext context,
+  Future<String> Function() action,
+  String fallback,
+) async {
   try {
     final message = await action();
     if (context.mounted) {
-      MuToast.show(context, message: message.isEmpty ? fallback : message, type: MuToastType.success);
+      MuToast.show(
+        context,
+        message: message.isEmpty ? fallback : message,
+        type: MuToastType.success,
+      );
     }
   } on Object catch (e) {
-    if (context.mounted) MuToast.show(context, message: ApiException.messageFor(e), type: MuToastType.error);
+    if (context.mounted) {
+      MuToast.show(
+        context,
+        message: ApiException.messageFor(e),
+        type: MuToastType.error,
+      );
+    }
   }
 }
 
@@ -150,11 +193,16 @@ Future<String?> _askReason(
   required bool required,
 }) => showMuSheet<String>(
   context,
-  builder: (_) => _ReasonSheet(title: title, action: action, required: required),
+  builder: (_) =>
+      _ReasonSheet(title: title, action: action, required: required),
 );
 
 class _ReasonSheet extends StatefulWidget {
-  const _ReasonSheet({required this.title, required this.action, required this.required});
+  const _ReasonSheet({
+    required this.title,
+    required this.action,
+    required this.required,
+  });
 
   final String title;
   final String action;
@@ -178,7 +226,9 @@ class _ReasonSheetState extends State<_ReasonSheet> {
   Widget build(BuildContext context) {
     return MuFormSheet(
       title: widget.title,
-      lead: widget.required ? 'The organiser sees this.' : 'Optional; the organiser sees it.',
+      lead: widget.required
+          ? 'The organiser sees this.'
+          : 'Optional; the organiser sees it.',
       action: MuButton(
         label: widget.action,
         variant: MuButtonVariant.danger,
@@ -230,7 +280,11 @@ class _LinkRow extends ConsumerWidget {
         confirmLabel: 'Verify',
       );
       if (ok && context.mounted) {
-        await _act(context, () => ref.read(approvalActionsProvider.notifier).verifyLink(l.id), 'Verified');
+        await _act(
+          context,
+          () => ref.read(approvalActionsProvider.notifier).verifyLink(l.id),
+          'Verified',
+        );
       }
     }
 
@@ -241,10 +295,17 @@ class _LinkRow extends ConsumerWidget {
         l.muid,
         if (l.graduationYear != null) 'Class of ${l.graduationYear}',
         if (l.isAlumni) 'Alumni',
-        if (l.requestedAt != null) 'Asked ${formatAgo(l.requestedAt!.toLocal(), now)}',
+        if (l.requestedAt != null)
+          'Asked ${formatAgo(l.requestedAt!.toLocal(), now)}',
       ].join(' · '),
       divider: !last,
-      actions: [MuButton(label: 'Verify', size: MuButtonSize.small, onPressed: () => unawaited(verify()))],
+      actions: [
+        MuButton(
+          label: 'Verify',
+          size: MuButtonSize.small,
+          onPressed: () => unawaited(verify()),
+        ),
+      ],
     );
   }
 }
@@ -260,11 +321,18 @@ class _EventRow extends ConsumerWidget {
     final e = event;
     final start = e.start?.toLocal();
     Future<void> reject() async {
-      final reason = await _askReason(context, title: 'Reject “${e.title}”?', action: 'Reject event', required: true);
+      final reason = await _askReason(
+        context,
+        title: 'Reject “${e.title}”?',
+        action: 'Reject event',
+        required: true,
+      );
       if (reason != null && context.mounted) {
         await _act(
           context,
-          () => ref.read(approvalActionsProvider.notifier).rejectEvent(e.id, reason),
+          () => ref
+              .read(approvalActionsProvider.notifier)
+              .rejectEvent(e.id, reason),
           'Event rejected',
         );
       }
@@ -284,7 +352,12 @@ class _EventRow extends ConsumerWidget {
           label: 'Approve',
           size: MuButtonSize.small,
           onPressed: () => unawaited(
-            _act(context, () => ref.read(approvalActionsProvider.notifier).approveEvent(e.id), 'Event approved'),
+            _act(
+              context,
+              () =>
+                  ref.read(approvalActionsProvider.notifier).approveEvent(e.id),
+              'Event approved',
+            ),
           ),
         ),
         MuButton(
@@ -317,7 +390,9 @@ class _InviteRow extends ConsumerWidget {
       if (reason != null && context.mounted) {
         await _act(
           context,
-          () => ref.read(approvalActionsProvider.notifier).rejectInvite(i, reason),
+          () => ref
+              .read(approvalActionsProvider.notifier)
+              .rejectInvite(i, reason),
           'Invite declined',
         );
       }
@@ -337,7 +412,11 @@ class _InviteRow extends ConsumerWidget {
           label: 'Accept',
           size: MuButtonSize.small,
           onPressed: () => unawaited(
-            _act(context, () => ref.read(approvalActionsProvider.notifier).acceptInvite(i), 'Invite accepted'),
+            _act(
+              context,
+              () => ref.read(approvalActionsProvider.notifier).acceptInvite(i),
+              'Invite accepted',
+            ),
           ),
         ),
         MuButton(

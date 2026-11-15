@@ -10,7 +10,10 @@ enum LevelStatus { cleared, current, ahead }
 /// μJourney (`LevelCard isLocked={false}`), every level's tasks are open. Matched by level number, so list order
 /// doesn't matter. Task completion doesn't decide it (spec §13: an empty
 /// level used to count as cleared, which put a 0-karma learner at lvl7).
-List<LevelStatus> levelStatuses(List<UserLevel> levels, {required String? currentLevel}) {
+List<LevelStatus> levelStatuses(
+  List<UserLevel> levels, {
+  required String? currentLevel,
+}) {
   final current = levelNumber(currentLevel);
   return [
     for (final level in levels)

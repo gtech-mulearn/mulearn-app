@@ -29,8 +29,12 @@ class CampusOverviewScreen extends ConsumerWidget {
       body: summary.when(
         skipError: true,
         skipLoadingOnReload: true,
-        loading: () => const Center(child: MuDotsLoader(label: 'Loading your campus…')),
-        error: (e, _) => ErrorRetryView(error: e, onRetry: () => ref.invalidate(campusSummaryProvider)),
+        loading: () =>
+            const Center(child: MuDotsLoader(label: 'Loading your campus…')),
+        error: (e, _) => ErrorRetryView(
+          error: e,
+          onRetry: () => ref.invalidate(campusSummaryProvider),
+        ),
         data: (s) => MuRefresh(
           onRefresh: () => Future.wait([
             ref.refresh(campusSummaryProvider.future),
@@ -38,7 +42,9 @@ class CampusOverviewScreen extends ConsumerWidget {
             ref.refresh(campusTopStudentsProvider.future),
           ]),
           child: ListView(
-            physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+            physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics(),
+            ),
             padding: muListPadding,
             // Keep every section built while scrolling, so the karma chart and
             // top students don't refetch each time they come back into view.
@@ -63,9 +69,13 @@ class CampusOverviewScreen extends ConsumerWidget {
               MuFeedGroup(
                 children: [
                   MuFeedRow(
-                    leading: const MuFeedIcon(LucideIcons.checkSquare, tone: MuFeedTone.pending),
+                    leading: const MuFeedIcon(
+                      LucideIcons.checkSquare,
+                      tone: MuFeedTone.pending,
+                    ),
                     subject: 'Review approvals',
-                    time: 'Student links, campus events and collaboration invites',
+                    time:
+                        'Student links, campus events and collaboration invites',
                     trailing: const _Chevron(),
                     divider: false,
                     onTap: () => context.push(RoutePaths.campusApprovals),
@@ -77,7 +87,12 @@ class CampusOverviewScreen extends ConsumerWidget {
                 MuBarList(
                   items: [
                     for (final f in s.funnel)
-                      (label: f.label, value: f.count, icon: null, note: '${f.percentage.round()}%'),
+                      (
+                        label: f.label,
+                        value: f.count,
+                        icon: null,
+                        note: '${f.percentage.round()}%',
+                      ),
                   ],
                 ),
               ],
@@ -94,7 +109,10 @@ class CampusOverviewScreen extends ConsumerWidget {
                 MuFeedGroup(
                   children: [
                     for (var i = 0; i < s.recentActivity.length; i++)
-                      _ActivityRow(activity: s.recentActivity[i], last: i == s.recentActivity.length - 1),
+                      _ActivityRow(
+                        activity: s.recentActivity[i],
+                        last: i == s.recentActivity.length - 1,
+                      ),
                   ],
                 ),
               ],
@@ -128,9 +146,18 @@ class _Header extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Semantics(header: true, child: Text(summary.collegeName, style: mu.text.title1)),
+              Semantics(
+                header: true,
+                child: Text(summary.collegeName, style: mu.text.title1),
+              ),
               const SizedBox(height: 2),
-              Text([summary.campusCode, summary.zone].where((x) => x.isNotEmpty).join(' · '), style: mu.text.caption),
+              Text(
+                [
+                  summary.campusCode,
+                  summary.zone,
+                ].where((x) => x.isNotEmpty).join(' · '),
+                style: mu.text.caption,
+              ),
             ],
           ),
         ),
@@ -143,8 +170,11 @@ class _Chevron extends StatelessWidget {
   const _Chevron();
 
   @override
-  Widget build(BuildContext context) =>
-      Icon(LucideIcons.chevronRight, size: MuSizes.iconSm + 2, color: context.mu.colors.ink3);
+  Widget build(BuildContext context) => Icon(
+    LucideIcons.chevronRight,
+    size: MuSizes.iconSm + 2,
+    color: context.mu.colors.ink3,
+  );
 }
 
 String _period(String? p) => switch (p) {
@@ -165,23 +195,46 @@ class _CircleHealthSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mu = context.mu;
-    if (circles.isEmpty) return const MuEmptyLine('No circles at this campus yet.');
+    if (circles.isEmpty) {
+      return const MuEmptyLine('No circles at this campus yet.');
+    }
     int count(String status) => circles.where((c) => c.status == status).length;
-    final attention = [...circles.where((c) => c.status == 'inactive'), ...circles.where((c) => c.status == 'slow')];
+    final attention = [
+      ...circles.where((c) => c.status == 'inactive'),
+      ...circles.where((c) => c.status == 'slow'),
+    ];
     final now = ref.watch(clockProvider)().toLocal();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         MuBarList(
           items: [
-            (label: 'Meeting regularly', value: count('active'), icon: LucideIcons.checkCircle2, note: null),
-            (label: 'Going slow', value: count('slow'), icon: LucideIcons.clock, note: null),
-            (label: 'Inactive', value: count('inactive'), icon: LucideIcons.pauseCircle, note: null),
+            (
+              label: 'Meeting regularly',
+              value: count('active'),
+              icon: LucideIcons.checkCircle2,
+              note: null,
+            ),
+            (
+              label: 'Going slow',
+              value: count('slow'),
+              icon: LucideIcons.clock,
+              note: null,
+            ),
+            (
+              label: 'Inactive',
+              value: count('inactive'),
+              icon: LucideIcons.pauseCircle,
+              note: null,
+            ),
           ],
         ),
         if (attention.isNotEmpty) ...[
           const SizedBox(height: MuSpacing.space4),
-          Text('Needs attention', style: mu.text.label.copyWith(color: mu.colors.ink2)),
+          Text(
+            'Needs attention',
+            style: mu.text.label.copyWith(color: mu.colors.ink2),
+          ),
           const SizedBox(height: MuSpacing.space2),
           MuFeedGroup(
             children: [
@@ -189,7 +242,9 @@ class _CircleHealthSection extends ConsumerWidget {
                 MuFeedRow(
                   leading: MuFeedIcon(
                     LucideIcons.users,
-                    tone: attention[i].status == 'inactive' ? MuFeedTone.problem : MuFeedTone.pending,
+                    tone: attention[i].status == 'inactive'
+                        ? MuFeedTone.problem
+                        : MuFeedTone.pending,
                   ),
                   subject: attention[i].circleName,
                   time: [
@@ -202,7 +257,9 @@ class _CircleHealthSection extends ConsumerWidget {
                   ].join(' · '),
                   trailing: const _Chevron(),
                   divider: i < attention.length - 1,
-                  onTap: () => context.push(RoutePaths.learningCircleDetailPath(attention[i].circleId)),
+                  onTap: () => context.push(
+                    RoutePaths.learningCircleDetailPath(attention[i].circleId),
+                  ),
                 ),
             ],
           ),
@@ -235,13 +292,21 @@ class _WeeklyKarmaState extends ConsumerState<_WeeklyKarma> {
         .when(
           skipError: true,
           skipLoadingOnReload: true,
-          loading: () => const SizedBox(height: 120, child: Center(child: MuDotsLoader())),
-          error: (e, _) => Text(ApiException.messageFor(e), style: mu.text.caption),
+          loading: () =>
+              const SizedBox(height: 120, child: Center(child: MuDotsLoader())),
+          error: (e, _) =>
+              Text(ApiException.messageFor(e), style: mu.text.caption),
           data: (days) {
             final total = days.fold<int>(0, (sum, d) => sum + d.karma);
-            if (total == 0) return const MuEmptyLine('No karma earned this week yet.');
-            final peak = days.map((d) => d.karma).reduce((a, b) => a > b ? a : b);
-            final picked = _picked != null && _picked! < days.length ? days[_picked!] : null;
+            if (total == 0) {
+              return const MuEmptyLine('No karma earned this week yet.');
+            }
+            final peak = days
+                .map((d) => d.karma)
+                .reduce((a, b) => a > b ? a : b);
+            final picked = _picked != null && _picked! < days.length
+                ? days[_picked!]
+                : null;
             return MuSurfaceCard(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -251,13 +316,18 @@ class _WeeklyKarmaState extends ConsumerState<_WeeklyKarma> {
                     children: [
                       Text(
                         muGrouped(picked?.karma ?? total),
-                        style: mu.text.numeral.copyWith(fontSize: 28, color: c.voltText),
+                        style: mu.text.numeral.copyWith(
+                          fontSize: 28,
+                          color: c.voltText,
+                        ),
                       ),
                       const SizedBox(width: MuSpacing.space2),
                       Padding(
                         padding: const EdgeInsets.only(bottom: 4),
                         child: Text(
-                          picked == null ? 'karma in 7 days' : 'karma on ${formatDay(picked.day)}',
+                          picked == null
+                              ? 'karma in 7 days'
+                              : 'karma on ${formatDay(picked.day)}',
                           style: mu.text.caption,
                         ),
                       ),
@@ -274,24 +344,46 @@ class _WeeklyKarmaState extends ConsumerState<_WeeklyKarma> {
                             child: Semantics(
                               button: true,
                               selected: _picked == i,
-                              label: '${formatDay(days[i].day)}: ${days[i].karma} karma',
+                              label:
+                                  '${formatDay(days[i].day)}: ${days[i].karma} karma',
                               excludeSemantics: true,
                               child: GestureDetector(
                                 behavior: HitTestBehavior.opaque,
-                                onTap: () => setState(() => _picked = _picked == i ? null : i),
+                                onTap: () => setState(
+                                  () => _picked = _picked == i ? null : i,
+                                ),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     AnimatedContainer(
-                                      duration: const Duration(milliseconds: 180),
-                                      height: peak == 0 ? 2 : (76 * days[i].karma / peak).clamp(2, 76).toDouble(),
+                                      duration: const Duration(
+                                        milliseconds: 180,
+                                      ),
+                                      height: peak == 0
+                                          ? 2
+                                          : (76 * days[i].karma / peak)
+                                                .clamp(2, 76)
+                                                .toDouble(),
                                       // 2px surface gap each side between bars.
-                                      margin: const EdgeInsets.symmetric(horizontal: 5),
+                                      margin: const EdgeInsets.symmetric(
+                                        horizontal: 5,
+                                      ),
                                       decoration: BoxDecoration(
-                                        color: (days[i].karma == peak ? c.volt : c.cobalt).withValues(
-                                          alpha: _picked == null || _picked == i ? 1 : 0.35,
-                                        ),
-                                        borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
+                                        color:
+                                            (days[i].karma == peak
+                                                    ? c.volt
+                                                    : c.cobalt)
+                                                .withValues(
+                                                  alpha:
+                                                      _picked == null ||
+                                                          _picked == i
+                                                      ? 1
+                                                      : 0.35,
+                                                ),
+                                        borderRadius:
+                                            const BorderRadius.vertical(
+                                              top: Radius.circular(4),
+                                            ),
                                       ),
                                     ),
                                     const SizedBox(height: MuSpacing.space2),
@@ -299,7 +391,9 @@ class _WeeklyKarmaState extends ConsumerState<_WeeklyKarma> {
                                       _dayLetters[days[i].day.weekday - 1],
                                       style: mu.text.caption.copyWith(
                                         color: _picked == i ? c.ink : c.ink3,
-                                        fontWeight: _picked == i ? FontWeight.w700 : null,
+                                        fontWeight: _picked == i
+                                            ? FontWeight.w700
+                                            : null,
                                       ),
                                     ),
                                   ],
@@ -332,9 +426,14 @@ class _ActivityRow extends ConsumerWidget {
     return MuFeedRow(
       leading: const MuFeedIcon(LucideIcons.activity),
       subject: a.title,
-      time: [if ((a.actorName ?? '').isNotEmpty) a.actorName!, formatAgo(a.createdAt.toLocal(), now)].join(' · '),
+      time: [
+        if ((a.actorName ?? '').isNotEmpty) a.actorName!,
+        formatAgo(a.createdAt.toLocal(), now),
+      ].join(' · '),
       divider: !last,
-      onTap: muid == null || muid.isEmpty ? null : () => context.push(RoutePaths.publicProfilePath(muid)),
+      onTap: muid == null || muid.isEmpty
+          ? null
+          : () => context.push(RoutePaths.publicProfilePath(muid)),
     );
   }
 }
@@ -350,14 +449,20 @@ class _TopStudents extends ConsumerWidget {
         .when(
           skipError: true,
           skipLoadingOnReload: true,
-          loading: () => const SizedBox(height: 120, child: Center(child: MuDotsLoader())),
-          error: (e, _) => Text(ApiException.messageFor(e), style: mu.text.caption),
+          loading: () =>
+              const SizedBox(height: 120, child: Center(child: MuDotsLoader())),
+          error: (e, _) =>
+              Text(ApiException.messageFor(e), style: mu.text.caption),
           data: (students) => students.isEmpty
               ? const MuEmptyLine('No students yet.')
               : MuFeedGroup(
                   children: [
                     for (var i = 0; i < students.length; i++)
-                      _StudentRow(student: students[i], leader: students.first.karma, last: i == students.length - 1),
+                      _StudentRow(
+                        student: students[i],
+                        leader: students.first.karma,
+                        last: i == students.length - 1,
+                      ),
                   ],
                 ),
         );
@@ -365,7 +470,11 @@ class _TopStudents extends ConsumerWidget {
 }
 
 class _StudentRow extends StatelessWidget {
-  const _StudentRow({required this.student, required this.leader, required this.last});
+  const _StudentRow({
+    required this.student,
+    required this.leader,
+    required this.last,
+  });
 
   final CampusStudent student;
 
@@ -393,7 +502,9 @@ class _StudentRow extends StatelessWidget {
         ),
       ),
       divider: !last,
-      onTap: s.muid.isEmpty ? null : () => context.push(RoutePaths.campusStudentPath(s.muid), extra: s),
+      onTap: s.muid.isEmpty
+          ? null
+          : () => context.push(RoutePaths.campusStudentPath(s.muid), extra: s),
     );
   }
 }

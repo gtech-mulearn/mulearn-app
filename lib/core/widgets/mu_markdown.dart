@@ -33,7 +33,10 @@ class MuMarkdown extends ConsumerWidget {
         h3: mu.text.title3,
         strong: body.copyWith(color: c.ink, fontWeight: FontWeight.w700),
         em: body.copyWith(fontStyle: FontStyle.italic),
-        a: body.copyWith(color: c.cobaltText, decoration: TextDecoration.underline),
+        a: body.copyWith(
+          color: c.cobaltText,
+          decoration: TextDecoration.underline,
+        ),
         listBullet: body,
         blockquote: body.copyWith(color: c.ink3),
         blockquoteDecoration: BoxDecoration(
@@ -42,7 +45,10 @@ class MuMarkdown extends ConsumerWidget {
           border: Border(left: BorderSide(color: c.cobalt, width: 3)),
         ),
         blockquotePadding: const EdgeInsets.all(MuSpacing.space3),
-        code: mu.text.codeSm.copyWith(color: c.ink, backgroundColor: c.surfaceSunk),
+        code: mu.text.codeSm.copyWith(
+          color: c.ink,
+          backgroundColor: c.surfaceSunk,
+        ),
       ),
     );
   }

@@ -14,7 +14,10 @@ class EditSocialsSheet extends ConsumerStatefulWidget {
 
   /// Opens the sheet over [context].
   static Future<void> show(BuildContext context, Socials initial) =>
-      showMuSheet<void>(context, builder: (_) => EditSocialsSheet(initial: initial));
+      showMuSheet<void>(
+        context,
+        builder: (_) => EditSocialsSheet(initial: initial),
+      );
 
   @override
   ConsumerState<EditSocialsSheet> createState() => _EditSocialsSheetState();
@@ -73,12 +76,20 @@ class _EditSocialsSheetState extends ConsumerState<EditSocialsSheet> {
     try {
       await ref.read(socialsControllerProvider.notifier).save(socials);
       if (mounted) {
-        MuToast.show(context, message: 'Links saved', type: MuToastType.success);
+        MuToast.show(
+          context,
+          message: 'Links saved',
+          type: MuToastType.success,
+        );
         Navigator.of(context).pop();
       }
     } on Object catch (e) {
       if (mounted) {
-        MuToast.show(context, message: ApiException.messageFor(e), type: MuToastType.error);
+        MuToast.show(
+          context,
+          message: ApiException.messageFor(e),
+          type: MuToastType.error,
+        );
       }
     } finally {
       if (mounted) setState(() => _saving = false);
@@ -90,7 +101,12 @@ class _EditSocialsSheetState extends ConsumerState<EditSocialsSheet> {
     return MuFormSheet(
       title: 'Social links',
       lead: 'Shown on your profile so peers and mentors can find your work.',
-      action: MuButton(label: 'Save', block: true, loading: _saving, onPressed: _saving ? null : _save),
+      action: MuButton(
+        label: 'Save',
+        block: true,
+        loading: _saving,
+        onPressed: _saving ? null : _save,
+      ),
       children: [
         for (final (key, label, base) in _fields)
           MuTextField(
@@ -99,7 +115,9 @@ class _EditSocialsSheetState extends ConsumerState<EditSocialsSheet> {
             hint: 'Username or link',
             help: '$base<username>',
             keyboardType: TextInputType.url,
-            textInputAction: key == _fields.last.$1 ? TextInputAction.done : TextInputAction.next,
+            textInputAction: key == _fields.last.$1
+                ? TextInputAction.done
+                : TextInputAction.next,
           ),
       ],
     );

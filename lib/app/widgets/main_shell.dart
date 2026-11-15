@@ -43,13 +43,22 @@ class MainShell extends ConsumerWidget {
       value: dark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
       child: Scaffold(
         extendBody: true,
-        body: UnreadRefreshTriggers(child: DiscordResumeCheck(child: navigationShell)),
+        body: UnreadRefreshTriggers(
+          child: DiscordResumeCheck(child: navigationShell),
+        ),
         bottomNavigationBar: MuNavCapsule(
           items: _items,
           currentIndex: navigationShell.currentIndex,
           onSelect: (index) {
-            if (index == 0) unawaited(ref.read(unreadNotificationsProvider.notifier).refreshIfStale());
-            navigationShell.goBranch(index, initialLocation: index == navigationShell.currentIndex);
+            if (index == 0) {
+              unawaited(
+                ref.read(unreadNotificationsProvider.notifier).refreshIfStale(),
+              );
+            }
+            navigationShell.goBranch(
+              index,
+              initialLocation: index == navigationShell.currentIndex,
+            );
           },
         ),
       ),

@@ -9,7 +9,11 @@ import 'package:mulearn_app/core/design_system/tokens/mu_tokens.g.dart';
 /// notches.
 class MuTicketBorder extends ShapeBorder {
   /// A ticket outline.
-  const MuTicketBorder({required this.perforationFromBottom, this.radius = MuRadii.card, this.notch = 14});
+  const MuTicketBorder({
+    required this.perforationFromBottom,
+    this.radius = MuRadii.card,
+    this.notch = 14,
+  });
 
   /// Distance from the bottom edge to the perforation line.
   final double perforationFromBottom;
@@ -24,11 +28,13 @@ class MuTicketBorder extends ShapeBorder {
   EdgeInsetsGeometry get dimensions => EdgeInsets.zero;
 
   @override
-  Path getInnerPath(Rect rect, {TextDirection? textDirection}) => getOuterPath(rect, textDirection: textDirection);
+  Path getInnerPath(Rect rect, {TextDirection? textDirection}) =>
+      getOuterPath(rect, textDirection: textDirection);
 
   @override
   Path getOuterPath(Rect rect, {TextDirection? textDirection}) {
-    final body = Path()..addRRect(RRect.fromRectAndRadius(rect, Radius.circular(radius)));
+    final body = Path()
+      ..addRRect(RRect.fromRectAndRadius(rect, Radius.circular(radius)));
     final y = rect.bottom - perforationFromBottom;
     final notches = Path()
       ..addOval(Rect.fromCircle(center: Offset(rect.left, y), radius: notch))
@@ -40,8 +46,11 @@ class MuTicketBorder extends ShapeBorder {
   void paint(Canvas canvas, Rect rect, {TextDirection? textDirection}) {}
 
   @override
-  ShapeBorder scale(double t) =>
-      MuTicketBorder(perforationFromBottom: perforationFromBottom * t, radius: radius * t, notch: notch * t);
+  ShapeBorder scale(double t) => MuTicketBorder(
+    perforationFromBottom: perforationFromBottom * t,
+    radius: radius * t,
+    notch: notch * t,
+  );
 }
 
 /// An event as a ticket: poster on top, a perforation, and a stub holding
@@ -111,12 +120,15 @@ class MuEventTicket extends StatelessWidget {
               CachedNetworkImage(
                 imageUrl: posterUrl!,
                 fit: BoxFit.cover,
-                placeholder: (_, _) => MuGeneratedPoster(text: posterTitle ?? title),
-                errorWidget: (_, _, _) => MuGeneratedPoster(text: posterTitle ?? title),
+                placeholder: (_, _) =>
+                    MuGeneratedPoster(text: posterTitle ?? title),
+                errorWidget: (_, _, _) =>
+                    MuGeneratedPoster(text: posterTitle ?? title),
               )
             else
               MuGeneratedPoster(text: posterTitle ?? title),
-            if (capacity != null) Positioned(left: 10, top: 10, child: capacity!),
+            if (capacity != null)
+              Positioned(left: 10, top: 10, child: capacity!),
             if (kind != null) Positioned(right: 10, top: 10, child: kind!),
           ],
         ),
@@ -135,7 +147,13 @@ class MuEventTicket extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: mu.text.title2.copyWith(fontSize: 22, fontWeight: FontWeight.w800)),
+                Text(
+                  title,
+                  style: mu.text.title2.copyWith(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
                 const SizedBox(height: MuSpacing.space1),
                 Text(when, style: mu.text.caption),
                 if (pills.isNotEmpty) ...[
@@ -149,8 +167,14 @@ class MuEventTicket extends StatelessWidget {
             const SizedBox(height: MuSpacing.space3),
             Container(
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(horizontal: MuSpacing.space3, vertical: 10),
-              decoration: BoxDecoration(color: c.surfaceSunk, borderRadius: BorderRadius.circular(14)),
+              padding: const EdgeInsets.symmetric(
+                horizontal: MuSpacing.space3,
+                vertical: 10,
+              ),
+              decoration: BoxDecoration(
+                color: c.surfaceSunk,
+                borderRadius: BorderRadius.circular(14),
+              ),
               child: going,
             ),
           ],
@@ -163,7 +187,13 @@ class MuEventTicket extends StatelessWidget {
       decoration: ShapeDecoration(
         color: c.surface,
         shape: const MuTicketBorder(perforationFromBottom: _stubHeight),
-        shadows: mu.shadows.lift.map((s) => s.copyWith(color: s.color.withValues(alpha: s.color.a * 0.45))).toList(),
+        shadows: mu.shadows.lift
+            .map(
+              (s) => s.copyWith(
+                color: s.color.withValues(alpha: s.color.a * 0.45),
+              ),
+            )
+            .toList(),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -185,11 +215,17 @@ class MuEventTicket extends StatelessWidget {
                   right: 16,
                   top: 0,
                   child: ExcludeSemantics(
-                    child: CustomPaint(size: const Size(double.infinity, 2), painter: _DashPainter(c.lineStrong)),
+                    child: CustomPaint(
+                      size: const Size(double.infinity, 2),
+                      painter: _DashPainter(c.lineStrong),
+                    ),
                   ),
                 ),
                 // 18 + 56 (button with its focus-ring padding) + 18 = the 92dp stub.
-                Padding(padding: const EdgeInsets.fromLTRB(20, 18, 20, 18), child: stub),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 18, 20, 18),
+                  child: stub,
+                ),
               ],
             ),
           ),
@@ -211,7 +247,11 @@ class _DashPainter extends CustomPainter {
       ..color = color.withValues(alpha: 0.7)
       ..strokeWidth = 2;
     for (var x = 0.0; x < size.width; x += 10) {
-      canvas.drawLine(Offset(x, 1), Offset((x + 5).clamp(0, size.width), 1), paint);
+      canvas.drawLine(
+        Offset(x, 1),
+        Offset((x + 5).clamp(0, size.width), 1),
+        paint,
+      );
     }
   }
 
@@ -253,7 +293,10 @@ class MuGeneratedPoster extends StatelessWidget {
             child: Container(
               width: 56,
               height: 56,
-              decoration: BoxDecoration(color: c.igCreative, shape: BoxShape.circle),
+              decoration: BoxDecoration(
+                color: c.igCreative,
+                shape: BoxShape.circle,
+              ),
             ),
           ),
           Align(
@@ -262,7 +305,10 @@ class MuGeneratedPoster extends StatelessWidget {
               padding: const EdgeInsets.all(14),
               child: Text(
                 text.toUpperCase(),
-                style: mu.text.poster.copyWith(fontSize: fontSize, color: c.onCobalt),
+                style: mu.text.poster.copyWith(
+                  fontSize: fontSize,
+                  color: c.onCobalt,
+                ),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),

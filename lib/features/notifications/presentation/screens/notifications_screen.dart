@@ -32,7 +32,8 @@ class NotificationsScreen extends ConsumerStatefulWidget {
   const NotificationsScreen({super.key});
 
   @override
-  ConsumerState<NotificationsScreen> createState() => _NotificationsScreenState();
+  ConsumerState<NotificationsScreen> createState() =>
+      _NotificationsScreenState();
 }
 
 class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
@@ -48,7 +49,9 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) unawaited(ref.read(unreadNotificationsProvider.notifier).refresh());
+      if (mounted) {
+        unawaited(ref.read(unreadNotificationsProvider.notifier).refresh());
+      }
     });
   }
 
@@ -73,7 +76,10 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
         _toast(ApiException.messageFor(e), MuToastType.error);
       }),
     );
-    final target = notificationTarget(notification, dashboardBase: Uri.parse(FlavorConfig.instance.dashboardUrl));
+    final target = notificationTarget(
+      notification,
+      dashboardBase: Uri.parse(FlavorConfig.instance.dashboardUrl),
+    );
     switch (target) {
       case AppRoute(:final location):
         if (RoutePaths.tabRoots.contains(location)) {
@@ -90,7 +96,9 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
 
   Future<void> _archive(AppNotification notification) async {
     try {
-      await ref.read(notificationsControllerProvider.notifier).archive(notification.id);
+      await ref
+          .read(notificationsControllerProvider.notifier)
+          .archive(notification.id);
       _toast('Notification archived', MuToastType.success);
     } on Object catch (e) {
       _toast(ApiException.messageFor(e), MuToastType.error);
@@ -120,7 +128,12 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(MuSpacing.space3, MuSpacing.space2, MuSpacing.space3, 0),
+              padding: const EdgeInsets.fromLTRB(
+                MuSpacing.space3,
+                MuSpacing.space2,
+                MuSpacing.space3,
+                0,
+              ),
               child: Row(
                 children: [
                   MuIconButton(
@@ -130,7 +143,10 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                   ),
                   const SizedBox(width: MuSpacing.space1),
                   Expanded(
-                    child: Semantics(header: true, child: Text('Notifications', style: mu.text.title1)),
+                    child: Semantics(
+                      header: true,
+                      child: Text('Notifications', style: mu.text.title1),
+                    ),
                   ),
                   MuButton(
                     label: 'Mark all read',
@@ -142,7 +158,12 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space3, MuSpacing.space5, 0),
+              padding: const EdgeInsets.fromLTRB(
+                MuSpacing.space5,
+                MuSpacing.space3,
+                MuSpacing.space5,
+                0,
+              ),
               child: MuSegmented<_Filter>(
                 values: _Filter.values,
                 selected: _filter,
@@ -158,8 +179,11 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
               child: notificationsState.when(
                 skipError: true,
                 loading: () => const Center(child: CircularProgressIndicator()),
-                error: (error, _) =>
-                    ErrorRetryView(error: error, onRetry: () => ref.invalidate(notificationsControllerProvider)),
+                error: (error, _) => ErrorRetryView(
+                  error: error,
+                  onRetry: () =>
+                      ref.invalidate(notificationsControllerProvider),
+                ),
                 data: (paged) {
                   final items = paged.items.where(_matches).toList();
                   return RefreshIndicator(
@@ -174,13 +198,18 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                                 const MuStateDisplay(
                                   variant: MuStateVariant.noResults,
                                   title: 'No notifications',
-                                  description: 'Notifications will show up here.',
+                                  description:
+                                      'Notifications will show up here.',
                                 )
                               else
                                 Padding(
-                                  padding: const EdgeInsets.all(MuSpacing.space8),
+                                  padding: const EdgeInsets.all(
+                                    MuSpacing.space8,
+                                  ),
                                   child: Text(
-                                    _filter == _Filter.invites ? 'No invites right now.' : 'No karma news yet.',
+                                    _filter == _Filter.invites
+                                        ? 'No invites right now.'
+                                        : 'No karma news yet.',
                                     textAlign: TextAlign.center,
                                     style: mu.text.body.copyWith(color: c.ink3),
                                   ),
@@ -189,18 +218,33 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                           )
                         : NotificationListener<ScrollNotification>(
                             onNotification: (n) {
-                              if (n.metrics.extentAfter < 400 && paged.hasMore && paged.loadMoreError == null) {
-                                unawaited(ref.read(notificationsControllerProvider.notifier).loadMore());
+                              if (n.metrics.extentAfter < 400 &&
+                                  paged.hasMore &&
+                                  paged.loadMoreError == null) {
+                                unawaited(
+                                  ref
+                                      .read(
+                                        notificationsControllerProvider
+                                            .notifier,
+                                      )
+                                      .loadMore(),
+                                );
                               }
                               return false;
                             },
                             child: _InboxList(
                               items: items,
-                              footer: paged.hasMore || paged.loadMoreError != null
+                              footer:
+                                  paged.hasMore || paged.loadMoreError != null
                                   ? MuLoadMoreFooter(
                                       isLoading: paged.isLoadingMore,
                                       error: paged.loadMoreError,
-                                      onRetry: () => ref.read(notificationsControllerProvider.notifier).loadMore(),
+                                      onRetry: () => ref
+                                          .read(
+                                            notificationsControllerProvider
+                                                .notifier,
+                                          )
+                                          .loadMore(),
                                     )
                                   : null,
                               onOpen: _open,
@@ -221,7 +265,12 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
 /// The feed as "Today" and "Earlier" groups (local dates), newest first,
 /// each a card of FeedRows.
 class _InboxList extends StatelessWidget {
-  const _InboxList({required this.items, required this.onOpen, required this.onArchive, this.footer});
+  const _InboxList({
+    required this.items,
+    required this.onOpen,
+    required this.onArchive,
+    this.footer,
+  });
 
   final List<AppNotification> items;
   final Widget? footer;
@@ -233,7 +282,9 @@ class _InboxList extends StatelessWidget {
     final now = DateTime.now();
     bool isToday(AppNotification n) {
       final local = n.createdAt.toLocal();
-      return local.year == now.year && local.month == now.month && local.day == now.day;
+      return local.year == now.year &&
+          local.month == now.month &&
+          local.day == now.day;
     }
 
     final today = items.where(isToday).toList();
@@ -244,14 +295,22 @@ class _InboxList extends StatelessWidget {
       children: [
         _SectionLabel(title),
         MuFeedGroup(
-          children: [for (var i = 0; i < list.length; i++) _row(context, list[i], now, last: i == list.length - 1)],
+          children: [
+            for (var i = 0; i < list.length; i++)
+              _row(context, list[i], now, last: i == list.length - 1),
+          ],
         ),
       ],
     );
 
     return ListView(
       physics: const AlwaysScrollableScrollPhysics(),
-      padding: const EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space2, MuSpacing.space5, MuSpacing.space8),
+      padding: const EdgeInsets.fromLTRB(
+        MuSpacing.space5,
+        MuSpacing.space2,
+        MuSpacing.space5,
+        MuSpacing.space8,
+      ),
       children: [
         if (today.isNotEmpty) group('Today', today),
         if (earlier.isNotEmpty) group('Earlier', earlier),
@@ -260,14 +319,20 @@ class _InboxList extends StatelessWidget {
     );
   }
 
-  static (IconData, MuFeedTone) _look(AppNotification n) => switch (n.category) {
-    'KARMA' => (LucideIcons.zap, MuFeedTone.karma),
-    'EVENTS' => (LucideIcons.calendarDays, MuFeedTone.event),
-    'LC' => (LucideIcons.users, MuFeedTone.done),
-    _ => (LucideIcons.megaphone, MuFeedTone.neutral),
-  };
+  static (IconData, MuFeedTone) _look(AppNotification n) =>
+      switch (n.category) {
+        'KARMA' => (LucideIcons.zap, MuFeedTone.karma),
+        'EVENTS' => (LucideIcons.calendarDays, MuFeedTone.event),
+        'LC' => (LucideIcons.users, MuFeedTone.done),
+        _ => (LucideIcons.megaphone, MuFeedTone.neutral),
+      };
 
-  Widget _row(BuildContext context, AppNotification n, DateTime now, {required bool last}) {
+  Widget _row(
+    BuildContext context,
+    AppNotification n,
+    DateTime now, {
+    required bool last,
+  }) {
     final mu = context.mu;
     final c = mu.colors;
     final (icon, tone) = _look(n);
@@ -308,10 +373,18 @@ class _SectionLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.fromLTRB(MuSpacing.space1, MuSpacing.space5, 0, MuSpacing.space2),
+    padding: const EdgeInsets.fromLTRB(
+      MuSpacing.space1,
+      MuSpacing.space5,
+      0,
+      MuSpacing.space2,
+    ),
     child: Semantics(
       header: true,
-      child: Text(text, style: context.mu.text.label.copyWith(color: context.mu.colors.ink3)),
+      child: Text(
+        text,
+        style: context.mu.text.label.copyWith(color: context.mu.colors.ink3),
+      ),
     ),
   );
 }

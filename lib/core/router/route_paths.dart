@@ -22,7 +22,13 @@ abstract final class RoutePaths {
 
   /// The bottom-bar tab roots, in the shell's branch order (`app_router.dart`).
   /// Open them with `context.openTab`, never `push`.
-  static const List<String> tabRoots = [home, tasks, journey, leaderboard, profile];
+  static const List<String> tabRoots = [
+    home,
+    tasks,
+    journey,
+    leaderboard,
+    profile,
+  ];
   static const String leaderboard = '/leaderboard';
   static const String profile = '/profile';
   static const String notifications = '/notifications';
@@ -43,7 +49,8 @@ abstract final class RoutePaths {
   static const String enablerCampus = '/enabler/campuses/:id';
   static String enablerCampusPath(String id) => '/enabler/campuses/$id';
   static const String campusStudent = '/campus/students/:muid';
-  static String campusStudentPath(String muid) => '/campus/students/${Uri.encodeComponent(muid)}';
+  static String campusStudentPath(String muid) =>
+      '/campus/students/${Uri.encodeComponent(muid)}';
   static const String mentorSessions = '/mentor/sessions';
   static const String mentorSessionNew = '/mentor/sessions/new';
   static const String mentorSessionEdit = '/mentor/sessions/:id/edit';
@@ -92,16 +99,19 @@ abstract final class RoutePaths {
   static String problemStatementPath(String id) => '/problem-statements/$id';
 
   static const String weeklyTwitches = '/weekly-twitches';
-  static String weeklyTwitchesShowPath(String show) => '/weekly-twitches?show=$show';
+  static String weeklyTwitchesShowPath(String show) =>
+      '/weekly-twitches?show=$show';
   static const String weeklyTwitch = '/weekly-twitches/:show/:id';
-  static String weeklyTwitchPath(String show, String id) => '/weekly-twitches/$show/$id';
+  static String weeklyTwitchPath(String show, String id) =>
+      '/weekly-twitches/$show/$id';
 
   static const String learningCircles = '/circles';
   static const String createLearningCircle = '/circles/create';
   static const String learningCircleDetail = '/circles/:id';
   static String learningCircleDetailPath(String id) => '/circles/$id';
   static const String createMeeting = '/circles/:id/meetings/create';
-  static String createMeetingPath(String circleId) => '/circles/$circleId/meetings/create';
+  static String createMeetingPath(String circleId) =>
+      '/circles/$circleId/meetings/create';
   static const String meetingDetail = '/meetings/:id';
   static String meetingDetailPath(String id) => '/meetings/$id';
   static const String editMeeting = '/meetings/:id/edit';

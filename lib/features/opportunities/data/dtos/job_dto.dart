@@ -13,12 +13,19 @@ abstract final class JobDto {
     return s.isEmpty ? null : s;
   }
 
-  static DateTime? _date(Object? v) => v is String ? DateTime.tryParse(v) : null;
+  static DateTime? _date(Object? v) =>
+      v is String ? DateTime.tryParse(v) : null;
 
   static List<String> _deliverables(Object? v) => switch (v) {
     final List<dynamic> list => [
       for (final item in list)
-        if (_str(item is Map ? (item['title'] ?? item['name'] ?? item['description']) : item) case final s?) s,
+        if (_str(
+              item is Map
+                  ? (item['title'] ?? item['name'] ?? item['description'])
+                  : item,
+            )
+            case final s?)
+          s,
     ],
     final String s when s.trim().isNotEmpty => [s.trim()],
     _ => const [],
@@ -28,7 +35,9 @@ abstract final class JobDto {
     final eligibility = json['eligibility'];
     final checks = eligibility is Map<String, dynamic>
         ? [
-            for (final r in (eligibility['rules'] as List<dynamic>? ?? const []).whereType<Map<String, dynamic>>())
+            for (final r
+                in (eligibility['rules'] as List<dynamic>? ?? const [])
+                    .whereType<Map<String, dynamic>>())
               JobRuleCheck(
                 ruleType: '${r['rule_type'] ?? ''}',
                 ruleValue: '${r['rule_value'] ?? ''}',
@@ -48,26 +57,32 @@ abstract final class JobDto {
       stipend: _str(json['stipend']),
       experience: _str(json['experience']),
       description: _str(json['job_description']),
-      durationValue: json['duration_value'] is num ? (json['duration_value'] as num).toInt() : null,
+      durationValue: json['duration_value'] is num
+          ? (json['duration_value'] as num).toInt()
+          : null,
       durationUnit: _str(json['duration_unit']),
       hourlyRate: _str(json['hourly_rate']),
       deliverables: _deliverables(json['deliverables']),
-      certificateProvided: '${json['certificate_provided'] ?? ''}'.toLowerCase() == 'yes',
+      certificateProvided:
+          '${json['certificate_provided'] ?? ''}'.toLowerCase() == 'yes',
       createdAt: _date(json['created_at']),
       expiresAt: _date(json['expires_at']),
-      eligible: eligibility is Map<String, dynamic> ? eligibility['eligible'] == true : null,
+      eligible: eligibility is Map<String, dynamic>
+          ? eligibility['eligible'] == true
+          : null,
       checks: checks,
     );
   }
 
-  static JobApplication application(Map<String, dynamic> json) => JobApplication(
-    id: '${json['id']}',
-    job: job(json['job'] as Map<String, dynamic>),
-    status: ApplicationStatus.parse(json['status'] as String?),
-    rawStatus: _str(json['status']) ?? 'Pending',
-    resumeLink: _str(json['resume_link']),
-    coverLetter: _str(json['cover_letter']),
-    rejectionReason: _str(json['rejection_reason']),
-    appliedAt: _date(json['applied_at']),
-  );
+  static JobApplication application(Map<String, dynamic> json) =>
+      JobApplication(
+        id: '${json['id']}',
+        job: job(json['job'] as Map<String, dynamic>),
+        status: ApplicationStatus.parse(json['status'] as String?),
+        rawStatus: _str(json['status']) ?? 'Pending',
+        resumeLink: _str(json['resume_link']),
+        coverLetter: _str(json['cover_letter']),
+        rejectionReason: _str(json['rejection_reason']),
+        appliedAt: _date(json['applied_at']),
+      );
 }

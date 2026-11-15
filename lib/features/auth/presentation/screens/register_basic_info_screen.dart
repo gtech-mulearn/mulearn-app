@@ -13,17 +13,20 @@ class RegisterBasicInfoScreen extends ConsumerStatefulWidget {
   const RegisterBasicInfoScreen({super.key});
 
   @override
-  ConsumerState<RegisterBasicInfoScreen> createState() => _RegisterBasicInfoScreenState();
+  ConsumerState<RegisterBasicInfoScreen> createState() =>
+      _RegisterBasicInfoScreenState();
 }
 
-class _RegisterBasicInfoScreenState extends ConsumerState<RegisterBasicInfoScreen> {
+class _RegisterBasicInfoScreenState
+    extends ConsumerState<RegisterBasicInfoScreen> {
   final _formKey = GlobalKey<FormState>();
   final _fullNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
 
-  bool get _isGoogleSignUp => ref.read(registerWizardControllerProvider).googleTempToken != null;
+  bool get _isGoogleSignUp =>
+      ref.read(registerWizardControllerProvider).googleTempToken != null;
 
   @override
   void initState() {
@@ -67,7 +70,12 @@ class _RegisterBasicInfoScreenState extends ConsumerState<RegisterBasicInfoScree
       lead: isGoogle
           ? 'Finish setting up with your Google email.'
           : 'Learn by doing, alongside peers from every campus.',
-      bottom: MuButton(label: 'Continue', block: true, knob: true, onPressed: _continue),
+      bottom: MuButton(
+        label: 'Continue',
+        block: true,
+        knob: true,
+        onPressed: _continue,
+      ),
       children: [
         Form(
           key: _formKey,
@@ -95,13 +103,17 @@ class _RegisterBasicInfoScreenState extends ConsumerState<RegisterBasicInfoScree
                   hint: 'you@college.edu',
                   controller: _emailController,
                   readOnly: isGoogle,
-                  help: isGoogle ? 'From your Google account' : "We'll use it to sign you in.",
+                  help: isGoogle
+                      ? 'From your Google account'
+                      : "We'll use it to sign you in.",
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.next,
                   autofillHints: const [AutofillHints.email],
                   validator: (value) {
                     final v = value?.trim() ?? '';
-                    return (v.isEmpty || !v.contains('@')) ? 'Enter an email like you@college.edu.' : null;
+                    return (v.isEmpty || !v.contains('@'))
+                        ? 'Enter an email like you@college.edu.'
+                        : null;
                   },
                 ),
                 if (!isGoogle) ...[
@@ -127,7 +139,9 @@ class _RegisterBasicInfoScreenState extends ConsumerState<RegisterBasicInfoScree
                     obscure: true,
                     textInputAction: TextInputAction.done,
                     onSubmitted: (_) => _continue(),
-                    validator: (v) => v != _passwordController.text ? "The two passwords don't match." : null,
+                    validator: (v) => v != _passwordController.text
+                        ? "The two passwords don't match."
+                        : null,
                   ),
                 ],
               ],
@@ -139,7 +153,12 @@ class _RegisterBasicInfoScreenState extends ConsumerState<RegisterBasicInfoScree
           alignment: WrapAlignment.center,
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
-            Text('Already on μLearn?', style: context.mu.text.body.copyWith(color: context.mu.colors.ink2)),
+            Text(
+              'Already on μLearn?',
+              style: context.mu.text.body.copyWith(
+                color: context.mu.colors.ink2,
+              ),
+            ),
             MuButton(
               label: 'Sign in',
               variant: MuButtonVariant.ghost,

@@ -48,8 +48,11 @@ const _allowedSignedInExtra = {
 
 /// Role workspaces (Plan 4): `/mentor…`, `/campus…`, `/enabler…`. Access
 /// is decided by `WorkspaceGate` on the screen, not here.
-bool _isWorkspace(String path) =>
-    const ['/mentor', '/campus', '/enabler'].any((root) => path == root || path.startsWith('$root/'));
+bool _isWorkspace(String path) => const [
+  '/mentor',
+  '/campus',
+  '/enabler',
+].any((root) => path == root || path.startsWith('$root/'));
 
 bool _isSignedInScreen(String path) =>
     _allowedSignedIn.contains(path) ||
@@ -66,18 +69,23 @@ bool _isSignedInScreen(String path) =>
     path.startsWith('/meetings/') ||
     (path.startsWith('/tasks/') && path != RoutePaths.tasks);
 
-String _normalise(String path) => path.length > 1 && path.endsWith('/') ? path.substring(0, path.length - 1) : path;
+String _normalise(String path) => path.length > 1 && path.endsWith('/')
+    ? path.substring(0, path.length - 1)
+    : path;
 
 /// A `from` worth resuming: an in-app path (never `//host` or a URL) to a
 /// signed-in screen.
 String? _resumable(String? from) {
-  if (from == null || !from.startsWith('/') || from.startsWith('//')) return null;
+  if (from == null || !from.startsWith('/') || from.startsWith('//')) {
+    return null;
+  }
   final uri = Uri.tryParse(from);
   if (uri == null || uri.hasScheme || uri.hasAuthority) return null;
   return _isSignedInScreen(_normalise(uri.path)) ? from : null;
 }
 
-String _with(String path, String? from) => from == null ? path : '$path?from=${Uri.encodeQueryComponent(from)}';
+String _with(String path, String? from) =>
+    from == null ? path : '$path?from=${Uri.encodeQueryComponent(from)}';
 
 /// The router's auth guard. A deep link (e.g. Discord's redirect App Link)
 /// keeps its target: through the splash screen while the session loads
@@ -94,7 +102,9 @@ String? appRedirect({
   final from = _resumable(uri.queryParameters['from']);
   // A real App Link reaches the router as its full URI (Android passes the
   // intent's data; go_router keeps scheme and host): resume its in-app part.
-  final here = _resumable(Uri(path: uri.path, query: uri.hasQuery ? uri.query : null).toString());
+  final here = _resumable(
+    Uri(path: uri.path, query: uri.hasQuery ? uri.query : null).toString(),
+  );
 
   // Session (or the first-launch flag) still being read from storage.
   if (auth.isLoading || !auth.hasValue || !arrivalSeen.hasValue) {
@@ -108,7 +118,10 @@ String? appRedirect({
     if (target == null && arrivalSeen.value == false) return RoutePaths.welcome;
     return _with(RoutePaths.signIn, target);
   }
-  if ((path == RoutePaths.splash || path == RoutePaths.signIn) && from != null) return from;
+  if ((path == RoutePaths.splash || path == RoutePaths.signIn) &&
+      from != null) {
+    return from;
+  }
   if (_isSignedInScreen(path)) return null;
   return RoutePaths.home;
 }

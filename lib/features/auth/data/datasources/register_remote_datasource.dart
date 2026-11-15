@@ -10,16 +10,23 @@ class RegisterRemoteDataSource {
 
   final Dio _dio;
 
-  Future<List<dynamic>> fetchRoles() => _fetchList(ApiPaths.registerRoles, key: 'roles');
+  Future<List<dynamic>> fetchRoles() =>
+      _fetchList(ApiPaths.registerRoles, key: 'roles');
 
-  Future<List<dynamic>> fetchColleges() => _fetchList(ApiPaths.registerColleges, key: 'colleges');
+  Future<List<dynamic>> fetchColleges() =>
+      _fetchList(ApiPaths.registerColleges, key: 'colleges');
 
-  Future<List<dynamic>> fetchDepartments() => _fetchList(ApiPaths.registerDepartments, key: 'departments');
+  Future<List<dynamic>> fetchDepartments() =>
+      _fetchList(ApiPaths.registerDepartments, key: 'departments');
 
-  Future<List<dynamic>> fetchCompanies() => _fetchList(ApiPaths.registerCompanies, key: 'companies');
+  Future<List<dynamic>> fetchCompanies() =>
+      _fetchList(ApiPaths.registerCompanies, key: 'companies');
 
   Future<List<dynamic>> _fetchList(String path, {required String key}) async {
-    final response = await _dio.get<dynamic>(path, options: Options(headers: {RequestFlags.skipAuth: true}));
+    final response = await _dio.get<dynamic>(
+      path,
+      options: Options(headers: {RequestFlags.skipAuth: true}),
+    );
     final payload = ApiEnvelope.unwrapObject(response);
     return payload[key] as List<dynamic>;
   }
@@ -35,7 +42,12 @@ class RegisterRemoteDataSource {
     final response = await _dio.post<dynamic>(
       ApiPaths.register,
       data: {
-        'user': {'full_name': fullName, 'email': email, 'password': password, 'role': roleId},
+        'user': {
+          'full_name': fullName,
+          'email': email,
+          'password': password,
+          'role': roleId,
+        },
         if (referralMuid != null) 'referral': {'muid': referralMuid},
       },
       options: Options(headers: {RequestFlags.skipAuth: true}),
@@ -102,19 +114,28 @@ class RegisterRemoteDataSource {
       'graduation_year': graduationYear,
     }..removeWhere((_, value) => value == null);
 
-    final response = await _dio.post<dynamic>(ApiPaths.createOrganization, data: body);
+    final response = await _dio.post<dynamic>(
+      ApiPaths.createOrganization,
+      data: body,
+    );
     ApiEnvelope.unwrapObject(response);
   }
 
   /// `POST /api/v1/register/select-domains/` — authenticated.
   Future<void> selectDomains(List<String> domains) async {
-    final response = await _dio.post<dynamic>(ApiPaths.selectDomains, data: {'domains': domains});
+    final response = await _dio.post<dynamic>(
+      ApiPaths.selectDomains,
+      data: {'domains': domains},
+    );
     ApiEnvelope.unwrapObject(response);
   }
 
   /// `POST /api/v1/register/select-endgoals/` — authenticated.
   Future<void> selectEndgoals(List<String> endgoals) async {
-    final response = await _dio.post<dynamic>(ApiPaths.selectEndgoals, data: {'endgoals': endgoals});
+    final response = await _dio.post<dynamic>(
+      ApiPaths.selectEndgoals,
+      data: {'endgoals': endgoals},
+    );
     ApiEnvelope.unwrapObject(response);
   }
 }

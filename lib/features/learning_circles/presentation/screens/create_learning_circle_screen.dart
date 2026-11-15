@@ -15,10 +15,12 @@ class CreateLearningCircleScreen extends ConsumerStatefulWidget {
   const CreateLearningCircleScreen({super.key});
 
   @override
-  ConsumerState<CreateLearningCircleScreen> createState() => _CreateLearningCircleScreenState();
+  ConsumerState<CreateLearningCircleScreen> createState() =>
+      _CreateLearningCircleScreenState();
 }
 
-class _CreateLearningCircleScreenState extends ConsumerState<CreateLearningCircleScreen> {
+class _CreateLearningCircleScreenState
+    extends ConsumerState<CreateLearningCircleScreen> {
   final _formKey = GlobalKey<FormState>();
   final _title = TextEditingController();
   final _description = TextEditingController();
@@ -36,20 +38,30 @@ class _CreateLearningCircleScreenState extends ConsumerState<CreateLearningCircl
     if (orgId == null) {
       MuToast.show(
         context,
-        message: 'Your account has no college on file. Add it in Edit profile, then start a circle.',
+        message:
+            'Your account has no college on file. Add it in Edit profile, then start a circle.',
         type: MuToastType.error,
       );
       return;
     }
     final circleId = await ref
         .read(circleActionsControllerProvider.notifier)
-        .createCircle(igId: _igId!, orgId: orgId, title: _title.text.trim(), description: _description.text.trim());
+        .createCircle(
+          igId: _igId!,
+          orgId: orgId,
+          title: _title.text.trim(),
+          description: _description.text.trim(),
+        );
     if (!mounted) return;
     if (circleId != null) {
       ref
         ..invalidate(circlesListControllerProvider)
         ..invalidate(myCirclesProvider);
-      MuToast.show(context, message: 'Your circle is live', type: MuToastType.success);
+      MuToast.show(
+        context,
+        message: 'Your circle is live',
+        type: MuToastType.success,
+      );
       context.pushReplacement(RoutePaths.learningCircleDetailPath(circleId));
     }
   }
@@ -73,7 +85,9 @@ class _CreateLearningCircleScreenState extends ConsumerState<CreateLearningCircl
               child: Form(
                 key: _formKey,
                 child: ListView(
-                  physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+                  physics: const BouncingScrollPhysics(
+                    parent: AlwaysScrollableScrollPhysics(),
+                  ),
                   padding: const EdgeInsets.fromLTRB(
                     MuSpacing.space5,
                     MuSpacing.space2,
@@ -86,8 +100,16 @@ class _CreateLearningCircleScreenState extends ConsumerState<CreateLearningCircl
                       child: Text.rich(
                         TextSpan(
                           children: [
-                            TextSpan(text: 'Start a\n', style: mu.text.displayLight.copyWith(fontSize: 36)),
-                            TextSpan(text: 'circle', style: mu.text.display.copyWith(fontSize: 36)),
+                            TextSpan(
+                              text: 'Start a\n',
+                              style: mu.text.displayLight.copyWith(
+                                fontSize: 36,
+                              ),
+                            ),
+                            TextSpan(
+                              text: 'circle',
+                              style: mu.text.display.copyWith(fontSize: 36),
+                            ),
                           ],
                         ),
                       ),
@@ -102,8 +124,14 @@ class _CreateLearningCircleScreenState extends ConsumerState<CreateLearningCircl
                       label: 'Interest group',
                       value: _igId,
                       loading: igOptions.isLoading,
-                      options: igOptions.value?.map((o) => MuOption(o.id, o.label)).toList() ?? const [],
-                      validator: (v) => v == null ? 'Pick the group this circle learns in' : null,
+                      options:
+                          igOptions.value
+                              ?.map((o) => MuOption(o.id, o.label))
+                              .toList() ??
+                          const [],
+                      validator: (v) => v == null
+                          ? 'Pick the group this circle learns in'
+                          : null,
                       onChanged: (v) => setState(() => _igId = v),
                     ),
                     const SizedBox(height: MuSpacing.space4),
@@ -113,33 +141,46 @@ class _CreateLearningCircleScreenState extends ConsumerState<CreateLearningCircl
                       hint: 'Pandas Saturdays',
                       maxLength: 100,
                       textCapitalization: TextCapitalization.words,
-                      validator: (v) => (v == null || v.trim().isEmpty) ? 'Give it a name' : null,
+                      validator: (v) => (v == null || v.trim().isEmpty)
+                          ? 'Give it a name'
+                          : null,
                     ),
                     const SizedBox(height: MuSpacing.space4),
                     MuTextField(
                       label: 'What you will learn',
                       controller: _description,
-                      hint: 'We work through the Kaggle Pandas course, one lesson a week.',
+                      hint:
+                          'We work through the Kaggle Pandas course, one lesson a week.',
                       maxLength: 500,
                       maxLines: 5,
                       minLines: 3,
                       textCapitalization: TextCapitalization.sentences,
-                      validator: (v) => (v == null || v.trim().isEmpty) ? 'Say what the circle is for' : null,
+                      validator: (v) => (v == null || v.trim().isEmpty)
+                          ? 'Say what the circle is for'
+                          : null,
                     ),
                     const SizedBox(height: MuSpacing.space4),
                     Row(
                       children: [
-                        Icon(LucideIcons.mapPin, size: MuSizes.iconSm, color: c.ink3),
+                        Icon(
+                          LucideIcons.mapPin,
+                          size: MuSizes.iconSm,
+                          color: c.ink3,
+                        ),
                         const SizedBox(width: MuSpacing.space2),
                         Expanded(
                           child: Text(
                             college.when(
                               loading: () => 'Finding your college…',
-                              error: (_, _) => "Couldn't load your college. Pull to try again.",
-                              data: (col) =>
-                                  col.code != null ? 'Meets at your college (${col.code})' : 'Meets at your college',
+                              error: (_, _) =>
+                                  "Couldn't load your college. Pull to try again.",
+                              data: (col) => col.code != null
+                                  ? 'Meets at your college (${col.code})'
+                                  : 'Meets at your college',
                             ),
-                            style: mu.text.caption.copyWith(color: college.hasError ? c.danger : c.ink3),
+                            style: mu.text.caption.copyWith(
+                              color: college.hasError ? c.danger : c.ink3,
+                            ),
                           ),
                         ),
                       ],
@@ -165,7 +206,10 @@ class _CreateLearningCircleScreenState extends ConsumerState<CreateLearningCircl
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     if (action.hasError) ...[
-                      Text(ApiException.messageFor(action.error!), style: mu.text.caption.copyWith(color: c.danger)),
+                      Text(
+                        ApiException.messageFor(action.error!),
+                        style: mu.text.caption.copyWith(color: c.danger),
+                      ),
                       const SizedBox(height: MuSpacing.space2),
                     ],
                     MuButton(

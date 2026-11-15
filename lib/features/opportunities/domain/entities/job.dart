@@ -61,22 +61,24 @@ enum ApplicationStatus {
   withdrawn,
   unknown;
 
-  static ApplicationStatus parse(String? raw) => switch (raw?.trim().toLowerCase()) {
-    'pending' => pending,
-    'in-review' || 'in review' || 'in_review' => inReview,
-    'shortlisted' => shortlisted,
-    'interview' => interview,
-    'selected' => selected,
-    'rejected' => rejected,
-    'withdrawn' => withdrawn,
-    _ => unknown,
-  };
+  static ApplicationStatus parse(String? raw) =>
+      switch (raw?.trim().toLowerCase()) {
+        'pending' => pending,
+        'in-review' || 'in review' || 'in_review' => inReview,
+        'shortlisted' => shortlisted,
+        'interview' => interview,
+        'selected' => selected,
+        'rejected' => rejected,
+        'withdrawn' => withdrawn,
+        _ => unknown,
+      };
 
   /// Resubmit is allowed only from these (UserApplicationResubmitAPI).
   bool get canResubmit => this == rejected || this == withdrawn;
 
   /// A selected application can't be withdrawn (UserApplicationWithdrawAPI).
-  bool get canWithdraw => this != selected && this != withdrawn && this != rejected;
+  bool get canWithdraw =>
+      this != selected && this != withdrawn && this != rejected;
 }
 
 /// The signed-in learner's application to a [job].
@@ -99,6 +101,9 @@ abstract class JobApplication with _$JobApplication {
 /// A page of [items] and whether another follows.
 @freezed
 abstract class OpportunityPage<T> with _$OpportunityPage<T> {
-  const factory OpportunityPage({required List<T> items, required bool hasNext, required int count}) =
-      _OpportunityPage<T>;
+  const factory OpportunityPage({
+    required List<T> items,
+    required bool hasNext,
+    required int count,
+  }) = _OpportunityPage<T>;
 }

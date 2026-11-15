@@ -13,7 +13,12 @@ import 'package:mulearn_app/features/learning_circles/presentation/providers/mee
 /// Leaving a circle (CircleLeaveAPI): members leave after confirming; a
 /// lead hands leadership over first; the creator deletes the circle instead.
 class CircleLeaveSection extends ConsumerWidget {
-  const CircleLeaveSection({required this.circleId, required this.circleTitle, required this.role, super.key});
+  const CircleLeaveSection({
+    required this.circleId,
+    required this.circleTitle,
+    required this.role,
+    super.key,
+  });
 
   final String circleId;
   final String circleTitle;
@@ -32,7 +37,11 @@ class CircleLeaveSection extends ConsumerWidget {
     final left = await controller.leaveCircle(circleId);
     if (!context.mounted) return;
     if (left) {
-      MuToast.show(context, message: 'You left $circleTitle', type: MuToastType.success);
+      MuToast.show(
+        context,
+        message: 'You left $circleTitle',
+        type: MuToastType.success,
+      );
       await Navigator.of(context).maybePop();
     } else {
       final error = ref.read(circleActionsControllerProvider).error;
@@ -74,7 +83,12 @@ class CircleLeaveSection extends ConsumerWidget {
 /// it starts, cancel the RSVP until 30 minutes before, join with the code
 /// once it has started, leave after joining.
 class MeetingActionsBar extends ConsumerWidget {
-  const MeetingActionsBar({required this.meetingId, required this.meeting, required this.onJoinWithCode, super.key});
+  const MeetingActionsBar({
+    required this.meetingId,
+    required this.meeting,
+    required this.onJoinWithCode,
+    super.key,
+  });
 
   final String meetingId;
   final MeetingDetail meeting;
@@ -120,7 +134,14 @@ class MeetingActionsBar extends ConsumerWidget {
         knob: true,
         block: true,
         loading: busy,
-        onPressed: busy ? null : () => _run(context, ref, (c) => c.rsvp(meetingId), success: "You're going"),
+        onPressed: busy
+            ? null
+            : () => _run(
+                context,
+                ref,
+                (c) => c.rsvp(meetingId),
+                success: "You're going",
+              ),
       );
     }
     if (s.canJoinWithCode) {
@@ -137,16 +158,30 @@ class MeetingActionsBar extends ConsumerWidget {
         variant: MuButtonVariant.outline,
         block: true,
         loading: busy,
-        onPressed: busy ? null : () => _run(context, ref, (c) => c.leave(meetingId), success: 'You left the meeting'),
+        onPressed: busy
+            ? null
+            : () => _run(
+                context,
+                ref,
+                (c) => c.leave(meetingId),
+                success: 'You left the meeting',
+              ),
       );
     }
     if (s.isRsvpd && !s.hasJoined) {
       return Row(
         children: [
-          Icon(LucideIcons.checkCircle2, size: MuSizes.iconMd, color: c.success),
+          Icon(
+            LucideIcons.checkCircle2,
+            size: MuSizes.iconMd,
+            color: c.success,
+          ),
           const SizedBox(width: MuSpacing.space2),
           Expanded(
-            child: Text("You're going", style: mu.text.bodyStrong.copyWith(color: c.success)),
+            child: Text(
+              "You're going",
+              style: mu.text.bodyStrong.copyWith(color: c.success),
+            ),
           ),
           if (s.canCancelRsvp)
             MuButton(
@@ -155,7 +190,12 @@ class MeetingActionsBar extends ConsumerWidget {
               size: MuButtonSize.small,
               onPressed: busy
                   ? null
-                  : () => _run(context, ref, (c) => c.cancelRsvp(meetingId), success: 'RSVP cancelled'),
+                  : () => _run(
+                      context,
+                      ref,
+                      (c) => c.cancelRsvp(meetingId),
+                      success: 'RSVP cancelled',
+                    ),
             )
           else
             Flexible(

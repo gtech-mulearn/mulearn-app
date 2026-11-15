@@ -47,14 +47,25 @@ class _AchievementsTabState extends State<AchievementsTab> {
   Widget build(BuildContext context) {
     final list = switch (_section) {
       _Section.earned => _EarnedList(widget: widget),
-      _Section.eligible => _EligibleList(muid: widget.muid, shrink: !widget.scrollable),
-      _Section.inProgress => _InProgressList(muid: widget.muid, shrink: !widget.scrollable),
+      _Section.eligible => _EligibleList(
+        muid: widget.muid,
+        shrink: !widget.scrollable,
+      ),
+      _Section.inProgress => _InProgressList(
+        muid: widget.muid,
+        shrink: !widget.scrollable,
+      ),
     };
     if (!widget.isOwnProfile) return _EarnedList(widget: widget);
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space4, MuSpacing.space5, 0),
+          padding: const EdgeInsets.fromLTRB(
+            MuSpacing.space5,
+            MuSpacing.space4,
+            MuSpacing.space5,
+            0,
+          ),
           child: MuSegmented<_Section>(
             values: _Section.values,
             selected: _section,
@@ -72,7 +83,12 @@ class _AchievementsTabState extends State<AchievementsTab> {
   }
 }
 
-const _listPadding = EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space4, MuSpacing.space5, MuSpacing.navClearance);
+const _listPadding = EdgeInsets.fromLTRB(
+  MuSpacing.space5,
+  MuSpacing.space4,
+  MuSpacing.space5,
+  MuSpacing.navClearance,
+);
 
 class _Empty extends StatelessWidget {
   const _Empty(this.message);
@@ -103,13 +119,20 @@ class _EarnedList extends ConsumerWidget {
         .watch(userAchievementsProvider(widget.muid))
         .when(
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, _) =>
-              ErrorRetryView(error: error, onRetry: () => ref.invalidate(userAchievementsProvider(widget.muid))),
+          error: (error, _) => ErrorRetryView(
+            error: error,
+            onRetry: () =>
+                ref.invalidate(userAchievementsProvider(widget.muid)),
+          ),
           data: (achievements) {
-            if (achievements.isEmpty) return const _Empty('No achievements yet.');
+            if (achievements.isEmpty) {
+              return const _Empty('No achievements yet.');
+            }
             return ListView.builder(
               shrinkWrap: !widget.scrollable,
-              physics: widget.scrollable ? null : const NeverScrollableScrollPhysics(),
+              physics: widget.scrollable
+                  ? null
+                  : const NeverScrollableScrollPhysics(),
               padding: _listPadding,
               itemCount: achievements.length,
               itemBuilder: (context, index) => Padding(
@@ -135,26 +158,49 @@ class _EligibleList extends ConsumerWidget {
 
   final String muid;
 
-  Future<void> _claim(BuildContext context, WidgetRef ref, AchievementProgress item) async {
+  Future<void> _claim(
+    BuildContext context,
+    WidgetRef ref,
+    AchievementProgress item,
+  ) async {
     try {
-      final result = await ref.read(achievementClaimControllerProvider.notifier).claim(item.achievementId, muid: muid);
-      if (context.mounted) MuToast.show(context, message: result.message, type: MuToastType.success);
+      final result = await ref
+          .read(achievementClaimControllerProvider.notifier)
+          .claim(item.achievementId, muid: muid);
+      if (context.mounted) {
+        MuToast.show(
+          context,
+          message: result.message,
+          type: MuToastType.success,
+        );
+      }
     } on Object catch (e) {
-      if (context.mounted) MuToast.show(context, message: ApiException.messageFor(e), type: MuToastType.error);
+      if (context.mounted) {
+        MuToast.show(
+          context,
+          message: ApiException.messageFor(e),
+          type: MuToastType.error,
+        );
+      }
     }
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final descriptions = ref.watch(achievementDescriptionsProvider).value ?? const {};
+    final descriptions =
+        ref.watch(achievementDescriptionsProvider).value ?? const {};
     return ref
         .watch(eligibleAchievementsProvider)
         .when(
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, _) =>
-              ErrorRetryView(error: error, onRetry: () => ref.invalidate(eligibleAchievementsProvider)),
+          error: (error, _) => ErrorRetryView(
+            error: error,
+            onRetry: () => ref.invalidate(eligibleAchievementsProvider),
+          ),
           data: (items) {
-            if (items.isEmpty) return const _Empty('Nothing to claim yet. Keep earning karma.');
+            if (items.isEmpty) {
+              return const _Empty('Nothing to claim yet. Keep earning karma.');
+            }
             return ListView(
               shrinkWrap: shrink,
               physics: shrink ? const NeverScrollableScrollPhysics() : null,
@@ -189,21 +235,27 @@ class _InProgressList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final descriptions = ref.watch(achievementDescriptionsProvider).value ?? const {};
+    final descriptions =
+        ref.watch(achievementDescriptionsProvider).value ?? const {};
     final earned = ref.watch(userAchievementsProvider(muid)).value ?? const [];
     final eligible = ref.watch(eligibleAchievementsProvider).value ?? const [];
     return ref
         .watch(achievementProgressProvider)
         .when(
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, _) => ErrorRetryView(error: error, onRetry: () => ref.invalidate(achievementProgressProvider)),
+          error: (error, _) => ErrorRetryView(
+            error: error,
+            onRetry: () => ref.invalidate(achievementProgressProvider),
+          ),
           data: (progress) {
             final items = inProgressAchievements(
               progress,
               earnedIds: {for (final e in earned) e.achievement.id},
               eligibleIds: {for (final e in eligible) e.achievementId},
             );
-            if (items.isEmpty) return const _Empty('Nothing in progress right now.');
+            if (items.isEmpty) {
+              return const _Empty('Nothing in progress right now.');
+            }
             return ListView(
               shrinkWrap: shrink,
               physics: shrink ? const NeverScrollableScrollPhysics() : null,
@@ -212,7 +264,11 @@ class _InProgressList extends ConsumerWidget {
                 for (final item in items)
                   Padding(
                     padding: const EdgeInsets.only(bottom: MuSpacing.space3),
-                    child: _ProgressCard(item: item, description: descriptions[item.achievementId], showProgress: true),
+                    child: _ProgressCard(
+                      item: item,
+                      description: descriptions[item.achievementId],
+                      showProgress: true,
+                    ),
                   ),
               ],
             );
@@ -224,7 +280,12 @@ class _InProgressList extends ConsumerWidget {
 String _number(num n) => n == n.roundToDouble() ? '${n.toInt()}' : '$n';
 
 class _ProgressCard extends StatelessWidget {
-  const _ProgressCard({required this.item, this.description, this.action, this.showProgress = false});
+  const _ProgressCard({
+    required this.item,
+    this.description,
+    this.action,
+    this.showProgress = false,
+  });
 
   final AchievementProgress item;
   final String? description;
@@ -249,11 +310,19 @@ class _ProgressCard extends StatelessWidget {
                   children: [
                     Text(item.name, style: context.mu.text.bodyStrong),
                     if (description != null)
-                      Text(description!, style: context.mu.text.caption, maxLines: 2, overflow: TextOverflow.ellipsis),
+                      Text(
+                        description!,
+                        style: context.mu.text.caption,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                   ],
                 ),
               ),
-              if (action != null) ...[const SizedBox(width: MuSpacing.space2), action!],
+              if (action != null) ...[
+                const SizedBox(width: MuSpacing.space2),
+                action!,
+              ],
             ],
           ),
           if (showProgress) ...[
@@ -261,8 +330,12 @@ class _ProgressCard extends StatelessWidget {
             _Track(value: (item.percentage ?? 0) / 100),
             const SizedBox(height: MuSpacing.space1),
             Text(
-              current != null && required != null ? '${_number(current)} / ${_number(required)}' : (item.reason ?? ''),
-              style: context.mu.text.caption.copyWith(color: context.mu.colors.ink2),
+              current != null && required != null
+                  ? '${_number(current)} / ${_number(required)}'
+                  : (item.reason ?? ''),
+              style: context.mu.text.caption.copyWith(
+                color: context.mu.colors.ink2,
+              ),
             ),
           ],
         ],
@@ -278,9 +351,16 @@ class _AchievementIcon extends StatelessWidget {
   Widget build(BuildContext context) => Container(
     height: 44,
     width: 44,
-    decoration: BoxDecoration(color: context.mu.colors.volt, shape: BoxShape.circle),
+    decoration: BoxDecoration(
+      color: context.mu.colors.volt,
+      shape: BoxShape.circle,
+    ),
     alignment: Alignment.center,
-    child: Icon(LucideIcons.award, color: context.mu.colors.onVolt, size: MuSizes.iconMd),
+    child: Icon(
+      LucideIcons.award,
+      color: context.mu.colors.onVolt,
+      size: MuSizes.iconMd,
+    ),
   );
 }
 
@@ -293,7 +373,10 @@ class _Card extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
     padding: const EdgeInsets.all(MuSpacing.space4),
-    decoration: BoxDecoration(color: context.mu.colors.surface, borderRadius: BorderRadius.circular(MuRadii.card)),
+    decoration: BoxDecoration(
+      color: context.mu.colors.surface,
+      borderRadius: BorderRadius.circular(MuRadii.card),
+    ),
     child: child,
   );
 }
@@ -311,7 +394,9 @@ class _Track extends StatelessWidget {
       height: 8,
       child: Stack(
         children: [
-          Positioned.fill(child: ColoredBox(color: context.mu.colors.surfaceSunk)),
+          Positioned.fill(
+            child: ColoredBox(color: context.mu.colors.surfaceSunk),
+          ),
           FractionallySizedBox(
             // Grow from the start edge (the default centres the bar).
             alignment: AlignmentDirectional.centerStart,
@@ -353,7 +438,10 @@ class _AchievementCard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(achievement.achievement.achievementName, style: context.mu.text.bodyStrong),
+                Text(
+                  achievement.achievement.achievementName,
+                  style: context.mu.text.bodyStrong,
+                ),
                 if (achievement.achievement.description != null)
                   Text(
                     achievement.achievement.description!,

@@ -44,7 +44,8 @@ class MuOtpField extends StatefulWidget {
 }
 
 class _MuOtpFieldState extends State<MuOtpField> {
-  late final TextEditingController _controller = widget.controller ?? TextEditingController();
+  late final TextEditingController _controller =
+      widget.controller ?? TextEditingController();
   final _focus = FocusNode();
 
   @override
@@ -84,16 +85,28 @@ class _MuOtpFieldState extends State<MuOtpField> {
               constraints: const BoxConstraints(maxWidth: 48),
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                color: hasError ? c.dangerTint : (i == code.length && _focus.hasFocus ? c.surface : c.surfaceSunk),
+                color: hasError
+                    ? c.dangerTint
+                    : (i == code.length && _focus.hasFocus
+                          ? c.surface
+                          : c.surfaceSunk),
                 borderRadius: BorderRadius.circular(MuRadii.control),
                 border: Border.all(
                   width: 2,
-                  color: hasError ? c.danger : (i == code.length && _focus.hasFocus ? c.cobalt : c.surfaceSunk),
+                  color: hasError
+                      ? c.danger
+                      : (i == code.length && _focus.hasFocus
+                            ? c.cobalt
+                            : c.surfaceSunk),
                 ),
               ),
               child: Text(
                 i < code.length ? code[i] : '',
-                style: mu.text.display.copyWith(fontSize: 24, height: 1, color: c.ink),
+                style: mu.text.display.copyWith(
+                  fontSize: 24,
+                  height: 1,
+                  color: c.ink,
+                ),
               ),
             ),
           ),
@@ -151,7 +164,10 @@ class _MuOtpFieldState extends State<MuOtpField> {
                 Expanded(
                   child: Text(
                     widget.error!,
-                    style: mu.text.caption.copyWith(color: c.danger, fontWeight: FontWeight.w600),
+                    style: mu.text.caption.copyWith(
+                      color: c.danger,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
               ],

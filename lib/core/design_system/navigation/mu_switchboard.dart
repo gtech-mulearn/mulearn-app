@@ -6,7 +6,12 @@ import 'package:mulearn_app/core/design_system/tokens/mu_tokens.g.dart';
 /// One door of a [MuSwitchboard].
 class MuDoor {
   /// A door: label, icon, the IG colour of its icon well, where it goes.
-  const MuDoor({required this.label, required this.icon, required this.tone, required this.onTap});
+  const MuDoor({
+    required this.label,
+    required this.icon,
+    required this.tone,
+    required this.onTap,
+  });
 
   /// "Events", "Interest Groups"…
   final String label;
@@ -43,7 +48,10 @@ class MuSwitchboard extends StatelessWidget {
       border: Border(right: i.isEven ? rule : BorderSide.none, bottom: rule),
     );
     return DecoratedBox(
-      decoration: BoxDecoration(color: c.surface, border: Border.fromBorderSide(rule)),
+      decoration: BoxDecoration(
+        color: c.surface,
+        border: Border.fromBorderSide(rule),
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -96,7 +104,10 @@ class _DoorState extends State<_Door> {
         child: Container(
           height: 76,
           padding: const EdgeInsets.symmetric(horizontal: MuSpacing.space4),
-          decoration: BoxDecoration(color: _down ? c.surfaceSunk : null, border: widget.border),
+          decoration: BoxDecoration(
+            color: _down ? c.surfaceSunk : null,
+            border: widget.border,
+          ),
           child: Row(
             children: [
               Expanded(
@@ -142,8 +153,12 @@ class MuPulseStrip extends StatefulWidget {
   State<MuPulseStrip> createState() => _MuPulseStripState();
 }
 
-class _MuPulseStripState extends State<MuPulseStrip> with SingleTickerProviderStateMixin {
-  late final AnimationController _ticker = AnimationController(vsync: this, duration: const Duration(days: 1));
+class _MuPulseStripState extends State<MuPulseStrip>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _ticker = AnimationController(
+    vsync: this,
+    duration: const Duration(days: 1),
+  );
   final _scroll = ScrollController();
   bool _paused = false;
   Duration _last = Duration.zero;
@@ -212,10 +227,16 @@ class _MuPulseStripState extends State<MuPulseStrip> with SingleTickerProviderSt
                 Container(
                   width: 7,
                   height: 7,
-                  decoration: BoxDecoration(color: c.volt, shape: BoxShape.circle),
+                  decoration: BoxDecoration(
+                    color: c.volt,
+                    shape: BoxShape.circle,
+                  ),
                 ),
                 const SizedBox(width: 10),
-                Text(looped[i], style: mu.text.label.copyWith(color: c.onNight)),
+                Text(
+                  looped[i],
+                  style: mu.text.label.copyWith(color: c.onNight),
+                ),
               ],
             ),
           ),

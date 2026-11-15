@@ -2,7 +2,14 @@
 /// and real featured events and groups, from the public endpoints. Every
 /// count is nullable: a count that didn't load is left out, never guessed.
 class PublicStats {
-  const PublicStats({this.members, this.campuses, this.companies, this.mentors, this.interestGroups, this.circles});
+  const PublicStats({
+    this.members,
+    this.campuses,
+    this.companies,
+    this.mentors,
+    this.interestGroups,
+    this.circles,
+  });
 
   final int? members;
   final int? campuses;

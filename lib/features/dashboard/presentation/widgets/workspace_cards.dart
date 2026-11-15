@@ -64,7 +64,8 @@ class _CampusCard extends ConsumerWidget {
         ? 'Students, circles and approvals'
         : [
             if (h.code.isNotEmpty) h.code else h.college,
-            if (h.statLabel != null && h.statValue != null) '${h.statLabel} ${h.statValue}',
+            if (h.statLabel != null && h.statValue != null)
+              '${h.statLabel} ${h.statValue}',
           ].join(' · ');
     return WorkspaceCard(
       icon: LucideIcons.school,
@@ -106,13 +107,19 @@ class WorkspaceCard extends StatelessWidget {
         pressedScale: 0.98,
         child: Container(
           padding: const EdgeInsets.all(MuSpacing.space4),
-          decoration: BoxDecoration(color: c.surface, borderRadius: BorderRadius.circular(MuRadii.card)),
+          decoration: BoxDecoration(
+            color: c.surface,
+            borderRadius: BorderRadius.circular(MuRadii.card),
+          ),
           child: Row(
             children: [
               Container(
                 width: 48,
                 height: 48,
-                decoration: BoxDecoration(color: MuTones.forIgCategory(c, tone), shape: BoxShape.circle),
+                decoration: BoxDecoration(
+                  color: MuTones.forIgCategory(c, tone),
+                  shape: BoxShape.circle,
+                ),
                 child: Icon(icon, size: MuSizes.iconMd, color: c.inkPrint),
               ),
               const SizedBox(width: MuSpacing.space3),
@@ -122,11 +129,20 @@ class WorkspaceCard extends StatelessWidget {
                   children: [
                     Text(title, style: mu.text.title3),
                     const SizedBox(height: 2),
-                    Text(subtitle, style: mu.text.caption, maxLines: 1, overflow: TextOverflow.ellipsis),
+                    Text(
+                      subtitle,
+                      style: mu.text.caption,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ],
                 ),
               ),
-              Icon(LucideIcons.chevronRight, size: MuSizes.iconSm, color: c.ink3),
+              Icon(
+                LucideIcons.chevronRight,
+                size: MuSizes.iconSm,
+                color: c.ink3,
+              ),
             ],
           ),
         ),

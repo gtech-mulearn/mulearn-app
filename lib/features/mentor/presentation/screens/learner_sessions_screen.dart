@@ -29,7 +29,8 @@ class LearnerSessionsScreen extends ConsumerStatefulWidget {
   const LearnerSessionsScreen({super.key});
 
   @override
-  ConsumerState<LearnerSessionsScreen> createState() => _LearnerSessionsScreenState();
+  ConsumerState<LearnerSessionsScreen> createState() =>
+      _LearnerSessionsScreenState();
 }
 
 class _LearnerSessionsScreenState extends ConsumerState<LearnerSessionsScreen> {
@@ -52,7 +53,9 @@ class _LearnerSessionsScreenState extends ConsumerState<LearnerSessionsScreen> {
                   ref.refresh(mySessionRequestsProvider.future),
                 ]),
                 child: ListView(
-                  physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+                  physics: const BouncingScrollPhysics(
+                    parent: AlwaysScrollableScrollPhysics(),
+                  ),
                   padding: const EdgeInsets.fromLTRB(
                     MuSpacing.space5,
                     MuSpacing.space2,
@@ -76,8 +79,16 @@ class _LearnerSessionsScreenState extends ConsumerState<LearnerSessionsScreen> {
                       child: Text.rich(
                         TextSpan(
                           children: [
-                            TextSpan(text: 'Learn with\n', style: mu.text.displayLight.copyWith(fontSize: 36)),
-                            TextSpan(text: 'mentors', style: mu.text.display.copyWith(fontSize: 36)),
+                            TextSpan(
+                              text: 'Learn with\n',
+                              style: mu.text.displayLight.copyWith(
+                                fontSize: 36,
+                              ),
+                            ),
+                            TextSpan(
+                              text: 'mentors',
+                              style: mu.text.display.copyWith(fontSize: 36),
+                            ),
                           ],
                         ),
                       ),
@@ -134,135 +145,192 @@ class _LearnerSessionsScreenState extends ConsumerState<LearnerSessionsScreen> {
     );
   }
 
-  List<Widget> _states<T>(AsyncValue<T> value, ProviderOrFamily provider, List<Widget> Function(T data) data) =>
-      value.when(
-        skipError: true,
-        loading: () => const [
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: MuSpacing.space8),
-            child: Center(child: MuDotsLoader()),
+  List<Widget> _states<T>(
+    AsyncValue<T> value,
+    ProviderOrFamily provider,
+    List<Widget> Function(T data) data,
+  ) => value.when(
+    skipError: true,
+    loading: () => const [
+      Padding(
+        padding: EdgeInsets.symmetric(vertical: MuSpacing.space8),
+        child: Center(child: MuDotsLoader()),
+      ),
+    ],
+    error: (e, _) => [
+      const SizedBox(height: MuSpacing.space4),
+      Row(
+        children: [
+          Expanded(child: MuEmptyLine(ApiException.messageFor(e))),
+          MuButton(
+            label: 'Retry',
+            variant: MuButtonVariant.ghost,
+            size: MuButtonSize.small,
+            onPressed: () => ref.invalidate(provider),
           ),
         ],
-        error: (e, _) => [
-          const SizedBox(height: MuSpacing.space4),
-          Row(
-            children: [
-              Expanded(child: MuEmptyLine(ApiException.messageFor(e))),
-              MuButton(
-                label: 'Retry',
-                variant: MuButtonVariant.ghost,
-                size: MuButtonSize.small,
-                onPressed: () => ref.invalidate(provider),
-              ),
-            ],
-          ),
-        ],
-        data: data,
-      );
+      ),
+    ],
+    data: data,
+  );
 
   List<Widget> _available() {
-    final joined = ref.watch(joinedSessionIdsProvider).value ?? const <String>{};
+    final joined =
+        ref.watch(joinedSessionIdsProvider).value ?? const <String>{};
     final today = ref.watch(clockProvider)().toLocal();
-    return _states(ref.watch(availableSessionsProvider), availableSessionsProvider, (items) {
+    return _states(
+      ref.watch(availableSessionsProvider),
+      availableSessionsProvider,
+      (items) {
+        if (items.isEmpty) {
+          return const [
+            SizedBox(height: MuSpacing.space4),
+            MuEmptyLine(
+              'No sessions open right now. Ask for one below and a mentor can pick it up.',
+            ),
+          ];
+        }
+        final days = <DateTime, List<AvailableSession>>{};
+        for (final a in items) {
+          final s = a.session.startsAt.toLocal();
+          days.putIfAbsent(DateTime(s.year, s.month, s.day), () => []).add(a);
+        }
+        return [
+          for (final MapEntry(key: day, value: list) in days.entries) ...[
+            MuSectionEyebrow(
+              formatDayHeading(day, today),
+              top: MuSpacing.space4,
+            ),
+            MuFeedGroup(
+              children: [
+                for (var i = 0; i < list.length; i++)
+                  _AvailableRow(
+                    item: list[i],
+                    joined: joined.contains(list[i].session.id),
+                    last: i == list.length - 1,
+                  ),
+              ],
+            ),
+          ],
+        ];
+      },
+    );
+  }
+
+  List<Widget> _requests() => _states(
+    ref.watch(mySessionRequestsProvider),
+    mySessionRequestsProvider,
+    (items) {
       if (items.isEmpty) {
         return const [
           SizedBox(height: MuSpacing.space4),
-          MuEmptyLine('No sessions open right now. Ask for one below and a mentor can pick it up.'),
+          MuEmptyLine(
+            "You haven't asked for a session yet. Need help with something? Ask below.",
+          ),
         ];
       }
-      final days = <DateTime, List<AvailableSession>>{};
-      for (final a in items) {
-        final s = a.session.startsAt.toLocal();
-        days.putIfAbsent(DateTime(s.year, s.month, s.day), () => []).add(a);
-      }
       return [
-        for (final MapEntry(key: day, value: list) in days.entries) ...[
-          MuSectionEyebrow(formatDayHeading(day, today), top: MuSpacing.space4),
-          MuFeedGroup(
-            children: [
-              for (var i = 0; i < list.length; i++)
-                _AvailableRow(item: list[i], joined: joined.contains(list[i].session.id), last: i == list.length - 1),
-            ],
-          ),
-        ],
-      ];
-    });
-  }
-
-  List<Widget> _requests() => _states(ref.watch(mySessionRequestsProvider), mySessionRequestsProvider, (items) {
-    if (items.isEmpty) {
-      return const [
-        SizedBox(height: MuSpacing.space4),
-        MuEmptyLine("You haven't asked for a session yet. Need help with something? Ask below."),
-      ];
-    }
-    return [
-      const SizedBox(height: MuSpacing.space4),
-      MuFeedGroup(
-        children: [
-          for (var i = 0; i < items.length; i++)
-            MuFeedRow(
-              leading: const MuFeedIcon(LucideIcons.messageSquare, tone: MuFeedTone.event),
-              subject: items[i].title,
-              time: [formatDayTime(items[i].startsAt.toLocal()), items[i].groupName].join(' · '),
-              actions: [_requestPill(items[i].status)],
-              divider: i < items.length - 1,
-            ),
-        ],
-      ),
-    ];
-  });
-
-  List<Widget> _history() => _states(ref.watch(mySessionHistoryProvider), mySessionHistoryProvider, (items) {
-    if (items.isEmpty) {
-      return const [
-        SizedBox(height: MuSpacing.space4),
-        MuEmptyLine('Sessions you join show up here, with a way to rate them after.'),
-      ];
-    }
-    final now = ref.watch(clockProvider)();
-    return [
-      const SizedBox(height: MuSpacing.space4),
-      MuFeedGroup(
-        children: [
-          for (var i = 0; i < items.length; i++)
-            MuFeedRow(
-              leading: MuFeedIcon(
-                items[i].attendance == LearnerAttendance.attended ? LucideIcons.checkCircle2 : LucideIcons.calendar,
-                tone: items[i].attendance == LearnerAttendance.attended ? MuFeedTone.karma : MuFeedTone.event,
+        const SizedBox(height: MuSpacing.space4),
+        MuFeedGroup(
+          children: [
+            for (var i = 0; i < items.length; i++)
+              MuFeedRow(
+                leading: const MuFeedIcon(
+                  LucideIcons.messageSquare,
+                  tone: MuFeedTone.event,
+                ),
+                subject: items[i].title,
+                time: [
+                  formatDayTime(items[i].startsAt.toLocal()),
+                  items[i].groupName,
+                ].join(' · '),
+                actions: [_requestPill(items[i].status)],
+                divider: i < items.length - 1,
               ),
-              subject: items[i].session.title,
-              time: [
-                formatDay(items[i].session.startsAt.toLocal()),
-                if (items[i].session.entityName.isNotEmpty) items[i].session.entityName,
-              ].join(' · '),
-              actions: [
-                _recordPill(items[i], now),
-                if (items[i].feedback != null) const MuPill('Feedback sent', icon: LucideIcons.messageCircle),
-              ],
-              trailing: items[i].canGiveFeedback
-                  ? MuButton(
-                      label: 'Rate it',
-                      size: MuButtonSize.small,
-                      variant: MuButtonVariant.outline,
-                      onPressed: () => _FeedbackSheet.show(context, items[i].session),
-                    )
-                  : null,
-              divider: i < items.length - 1,
-              onTap: () => _SessionSheet.show(context, items[i].session, joined: true),
-            ),
-        ],
-      ),
-    ];
-  });
+          ],
+        ),
+      ];
+    },
+  );
+
+  List<Widget> _history() => _states(
+    ref.watch(mySessionHistoryProvider),
+    mySessionHistoryProvider,
+    (items) {
+      if (items.isEmpty) {
+        return const [
+          SizedBox(height: MuSpacing.space4),
+          MuEmptyLine(
+            'Sessions you join show up here, with a way to rate them after.',
+          ),
+        ];
+      }
+      final now = ref.watch(clockProvider)();
+      return [
+        const SizedBox(height: MuSpacing.space4),
+        MuFeedGroup(
+          children: [
+            for (var i = 0; i < items.length; i++)
+              MuFeedRow(
+                leading: MuFeedIcon(
+                  items[i].attendance == LearnerAttendance.attended
+                      ? LucideIcons.checkCircle2
+                      : LucideIcons.calendar,
+                  tone: items[i].attendance == LearnerAttendance.attended
+                      ? MuFeedTone.karma
+                      : MuFeedTone.event,
+                ),
+                subject: items[i].session.title,
+                time: [
+                  formatDay(items[i].session.startsAt.toLocal()),
+                  if (items[i].session.entityName.isNotEmpty)
+                    items[i].session.entityName,
+                ].join(' · '),
+                actions: [
+                  _recordPill(items[i], now),
+                  if (items[i].feedback != null)
+                    const MuPill(
+                      'Feedback sent',
+                      icon: LucideIcons.messageCircle,
+                    ),
+                ],
+                trailing: items[i].canGiveFeedback
+                    ? MuButton(
+                        label: 'Rate it',
+                        size: MuButtonSize.small,
+                        variant: MuButtonVariant.outline,
+                        onPressed: () =>
+                            _FeedbackSheet.show(context, items[i].session),
+                      )
+                    : null,
+                divider: i < items.length - 1,
+                onTap: () =>
+                    _SessionSheet.show(context, items[i].session, joined: true),
+              ),
+          ],
+        ),
+      ];
+    },
+  );
 }
 
 Widget _requestPill(SessionStatus s) => switch (s) {
-  SessionStatus.requested => const MuPill('Waiting for a mentor', tone: MuPillTone.warning, icon: LucideIcons.clock),
-  SessionStatus.scheduled ||
-  SessionStatus.pendingApproval => const MuPill('Approved', tone: MuPillTone.success, icon: LucideIcons.check),
+  SessionStatus.requested => const MuPill(
+    'Waiting for a mentor',
+    tone: MuPillTone.warning,
+    icon: LucideIcons.clock,
+  ),
+  SessionStatus.scheduled || SessionStatus.pendingApproval => const MuPill(
+    'Approved',
+    tone: MuPillTone.success,
+    icon: LucideIcons.check,
+  ),
   SessionStatus.completed => const MuPill('Done', icon: LucideIcons.check),
-  SessionStatus.rejected => const MuPill('Declined', tone: MuPillTone.danger, icon: LucideIcons.x),
+  SessionStatus.rejected => const MuPill(
+    'Declined',
+    tone: MuPillTone.danger,
+    icon: LucideIcons.x,
+  ),
   SessionStatus.cancelled => const MuPill('Cancelled', icon: LucideIcons.x),
   SessionStatus.unknown => const MuPill('Unknown'),
 };
@@ -270,17 +338,36 @@ Widget _requestPill(SessionStatus s) => switch (s) {
 Widget _recordPill(SessionRecord r, DateTime now) {
   switch (r.session.status) {
     case SessionStatus.requested:
-      return const MuPill('Requested', tone: MuPillTone.warning, icon: LucideIcons.clock);
+      return const MuPill(
+        'Requested',
+        tone: MuPillTone.warning,
+        icon: LucideIcons.clock,
+      );
     case SessionStatus.rejected:
-      return const MuPill('Declined', tone: MuPillTone.danger, icon: LucideIcons.x);
+      return const MuPill(
+        'Declined',
+        tone: MuPillTone.danger,
+        icon: LucideIcons.x,
+      );
     case SessionStatus.cancelled:
       return const MuPill('Cancelled', icon: LucideIcons.x);
     case _:
   }
   return switch (r.attendance) {
-    LearnerAttendance.attended => const MuPill('Attended', tone: MuPillTone.success, icon: LucideIcons.check),
-    LearnerAttendance.absent => const MuPill('Missed', tone: MuPillTone.danger, icon: LucideIcons.x),
-    _ when now.isBefore(r.session.endsAt) => const MuPill('Coming up', tone: MuPillTone.cobalt),
+    LearnerAttendance.attended => const MuPill(
+      'Attended',
+      tone: MuPillTone.success,
+      icon: LucideIcons.check,
+    ),
+    LearnerAttendance.absent => const MuPill(
+      'Missed',
+      tone: MuPillTone.danger,
+      icon: LucideIcons.x,
+    ),
+    _ when now.isBefore(r.session.endsAt) => const MuPill(
+      'Coming up',
+      tone: MuPillTone.cobalt,
+    ),
     _ => const MuPill('Joined'),
   };
 }
@@ -288,7 +375,11 @@ Widget _recordPill(SessionRecord r, DateTime now) {
 /// An open session: its times on the left, title, mentor and group, and
 /// Join (or Joined). Opens the session.
 class _AvailableRow extends ConsumerWidget {
-  const _AvailableRow({required this.item, required this.joined, required this.last});
+  const _AvailableRow({
+    required this.item,
+    required this.joined,
+    required this.last,
+  });
 
   final AvailableSession item;
   final bool joined;
@@ -304,25 +395,44 @@ class _AvailableRow extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(formatTime(s.startsAt.toLocal()), style: mu.text.bodyStrong.copyWith(fontSize: 14)),
+            Text(
+              formatTime(s.startsAt.toLocal()),
+              style: mu.text.bodyStrong.copyWith(fontSize: 14),
+            ),
             Text(formatTime(s.endsAt.toLocal()), style: mu.text.caption),
           ],
         ),
       ),
       subject: s.title,
-      time: [item.mentorName, if (s.entityName.isNotEmpty) s.entityName].join(' · '),
+      time: [
+        item.mentorName,
+        if (s.entityName.isNotEmpty) s.entityName,
+      ].join(' · '),
       actions: [MuPill(sessionModeLabel(s.mode))],
       trailing: joined
-          ? const MuPill('Joined', tone: MuPillTone.success, icon: LucideIcons.check)
+          ? const MuPill(
+              'Joined',
+              tone: MuPillTone.success,
+              icon: LucideIcons.check,
+            )
           : _JoinButton(sessionId: s.id, title: s.title),
       divider: !last,
-      onTap: () => _SessionSheet.show(context, s, mentorName: item.mentorName, joined: joined),
+      onTap: () => _SessionSheet.show(
+        context,
+        s,
+        mentorName: item.mentorName,
+        joined: joined,
+      ),
     );
   }
 }
 
 class _JoinButton extends ConsumerStatefulWidget {
-  const _JoinButton({required this.sessionId, required this.title, this.block = false});
+  const _JoinButton({
+    required this.sessionId,
+    required this.title,
+    this.block = false,
+  });
 
   final String sessionId;
   final String title;
@@ -337,7 +447,9 @@ class _JoinButtonState extends ConsumerState<_JoinButton> {
 
   Future<void> _join() async {
     setState(() => _busy = true);
-    final message = await ref.read(learnerSessionActionsProvider.notifier).join(widget.sessionId);
+    final message = await ref
+        .read(learnerSessionActionsProvider.notifier)
+        .join(widget.sessionId);
     if (!mounted) return;
     setState(() => _busy = false);
     final error = ref.read(learnerSessionActionsProvider).error;
@@ -363,17 +475,26 @@ class _JoinButtonState extends ConsumerState<_JoinButton> {
 /// A session's details in a sheet: when, who, where, what it's about, and
 /// the link once you're in (or Join).
 class _SessionSheet extends ConsumerWidget {
-  const _SessionSheet({required this.session, required this.joined, this.mentorName});
+  const _SessionSheet({
+    required this.session,
+    required this.joined,
+    this.mentorName,
+  });
 
   final MentorSession session;
   final String? mentorName;
   final bool joined;
 
-  static Future<void> show(BuildContext context, MentorSession session, {required bool joined, String? mentorName}) =>
-      showMuSheet<void>(
-        context,
-        builder: (_) => _SessionSheet(session: session, mentorName: mentorName, joined: joined),
-      );
+  static Future<void> show(
+    BuildContext context,
+    MentorSession session, {
+    required bool joined,
+    String? mentorName,
+  }) => showMuSheet<void>(
+    context,
+    builder: (_) =>
+        _SessionSheet(session: session, mentorName: mentorName, joined: joined),
+  );
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -383,7 +504,12 @@ class _SessionSheet extends ConsumerWidget {
     final ends = s.endsAt.toLocal();
     final venue = s.venue;
     return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(MuSpacing.space5, 0, MuSpacing.space5, MuSpacing.space5),
+      padding: const EdgeInsets.fromLTRB(
+        MuSpacing.space5,
+        0,
+        MuSpacing.space5,
+        MuSpacing.space5,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -394,21 +520,29 @@ class _SessionSheet extends ConsumerWidget {
             runSpacing: 6,
             children: [
               MuPill(sessionModeLabel(s.mode)),
-              if (s.entityName.isNotEmpty) MuPill(s.entityName, tone: MuPillTone.cobalt),
+              if (s.entityName.isNotEmpty)
+                MuPill(s.entityName, tone: MuPillTone.cobalt),
             ],
           ),
           const SizedBox(height: MuSpacing.space4),
           MuFeedGroup(
             children: [
               MuFeedRow(
-                leading: const MuFeedIcon(LucideIcons.calendar, tone: MuFeedTone.event),
+                leading: const MuFeedIcon(
+                  LucideIcons.calendar,
+                  tone: MuFeedTone.event,
+                ),
                 subject: formatDay(starts),
                 time: '${formatTime(starts)} – ${formatTime(ends)}',
                 divider: mentorName != null,
               ),
               if (mentorName != null)
                 MuFeedRow(
-                  leading: MuAvatar(name: mentorName!, size: MuSizes.avatarMd, ring: false),
+                  leading: MuAvatar(
+                    name: mentorName!,
+                    size: MuSizes.avatarMd,
+                    ring: false,
+                  ),
                   subject: mentorName!,
                   time: 'Mentor',
                   divider: false,
@@ -417,9 +551,15 @@ class _SessionSheet extends ConsumerWidget {
           ),
           if (s.description.isNotEmpty) ...[
             const SizedBox(height: MuSpacing.space4),
-            Text(s.description, style: mu.text.body.copyWith(color: mu.colors.ink2)),
+            Text(
+              s.description,
+              style: mu.text.body.copyWith(color: mu.colors.ink2),
+            ),
           ],
-          if (joined && venue != null) ...[const SizedBox(height: MuSpacing.space4), VenueRow(venue: venue)],
+          if (joined && venue != null) ...[
+            const SizedBox(height: MuSpacing.space4),
+            VenueRow(venue: venue),
+          ],
           if (joined && s.meetingLink != null) ...[
             const SizedBox(height: MuSpacing.space4),
             MeetingLinkActions(session: s),
@@ -442,7 +582,10 @@ class _FeedbackSheet extends ConsumerStatefulWidget {
   final MentorSession session;
 
   static Future<void> show(BuildContext context, MentorSession session) =>
-      showMuSheet<void>(context, builder: (_) => _FeedbackSheet(session: session));
+      showMuSheet<void>(
+        context,
+        builder: (_) => _FeedbackSheet(session: session),
+      );
 
   @override
   ConsumerState<_FeedbackSheet> createState() => _FeedbackSheetState();
@@ -469,7 +612,11 @@ class _FeedbackSheetState extends ConsumerState<_FeedbackSheet> {
         .feedback(widget.session.id, rating: _rating, text: _text.text);
     if (!mounted) return;
     if (message == null) {
-      setState(() => _error = ApiException.messageFor(ref.read(learnerSessionActionsProvider).error ?? 'Not sent'));
+      setState(
+        () => _error = ApiException.messageFor(
+          ref.read(learnerSessionActionsProvider).error ?? 'Not sent',
+        ),
+      );
       return;
     }
     MuToast.show(context, message: message, type: MuToastType.success);
@@ -483,7 +630,12 @@ class _FeedbackSheetState extends ConsumerState<_FeedbackSheet> {
     return MuFormSheet(
       title: 'How was it?',
       lead: widget.session.title,
-      action: MuButton(label: 'Send feedback', block: true, loading: busy, onPressed: busy ? null : _send),
+      action: MuButton(
+        label: 'Send feedback',
+        block: true,
+        loading: busy,
+        onPressed: busy ? null : _send,
+      ),
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -524,7 +676,11 @@ class _FeedbackSheetState extends ConsumerState<_FeedbackSheet> {
             if (_error != null) setState(() => _error = null);
           },
         ),
-        if (_error != null) Text(_error!, style: context.mu.text.caption.copyWith(color: c.danger)),
+        if (_error != null)
+          Text(
+            _error!,
+            style: context.mu.text.caption.copyWith(color: c.danger),
+          ),
       ],
     );
   }
@@ -535,7 +691,8 @@ class _FeedbackSheetState extends ConsumerState<_FeedbackSheet> {
 class _RequestSheet extends ConsumerStatefulWidget {
   const _RequestSheet();
 
-  static Future<void> show(BuildContext context) => showMuSheet<void>(context, builder: (_) => const _RequestSheet());
+  static Future<void> show(BuildContext context) =>
+      showMuSheet<void>(context, builder: (_) => const _RequestSheet());
 
   @override
   ConsumerState<_RequestSheet> createState() => _RequestSheetState();
@@ -565,14 +722,19 @@ class _RequestSheetState extends ConsumerState<_RequestSheet> {
   }
 
   Future<void> _pick({required bool start}) async {
-    final picked = await pickDateTime(context, initial: start ? _starts : _ends);
+    final picked = await pickDateTime(
+      context,
+      initial: start ? _starts : _ends,
+    );
     if (picked == null || !mounted) return;
     setState(() {
       _timeError = null;
       if (start) {
         final length = _ends.difference(_starts);
         _starts = picked;
-        _ends = picked.add(length.isNegative ? const Duration(hours: 1) : length);
+        _ends = picked.add(
+          length.isNegative ? const Duration(hours: 1) : length,
+        );
       } else {
         _ends = picked;
       }
@@ -599,7 +761,9 @@ class _RequestSheetState extends ConsumerState<_RequestSheet> {
             mode: _mode,
             startsAt: _starts,
             endsAt: _ends,
-            meetingLink: link.isEmpty || link.startsWith('http') ? link : 'https://$link',
+            meetingLink: link.isEmpty || link.startsWith('http')
+                ? link
+                : 'https://$link',
             venue: _venue.text.trim(),
           ),
         );
@@ -607,7 +771,9 @@ class _RequestSheetState extends ConsumerState<_RequestSheet> {
     final error = ref.read(learnerSessionActionsProvider).error;
     MuToast.show(
       context,
-      message: message ?? ApiException.messageFor(error ?? "Couldn't send the request"),
+      message:
+          message ??
+          ApiException.messageFor(error ?? "Couldn't send the request"),
       type: message != null ? MuToastType.success : MuToastType.error,
     );
     if (message != null) Navigator.of(context).pop();
@@ -622,7 +788,8 @@ class _RequestSheetState extends ConsumerState<_RequestSheet> {
     if (igs.hasValue && groups.isEmpty) {
       return MuFormSheet(
         title: 'Ask for a session',
-        lead: 'Mentors take requests in interest groups. Join one first, then ask here.',
+        lead:
+            'Mentors take requests in interest groups. Join one first, then ask here.',
         action: MuButton(
           label: 'Find interest groups',
           block: true,
@@ -639,7 +806,12 @@ class _RequestSheetState extends ConsumerState<_RequestSheet> {
       child: MuFormSheet(
         title: 'Ask for a session',
         lead: 'Mentors in the group see your request and can schedule it.',
-        action: MuButton(label: 'Send request', block: true, loading: busy, onPressed: busy ? null : _send),
+        action: MuButton(
+          label: 'Send request',
+          block: true,
+          loading: busy,
+          onPressed: busy ? null : _send,
+        ),
         children: [
           MuSelectField(
             label: 'Interest group',
@@ -656,7 +828,8 @@ class _RequestSheetState extends ConsumerState<_RequestSheet> {
             hint: 'E.g. Getting started with React hooks',
             maxLength: 150,
             textCapitalization: TextCapitalization.sentences,
-            validator: (v) => (v ?? '').trim().isEmpty ? 'Give it a short title.' : null,
+            validator: (v) =>
+                (v ?? '').trim().isEmpty ? 'Give it a short title.' : null,
           ),
           MuTextField(
             label: 'Details',
@@ -665,35 +838,52 @@ class _RequestSheetState extends ConsumerState<_RequestSheet> {
             maxLines: 5,
             minLines: 3,
             textCapitalization: TextCapitalization.sentences,
-            validator: (v) => (v ?? '').trim().isEmpty ? 'Add a line or two.' : null,
+            validator: (v) =>
+                (v ?? '').trim().isEmpty ? 'Add a line or two.' : null,
           ),
           MuFieldChrome(
             label: 'Starts',
             onTap: () => _pick(start: true),
-            trailing: Icon(LucideIcons.calendar, size: MuSizes.iconSm, color: mu.colors.ink3),
+            trailing: Icon(
+              LucideIcons.calendar,
+              size: MuSizes.iconSm,
+              color: mu.colors.ink3,
+            ),
             child: Text(formatDayTime(_starts), style: mu.text.body),
           ),
           MuFieldChrome(
             label: 'Ends',
             onTap: () => _pick(start: false),
             error: _timeError,
-            trailing: Icon(LucideIcons.clock, size: MuSizes.iconSm, color: mu.colors.ink3),
+            trailing: Icon(
+              LucideIcons.clock,
+              size: MuSizes.iconSm,
+              color: mu.colors.ink3,
+            ),
             child: Text(formatDayTime(_ends), style: mu.text.body),
           ),
           MuSegmented<SessionMode>(
-            values: const [SessionMode.online, SessionMode.offline, SessionMode.hybrid],
+            values: const [
+              SessionMode.online,
+              SessionMode.offline,
+              SessionMode.hybrid,
+            ],
             selected: _mode,
             label: sessionModeLabel,
             onChanged: (m) => setState(() => _mode = m),
           ),
           if (_mode != SessionMode.offline)
             MuTextField(
-              label: _mode == SessionMode.hybrid ? 'Meeting link' : 'Meeting link (optional)',
+              label: _mode == SessionMode.hybrid
+                  ? 'Meeting link'
+                  : 'Meeting link (optional)',
               controller: _link,
               hint: 'The mentor can add one when they approve',
               keyboardType: TextInputType.url,
               validator: (v) =>
-                  _mode == SessionMode.hybrid && (v ?? '').trim().isEmpty ? 'Hybrid sessions need a link.' : null,
+                  _mode == SessionMode.hybrid && (v ?? '').trim().isEmpty
+                  ? 'Hybrid sessions need a link.'
+                  : null,
             ),
           if (_mode != SessionMode.online)
             MuTextField(
@@ -701,7 +891,9 @@ class _RequestSheetState extends ConsumerState<_RequestSheet> {
               controller: _venue,
               hint: 'Where to meet',
               validator: (v) =>
-                  _mode == SessionMode.hybrid && (v ?? '').trim().isEmpty ? 'Hybrid sessions need a venue.' : null,
+                  _mode == SessionMode.hybrid && (v ?? '').trim().isEmpty
+                  ? 'Hybrid sessions need a venue.'
+                  : null,
             ),
         ],
       ),

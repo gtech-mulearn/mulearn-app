@@ -17,7 +17,10 @@ Future<DateTime?> pickDateTime(
     lastDate: last ?? initial.add(const Duration(days: 365)),
   );
   if (day == null || !context.mounted) return null;
-  final time = await showTimePicker(context: context, initialTime: TimeOfDay.fromDateTime(initial));
+  final time = await showTimePicker(
+    context: context,
+    initialTime: TimeOfDay.fromDateTime(initial),
+  );
   if (time == null) return null;
   return DateTime(day.year, day.month, day.day, time.hour, time.minute);
 }

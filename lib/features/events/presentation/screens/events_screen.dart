@@ -20,16 +20,32 @@ import 'package:mulearn_app/features/events/presentation/providers/events_contro
 /// Which events the list shows: from today on, or every event.
 enum _When { upcoming, all }
 
-const _monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const _monthNames = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec',
+];
 
 /// "17 Nov · Palai", "17–19 Nov · Online".
 String _whenLine(Event e) {
   final start = DateTime.tryParse(e.startDatetime)?.toLocal();
   final end = DateTime.tryParse(e.endDatetime)?.toLocal();
-  final place = e.venue.venueType == 'online' ? 'Online' : (e.venue.venueCity ?? 'Venue TBA');
+  final place = e.venue.venueType == 'online'
+      ? 'Online'
+      : (e.venue.venueCity ?? 'Venue TBA');
   if (start == null) return place;
   final day = '${start.day} ${_monthNames[start.month - 1]}';
-  final multiDay = end != null && (end.day != start.day || end.month != start.month);
+  final multiDay =
+      end != null && (end.day != start.day || end.month != start.month);
   final String range;
   if (!multiDay) {
     range = day;
@@ -78,8 +94,11 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
     final paged = ref.read(eventsListControllerProvider(_query)).value;
     // After a failed page, only the explicit "Try again" retries.
     if (paged == null || paged.loadMoreError != null) return;
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
-      unawaited(ref.read(eventsListControllerProvider(_query).notifier).loadMore());
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      unawaited(
+        ref.read(eventsListControllerProvider(_query).notifier).loadMore(),
+      );
     }
   }
 
@@ -93,7 +112,10 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
   }
 
   Future<void> _openFilters() async {
-    final next = await showMuSheet<EventFilter>(context, builder: (_) => _EventFiltersSheet(initial: _filter));
+    final next = await showMuSheet<EventFilter>(
+      context,
+      builder: (_) => _EventFiltersSheet(initial: _filter),
+    );
     if (next != null && mounted) setState(() => _filter = next);
   }
 
@@ -120,7 +142,12 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(MuSpacing.space5 - 4, MuSpacing.space2, MuSpacing.space5, 0),
+              padding: const EdgeInsets.fromLTRB(
+                MuSpacing.space5 - 4,
+                MuSpacing.space2,
+                MuSpacing.space5,
+                0,
+              ),
               child: Row(
                 children: [
                   if (ModalRoute.of(context)?.canPop ?? false)
@@ -133,7 +160,10 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
                     const SizedBox(width: 4),
                   const SizedBox(width: MuSpacing.space1),
                   Expanded(
-                    child: Semantics(header: true, child: Text('Events', style: mu.text.title1)),
+                    child: Semantics(
+                      header: true,
+                      child: Text('Events', style: mu.text.title1),
+                    ),
                   ),
                   MuIconButton(
                     icon: LucideIcons.radio,
@@ -141,7 +171,8 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
                     onPressed: () => context.push(RoutePaths.weeklyTwitches),
                   ),
                   const SizedBox(width: MuSpacing.space2),
-                  if (ref.watch(capabilitiesProvider).value?.canBrowseJobs ?? false) ...[
+                  if (ref.watch(capabilitiesProvider).value?.canBrowseJobs ??
+                      false) ...[
                     MuIconButton(
                       icon: LucideIcons.briefcase,
                       tooltip: 'Opportunities',
@@ -159,7 +190,12 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space3, MuSpacing.space5, 0),
+              padding: const EdgeInsets.fromLTRB(
+                MuSpacing.space5,
+                MuSpacing.space3,
+                MuSpacing.space5,
+                0,
+              ),
               child: Row(
                 children: [
                   Expanded(
@@ -180,7 +216,12 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space3, MuSpacing.space5, 0),
+              padding: const EdgeInsets.fromLTRB(
+                MuSpacing.space5,
+                MuSpacing.space3,
+                MuSpacing.space5,
+                0,
+              ),
               child: MuSegmented<_When>(
                 values: _When.values,
                 selected: _when,
@@ -192,8 +233,11 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
               child: eventsState.when(
                 skipError: true,
                 loading: () => const Center(child: CircularProgressIndicator()),
-                error: (error, _) =>
-                    ErrorRetryView(error: error, onRetry: () => ref.invalidate(eventsListControllerProvider(query))),
+                error: (error, _) => ErrorRetryView(
+                  error: error,
+                  onRetry: () =>
+                      ref.invalidate(eventsListControllerProvider(query)),
+                ),
                 data: (paged) {
                   final events = paged.items;
                   if (events.isEmpty) {
@@ -217,10 +261,13 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
                   }
                   final hasMore = paged.hasMore;
                   return MuRefresh(
-                    onRefresh: () => ref.refresh(eventsListControllerProvider(query).future),
+                    onRefresh: () =>
+                        ref.refresh(eventsListControllerProvider(query).future),
                     child: ListView.separated(
                       controller: _scrollController,
-                      physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+                      physics: const BouncingScrollPhysics(
+                        parent: AlwaysScrollableScrollPhysics(),
+                      ),
                       padding: const EdgeInsets.fromLTRB(
                         MuSpacing.space5,
                         MuSpacing.space5,
@@ -228,16 +275,23 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
                         MuSpacing.navClearance,
                       ),
                       itemCount: events.length + (hasMore ? 1 : 0),
-                      separatorBuilder: (_, _) => const SizedBox(height: MuSpacing.space5),
+                      separatorBuilder: (_, _) =>
+                          const SizedBox(height: MuSpacing.space5),
                       itemBuilder: (context, index) {
                         if (index >= events.length) {
                           return MuLoadMoreFooter(
                             isLoading: paged.isLoadingMore,
                             error: paged.loadMoreError,
-                            onRetry: () => ref.read(eventsListControllerProvider(query).notifier).loadMore(),
+                            onRetry: () => ref
+                                .read(
+                                  eventsListControllerProvider(query).notifier,
+                                )
+                                .loadMore(),
                           );
                         }
-                        return Center(child: _EventTicket(event: events[index]));
+                        return Center(
+                          child: _EventTicket(event: events[index]),
+                        );
                       },
                     ),
                   );
@@ -265,12 +319,20 @@ class _EventTicket extends ConsumerWidget {
       title: event.title,
       when: _whenLine(event),
       posterUrl: event.coverImage ?? event.bannerImage,
-      capacity: MuPill('${event.interestCount} interested', tone: MuPillTone.night),
+      capacity: MuPill(
+        '${event.interestCount} interested',
+        tone: MuPillTone.night,
+      ),
       kind: kind == null ? null : MuPill(kind, tone: MuPillTone.paper),
       pills: [
         if (event.minKarma != null && event.minKarma! > 0)
           MuPill('${muGrouped(event.minKarma!)}+ karma', tone: MuPillTone.volt),
-        if (event.isFeatured) const MuPill('Featured', tone: MuPillTone.cobalt, icon: LucideIcons.sparkles),
+        if (event.isFeatured)
+          const MuPill(
+            'Featured',
+            tone: MuPillTone.cobalt,
+            icon: LucideIcons.sparkles,
+          ),
       ],
       onTap: () => context.push(RoutePaths.eventDetailPath(event.id)),
       stub: MuButton(
@@ -279,7 +341,9 @@ class _EventTicket extends ConsumerWidget {
         variant: interested ? MuButtonVariant.outline : MuButtonVariant.ink,
         block: true,
         loading: busy,
-        onPressed: () => ref.read(eventInterestControllerProvider.notifier).toggle(event.id, interested: !interested),
+        onPressed: () => ref
+            .read(eventInterestControllerProvider.notifier)
+            .toggle(event.id, interested: !interested),
       ),
     );
   }
@@ -305,14 +369,23 @@ class _EventFiltersSheetState extends ConsumerState<_EventFiltersSheet> {
     final c = mu.colors;
     final payload = ref.watch(myProfilePayloadProvider).value;
     final groups = [
-      for (final g in (payload?['interest_groups'] as List<dynamic>? ?? const []).whereType<Map<String, dynamic>>())
-        if (g['id'] is String) (id: g['id'] as String, name: g['name'] as String? ?? ''),
+      for (final g
+          in (payload?['interest_groups'] as List<dynamic>? ?? const [])
+              .whereType<Map<String, dynamic>>())
+        if (g['id'] is String)
+          (id: g['id'] as String, name: g['name'] as String? ?? ''),
     ];
     final from = _draft.from;
 
     Widget label(String text) => Padding(
-      padding: const EdgeInsets.only(top: MuSpacing.space5, bottom: MuSpacing.space2),
-      child: Text(text.toUpperCase(), style: mu.text.eyebrow.copyWith(color: c.ink3)),
+      padding: const EdgeInsets.only(
+        top: MuSpacing.space5,
+        bottom: MuSpacing.space2,
+      ),
+      child: Text(
+        text.toUpperCase(),
+        style: mu.text.eyebrow.copyWith(color: c.ink3),
+      ),
     );
 
     return SafeArea(
@@ -338,8 +411,11 @@ class _EventFiltersSheetState extends ConsumerState<_EventFiltersSheet> {
                     MuFilterChip(
                       label: e.value,
                       selected: _draft.eventType == e.key,
-                      onTap: () =>
-                          setState(() => _draft = _draft.copyWith(eventType: _draft.eventType == e.key ? null : e.key)),
+                      onTap: () => setState(
+                        () => _draft = _draft.copyWith(
+                          eventType: _draft.eventType == e.key ? null : e.key,
+                        ),
+                      ),
                     ),
                 ],
               ),
@@ -353,7 +429,11 @@ class _EventFiltersSheetState extends ConsumerState<_EventFiltersSheet> {
                       MuFilterChip(
                         label: g.name,
                         selected: _draft.igId == g.id,
-                        onTap: () => setState(() => _draft = _draft.copyWith(igId: _draft.igId == g.id ? null : g.id)),
+                        onTap: () => setState(
+                          () => _draft = _draft.copyWith(
+                            igId: _draft.igId == g.id ? null : g.id,
+                          ),
+                        ),
                       ),
                   ],
                 ),
@@ -362,7 +442,9 @@ class _EventFiltersSheetState extends ConsumerState<_EventFiltersSheet> {
               Row(
                 children: [
                   MuFilterChip(
-                    label: from == null ? 'Any date' : '${from.day} ${_monthNames[from.month - 1]} ${from.year}',
+                    label: from == null
+                        ? 'Any date'
+                        : '${from.day} ${_monthNames[from.month - 1]} ${from.year}',
                     icon: LucideIcons.calendar,
                     selected: from != null,
                     onTap: () async {
@@ -373,7 +455,9 @@ class _EventFiltersSheetState extends ConsumerState<_EventFiltersSheet> {
                         firstDate: DateTime(now.year - 1),
                         lastDate: DateTime(now.year + 2),
                       );
-                      if (picked != null) setState(() => _draft = _draft.copyWith(from: picked));
+                      if (picked != null) {
+                        setState(() => _draft = _draft.copyWith(from: picked));
+                      }
                     },
                   ),
                   if (from != null) ...[
@@ -381,7 +465,8 @@ class _EventFiltersSheetState extends ConsumerState<_EventFiltersSheet> {
                     MuIconButton(
                       icon: LucideIcons.x,
                       tooltip: 'Clear date',
-                      onPressed: () => setState(() => _draft = _draft.copyWith(from: null)),
+                      onPressed: () =>
+                          setState(() => _draft = _draft.copyWith(from: null)),
                     ),
                   ],
                 ],
@@ -390,10 +475,17 @@ class _EventFiltersSheetState extends ConsumerState<_EventFiltersSheet> {
               SwitchListTile.adaptive(
                 contentPadding: EdgeInsets.zero,
                 activeTrackColor: c.cobalt,
-                title: Text('Only events I can join', style: mu.text.bodyStrong),
-                subtitle: Text('Hide events that need more karma than you have', style: mu.text.caption),
+                title: Text(
+                  'Only events I can join',
+                  style: mu.text.bodyStrong,
+                ),
+                subtitle: Text(
+                  'Hide events that need more karma than you have',
+                  style: mu.text.caption,
+                ),
                 value: _draft.eligibleOnly,
-                onChanged: (v) => setState(() => _draft = _draft.copyWith(eligibleOnly: v)),
+                onChanged: (v) =>
+                    setState(() => _draft = _draft.copyWith(eligibleOnly: v)),
               ),
               const SizedBox(height: MuSpacing.space5),
               Row(
@@ -402,12 +494,17 @@ class _EventFiltersSheetState extends ConsumerState<_EventFiltersSheet> {
                     child: MuButton(
                       label: 'Clear',
                       variant: MuButtonVariant.outline,
-                      onPressed: () => Navigator.of(context).pop(EventFilter(search: widget.initial.search)),
+                      onPressed: () => Navigator.of(
+                        context,
+                      ).pop(EventFilter(search: widget.initial.search)),
                     ),
                   ),
                   const SizedBox(width: MuSpacing.space3),
                   Expanded(
-                    child: MuButton(label: 'Apply', onPressed: () => Navigator.of(context).pop(_draft)),
+                    child: MuButton(
+                      label: 'Apply',
+                      onPressed: () => Navigator.of(context).pop(_draft),
+                    ),
                   ),
                 ],
               ),

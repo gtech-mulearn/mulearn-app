@@ -15,11 +15,21 @@ class EditMeetingScreen extends ConsumerWidget {
 
   final String meetingId;
 
-  Future<void> _submit(BuildContext context, WidgetRef ref, MeetingForm form) async {
-    await ref.read(meetingActionsControllerProvider.notifier).editMeeting(meetingId, form);
+  Future<void> _submit(
+    BuildContext context,
+    WidgetRef ref,
+    MeetingForm form,
+  ) async {
+    await ref
+        .read(meetingActionsControllerProvider.notifier)
+        .editMeeting(meetingId, form);
     if (!context.mounted) return;
     if (!ref.read(meetingActionsControllerProvider).hasError) {
-      MuToast.show(context, message: 'Meeting saved', type: MuToastType.success);
+      MuToast.show(
+        context,
+        message: 'Meeting saved',
+        type: MuToastType.success,
+      );
       context.pop();
     }
   }
@@ -37,15 +47,22 @@ class EditMeetingScreen extends ConsumerWidget {
             const MuTopBar.detail(),
             Expanded(
               child: detailState.when(
-                loading: () => const Center(child: MuDotsLoader(label: 'Loading the meeting…')),
-                error: (error, _) =>
-                    ErrorRetryView(error: error, onRetry: () => ref.invalidate(meetingDetailProvider(meetingId))),
+                loading: () => const Center(
+                  child: MuDotsLoader(label: 'Loading the meeting…'),
+                ),
+                error: (error, _) => ErrorRetryView(
+                  error: error,
+                  onRetry: () =>
+                      ref.invalidate(meetingDetailProvider(meetingId)),
+                ),
                 data: (meeting) => MeetingFormFields(
                   title: 'Edit meeting',
                   initial: _formFromDetail(meeting),
                   isSubmitting: actionState.isLoading,
                   submitLabel: 'Save changes',
-                  errorMessage: actionState.hasError ? ApiException.messageFor(actionState.error!) : null,
+                  errorMessage: actionState.hasError
+                      ? ApiException.messageFor(actionState.error!)
+                      : null,
                   onSubmit: (form) => _submit(context, ref, form),
                 ),
               ),

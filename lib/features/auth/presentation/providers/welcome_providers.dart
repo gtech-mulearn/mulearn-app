@@ -7,11 +7,13 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'welcome_providers.g.dart';
 
 @riverpod
-WelcomeRemoteDataSource welcomeRemoteDataSource(Ref ref) => WelcomeRemoteDataSource(ref.watch(dioProvider));
+WelcomeRemoteDataSource welcomeRemoteDataSource(Ref ref) =>
+    WelcomeRemoteDataSource(ref.watch(dioProvider));
 
 /// Community counts for the arrival beats and the Commons.
 @riverpod
-Future<PublicStats> publicStats(Ref ref) => ref.watch(welcomeRemoteDataSourceProvider).fetchStats();
+Future<PublicStats> publicStats(Ref ref) =>
+    ref.watch(welcomeRemoteDataSourceProvider).fetchStats();
 
 /// Featured events, for the "Then show up" beat and the Commons.
 @riverpod
@@ -30,7 +32,8 @@ class ArrivalSeen extends _$ArrivalSeen {
   static const _key = 'arrival_seen';
 
   @override
-  Future<bool> build() async => (await ref.watch(secureStorageProvider).read(key: _key)) == '1';
+  Future<bool> build() async =>
+      (await ref.watch(secureStorageProvider).read(key: _key)) == '1';
 
   Future<void> markSeen() async {
     state = const AsyncData(true);

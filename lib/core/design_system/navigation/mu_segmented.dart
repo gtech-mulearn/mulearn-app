@@ -14,7 +14,10 @@ class MuSegmented<T> extends StatelessWidget {
     required this.label,
     required this.onChanged,
     super.key,
-  }) : assert(values.length >= 2 && values.length <= 3, 'segmented controls hold 2 or 3 options');
+  }) : assert(
+         values.length >= 2 && values.length <= 3,
+         'segmented controls hold 2 or 3 options',
+       );
 
   /// Options, in order.
   final List<T> values;
@@ -37,13 +40,21 @@ class MuSegmented<T> extends StatelessWidget {
     return Container(
       height: MuSizes.touchMin,
       padding: const EdgeInsets.all(4),
-      decoration: BoxDecoration(color: c.surfaceSunk, borderRadius: BorderRadius.circular(MuRadii.round)),
+      decoration: BoxDecoration(
+        color: c.surfaceSunk,
+        borderRadius: BorderRadius.circular(MuRadii.round),
+      ),
       child: Stack(
         children: [
           AnimatedAlign(
-            duration: reduce ? Duration.zero : const Duration(milliseconds: 320),
+            duration: reduce
+                ? Duration.zero
+                : const Duration(milliseconds: 320),
             curve: Curves.easeOutCubic,
-            alignment: Alignment(values.length == 1 ? 0 : -1 + 2 * index / (values.length - 1), 0),
+            alignment: Alignment(
+              values.length == 1 ? 0 : -1 + 2 * index / (values.length - 1),
+              0,
+            ),
             child: FractionallySizedBox(
               widthFactor: 1 / values.length,
               heightFactor: 1,
@@ -52,7 +63,11 @@ class MuSegmented<T> extends StatelessWidget {
                   color: c.surface,
                   borderRadius: BorderRadius.circular(MuRadii.round),
                   boxShadow: [
-                    BoxShadow(color: c.ink.withValues(alpha: 0.12), blurRadius: 3, offset: const Offset(0, 1)),
+                    BoxShadow(
+                      color: c.ink.withValues(alpha: 0.12),
+                      blurRadius: 3,
+                      offset: const Offset(0, 1),
+                    ),
                   ],
                 ),
               ),
@@ -80,7 +95,10 @@ class MuSegmented<T> extends StatelessWidget {
                           label(v),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: mu.text.label.copyWith(fontSize: 14, color: v == selected ? c.ink : c.ink2),
+                          style: mu.text.label.copyWith(
+                            fontSize: 14,
+                            color: v == selected ? c.ink : c.ink2,
+                          ),
                         ),
                       ),
                     ),

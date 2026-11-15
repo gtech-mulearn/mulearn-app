@@ -50,11 +50,15 @@ class PublicProfileScreen extends ConsumerWidget {
                   child: MuStateDisplay(
                     variant: MuStateVariant.notFound,
                     title: 'Profile not found',
-                    description: 'The requested profile could not be found or is private.',
+                    description:
+                        'The requested profile could not be found or is private.',
                   ),
                 ),
               )
-            : ErrorRetryView(error: error, onRetry: () => ref.invalidate(publicUserProfileProvider(muid))),
+            : ErrorRetryView(
+                error: error,
+                onRetry: () => ref.invalidate(publicUserProfileProvider(muid)),
+              ),
         data: (profile) => MuRefresh(
           onRefresh: () => ref.refresh(publicUserProfileProvider(muid).future),
           child: ProfileView(profile: profile, isOwn: false),

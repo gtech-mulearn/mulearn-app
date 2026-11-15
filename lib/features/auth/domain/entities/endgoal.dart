@@ -1,6 +1,13 @@
 /// An end goal, picked during interests onboarding (pure-Dart domain entity,
 /// rules.md §2).
-enum Endgoal { job, researchAndDevelopment, entrepreneurship, gigWork, higherEducation, socialImpact }
+enum Endgoal {
+  job,
+  researchAndDevelopment,
+  entrepreneurship,
+  gigWork,
+  higherEducation,
+  socialImpact,
+}
 
 /// The exact wire value sent to `POST /api/v1/register/select-endgoals/` —
 /// not derivable from the enum name (`researchAndDevelopment` → `"r&d"`,

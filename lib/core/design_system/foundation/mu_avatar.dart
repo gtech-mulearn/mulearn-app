@@ -9,7 +9,13 @@ import 'package:mulearn_app/core/design_system/tokens/mu_tokens.g.dart';
 /// same colour).
 class MuAvatar extends StatelessWidget {
   /// An avatar of [size] (28 stacks, 40 rows, 88 profiles).
-  const MuAvatar({required this.name, this.url, this.size = MuSizes.avatarSm, this.ring = true, super.key});
+  const MuAvatar({
+    required this.name,
+    this.url,
+    this.size = MuSizes.avatarSm,
+    this.ring = true,
+    super.key,
+  });
 
   /// Full name; initials come from the first two words.
   final String name;
@@ -25,7 +31,11 @@ class MuAvatar extends StatelessWidget {
 
   /// "Aysha Rahman" → "AR", "nikhil" → "N".
   static String initialsOf(String name) {
-    final words = name.trim().split(RegExp(r'\s+')).where((w) => w.isNotEmpty).toList();
+    final words = name
+        .trim()
+        .split(RegExp(r'\s+'))
+        .where((w) => w.isNotEmpty)
+        .toList();
     if (words.isEmpty) return '';
     final first = words.first.characters.first;
     final second = words.length > 1 ? words[1].characters.first : '';
@@ -40,7 +50,12 @@ class MuAvatar extends StatelessWidget {
     final initials = Center(
       child: Text(
         initialsOf(name),
-        style: mu.text.label.copyWith(color: c.inkPrint, fontSize: size * 0.36, fontWeight: FontWeight.w700, height: 1),
+        style: mu.text.label.copyWith(
+          color: c.inkPrint,
+          fontSize: size * 0.36,
+          fontWeight: FontWeight.w700,
+          height: 1,
+        ),
       ),
     );
     final photo = url == null || url!.isEmpty

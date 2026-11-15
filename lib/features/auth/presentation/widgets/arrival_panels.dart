@@ -12,7 +12,8 @@ import 'package:mulearn_app/features/auth/domain/entities/public_community.dart'
 /// The four arrival panels (artifact Pre-login → The four beats). Each is a
 /// live μLearn object you can touch, on its own colour.
 
-bool _reduceMotion(BuildContext context) => MediaQuery.maybeDisableAnimationsOf(context) ?? false;
+bool _reduceMotion(BuildContext context) =>
+    MediaQuery.maybeDisableAnimationsOf(context) ?? false;
 
 // ── Beat 1: the ring ─────────────────────────────────────────────────────
 
@@ -32,8 +33,14 @@ class RingPanel extends StatefulWidget {
 }
 
 class _RingPanelState extends State<RingPanel> with TickerProviderStateMixin {
-  late final AnimationController _spin = AnimationController(vsync: this, duration: const Duration(seconds: 36));
-  late final AnimationController _burst = AnimationController(vsync: this, duration: const Duration(milliseconds: 900));
+  late final AnimationController _spin = AnimationController(
+    vsync: this,
+    duration: const Duration(seconds: 36),
+  );
+  late final AnimationController _burst = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 900),
+  );
   bool _broken = false;
 
   static const _fallback = [
@@ -108,7 +115,9 @@ class _RingPanelState extends State<RingPanel> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final mu = context.mu;
     final c = mu.colors;
-    final names = widget.groups.isEmpty ? _fallback : [for (final g in widget.groups.take(12)) g.name];
+    final names = widget.groups.isEmpty
+        ? _fallback
+        : [for (final g in widget.groups.take(12)) g.name];
     final count = widget.groupCount ?? widget.groups.length;
 
     return ColoredBox(
@@ -124,7 +133,9 @@ class _RingPanelState extends State<RingPanel> with TickerProviderStateMixin {
               Positioned(
                 left: MuSpacing.space6,
                 top: top + MuSpacing.space4,
-                child: const ExcludeSemantics(child: MuLogo.wordmarkOnBrand(height: 26)),
+                child: const ExcludeSemantics(
+                  child: MuLogo.wordmarkOnBrand(height: 26),
+                ),
               ),
               // The ring, until it breaks.
               Positioned.fromRect(
@@ -133,7 +144,10 @@ class _RingPanelState extends State<RingPanel> with TickerProviderStateMixin {
                   animation: _burst,
                   builder: (context, child) => Opacity(
                     opacity: (1 - _burst.value * 2).clamp(0.0, 1.0),
-                    child: Transform.scale(scale: 1 + _burst.value * 0.6, child: child),
+                    child: Transform.scale(
+                      scale: 1 + _burst.value * 0.6,
+                      child: child,
+                    ),
                   ),
                   child: Semantics(
                     container: true,
@@ -176,9 +190,17 @@ class _RingPanelState extends State<RingPanel> with TickerProviderStateMixin {
                                 decoration: BoxDecoration(
                                   color: c.onCobalt,
                                   shape: BoxShape.circle,
-                                  border: Border.all(color: c.onCobalt.withValues(alpha: 0.2), width: 8),
+                                  border: Border.all(
+                                    color: c.onCobalt.withValues(alpha: 0.2),
+                                    width: 8,
+                                  ),
                                 ),
-                                child: Text('You', style: mu.text.title3.copyWith(color: c.inkPrint)),
+                                child: Text(
+                                  'You',
+                                  style: mu.text.title3.copyWith(
+                                    color: c.inkPrint,
+                                  ),
+                                ),
                               ),
                             ],
                           ),
@@ -194,7 +216,9 @@ class _RingPanelState extends State<RingPanel> with TickerProviderStateMixin {
                   AnimatedBuilder(
                     animation: _burst,
                     builder: (context, child) {
-                      final t = Curves.easeOutBack.transform(((_burst.value - i * 0.035) / 0.6).clamp(0.0, 1.0));
+                      final t = Curves.easeOutBack.transform(
+                        ((_burst.value - i * 0.035) / 0.6).clamp(0.0, 1.0),
+                      );
                       final from = stage.center;
                       final to = Offset(
                         stage.left + _spots[i].$1 * stage.width,
@@ -206,20 +230,32 @@ class _RingPanelState extends State<RingPanel> with TickerProviderStateMixin {
                         top: at.dy,
                         child: Opacity(
                           opacity: t.clamp(0.0, 1.0),
-                          child: Transform.rotate(angle: _spots[i].$3 * t * math.pi / 180, child: child),
+                          child: Transform.rotate(
+                            angle: _spots[i].$3 * t * math.pi / 180,
+                            child: child,
+                          ),
                         ),
                       );
                     },
-                    child: MuIgChip(name: names[i], category: _tones[i % _tones.length]),
+                    child: MuIgChip(
+                      name: names[i],
+                      category: _tones[i % _tones.length],
+                    ),
                   ),
               Positioned(
                 left: 0,
                 right: 0,
                 bottom: MuSpacing.space5,
                 child: Text(
-                  _broken ? (count > 0 ? '$count Interest Groups. Pick any.' : 'Pick any group.') : 'Tap the ring',
+                  _broken
+                      ? (count > 0
+                            ? '$count Interest Groups. Pick any.'
+                            : 'Pick any group.')
+                      : 'Tap the ring',
                   textAlign: TextAlign.center,
-                  style: mu.text.bodyStrong.copyWith(color: c.onCobalt.withValues(alpha: 0.86)),
+                  style: mu.text.bodyStrong.copyWith(
+                    color: c.onCobalt.withValues(alpha: 0.86),
+                  ),
                 ),
               ),
             ],
@@ -232,7 +268,11 @@ class _RingPanelState extends State<RingPanel> with TickerProviderStateMixin {
 
 /// Text set around a circle, with a hairline ring under it.
 class _RingTextPainter extends CustomPainter {
-  _RingTextPainter({required this.text, required this.style, required this.ring});
+  _RingTextPainter({
+    required this.text,
+    required this.style,
+    required this.ring,
+  });
 
   final String text;
   final TextStyle style;
@@ -271,7 +311,10 @@ class _RingTextPainter extends CustomPainter {
       final mid = angle + sweep / 2;
       canvas
         ..save()
-        ..translate(center.dx + radius * math.cos(mid), center.dy + radius * math.sin(mid))
+        ..translate(
+          center.dx + radius * math.cos(mid),
+          center.dy + radius * math.sin(mid),
+        )
         ..rotate(mid + math.pi / 2);
       tp.paint(canvas, Offset(-tp.width / 2, -tp.height / 2));
       canvas.restore();
@@ -280,7 +323,8 @@ class _RingTextPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_RingTextPainter old) => old.text != text || old.style != style || old.ring != ring;
+  bool shouldRepaint(_RingTextPainter old) =>
+      old.text != text || old.style != style || old.ring != ring;
 }
 
 // ── Beat 2: a task, then karma ───────────────────────────────────────────
@@ -308,7 +352,12 @@ class _TaskPanelState extends State<TaskPanel> {
     return ColoredBox(
       color: c.night,
       child: Padding(
-        padding: EdgeInsets.fromLTRB(MuSpacing.space5, top + MuSpacing.space8, MuSpacing.space5, MuSpacing.space5),
+        padding: EdgeInsets.fromLTRB(
+          MuSpacing.space5,
+          top + MuSpacing.space8,
+          MuSpacing.space5,
+          MuSpacing.space5,
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -320,7 +369,9 @@ class _TaskPanelState extends State<TaskPanel> {
               karma: 150,
               state: _posted ? MuTaskState.done : MuTaskState.open,
               footer: MuButton(
-                label: _posted ? 'Reviewed by a peer' : 'Post on Discord with the hashtag',
+                label: _posted
+                    ? 'Reviewed by a peer'
+                    : 'Post on Discord with the hashtag',
                 icon: _posted ? LucideIcons.check : LucideIcons.send,
                 size: MuButtonSize.small,
                 block: true,
@@ -337,14 +388,24 @@ class _TaskPanelState extends State<TaskPanel> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Expanded(
-                  child: Text('YOUR KARMA', style: mu.text.eyebrow.copyWith(color: c.onNight2)),
+                  child: Text(
+                    'YOUR KARMA',
+                    style: mu.text.eyebrow.copyWith(color: c.onNight2),
+                  ),
                 ),
                 TweenAnimationBuilder<double>(
                   tween: Tween(end: _posted ? 12480 : 12330),
-                  duration: reduce ? Duration.zero : const Duration(milliseconds: 900),
+                  duration: reduce
+                      ? Duration.zero
+                      : const Duration(milliseconds: 900),
                   curve: Curves.easeOutCubic,
-                  builder: (context, v, _) =>
-                      Text(muGrouped(v.round()), style: mu.text.numeralXl.copyWith(fontSize: 46, color: c.volt)),
+                  builder: (context, v, _) => Text(
+                    muGrouped(v.round()),
+                    style: mu.text.numeralXl.copyWith(
+                      fontSize: 46,
+                      color: c.volt,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -359,12 +420,20 @@ class _TaskPanelState extends State<TaskPanel> {
                         height: 40,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                          color: i < 4 ? c.cobalt : (i == 4 ? c.volt : c.onNight.withValues(alpha: 0.08)),
+                          color: i < 4
+                              ? c.cobalt
+                              : (i == 4
+                                    ? c.volt
+                                    : c.onNight.withValues(alpha: 0.08)),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
                           '$i',
-                          style: mu.text.title3.copyWith(color: i < 4 ? c.onCobalt : (i == 4 ? c.onVolt : c.onNight2)),
+                          style: mu.text.title3.copyWith(
+                            color: i < 4
+                                ? c.onCobalt
+                                : (i == 4 ? c.onVolt : c.onNight2),
+                          ),
                         ),
                       ),
                     ),
@@ -390,10 +459,20 @@ class CirclePanel extends StatefulWidget {
   State<CirclePanel> createState() => _CirclePanelState();
 }
 
-class _CirclePanelState extends State<CirclePanel> with SingleTickerProviderStateMixin {
-  late final AnimationController _spin = AnimationController(vsync: this, duration: const Duration(seconds: 48));
+class _CirclePanelState extends State<CirclePanel>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _spin = AnimationController(
+    vsync: this,
+    duration: const Duration(seconds: 48),
+  );
 
-  static const _peers = ['Arjun R', 'Sneha N', 'Fathima R', 'Nikhil K', 'Jishnu M'];
+  static const _peers = [
+    'Arjun R',
+    'Sneha N',
+    'Fathima R',
+    'Nikhil K',
+    'Jishnu M',
+  ];
 
   @override
   void didChangeDependencies() {
@@ -421,7 +500,10 @@ class _CirclePanelState extends State<CirclePanel> with SingleTickerProviderStat
       color: c.igMaker,
       child: LayoutBuilder(
         builder: (context, box) {
-          final center = Offset(box.maxWidth / 2, top + (box.maxHeight - top) * 0.47);
+          final center = Offset(
+            box.maxWidth / 2,
+            top + (box.maxHeight - top) * 0.47,
+          );
           const r = 78.0;
           return Stack(
             children: [
@@ -433,7 +515,10 @@ class _CirclePanelState extends State<CirclePanel> with SingleTickerProviderStat
                   height: r * 2,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    border: Border.all(color: c.inkPrint.withValues(alpha: 0.35), width: 2),
+                    border: Border.all(
+                      color: c.inkPrint.withValues(alpha: 0.35),
+                      width: 2,
+                    ),
                   ),
                 ),
               ),
@@ -444,8 +529,14 @@ class _CirclePanelState extends State<CirclePanel> with SingleTickerProviderStat
                   width: 64,
                   height: 64,
                   alignment: Alignment.center,
-                  decoration: BoxDecoration(color: c.night, shape: BoxShape.circle),
-                  child: Text('8', style: mu.text.title2.copyWith(color: c.onNight)),
+                  decoration: BoxDecoration(
+                    color: c.night,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Text(
+                    '8',
+                    style: mu.text.title2.copyWith(color: c.onNight),
+                  ),
                 ),
               ),
               AnimatedBuilder(
@@ -455,7 +546,10 @@ class _CirclePanelState extends State<CirclePanel> with SingleTickerProviderStat
                     for (var i = 0; i < _peers.length; i++)
                       Builder(
                         builder: (context) {
-                          final a = -math.pi / 2 + i * 2 * math.pi / _peers.length + _spin.value * 2 * math.pi;
+                          final a =
+                              -math.pi / 2 +
+                              i * 2 * math.pi / _peers.length +
+                              _spin.value * 2 * math.pi;
                           return Positioned(
                             left: center.dx + r * math.cos(a) - 22,
                             top: center.dy + r * math.sin(a) - 22,
@@ -469,19 +563,30 @@ class _CirclePanelState extends State<CirclePanel> with SingleTickerProviderStat
               Positioned(
                 left: MuSpacing.space5,
                 top: top + MuSpacing.space8,
-                child: const MuFlickable(child: MuVoiceBubble('Stuck on hooks?')),
+                child: const MuFlickable(
+                  child: MuVoiceBubble('Stuck on hooks?'),
+                ),
               ),
               Positioned(
                 right: MuSpacing.space4,
                 top: center.dy - r - 24,
                 child: const MuFlickable(
-                  child: MuVoiceBubble("I'll pair with you", tone: MuVoiceTone.volt, tailRight: true),
+                  child: MuVoiceBubble(
+                    "I'll pair with you",
+                    tone: MuVoiceTone.volt,
+                    tailRight: true,
+                  ),
                 ),
               ),
               const Positioned(
                 left: MuSpacing.space6,
                 bottom: MuSpacing.space8,
-                child: MuFlickable(child: MuVoiceBubble('Thursday, 6 PM?', tone: MuVoiceTone.cobalt)),
+                child: MuFlickable(
+                  child: MuVoiceBubble(
+                    'Thursday, 6 PM?',
+                    tone: MuVoiceTone.cobalt,
+                  ),
+                ),
               ),
             ],
           );
@@ -501,7 +606,20 @@ class TicketsPanel extends StatelessWidget {
   final GuestEvent? event;
   final int? companies;
 
-  static const _months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  static const _months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
 
   static String _when(GuestEvent e) {
     final s = e.start;
@@ -538,7 +656,9 @@ class TicketsPanel extends StatelessWidget {
                     eyebrow: e == null ? 'FEATURED EVENT' : _when(e),
                     title: e?.title ?? 'Learning Fest',
                     pill: MuPill(
-                      e == null || e.interested <= 0 ? 'Open to everyone' : '${muGrouped(e.interested)} interested',
+                      e == null || e.interested <= 0
+                          ? 'Open to everyone'
+                          : '${muGrouped(e.interested)} interested',
                       tone: MuPillTone.volt,
                       icon: LucideIcons.zap,
                     ),
@@ -558,7 +678,9 @@ class TicketsPanel extends StatelessWidget {
                     eyebrow: 'CAREER LAB',
                     title: 'Hiring calls',
                     pill: MuPill(
-                      companies == null ? 'Partner companies' : '${muGrouped(companies!)} partner companies',
+                      companies == null
+                          ? 'Partner companies'
+                          : '${muGrouped(companies!)} partner companies',
                       tone: MuPillTone.night,
                     ),
                   ),
@@ -573,7 +695,11 @@ class TicketsPanel extends StatelessWidget {
 }
 
 class _MiniTicket extends StatelessWidget {
-  const _MiniTicket({required this.eyebrow, required this.title, required this.pill});
+  const _MiniTicket({
+    required this.eyebrow,
+    required this.title,
+    required this.pill,
+  });
 
   final String eyebrow;
   final String title;
@@ -587,10 +713,19 @@ class _MiniTicket extends StatelessWidget {
     return Container(
       decoration: ShapeDecoration(
         color: c.onCobalt,
-        shape: const MuTicketBorder(perforationFromBottom: 62, radius: 22, notch: 13),
+        shape: const MuTicketBorder(
+          perforationFromBottom: 62,
+          radius: 22,
+          notch: 13,
+        ),
         shadows: mu.shadows.lift,
       ),
-      padding: const EdgeInsets.fromLTRB(MuSpacing.space5, 18, MuSpacing.space5, 16),
+      padding: const EdgeInsets.fromLTRB(
+        MuSpacing.space5,
+        18,
+        MuSpacing.space5,
+        16,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
@@ -606,7 +741,10 @@ class _MiniTicket extends StatelessWidget {
             title,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: mu.text.title2.copyWith(color: c.inkPrint, fontWeight: FontWeight.w800),
+            style: mu.text.title2.copyWith(
+              color: c.inkPrint,
+              fontWeight: FontWeight.w800,
+            ),
           ),
           const SizedBox(height: 28),
           pill,
@@ -630,9 +768,14 @@ class MuFlickable extends StatefulWidget {
   State<MuFlickable> createState() => _MuFlickableState();
 }
 
-class _MuFlickableState extends State<MuFlickable> with TickerProviderStateMixin {
-  late final AnimationController _x = AnimationController.unbounded(vsync: this);
-  late final AnimationController _y = AnimationController.unbounded(vsync: this);
+class _MuFlickableState extends State<MuFlickable>
+    with TickerProviderStateMixin {
+  late final AnimationController _x = AnimationController.unbounded(
+    vsync: this,
+  );
+  late final AnimationController _y = AnimationController.unbounded(
+    vsync: this,
+  );
   late final AnimationController _fade = AnimationController(
     vsync: this,
     value: 1,
@@ -651,8 +794,16 @@ class _MuFlickableState extends State<MuFlickable> with TickerProviderStateMixin
 
   void _home(Velocity v) {
     final spring = MuSprings.momentum.description;
-    unawaited(_x.animateWith(SpringSimulation(spring, _x.value, 0, v.pixelsPerSecond.dx)));
-    unawaited(_y.animateWith(SpringSimulation(spring, _y.value, 0, v.pixelsPerSecond.dy)));
+    unawaited(
+      _x.animateWith(
+        SpringSimulation(spring, _x.value, 0, v.pixelsPerSecond.dx),
+      ),
+    );
+    unawaited(
+      _y.animateWith(
+        SpringSimulation(spring, _y.value, 0, v.pixelsPerSecond.dy),
+      ),
+    );
   }
 
   void _end(DragEndDetails d) {
@@ -662,8 +813,12 @@ class _MuFlickableState extends State<MuFlickable> with TickerProviderStateMixin
       // Off along where the throw was going, then back home, faded in.
       final to = Offset(_x.value + project(v.dx), _y.value + project(v.dy));
       final spring = MuSprings.momentum.description;
-      unawaited(_x.animateWith(SpringSimulation(spring, _x.value, to.dx, v.dx)));
-      unawaited(_y.animateWith(SpringSimulation(spring, _y.value, to.dy, v.dy)));
+      unawaited(
+        _x.animateWith(SpringSimulation(spring, _x.value, to.dx, v.dx)),
+      );
+      unawaited(
+        _y.animateWith(SpringSimulation(spring, _y.value, to.dy, v.dy)),
+      );
       unawaited(_fade.reverse());
       _return = Timer(const Duration(milliseconds: 1100), () {
         if (!mounted) return;
@@ -695,7 +850,10 @@ class _MuFlickableState extends State<MuFlickable> with TickerProviderStateMixin
         animation: Listenable.merge([_x, _y, _fade]),
         builder: (context, child) => Opacity(
           opacity: _fade.value,
-          child: Transform.translate(offset: Offset(_x.value, _y.value), child: child),
+          child: Transform.translate(
+            offset: Offset(_x.value, _y.value),
+            child: child,
+          ),
         ),
         child: widget.child,
       ),

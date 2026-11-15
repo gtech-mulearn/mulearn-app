@@ -25,7 +25,8 @@ abstract class NotificationDto with _$NotificationDto {
 
   const NotificationDto._();
 
-  factory NotificationDto.fromJson(Map<String, dynamic> json) => _$NotificationDtoFromJson(json);
+  factory NotificationDto.fromJson(Map<String, dynamic> json) =>
+      _$NotificationDtoFromJson(json);
 
   AppNotification toDomain() => AppNotification(
     id: id,

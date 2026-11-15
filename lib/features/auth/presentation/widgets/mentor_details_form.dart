@@ -40,7 +40,9 @@ class _MentorDetailsFormState extends ConsumerState<MentorDetailsForm> {
     FocusScope.of(context).unfocus();
 
     final isCollege = _organizationType == OrganizationType.college;
-    final graduationYear = isCollege ? int.tryParse(_graduationYearController.text.trim()) : null;
+    final graduationYear = isCollege
+        ? int.tryParse(_graduationYearController.text.trim())
+        : null;
 
     try {
       await ref
@@ -48,7 +50,9 @@ class _MentorDetailsFormState extends ConsumerState<MentorDetailsForm> {
           .submitGeneric(
             role: RegistrationRole.mentor,
             organization: _organization,
-            customOrganization: _organization == muOtherOptionValue ? _customOrganizationController.text.trim() : null,
+            customOrganization: _organization == muOtherOptionValue
+                ? _customOrganizationController.text.trim()
+                : null,
             department: isCollege ? _department : null,
             graduationYear: graduationYear,
             organizationType: _organizationType,
@@ -62,12 +66,16 @@ class _MentorDetailsFormState extends ConsumerState<MentorDetailsForm> {
   @override
   Widget build(BuildContext context) {
     final isCollege = _organizationType == OrganizationType.college;
-    final options = isCollege ? ref.watch(registerCollegesProvider) : ref.watch(registerCompaniesProvider);
+    final options = isCollege
+        ? ref.watch(registerCollegesProvider)
+        : ref.watch(registerCompaniesProvider);
     final departments = ref.watch(registerDepartmentsProvider);
     final loading = ref.watch(registerSubmitControllerProvider).isLoading;
     final orgLabel = isCollege ? 'College' : 'Company';
 
-    List<MuOption> opts(List<ReferenceOption> list) => [for (final o in list) MuOption(o.id, o.title)];
+    List<MuOption> opts(List<ReferenceOption> list) => [
+      for (final o in list) MuOption(o.id, o.title),
+    ];
 
     return Form(
       key: _formKey,
@@ -77,7 +85,8 @@ class _MentorDetailsFormState extends ConsumerState<MentorDetailsForm> {
           MuSegmented<OrganizationType>(
             values: const [OrganizationType.company, OrganizationType.college],
             selected: _organizationType,
-            label: (t) => t == OrganizationType.college ? 'At a college' : 'At a company',
+            label: (t) =>
+                t == OrganizationType.college ? 'At a college' : 'At a company',
             onChanged: (t) {
               if (loading) return;
               setState(() {
@@ -92,13 +101,17 @@ class _MentorDetailsFormState extends ConsumerState<MentorDetailsForm> {
             hint: 'Search your ${orgLabel.toLowerCase()}',
             options: opts(options.value ?? const []),
             loading: options.isLoading,
-            error: options.hasError ? "Couldn't load the list. Go back and try again." : null,
+            error: options.hasError
+                ? "Couldn't load the list. Go back and try again."
+                : null,
             enabled: !loading,
             allowOther: true,
             otherLabel: 'My ${orgLabel.toLowerCase()} is not listed',
             value: _organization,
             onChanged: (v) => setState(() => _organization = v),
-            validator: (_) => (_organization ?? '').isEmpty ? 'Pick your ${orgLabel.toLowerCase()} to continue.' : null,
+            validator: (_) => (_organization ?? '').isEmpty
+                ? 'Pick your ${orgLabel.toLowerCase()} to continue.'
+                : null,
           ),
           if (_organization == muOtherOptionValue) ...[
             const SizedBox(height: MuSpacing.space4),
@@ -107,7 +120,9 @@ class _MentorDetailsFormState extends ConsumerState<MentorDetailsForm> {
               controller: _customOrganizationController,
               enabled: !loading,
               textCapitalization: TextCapitalization.words,
-              validator: (v) => (v?.trim().length ?? 0) < 3 ? 'Use at least 3 characters.' : null,
+              validator: (v) => (v?.trim().length ?? 0) < 3
+                  ? 'Use at least 3 characters.'
+                  : null,
             ),
           ],
           if (isCollege) ...[
@@ -116,11 +131,15 @@ class _MentorDetailsFormState extends ConsumerState<MentorDetailsForm> {
               label: 'Department',
               options: opts(departments.value ?? const []),
               loading: departments.isLoading,
-              error: departments.hasError ? "Couldn't load departments. Go back and try again." : null,
+              error: departments.hasError
+                  ? "Couldn't load departments. Go back and try again."
+                  : null,
               enabled: !loading,
               value: _department,
               onChanged: (v) => setState(() => _department = v),
-              validator: (_) => (_department ?? '').isEmpty ? 'Pick your department to continue.' : null,
+              validator: (_) => (_department ?? '').isEmpty
+                  ? 'Pick your department to continue.'
+                  : null,
             ),
             const SizedBox(height: MuSpacing.space4),
             MuTextField(
@@ -132,7 +151,9 @@ class _MentorDetailsFormState extends ConsumerState<MentorDetailsForm> {
               maxLength: 4,
               validator: (value) {
                 final year = int.tryParse(value?.trim() ?? '');
-                return (year == null || year < 2020 || year > 2040) ? 'Enter a year from 2020 to 2040.' : null;
+                return (year == null || year < 2020 || year > 2040)
+                    ? 'Enter a year from 2020 to 2040.'
+                    : null;
               },
             ),
           ],

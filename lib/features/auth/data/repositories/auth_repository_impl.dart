@@ -12,17 +12,25 @@ import 'package:mulearn_app/features/auth/domain/repositories/auth_repository.da
 /// Token extraction is delegated to [AuthTokenParser], which now uses the
 /// confirmed `accessToken`/`refreshToken` field names (rules.md §3/§9).
 class AuthRepositoryImpl implements AuthRepository {
-  const AuthRepositoryImpl({required AuthRemoteDataSource remote, required TokenStorage tokenStorage})
-    : _remote = remote,
-      _tokenStorage = tokenStorage;
+  const AuthRepositoryImpl({
+    required AuthRemoteDataSource remote,
+    required TokenStorage tokenStorage,
+  }) : _remote = remote,
+       _tokenStorage = tokenStorage;
 
   final AuthRemoteDataSource _remote;
   final TokenStorage _tokenStorage;
 
   @override
-  Future<AuthSession> signInWithPassword({required String emailOrMuid, required String password}) async {
+  Future<AuthSession> signInWithPassword({
+    required String emailOrMuid,
+    required String password,
+  }) async {
     try {
-      final payload = await _remote.authenticateWithPassword(emailOrMuid: emailOrMuid, password: password);
+      final payload = await _remote.authenticateWithPassword(
+        emailOrMuid: emailOrMuid,
+        password: password,
+      );
       return await _completeSignIn(payload);
     } on DioException catch (e) {
       throw ApiException.fromDioException(e);
@@ -30,9 +38,15 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<AuthSession> signInWithOtp({required String emailOrMuid, required String otp}) async {
+  Future<AuthSession> signInWithOtp({
+    required String emailOrMuid,
+    required String otp,
+  }) async {
     try {
-      final payload = await _remote.authenticateWithOtp(emailOrMuid: emailOrMuid, otp: otp);
+      final payload = await _remote.authenticateWithOtp(
+        emailOrMuid: emailOrMuid,
+        otp: otp,
+      );
       return await _completeSignIn(payload);
     } on DioException catch (e) {
       throw ApiException.fromDioException(e);
@@ -67,7 +81,10 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<void> resetPassword({required String token, required String password}) async {
+  Future<void> resetPassword({
+    required String token,
+    required String password,
+  }) async {
     try {
       await _remote.resetPassword(token: token, password: password);
     } on DioException catch (e) {
@@ -76,11 +93,15 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<SocialSignInOutcome> signInWithGoogle({required String idToken}) async {
+  Future<SocialSignInOutcome> signInWithGoogle({
+    required String idToken,
+  }) async {
     try {
       final payload = await _remote.authenticateWithGoogle(idToken: idToken);
       final tempToken = payload['tempToken'];
-      if (payload['isNewUser'] == true && tempToken is String && tempToken.isNotEmpty) {
+      if (payload['isNewUser'] == true &&
+          tempToken is String &&
+          tempToken.isNotEmpty) {
         return SocialNeedsRegistration(
           tempToken: tempToken,
           email: payload['email'] as String? ?? '',
@@ -97,7 +118,9 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<AuthSession> signInWithApple({required String identityToken}) async {
     try {
-      final payload = await _remote.authenticateWithApple(identityToken: identityToken);
+      final payload = await _remote.authenticateWithApple(
+        identityToken: identityToken,
+      );
       return await _completeSignIn(payload);
     } on DioException catch (e) {
       throw ApiException.fromDioException(e);
@@ -114,8 +137,14 @@ class AuthRepositoryImpl implements AuthRepository {
       );
     }
 
-    await _tokenStorage.saveTokens(accessToken: tokens.accessToken, refreshToken: tokens.refreshToken);
-    return AuthSession(accessToken: tokens.accessToken, refreshToken: tokens.refreshToken);
+    await _tokenStorage.saveTokens(
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
+    );
+    return AuthSession(
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
+    );
   }
 
   @override

@@ -18,7 +18,10 @@ class NotFoundScreen extends StatelessWidget {
           child: SingleChildScrollView(
             child: MuStateDisplay(
               variant: MuStateVariant.notFound,
-              action: MuButton(label: 'Back to Home', onPressed: () => context.go(RoutePaths.home)),
+              action: MuButton(
+                label: 'Back to Home',
+                onPressed: () => context.go(RoutePaths.home),
+              ),
             ),
           ),
         ),

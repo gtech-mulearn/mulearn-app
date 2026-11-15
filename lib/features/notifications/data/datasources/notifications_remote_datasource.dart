@@ -11,16 +11,32 @@ class NotificationsRemoteDataSource {
   final Dio _dio;
 
   /// `{count, page, page_size, results}`.
-  Future<Map<String, dynamic>> fetchPage(int page) async => ApiEnvelope.unwrapObject(
-    await _dio.get<dynamic>(NotificationPaths.feed, queryParameters: PagePaging.query(page)),
+  Future<Map<String, dynamic>> fetchPage(int page) async =>
+      ApiEnvelope.unwrapObject(
+        await _dio.get<dynamic>(
+          NotificationPaths.feed,
+          queryParameters: PagePaging.query(page),
+        ),
+      );
+
+  Future<void> markRead(String id) async => ApiEnvelope.unwrapObject(
+    await _dio.patch<dynamic>(
+      NotificationPaths.read(id),
+      data: <String, dynamic>{},
+    ),
   );
 
-  Future<void> markRead(String id) async =>
-      ApiEnvelope.unwrapObject(await _dio.patch<dynamic>(NotificationPaths.read(id), data: <String, dynamic>{}));
+  Future<void> markAllRead() async => ApiEnvelope.unwrapObject(
+    await _dio.patch<dynamic>(
+      NotificationPaths.readAll,
+      data: <String, dynamic>{},
+    ),
+  );
 
-  Future<void> markAllRead() async =>
-      ApiEnvelope.unwrapObject(await _dio.patch<dynamic>(NotificationPaths.readAll, data: <String, dynamic>{}));
-
-  Future<void> archive(String id) async =>
-      ApiEnvelope.unwrapObject(await _dio.patch<dynamic>(NotificationPaths.archive(id), data: <String, dynamic>{}));
+  Future<void> archive(String id) async => ApiEnvelope.unwrapObject(
+    await _dio.patch<dynamic>(
+      NotificationPaths.archive(id),
+      data: <String, dynamic>{},
+    ),
+  );
 }

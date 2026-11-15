@@ -5,7 +5,8 @@ library;
 
 import 'package:flutter/material.dart';
 import 'package:mulearn_app/core/design_system/input/mu_button.dart';
-import 'package:mulearn_app/core/design_system/mulearn/mu_leaderboard.dart' show muGrouped;
+import 'package:mulearn_app/core/design_system/mulearn/mu_leaderboard.dart'
+    show muGrouped;
 import 'package:mulearn_app/core/design_system/navigation/mu_top_bar.dart';
 import 'package:mulearn_app/core/design_system/theme/mu_theme.dart';
 import 'package:mulearn_app/core/design_system/tokens/mu_tokens.g.dart';
@@ -13,7 +14,13 @@ import 'package:mulearn_app/core/design_system/tokens/mu_tokens.g.dart';
 /// The frame of a campus workspace screen: `chalk`, the detail top bar
 /// (with an optional [title] and [action]), then [body].
 class MuWorkspacePage extends StatelessWidget {
-  const MuWorkspacePage({required this.body, this.title, this.action, this.bottom, super.key});
+  const MuWorkspacePage({
+    required this.body,
+    this.title,
+    this.action,
+    this.bottom,
+    super.key,
+  });
 
   final String? title;
   final Widget? action;
@@ -60,12 +67,23 @@ class MuWorkspacePage extends StatelessWidget {
 }
 
 /// The standard scrolling list padding for workspace screens.
-const muListPadding = EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space2, MuSpacing.space5, MuSpacing.space8);
+const muListPadding = EdgeInsets.fromLTRB(
+  MuSpacing.space5,
+  MuSpacing.space2,
+  MuSpacing.space5,
+  MuSpacing.space8,
+);
 
 /// A section heading in eyebrow caps, with an optional small action on the
 /// right ("All students").
 class MuSectionEyebrow extends StatelessWidget {
-  const MuSectionEyebrow(this.text, {this.action, this.onAction, this.top = MuSpacing.space8, super.key});
+  const MuSectionEyebrow(
+    this.text, {
+    this.action,
+    this.onAction,
+    this.top = MuSpacing.space8,
+    super.key,
+  });
 
   final String text;
   final String? action;
@@ -75,11 +93,17 @@ class MuSectionEyebrow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: top, bottom: action == null ? MuSpacing.space3 : MuSpacing.space1),
+      padding: EdgeInsets.only(
+        top: top,
+        bottom: action == null ? MuSpacing.space3 : MuSpacing.space1,
+      ),
       child: Row(
         children: [
           Expanded(
-            child: Semantics(header: true, child: Text(text.toUpperCase(), style: context.mu.text.eyebrow)),
+            child: Semantics(
+              header: true,
+              child: Text(text.toUpperCase(), style: context.mu.text.eyebrow),
+            ),
           ),
           if (action != null)
             Flexible(
@@ -99,7 +123,13 @@ class MuSectionEyebrow extends StatelessWidget {
 /// A headline number on `surface`: the label in eyebrow caps, the value as
 /// a numeral, an optional change line under it ([up] green, otherwise red).
 class MuStatTile extends StatelessWidget {
-  const MuStatTile({required this.label, required this.value, this.change, this.up = true, super.key});
+  const MuStatTile({
+    required this.label,
+    required this.value,
+    this.change,
+    this.up = true,
+    super.key,
+  });
 
   final String label;
   final String value;
@@ -116,16 +146,29 @@ class MuStatTile extends StatelessWidget {
       excludeSemantics: true,
       child: Container(
         padding: const EdgeInsets.all(MuSpacing.space4),
-        decoration: BoxDecoration(color: c.surface, borderRadius: BorderRadius.circular(MuRadii.card)),
+        decoration: BoxDecoration(
+          color: c.surface,
+          borderRadius: BorderRadius.circular(MuRadii.card),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(label.toUpperCase(), maxLines: 2, overflow: TextOverflow.ellipsis, style: mu.text.eyebrow),
+            Text(
+              label.toUpperCase(),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: mu.text.eyebrow,
+            ),
             const SizedBox(height: MuSpacing.space2),
             Text(value, style: mu.text.numeral.copyWith(fontSize: 28)),
             if (change != null) ...[
               const SizedBox(height: 2),
-              Text(change!, style: mu.text.caption.copyWith(color: up ? c.success : c.danger)),
+              Text(
+                change!,
+                style: mu.text.caption.copyWith(
+                  color: up ? c.success : c.danger,
+                ),
+              ),
             ],
           ],
         ),
@@ -186,7 +229,11 @@ class MuBar extends StatelessWidget {
 
 /// A card on `surface` with the standard padding.
 class MuSurfaceCard extends StatelessWidget {
-  const MuSurfaceCard({required this.child, this.padding = const EdgeInsets.all(MuSpacing.space4), super.key});
+  const MuSurfaceCard({
+    required this.child,
+    this.padding = const EdgeInsets.all(MuSpacing.space4),
+    super.key,
+  });
 
   final Widget child;
   final EdgeInsetsGeometry padding;
@@ -194,7 +241,10 @@ class MuSurfaceCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
     padding: padding,
-    decoration: BoxDecoration(color: context.mu.colors.surface, borderRadius: BorderRadius.circular(MuRadii.card)),
+    decoration: BoxDecoration(
+      color: context.mu.colors.surface,
+      borderRadius: BorderRadius.circular(MuRadii.card),
+    ),
     child: child,
   );
 }
@@ -206,7 +256,10 @@ class MuEmptyLine extends StatelessWidget {
   final String text;
 
   @override
-  Widget build(BuildContext context) => Text(text, style: context.mu.text.body.copyWith(color: context.mu.colors.ink3));
+  Widget build(BuildContext context) => Text(
+    text,
+    style: context.mu.text.body.copyWith(color: context.mu.colors.ink3),
+  );
 }
 
 /// A rank badge for a feed row's leading slot ("#3").
@@ -223,11 +276,17 @@ class MuRankDisc extends StatelessWidget {
     return Container(
       width: MuSizes.avatarMd,
       height: MuSizes.avatarMd,
-      decoration: BoxDecoration(color: top ? c.volt : c.surfaceSunk, shape: BoxShape.circle),
+      decoration: BoxDecoration(
+        color: top ? c.volt : c.surfaceSunk,
+        shape: BoxShape.circle,
+      ),
       alignment: Alignment.center,
       child: Text(
         rank == null ? '–' : '#$rank',
-        style: mu.text.label.copyWith(fontWeight: FontWeight.w800, color: top ? c.onVolt : c.ink2),
+        style: mu.text.label.copyWith(
+          fontWeight: FontWeight.w800,
+          color: top ? c.onVolt : c.ink2,
+        ),
       ),
     );
   }
@@ -255,9 +314,15 @@ class MuBarList extends StatelessWidget {
         children: [
           for (var i = 0; i < items.length; i++)
             Padding(
-              padding: EdgeInsets.only(bottom: i == items.length - 1 ? 0 : MuSpacing.space4),
+              padding: EdgeInsets.only(
+                bottom: i == items.length - 1 ? 0 : MuSpacing.space4,
+              ),
               child: Semantics(
-                label: [items[i].label, '${items[i].value}', ?items[i].note].join(', '),
+                label: [
+                  items[i].label,
+                  '${items[i].value}',
+                  ?items[i].note,
+                ].join(', '),
                 excludeSemantics: true,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -265,16 +330,29 @@ class MuBarList extends StatelessWidget {
                     Row(
                       children: [
                         if (items[i].icon != null) ...[
-                          Icon(items[i].icon, size: MuSizes.iconSm, color: c.ink2),
+                          Icon(
+                            items[i].icon,
+                            size: MuSizes.iconSm,
+                            color: c.ink2,
+                          ),
                           const SizedBox(width: MuSpacing.space2),
                         ],
-                        Expanded(child: Text(items[i].label, style: mu.text.body)),
-                        Text(muGrouped(items[i].value), style: mu.text.bodyStrong),
+                        Expanded(
+                          child: Text(items[i].label, style: mu.text.body),
+                        ),
+                        Text(
+                          muGrouped(items[i].value),
+                          style: mu.text.bodyStrong,
+                        ),
                         if (items[i].note != null) ...[
                           const SizedBox(width: MuSpacing.space2),
                           SizedBox(
                             width: 44,
-                            child: Text(items[i].note!, style: mu.text.caption, textAlign: TextAlign.end),
+                            child: Text(
+                              items[i].note!,
+                              style: mu.text.caption,
+                              textAlign: TextAlign.end,
+                            ),
                           ),
                         ],
                       ],

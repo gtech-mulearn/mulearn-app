@@ -5,4 +5,5 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'badges_controller.g.dart';
 
 @riverpod
-Future<BadgesData> badges(Ref ref, String muid) => ref.watch(profileRepositoryProvider).getBadges(muid);
+Future<BadgesData> badges(Ref ref, String muid) =>
+    ref.watch(profileRepositoryProvider).getBadges(muid);

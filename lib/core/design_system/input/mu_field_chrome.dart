@@ -77,7 +77,9 @@ class MuFieldChrome extends StatelessWidget {
         border: Border.all(color: ring, width: focused || hasError ? 2 : 1.5),
       ),
       child: Row(
-        crossAxisAlignment: multiline ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+        crossAxisAlignment: multiline
+            ? CrossAxisAlignment.start
+            : CrossAxisAlignment.center,
         children: [
           Expanded(child: child),
           ?trailing,
@@ -93,7 +95,14 @@ class MuFieldChrome extends StatelessWidget {
         children: [
           Text(label, style: mu.text.label.copyWith(color: c.ink2)),
           const SizedBox(height: 6),
-          if (onTap == null) box else GestureDetector(behavior: HitTestBehavior.translucent, onTap: onTap, child: box),
+          if (onTap == null)
+            box
+          else
+            GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onTap: onTap,
+              child: box,
+            ),
           if (hasError) ...[
             const SizedBox(height: 6),
             Semantics(
@@ -103,13 +112,20 @@ class MuFieldChrome extends StatelessWidget {
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(top: 1),
-                    child: Icon(LucideIcons.alertCircle, size: 14, color: c.danger),
+                    child: Icon(
+                      LucideIcons.alertCircle,
+                      size: 14,
+                      color: c.danger,
+                    ),
                   ),
                   const SizedBox(width: 6),
                   Expanded(
                     child: Text(
                       error!,
-                      style: mu.text.caption.copyWith(color: c.danger, fontWeight: FontWeight.w600),
+                      style: mu.text.caption.copyWith(
+                        color: c.danger,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ],

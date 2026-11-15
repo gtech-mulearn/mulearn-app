@@ -56,22 +56,39 @@ class MuTopBar extends StatelessWidget {
     if (greeting != null) {
       row = Row(
         children: [
-          if (avatar != null) ...[avatar!, const SizedBox(width: MuSpacing.space3)],
+          if (avatar != null) ...[
+            avatar!,
+            const SizedBox(width: MuSpacing.space3),
+          ],
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(greeting!, style: mu.text.bodyStrong, maxLines: 1, overflow: TextOverflow.ellipsis),
-                Text(subtitle!, style: mu.text.caption, maxLines: 1, overflow: TextOverflow.ellipsis),
+                Text(
+                  greeting!,
+                  style: mu.text.bodyStrong,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Text(
+                  subtitle!,
+                  style: mu.text.caption,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ],
             ),
           ),
-          for (final a in actions) ...[const SizedBox(width: MuSpacing.space1), a],
+          for (final a in actions) ...[
+            const SizedBox(width: MuSpacing.space1),
+            a,
+          ],
         ],
       );
     } else {
-      final canPop = onBack != null || (ModalRoute.of(context)?.canPop ?? false);
+      final canPop =
+          onBack != null || (ModalRoute.of(context)?.canPop ?? false);
       row = Row(
         children: [
           if (canPop)
@@ -113,7 +130,13 @@ class MuTopBar extends StatelessWidget {
 /// action (so the action never scrolls away).
 class MuGlassBar extends StatelessWidget {
   /// A glass bar at [visibility] (0 hidden … 1 shown; drive it from scroll).
-  const MuGlassBar({required this.title, this.visibility = 1, this.onBack, this.action, super.key});
+  const MuGlassBar({
+    required this.title,
+    this.visibility = 1,
+    this.onBack,
+    this.action,
+    super.key,
+  });
 
   /// One line, ellipsized.
   final String title;
@@ -138,13 +161,20 @@ class MuGlassBar extends StatelessWidget {
       child: Opacity(
         opacity: v,
         child: ClipRRect(
-          borderRadius: const BorderRadius.vertical(bottom: Radius.circular(18)),
+          borderRadius: const BorderRadius.vertical(
+            bottom: Radius.circular(18),
+          ),
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
             child: ColoredBox(
               color: c.glass,
               child: Padding(
-                padding: EdgeInsets.fromLTRB(MuSpacing.space3, top, MuSpacing.space3, 0),
+                padding: EdgeInsets.fromLTRB(
+                  MuSpacing.space3,
+                  top,
+                  MuSpacing.space3,
+                  0,
+                ),
                 child: SizedBox(
                   height: 56,
                   child: Row(
@@ -153,7 +183,8 @@ class MuGlassBar extends StatelessWidget {
                         icon: LucideIcons.arrowLeft,
                         tooltip: 'Back',
                         variant: MuIconButtonVariant.sunk,
-                        onPressed: onBack ?? () => Navigator.of(context).maybePop(),
+                        onPressed:
+                            onBack ?? () => Navigator.of(context).maybePop(),
                       ),
                       const SizedBox(width: MuSpacing.space2),
                       Expanded(
@@ -164,7 +195,10 @@ class MuGlassBar extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
-                      if (action != null) ...[const SizedBox(width: MuSpacing.space2), action!],
+                      if (action != null) ...[
+                        const SizedBox(width: MuSpacing.space2),
+                        action!,
+                      ],
                     ],
                   ),
                 ),

@@ -27,7 +27,11 @@ class ProfileScreen extends ConsumerWidget {
         skipError: true,
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => SafeArea(
-          child: ErrorRetryView(error: error, onRetry: () => ref.read(profileControllerProvider.notifier).refresh()),
+          child: ErrorRetryView(
+            error: error,
+            onRetry: () =>
+                ref.read(profileControllerProvider.notifier).refresh(),
+          ),
         ),
         data: (profile) => MuRefresh(
           onRefresh: () {

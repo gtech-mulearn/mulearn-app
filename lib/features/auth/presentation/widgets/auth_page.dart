@@ -50,14 +50,20 @@ class AuthPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(MuSpacing.space3, MuSpacing.space2, MuSpacing.space5, 0),
+              padding: const EdgeInsets.fromLTRB(
+                MuSpacing.space3,
+                MuSpacing.space2,
+                MuSpacing.space5,
+                0,
+              ),
               child: Row(
                 children: [
                   if (canPop)
                     MuIconButton(
                       icon: LucideIcons.arrowLeft,
                       tooltip: 'Back',
-                      onPressed: onBack ?? () => Navigator.of(context).maybePop(),
+                      onPressed:
+                          onBack ?? () => Navigator.of(context).maybePop(),
                     )
                   else
                     const SizedBox(height: MuSizes.touchMin),
@@ -102,22 +108,39 @@ class AuthPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Text(eyebrow.toUpperCase(), style: mu.text.eyebrow.copyWith(color: c.ink3)),
+                    Text(
+                      eyebrow.toUpperCase(),
+                      style: mu.text.eyebrow.copyWith(color: c.ink3),
+                    ),
                     const SizedBox(height: MuSpacing.space2),
                     Semantics(
                       header: true,
                       child: Text.rich(
                         TextSpan(
                           children: [
-                            TextSpan(text: light, style: mu.text.displayLight.copyWith(fontSize: 36)),
-                            TextSpan(text: bold, style: mu.text.display.copyWith(fontSize: 36)),
+                            TextSpan(
+                              text: light,
+                              style: mu.text.displayLight.copyWith(
+                                fontSize: 36,
+                              ),
+                            ),
+                            TextSpan(
+                              text: bold,
+                              style: mu.text.display.copyWith(fontSize: 36),
+                            ),
                           ],
                         ),
                       ),
                     ),
                     if (lead != null) ...[
                       const SizedBox(height: MuSpacing.space2),
-                      Text(lead!, style: mu.text.bodyLg.copyWith(fontSize: 16, color: c.ink2)),
+                      Text(
+                        lead!,
+                        style: mu.text.bodyLg.copyWith(
+                          fontSize: 16,
+                          color: c.ink2,
+                        ),
+                      ),
                     ],
                     const SizedBox(height: MuSpacing.space6),
                     ...children,

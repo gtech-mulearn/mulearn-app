@@ -35,8 +35,13 @@ class ProblemStatementDetailScreen extends ConsumerWidget {
             const MuTopBar.detail(),
             Expanded(
               child: state.when(
-                loading: () => const Center(child: MuDotsLoader(label: 'Loading the problem…')),
-                error: (e, _) => ErrorRetryView(error: e, onRetry: () => ref.invalidate(problemStatementProvider(id))),
+                loading: () => const Center(
+                  child: MuDotsLoader(label: 'Loading the problem…'),
+                ),
+                error: (e, _) => ErrorRetryView(
+                  error: e,
+                  onRetry: () => ref.invalidate(problemStatementProvider(id)),
+                ),
                 data: (s) => _Body(statement: s),
               ),
             ),
@@ -66,12 +71,24 @@ class _Body extends ConsumerWidget {
         ref.refresh(myPsParticipationProvider(s.id).future),
       ]),
       child: ListView(
-        physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-        padding: const EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space2, MuSpacing.space5, MuSpacing.space8),
+        physics: const BouncingScrollPhysics(
+          parent: AlwaysScrollableScrollPhysics(),
+        ),
+        padding: const EdgeInsets.fromLTRB(
+          MuSpacing.space5,
+          MuSpacing.space2,
+          MuSpacing.space5,
+          MuSpacing.space8,
+        ),
         children: [
           Row(
             children: [
-              MuAvatar(name: s.companyName, url: s.companyLogo, size: MuSizes.avatarMd, ring: false),
+              MuAvatar(
+                name: s.companyName,
+                url: s.companyLogo,
+                size: MuSizes.avatarMd,
+                ring: false,
+              ),
               const SizedBox(width: MuSpacing.space3),
               Expanded(
                 child: Column(
@@ -79,7 +96,9 @@ class _Body extends ConsumerWidget {
                   children: [
                     Text(s.companyName, style: mu.text.bodyStrong),
                     Text(
-                      s.publishedAt == null ? 'Problem statement' : 'Posted ${formatDay(s.publishedAt!)}',
+                      s.publishedAt == null
+                          ? 'Problem statement'
+                          : 'Posted ${formatDay(s.publishedAt!)}',
                       style: mu.text.caption,
                     ),
                   ],
@@ -88,14 +107,18 @@ class _Body extends ConsumerWidget {
             ],
           ),
           const SizedBox(height: MuSpacing.space4),
-          Semantics(header: true, child: Text(s.title, style: mu.text.display.copyWith(fontSize: 30))),
+          Semantics(
+            header: true,
+            child: Text(s.title, style: mu.text.display.copyWith(fontSize: 30)),
+          ),
           const SizedBox(height: MuSpacing.space3),
           Wrap(
             spacing: 6,
             runSpacing: 6,
             children: [
               ?psStatusPill(mine?.status ?? s.myStatus),
-              if (s.category != null) MuPill(s.category!, tone: MuPillTone.cobalt),
+              if (s.category != null)
+                MuPill(s.category!, tone: MuPillTone.cobalt),
               for (final skill in s.skills) MuPill(skill),
             ],
           ),
@@ -103,9 +126,14 @@ class _Body extends ConsumerWidget {
           MuFeedGroup(
             children: [
               MuFeedRow(
-                leading: MuFeedIcon(s.isOpen ? LucideIcons.clock : LucideIcons.lock, tone: MuFeedTone.event),
+                leading: MuFeedIcon(
+                  s.isOpen ? LucideIcons.clock : LucideIcons.lock,
+                  tone: MuFeedTone.event,
+                ),
                 subject: psDeadlineLabel(s, now),
-                time: s.deadline == null ? 'Open until it is taken down' : formatDayTime(s.deadline!),
+                time: s.deadline == null
+                    ? 'Open until it is taken down'
+                    : formatDayTime(s.deadline!),
               ),
               MuFeedRow(
                 leading: const MuFeedIcon(LucideIcons.users),
@@ -115,14 +143,25 @@ class _Body extends ConsumerWidget {
               ),
               if (link != null)
                 MuFeedRow(
-                  leading: const MuFeedIcon(LucideIcons.link, tone: MuFeedTone.karma),
+                  leading: const MuFeedIcon(
+                    LucideIcons.link,
+                    tone: MuFeedTone.karma,
+                  ),
                   subject: 'Your solution',
-                  time: mine?.submittedAt == null ? link : 'Sent ${formatDayTime(mine!.submittedAt!)}',
-                  trailing: Icon(LucideIcons.arrowUpRight, size: MuSizes.iconSm, color: mu.colors.ink3),
+                  time: mine?.submittedAt == null
+                      ? link
+                      : 'Sent ${formatDayTime(mine!.submittedAt!)}',
+                  trailing: Icon(
+                    LucideIcons.arrowUpRight,
+                    size: MuSizes.iconSm,
+                    color: mu.colors.ink3,
+                  ),
                   divider: false,
                   onTap: () {
                     final uri = Uri.tryParse(link);
-                    if (uri != null) unawaited(ref.read(openExternalProvider)(uri));
+                    if (uri != null) {
+                      unawaited(ref.read(openExternalProvider)(uri));
+                    }
                   },
                 ),
             ],
@@ -144,13 +183,20 @@ class _ActionBar extends ConsumerWidget {
 
   final ProblemStatement statement;
 
-  Future<void> _act(BuildContext context, WidgetRef ref, Future<bool> Function(PsActions a) run, String done) async {
+  Future<void> _act(
+    BuildContext context,
+    WidgetRef ref,
+    Future<bool> Function(PsActions a) run,
+    String done,
+  ) async {
     final ok = await run(ref.read(psActionsProvider.notifier));
     if (!context.mounted) return;
     final error = ref.read(psActionsProvider).error;
     MuToast.show(
       context,
-      message: ok ? done : ApiException.messageFor(error ?? "That didn't go through"),
+      message: ok
+          ? done
+          : ApiException.messageFor(error ?? "That didn't go through"),
       type: ok ? MuToastType.success : MuToastType.error,
     );
   }
@@ -159,12 +205,18 @@ class _ActionBar extends ConsumerWidget {
     final sure = await showMuConfirm(
       context,
       title: 'Leave this problem?',
-      body: "You'll no longer be counted as trying it. You can come back while it's open.",
+      body:
+          "You'll no longer be counted as trying it. You can come back while it's open.",
       confirmLabel: 'Leave',
       destructive: true,
     );
     if (sure && context.mounted) {
-      await _act(context, ref, (a) => a.leave(statement.id), 'You left ${statement.title}');
+      await _act(
+        context,
+        ref,
+        (a) => a.leave(statement.id),
+        'You left ${statement.title}',
+      );
     }
   }
 
@@ -172,12 +224,18 @@ class _ActionBar extends ConsumerWidget {
     final sure = await showMuConfirm(
       context,
       title: 'Withdraw your solution?',
-      body: "Your link is removed and you're back to trying it. You can submit again before the deadline.",
+      body:
+          "Your link is removed and you're back to trying it. You can submit again before the deadline.",
       confirmLabel: 'Withdraw',
       destructive: true,
     );
     if (sure && context.mounted) {
-      await _act(context, ref, (a) => a.withdraw(statement.id), 'Solution withdrawn');
+      await _act(
+        context,
+        ref,
+        (a) => a.withdraw(statement.id),
+        'Solution withdrawn',
+      );
     }
   }
 
@@ -203,8 +261,12 @@ class _ActionBar extends ConsumerWidget {
             loading: busy,
             onPressed: busy
                 ? null
-                : () =>
-                      _act(context, ref, (a) => a.startTrying(s.id), "You're on it. Submit your link when it's ready."),
+                : () => _act(
+                    context,
+                    ref,
+                    (a) => a.startTrying(s.id),
+                    "You're on it. Submit your link when it's ready.",
+                  ),
           ),
         );
       case (null, false):
@@ -255,7 +317,13 @@ class _ActionBar extends ConsumerWidget {
                 icon: LucideIcons.link,
                 block: true,
                 loading: busy,
-                onPressed: busy ? null : () => _SubmitSheet.show(context, s, current: mine.value?.submissionUrl),
+                onPressed: busy
+                    ? null
+                    : () => _SubmitSheet.show(
+                        context,
+                        s,
+                        current: mine.value?.submissionUrl,
+                      ),
               ),
             ),
           );
@@ -270,13 +338,20 @@ class _ActionBar extends ConsumerWidget {
         border: Border(top: BorderSide(color: c.line)),
       ),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space3, MuSpacing.space5, MuSpacing.space3),
+        padding: const EdgeInsets.fromLTRB(
+          MuSpacing.space5,
+          MuSpacing.space3,
+          MuSpacing.space5,
+          MuSpacing.space3,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            if (note != null) Text(note, style: mu.text.caption, textAlign: TextAlign.center),
-            if (note != null && buttons.isNotEmpty) const SizedBox(height: MuSpacing.space2),
+            if (note != null)
+              Text(note, style: mu.text.caption, textAlign: TextAlign.center),
+            if (note != null && buttons.isNotEmpty)
+              const SizedBox(height: MuSpacing.space2),
             if (buttons.length == 1)
               buttons.single
             else if (buttons.isNotEmpty)
@@ -302,7 +377,11 @@ class _SubmitSheet extends ConsumerStatefulWidget {
   final ProblemStatement statement;
   final String? current;
 
-  static Future<void> show(BuildContext context, ProblemStatement statement, {String? current}) => showMuSheet<void>(
+  static Future<void> show(
+    BuildContext context,
+    ProblemStatement statement, {
+    String? current,
+  }) => showMuSheet<void>(
     context,
     builder: (_) => _SubmitSheet(statement: statement, current: current),
   );
@@ -332,12 +411,16 @@ class _SubmitSheetState extends ConsumerState<_SubmitSheet> {
     final s = v?.trim() ?? '';
     if (s.isEmpty) return 'Add the link to your solution';
     final uri = Uri.tryParse(_https(s));
-    return uri == null || !uri.host.contains('.') ? 'That link looks incomplete' : null;
+    return uri == null || !uri.host.contains('.')
+        ? 'That link looks incomplete'
+        : null;
   }
 
   Future<void> _submit() async {
     if (!(_formKey.currentState?.validate() ?? false)) return;
-    final ok = await ref.read(psActionsProvider.notifier).submit(widget.statement.id, _https(_link.text));
+    final ok = await ref
+        .read(psActionsProvider.notifier)
+        .submit(widget.statement.id, _https(_link.text));
     if (!mounted) return;
     final error = ref.read(psActionsProvider).error;
     MuToast.show(
@@ -356,7 +439,9 @@ class _SubmitSheetState extends ConsumerState<_SubmitSheet> {
     return Form(
       key: _formKey,
       child: MuFormSheet(
-        title: widget.current == null ? 'Submit your solution' : 'Update your link',
+        title: widget.current == null
+            ? 'Submit your solution'
+            : 'Update your link',
         lead:
             '${widget.statement.companyName} sees this link with your μLearn profile. '
             'You can change it until the deadline.',

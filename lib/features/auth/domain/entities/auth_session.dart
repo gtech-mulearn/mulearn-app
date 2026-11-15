@@ -12,5 +12,8 @@ part 'auth_session.freezed.dart';
 /// is confirmed, if a user summary is worth carrying.
 @freezed
 abstract class AuthSession with _$AuthSession {
-  const factory AuthSession({required String accessToken, required String refreshToken}) = _AuthSession;
+  const factory AuthSession({
+    required String accessToken,
+    required String refreshToken,
+  }) = _AuthSession;
 }

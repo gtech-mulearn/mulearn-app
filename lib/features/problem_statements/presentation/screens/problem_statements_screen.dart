@@ -24,10 +24,12 @@ class ProblemStatementsScreen extends ConsumerStatefulWidget {
   const ProblemStatementsScreen({super.key});
 
   @override
-  ConsumerState<ProblemStatementsScreen> createState() => _ProblemStatementsScreenState();
+  ConsumerState<ProblemStatementsScreen> createState() =>
+      _ProblemStatementsScreenState();
 }
 
-class _ProblemStatementsScreenState extends ConsumerState<ProblemStatementsScreen> {
+class _ProblemStatementsScreenState
+    extends ConsumerState<ProblemStatementsScreen> {
   final _search = TextEditingController();
   _Tab _tab = _Tab.browse;
   String _query = '';
@@ -46,8 +48,13 @@ class _ProblemStatementsScreenState extends ConsumerState<ProblemStatementsScree
   bool _onScroll(ScrollNotification n) {
     if (_tab != _Tab.browse) return false;
     final feed = ref.read(psFeedProvider(_query, _openOnly)).value;
-    if (n.metrics.extentAfter < 400 && feed != null && feed.hasMore && feed.loadMoreError == null) {
-      unawaited(ref.read(psFeedProvider(_query, _openOnly).notifier).loadMore());
+    if (n.metrics.extentAfter < 400 &&
+        feed != null &&
+        feed.hasMore &&
+        feed.loadMoreError == null) {
+      unawaited(
+        ref.read(psFeedProvider(_query, _openOnly).notifier).loadMore(),
+      );
     }
     return false;
   }
@@ -71,7 +78,9 @@ class _ProblemStatementsScreenState extends ConsumerState<ProblemStatementsScree
           child: NotificationListener<ScrollNotification>(
             onNotification: _onScroll,
             child: ListView(
-              physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+              physics: const BouncingScrollPhysics(
+                parent: AlwaysScrollableScrollPhysics(),
+              ),
               keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
               padding: const EdgeInsets.fromLTRB(
                 MuSpacing.space5,
@@ -83,7 +92,11 @@ class _ProblemStatementsScreenState extends ConsumerState<ProblemStatementsScree
                 if (Navigator.of(context).canPop()) ...[
                   Align(
                     alignment: AlignmentDirectional.centerStart,
-                    child: MuIconButton(icon: LucideIcons.arrowLeft, tooltip: 'Back', onPressed: () => context.pop()),
+                    child: MuIconButton(
+                      icon: LucideIcons.arrowLeft,
+                      tooltip: 'Back',
+                      onPressed: () => context.pop(),
+                    ),
                   ),
                   const SizedBox(height: MuSpacing.space3),
                 ],
@@ -92,8 +105,14 @@ class _ProblemStatementsScreenState extends ConsumerState<ProblemStatementsScree
                   child: Text.rich(
                     TextSpan(
                       children: [
-                        TextSpan(text: 'Solve real\n', style: mu.text.displayLight.copyWith(fontSize: 36)),
-                        TextSpan(text: 'problems', style: mu.text.display.copyWith(fontSize: 36)),
+                        TextSpan(
+                          text: 'Solve real\n',
+                          style: mu.text.displayLight.copyWith(fontSize: 36),
+                        ),
+                        TextSpan(
+                          text: 'problems',
+                          style: mu.text.display.copyWith(fontSize: 36),
+                        ),
                       ],
                     ),
                   ),
@@ -107,8 +126,11 @@ class _ProblemStatementsScreenState extends ConsumerState<ProblemStatementsScree
                 MuSegmented<_Tab>(
                   values: _Tab.values,
                   selected: _tab,
-                  label: (t) =>
-                      t == _Tab.browse ? 'Browse' : (mineCount == 0 ? 'Participating' : 'Participating · $mineCount'),
+                  label: (t) => t == _Tab.browse
+                      ? 'Browse'
+                      : (mineCount == 0
+                            ? 'Participating'
+                            : 'Participating · $mineCount'),
                   onChanged: (t) => setState(() => _tab = t),
                 ),
                 const SizedBox(height: MuSpacing.space4),
@@ -148,12 +170,19 @@ class _ProblemStatementsScreenState extends ConsumerState<ProblemStatementsScree
       .when(
         skipError: true,
         loading: () => const [_Loading()],
-        error: (e, _) => [_Problem(error: e, onRetry: () => ref.invalidate(psFeedProvider(_query, _openOnly)))],
+        error: (e, _) => [
+          _Problem(
+            error: e,
+            onRetry: () => ref.invalidate(psFeedProvider(_query, _openOnly)),
+          ),
+        ],
         data: (paged) => [
           if (paged.items.isEmpty)
             MuEmptyLine(
               _query.isEmpty
-                  ? (_openOnly ? 'Nothing open right now. Check back soon.' : 'No problem statements yet.')
+                  ? (_openOnly
+                        ? 'Nothing open right now. Check back soon.'
+                        : 'No problem statements yet.')
                   : 'Nothing matches "$_query".',
             )
           else
@@ -162,7 +191,9 @@ class _ProblemStatementsScreenState extends ConsumerState<ProblemStatementsScree
             MuLoadMoreFooter(
               isLoading: paged.isLoadingMore,
               error: paged.loadMoreError,
-              onRetry: () => ref.read(psFeedProvider(_query, _openOnly).notifier).loadMore(),
+              onRetry: () => ref
+                  .read(psFeedProvider(_query, _openOnly).notifier)
+                  .loadMore(),
             ),
         ],
       );
@@ -170,11 +201,18 @@ class _ProblemStatementsScreenState extends ConsumerState<ProblemStatementsScree
   List<Widget> _mine(AsyncValue<List<ProblemStatement>> mine) => mine.when(
     skipError: true,
     loading: () => const [_Loading()],
-    error: (e, _) => [_Problem(error: e, onRetry: () => ref.invalidate(psParticipatingProvider))],
+    error: (e, _) => [
+      _Problem(
+        error: e,
+        onRetry: () => ref.invalidate(psParticipatingProvider),
+      ),
+    ],
     data: (items) {
       if (items.isEmpty) {
         return [
-          const MuEmptyLine("You're not on any yet. Pick one in Browse and say you're trying it."),
+          const MuEmptyLine(
+            "You're not on any yet. Pick one in Browse and say you're trying it.",
+          ),
           const SizedBox(height: MuSpacing.space4),
           Align(
             alignment: AlignmentDirectional.centerStart,
@@ -196,9 +234,15 @@ class _ProblemStatementsScreenState extends ConsumerState<ProblemStatementsScree
           if (s.myStatus == PsStatus.trying) s,
       ];
       return [
-        if (trying.isNotEmpty) ...[MuSectionEyebrow('TRYING · ${trying.length}'), PsList(trying)],
+        if (trying.isNotEmpty) ...[
+          MuSectionEyebrow('TRYING · ${trying.length}'),
+          PsList(trying),
+        ],
         if (submitted.isNotEmpty) ...[
-          MuSectionEyebrow('SUBMITTED · ${submitted.length}', top: trying.isEmpty ? 0 : MuSpacing.space6),
+          MuSectionEyebrow(
+            'SUBMITTED · ${submitted.length}',
+            top: trying.isEmpty ? 0 : MuSpacing.space6,
+          ),
           PsList(submitted),
         ],
       ];
@@ -226,7 +270,12 @@ class _Problem extends StatelessWidget {
   Widget build(BuildContext context) => Row(
     children: [
       Expanded(child: MuEmptyLine(ApiException.messageFor(error))),
-      MuButton(label: 'Retry', variant: MuButtonVariant.ghost, size: MuButtonSize.small, onPressed: onRetry),
+      MuButton(
+        label: 'Retry',
+        variant: MuButtonVariant.ghost,
+        size: MuButtonSize.small,
+        onPressed: onRetry,
+      ),
     ],
   );
 }
@@ -254,10 +303,18 @@ class PsList extends ConsumerWidget {
             ),
             subject: items[i].title,
             time: [items[i].companyName, ?items[i].category].join(' · '),
-            trailing: Icon(LucideIcons.chevronRight, size: MuSizes.iconSm + 2, color: c.ink3),
-            actions: [psDeadlinePill(items[i], now), ?psStatusPill(items[i].myStatus)],
+            trailing: Icon(
+              LucideIcons.chevronRight,
+              size: MuSizes.iconSm + 2,
+              color: c.ink3,
+            ),
+            actions: [
+              psDeadlinePill(items[i], now),
+              ?psStatusPill(items[i].myStatus),
+            ],
             divider: i < items.length - 1,
-            onTap: () => context.push(RoutePaths.problemStatementPath(items[i].id)),
+            onTap: () =>
+                context.push(RoutePaths.problemStatementPath(items[i].id)),
           ),
       ],
     );

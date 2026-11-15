@@ -30,22 +30,37 @@ class LearnerSessionsRemoteDataSource {
 
   final Dio _dio;
 
-  Future<Map<String, dynamic>> _list(String path) async => ApiEnvelope.unwrapObject(
-    await _dio.get<dynamic>(path, queryParameters: PageIndexPaging.query(1, perPage: _perPage)),
+  Future<Map<String, dynamic>> _list(String path) async =>
+      ApiEnvelope.unwrapObject(
+        await _dio.get<dynamic>(
+          path,
+          queryParameters: PageIndexPaging.query(1, perPage: _perPage),
+        ),
+      );
+
+  Future<Map<String, dynamic>> fetchAvailable() =>
+      _list(LearnerSessionPaths.available);
+  Future<Map<String, dynamic>> fetchHistory() =>
+      _list(LearnerSessionPaths.history);
+  Future<Map<String, dynamic>> fetchMyRequests() =>
+      _list(LearnerSessionPaths.myRequests);
+
+  Future<String?> join(String id) async => ApiEnvelope.unwrapMessage(
+    await _dio.post<dynamic>(
+      LearnerSessionPaths.join(id),
+      data: const <String, Object>{},
+    ),
   );
 
-  Future<Map<String, dynamic>> fetchAvailable() => _list(LearnerSessionPaths.available);
-  Future<Map<String, dynamic>> fetchHistory() => _list(LearnerSessionPaths.history);
-  Future<Map<String, dynamic>> fetchMyRequests() => _list(LearnerSessionPaths.myRequests);
-
-  Future<String?> join(String id) async =>
-      ApiEnvelope.unwrapMessage(await _dio.post<dynamic>(LearnerSessionPaths.join(id), data: const <String, Object>{}));
-
   Future<String?> request(Map<String, Object?> body) async =>
-      ApiEnvelope.unwrapMessage(await _dio.post<dynamic>(LearnerSessionPaths.request, data: body));
+      ApiEnvelope.unwrapMessage(
+        await _dio.post<dynamic>(LearnerSessionPaths.request, data: body),
+      );
 
   Future<String?> feedback(String id, Map<String, Object?> body) async =>
-      ApiEnvelope.unwrapMessage(await _dio.patch<dynamic>(LearnerSessionPaths.feedback(id), data: body));
+      ApiEnvelope.unwrapMessage(
+        await _dio.patch<dynamic>(LearnerSessionPaths.feedback(id), data: body),
+      );
 }
 
 class LearnerSessionsRepositoryImpl implements LearnerSessionsRepository {
@@ -59,7 +74,8 @@ class LearnerSessionsRepositoryImpl implements LearnerSessionsRepository {
     return s.isEmpty ? null : s;
   }
 
-  static DateTime? _time(Object? v) => DateTime.tryParse(_str(v) ?? '')?.toUtc();
+  static DateTime? _time(Object? v) =>
+      DateTime.tryParse(_str(v) ?? '')?.toUtc();
 
   static Iterable<Map<String, dynamic>> _rows(Map<String, dynamic> json) {
     final data = json['data'];
@@ -102,11 +118,14 @@ class LearnerSessionsRepositoryImpl implements LearnerSessionsRepository {
 
   /// Newest first.
   static List<SessionRecord> parseHistory(Map<String, dynamic> json) =>
-      [for (final r in _rows(json)) ?parseRecord(r)]..sort((a, b) => b.session.startsAt.compareTo(a.session.startsAt));
+      [for (final r in _rows(json)) ?parseRecord(r)]
+        ..sort((a, b) => b.session.startsAt.compareTo(a.session.startsAt));
 
   static List<MySessionRequest> parseRequests(Map<String, dynamic> json) => [
     for (final r in _rows(json))
-      if (_str(r['id']) != null && _time(r['starts_at']) != null && _time(r['ends_at']) != null)
+      if (_str(r['id']) != null &&
+          _time(r['starts_at']) != null &&
+          _time(r['ends_at']) != null)
         MySessionRequest(
           id: _str(r['id'])!,
           title: _str(r['title']) ?? 'Session request',
@@ -130,29 +149,38 @@ class LearnerSessionsRepositoryImpl implements LearnerSessionsRepository {
   }
 
   @override
-  Future<List<AvailableSession>> available() => _guard(() async => parseAvailable(await _remote.fetchAvailable()));
+  Future<List<AvailableSession>> available() =>
+      _guard(() async => parseAvailable(await _remote.fetchAvailable()));
 
   @override
-  Future<List<SessionRecord>> history() => _guard(() async => parseHistory(await _remote.fetchHistory()));
+  Future<List<SessionRecord>> history() =>
+      _guard(() async => parseHistory(await _remote.fetchHistory()));
 
   @override
-  Future<List<MySessionRequest>> myRequests() => _guard(() async => parseRequests(await _remote.fetchMyRequests()));
+  Future<List<MySessionRequest>> myRequests() =>
+      _guard(() async => parseRequests(await _remote.fetchMyRequests()));
 
   @override
-  Future<String> join(String sessionId) =>
-      _guard(() async => await _remote.join(sessionId) ?? "You're in. It's on your sessions list.");
-
-  @override
-  Future<String> request(SessionRequestDraft draft) =>
-      _guard(() async => await _remote.request(draft.toJson()) ?? 'Request sent to the mentors.');
-
-  @override
-  Future<String> feedback(String sessionId, {int? rating, String? text}) => _guard(
+  Future<String> join(String sessionId) => _guard(
     () async =>
-        await _remote.feedback(sessionId, {
-          if (rating != null) 'rating': rating,
-          if ((text ?? '').trim().isNotEmpty) 'feedback': text!.trim(),
-        }) ??
-        'Thanks for the feedback.',
+        await _remote.join(sessionId) ??
+        "You're in. It's on your sessions list.",
   );
+
+  @override
+  Future<String> request(SessionRequestDraft draft) => _guard(
+    () async =>
+        await _remote.request(draft.toJson()) ?? 'Request sent to the mentors.',
+  );
+
+  @override
+  Future<String> feedback(String sessionId, {int? rating, String? text}) =>
+      _guard(
+        () async =>
+            await _remote.feedback(sessionId, {
+              if (rating != null) 'rating': rating,
+              if ((text ?? '').trim().isNotEmpty) 'feedback': text!.trim(),
+            }) ??
+            'Thanks for the feedback.',
+      );
 }

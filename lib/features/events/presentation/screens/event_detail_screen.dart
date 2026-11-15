@@ -37,9 +37,13 @@ class EventDetailScreen extends ConsumerWidget {
             const MuTopBar.detail(),
             Expanded(
               child: detailState.when(
-                loading: () => const Center(child: MuDotsLoader(label: 'Loading the event…')),
-                error: (error, _) =>
-                    ErrorRetryView(error: error, onRetry: () => ref.invalidate(eventDetailProvider(eventId))),
+                loading: () => const Center(
+                  child: MuDotsLoader(label: 'Loading the event…'),
+                ),
+                error: (error, _) => ErrorRetryView(
+                  error: error,
+                  onRetry: () => ref.invalidate(eventDetailProvider(eventId)),
+                ),
                 data: (e) => _Body(event: e),
               ),
             ),
@@ -54,18 +58,22 @@ class EventDetailScreen extends ConsumerWidget {
 String? _place(Event e) {
   final v = e.venue;
   if (v.venueType == 'online') {
-    return (v.venuePlatform?.isNotEmpty ?? false) ? 'Online · ${v.venuePlatform}' : 'Online';
+    return (v.venuePlatform?.isNotEmpty ?? false)
+        ? 'Online · ${v.venuePlatform}'
+        : 'Online';
   }
   final address = v.venueAddress?.trim() ?? '';
   final city = v.venueCity?.trim() ?? '';
   final parts = [
     if (address.isNotEmpty) address,
-    if (city.isNotEmpty && !address.toLowerCase().contains(city.toLowerCase())) city,
+    if (city.isNotEmpty && !address.toLowerCase().contains(city.toLowerCase()))
+      city,
   ].join(', ');
   return parts.isEmpty ? null : parts;
 }
 
-bool _sameDay(DateTime a, DateTime b) => a.year == b.year && a.month == b.month && a.day == b.day;
+bool _sameDay(DateTime a, DateTime b) =>
+    a.year == b.year && a.month == b.month && a.day == b.day;
 
 String? _organiser(Event e) {
   final o = e.organizer;
@@ -96,11 +104,20 @@ class _Body extends ConsumerWidget {
     final organiser = _organiser(event);
     final poster = event.bannerImage ?? event.coverImage;
     final description = event.description?.trim() ?? '';
-    final deadline = DateTime.tryParse(event.registrationDeadline ?? '')?.toLocal();
+    final deadline = DateTime.tryParse(
+      event.registrationDeadline ?? '',
+    )?.toLocal();
 
     return ListView(
-      physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-      padding: const EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space2, MuSpacing.space5, MuSpacing.space8),
+      physics: const BouncingScrollPhysics(
+        parent: AlwaysScrollableScrollPhysics(),
+      ),
+      padding: const EdgeInsets.fromLTRB(
+        MuSpacing.space5,
+        MuSpacing.space2,
+        MuSpacing.space5,
+        MuSpacing.space8,
+      ),
       children: [
         ExcludeSemantics(
           child: ClipRRect(
@@ -114,34 +131,62 @@ class _Body extends ConsumerWidget {
                     CachedNetworkImage(
                       imageUrl: poster,
                       fit: BoxFit.cover,
-                      placeholder: (_, _) => MuGeneratedPoster(text: event.title, fontSize: 44),
-                      errorWidget: (_, _, _) => MuGeneratedPoster(text: event.title, fontSize: 44),
+                      placeholder: (_, _) =>
+                          MuGeneratedPoster(text: event.title, fontSize: 44),
+                      errorWidget: (_, _, _) =>
+                          MuGeneratedPoster(text: event.title, fontSize: 44),
                     )
                   else
                     MuGeneratedPoster(text: event.title, fontSize: 44),
                   Positioned(
                     left: 12,
                     top: 12,
-                    child: MuPill('${muGrouped(event.interestCount)} interested', tone: MuPillTone.night),
+                    child: MuPill(
+                      '${muGrouped(event.interestCount)} interested',
+                      tone: MuPillTone.night,
+                    ),
                   ),
-                  if (kind != null) Positioned(right: 12, top: 12, child: MuPill(kind, tone: MuPillTone.paper)),
+                  if (kind != null)
+                    Positioned(
+                      right: 12,
+                      top: 12,
+                      child: MuPill(kind, tone: MuPillTone.paper),
+                    ),
                 ],
               ),
             ),
           ),
         ),
         const SizedBox(height: MuSpacing.space5),
-        Semantics(header: true, child: Text(event.title, style: mu.text.display.copyWith(fontSize: 32))),
+        Semantics(
+          header: true,
+          child: Text(
+            event.title,
+            style: mu.text.display.copyWith(fontSize: 32),
+          ),
+        ),
         const SizedBox(height: MuSpacing.space3),
         Wrap(
           spacing: 6,
           runSpacing: 6,
           children: [
-            MuPill(online ? 'Online' : 'In person', icon: online ? LucideIcons.wifi : LucideIcons.mapPin),
+            MuPill(
+              online ? 'Online' : 'In person',
+              icon: online ? LucideIcons.wifi : LucideIcons.mapPin,
+            ),
             if (event.minKarma != null && event.minKarma! > 0)
-              MuPill('${muGrouped(event.minKarma!)}+ karma', tone: MuPillTone.volt),
-            if (event.userLimit != null && event.userLimit! > 0) MuPill('${muGrouped(event.userLimit!)} seats'),
-            if (event.isFeatured) const MuPill('Featured', tone: MuPillTone.cobalt, icon: LucideIcons.sparkles),
+              MuPill(
+                '${muGrouped(event.minKarma!)}+ karma',
+                tone: MuPillTone.volt,
+              ),
+            if (event.userLimit != null && event.userLimit! > 0)
+              MuPill('${muGrouped(event.userLimit!)} seats'),
+            if (event.isFeatured)
+              const MuPill(
+                'Featured',
+                tone: MuPillTone.cobalt,
+                icon: LucideIcons.sparkles,
+              ),
             for (final t in event.tags) MuPill('#$t'),
           ],
         ),
@@ -149,14 +194,24 @@ class _Body extends ConsumerWidget {
           const SizedBox(height: MuSpacing.space4),
           Container(
             padding: const EdgeInsets.all(MuSpacing.space4),
-            decoration: BoxDecoration(color: c.warningTint, borderRadius: BorderRadius.circular(MuRadii.control)),
+            decoration: BoxDecoration(
+              color: c.warningTint,
+              borderRadius: BorderRadius.circular(MuRadii.control),
+            ),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(LucideIcons.info, size: MuSizes.iconSm + 2, color: c.warning),
+                Icon(
+                  LucideIcons.info,
+                  size: MuSizes.iconSm + 2,
+                  color: c.warning,
+                ),
                 const SizedBox(width: MuSpacing.space2),
                 Expanded(
-                  child: Text(event.blockedReason!, style: mu.text.body.copyWith(color: c.ink)),
+                  child: Text(
+                    event.blockedReason!,
+                    style: mu.text.body.copyWith(color: c.ink),
+                  ),
                 ),
               ],
             ),
@@ -167,7 +222,10 @@ class _Body extends ConsumerWidget {
           children: [
             if (start != null)
               MuFeedRow(
-                leading: const MuFeedIcon(LucideIcons.calendar, tone: MuFeedTone.event),
+                leading: const MuFeedIcon(
+                  LucideIcons.calendar,
+                  tone: MuFeedTone.event,
+                ),
                 subject: end == null || _sameDay(start, end)
                     ? formatDay(start)
                     : '${formatDay(start)} – ${formatDay(end)}',
@@ -178,7 +236,10 @@ class _Body extends ConsumerWidget {
                     : 'From ${formatTime(start)}',
               ),
             MuFeedRow(
-              leading: MuFeedIcon(online ? LucideIcons.wifi : LucideIcons.mapPin, tone: MuFeedTone.event),
+              leading: MuFeedIcon(
+                online ? LucideIcons.wifi : LucideIcons.mapPin,
+                tone: MuFeedTone.event,
+              ),
               subject: place ?? 'Venue to be announced',
               time: online
                   ? 'The link arrives once you register'
@@ -186,9 +247,15 @@ class _Body extends ConsumerWidget {
                   ? 'Open in Maps'
                   : null,
               trailing: !online && (mapsUrl?.isNotEmpty ?? false)
-                  ? Icon(LucideIcons.arrowUpRight, size: MuSizes.iconSm, color: c.ink3)
+                  ? Icon(
+                      LucideIcons.arrowUpRight,
+                      size: MuSizes.iconSm,
+                      color: c.ink3,
+                    )
                   : null,
-              onTap: !online && (mapsUrl?.isNotEmpty ?? false) ? () => unawaited(_open(ref, mapsUrl!)) : null,
+              onTap: !online && (mapsUrl?.isNotEmpty ?? false)
+                  ? () => unawaited(_open(ref, mapsUrl!))
+                  : null,
               divider: organiser != null || deadline != null,
             ),
             if (organiser != null)
@@ -200,7 +267,10 @@ class _Body extends ConsumerWidget {
               ),
             if (deadline != null)
               MuFeedRow(
-                leading: const MuFeedIcon(LucideIcons.clock, tone: MuFeedTone.pending),
+                leading: const MuFeedIcon(
+                  LucideIcons.clock,
+                  tone: MuFeedTone.pending,
+                ),
                 subject: 'Register by ${formatDay(deadline)}',
                 time: formatTime(deadline),
                 divider: false,
@@ -215,7 +285,10 @@ class _Body extends ConsumerWidget {
         ],
         if (event.linkedTasks.isNotEmpty) ...[
           const SizedBox(height: MuSpacing.space6),
-          Semantics(header: true, child: Text('TASKS FOR THIS EVENT', style: mu.text.eyebrow)),
+          Semantics(
+            header: true,
+            child: Text('TASKS FOR THIS EVENT', style: mu.text.eyebrow),
+          ),
           const SizedBox(height: MuSpacing.space1),
           Text(
             'Post your proof on Discord with the hashtag to earn karma.',
@@ -225,7 +298,10 @@ class _Body extends ConsumerWidget {
           MuFeedGroup(
             children: [
               for (var i = 0; i < event.linkedTasks.length; i++)
-                _LinkedTaskRow(task: event.linkedTasks[i], last: i == event.linkedTasks.length - 1),
+                _LinkedTaskRow(
+                  task: event.linkedTasks[i],
+                  last: i == event.linkedTasks.length - 1,
+                ),
             ],
           ),
         ],
@@ -261,7 +337,13 @@ class _LinkedTaskRow extends StatelessWidget {
           ? null
           : () async {
               await Clipboard.setData(ClipboardData(text: hashtag));
-              if (context.mounted) MuToast.show(context, message: 'Copied $hashtag', type: MuToastType.success);
+              if (context.mounted) {
+                MuToast.show(
+                  context,
+                  message: 'Copied $hashtag',
+                  type: MuToastType.success,
+                );
+              }
             },
     );
   }
@@ -287,13 +369,18 @@ class _StubBar extends ConsumerWidget {
     final form = event.registrationUrl;
     final hasForm = form != null && form.isNotEmpty;
 
-    void toggle() =>
-        unawaited(ref.read(eventInterestControllerProvider.notifier).toggle(event.id, interested: !interested));
+    void toggle() => unawaited(
+      ref
+          .read(eventInterestControllerProvider.notifier)
+          .toggle(event.id, interested: !interested),
+    );
 
     final interest = MuButton(
       label: interested ? 'Interested' : "I'm interested",
       icon: interested ? LucideIcons.check : LucideIcons.star,
-      variant: hasForm || interested ? MuButtonVariant.outline : MuButtonVariant.ink,
+      variant: hasForm || interested
+          ? MuButtonVariant.outline
+          : MuButtonVariant.ink,
       block: true,
       loading: busy,
       onPressed: open && !busy ? toggle : null,
@@ -305,19 +392,31 @@ class _StubBar extends ConsumerWidget {
         border: Border(top: BorderSide(color: c.line)),
       ),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space3, MuSpacing.space5, MuSpacing.space3),
+        padding: const EdgeInsets.fromLTRB(
+          MuSpacing.space5,
+          MuSpacing.space3,
+          MuSpacing.space5,
+          MuSpacing.space3,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             if (interestState.hasError) ...[
-              Text(ApiException.messageFor(interestState.error!), style: mu.text.caption.copyWith(color: c.danger)),
+              Text(
+                ApiException.messageFor(interestState.error!),
+                style: mu.text.caption.copyWith(color: c.danger),
+              ),
               const SizedBox(height: MuSpacing.space2),
             ],
             if (hasForm)
               Row(
                 children: [
-                  _InterestToggle(interested: interested, busy: busy, onPressed: open && !busy ? toggle : null),
+                  _InterestToggle(
+                    interested: interested,
+                    busy: busy,
+                    onPressed: open && !busy ? toggle : null,
+                  ),
                   const SizedBox(width: MuSpacing.space3),
                   Expanded(
                     child: MuButton(
@@ -325,7 +424,9 @@ class _StubBar extends ConsumerWidget {
                       variant: MuButtonVariant.ink,
                       knob: true,
                       block: true,
-                      onPressed: open ? () => unawaited(_open(ref, form)) : null,
+                      onPressed: open
+                          ? () => unawaited(_open(ref, form))
+                          : null,
                     ),
                   ),
                 ],
@@ -342,7 +443,11 @@ class _StubBar extends ConsumerWidget {
 /// Interest as a round star beside Register: filled cobalt once you're
 /// interested. Says which in words to screen readers.
 class _InterestToggle extends StatelessWidget {
-  const _InterestToggle({required this.interested, required this.busy, required this.onPressed});
+  const _InterestToggle({
+    required this.interested,
+    required this.busy,
+    required this.onPressed,
+  });
 
   final bool interested;
   final bool busy;
@@ -369,18 +474,25 @@ class _InterestToggle extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: interested ? c.cobalt : null,
-              border: interested ? null : Border.all(color: c.lineStrong, width: 1.5),
+              border: interested
+                  ? null
+                  : Border.all(color: c.lineStrong, width: 1.5),
             ),
             alignment: Alignment.center,
             child: busy
                 ? SizedBox.square(
                     dimension: 18,
-                    child: CircularProgressIndicator(strokeWidth: 2, color: interested ? c.onCobalt : c.ink2),
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: interested ? c.onCobalt : c.ink2,
+                    ),
                   )
                 : Icon(
                     interested ? LucideIcons.check : LucideIcons.star,
                     size: MuSizes.iconMd,
-                    color: onPressed == null ? c.ink3 : (interested ? c.onCobalt : c.ink),
+                    color: onPressed == null
+                        ? c.ink3
+                        : (interested ? c.onCobalt : c.ink),
                   ),
           ),
         ),

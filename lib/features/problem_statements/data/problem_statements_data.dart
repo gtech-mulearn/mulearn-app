@@ -10,9 +10,12 @@ abstract final class ProblemStatementPaths {
   const ProblemStatementPaths._();
 
   static const String feed = '/api/v1/dashboard/problem-statements/';
-  static String detail(String id) => '/api/v1/dashboard/problem-statements/$id/';
-  static String interaction(String id) => '/api/v1/dashboard/problem-statements/$id/interaction/';
-  static String submission(String id) => '/api/v1/dashboard/problem-statements/$id/submission/';
+  static String detail(String id) =>
+      '/api/v1/dashboard/problem-statements/$id/';
+  static String interaction(String id) =>
+      '/api/v1/dashboard/problem-statements/$id/interaction/';
+  static String submission(String id) =>
+      '/api/v1/dashboard/problem-statements/$id/submission/';
 }
 
 class ProblemStatementsRemoteDataSource {
@@ -21,23 +24,38 @@ class ProblemStatementsRemoteDataSource {
   final Dio _dio;
 
   Future<Map<String, dynamic>> fetchFeed(Map<String, Object> query) async =>
-      ApiEnvelope.unwrapObject(await _dio.get<dynamic>(ProblemStatementPaths.feed, queryParameters: query));
+      ApiEnvelope.unwrapObject(
+        await _dio.get<dynamic>(
+          ProblemStatementPaths.feed,
+          queryParameters: query,
+        ),
+      );
 
   Future<Map<String, dynamic>> fetchDetail(String id) async =>
-      ApiEnvelope.unwrapObject(await _dio.get<dynamic>(ProblemStatementPaths.detail(id)));
+      ApiEnvelope.unwrapObject(
+        await _dio.get<dynamic>(ProblemStatementPaths.detail(id)),
+      );
 
   Future<Map<String, dynamic>> fetchInteraction(String id) async =>
-      ApiEnvelope.unwrapObject(await _dio.get<dynamic>(ProblemStatementPaths.interaction(id)));
+      ApiEnvelope.unwrapObject(
+        await _dio.get<dynamic>(ProblemStatementPaths.interaction(id)),
+      );
 
-  Future<void> putInteraction(String id) =>
-      _dio.put<dynamic>(ProblemStatementPaths.interaction(id), data: {'status': 'Trying'});
+  Future<void> putInteraction(String id) => _dio.put<dynamic>(
+    ProblemStatementPaths.interaction(id),
+    data: {'status': 'Trying'},
+  );
 
-  Future<void> deleteInteraction(String id) => _dio.delete<dynamic>(ProblemStatementPaths.interaction(id));
+  Future<void> deleteInteraction(String id) =>
+      _dio.delete<dynamic>(ProblemStatementPaths.interaction(id));
 
-  Future<void> putSubmission(String id, String url) =>
-      _dio.put<dynamic>(ProblemStatementPaths.submission(id), data: {'submission_url': url});
+  Future<void> putSubmission(String id, String url) => _dio.put<dynamic>(
+    ProblemStatementPaths.submission(id),
+    data: {'submission_url': url},
+  );
 
-  Future<void> deleteSubmission(String id) => _dio.delete<dynamic>(ProblemStatementPaths.submission(id));
+  Future<void> deleteSubmission(String id) =>
+      _dio.delete<dynamic>(ProblemStatementPaths.submission(id));
 }
 
 /// Maps `ProblemStatementSerializer` and the interaction payload.
@@ -55,9 +73,11 @@ class ProblemStatementsRepositoryImpl implements ProblemStatementsRepository {
     return s.isEmpty ? null : s;
   }
 
-  static int _int(Object? v) => v is num ? v.toInt() : int.tryParse('${v ?? ''}') ?? 0;
+  static int _int(Object? v) =>
+      v is num ? v.toInt() : int.tryParse('${v ?? ''}') ?? 0;
 
-  static DateTime? _time(Object? v) => DateTime.tryParse(_str(v) ?? '')?.toLocal();
+  static DateTime? _time(Object? v) =>
+      DateTime.tryParse(_str(v) ?? '')?.toLocal();
 
   static ProblemStatement? parse(Map<String, dynamic> json) {
     final id = _str(json['id']);
@@ -88,16 +108,25 @@ class ProblemStatementsRepositoryImpl implements ProblemStatementsRepository {
 
   static PsPage parsePage(Map<String, dynamic> json) {
     final data = json['data'];
-    final rows = data is List ? data.whereType<Map<String, dynamic>>() : const <Map<String, dynamic>>[];
-    final info = PageIndexPaging.parse(json['pagination'] as Map<String, dynamic>?);
-    return (items: [for (final r in rows) ?parse(r)], hasNext: info.hasNext, totalPages: info.totalPages);
+    final rows = data is List
+        ? data.whereType<Map<String, dynamic>>()
+        : const <Map<String, dynamic>>[];
+    final info = PageIndexPaging.parse(
+      json['pagination'] as Map<String, dynamic>?,
+    );
+    return (
+      items: [for (final r in rows) ?parse(r)],
+      hasNext: info.hasNext,
+      totalPages: info.totalPages,
+    );
   }
 
-  static MyPsParticipation parseParticipation(Map<String, dynamic> json) => MyPsParticipation(
-    status: PsStatus.parse(json['status']),
-    submissionUrl: _str(json['submission_url']),
-    submittedAt: _time(json['submitted_at']),
-  );
+  static MyPsParticipation parseParticipation(Map<String, dynamic> json) =>
+      MyPsParticipation(
+        status: PsStatus.parse(json['status']),
+        submissionUrl: _str(json['submission_url']),
+        submittedAt: _time(json['submitted_at']),
+      );
 
   Future<T> _guard<T>(Future<T> Function() body) async {
     try {
@@ -124,10 +153,16 @@ class ProblemStatementsRepositoryImpl implements ProblemStatementsRepository {
 
   @override
   Future<List<ProblemStatement>> participating() => _guard(() async {
-    final first = parsePage(await _remote.fetchFeed(PageIndexPaging.query(1, perPage: participatingPageSize)));
+    final first = parsePage(
+      await _remote.fetchFeed(
+        PageIndexPaging.query(1, perPage: participatingPageSize),
+      ),
+    );
     final rest = await Future.wait([
       for (var p = 2; p <= first.totalPages; p++)
-        _remote.fetchFeed(PageIndexPaging.query(p, perPage: participatingPageSize)).then(parsePage),
+        _remote
+            .fetchFeed(PageIndexPaging.query(p, perPage: participatingPageSize))
+            .then(parsePage),
     ]);
     return [
       for (final page in [first, ...rest])
@@ -139,23 +174,31 @@ class ProblemStatementsRepositoryImpl implements ProblemStatementsRepository {
   @override
   Future<ProblemStatement> detail(String id) => _guard(() async {
     final statement = parse(await _remote.fetchDetail(id));
-    if (statement == null) throw const ApiException(message: "This problem statement couldn't be read.");
+    if (statement == null) {
+      throw const ApiException(
+        message: "This problem statement couldn't be read.",
+      );
+    }
     return statement;
   });
 
   @override
-  Future<MyPsParticipation> myParticipation(String id) =>
-      _guard(() async => parseParticipation(await _remote.fetchInteraction(id)));
+  Future<MyPsParticipation> myParticipation(String id) => _guard(
+    () async => parseParticipation(await _remote.fetchInteraction(id)),
+  );
 
   @override
-  Future<void> startTrying(String id) => _guard(() => _remote.putInteraction(id));
+  Future<void> startTrying(String id) =>
+      _guard(() => _remote.putInteraction(id));
 
   @override
   Future<void> leave(String id) => _guard(() => _remote.deleteInteraction(id));
 
   @override
-  Future<void> submit(String id, String url) => _guard(() => _remote.putSubmission(id, url));
+  Future<void> submit(String id, String url) =>
+      _guard(() => _remote.putSubmission(id, url));
 
   @override
-  Future<void> withdraw(String id) => _guard(() => _remote.deleteSubmission(id));
+  Future<void> withdraw(String id) =>
+      _guard(() => _remote.deleteSubmission(id));
 }

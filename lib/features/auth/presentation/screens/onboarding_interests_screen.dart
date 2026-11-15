@@ -27,10 +27,12 @@ class OnboardingInterestsScreen extends ConsumerStatefulWidget {
   const OnboardingInterestsScreen({super.key});
 
   @override
-  ConsumerState<OnboardingInterestsScreen> createState() => _OnboardingInterestsScreenState();
+  ConsumerState<OnboardingInterestsScreen> createState() =>
+      _OnboardingInterestsScreenState();
 }
 
-class _OnboardingInterestsScreenState extends ConsumerState<OnboardingInterestsScreen> {
+class _OnboardingInterestsScreenState
+    extends ConsumerState<OnboardingInterestsScreen> {
   _Mode _mode = _Mode.choice;
 
   void _complete() {
@@ -46,7 +48,11 @@ class _OnboardingInterestsScreenState extends ConsumerState<OnboardingInterestsS
   Widget build(BuildContext context) {
     ref.listen(interestsControllerProvider, (_, next) {
       if (next.hasError && !next.isLoading) {
-        MuToast.show(context, message: ApiException.messageFor(next.error!), type: MuToastType.error);
+        MuToast.show(
+          context,
+          message: ApiException.messageFor(next.error!),
+          type: MuToastType.error,
+        );
       }
     });
 
@@ -56,9 +62,18 @@ class _OnboardingInterestsScreenState extends ConsumerState<OnboardingInterestsS
         if (!didPop) _to(_Mode.choice);
       },
       child: switch (_mode) {
-        _Mode.choice => _ChoiceView(onQuiz: () => _to(_Mode.quiz), onDirect: () => _to(_Mode.direct)),
-        _Mode.quiz => _QuizView(onBack: () => _to(_Mode.choice), onComplete: _complete),
-        _Mode.direct => _DirectView(onBack: () => _to(_Mode.choice), onComplete: _complete),
+        _Mode.choice => _ChoiceView(
+          onQuiz: () => _to(_Mode.quiz),
+          onDirect: () => _to(_Mode.direct),
+        ),
+        _Mode.quiz => _QuizView(
+          onBack: () => _to(_Mode.choice),
+          onComplete: _complete,
+        ),
+        _Mode.direct => _DirectView(
+          onBack: () => _to(_Mode.choice),
+          onComplete: _complete,
+        ),
       },
     );
   }
@@ -78,7 +93,8 @@ class _ChoiceView extends StatelessWidget {
       eyebrow: 'One last thing',
       light: 'Where do you ',
       bold: 'want to start?',
-      lead: 'We shape your first tasks around this. Nothing is locked in: change direction whenever you like.',
+      lead:
+          'We shape your first tasks around this. Nothing is locked in: change direction whenever you like.',
       children: [
         _OptionCard(
           icon: LucideIcons.sparkles,
@@ -100,7 +116,12 @@ class _ChoiceView extends StatelessWidget {
 
 /// A large tappable choice: icon well, title, line, chevron.
 class _OptionCard extends StatelessWidget {
-  const _OptionCard({required this.title, required this.onTap, this.subtitle, this.icon});
+  const _OptionCard({
+    required this.title,
+    required this.onTap,
+    this.subtitle,
+    this.icon,
+  });
 
   final IconData? icon;
   final String title;
@@ -121,14 +142,20 @@ class _OptionCard extends StatelessWidget {
         child: Container(
           constraints: const BoxConstraints(minHeight: 64),
           padding: const EdgeInsets.all(MuSpacing.space4),
-          decoration: BoxDecoration(color: c.surface, borderRadius: BorderRadius.circular(MuRadii.card)),
+          decoration: BoxDecoration(
+            color: c.surface,
+            borderRadius: BorderRadius.circular(MuRadii.card),
+          ),
           child: Row(
             children: [
               if (icon != null) ...[
                 Container(
                   width: 44,
                   height: 44,
-                  decoration: BoxDecoration(color: c.cobaltTint, shape: BoxShape.circle),
+                  decoration: BoxDecoration(
+                    color: c.cobaltTint,
+                    shape: BoxShape.circle,
+                  ),
                   child: Icon(icon, size: MuSizes.iconMd, color: c.cobaltText),
                 ),
                 const SizedBox(width: MuSpacing.space3),
@@ -140,13 +167,23 @@ class _OptionCard extends StatelessWidget {
                     Text(title, style: mu.text.title3),
                     if (subtitle != null) ...[
                       const SizedBox(height: 2),
-                      Text(subtitle!, style: mu.text.body.copyWith(fontSize: 14, color: c.ink2)),
+                      Text(
+                        subtitle!,
+                        style: mu.text.body.copyWith(
+                          fontSize: 14,
+                          color: c.ink2,
+                        ),
+                      ),
                     ],
                   ],
                 ),
               ),
               const SizedBox(width: MuSpacing.space2),
-              Icon(LucideIcons.chevronRight, size: MuSizes.iconSm, color: c.ink3),
+              Icon(
+                LucideIcons.chevronRight,
+                size: MuSizes.iconSm,
+                color: c.ink3,
+              ),
             ],
           ),
         ),
@@ -166,7 +203,8 @@ class _QuizView extends ConsumerStatefulWidget {
 }
 
 class _QuizViewState extends ConsumerState<_QuizView> {
-  late final List<QuizQuestion> _questions = List.of(kPathfinderQuizQuestions)..shuffle();
+  late final List<QuizQuestion> _questions = List.of(kPathfinderQuizQuestions)
+    ..shuffle();
   int _index = 0;
   final Map<Pathway, int> _tally = {};
 
@@ -177,10 +215,13 @@ class _QuizViewState extends ConsumerState<_QuizView> {
       setState(() => _index += 1);
       return;
     }
-    final ranked = _tally.entries.toList()..sort((a, b) => b.value.compareTo(a.value));
+    final ranked = _tally.entries.toList()
+      ..sort((a, b) => b.value.compareTo(a.value));
     final topPathways = ranked.take(2).map((e) => e.key.name).toList();
     try {
-      await ref.read(interestsControllerProvider.notifier).submitPathwaysOnly(topPathways);
+      await ref
+          .read(interestsControllerProvider.notifier)
+          .submitPathwaysOnly(topPathways);
       widget.onComplete();
     } on Object catch (_) {
       // Surfaced via the ref.listen toast in the parent screen.
@@ -207,10 +248,14 @@ class _QuizViewState extends ConsumerState<_QuizView> {
       },
       children: [
         for (final option in question.options) ...[
-          _OptionCard(title: option.text, onTap: loading ? null : () => _answer(option.pathway)),
+          _OptionCard(
+            title: option.text,
+            onTap: loading ? null : () => _answer(option.pathway),
+          ),
           const SizedBox(height: MuSpacing.space3),
         ],
-        if (loading) const Center(child: MuDotsLoader(label: 'Saving your pathways…')),
+        if (loading)
+          const Center(child: MuDotsLoader(label: 'Saving your pathways…')),
       ],
     );
   }
@@ -235,7 +280,10 @@ class _DirectViewState extends ConsumerState<_DirectView> {
     try {
       await ref
           .read(interestsControllerProvider.notifier)
-          .submitPathwaysAndEndgoals(_pathways.map((p) => p.name).toList(), _endgoals.map((e) => e.apiValue).toList());
+          .submitPathwaysAndEndgoals(
+            _pathways.map((p) => p.name).toList(),
+            _endgoals.map((e) => e.apiValue).toList(),
+          );
       widget.onComplete();
     } on Object catch (_) {
       // Surfaced via the ref.listen toast in the parent screen.
@@ -258,13 +306,16 @@ class _DirectViewState extends ConsumerState<_DirectView> {
         eyebrow: 'Your pathways',
         light: 'What do you ',
         bold: 'like to do?',
-        lead: 'Pick one or more. Your Interest Groups and first tasks follow from this.',
+        lead:
+            'Pick one or more. Your Interest Groups and first tasks follow from this.',
         onBack: widget.onBack,
         bottom: MuButton(
           label: 'Continue',
           block: true,
           knob: true,
-          onPressed: _pathways.isEmpty ? null : () => setState(() => _onEndgoals = true),
+          onPressed: _pathways.isEmpty
+              ? null
+              : () => setState(() => _onEndgoals = true),
         ),
         children: [
           GridView.count(
@@ -276,7 +327,11 @@ class _DirectViewState extends ConsumerState<_DirectView> {
             childAspectRatio: 1.05,
             children: [
               for (final p in Pathway.values)
-                _PathwayTile(pathway: p, selected: _pathways.contains(p), onTap: () => _toggle(_pathways, p)),
+                _PathwayTile(
+                  pathway: p,
+                  selected: _pathways.contains(p),
+                  onTap: () => _toggle(_pathways, p),
+                ),
             ],
           ),
         ],
@@ -329,7 +384,11 @@ class _DirectViewState extends ConsumerState<_DirectView> {
 /// A pathway as a sticker tile in its own Interest Group colour; selected
 /// gets a night ring and a check.
 class _PathwayTile extends StatelessWidget {
-  const _PathwayTile({required this.pathway, required this.selected, required this.onTap});
+  const _PathwayTile({
+    required this.pathway,
+    required this.selected,
+    required this.onTap,
+  });
 
   final Pathway pathway;
   final bool selected;
@@ -339,11 +398,36 @@ class _PathwayTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final mu = context.mu;
     final c = mu.colors;
-    final (String name, String line, IgCategory tone, IconData icon) = switch (pathway) {
-      Pathway.coder => ('Coder', 'Build software', IgCategory.coder, LucideIcons.code2),
-      Pathway.maker => ('Maker', 'Build things you can hold', IgCategory.maker, LucideIcons.cpu),
-      Pathway.manager => ('Manager', 'Lead people and projects', IgCategory.manager, LucideIcons.briefcase),
-      Pathway.creative => ('Creative', 'Design, film and art', IgCategory.creative, LucideIcons.palette),
+    final (
+      String name,
+      String line,
+      IgCategory tone,
+      IconData icon,
+    ) = switch (pathway) {
+      Pathway.coder => (
+        'Coder',
+        'Build software',
+        IgCategory.coder,
+        LucideIcons.code2,
+      ),
+      Pathway.maker => (
+        'Maker',
+        'Build things you can hold',
+        IgCategory.maker,
+        LucideIcons.cpu,
+      ),
+      Pathway.manager => (
+        'Manager',
+        'Lead people and projects',
+        IgCategory.manager,
+        LucideIcons.briefcase,
+      ),
+      Pathway.creative => (
+        'Creative',
+        'Design, film and art',
+        IgCategory.creative,
+        LucideIcons.palette,
+      ),
     };
     return Semantics(
       button: true,
@@ -358,7 +442,10 @@ class _PathwayTile extends StatelessWidget {
           decoration: BoxDecoration(
             color: MuTones.forIgCategory(c, tone),
             borderRadius: BorderRadius.circular(MuRadii.card),
-            border: Border.all(color: selected ? c.inkPrint : MuTones.forIgCategory(c, tone), width: 3),
+            border: Border.all(
+              color: selected ? c.inkPrint : MuTones.forIgCategory(c, tone),
+              width: 3,
+            ),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -373,8 +460,15 @@ class _PathwayTile extends StatelessWidget {
                     child: Container(
                       width: 26,
                       height: 26,
-                      decoration: BoxDecoration(color: c.inkPrint, shape: BoxShape.circle),
-                      child: Icon(LucideIcons.check, size: 16, color: MuTones.forIgCategory(c, tone)),
+                      decoration: BoxDecoration(
+                        color: c.inkPrint,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        LucideIcons.check,
+                        size: 16,
+                        color: MuTones.forIgCategory(c, tone),
+                      ),
                     ),
                   ),
                 ],
@@ -382,10 +476,18 @@ class _PathwayTile extends StatelessWidget {
               const Spacer(),
               Text(
                 name,
-                style: mu.text.title2.copyWith(color: c.inkPrint, fontWeight: FontWeight.w800),
+                style: mu.text.title2.copyWith(
+                  color: c.inkPrint,
+                  fontWeight: FontWeight.w800,
+                ),
               ),
               const SizedBox(height: 2),
-              Text(line, style: mu.text.caption.copyWith(color: c.inkPrint.withValues(alpha: 0.75))),
+              Text(
+                line,
+                style: mu.text.caption.copyWith(
+                  color: c.inkPrint.withValues(alpha: 0.75),
+                ),
+              ),
             ],
           ),
         ),

@@ -7,7 +7,13 @@ import 'package:mulearn_app/core/design_system/tokens/mu_tokens.g.dart';
 /// selected. Rows of these scroll sideways, first chip "All".
 class MuFilterChip extends StatelessWidget {
   /// A chip reading [label].
-  const MuFilterChip({required this.label, required this.selected, required this.onTap, this.icon, super.key});
+  const MuFilterChip({
+    required this.label,
+    required this.selected,
+    required this.onTap,
+    this.icon,
+    super.key,
+  });
 
   /// Short label.
   final String label;
@@ -51,7 +57,10 @@ class MuFilterChip extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  if (icon != null) ...[Icon(icon, size: MuSizes.iconSm, color: fg), const SizedBox(width: 6)],
+                  if (icon != null) ...[
+                    Icon(icon, size: MuSizes.iconSm, color: fg),
+                    const SizedBox(width: 6),
+                  ],
                   Text(label, style: mu.text.label.copyWith(color: fg)),
                 ],
               ),

@@ -43,13 +43,19 @@ class MuOpportunityRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final mu = context.mu;
     final c = mu.colors;
-    final initial = org.trim().isEmpty ? '?' : org.trim().characters.first.toUpperCase();
+    final initial = org.trim().isEmpty
+        ? '?'
+        : org.trim().characters.first.toUpperCase();
     final monogram = Container(
       color: MuTones.forIgCategory(c, MuTones.hashed(org)),
       alignment: Alignment.center,
       child: Text(
         initial,
-        style: mu.text.title2.copyWith(fontSize: 18, fontWeight: FontWeight.w800, color: c.inkPrint),
+        style: mu.text.title2.copyWith(
+          fontSize: 18,
+          fontWeight: FontWeight.w800,
+          color: c.inkPrint,
+        ),
       ),
     );
 
@@ -75,13 +81,24 @@ class MuOpportunityRow extends StatelessWidget {
                   role,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: mu.text.title3.copyWith(fontSize: 16, color: closed ? c.ink3 : c.ink),
+                  style: mu.text.title3.copyWith(
+                    fontSize: 16,
+                    color: closed ? c.ink3 : c.ink,
+                  ),
                 ),
                 if (terms != null && terms!.isNotEmpty) ...[
                   const SizedBox(height: 2),
-                  Text(terms!, maxLines: 2, overflow: TextOverflow.ellipsis, style: mu.text.caption),
+                  Text(
+                    terms!,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: mu.text.caption,
+                  ),
                 ],
-                if (status != null) ...[const SizedBox(height: MuSpacing.space2), status!],
+                if (status != null) ...[
+                  const SizedBox(height: MuSpacing.space2),
+                  status!,
+                ],
               ],
             ),
           ),
@@ -125,10 +142,19 @@ class MuOpportunityGroup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: MuSpacing.space5, vertical: MuSpacing.space1),
-      decoration: BoxDecoration(color: context.mu.colors.surface, borderRadius: BorderRadius.circular(MuRadii.card)),
+      padding: const EdgeInsets.symmetric(
+        horizontal: MuSpacing.space5,
+        vertical: MuSpacing.space1,
+      ),
+      decoration: BoxDecoration(
+        color: context.mu.colors.surface,
+        borderRadius: BorderRadius.circular(MuRadii.card),
+      ),
       clipBehavior: Clip.antiAlias,
-      child: Column(crossAxisAlignment: CrossAxisAlignment.stretch, children: children),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: children,
+      ),
     );
   }
 }

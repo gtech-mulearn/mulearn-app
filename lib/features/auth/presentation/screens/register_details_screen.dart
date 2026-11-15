@@ -28,7 +28,11 @@ class RegisterDetailsScreen extends ConsumerWidget {
 
     ref.listen(registerSubmitControllerProvider, (_, next) {
       if (next.hasError && !next.isLoading) {
-        MuToast.show(context, message: ApiException.messageFor(next.error!), type: MuToastType.error);
+        MuToast.show(
+          context,
+          message: ApiException.messageFor(next.error!),
+          type: MuToastType.error,
+        );
       }
     });
 
@@ -41,9 +45,21 @@ class RegisterDetailsScreen extends ConsumerWidget {
     }
 
     final (String light, String bold, String lead) = switch (role) {
-      RegistrationRole.student => ('Where do ', 'you learn?', 'Your campus connects you with peers and campus events.'),
-      RegistrationRole.mentor => ('Where do ', 'you work?', 'Learners will see where their mentor comes from.'),
-      RegistrationRole.enabler => ('Which campus ', 'do you enable?', 'Pick the institution you support.'),
+      RegistrationRole.student => (
+        'Where do ',
+        'you learn?',
+        'Your campus connects you with peers and campus events.',
+      ),
+      RegistrationRole.mentor => (
+        'Where do ',
+        'you work?',
+        'Learners will see where their mentor comes from.',
+      ),
+      RegistrationRole.enabler => (
+        'Which campus ',
+        'do you enable?',
+        'Pick the institution you support.',
+      ),
     };
 
     return AuthPage(
@@ -55,9 +71,15 @@ class RegisterDetailsScreen extends ConsumerWidget {
       lead: lead,
       children: [
         switch (role) {
-          RegistrationRole.student => StudentDetailsForm(onSubmitted: () => _onSubmitted(context, ref)),
-          RegistrationRole.enabler => EnablerDetailsForm(onSubmitted: () => _onSubmitted(context, ref)),
-          RegistrationRole.mentor => MentorDetailsForm(onSubmitted: () => _onSubmitted(context, ref)),
+          RegistrationRole.student => StudentDetailsForm(
+            onSubmitted: () => _onSubmitted(context, ref),
+          ),
+          RegistrationRole.enabler => EnablerDetailsForm(
+            onSubmitted: () => _onSubmitted(context, ref),
+          ),
+          RegistrationRole.mentor => MentorDetailsForm(
+            onSubmitted: () => _onSubmitted(context, ref),
+          ),
         },
       ],
     );

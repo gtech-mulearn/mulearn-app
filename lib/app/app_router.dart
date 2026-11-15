@@ -102,79 +102,166 @@ GoRouter goRouter(Ref ref) {
     // A path the app doesn't know (e.g. an old link): the dashboard's 404.
     errorBuilder: (_, __) => const NotFoundScreen(),
     routes: [
-      GoRoute(path: RoutePaths.splash, builder: (_, __) => const SplashScreen()),
-      GoRoute(path: RoutePaths.welcome, builder: (_, __) => const ArrivalScreen()),
-      GoRoute(path: RoutePaths.signIn, builder: (_, __) => const SignInScreen()),
-      GoRoute(path: RoutePaths.forgotPassword, builder: (_, __) => const ForgotPasswordScreen()),
-      GoRoute(path: RoutePaths.resetPassword, builder: (_, __) => const ResetPasswordScreen()),
-      GoRoute(path: RoutePaths.registerBasicInfo, builder: (_, __) => const RegisterBasicInfoScreen()),
-      GoRoute(path: RoutePaths.registerRoleSelection, builder: (_, __) => const RegisterRoleSelectionScreen()),
-      GoRoute(path: RoutePaths.registerDetails, builder: (_, __) => const RegisterDetailsScreen()),
-      GoRoute(path: RoutePaths.onboardingInterests, builder: (_, __) => const OnboardingInterestsScreen()),
-      GoRoute(path: RoutePaths.search, builder: (_, __) => const SearchScreen()),
+      GoRoute(
+        path: RoutePaths.splash,
+        builder: (_, __) => const SplashScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.welcome,
+        builder: (_, __) => const ArrivalScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.signIn,
+        builder: (_, __) => const SignInScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.forgotPassword,
+        builder: (_, __) => const ForgotPasswordScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.resetPassword,
+        builder: (_, __) => const ResetPasswordScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.registerBasicInfo,
+        builder: (_, __) => const RegisterBasicInfoScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.registerRoleSelection,
+        builder: (_, __) => const RegisterRoleSelectionScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.registerDetails,
+        builder: (_, __) => const RegisterDetailsScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.onboardingInterests,
+        builder: (_, __) => const OnboardingInterestsScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.search,
+        builder: (_, __) => const SearchScreen(),
+      ),
       GoRoute(
         path: RoutePaths.publicCampus,
-        builder: (_, state) => PublicCampusScreen(campusId: state.pathParameters['id']!),
+        builder: (_, state) =>
+            PublicCampusScreen(campusId: state.pathParameters['id']!),
       ),
       GoRoute(
         path: RoutePaths.publicProfile,
-        builder: (_, state) => PublicProfileScreen(muid: state.pathParameters['muid']!),
+        builder: (_, state) =>
+            PublicProfileScreen(muid: state.pathParameters['muid']!),
       ),
-      GoRoute(path: RoutePaths.interestGroups, builder: (_, __) => const InterestGroupsScreen()),
+      GoRoute(
+        path: RoutePaths.interestGroups,
+        builder: (_, __) => const InterestGroupsScreen(),
+      ),
       GoRoute(
         path: RoutePaths.interestGroupDetail,
-        builder: (_, state) => InterestGroupDetailScreen(groupId: state.pathParameters['id']!),
+        builder: (_, state) =>
+            InterestGroupDetailScreen(groupId: state.pathParameters['id']!),
       ),
-      GoRoute(path: RoutePaths.events, builder: (_, __) => const EventsScreen()),
+      GoRoute(
+        path: RoutePaths.events,
+        builder: (_, __) => const EventsScreen(),
+      ),
       GoRoute(
         path: RoutePaths.eventDetail,
-        builder: (_, state) => EventDetailScreen(eventId: state.pathParameters['id']!),
+        builder: (_, state) =>
+            EventDetailScreen(eventId: state.pathParameters['id']!),
       ),
-      GoRoute(path: RoutePaths.calendar, builder: (_, __) => const CalendarScreen()),
-      GoRoute(path: RoutePaths.opportunities, builder: (_, __) => const OpportunitiesScreen()),
-      GoRoute(path: RoutePaths.problemStatements, builder: (_, __) => const ProblemStatementsScreen()),
-      GoRoute(path: RoutePaths.learnerSessions, builder: (_, __) => const LearnerSessionsScreen()),
-      GoRoute(path: RoutePaths.projects, builder: (_, __) => const ProjectsScreen()),
+      GoRoute(
+        path: RoutePaths.calendar,
+        builder: (_, __) => const CalendarScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.opportunities,
+        builder: (_, __) => const OpportunitiesScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.problemStatements,
+        builder: (_, __) => const ProblemStatementsScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.learnerSessions,
+        builder: (_, __) => const LearnerSessionsScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.projects,
+        builder: (_, __) => const ProjectsScreen(),
+      ),
       // Before /projects/:id, so "new" isn't read as an id.
-      GoRoute(path: RoutePaths.projectNew, builder: (_, __) => const ProjectFormScreen()),
+      GoRoute(
+        path: RoutePaths.projectNew,
+        builder: (_, __) => const ProjectFormScreen(),
+      ),
       GoRoute(
         path: RoutePaths.project,
-        builder: (_, state) => ProjectDetailScreen(id: state.pathParameters['id']!),
+        builder: (_, state) =>
+            ProjectDetailScreen(id: state.pathParameters['id']!),
       ),
       GoRoute(
         path: RoutePaths.projectEdit,
-        builder: (_, state) => ProjectFormScreen(projectId: state.pathParameters['id']),
+        builder: (_, state) =>
+            ProjectFormScreen(projectId: state.pathParameters['id']),
       ),
       GoRoute(
         path: RoutePaths.problemStatement,
-        builder: (_, state) => ProblemStatementDetailScreen(id: state.pathParameters['id']!),
+        builder: (_, state) =>
+            ProblemStatementDetailScreen(id: state.pathParameters['id']!),
       ),
       GoRoute(
         path: RoutePaths.weeklyTwitches,
-        builder: (_, state) =>
-            WeeklyTwitchesScreen(initial: TwitchShow.from(state.uri.queryParameters['show']) ?? TwitchShow.officeHours),
+        builder: (_, state) => WeeklyTwitchesScreen(
+          initial:
+              TwitchShow.from(state.uri.queryParameters['show']) ??
+              TwitchShow.officeHours,
+        ),
       ),
       GoRoute(
         path: RoutePaths.weeklyTwitch,
         builder: (_, state) => TwitchDetailScreen(
-          show: TwitchShow.from(state.pathParameters['show']) ?? TwitchShow.officeHours,
+          show:
+              TwitchShow.from(state.pathParameters['show']) ??
+              TwitchShow.officeHours,
           id: state.pathParameters['id']!,
         ),
       ),
-      GoRoute(path: RoutePaths.learningCircles, builder: (_, __) => const LearningCirclesScreen()),
-      GoRoute(path: RoutePaths.createLearningCircle, builder: (_, __) => const CreateLearningCircleScreen()),
-      GoRoute(path: RoutePaths.notifications, builder: (_, __) => const NotificationsScreen()),
-      GoRoute(path: RoutePaths.settings, builder: (_, __) => const SettingsScreen()),
-      GoRoute(path: RoutePaths.settingsPassword, builder: (_, __) => const ChangePasswordScreen()),
+      GoRoute(
+        path: RoutePaths.learningCircles,
+        builder: (_, __) => const LearningCirclesScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.createLearningCircle,
+        builder: (_, __) => const CreateLearningCircleScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.notifications,
+        builder: (_, __) => const NotificationsScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.settings,
+        builder: (_, __) => const SettingsScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.settingsPassword,
+        builder: (_, __) => const ChangePasswordScreen(),
+      ),
       GoRoute(
         path: RoutePaths.mentor,
-        builder: (_, __) =>
-            WorkspaceGate(select: (a) => a.mentor, role: 'Mentor', builder: (_) => const MentorHubScreen()),
+        builder: (_, __) => WorkspaceGate(
+          select: (a) => a.mentor,
+          role: 'Mentor',
+          builder: (_) => const MentorHubScreen(),
+        ),
       ),
       GoRoute(
         path: RoutePaths.campus,
-        builder: (_, __) =>
-            WorkspaceGate(select: (a) => a.campus, role: 'Campus', builder: (_) => const CampusOverviewScreen()),
+        builder: (_, __) => WorkspaceGate(
+          select: (a) => a.campus,
+          role: 'Campus',
+          builder: (_) => const CampusOverviewScreen(),
+        ),
       ),
       GoRoute(
         path: RoutePaths.enablerCampuses,
@@ -189,23 +276,33 @@ GoRouter goRouter(Ref ref) {
         builder: (_, state) => WorkspaceGate(
           select: (a) => a.enablerCampuses,
           role: 'Enabler',
-          builder: (_) => EnablerCampusScreen(campusId: state.pathParameters['id']!),
+          builder: (_) =>
+              EnablerCampusScreen(campusId: state.pathParameters['id']!),
         ),
       ),
       GoRoute(
         path: RoutePaths.campusApprovals,
-        builder: (_, __) =>
-            WorkspaceGate(select: (a) => a.campus, role: 'Campus', builder: (_) => const CampusApprovalsScreen()),
+        builder: (_, __) => WorkspaceGate(
+          select: (a) => a.campus,
+          role: 'Campus',
+          builder: (_) => const CampusApprovalsScreen(),
+        ),
       ),
       GoRoute(
         path: RoutePaths.campusGroups,
-        builder: (_, __) =>
-            WorkspaceGate(select: (a) => a.campus, role: 'Campus', builder: (_) => const CampusGroupsScreen()),
+        builder: (_, __) => WorkspaceGate(
+          select: (a) => a.campus,
+          role: 'Campus',
+          builder: (_) => const CampusGroupsScreen(),
+        ),
       ),
       GoRoute(
         path: RoutePaths.campusStudents,
-        builder: (_, __) =>
-            WorkspaceGate(select: (a) => a.campus, role: 'Campus', builder: (_) => const CampusStudentsScreen()),
+        builder: (_, __) => WorkspaceGate(
+          select: (a) => a.campus,
+          role: 'Campus',
+          builder: (_) => const CampusStudentsScreen(),
+        ),
       ),
       GoRoute(
         path: RoutePaths.campusStudent,
@@ -214,89 +311,138 @@ GoRouter goRouter(Ref ref) {
           role: 'Campus',
           builder: (_) => CampusStudentScreen(
             muid: state.pathParameters['muid']!,
-            student: state.extra is CampusStudent ? state.extra! as CampusStudent : null,
+            student: state.extra is CampusStudent
+                ? state.extra! as CampusStudent
+                : null,
           ),
         ),
       ),
       GoRoute(
         path: RoutePaths.mentorSessions,
-        builder: (_, __) =>
-            WorkspaceGate(select: (a) => a.mentor, role: 'Mentor', builder: (_) => const MentorSessionsScreen()),
+        builder: (_, __) => WorkspaceGate(
+          select: (a) => a.mentor,
+          role: 'Mentor',
+          builder: (_) => const MentorSessionsScreen(),
+        ),
       ),
       // Before `:id` routes, so "new" isn't read as an id.
       GoRoute(
         path: RoutePaths.mentorSessionNew,
-        builder: (_, __) =>
-            WorkspaceGate(select: (a) => a.mentor, role: 'Mentor', builder: (_) => const SessionFormScreen()),
+        builder: (_, __) => WorkspaceGate(
+          select: (a) => a.mentor,
+          role: 'Mentor',
+          builder: (_) => const SessionFormScreen(),
+        ),
       ),
       GoRoute(
         path: RoutePaths.mentorSessionEdit,
         builder: (_, state) => WorkspaceGate(
           select: (a) => a.mentor,
           role: 'Mentor',
-          builder: (_) => SessionFormScreen(sessionId: state.pathParameters['id']),
+          builder: (_) =>
+              SessionFormScreen(sessionId: state.pathParameters['id']),
         ),
       ),
       GoRoute(
         path: RoutePaths.mentorAvailability,
-        builder: (_, __) =>
-            WorkspaceGate(select: (a) => a.mentor, role: 'Mentor', builder: (_) => const AvailabilityScreen()),
+        builder: (_, __) => WorkspaceGate(
+          select: (a) => a.mentor,
+          role: 'Mentor',
+          builder: (_) => const AvailabilityScreen(),
+        ),
       ),
       GoRoute(
         path: RoutePaths.mentorRequests,
-        builder: (_, __) =>
-            WorkspaceGate(select: (a) => a.mentor, role: 'Mentor', builder: (_) => const StudentRequestsScreen()),
+        builder: (_, __) => WorkspaceGate(
+          select: (a) => a.mentor,
+          role: 'Mentor',
+          builder: (_) => const StudentRequestsScreen(),
+        ),
       ),
       GoRoute(
         path: RoutePaths.mentorSessionDetail,
         builder: (_, state) => WorkspaceGate(
           select: (a) => a.mentor,
           role: 'Mentor',
-          builder: (_) => MentorSessionDetailScreen(sessionId: state.pathParameters['id']!),
+          builder: (_) =>
+              MentorSessionDetailScreen(sessionId: state.pathParameters['id']!),
         ),
       ),
       GoRoute(
         path: RoutePaths.connectDiscord,
-        builder: (_, state) => ConnectDiscordScreen(code: state.uri.queryParameters['code']),
+        builder: (_, state) =>
+            ConnectDiscordScreen(code: state.uri.queryParameters['code']),
       ),
       GoRoute(
         path: RoutePaths.taskDetail,
-        builder: (_, state) => TaskDetailScreen(taskId: state.pathParameters['id']!),
+        builder: (_, state) =>
+            TaskDetailScreen(taskId: state.pathParameters['id']!),
       ),
       GoRoute(
         path: RoutePaths.learningCircleDetail,
-        builder: (_, state) => LearningCircleDetailScreen(circleId: state.pathParameters['id']!),
+        builder: (_, state) =>
+            LearningCircleDetailScreen(circleId: state.pathParameters['id']!),
       ),
       GoRoute(
         path: RoutePaths.createMeeting,
-        builder: (_, state) => CreateMeetingScreen(circleId: state.pathParameters['id']!),
+        builder: (_, state) =>
+            CreateMeetingScreen(circleId: state.pathParameters['id']!),
       ),
       GoRoute(
         path: RoutePaths.meetingDetail,
-        builder: (_, state) =>
-            MeetingDetailScreen(meetingId: state.pathParameters['id']!, circleId: state.extra as String?),
+        builder: (_, state) => MeetingDetailScreen(
+          meetingId: state.pathParameters['id']!,
+          circleId: state.extra as String?,
+        ),
       ),
       GoRoute(
         path: RoutePaths.editMeeting,
-        builder: (_, state) => EditMeetingScreen(meetingId: state.pathParameters['id']!),
+        builder: (_, state) =>
+            EditMeetingScreen(meetingId: state.pathParameters['id']!),
       ),
       StatefulShellRoute.indexedStack(
-        builder: (_, __, navigationShell) => MainShell(navigationShell: navigationShell),
+        builder: (_, __, navigationShell) =>
+            MainShell(navigationShell: navigationShell),
         branches: [
           StatefulShellBranch(
-            routes: [GoRoute(path: RoutePaths.home, builder: (_, __) => const HomeScreen())],
+            routes: [
+              GoRoute(
+                path: RoutePaths.home,
+                builder: (_, __) => const HomeScreen(),
+              ),
+            ],
           ),
           StatefulShellBranch(
-            routes: [GoRoute(path: RoutePaths.tasks, builder: (_, __) => const TasksScreen())],
+            routes: [
+              GoRoute(
+                path: RoutePaths.tasks,
+                builder: (_, __) => const TasksScreen(),
+              ),
+            ],
           ),
           StatefulShellBranch(
-            routes: [GoRoute(path: RoutePaths.journey, builder: (_, __) => const JourneyScreen())],
+            routes: [
+              GoRoute(
+                path: RoutePaths.journey,
+                builder: (_, __) => const JourneyScreen(),
+              ),
+            ],
           ),
           StatefulShellBranch(
-            routes: [GoRoute(path: RoutePaths.leaderboard, builder: (_, __) => const LeaderboardScreen())],
+            routes: [
+              GoRoute(
+                path: RoutePaths.leaderboard,
+                builder: (_, __) => const LeaderboardScreen(),
+              ),
+            ],
           ),
           StatefulShellBranch(
-            routes: [GoRoute(path: RoutePaths.profile, builder: (_, __) => const ProfileScreen())],
+            routes: [
+              GoRoute(
+                path: RoutePaths.profile,
+                builder: (_, __) => const ProfileScreen(),
+              ),
+            ],
           ),
         ],
       ),

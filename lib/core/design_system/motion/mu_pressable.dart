@@ -40,8 +40,12 @@ class MuPressable extends StatefulWidget {
   State<MuPressable> createState() => _MuPressableState();
 }
 
-class _MuPressableState extends State<MuPressable> with SingleTickerProviderStateMixin {
-  late final AnimationController _scale = AnimationController.unbounded(vsync: this, value: 1);
+class _MuPressableState extends State<MuPressable>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _scale = AnimationController.unbounded(
+    vsync: this,
+    value: 1,
+  );
 
   bool _reduceMotion = false;
 
@@ -62,7 +66,14 @@ class _MuPressableState extends State<MuPressable> with SingleTickerProviderStat
       return;
     }
     // Start from the on-screen value and current velocity: interruptible.
-    _scale.animateWith(SpringSimulation(MuSprings.snappy.description, _scale.value, target, _scale.velocity));
+    _scale.animateWith(
+      SpringSimulation(
+        MuSprings.snappy.description,
+        _scale.value,
+        target,
+        _scale.velocity,
+      ),
+    );
   }
 
   @override
@@ -92,7 +103,8 @@ class _MuPressableState extends State<MuPressable> with SingleTickerProviderStat
             },
       child: AnimatedBuilder(
         animation: _scale,
-        builder: (context, child) => Transform.scale(scale: _scale.value, child: child),
+        builder: (context, child) =>
+            Transform.scale(scale: _scale.value, child: child),
         child: widget.child,
       ),
     );

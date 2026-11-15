@@ -35,7 +35,10 @@ class EditProfileSheet extends ConsumerStatefulWidget {
 
   /// Opens the sheet over [context].
   static Future<void> show(BuildContext context, UserProfile profile) =>
-      showMuSheet<void>(context, builder: (_) => EditProfileSheet(profile: profile));
+      showMuSheet<void>(
+        context,
+        builder: (_) => EditProfileSheet(profile: profile),
+      );
 
   @override
   ConsumerState<EditProfileSheet> createState() => _EditProfileSheetState();
@@ -65,7 +68,12 @@ class _EditProfileSheetState extends ConsumerState<EditProfileSheet> {
     super.dispose();
   }
 
-  static const _genderOptions = ['Male', 'Female', 'Other', 'Prefer not to say'];
+  static const _genderOptions = [
+    'Male',
+    'Female',
+    'Other',
+    'Prefer not to say',
+  ];
 
   /// The backend doesn't guarantee returning gender in the casing it was
   /// saved with (`"male"` for `"Male"`). Mirrors the reference dashboard's
@@ -82,10 +90,14 @@ class _EditProfileSheetState extends ConsumerState<EditProfileSheet> {
   void _prefill(EditableProfile editable) {
     if (_prefilled) return;
     _prefilled = true;
-    _fullName.text = editable.fullName.isNotEmpty ? editable.fullName : widget.profile.fullName;
+    _fullName.text = editable.fullName.isNotEmpty
+        ? editable.fullName
+        : widget.profile.fullName;
     _email.text = editable.email;
     _mobile.text = editable.mobile;
-    _gender = _normalizeGender(editable.gender.isNotEmpty ? editable.gender : widget.profile.gender);
+    _gender = _normalizeGender(
+      editable.gender.isNotEmpty ? editable.gender : widget.profile.gender,
+    );
     _dob = editable.dob;
     _communities = editable.communities.toSet();
     _districtId = editable.district?.id;
@@ -127,16 +139,26 @@ class _EditProfileSheetState extends ConsumerState<EditProfileSheet> {
           );
 
       if (_orgId != null && _departmentId != null) {
-        await ref.read(changeCollegeControllerProvider.notifier).submit(orgId: _orgId!, departmentId: _departmentId!);
+        await ref
+            .read(changeCollegeControllerProvider.notifier)
+            .submit(orgId: _orgId!, departmentId: _departmentId!);
       }
 
       if (mounted) {
-        MuToast.show(context, message: 'Profile saved', type: MuToastType.success);
+        MuToast.show(
+          context,
+          message: 'Profile saved',
+          type: MuToastType.success,
+        );
         Navigator.of(context).pop();
       }
     } on Object catch (e) {
       if (mounted) {
-        MuToast.show(context, message: ApiException.messageFor(e), type: MuToastType.error);
+        MuToast.show(
+          context,
+          message: ApiException.messageFor(e),
+          type: MuToastType.error,
+        );
       }
     } finally {
       if (mounted) setState(() => _saving = false);
@@ -147,7 +169,8 @@ class _EditProfileSheetState extends ConsumerState<EditProfileSheet> {
   Widget build(BuildContext context) {
     final mu = context.mu;
     final c = mu.colors;
-    final editableState = ref.watch(editableProfileControllerProvider)..whenData(_prefill);
+    final editableState = ref.watch(editableProfileControllerProvider)
+      ..whenData(_prefill);
     final department = editableState.value?.department?.title;
     final dob = DateTime.tryParse(_dob);
 
@@ -161,7 +184,12 @@ class _EditProfileSheetState extends ConsumerState<EditProfileSheet> {
     return MuFormSheet(
       title: 'Edit profile',
       lead: 'Your name shows on your profile, leaderboards and certificates.',
-      action: MuButton(label: 'Save', block: true, loading: _saving, onPressed: _saving ? null : _save),
+      action: MuButton(
+        label: 'Save',
+        block: true,
+        loading: _saving,
+        onPressed: _saving ? null : _save,
+      ),
       children: [
         MuTextField(
           label: 'Full name',
@@ -203,13 +231,19 @@ class _EditProfileSheetState extends ConsumerState<EditProfileSheet> {
             ),
             child: Text(
               dob == null ? 'Add your birthday' : _long(dob),
-              style: mu.text.body.copyWith(fontSize: 16, color: dob == null ? c.ink3 : c.ink),
+              style: mu.text.body.copyWith(
+                fontSize: 16,
+                color: dob == null ? c.ink3 : c.ink,
+              ),
             ),
           ),
         ),
         MuFormSection(
           'College',
-          note: ['Now: ${widget.profile.collegeCode ?? 'not set'}', if (department != null) department].join(' · '),
+          note: [
+            'Now: ${widget.profile.collegeCode ?? 'not set'}',
+            if (department != null) department,
+          ].join(' · '),
         ),
         Text(
           'Moved? Pick your new college and department. Leave these alone to keep the current one.',
@@ -220,19 +254,27 @@ class _EditProfileSheetState extends ConsumerState<EditProfileSheet> {
     );
   }
 
-  static String _long(DateTime d) => '${d.day} ${_months[d.month - 1]} ${d.year}';
+  static String _long(DateTime d) =>
+      '${d.day} ${_months[d.month - 1]} ${d.year}';
 
   List<Widget> _collegeFields() {
     final countries = ref.watch(profileCountriesProvider);
-    final states = _countryId == null ? null : ref.watch(profileStatesProvider(_countryId!));
-    final districts = _stateId == null ? null : ref.watch(profileDistrictsProvider(_stateId!));
-    final orgs = _districtId == null ? null : ref.watch(organizationsAndDepartmentsProvider(_districtId!));
+    final states = _countryId == null
+        ? null
+        : ref.watch(profileStatesProvider(_countryId!));
+    final districts = _stateId == null
+        ? null
+        : ref.watch(profileDistrictsProvider(_stateId!));
+    final orgs = _districtId == null
+        ? null
+        : ref.watch(organizationsAndDepartmentsProvider(_districtId!));
 
     List<MuOption> places(List<LocationOption>? list) => [
       for (final o in list ?? const <LocationOption>[]) MuOption(o.id, o.name),
     ];
     List<MuOption> refs(List<ReferenceOption>? list) => [
-      for (final o in list ?? const <ReferenceOption>[]) MuOption(o.id, o.title),
+      for (final o in list ?? const <ReferenceOption>[])
+        MuOption(o.id, o.title),
     ];
 
     return [

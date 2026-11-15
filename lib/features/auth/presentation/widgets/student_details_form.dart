@@ -52,11 +52,14 @@ class _StudentDetailsFormState extends ConsumerState<StudentDetailsForm> {
           .submitGeneric(
             role: RegistrationRole.student,
             college: isCollege ? _college : null,
-            customCollege: isCollege && _college == muOtherOptionValue ? _customCollegeController.text.trim() : null,
+            customCollege: isCollege && _college == muOtherOptionValue
+                ? _customCollegeController.text.trim()
+                : null,
             department: isCollege ? _department : null,
             graduationYear: isCollege ? graduationYear : null,
             organization: isCollege ? null : _organization,
-            customOrganization: !isCollege && _organization == muOtherOptionValue
+            customOrganization:
+                !isCollege && _organization == muOtherOptionValue
                 ? _customOrganizationController.text.trim()
                 : null,
             organizationType: _organizationType,
@@ -75,7 +78,9 @@ class _StudentDetailsFormState extends ConsumerState<StudentDetailsForm> {
     final loading = ref.watch(registerSubmitControllerProvider).isLoading;
     final isCollege = _organizationType == OrganizationType.college;
 
-    List<MuOption> opts(List<ReferenceOption> list) => [for (final o in list) MuOption(o.id, o.title)];
+    List<MuOption> opts(List<ReferenceOption> list) => [
+      for (final o in list) MuOption(o.id, o.title),
+    ];
 
     return Form(
       key: _formKey,
@@ -85,7 +90,8 @@ class _StudentDetailsFormState extends ConsumerState<StudentDetailsForm> {
           MuSegmented<OrganizationType>(
             values: const [OrganizationType.college, OrganizationType.company],
             selected: _organizationType,
-            label: (t) => t == OrganizationType.college ? 'At a college' : 'At a company',
+            label: (t) =>
+                t == OrganizationType.college ? 'At a college' : 'At a company',
             onChanged: (t) {
               if (!loading) setState(() => _organizationType = t);
             },
@@ -97,13 +103,17 @@ class _StudentDetailsFormState extends ConsumerState<StudentDetailsForm> {
               hint: 'Search your college',
               options: opts(colleges.value ?? const []),
               loading: colleges.isLoading,
-              error: colleges.hasError ? "Couldn't load colleges. Go back and try again." : null,
+              error: colleges.hasError
+                  ? "Couldn't load colleges. Go back and try again."
+                  : null,
               enabled: !loading,
               allowOther: true,
               otherLabel: 'My college is not listed',
               value: _college,
               onChanged: (v) => setState(() => _college = v),
-              validator: (_) => (_college ?? '').isEmpty ? 'Pick your college to continue.' : null,
+              validator: (_) => (_college ?? '').isEmpty
+                  ? 'Pick your college to continue.'
+                  : null,
             ),
             if (_college == muOtherOptionValue) ...[
               const SizedBox(height: MuSpacing.space4),
@@ -112,7 +122,9 @@ class _StudentDetailsFormState extends ConsumerState<StudentDetailsForm> {
                 controller: _customCollegeController,
                 enabled: !loading,
                 textCapitalization: TextCapitalization.words,
-                validator: (v) => (v?.trim().length ?? 0) < 3 ? 'Use at least 3 characters.' : null,
+                validator: (v) => (v?.trim().length ?? 0) < 3
+                    ? 'Use at least 3 characters.'
+                    : null,
               ),
             ],
             const SizedBox(height: MuSpacing.space4),
@@ -120,11 +132,15 @@ class _StudentDetailsFormState extends ConsumerState<StudentDetailsForm> {
               label: 'Department',
               options: opts(departments.value ?? const []),
               loading: departments.isLoading,
-              error: departments.hasError ? "Couldn't load departments. Go back and try again." : null,
+              error: departments.hasError
+                  ? "Couldn't load departments. Go back and try again."
+                  : null,
               enabled: !loading,
               value: _department,
               onChanged: (v) => setState(() => _department = v),
-              validator: (_) => (_department ?? '').isEmpty ? 'Pick your department to continue.' : null,
+              validator: (_) => (_department ?? '').isEmpty
+                  ? 'Pick your department to continue.'
+                  : null,
             ),
             const SizedBox(height: MuSpacing.space4),
             MuTextField(
@@ -136,7 +152,9 @@ class _StudentDetailsFormState extends ConsumerState<StudentDetailsForm> {
               maxLength: 4,
               validator: (value) {
                 final year = int.tryParse(value?.trim() ?? '');
-                return (year == null || year < 2020 || year > 2040) ? 'Enter a year from 2020 to 2040.' : null;
+                return (year == null || year < 2020 || year > 2040)
+                    ? 'Enter a year from 2020 to 2040.'
+                    : null;
               },
             ),
           ] else ...[
@@ -145,13 +163,17 @@ class _StudentDetailsFormState extends ConsumerState<StudentDetailsForm> {
               hint: 'Search your company',
               options: opts(companies.value ?? const []),
               loading: companies.isLoading,
-              error: companies.hasError ? "Couldn't load companies. Go back and try again." : null,
+              error: companies.hasError
+                  ? "Couldn't load companies. Go back and try again."
+                  : null,
               enabled: !loading,
               allowOther: true,
               otherLabel: 'My company is not listed',
               value: _organization,
               onChanged: (v) => setState(() => _organization = v),
-              validator: (_) => (_organization ?? '').isEmpty ? 'Pick your company to continue.' : null,
+              validator: (_) => (_organization ?? '').isEmpty
+                  ? 'Pick your company to continue.'
+                  : null,
             ),
             if (_organization == muOtherOptionValue) ...[
               const SizedBox(height: MuSpacing.space4),
@@ -160,7 +182,9 @@ class _StudentDetailsFormState extends ConsumerState<StudentDetailsForm> {
                 controller: _customOrganizationController,
                 enabled: !loading,
                 textCapitalization: TextCapitalization.words,
-                validator: (v) => (v?.trim().length ?? 0) < 3 ? 'Use at least 3 characters.' : null,
+                validator: (v) => (v?.trim().length ?? 0) < 3
+                    ? 'Use at least 3 characters.'
+                    : null,
               ),
             ],
           ],

@@ -15,7 +15,8 @@ class ForgotPasswordScreen extends ConsumerStatefulWidget {
   const ForgotPasswordScreen({super.key});
 
   @override
-  ConsumerState<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
+  ConsumerState<ForgotPasswordScreen> createState() =>
+      _ForgotPasswordScreenState();
 }
 
 class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
@@ -35,7 +36,9 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
     try {
       await ref
           .read(authControllerProvider.notifier)
-          .requestPasswordReset(emailOrMuid: _emailOrMuidController.text.trim());
+          .requestPasswordReset(
+            emailOrMuid: _emailOrMuidController.text.trim(),
+          );
       if (mounted) setState(() => _sent = true);
     } on Object catch (_) {
       // Surfaced via the ref.listen toast below.
@@ -50,7 +53,11 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
 
     ref.listen(authControllerProvider, (_, next) {
       if (next.hasError && !next.isLoading) {
-        MuToast.show(context, message: ApiException.messageFor(next.error!), type: MuToastType.error);
+        MuToast.show(
+          context,
+          message: ApiException.messageFor(next.error!),
+          type: MuToastType.error,
+        );
       }
     });
 
@@ -71,14 +78,24 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
         children: [
           Container(
             padding: const EdgeInsets.all(MuSpacing.space4),
-            decoration: BoxDecoration(color: c.surface, borderRadius: BorderRadius.circular(MuRadii.card)),
+            decoration: BoxDecoration(
+              color: c.surface,
+              borderRadius: BorderRadius.circular(MuRadii.card),
+            ),
             child: Row(
               children: [
                 Container(
                   width: 44,
                   height: 44,
-                  decoration: BoxDecoration(color: c.successTint, shape: BoxShape.circle),
-                  child: Icon(LucideIcons.mailCheck, color: c.success, size: MuSizes.iconMd),
+                  decoration: BoxDecoration(
+                    color: c.successTint,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    LucideIcons.mailCheck,
+                    color: c.success,
+                    size: MuSizes.iconMd,
+                  ),
                 ),
                 const SizedBox(width: MuSpacing.space3),
                 Expanded(
@@ -107,7 +124,8 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
       eyebrow: 'Reset your password',
       light: 'Forgot ',
       bold: 'your password?',
-      lead: "Enter your email or muid and we'll send you a link to set a new one.",
+      lead:
+          "Enter your email or muid and we'll send you a link to set a new one.",
       bottom: MuButton(
         label: 'Send reset link',
         block: true,
@@ -127,7 +145,9 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
             keyboardType: TextInputType.emailAddress,
             textInputAction: TextInputAction.send,
             onSubmitted: (_) => _submit(),
-            validator: (v) => (v?.trim().isEmpty ?? true) ? 'Enter your email or muid to continue.' : null,
+            validator: (v) => (v?.trim().isEmpty ?? true)
+                ? 'Enter your email or muid to continue.'
+                : null,
           ),
         ),
       ],

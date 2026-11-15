@@ -18,8 +18,10 @@ class WorkspaceLinks extends ConsumerWidget {
     final access = ref.watch(workspaceAccessProvider).value;
     if (access == null) return const SizedBox.shrink();
     final links = [
-      if (access.mentor == WorkspaceState.open) (LucideIcons.graduationCap, 'Mentor workspace', RoutePaths.mentor),
-      if (access.campus == WorkspaceState.open) (LucideIcons.school, 'Campus workspace', RoutePaths.campus),
+      if (access.mentor == WorkspaceState.open)
+        (LucideIcons.graduationCap, 'Mentor workspace', RoutePaths.mentor),
+      if (access.campus == WorkspaceState.open)
+        (LucideIcons.school, 'Campus workspace', RoutePaths.campus),
       if (access.enablerCampuses == WorkspaceState.open)
         (LucideIcons.building2, 'My campuses', RoutePaths.enablerCampuses),
     ];
@@ -51,7 +53,10 @@ class WorkspaceLinks extends ConsumerWidget {
                 pressedScale: 0.98,
                 child: Container(
                   margin: const EdgeInsets.only(top: MuSpacing.space2),
-                  padding: const EdgeInsets.symmetric(horizontal: MuSpacing.space4, vertical: MuSpacing.space3),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: MuSpacing.space4,
+                    vertical: MuSpacing.space3,
+                  ),
                   decoration: BoxDecoration(
                     color: c.onNight.withValues(alpha: 0.08),
                     borderRadius: BorderRadius.circular(MuRadii.control),
@@ -61,14 +66,28 @@ class WorkspaceLinks extends ConsumerWidget {
                       Container(
                         width: 36,
                         height: 36,
-                        decoration: BoxDecoration(color: c.volt, shape: BoxShape.circle),
-                        child: Icon(icon, size: MuSizes.iconSm, color: c.onVolt),
+                        decoration: BoxDecoration(
+                          color: c.volt,
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          icon,
+                          size: MuSizes.iconSm,
+                          color: c.onVolt,
+                        ),
                       ),
                       const SizedBox(width: MuSpacing.space3),
                       Expanded(
-                        child: Text(label, style: mu.text.bodyStrong.copyWith(color: c.onNight)),
+                        child: Text(
+                          label,
+                          style: mu.text.bodyStrong.copyWith(color: c.onNight),
+                        ),
                       ),
-                      Icon(LucideIcons.chevronRight, size: MuSizes.iconSm, color: c.onNight2),
+                      Icon(
+                        LucideIcons.chevronRight,
+                        size: MuSizes.iconSm,
+                        color: c.onNight2,
+                      ),
                     ],
                   ),
                 ),

@@ -10,7 +10,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'profile_controller.g.dart';
 
 @riverpod
-ProfileRemoteDataSource profileRemoteDataSource(Ref ref) => ProfileRemoteDataSource(ref.watch(dioProvider));
+ProfileRemoteDataSource profileRemoteDataSource(Ref ref) =>
+    ProfileRemoteDataSource(ref.watch(dioProvider));
 
 @riverpod
 ProfileRepository profileRepository(Ref ref) => ProfileRepositoryImpl(
@@ -26,7 +27,9 @@ class ProfileController extends _$ProfileController {
   @override
   Future<UserProfile> build() async {
     final repository = ref.watch(profileRepositoryProvider);
-    return repository.profileFromPayload(await ref.watch(myProfilePayloadProvider.future));
+    return repository.profileFromPayload(
+      await ref.watch(myProfilePayloadProvider.future),
+    );
   }
 
   /// Refetches the shared profile; every reader of it refreshes.
@@ -38,7 +41,9 @@ class ProfileController extends _$ProfileController {
   /// refetched so every reader (and a later rebuild) agrees with the server.
   Future<void> togglePublic({required bool isPublic}) async {
     final current = state.value;
-    await ref.read(profileRepositoryProvider).togglePublicProfile(isPublic: isPublic);
+    await ref
+        .read(profileRepositoryProvider)
+        .togglePublicProfile(isPublic: isPublic);
     if (!ref.mounted) return;
     if (current != null) {
       state = AsyncData(current.copyWith(isPublic: isPublic));

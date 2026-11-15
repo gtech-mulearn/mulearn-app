@@ -9,34 +9,43 @@ part 'learner_sessions_providers.g.dart';
 
 @riverpod
 LearnerSessionsRepository learnerSessionsRepository(Ref ref) =>
-    LearnerSessionsRepositoryImpl(LearnerSessionsRemoteDataSource(ref.watch(dioProvider)));
+    LearnerSessionsRepositoryImpl(
+      LearnerSessionsRemoteDataSource(ref.watch(dioProvider)),
+    );
 
 /// Sessions open to join, soonest first.
 @Riverpod(retry: noRetry)
-Future<List<AvailableSession>> availableSessions(Ref ref) => ref.watch(learnerSessionsRepositoryProvider).available();
+Future<List<AvailableSession>> availableSessions(Ref ref) =>
+    ref.watch(learnerSessionsRepositoryProvider).available();
 
 /// What the learner joined or asked for, newest first.
 @Riverpod(retry: noRetry)
-Future<List<SessionRecord>> mySessionHistory(Ref ref) => ref.watch(learnerSessionsRepositoryProvider).history();
+Future<List<SessionRecord>> mySessionHistory(Ref ref) =>
+    ref.watch(learnerSessionsRepositoryProvider).history();
 
 /// The learner's requests to mentors.
 @Riverpod(retry: noRetry)
-Future<List<MySessionRequest>> mySessionRequests(Ref ref) => ref.watch(learnerSessionsRepositoryProvider).myRequests();
+Future<List<MySessionRequest>> mySessionRequests(Ref ref) =>
+    ref.watch(learnerSessionsRepositoryProvider).myRequests();
 
 /// The ids of sessions the learner already joined (from their history).
 @Riverpod(retry: noRetry)
 Future<Set<String>> joinedSessionIds(Ref ref) async => {
-  for (final r in await ref.watch(mySessionHistoryProvider.future)) r.session.id,
+  for (final r in await ref.watch(mySessionHistoryProvider.future))
+    r.session.id,
 };
 
 /// The learner's Interest Groups: where they can ask for a session.
 @Riverpod(retry: noRetry)
 Future<List<IgChoice>> myIgChoices(Ref ref) async {
-  final groups = (await ref.watch(myProfilePayloadProvider.future))['interest_groups'];
+  final groups = (await ref.watch(
+    myProfilePayloadProvider.future,
+  ))['interest_groups'];
   return [
     if (groups is List)
       for (final g in groups.whereType<Map<String, dynamic>>())
-        if (g['id'] is String && g['name'] is String) (id: g['id'] as String, name: g['name'] as String),
+        if (g['id'] is String && g['name'] is String)
+          (id: g['id'] as String, name: g['name'] as String),
   ];
 }
 
@@ -48,13 +57,17 @@ class LearnerSessionActions extends _$LearnerSessionActions {
   @override
   Future<void> build() async {}
 
-  Future<String?> _run(Future<String> Function(LearnerSessionsRepository repo) action) async {
+  Future<String?> _run(
+    Future<String> Function(LearnerSessionsRepository repo) action,
+  ) async {
     final repo = ref.read(learnerSessionsRepositoryProvider);
     final link = ref.keepAlive(); // finish the refresh even if the sheet closes
     state = const AsyncLoading();
     try {
       String? message;
-      final result = await AsyncValue.guard(() async => message = await action(repo));
+      final result = await AsyncValue.guard(
+        () async => message = await action(repo),
+      );
       ref
         ..invalidate(availableSessionsProvider)
         ..invalidate(mySessionHistoryProvider)
@@ -66,8 +79,10 @@ class LearnerSessionActions extends _$LearnerSessionActions {
     }
   }
 
-  Future<String?> join(String sessionId) => _run((repo) => repo.join(sessionId));
-  Future<String?> request(SessionRequestDraft draft) => _run((repo) => repo.request(draft));
+  Future<String?> join(String sessionId) =>
+      _run((repo) => repo.join(sessionId));
+  Future<String?> request(SessionRequestDraft draft) =>
+      _run((repo) => repo.request(draft));
   Future<String?> feedback(String sessionId, {int? rating, String? text}) =>
       _run((repo) => repo.feedback(sessionId, rating: rating, text: text));
 }

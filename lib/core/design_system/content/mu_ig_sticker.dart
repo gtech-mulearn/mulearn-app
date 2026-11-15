@@ -66,7 +66,10 @@ class MuIgSticker extends StatelessWidget {
     final c = mu.colors;
     final ink = c.inkPrint;
     final tilt = _tilts[index % _tilts.length] * math.pi / 180;
-    final label = [if (code != null) code!.toUpperCase(), category.name.toUpperCase()].join(' · ');
+    final label = [
+      if (code != null) code!.toUpperCase(),
+      category.name.toUpperCase(),
+    ].join(' · ');
 
     final body = Container(
       width: width,
@@ -86,13 +89,23 @@ class MuIgSticker extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           ExcludeSemantics(
-            child: Text(label, style: mu.text.codeSm.copyWith(color: ink.withValues(alpha: 0.75))),
+            child: Text(
+              label,
+              style: mu.text.codeSm.copyWith(
+                color: ink.withValues(alpha: 0.75),
+              ),
+            ),
           ),
           const SizedBox(height: MuSpacing.space5),
           ExcludeSemantics(
             child: Text(
               name,
-              style: mu.text.title2.copyWith(fontSize: 19, height: 1.05, fontWeight: FontWeight.w800, color: ink),
+              style: mu.text.title2.copyWith(
+                fontSize: 19,
+                height: 1.05,
+                fontWeight: FontWeight.w800,
+                color: ink,
+              ),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
@@ -103,12 +116,22 @@ class MuIgSticker extends StatelessWidget {
               Expanded(
                 child: ExcludeSemantics(
                   child: Text(
-                    members == null ? '' : (members == 1 ? '1 member' : '${_compact(members!)} members'),
+                    members == null
+                        ? ''
+                        : (members == 1
+                              ? '1 member'
+                              : '${_compact(members!)} members'),
                     style: mu.text.caption.copyWith(color: ink),
                   ),
                 ),
               ),
-              if (onJoin != null) _JoinButton(joined: joined, joining: joining, name: name, onPressed: onJoin!),
+              if (onJoin != null)
+                _JoinButton(
+                  joined: joined,
+                  joining: joining,
+                  name: name,
+                  onPressed: onJoin!,
+                ),
               if (selected) Icon(Icons.check_circle, size: 22, color: c.night),
             ],
           ),
@@ -132,11 +155,17 @@ class MuIgSticker extends StatelessWidget {
     );
   }
 
-  static String _compact(int n) => n >= 1000 ? '${(n / 1000).toStringAsFixed(n >= 10000 ? 0 : 1)}k' : '$n';
+  static String _compact(int n) =>
+      n >= 1000 ? '${(n / 1000).toStringAsFixed(n >= 10000 ? 0 : 1)}k' : '$n';
 }
 
 class _JoinButton extends StatelessWidget {
-  const _JoinButton({required this.joined, required this.joining, required this.name, required this.onPressed});
+  const _JoinButton({
+    required this.joined,
+    required this.joining,
+    required this.name,
+    required this.onPressed,
+  });
 
   final bool joined;
   final bool joining;
@@ -147,7 +176,9 @@ class _JoinButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final mu = context.mu;
     final c = mu.colors;
-    final bg = joined ? c.onCobalt.withValues(alpha: 0.75) : c.inkPrint.withValues(alpha: 0.9);
+    final bg = joined
+        ? c.onCobalt.withValues(alpha: 0.75)
+        : c.inkPrint.withValues(alpha: 0.9);
     final fg = joined ? c.inkPrint : c.onCobalt;
     return Semantics(
       container: true,
@@ -161,10 +192,19 @@ class _JoinButton extends StatelessWidget {
           height: 30,
           padding: const EdgeInsets.symmetric(horizontal: MuSpacing.space3),
           alignment: Alignment.center,
-          decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(MuRadii.round)),
+          decoration: BoxDecoration(
+            color: bg,
+            borderRadius: BorderRadius.circular(MuRadii.round),
+          ),
           child: joining
-              ? SizedBox.square(dimension: 14, child: CircularProgressIndicator(strokeWidth: 2, color: fg))
-              : Text(joined ? 'Joined' : 'Join', style: mu.text.label.copyWith(color: fg, fontSize: 12)),
+              ? SizedBox.square(
+                  dimension: 14,
+                  child: CircularProgressIndicator(strokeWidth: 2, color: fg),
+                )
+              : Text(
+                  joined ? 'Joined' : 'Join',
+                  style: mu.text.label.copyWith(color: fg, fontSize: 12),
+                ),
         ),
       ),
     );
@@ -174,7 +214,12 @@ class _JoinButton extends StatelessWidget {
 /// A small Interest Group chip (profile interests, event "for" lines).
 class MuIgChip extends StatelessWidget {
   /// A chip for [name] in its [category] colour.
-  const MuIgChip({required this.name, required this.category, this.onTap, super.key});
+  const MuIgChip({
+    required this.name,
+    required this.category,
+    this.onTap,
+    super.key,
+  });
 
   /// IG name.
   final String name;

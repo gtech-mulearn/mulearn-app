@@ -27,7 +27,10 @@ class JourneyScreen extends ConsumerWidget {
 
     final Widget body;
     if (levelsState.hasError && levels == null) {
-      body = ErrorRetryView(error: levelsState.error!, onRetry: () => ref.invalidate(userLevelsProvider));
+      body = ErrorRetryView(
+        error: levelsState.error!,
+        onRetry: () => ref.invalidate(userLevelsProvider),
+      );
     } else if (profileState.hasError && profile == null) {
       body = ErrorRetryView(
         error: profileState.error!,
@@ -36,7 +39,11 @@ class JourneyScreen extends ConsumerWidget {
     } else if (levels == null || profile == null) {
       body = const Center(child: CircularProgressIndicator());
     } else {
-      body = _JourneyBody(levels: levels, userLevel: profile.level, karma: profile.karma);
+      body = _JourneyBody(
+        levels: levels,
+        userLevel: profile.level,
+        karma: profile.karma,
+      );
     }
 
     return Scaffold(
@@ -47,8 +54,12 @@ class JourneyScreen extends ConsumerWidget {
 }
 
 class _JourneyBody extends StatelessWidget {
-  _JourneyBody({required List<UserLevel> levels, required this.userLevel, required this.karma})
-    : levels = [...levels]..sort((a, b) => levelNumber(a.name).compareTo(levelNumber(b.name)));
+  _JourneyBody({
+    required List<UserLevel> levels,
+    required this.userLevel,
+    required this.karma,
+  }) : levels = [...levels]
+         ..sort((a, b) => levelNumber(a.name).compareTo(levelNumber(b.name)));
 
   final List<UserLevel> levels;
 
@@ -71,10 +82,14 @@ class _JourneyBody extends StatelessWidget {
     if (currentIndex == -1) currentIndex = levels.length - 1;
 
     final current = levels[currentIndex];
-    final remaining = current.tasks.where((t) => !t.completed).fold<num>(0, (sum, t) => sum + t.karma);
+    final remaining = current.tasks
+        .where((t) => !t.completed)
+        .fold<num>(0, (sum, t) => sum + t.karma);
     final total = current.tasks.length;
     final done = current.tasks.where((t) => t.completed).length;
-    final next = currentIndex + 1 < levels.length ? levels[currentIndex + 1] : null;
+    final next = currentIndex + 1 < levels.length
+        ? levels[currentIndex + 1]
+        : null;
 
     String? toNext;
     if (total > 0 && remaining > 0) {
@@ -84,22 +99,38 @@ class _JourneyBody extends StatelessWidget {
     }
 
     return ListView(
-      physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-      padding: const EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space4, MuSpacing.space5, MuSpacing.navClearance),
+      physics: const BouncingScrollPhysics(
+        parent: AlwaysScrollableScrollPhysics(),
+      ),
+      padding: const EdgeInsets.fromLTRB(
+        MuSpacing.space5,
+        MuSpacing.space4,
+        MuSpacing.space5,
+        MuSpacing.navClearance,
+      ),
       children: [
         Semantics(
           header: true,
           child: Text.rich(
             TextSpan(
               children: [
-                TextSpan(text: 'Your ', style: mu.text.displayLight.copyWith(fontSize: 34)),
-                TextSpan(text: 'journey', style: mu.text.display.copyWith(fontSize: 34)),
+                TextSpan(
+                  text: 'Your ',
+                  style: mu.text.displayLight.copyWith(fontSize: 34),
+                ),
+                TextSpan(
+                  text: 'journey',
+                  style: mu.text.display.copyWith(fontSize: 34),
+                ),
               ],
             ),
           ),
         ),
         const SizedBox(height: MuSpacing.space2),
-        Text('Seven levels, all open. Pick any task and start.', style: mu.text.body.copyWith(color: mu.colors.ink2)),
+        Text(
+          'Seven levels, all open. Pick any task and start.',
+          style: mu.text.body.copyWith(color: mu.colors.ink2),
+        ),
         const SizedBox(height: MuSpacing.space5),
         MuKarmaMeter(
           total: karma,
@@ -109,8 +140,14 @@ class _JourneyBody extends StatelessWidget {
         ),
         const SizedBox(height: MuSpacing.space5),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: MuSpacing.space4, vertical: MuSpacing.space2),
-          decoration: BoxDecoration(color: mu.colors.surface, borderRadius: BorderRadius.circular(MuRadii.card)),
+          padding: const EdgeInsets.symmetric(
+            horizontal: MuSpacing.space4,
+            vertical: MuSpacing.space2,
+          ),
+          decoration: BoxDecoration(
+            color: mu.colors.surface,
+            borderRadius: BorderRadius.circular(MuRadii.card),
+          ),
           child: MuLevelPath(
             stops: [
               for (var i = 0; i < levels.length; i++)
@@ -125,7 +162,10 @@ class _JourneyBody extends StatelessWidget {
                   meta: _meta(levels[i]),
                 ),
             ],
-            onOpen: (stop) => _openLevel(context, levels.firstWhere((l) => levelNumber(l.name) == stop.number)),
+            onOpen: (stop) => _openLevel(
+              context,
+              levels.firstWhere((l) => levelNumber(l.name) == stop.number),
+            ),
           ),
         ),
       ],
@@ -137,7 +177,9 @@ class _JourneyBody extends StatelessWidget {
     if (total == 0) return 'No tasks in this level yet';
     final done = level.tasks.where((t) => t.completed).length;
     final tasks = total == 1 ? '1 task' : '$total tasks';
-    return done == 0 ? '$tasks · ${muGrouped(level.karma.toInt())} karma' : '$tasks · $done done';
+    return done == 0
+        ? '$tasks · ${muGrouped(level.karma.toInt())} karma'
+        : '$tasks · $done done';
   }
 
   void _openLevel(BuildContext context, UserLevel level) {
@@ -147,7 +189,12 @@ class _JourneyBody extends StatelessWidget {
         final mu = context.mu;
         final c = mu.colors;
         return Padding(
-          padding: const EdgeInsets.fromLTRB(MuSpacing.space5, 0, MuSpacing.space5, MuSpacing.space6),
+          padding: const EdgeInsets.fromLTRB(
+            MuSpacing.space5,
+            0,
+            MuSpacing.space5,
+            MuSpacing.space6,
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -157,21 +204,29 @@ class _JourneyBody extends StatelessWidget {
               Text(levelLabel(level.name), style: mu.text.title2),
               const SizedBox(height: MuSpacing.space3),
               if (level.tasks.isEmpty)
-                Text('No tasks in this level yet', style: mu.text.body.copyWith(color: c.ink2))
+                Text(
+                  'No tasks in this level yet',
+                  style: mu.text.body.copyWith(color: c.ink2),
+                )
               else
                 Flexible(
                   child: ListView.separated(
                     shrinkWrap: true,
                     itemCount: level.tasks.length,
-                    separatorBuilder: (_, _) => Divider(color: c.line, height: 1),
+                    separatorBuilder: (_, _) =>
+                        Divider(color: c.line, height: 1),
                     itemBuilder: (_, i) {
                       final t = level.tasks[i];
                       return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: MuSpacing.space3),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: MuSpacing.space3,
+                        ),
                         child: Row(
                           children: [
                             Icon(
-                              t.completed ? LucideIcons.checkCircle2 : LucideIcons.circle,
+                              t.completed
+                                  ? LucideIcons.checkCircle2
+                                  : LucideIcons.circle,
                               size: MuSizes.iconMd,
                               color: t.completed ? c.success : c.ink3,
                             ),
@@ -181,14 +236,19 @@ class _JourneyBody extends StatelessWidget {
                                 t.taskName,
                                 style: mu.text.body.copyWith(
                                   color: t.completed ? c.ink3 : c.ink,
-                                  decoration: t.completed ? TextDecoration.lineThrough : null,
+                                  decoration: t.completed
+                                      ? TextDecoration.lineThrough
+                                      : null,
                                 ),
                               ),
                             ),
                             const SizedBox(width: MuSpacing.space2),
                             Text(
                               '+${muGrouped(t.karma.toInt())}',
-                              style: mu.text.code.copyWith(color: c.voltText, fontWeight: FontWeight.w700),
+                              style: mu.text.code.copyWith(
+                                color: c.voltText,
+                                fontWeight: FontWeight.w700,
+                              ),
                             ),
                           ],
                         ),

@@ -30,7 +30,8 @@ class MuTextStyles {
 
   /// Builds every style in [palette]'s `ink`.
   factory MuTextStyles.forPalette(MuPalette palette) {
-    TextStyle s(MuTypeSpec spec, {bool tabular = false}) => style(spec, color: palette.ink, tabular: tabular);
+    TextStyle s(MuTypeSpec spec, {bool tabular = false}) =>
+        style(spec, color: palette.ink, tabular: tabular);
     return MuTextStyles._(
       poster: s(MuTypeTokens.poster),
       display: s(MuTypeTokens.display),
@@ -53,7 +54,11 @@ class MuTextStyles {
   }
 
   /// One token spec as a [TextStyle].
-  static TextStyle style(MuTypeSpec spec, {required Color color, bool tabular = false}) {
+  static TextStyle style(
+    MuTypeSpec spec, {
+    required Color color,
+    bool tabular = false,
+  }) {
     return GoogleFonts.getFont(
       spec.family.familyName,
       fontSize: spec.size,

@@ -19,11 +19,19 @@ class OpportunitiesRepositoryImpl implements OpportunitiesRepository {
     }
   }
 
-  static OpportunityPage<T> _page<T>(Map<String, dynamic> json, T Function(Map<String, dynamic>) map) {
-    final info = PageIndexPaging.parse(json['pagination'] as Map<String, dynamic>?);
+  static OpportunityPage<T> _page<T>(
+    Map<String, dynamic> json,
+    T Function(Map<String, dynamic>) map,
+  ) {
+    final info = PageIndexPaging.parse(
+      json['pagination'] as Map<String, dynamic>?,
+    );
     return OpportunityPage(
       items: [
-        for (final row in (json['data'] as List<dynamic>? ?? const []).whereType<Map<String, dynamic>>()) map(row),
+        for (final row
+            in (json['data'] as List<dynamic>? ?? const [])
+                .whereType<Map<String, dynamic>>())
+          map(row),
       ],
       hasNext: info.hasNext,
       count: info.count,
@@ -31,21 +39,50 @@ class OpportunitiesRepositoryImpl implements OpportunitiesRepository {
   }
 
   @override
-  Future<OpportunityPage<Job>> jobs({required int pageIndex, String search = ''}) =>
-      _guard(() async => _page(await _remote.fetchJobs(pageIndex: pageIndex, search: search), JobDto.job));
+  Future<OpportunityPage<Job>> jobs({
+    required int pageIndex,
+    String search = '',
+  }) => _guard(
+    () async => _page(
+      await _remote.fetchJobs(pageIndex: pageIndex, search: search),
+      JobDto.job,
+    ),
+  );
 
   @override
-  Future<OpportunityPage<JobApplication>> myApplications({required int pageIndex}) =>
-      _guard(() async => _page(await _remote.fetchMyApplications(pageIndex: pageIndex), JobDto.application));
+  Future<OpportunityPage<JobApplication>> myApplications({
+    required int pageIndex,
+  }) => _guard(
+    () async => _page(
+      await _remote.fetchMyApplications(pageIndex: pageIndex),
+      JobDto.application,
+    ),
+  );
 
   @override
-  Future<void> apply(String jobId, {required String resumeLink, String? coverLetter}) =>
-      _guard(() => _remote.apply(jobId, resumeLink: resumeLink, coverLetter: coverLetter));
+  Future<void> apply(
+    String jobId, {
+    required String resumeLink,
+    String? coverLetter,
+  }) => _guard(
+    () =>
+        _remote.apply(jobId, resumeLink: resumeLink, coverLetter: coverLetter),
+  );
 
   @override
-  Future<void> resubmit(String applicationId, {required String resumeLink, String? coverLetter}) =>
-      _guard(() => _remote.resubmit(applicationId, resumeLink: resumeLink, coverLetter: coverLetter));
+  Future<void> resubmit(
+    String applicationId, {
+    required String resumeLink,
+    String? coverLetter,
+  }) => _guard(
+    () => _remote.resubmit(
+      applicationId,
+      resumeLink: resumeLink,
+      coverLetter: coverLetter,
+    ),
+  );
 
   @override
-  Future<void> withdraw(String applicationId) => _guard(() => _remote.withdraw(applicationId));
+  Future<void> withdraw(String applicationId) =>
+      _guard(() => _remote.withdraw(applicationId));
 }

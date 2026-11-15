@@ -37,7 +37,8 @@ class MuSearchField extends StatefulWidget {
 }
 
 class _MuSearchFieldState extends State<MuSearchField> {
-  late final TextEditingController _controller = widget.controller ?? TextEditingController();
+  late final TextEditingController _controller =
+      widget.controller ?? TextEditingController();
   final FocusNode _focus = FocusNode();
 
   @override
@@ -147,7 +148,10 @@ class _MuSearchFieldState extends State<MuSearchField> {
                     child: Container(
                       width: 22,
                       height: 22,
-                      decoration: BoxDecoration(color: c.ink3, shape: BoxShape.circle),
+                      decoration: BoxDecoration(
+                        color: c.ink3,
+                        shape: BoxShape.circle,
+                      ),
                       child: Icon(LucideIcons.x, size: 14, color: c.surface),
                     ),
                   ),

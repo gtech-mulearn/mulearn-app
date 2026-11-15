@@ -40,7 +40,9 @@ abstract final class MuColors {
   // --- Karma / energy accent (purple — replaces the retired lime family) ---
 
   /// Karma icon, "NEW" badge, streak marks, energy/reward CTA accents.
-  static const Color karmaAccent = Color(0xFF8F44ED); // dashboard --brand-purple
+  static const Color karmaAccent = Color(
+    0xFF8F44ED,
+  ); // dashboard --brand-purple
 
   /// Light tint of [karmaAccent] for pill/badge backgrounds — same
   /// saturation profile as [primaryTint].

@@ -9,7 +9,15 @@ import 'package:mulearn_app/core/design_system/tokens/mu_tokens.g.dart';
 /// in volt numerals, the level, and the rank.
 class MuKarmaMeter extends StatelessWidget {
   /// A meter for [total] karma.
-  const MuKarmaMeter({required this.total, this.level, this.rank, this.progress, this.toNext, this.onTap, super.key});
+  const MuKarmaMeter({
+    required this.total,
+    this.level,
+    this.rank,
+    this.progress,
+    this.toNext,
+    this.onTap,
+    super.key,
+  });
 
   /// Total karma.
   final int total;
@@ -36,7 +44,10 @@ class MuKarmaMeter extends StatelessWidget {
     final card = Container(
       width: double.infinity,
       padding: const EdgeInsets.all(MuSpacing.space5),
-      decoration: BoxDecoration(color: c.night, borderRadius: BorderRadius.circular(MuRadii.panel)),
+      decoration: BoxDecoration(
+        color: c.night,
+        borderRadius: BorderRadius.circular(MuRadii.panel),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -44,13 +55,19 @@ class MuKarmaMeter extends StatelessWidget {
             children: [
               Icon(LucideIcons.zap, size: MuSizes.iconSm, color: c.volt),
               const SizedBox(width: 6),
-              Text('TOTAL KARMA', style: mu.text.eyebrow.copyWith(color: c.onNight2)),
+              Text(
+                'TOTAL KARMA',
+                style: mu.text.eyebrow.copyWith(color: c.onNight2),
+              ),
               const Spacer(),
               if (rank != null)
                 Flexible(
                   flex: 3,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 5,
+                    ),
                     decoration: BoxDecoration(
                       color: c.onNight.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(MuRadii.round),
@@ -59,7 +76,10 @@ class MuKarmaMeter extends StatelessWidget {
                       rank!,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: mu.text.label.copyWith(color: c.onNight, fontSize: 12),
+                      style: mu.text.label.copyWith(
+                        color: c.onNight,
+                        fontSize: 12,
+                      ),
                     ),
                   ),
                 ),
@@ -69,19 +89,30 @@ class MuKarmaMeter extends StatelessWidget {
           FittedBox(
             fit: BoxFit.scaleDown,
             alignment: AlignmentDirectional.centerStart,
-            child: Text(muGrouped(total), style: mu.text.numeralXl.copyWith(color: c.volt)),
+            child: Text(
+              muGrouped(total),
+              style: mu.text.numeralXl.copyWith(color: c.volt),
+            ),
           ),
           const SizedBox(height: MuSpacing.space4),
           Row(
             children: [
-              if (level != null) Text(level!, style: mu.text.bodyStrong.copyWith(color: c.onNight)),
+              if (level != null)
+                Text(
+                  level!,
+                  style: mu.text.bodyStrong.copyWith(color: c.onNight),
+                ),
               const Spacer(),
-              if (toNext != null) Text(toNext!, style: mu.text.label.copyWith(color: c.onNight2)),
+              if (toNext != null)
+                Text(toNext!, style: mu.text.label.copyWith(color: c.onNight2)),
               if (onTap != null && toNext == null)
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text('Your journey', style: mu.text.label.copyWith(color: c.onNight2)),
+                    Text(
+                      'Your journey',
+                      style: mu.text.label.copyWith(color: c.onNight2),
+                    ),
                     const SizedBox(width: 4),
                     Icon(LucideIcons.arrowRight, size: 14, color: c.onNight2),
                   ],
@@ -96,7 +127,11 @@ class MuKarmaMeter extends StatelessWidget {
                 height: 8,
                 child: Stack(
                   children: [
-                    Positioned.fill(child: ColoredBox(color: c.onNight.withValues(alpha: 0.16))),
+                    Positioned.fill(
+                      child: ColoredBox(
+                        color: c.onNight.withValues(alpha: 0.16),
+                      ),
+                    ),
                     FractionallySizedBox(
                       // Grow from the start edge (the default centres the bar).
                       alignment: AlignmentDirectional.centerStart,
@@ -116,7 +151,9 @@ class MuKarmaMeter extends StatelessWidget {
       button: onTap != null,
       label: ['${muGrouped(total)} karma', ?level, ?rank, ?toNext].join(', '),
       excludeSemantics: true,
-      child: onTap == null ? card : MuPressable(onTap: onTap, pressedScale: 0.98, child: card),
+      child: onTap == null
+          ? card
+          : MuPressable(onTap: onTap, pressedScale: 0.98, child: card),
     );
   }
 }
@@ -142,7 +179,10 @@ class MuSectionTitle extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: Semantics(header: true, child: Text(title, style: mu.text.title2)),
+          child: Semantics(
+            header: true,
+            child: Text(title, style: mu.text.title2),
+          ),
         ),
         if (onSeeAll != null)
           Semantics(
@@ -153,9 +193,15 @@ class MuSectionTitle extends StatelessWidget {
             child: MuPressable(
               onTap: onSeeAll,
               child: ConstrainedBox(
-                constraints: const BoxConstraints(minHeight: MuSizes.touchMin, minWidth: MuSizes.touchMin),
+                constraints: const BoxConstraints(
+                  minHeight: MuSizes.touchMin,
+                  minWidth: MuSizes.touchMin,
+                ),
                 child: Center(
-                  child: Text('See all', style: mu.text.label.copyWith(color: c.cobaltText)),
+                  child: Text(
+                    'See all',
+                    style: mu.text.label.copyWith(color: c.cobaltText),
+                  ),
                 ),
               ),
             ),

@@ -53,7 +53,8 @@ class _MuNavCapsuleState extends State<MuNavCapsule> {
   int? _scrub;
   late List<GlobalKey> _tabKeys = _keys();
 
-  List<GlobalKey> _keys() => List.generate(widget.items.length, (_) => GlobalKey());
+  List<GlobalKey> _keys() =>
+      List.generate(widget.items.length, (_) => GlobalKey());
 
   @override
   void didUpdateWidget(covariant MuNavCapsule old) {
@@ -83,17 +84,18 @@ class _MuNavCapsuleState extends State<MuNavCapsule> {
   /// Below this capsule width the selected pill shows its icon only.
   static const _labelWidth = 330.0;
 
-  Widget _tab(int i, {required bool selected, required bool showLabel}) => _NavTab(
-    key: _tabKeys[i],
-    item: widget.items[i],
-    selected: selected,
-    showLabel: showLabel,
-    badge: widget.badges.contains(i),
-    onTap: () {
-      HapticFeedback.selectionClick();
-      widget.onSelect(i);
-    },
-  );
+  Widget _tab(int i, {required bool selected, required bool showLabel}) =>
+      _NavTab(
+        key: _tabKeys[i],
+        item: widget.items[i],
+        selected: selected,
+        showLabel: showLabel,
+        badge: widget.badges.contains(i),
+        onTap: () {
+          HapticFeedback.selectionClick();
+          widget.onSelect(i);
+        },
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +105,12 @@ class _MuNavCapsuleState extends State<MuNavCapsule> {
     final bottom = MediaQuery.paddingOf(context).bottom;
 
     return Padding(
-      padding: EdgeInsets.fromLTRB(MuSpacing.space3, 0, MuSpacing.space3, bottom + MuSpacing.space4),
+      padding: EdgeInsets.fromLTRB(
+        MuSpacing.space3,
+        0,
+        MuSpacing.space3,
+        bottom + MuSpacing.space4,
+      ),
       child: Center(
         heightFactor: 1,
         child: ConstrainedBox(
@@ -130,10 +137,16 @@ class _MuNavCapsuleState extends State<MuNavCapsule> {
                   children: [
                     for (var i = 0; i < widget.items.length; i++)
                       if (i == shown)
-                        _tab(i, selected: true, showLabel: constraints.maxWidth >= _labelWidth)
+                        _tab(
+                          i,
+                          selected: true,
+                          showLabel: constraints.maxWidth >= _labelWidth,
+                        )
                       else
                         // Unselected tabs share what the pill leaves.
-                        Expanded(child: _tab(i, selected: false, showLabel: false)),
+                        Expanded(
+                          child: _tab(i, selected: false, showLabel: false),
+                        ),
                   ],
                 ),
               ),
@@ -167,7 +180,10 @@ class _NavTab extends StatefulWidget {
 
 class _NavTabState extends State<_NavTab> with SingleTickerProviderStateMixin {
   // 0 = collapsed icon, 1 = selected pill with label.
-  late final AnimationController _t = AnimationController.unbounded(vsync: this, value: widget.selected ? 1 : 0);
+  late final AnimationController _t = AnimationController.unbounded(
+    vsync: this,
+    value: widget.selected ? 1 : 0,
+  );
   bool _reduceMotion = false;
 
   @override
@@ -184,7 +200,14 @@ class _NavTabState extends State<_NavTab> with SingleTickerProviderStateMixin {
     if (_reduceMotion) {
       _t.value = target;
     } else {
-      _t.animateWith(SpringSimulation(MuSprings.standard.description, _t.value, target, _t.velocity));
+      _t.animateWith(
+        SpringSimulation(
+          MuSprings.standard.description,
+          _t.value,
+          target,
+          _t.velocity,
+        ),
+      );
     }
   }
 
@@ -214,7 +237,9 @@ class _NavTabState extends State<_NavTab> with SingleTickerProviderStateMixin {
             final fg = Color.lerp(c.onNight2, c.ink, t)!;
             return Container(
               height: MuSizes.touchMin,
-              constraints: widget.selected ? const BoxConstraints(minWidth: MuSizes.touchMin) : null,
+              constraints: widget.selected
+                  ? const BoxConstraints(minWidth: MuSizes.touchMin)
+                  : null,
               padding: widget.showLabel
                   ? EdgeInsetsDirectional.only(start: 13 * t, end: 18 * t)
                   : EdgeInsets.symmetric(horizontal: 13 * t),
@@ -235,11 +260,16 @@ class _NavTabState extends State<_NavTab> with SingleTickerProviderStateMixin {
                         child: Opacity(
                           opacity: ((t - 0.5) * 2).clamp(0.0, 1.0),
                           child: Padding(
-                            padding: const EdgeInsetsDirectional.only(start: MuSpacing.space2),
+                            padding: const EdgeInsetsDirectional.only(
+                              start: MuSpacing.space2,
+                            ),
                             child: Text(
                               widget.item.label,
                               maxLines: 1,
-                              style: mu.text.label.copyWith(color: c.ink, fontSize: 14),
+                              style: mu.text.label.copyWith(
+                                color: c.ink,
+                                fontSize: 14,
+                              ),
                             ),
                           ),
                         ),
@@ -247,11 +277,17 @@ class _NavTabState extends State<_NavTab> with SingleTickerProviderStateMixin {
                     ),
                   if (widget.badge)
                     Padding(
-                      padding: const EdgeInsetsDirectional.only(start: 2, bottom: 16),
+                      padding: const EdgeInsetsDirectional.only(
+                        start: 2,
+                        bottom: 16,
+                      ),
                       child: Container(
                         width: 7,
                         height: 7,
-                        decoration: BoxDecoration(color: c.volt, shape: BoxShape.circle),
+                        decoration: BoxDecoration(
+                          color: c.volt,
+                          shape: BoxShape.circle,
+                        ),
                       ),
                     ),
                 ],

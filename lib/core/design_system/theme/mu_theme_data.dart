@@ -62,12 +62,24 @@ abstract final class MuThemeData {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: c.surfaceSunk,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 17),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 18,
+          vertical: 17,
+        ),
         hintStyle: t.body.copyWith(color: c.ink3),
         labelStyle: t.label.copyWith(color: c.ink2),
-        errorStyle: t.caption.copyWith(color: c.danger, fontWeight: FontWeight.w600),
-        border: OutlineInputBorder(borderRadius: controlRadius, borderSide: BorderSide.none),
-        enabledBorder: OutlineInputBorder(borderRadius: controlRadius, borderSide: BorderSide.none),
+        errorStyle: t.caption.copyWith(
+          color: c.danger,
+          fontWeight: FontWeight.w600,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: controlRadius,
+          borderSide: BorderSide.none,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: controlRadius,
+          borderSide: BorderSide.none,
+        ),
         focusedBorder: OutlineInputBorder(
           borderRadius: controlRadius,
           borderSide: BorderSide(color: c.cobalt, width: 2),

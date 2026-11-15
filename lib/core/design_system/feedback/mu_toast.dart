@@ -101,7 +101,9 @@ class _Toast extends StatefulWidget {
 class _ToastState extends State<_Toast> with SingleTickerProviderStateMixin {
   // 0 = hidden above the screen, 1 = in place. Unbounded so springs can
   // overshoot and drags can rubber-band.
-  late final AnimationController _t = AnimationController.unbounded(vsync: this);
+  late final AnimationController _t = AnimationController.unbounded(
+    vsync: this,
+  );
   Timer? _timer;
   bool _leaving = false;
   bool _held = false;
@@ -126,7 +128,8 @@ class _ToastState extends State<_Toast> with SingleTickerProviderStateMixin {
     _startTimer();
   }
 
-  bool get _reduceMotion => MediaQuery.maybeDisableAnimationsOf(context) ?? false;
+  bool get _reduceMotion =>
+      MediaQuery.maybeDisableAnimationsOf(context) ?? false;
 
   void _startTimer() {
     _timer?.cancel();
@@ -138,7 +141,9 @@ class _ToastState extends State<_Toast> with SingleTickerProviderStateMixin {
       _t.value = target;
       return;
     }
-    _t.animateWith(SpringSimulation(MuSprings.sheet.description, _t.value, target, velocity));
+    _t.animateWith(
+      SpringSimulation(MuSprings.sheet.description, _t.value, target, velocity),
+    );
   }
 
   Future<void> _leave() async {
@@ -154,7 +159,14 @@ class _ToastState extends State<_Toast> with SingleTickerProviderStateMixin {
       return;
     }
     await _t
-        .animateWith(SpringSimulation(MuSprings.standard.description, _t.value, 0, _t.velocity))
+        .animateWith(
+          SpringSimulation(
+            MuSprings.standard.description,
+            _t.value,
+            0,
+            _t.velocity,
+          ),
+        )
         .orCancel
         .catchError((_) {});
     if (mounted) widget.onGone();
@@ -169,7 +181,8 @@ class _ToastState extends State<_Toast> with SingleTickerProviderStateMixin {
   void _onDragEnd(DragEndDetails d) {
     _held = false;
     final v = d.velocity.pixelsPerSecond.dy / _travel;
-    final projected = _t.value + project(d.velocity.pixelsPerSecond.dy) / _travel;
+    final projected =
+        _t.value + project(d.velocity.pixelsPerSecond.dy) / _travel;
     if (projected < 0.5) {
       _leave();
     } else {
@@ -192,7 +205,11 @@ class _ToastState extends State<_Toast> with SingleTickerProviderStateMixin {
     final (icon, discBg, discFg) = switch (widget.type) {
       MuToastType.success => (LucideIcons.check, c.success, c.surface),
       MuToastType.error => (LucideIcons.alertTriangle, c.danger, c.surface),
-      MuToastType.info => (LucideIcons.info, c.onNight.withValues(alpha: 0.12), c.onNight),
+      MuToastType.info => (
+        LucideIcons.info,
+        c.onNight.withValues(alpha: 0.12),
+        c.onNight,
+      ),
       MuToastType.karma => (LucideIcons.zap, c.volt, c.onVolt),
     };
     final top = MediaQuery.paddingOf(context).top + MuSpacing.space2;
@@ -217,7 +234,11 @@ class _ToastState extends State<_Toast> with SingleTickerProviderStateMixin {
           Expanded(
             child: Text(
               widget.message,
-              style: mu.text.body.copyWith(color: c.onNight, fontSize: 14, height: 20 / 14),
+              style: mu.text.body.copyWith(
+                color: c.onNight,
+                fontSize: 14,
+                height: 20 / 14,
+              ),
             ),
           ),
           if (widget.action case final action?)
@@ -227,11 +248,22 @@ class _ToastState extends State<_Toast> with SingleTickerProviderStateMixin {
                 _leave();
               },
               child: ConstrainedBox(
-                constraints: const BoxConstraints(minHeight: MuSizes.touchMin, minWidth: MuSizes.touchMin),
+                constraints: const BoxConstraints(
+                  minHeight: MuSizes.touchMin,
+                  minWidth: MuSizes.touchMin,
+                ),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: MuSpacing.space3),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: MuSpacing.space3,
+                  ),
                   child: Center(
-                    child: Text(action.label, style: mu.text.bodyStrong.copyWith(color: c.volt, fontSize: 14)),
+                    child: Text(
+                      action.label,
+                      style: mu.text.bodyStrong.copyWith(
+                        color: c.volt,
+                        fontSize: 14,
+                      ),
+                    ),
                   ),
                 ),
               ),
@@ -252,7 +284,10 @@ class _ToastState extends State<_Toast> with SingleTickerProviderStateMixin {
           final p = _t.value;
           return Opacity(
             opacity: p.clamp(0, 1),
-            child: Transform.translate(offset: Offset(0, (p - 1) * _travel), child: child),
+            child: Transform.translate(
+              offset: Offset(0, (p - 1) * _travel),
+              child: child,
+            ),
           );
         },
         child: Semantics(
@@ -278,7 +313,12 @@ class _ToastState extends State<_Toast> with SingleTickerProviderStateMixin {
 /// the toast's look without floating, dismissible.
 class MuNudge extends StatelessWidget {
   /// A nudge with a leading [icon].
-  const MuNudge({required this.message, required this.icon, this.onDismiss, super.key});
+  const MuNudge({
+    required this.message,
+    required this.icon,
+    this.onDismiss,
+    super.key,
+  });
 
   /// One sentence.
   final String message;
@@ -296,20 +336,30 @@ class MuNudge extends StatelessWidget {
     return Container(
       constraints: const BoxConstraints(minHeight: 56),
       padding: const EdgeInsetsDirectional.fromSTEB(10, 8, 8, 8),
-      decoration: BoxDecoration(color: c.night, borderRadius: BorderRadius.circular(MuRadii.round)),
+      decoration: BoxDecoration(
+        color: c.night,
+        borderRadius: BorderRadius.circular(MuRadii.round),
+      ),
       child: Row(
         children: [
           Container(
             width: 36,
             height: 36,
-            decoration: BoxDecoration(color: c.onNight.withValues(alpha: 0.12), shape: BoxShape.circle),
+            decoration: BoxDecoration(
+              color: c.onNight.withValues(alpha: 0.12),
+              shape: BoxShape.circle,
+            ),
             child: Icon(icon, size: MuSizes.iconSm, color: c.onNight),
           ),
           const SizedBox(width: MuSpacing.space3),
           Expanded(
             child: Text(
               message,
-              style: mu.text.body.copyWith(color: c.onNight, fontSize: 14, height: 20 / 14),
+              style: mu.text.body.copyWith(
+                color: c.onNight,
+                fontSize: 14,
+                height: 20 / 14,
+              ),
             ),
           ),
           if (onDismiss != null)
@@ -325,8 +375,15 @@ class MuNudge extends StatelessWidget {
                     child: Container(
                       width: 36,
                       height: 36,
-                      decoration: BoxDecoration(color: c.onNight.withValues(alpha: 0.1), shape: BoxShape.circle),
-                      child: Icon(LucideIcons.x, size: MuSizes.iconSm, color: c.onNight),
+                      decoration: BoxDecoration(
+                        color: c.onNight.withValues(alpha: 0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        LucideIcons.x,
+                        size: MuSizes.iconSm,
+                        color: c.onNight,
+                      ),
                     ),
                   ),
                 ),

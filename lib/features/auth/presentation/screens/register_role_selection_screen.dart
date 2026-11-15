@@ -16,10 +16,12 @@ class RegisterRoleSelectionScreen extends ConsumerStatefulWidget {
   const RegisterRoleSelectionScreen({super.key});
 
   @override
-  ConsumerState<RegisterRoleSelectionScreen> createState() => _RegisterRoleSelectionScreenState();
+  ConsumerState<RegisterRoleSelectionScreen> createState() =>
+      _RegisterRoleSelectionScreenState();
 }
 
-class _RegisterRoleSelectionScreenState extends ConsumerState<RegisterRoleSelectionScreen> {
+class _RegisterRoleSelectionScreenState
+    extends ConsumerState<RegisterRoleSelectionScreen> {
   RegistrationRole? _selected;
 
   @override
@@ -50,8 +52,14 @@ class _RegisterRoleSelectionScreenState extends ConsumerState<RegisterRoleSelect
       eyebrow: 'Your role',
       light: 'How will you ',
       bold: 'take part?',
-      lead: 'You can add more roles later. Many people learn and mentor at once.',
-      bottom: MuButton(label: 'Continue', block: true, knob: true, onPressed: _selected == null ? null : _continue),
+      lead:
+          'You can add more roles later. Many people learn and mentor at once.',
+      bottom: MuButton(
+        label: 'Continue',
+        block: true,
+        knob: true,
+        onPressed: _selected == null ? null : _continue,
+      ),
       children: [
         MuRadioCard<RegistrationRole>(
           value: RegistrationRole.student,
@@ -67,7 +75,8 @@ class _RegisterRoleSelectionScreenState extends ConsumerState<RegisterRoleSelect
           groupValue: _selected,
           icon: LucideIcons.compass,
           title: 'Mentor',
-          subtitle: 'Guide learners. Company employees pick their company during setup.',
+          subtitle:
+              'Guide learners. Company employees pick their company during setup.',
           onChanged: _pick,
         ),
         const SizedBox(height: MuSpacing.space3),
@@ -76,7 +85,8 @@ class _RegisterRoleSelectionScreenState extends ConsumerState<RegisterRoleSelect
           groupValue: _selected,
           icon: LucideIcons.building2,
           title: 'Enabler',
-          subtitle: 'Represent an institution or organisation that supports μLearn.',
+          subtitle:
+              'Represent an institution or organisation that supports μLearn.',
           onChanged: _pick,
         ),
         const SizedBox(height: MuSpacing.space5),
@@ -85,7 +95,10 @@ class _RegisterRoleSelectionScreenState extends ConsumerState<RegisterRoleSelect
           style: mu.text.caption.copyWith(color: c.ink2),
         ),
         const SizedBox(height: 2),
-        SelectableText(FlavorConfig.instance.dashboardUrl, style: mu.text.caption.copyWith(color: c.cobaltText)),
+        SelectableText(
+          FlavorConfig.instance.dashboardUrl,
+          style: mu.text.caption.copyWith(color: c.cobaltText),
+        ),
       ],
     );
   }

@@ -18,7 +18,11 @@ Uri? launchableLink(String link) {
   if (text.isEmpty) return null;
   final hasScheme = RegExp('^[a-zA-Z][a-zA-Z0-9+.-]*:').hasMatch(text);
   final uri = Uri.tryParse(hasScheme ? text : 'https://$text');
-  if (uri == null || (uri.scheme != 'https' && uri.scheme != 'http') || !uri.host.contains('.')) return null;
+  if (uri == null ||
+      (uri.scheme != 'https' && uri.scheme != 'http') ||
+      !uri.host.contains('.')) {
+    return null;
+  }
   return uri;
 }
 
@@ -26,7 +30,11 @@ Uri? launchableLink(String link) {
 void openLink(BuildContext context, WidgetRef ref, String link) {
   final uri = launchableLink(link);
   if (uri == null) {
-    MuToast.show(context, message: "This link can't be opened. Copy it instead.", type: MuToastType.error);
+    MuToast.show(
+      context,
+      message: "This link can't be opened. Copy it instead.",
+      type: MuToastType.error,
+    );
     return;
   }
   unawaited(ref.read(openExternalProvider)(uri));
@@ -39,7 +47,11 @@ String displayLink(String link) => link.replaceFirst(RegExp('^https?://'), '');
 /// Copy, and Join as the primary action from 15 minutes before the start
 /// (Open link before then).
 class MeetingLinkActions extends ConsumerWidget {
-  const MeetingLinkActions({required this.session, this.compact = false, super.key});
+  const MeetingLinkActions({
+    required this.session,
+    this.compact = false,
+    super.key,
+  });
 
   final MentorSession session;
 
@@ -48,7 +60,9 @@ class MeetingLinkActions extends ConsumerWidget {
 
   Future<void> _copy(BuildContext context, String link) async {
     await Clipboard.setData(ClipboardData(text: link));
-    if (context.mounted) MuToast.show(context, message: 'Link copied', type: MuToastType.success);
+    if (context.mounted) {
+      MuToast.show(context, message: 'Link copied', type: MuToastType.success);
+    }
   }
 
   @override
@@ -77,9 +91,15 @@ class MeetingLinkActions extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Container(
-          padding: const EdgeInsetsDirectional.only(start: MuSpacing.space4, end: MuSpacing.space1),
+          padding: const EdgeInsetsDirectional.only(
+            start: MuSpacing.space4,
+            end: MuSpacing.space1,
+          ),
           constraints: const BoxConstraints(minHeight: MuSizes.fieldH),
-          decoration: BoxDecoration(color: c.surfaceSunk, borderRadius: BorderRadius.circular(MuRadii.control)),
+          decoration: BoxDecoration(
+            color: c.surfaceSunk,
+            borderRadius: BorderRadius.circular(MuRadii.control),
+          ),
           child: Row(
             children: [
               Icon(LucideIcons.link, size: MuSizes.iconSm, color: c.ink3),
@@ -137,7 +157,12 @@ class VenueRow extends ConsumerWidget {
           variant: MuButtonVariant.ghost,
           size: MuButtonSize.small,
           onPressed: () => unawaited(
-            ref.read(openExternalProvider)(Uri.https('www.google.com', '/maps/search/', {'api': '1', 'query': venue})),
+            ref.read(openExternalProvider)(
+              Uri.https('www.google.com', '/maps/search/', {
+                'api': '1',
+                'query': venue,
+              }),
+            ),
           ),
         ),
       ],

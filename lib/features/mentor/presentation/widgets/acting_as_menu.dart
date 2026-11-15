@@ -25,17 +25,33 @@ class ActingAsMenu extends ConsumerWidget {
     return 'Acting as ${name ?? 'a mentor'}';
   }
 
-  Future<void> _choose(BuildContext context, WidgetRef ref, Persona current, List<MentorScope> scopes) async {
+  Future<void> _choose(
+    BuildContext context,
+    WidgetRef ref,
+    Persona current,
+    List<MentorScope> scopes,
+  ) async {
     final picked = await showMuSheet<({MentorScope? scope})>(
       context,
       builder: (sheetContext) => SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(MuSpacing.space5, 0, MuSpacing.space5, MuSpacing.space5),
+        padding: const EdgeInsets.fromLTRB(
+          MuSpacing.space5,
+          0,
+          MuSpacing.space5,
+          MuSpacing.space5,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Semantics(header: true, child: Text('Act as', style: sheetContext.mu.text.title2)),
+            Semantics(
+              header: true,
+              child: Text('Act as', style: sheetContext.mu.text.title2),
+            ),
             const SizedBox(height: MuSpacing.space1),
-            Text('New sessions start in the scope you act in.', style: sheetContext.mu.text.caption),
+            Text(
+              'New sessions start in the scope you act in.',
+              style: sheetContext.mu.text.caption,
+            ),
             const SizedBox(height: MuSpacing.space4),
             for (final s in scopes) ...[
               MuRadioCard<String?>(
@@ -63,19 +79,28 @@ class ActingAsMenu extends ConsumerWidget {
     if (picked == null || !context.mounted) return;
     final scope = picked.scope;
     final unchanged =
-        (scope == null && !current.isMentor) || (scope != null && current.isMentor && current.scopeId == scope.id);
+        (scope == null && !current.isMentor) ||
+        (scope != null && current.isMentor && current.scopeId == scope.id);
     if (unchanged) return;
     try {
       await ref.read(personaControllerProvider.notifier).switchTo(scope);
       if (context.mounted) {
         MuToast.show(
           context,
-          message: scope == null ? 'Now acting as a learner' : 'Now acting as ${scope.name}',
+          message: scope == null
+              ? 'Now acting as a learner'
+              : 'Now acting as ${scope.name}',
           type: MuToastType.success,
         );
       }
     } on Object catch (e) {
-      if (context.mounted) MuToast.show(context, message: ApiException.messageFor(e), type: MuToastType.error);
+      if (context.mounted) {
+        MuToast.show(
+          context,
+          message: ApiException.messageFor(e),
+          type: MuToastType.error,
+        );
+      }
     }
   }
 
@@ -106,7 +131,11 @@ class ActingAsMenu extends ConsumerWidget {
                 ),
               ),
               const SizedBox(width: 2),
-              Icon(LucideIcons.chevronDown, size: MuSizes.iconSm, color: c.cobaltText),
+              Icon(
+                LucideIcons.chevronDown,
+                size: MuSizes.iconSm,
+                color: c.cobaltText,
+              ),
             ],
           ),
         ),

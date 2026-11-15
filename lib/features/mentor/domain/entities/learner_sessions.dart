@@ -25,14 +25,20 @@ enum LearnerAttendance {
   const LearnerAttendance(this.wire);
   final String wire;
 
-  static LearnerAttendance fromWire(String? v) =>
-      values.firstWhere((e) => e != unknown && e.wire == v?.toUpperCase(), orElse: () => unknown);
+  static LearnerAttendance fromWire(String? v) => values.firstWhere(
+    (e) => e != unknown && e.wire == v?.toUpperCase(),
+    orElse: () => unknown,
+  );
 }
 
 /// One of the learner's sessions (`session/participant/history/`): what
 /// they joined or requested, how they did, and their feedback.
 class SessionRecord {
-  const SessionRecord({required this.session, required this.attendance, this.feedback});
+  const SessionRecord({
+    required this.session,
+    required this.attendance,
+    this.feedback,
+  });
 
   /// Built from the row's `session_*` fields (its id is the session's).
   final MentorSession session;
@@ -42,7 +48,8 @@ class SessionRecord {
   final String? feedback;
 
   /// Feedback is taken only for sessions they attended.
-  bool get canGiveFeedback => attendance == LearnerAttendance.attended && feedback == null;
+  bool get canGiveFeedback =>
+      attendance == LearnerAttendance.attended && feedback == null;
 }
 
 /// A session the learner asked a mentor for (`session/student/my-requests/`).
@@ -108,7 +115,8 @@ class SessionRequestDraft {
     'starts_at': startsAt.toUtc().toIso8601String(),
     'ends_at': endsAt.toUtc().toIso8601String(),
     // The backend refuses a venue online and a link offline.
-    if (mode != SessionMode.offline && (meetingLink ?? '').isNotEmpty) 'meeting_link': meetingLink,
+    if (mode != SessionMode.offline && (meetingLink ?? '').isNotEmpty)
+      'meeting_link': meetingLink,
     if (mode != SessionMode.online && (venue ?? '').isNotEmpty) 'venue': venue,
   };
 }

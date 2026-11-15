@@ -68,7 +68,10 @@ class MuIconButton extends StatelessWidget {
       MuIconButtonVariant.sunk => (c.surfaceSunk, c.ink),
       MuIconButtonVariant.night => (c.night, c.onNight),
       MuIconButtonVariant.cobalt => (c.cobalt, c.onCobalt),
-      MuIconButtonVariant.glass => (c.onCobalt.withValues(alpha: 0.18), c.onCobalt),
+      MuIconButtonVariant.glass => (
+        c.onCobalt.withValues(alpha: 0.18),
+        c.onCobalt,
+      ),
     };
 
     final circle = Container(
@@ -77,7 +80,9 @@ class MuIconButton extends StatelessWidget {
       decoration: BoxDecoration(
         color: bg,
         shape: BoxShape.circle,
-        border: v == MuIconButtonVariant.surface ? Border.all(color: c.line) : null,
+        border: v == MuIconButtonVariant.surface
+            ? Border.all(color: c.line)
+            : null,
       ),
       child: Icon(icon, size: MuSizes.iconMd, color: fg),
     );
@@ -137,7 +142,11 @@ class MuIconButton extends StatelessWidget {
             pressedScale: 0.92,
             child: SizedBox.square(
               dimension: MuSizes.touchMin,
-              child: Stack(clipBehavior: Clip.none, alignment: Alignment.center, children: [circle, ?marker]),
+              child: Stack(
+                clipBehavior: Clip.none,
+                alignment: Alignment.center,
+                children: [circle, ?marker],
+              ),
             ),
           ),
         ),

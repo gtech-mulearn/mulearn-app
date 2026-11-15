@@ -4,7 +4,15 @@ import 'package:mulearn_app/core/design_system/theme/mu_theme.dart';
 import 'package:mulearn_app/core/design_system/tokens/mu_tokens.g.dart';
 
 const _weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-const _weekdaysLong = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+const _weekdaysLong = [
+  'Monday',
+  'Tuesday',
+  'Wednesday',
+  'Thursday',
+  'Friday',
+  'Saturday',
+  'Sunday',
+];
 const _monthsLong = [
   'January',
   'February',
@@ -23,7 +31,8 @@ const _monthsLong = [
 DateTime _day(DateTime d) => DateTime(d.year, d.month, d.day);
 
 /// The Monday of [d]'s week.
-DateTime muWeekStart(DateTime d) => _day(d).subtract(Duration(days: d.weekday - 1));
+DateTime muWeekStart(DateTime d) =>
+    _day(d).subtract(Duration(days: d.weekday - 1));
 
 /// Seven days as tall stadium cells (artifact DateStrip): weekday over the
 /// date, a dot under it for days with something on ([counts]); the selected day in
@@ -58,19 +67,25 @@ class _MuDateStripState extends State<MuDateStrip> {
   late final DateTime _anchor = muWeekStart(widget.selected);
   late final PageController _pages = PageController(initialPage: _origin);
 
-  DateTime _weekAt(int page) => _anchor.add(Duration(days: 7 * (page - _origin)));
+  DateTime _weekAt(int page) =>
+      _anchor.add(Duration(days: 7 * (page - _origin)));
 
   @override
   void didUpdateWidget(MuDateStrip old) {
     super.didUpdateWidget(old);
     // Jump to the selected day's week when it moves outside the one shown.
-    final target = _origin + muWeekStart(widget.selected).difference(_anchor).inDays ~/ 7;
+    final target =
+        _origin + muWeekStart(widget.selected).difference(_anchor).inDays ~/ 7;
     if (_pages.hasClients && (_pages.page?.round() ?? _origin) != target) {
       final reduce = MediaQuery.maybeDisableAnimationsOf(context) ?? false;
       if (reduce) {
         _pages.jumpToPage(target);
       } else {
-        _pages.animateToPage(target, duration: const Duration(milliseconds: 320), curve: Curves.easeOutCubic);
+        _pages.animateToPage(
+          target,
+          duration: const Duration(milliseconds: 320),
+          curve: Curves.easeOutCubic,
+        );
       }
     }
   }
@@ -149,7 +164,10 @@ class _MuDateStripState extends State<MuDateStrip> {
                     child: Container(
                       width: 5,
                       height: 5,
-                      decoration: BoxDecoration(color: on ? c.volt : c.ink, shape: BoxShape.circle),
+                      decoration: BoxDecoration(
+                        color: on ? c.volt : c.ink,
+                        shape: BoxShape.circle,
+                      ),
                     ),
                   ),
                 // Lifted a little so the dot below has room.
@@ -160,9 +178,17 @@ class _MuDateStripState extends State<MuDateStrip> {
                     children: [
                       Text(
                         _weekdays[day.weekday - 1],
-                        style: mu.text.caption.copyWith(color: on ? c.onNight2 : c.ink3),
+                        style: mu.text.caption.copyWith(
+                          color: on ? c.onNight2 : c.ink3,
+                        ),
                       ),
-                      Text('${day.day}', style: mu.text.title3.copyWith(fontSize: 15, color: on ? c.onNight : c.ink)),
+                      Text(
+                        '${day.day}',
+                        style: mu.text.title3.copyWith(
+                          fontSize: 15,
+                          color: on ? c.onNight : c.ink,
+                        ),
+                      ),
                     ],
                   ),
                 ),

@@ -66,7 +66,10 @@ class MuVoiceBubble extends StatelessWidget {
         height: height,
         padding: EdgeInsets.symmetric(horizontal: compact ? 18 : 22),
         alignment: Alignment.center,
-        decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(MuRadii.round)),
+        decoration: BoxDecoration(
+          color: bg,
+          borderRadius: BorderRadius.circular(MuRadii.round),
+        ),
         child: Text(
           text,
           maxLines: 1,

@@ -24,7 +24,13 @@ Future<Uint8List?> showMuImageCropper(
   return Navigator.of(context).push<Uint8List>(
     MaterialPageRoute(
       fullscreenDialog: true,
-      builder: (_) => _CropScreen(source: bytes, aspect: aspect, title: title, round: round, maxWidth: maxWidth),
+      builder: (_) => _CropScreen(
+        source: bytes,
+        aspect: aspect,
+        title: title,
+        round: round,
+        maxWidth: maxWidth,
+      ),
     ),
   );
 }
@@ -45,10 +51,22 @@ _Prepared? _prepare(Uint8List source) {
   const longest = 2400;
   if (math.max(upright.width, upright.height) > longest) {
     upright = upright.width >= upright.height
-        ? img.copyResize(upright, width: longest, interpolation: img.Interpolation.average)
-        : img.copyResize(upright, height: longest, interpolation: img.Interpolation.average);
+        ? img.copyResize(
+            upright,
+            width: longest,
+            interpolation: img.Interpolation.average,
+          )
+        : img.copyResize(
+            upright,
+            height: longest,
+            interpolation: img.Interpolation.average,
+          );
   }
-  return _Prepared(Uint8List.fromList(img.encodeJpg(upright, quality: 92)), upright.width, upright.height);
+  return _Prepared(
+    Uint8List.fromList(img.encodeJpg(upright, quality: 92)),
+    upright.width,
+    upright.height,
+  );
 }
 
 /// [args]: bytes, quarterTurns, x, y, w, h (in rotated-image pixels), maxWidth.
@@ -63,7 +81,13 @@ Uint8List _crop(List<Object> args) {
   final h = (args[5] as double).round().clamp(1, image.height - y);
   var out = img.copyCrop(image, x: x, y: y, width: w, height: h);
   final maxWidth = args[6] as int;
-  if (out.width > maxWidth) out = img.copyResize(out, width: maxWidth, interpolation: img.Interpolation.average);
+  if (out.width > maxWidth) {
+    out = img.copyResize(
+      out,
+      width: maxWidth,
+      interpolation: img.Interpolation.average,
+    );
+  }
   return Uint8List.fromList(img.encodeJpg(out, quality: 88));
 }
 
@@ -121,16 +145,24 @@ class _CropScreenState extends State<_CropScreen> {
   /// The photo's size after the quarter turns.
   Size get _imageSize {
     final p = _photo!;
-    return _turns.isOdd ? Size(p.height.toDouble(), p.width.toDouble()) : Size(p.width.toDouble(), p.height.toDouble());
+    return _turns.isOdd
+        ? Size(p.height.toDouble(), p.width.toDouble())
+        : Size(p.width.toDouble(), p.height.toDouble());
   }
 
-  double get _minScale => math.max(_frame.width / _imageSize.width, _frame.height / _imageSize.height);
+  double get _minScale => math.max(
+    _frame.width / _imageSize.width,
+    _frame.height / _imageSize.height,
+  );
 
   /// Keeps the frame fully covered by the photo.
   Offset _clamp(Offset o, double s) {
     final w = _imageSize.width * s;
     final h = _imageSize.height * s;
-    return Offset(o.dx.clamp(_frame.width - w, 0.0), o.dy.clamp(_frame.height - h, 0.0));
+    return Offset(
+      o.dx.clamp(_frame.width - w, 0.0),
+      o.dy.clamp(_frame.height - h, 0.0),
+    );
   }
 
   /// Fits the photo to cover the frame, centred.
@@ -157,7 +189,15 @@ class _CropScreenState extends State<_CropScreen> {
     final y = -_offset.dy / _scale;
     final w = _frame.width / _scale;
     final h = _frame.height / _scale;
-    final out = await compute(_crop, <Object>[p.bytes, _turns, x, y, w, h, widget.maxWidth]);
+    final out = await compute(_crop, <Object>[
+      p.bytes,
+      _turns,
+      x,
+      y,
+      w,
+      h,
+      widget.maxWidth,
+    ]);
     if (mounted) Navigator.of(context).pop(out);
   }
 
@@ -174,7 +214,12 @@ class _CropScreenState extends State<_CropScreen> {
           child: Column(
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(MuSpacing.space2, MuSpacing.space2, MuSpacing.space2, 0),
+                padding: const EdgeInsets.fromLTRB(
+                  MuSpacing.space2,
+                  MuSpacing.space2,
+                  MuSpacing.space2,
+                  0,
+                ),
                 child: Row(
                   children: [
                     MuIconButton(
@@ -201,7 +246,12 @@ class _CropScreenState extends State<_CropScreen> {
               ),
               Expanded(child: _editor(context)),
               Padding(
-                padding: const EdgeInsets.fromLTRB(MuSpacing.space5, 0, MuSpacing.space5, MuSpacing.space2),
+                padding: const EdgeInsets.fromLTRB(
+                  MuSpacing.space5,
+                  0,
+                  MuSpacing.space5,
+                  MuSpacing.space2,
+                ),
                 child: Text(
                   'Pinch to zoom, drag to arrange',
                   textAlign: TextAlign.center,
@@ -234,11 +284,16 @@ class _CropScreenState extends State<_CropScreen> {
     final c = context.mu.colors;
     if (_failed) {
       return Center(
-        child: Text("Couldn't open this photo.", style: context.mu.text.body.copyWith(color: c.onNight2)),
+        child: Text(
+          "Couldn't open this photo.",
+          style: context.mu.text.body.copyWith(color: c.onNight2),
+        ),
       );
     }
     final p = _photo;
-    if (p == null) return Center(child: CircularProgressIndicator(color: c.volt));
+    if (p == null) {
+      return Center(child: CircularProgressIndicator(color: c.volt));
+    }
 
     return LayoutBuilder(
       builder: (context, box) {
@@ -256,7 +311,11 @@ class _CropScreenState extends State<_CropScreen> {
           _frame = frame;
           _fit();
         }
-        final frameRect = Rect.fromCenter(center: box.biggest.center(Offset.zero), width: fw, height: fh);
+        final frameRect = Rect.fromCenter(
+          center: box.biggest.center(Offset.zero),
+          width: fw,
+          height: fh,
+        );
         final imageSize = _imageSize;
 
         return GestureDetector(
@@ -286,7 +345,11 @@ class _CropScreenState extends State<_CropScreen> {
                 height: imageSize.height * _scale,
                 child: RotatedBox(
                   quarterTurns: _turns,
-                  child: Image.memory(p.bytes, fit: BoxFit.fill, gaplessPlayback: true),
+                  child: Image.memory(
+                    p.bytes,
+                    fit: BoxFit.fill,
+                    gaplessPlayback: true,
+                  ),
                 ),
               ),
               // Dim everything outside the frame; outline the frame.
@@ -330,8 +393,14 @@ class _FramePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final hole = round
         ? (Path()..addOval(frame))
-        : (Path()..addRRect(RRect.fromRectAndRadius(frame, const Radius.circular(MuRadii.tag))));
-    final outside = Path.combine(PathOperation.difference, Path()..addRect(Offset.zero & size), hole);
+        : (Path()..addRRect(
+            RRect.fromRectAndRadius(frame, const Radius.circular(MuRadii.tag)),
+          ));
+    final outside = Path.combine(
+      PathOperation.difference,
+      Path()..addRect(Offset.zero & size),
+      hole,
+    );
     canvas.drawPath(outside, Paint()..color = scrim);
 
     // Rule of thirds inside the frame.
@@ -360,5 +429,6 @@ class _FramePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_FramePainter old) => old.frame != frame || old.round != round || old.scrim != scrim;
+  bool shouldRepaint(_FramePainter old) =>
+      old.frame != frame || old.round != round || old.scrim != scrim;
 }

@@ -92,24 +92,37 @@ class MuButton extends StatelessWidget {
     };
     final small = size == MuButtonSize.small;
     final height = small ? MuSizes.buttonHSm : MuSizes.buttonH;
-    final textStyle = mu.text.button.copyWith(color: fg, fontSize: small ? 14 : null);
+    final textStyle = mu.text.button.copyWith(
+      color: fg,
+      fontSize: small ? 14 : null,
+    );
     final enabled = onPressed != null && !loading;
     final showKnob = knob && !loading;
     final shownLabel = loading ? (loadingLabel ?? label) : label;
 
     final content = Row(
       mainAxisSize: block ? MainAxisSize.max : MainAxisSize.min,
-      mainAxisAlignment: showKnob ? MainAxisAlignment.spaceBetween : MainAxisAlignment.center,
+      mainAxisAlignment: showKnob
+          ? MainAxisAlignment.spaceBetween
+          : MainAxisAlignment.center,
       children: [
         if (loading) ...[
-          SizedBox.square(dimension: 18, child: CircularProgressIndicator(strokeWidth: 2, color: fg)),
+          SizedBox.square(
+            dimension: 18,
+            child: CircularProgressIndicator(strokeWidth: 2, color: fg),
+          ),
           const SizedBox(width: MuSpacing.space2),
         ] else if (icon != null) ...[
           Icon(icon, size: small ? MuSizes.iconSm : 18, color: fg),
           const SizedBox(width: MuSpacing.space2),
         ],
         Flexible(
-          child: Text(shownLabel, style: textStyle, maxLines: 1, overflow: TextOverflow.ellipsis),
+          child: Text(
+            shownLabel,
+            style: textStyle,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
         ),
         if (showKnob) ...[
           const SizedBox(width: MuSpacing.space3),
@@ -135,10 +148,14 @@ class MuButton extends StatelessWidget {
     final pill = Container(
       height: height,
       padding: EdgeInsetsDirectional.only(
-        start: variant == MuButtonVariant.ghost ? MuSpacing.space3 : (small ? MuSpacing.space4 : MuSpacing.space6),
+        start: variant == MuButtonVariant.ghost
+            ? MuSpacing.space3
+            : (small ? MuSpacing.space4 : MuSpacing.space6),
         end: showKnob
             ? 6
-            : (variant == MuButtonVariant.ghost ? MuSpacing.space3 : (small ? MuSpacing.space4 : MuSpacing.space6)),
+            : (variant == MuButtonVariant.ghost
+                  ? MuSpacing.space3
+                  : (small ? MuSpacing.space4 : MuSpacing.space6)),
       ),
       decoration: BoxDecoration(
         color: bg,
@@ -176,7 +193,12 @@ class MuButton extends StatelessWidget {
 /// Keyboard and switch-access focus: Enter/Space activate, and a 2dp ring
 /// offset 2dp shows while focused by keyboard.
 class _FocusRing extends StatefulWidget {
-  const _FocusRing({required this.enabled, required this.onActivate, required this.color, required this.child});
+  const _FocusRing({
+    required this.enabled,
+    required this.onActivate,
+    required this.color,
+    required this.child,
+  });
 
   final bool enabled;
   final VoidCallback? onActivate;
@@ -195,7 +217,11 @@ class _FocusRingState extends State<_FocusRing> {
     return FocusableActionDetector(
       enabled: widget.enabled,
       onShowFocusHighlight: (v) => setState(() => _highlight = v),
-      actions: {ActivateIntent: CallbackAction<ActivateIntent>(onInvoke: (_) => widget.onActivate?.call())},
+      actions: {
+        ActivateIntent: CallbackAction<ActivateIntent>(
+          onInvoke: (_) => widget.onActivate?.call(),
+        ),
+      },
       child: DecoratedBox(
         position: DecorationPosition.foreground,
         decoration: BoxDecoration(

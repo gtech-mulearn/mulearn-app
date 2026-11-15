@@ -43,7 +43,12 @@ class _ArrivalScreenState extends ConsumerState<ArrivalScreen> {
       if (reduce) {
         _pages.jumpToPage(_page + 1);
       } else {
-        unawaited(_pages.nextPage(duration: const Duration(milliseconds: 420), curve: Curves.easeOutCubic));
+        unawaited(
+          _pages.nextPage(
+            duration: const Duration(milliseconds: 420),
+            curve: Curves.easeOutCubic,
+          ),
+        );
       }
       return;
     }
@@ -61,21 +66,29 @@ class _ArrivalScreenState extends ConsumerState<ArrivalScreen> {
     final mu = context.mu;
     final c = mu.colors;
     final stats = ref.watch(publicStatsProvider).value ?? const PublicStats();
-    final groups = ref.watch(guestInterestGroupsProvider).value ?? const <GuestInterestGroup>[];
-    final events = ref.watch(guestFeaturedEventsProvider).value ?? const <GuestEvent>[];
+    final groups =
+        ref.watch(guestInterestGroupsProvider).value ??
+        const <GuestInterestGroup>[];
+    final events =
+        ref.watch(guestFeaturedEventsProvider).value ?? const <GuestEvent>[];
 
     final members = _n(stats.members);
     final campuses = _n(stats.campuses);
     final circles = _n(stats.circles);
     final mentors = _n(stats.mentors);
-    final igs = _n(stats.interestGroups ?? (groups.isEmpty ? null : groups.length));
+    final igs = _n(
+      stats.interestGroups ?? (groups.isEmpty ? null : groups.length),
+    );
     final companies = _n(stats.companies);
 
     final beats = <_Beat>[
       _Beat(
         panel: RingPanel(groups: groups, groupCount: stats.interestGroups),
         lightIcons: true,
-        eyebrow: [?(members == null ? null : '$members learners'), ?(campuses == null ? null : '$campuses campuses')],
+        eyebrow: [
+          ?(members == null ? null : '$members learners'),
+          ?(campuses == null ? null : '$campuses campuses'),
+        ],
         light: 'Your gateway to ',
         bold: 'peer-led growth',
         body:
@@ -106,9 +119,16 @@ class _ArrivalScreenState extends ConsumerState<ArrivalScreen> {
             "Meet every week, get unstuck together, and grow with peers who've been where you are.",
       ),
       _Beat(
-        panel: TicketsPanel(event: events.isEmpty ? null : events.first, companies: stats.companies),
+        panel: TicketsPanel(
+          event: events.isEmpty ? null : events.first,
+          companies: stats.companies,
+        ),
         lightIcons: false,
-        eyebrow: ['Events', 'Career Lab', ?(companies == null ? null : '$companies companies')],
+        eyebrow: [
+          'Events',
+          'Career Lab',
+          ?(companies == null ? null : '$companies companies'),
+        ],
         light: 'From curious ',
         bold: 'to capable',
         body:
@@ -118,7 +138,9 @@ class _ArrivalScreenState extends ConsumerState<ArrivalScreen> {
     ];
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: beats[_page].lightIcons ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark,
+      value: beats[_page].lightIcons
+          ? SystemUiOverlayStyle.light
+          : SystemUiOverlayStyle.dark,
       child: Scaffold(
         backgroundColor: c.chalk,
         body: Stack(
@@ -174,7 +196,9 @@ class _ArrivalScreenState extends ConsumerState<ArrivalScreen> {
                                   if (i > 0) const SizedBox(width: 5),
                                   Expanded(
                                     child: AnimatedContainer(
-                                      duration: const Duration(milliseconds: 300),
+                                      duration: const Duration(
+                                        milliseconds: 300,
+                                      ),
                                       height: 4,
                                       decoration: BoxDecoration(
                                         color: i <= _page ? c.ink : c.line,
@@ -189,7 +213,9 @@ class _ArrivalScreenState extends ConsumerState<ArrivalScreen> {
                         ),
                         const SizedBox(width: 14),
                         MuButton(
-                          label: _page == beats.length - 1 ? 'Get started' : 'Next',
+                          label: _page == beats.length - 1
+                              ? 'Get started'
+                              : 'Next',
                           knob: true,
                           onPressed: () => _next(beats.length),
                         ),
@@ -248,7 +274,9 @@ class _BeatView extends StatelessWidget {
         SizedBox(
           height: panelH,
           child: ClipRRect(
-            borderRadius: const BorderRadius.vertical(bottom: Radius.circular(MuRadii.poster)),
+            borderRadius: const BorderRadius.vertical(
+              bottom: Radius.circular(MuRadii.poster),
+            ),
             child: beat.panel,
           ),
         ),
@@ -258,26 +286,49 @@ class _BeatView extends StatelessWidget {
           // is unaffected. Bottom room keeps the last line clear of the bar.
           child: SingleChildScrollView(
             physics: const ClampingScrollPhysics(),
-            padding: const EdgeInsets.fromLTRB(MuSpacing.space6, 22, MuSpacing.space6, 96),
+            padding: const EdgeInsets.fromLTRB(
+              MuSpacing.space6,
+              22,
+              MuSpacing.space6,
+              96,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (beat.eyebrow.isNotEmpty)
-                  Text(beat.eyebrow.join(' · ').toUpperCase(), style: mu.text.eyebrow.copyWith(color: c.ink3)),
+                  Text(
+                    beat.eyebrow.join(' · ').toUpperCase(),
+                    style: mu.text.eyebrow.copyWith(color: c.ink3),
+                  ),
                 const SizedBox(height: MuSpacing.space2),
                 Semantics(
                   header: true,
                   child: Text.rich(
                     TextSpan(
                       children: [
-                        TextSpan(text: beat.light, style: mu.text.displayLight.copyWith(fontSize: 34, height: 1.04)),
-                        TextSpan(text: beat.bold, style: mu.text.display.copyWith(fontSize: 34, height: 1.04)),
+                        TextSpan(
+                          text: beat.light,
+                          style: mu.text.displayLight.copyWith(
+                            fontSize: 34,
+                            height: 1.04,
+                          ),
+                        ),
+                        TextSpan(
+                          text: beat.bold,
+                          style: mu.text.display.copyWith(
+                            fontSize: 34,
+                            height: 1.04,
+                          ),
+                        ),
                       ],
                     ),
                   ),
                 ),
                 const SizedBox(height: MuSpacing.space3),
-                Text(beat.body, style: mu.text.bodyLg.copyWith(fontSize: 16, color: c.ink2)),
+                Text(
+                  beat.body,
+                  style: mu.text.bodyLg.copyWith(fontSize: 16, color: c.ink2),
+                ),
               ],
             ),
           ),
@@ -312,7 +363,10 @@ class _SkipPill extends StatelessWidget {
                 color: c.onCobalt.withValues(alpha: 0.88),
                 borderRadius: BorderRadius.circular(MuRadii.round),
               ),
-              child: Text('Skip', style: mu.text.label.copyWith(color: c.inkPrint)),
+              child: Text(
+                'Skip',
+                style: mu.text.label.copyWith(color: c.inkPrint),
+              ),
             ),
           ),
         ),

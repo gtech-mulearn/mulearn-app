@@ -9,11 +9,14 @@ part 'campus_profile_providers.g.dart';
 
 @riverpod
 CampusProfileRepository campusProfileRepository(Ref ref) =>
-    CampusProfileRepositoryImpl(CampusProfileRemoteDataSource(ref.watch(dioProvider)));
+    CampusProfileRepositoryImpl(
+      CampusProfileRemoteDataSource(ref.watch(dioProvider)),
+    );
 
 /// A college's public page.
 @Riverpod(retry: noRetry)
-Future<PublicCampus> publicCampus(Ref ref, String id) => ref.watch(campusProfileRepositoryProvider).campus(id);
+Future<PublicCampus> publicCampus(Ref ref, String id) =>
+    ref.watch(campusProfileRepositoryProvider).campus(id);
 
 /// Its last seven days of karma.
 @Riverpod(retry: noRetry)

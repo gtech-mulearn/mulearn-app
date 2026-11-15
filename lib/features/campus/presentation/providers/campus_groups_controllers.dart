@@ -19,26 +19,40 @@ class CampusCirclesController extends _$CampusCirclesController {
     ref.keepRecent();
     _pageIndex = 1;
     _inFlight = null;
-    final page = await ref.watch(campusRepositoryProvider).getCircles(pageIndex: 1, search: search);
+    final page = await ref
+        .watch(campusRepositoryProvider)
+        .getCircles(pageIndex: 1, search: search);
     return PagedState(items: page.items, hasMore: page.hasNext);
   }
 
-  Future<void> loadMore() => _inFlight ??= _next().whenComplete(() => _inFlight = null);
+  Future<void> loadMore() =>
+      _inFlight ??= _next().whenComplete(() => _inFlight = null);
 
   Future<void> _next() async {
     final current = state.value;
     if (current == null || !current.hasMore) return;
-    state = AsyncData(current.copyWith(isLoadingMore: true, loadMoreError: null));
+    state = AsyncData(
+      current.copyWith(isLoadingMore: true, loadMoreError: null),
+    );
     try {
-      final page = await ref.read(campusRepositoryProvider).getCircles(pageIndex: _pageIndex + 1, search: search);
+      final page = await ref
+          .read(campusRepositoryProvider)
+          .getCircles(pageIndex: _pageIndex + 1, search: search);
       if (!ref.mounted) return;
       _pageIndex++;
       state = AsyncData(
-        PagedState(items: mergeUniqueBy(current.items, page.items, (c) => c.id), hasMore: page.hasNext),
+        PagedState(
+          items: mergeUniqueBy(current.items, page.items, (c) => c.id),
+          hasMore: page.hasNext,
+        ),
       );
     } on Object catch (e, st) {
       appLogger.w('Loading more circles failed', error: e, stackTrace: st);
-      if (ref.mounted) state = AsyncData(current.copyWith(isLoadingMore: false, loadMoreError: e));
+      if (ref.mounted) {
+        state = AsyncData(
+          current.copyWith(isLoadingMore: false, loadMoreError: e),
+        );
+      }
     }
   }
 }
@@ -54,26 +68,40 @@ class CampusIgsController extends _$CampusIgsController {
     ref.keepRecent();
     _pageIndex = 1;
     _inFlight = null;
-    final page = await ref.watch(campusRepositoryProvider).getIgs(pageIndex: 1, search: search);
+    final page = await ref
+        .watch(campusRepositoryProvider)
+        .getIgs(pageIndex: 1, search: search);
     return PagedState(items: page.items, hasMore: page.hasNext);
   }
 
-  Future<void> loadMore() => _inFlight ??= _next().whenComplete(() => _inFlight = null);
+  Future<void> loadMore() =>
+      _inFlight ??= _next().whenComplete(() => _inFlight = null);
 
   Future<void> _next() async {
     final current = state.value;
     if (current == null || !current.hasMore) return;
-    state = AsyncData(current.copyWith(isLoadingMore: true, loadMoreError: null));
+    state = AsyncData(
+      current.copyWith(isLoadingMore: true, loadMoreError: null),
+    );
     try {
-      final page = await ref.read(campusRepositoryProvider).getIgs(pageIndex: _pageIndex + 1, search: search);
+      final page = await ref
+          .read(campusRepositoryProvider)
+          .getIgs(pageIndex: _pageIndex + 1, search: search);
       if (!ref.mounted) return;
       _pageIndex++;
       state = AsyncData(
-        PagedState(items: mergeUniqueBy(current.items, page.items, (g) => g.id), hasMore: page.hasNext),
+        PagedState(
+          items: mergeUniqueBy(current.items, page.items, (g) => g.id),
+          hasMore: page.hasNext,
+        ),
       );
     } on Object catch (e, st) {
       appLogger.w('Loading more groups failed', error: e, stackTrace: st);
-      if (ref.mounted) state = AsyncData(current.copyWith(isLoadingMore: false, loadMoreError: e));
+      if (ref.mounted) {
+        state = AsyncData(
+          current.copyWith(isLoadingMore: false, loadMoreError: e),
+        );
+      }
     }
   }
 }

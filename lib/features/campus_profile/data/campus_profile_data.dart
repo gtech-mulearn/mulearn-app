@@ -10,7 +10,8 @@ abstract final class CampusProfilePaths {
   const CampusProfilePaths._();
 
   static String detail(String id) => '/api/v1/dashboard/campus/$id/';
-  static String weeklyKarma(String id) => '/api/v1/dashboard/campus/weekly-karma/$id/';
+  static String weeklyKarma(String id) =>
+      '/api/v1/dashboard/campus/weekly-karma/$id/';
 }
 
 class CampusProfileRemoteDataSource {
@@ -19,10 +20,14 @@ class CampusProfileRemoteDataSource {
   final Dio _dio;
 
   Future<Map<String, dynamic>> fetchCampus(String id) async =>
-      ApiEnvelope.unwrapObject(await _dio.get<dynamic>(CampusProfilePaths.detail(id)));
+      ApiEnvelope.unwrapObject(
+        await _dio.get<dynamic>(CampusProfilePaths.detail(id)),
+      );
 
   Future<Map<String, dynamic>> fetchWeeklyKarma(String id) async =>
-      ApiEnvelope.unwrapObject(await _dio.get<dynamic>(CampusProfilePaths.weeklyKarma(id)));
+      ApiEnvelope.unwrapObject(
+        await _dio.get<dynamic>(CampusProfilePaths.weeklyKarma(id)),
+      );
 }
 
 /// Maps `CampusDetailsPublicSerializer` and the weekly-karma map, tolerating
@@ -38,7 +43,8 @@ class CampusProfileRepositoryImpl implements CampusProfileRepository {
     return s.isEmpty ? null : s;
   }
 
-  static int _int(Object? v) => v is num ? v.toInt() : int.tryParse('${v ?? ''}') ?? 0;
+  static int _int(Object? v) =>
+      v is num ? v.toInt() : int.tryParse('${v ?? ''}') ?? 0;
 
   static List<Map<String, dynamic>> _rows(Object? v) =>
       v is List ? v.whereType<Map<String, dynamic>>().toList() : const [];
@@ -54,7 +60,9 @@ class CampusProfileRepositoryImpl implements CampusProfileRepository {
       totalKarma: _int(json['total_karma']),
       members: _int(json['total_members']),
       activeMembers: _int(json['active_members']),
-      rank: json['rank'] is num && (json['rank'] as num) > 0 ? (json['rank'] as num).toInt() : null,
+      rank: json['rank'] is num && (json['rank'] as num) > 0
+          ? (json['rank'] as num).toInt()
+          : null,
       lead: lead is Map<String, dynamic> && _str(lead['muid']) != null
           ? CampusPerson(
               muid: _str(lead['muid'])!,
@@ -89,7 +97,9 @@ class CampusProfileRepositoryImpl implements CampusProfileRepository {
             name: _str(ch['ig_name']) ?? 'Interest group',
             code: _str(ch['ig_code']) ?? '',
             members: _int(ch['member_count']),
-            leadName: ch['lead'] is Map ? _str((ch['lead'] as Map)['full_name']) : null,
+            leadName: ch['lead'] is Map
+                ? _str((ch['lead'] as Map)['full_name'])
+                : null,
           ),
       ],
       clusters: clusters is Map<String, dynamic>
@@ -105,7 +115,11 @@ class CampusProfileRepositoryImpl implements CampusProfileRepository {
           : const [],
       links: [
         for (final l in _rows(json['social_links']))
-          if (_str(l['url']) != null) CampusLink(platform: _str(l['platform']) ?? 'Link', url: _str(l['url'])!),
+          if (_str(l['url']) != null)
+            CampusLink(
+              platform: _str(l['platform']) ?? 'Link',
+              url: _str(l['url'])!,
+            ),
       ],
     );
   }
@@ -113,7 +127,8 @@ class CampusProfileRepositoryImpl implements CampusProfileRepository {
   static List<CampusKarmaDay> parseWeekly(Map<String, dynamic> json) {
     final days = <CampusKarmaDay>[
       for (final e in json.entries)
-        if (RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(e.key) && DateTime.tryParse(e.key) != null)
+        if (RegExp(r'^\d{4}-\d{2}-\d{2}$').hasMatch(e.key) &&
+            DateTime.tryParse(e.key) != null)
           (day: DateTime.parse(e.key), karma: _int(e.value)),
     ]..sort((a, b) => a.day.compareTo(b.day));
     return days;
@@ -128,7 +143,8 @@ class CampusProfileRepositoryImpl implements CampusProfileRepository {
   }
 
   @override
-  Future<PublicCampus> campus(String id) => _guard(() async => parse(id, await _remote.fetchCampus(id)));
+  Future<PublicCampus> campus(String id) =>
+      _guard(() async => parse(id, await _remote.fetchCampus(id)));
 
   @override
   Future<List<CampusKarmaDay>> weeklyKarma(String id) =>

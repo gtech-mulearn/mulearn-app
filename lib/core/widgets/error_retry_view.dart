@@ -38,11 +38,18 @@ class _ErrorRetryViewState extends State<ErrorRetryView> {
             Container(
               width: 64,
               height: 64,
-              decoration: BoxDecoration(color: c.dangerTint, shape: BoxShape.circle),
+              decoration: BoxDecoration(
+                color: c.dangerTint,
+                shape: BoxShape.circle,
+              ),
               child: Icon(LucideIcons.alertCircle, size: 28, color: c.danger),
             ),
             const SizedBox(height: MuSpacing.space4),
-            Text('Something went wrong', style: mu.text.title2, textAlign: TextAlign.center),
+            Text(
+              'Something went wrong',
+              style: mu.text.title2,
+              textAlign: TextAlign.center,
+            ),
             const SizedBox(height: MuSpacing.space2),
             Text(
               ApiException.messageFor(widget.error),
@@ -50,7 +57,11 @@ class _ErrorRetryViewState extends State<ErrorRetryView> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: MuSpacing.space5),
-            MuButton(label: 'Retry', variant: MuButtonVariant.outline, onPressed: widget.onRetry),
+            MuButton(
+              label: 'Retry',
+              variant: MuButtonVariant.outline,
+              onPressed: widget.onRetry,
+            ),
           ],
         ),
       ),

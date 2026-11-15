@@ -12,7 +12,8 @@ import 'package:mulearn_app/core/widgets/mu_state_display.dart';
 /// The monthly college-leaderboard endpoint doesn't return a `title` at
 /// all (only the all-time one does), so fall back to the college's short
 /// `code` (e.g. "MBT") rather than a blank row.
-String _collegeDisplayName(CollegeLeaderboardEntry entry) => entry.title ?? entry.code ?? 'Unknown college';
+String _collegeDisplayName(CollegeLeaderboardEntry entry) =>
+    entry.title ?? entry.code ?? 'Unknown college';
 
 enum _Board { students, colleges }
 
@@ -39,13 +40,24 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
         bottom: false,
         child: MuRefresh(
           onRefresh: () => _board == _Board.students
-              ? ref.refresh(studentLeaderboardProvider(monthly: _monthly).future)
-              : ref.refresh(collegeLeaderboardProvider(monthly: _monthly).future),
+              ? ref.refresh(
+                  studentLeaderboardProvider(monthly: _monthly).future,
+                )
+              : ref.refresh(
+                  collegeLeaderboardProvider(monthly: _monthly).future,
+                ),
           child: CustomScrollView(
-            physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+            physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics(),
+            ),
             slivers: [
               SliverPadding(
-                padding: const EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space4, MuSpacing.space5, 0),
+                padding: const EdgeInsets.fromLTRB(
+                  MuSpacing.space5,
+                  MuSpacing.space4,
+                  MuSpacing.space5,
+                  0,
+                ),
                 sliver: SliverList.list(
                   children: [
                     Semantics(
@@ -53,8 +65,16 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
                       child: Text.rich(
                         TextSpan(
                           children: [
-                            TextSpan(text: "Who's ", style: mu.text.displayLight.copyWith(fontSize: 34)),
-                            TextSpan(text: 'leading', style: mu.text.display.copyWith(fontSize: 34)),
+                            TextSpan(
+                              text: "Who's ",
+                              style: mu.text.displayLight.copyWith(
+                                fontSize: 34,
+                              ),
+                            ),
+                            TextSpan(
+                              text: 'leading',
+                              style: mu.text.display.copyWith(fontSize: 34),
+                            ),
                           ],
                         ),
                       ),
@@ -63,7 +83,8 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
                     MuSegmented<_Board>(
                       values: _Board.values,
                       selected: _board,
-                      label: (b) => b == _Board.students ? 'Students' : 'Colleges',
+                      label: (b) =>
+                          b == _Board.students ? 'Students' : 'Colleges',
                       onChanged: (b) => setState(() => _board = b),
                     ),
                     const SizedBox(height: MuSpacing.space2),
@@ -86,7 +107,10 @@ class _LeaderboardScreenState extends ConsumerState<LeaderboardScreen> {
                   ],
                 ),
               ),
-              if (_board == _Board.students) _StudentBoard(monthly: _monthly) else _CollegeBoard(monthly: _monthly),
+              if (_board == _Board.students)
+                _StudentBoard(monthly: _monthly)
+              else
+                _CollegeBoard(monthly: _monthly),
             ],
           ),
         ),
@@ -112,19 +136,39 @@ class _BoardView extends StatelessWidget {
     final offset = hasPodium ? 3 : 0;
     final max = entries.first.karma;
     return Padding(
-      padding: const EdgeInsets.fromLTRB(MuSpacing.space5, 0, MuSpacing.space5, MuSpacing.navClearance),
+      padding: const EdgeInsets.fromLTRB(
+        MuSpacing.space5,
+        0,
+        MuSpacing.space5,
+        MuSpacing.navClearance,
+      ),
       child: Column(
         children: [
-          if (hasPodium) MuPodium(top: entries.take(3).toList(), onOpen: (e) => open?.call(entries.indexOf(e))?.call()),
+          if (hasPodium)
+            MuPodium(
+              top: entries.take(3).toList(),
+              onOpen: (e) => open?.call(entries.indexOf(e))?.call(),
+            ),
           if (rest.isNotEmpty) ...[
             const SizedBox(height: MuSpacing.space3),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: MuSpacing.space4, vertical: MuSpacing.space1),
-              decoration: BoxDecoration(color: c.surface, borderRadius: BorderRadius.circular(MuRadii.card)),
+              padding: const EdgeInsets.symmetric(
+                horizontal: MuSpacing.space4,
+                vertical: MuSpacing.space1,
+              ),
+              decoration: BoxDecoration(
+                color: c.surface,
+                borderRadius: BorderRadius.circular(MuRadii.card),
+              ),
               child: Column(
                 children: [
                   for (var i = 0; i < rest.length; i++)
-                    MuRankRow(rank: i + offset + 1, entry: rest[i], maxKarma: max, onTap: open?.call(i + offset)),
+                    MuRankRow(
+                      rank: i + offset + 1,
+                      entry: rest[i],
+                      maxKarma: max,
+                      onTap: open?.call(i + offset),
+                    ),
                 ],
               ),
             ),
@@ -145,17 +189,23 @@ class _StudentBoard extends ConsumerWidget {
     return ref
         .watch(studentLeaderboardProvider(monthly: monthly))
         .when(
-          loading: () => const SliverFillRemaining(child: Center(child: CircularProgressIndicator())),
+          loading: () => const SliverFillRemaining(
+            child: Center(child: CircularProgressIndicator()),
+          ),
           error: (error, _) => SliverFillRemaining(
             child: ErrorRetryView(
               error: error,
-              onRetry: () => ref.invalidate(studentLeaderboardProvider(monthly: monthly)),
+              onRetry: () =>
+                  ref.invalidate(studentLeaderboardProvider(monthly: monthly)),
             ),
           ),
           data: (entries) {
             if (entries.isEmpty) {
               return const SliverToBoxAdapter(
-                child: MuStateDisplay(variant: MuStateVariant.noResults, size: MuStateSize.sm),
+                child: MuStateDisplay(
+                  variant: MuStateVariant.noResults,
+                  size: MuStateSize.sm,
+                ),
               );
             }
             return SliverToBoxAdapter(
@@ -171,7 +221,9 @@ class _StudentBoard extends ConsumerWidget {
                 ],
                 open: (i) {
                   final muid = entries[i].muid;
-                  return muid == null ? null : () => context.push(RoutePaths.publicProfilePath(muid));
+                  return muid == null
+                      ? null
+                      : () => context.push(RoutePaths.publicProfilePath(muid));
                 },
               ),
             );
@@ -190,17 +242,23 @@ class _CollegeBoard extends ConsumerWidget {
     return ref
         .watch(collegeLeaderboardProvider(monthly: monthly))
         .when(
-          loading: () => const SliverFillRemaining(child: Center(child: CircularProgressIndicator())),
+          loading: () => const SliverFillRemaining(
+            child: Center(child: CircularProgressIndicator()),
+          ),
           error: (error, _) => SliverFillRemaining(
             child: ErrorRetryView(
               error: error,
-              onRetry: () => ref.invalidate(collegeLeaderboardProvider(monthly: monthly)),
+              onRetry: () =>
+                  ref.invalidate(collegeLeaderboardProvider(monthly: monthly)),
             ),
           ),
           data: (entries) {
             if (entries.isEmpty) {
               return const SliverToBoxAdapter(
-                child: MuStateDisplay(variant: MuStateVariant.noResults, size: MuStateSize.sm),
+                child: MuStateDisplay(
+                  variant: MuStateVariant.noResults,
+                  size: MuStateSize.sm,
+                ),
               );
             }
             return SliverToBoxAdapter(

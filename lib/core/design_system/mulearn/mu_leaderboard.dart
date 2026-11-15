@@ -6,7 +6,12 @@ import 'package:mulearn_app/core/design_system/tokens/mu_tokens.g.dart';
 /// Someone on the leaderboard.
 class MuRankEntry {
   /// An entry: name, karma, and where they're from.
-  const MuRankEntry({required this.name, required this.karma, this.subtitle, this.photoUrl});
+  const MuRankEntry({
+    required this.name,
+    required this.karma,
+    this.subtitle,
+    this.photoUrl,
+  });
 
   /// Full name.
   final String name;
@@ -72,7 +77,10 @@ class MuPodium extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
                 ),
-                Text(muGrouped(e.karma), style: mu.text.codeSm.copyWith(color: c.ink3)),
+                Text(
+                  muGrouped(e.karma),
+                  style: mu.text.codeSm.copyWith(color: c.ink3),
+                ),
                 const SizedBox(height: 6),
                 Container(
                   height: height,
@@ -81,9 +89,19 @@ class MuPodium extends StatelessWidget {
                   padding: const EdgeInsets.only(top: 10),
                   decoration: BoxDecoration(
                     color: fill,
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(20), bottom: Radius.circular(6)),
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(20),
+                      bottom: Radius.circular(6),
+                    ),
                   ),
-                  child: Text('$rank', style: mu.text.poster.copyWith(fontSize: 54, height: 1, color: fg)),
+                  child: Text(
+                    '$rank',
+                    style: mu.text.poster.copyWith(
+                      fontSize: 54,
+                      height: 1,
+                      color: fg,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -137,18 +155,39 @@ class MuRankRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final mu = context.mu;
     final c = mu.colors;
-    final share = maxKarma <= 0 ? 0.0 : (entry.karma / maxKarma).clamp(0.0, 1.0);
+    final share = maxKarma <= 0
+        ? 0.0
+        : (entry.karma / maxKarma).clamp(0.0, 1.0);
     final name = isMe ? 'You · ${entry.name}' : entry.name;
     final row = Container(
-      padding: EdgeInsets.symmetric(horizontal: isMe ? MuSpacing.space4 : 0, vertical: MuSpacing.space3),
-      decoration: isMe ? BoxDecoration(color: c.cobaltTint, borderRadius: BorderRadius.circular(14)) : null,
+      padding: EdgeInsets.symmetric(
+        horizontal: isMe ? MuSpacing.space4 : 0,
+        vertical: MuSpacing.space3,
+      ),
+      decoration: isMe
+          ? BoxDecoration(
+              color: c.cobaltTint,
+              borderRadius: BorderRadius.circular(14),
+            )
+          : null,
       child: Row(
         children: [
           SizedBox(
             width: 34,
-            child: Text('$rank', style: mu.text.title3.copyWith(fontSize: 18, color: isMe ? c.cobaltText : c.ink3)),
+            child: Text(
+              '$rank',
+              style: mu.text.title3.copyWith(
+                fontSize: 18,
+                color: isMe ? c.cobaltText : c.ink3,
+              ),
+            ),
           ),
-          MuAvatar(name: entry.name, url: entry.photoUrl, size: MuSizes.avatarMd, ring: false),
+          MuAvatar(
+            name: entry.name,
+            url: entry.photoUrl,
+            size: MuSizes.avatarMd,
+            ring: false,
+          ),
           const SizedBox(width: MuSpacing.space3),
           Expanded(
             child: Column(
@@ -157,14 +196,27 @@ class MuRankRow extends StatelessWidget {
                 Row(
                   children: [
                     Expanded(
-                      child: Text(name, style: mu.text.bodyStrong, maxLines: 1, overflow: TextOverflow.ellipsis),
+                      child: Text(
+                        name,
+                        style: mu.text.bodyStrong,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                     const SizedBox(width: MuSpacing.space2),
-                    Text(muGrouped(entry.karma), style: mu.text.code.copyWith(fontWeight: FontWeight.w700)),
+                    Text(
+                      muGrouped(entry.karma),
+                      style: mu.text.code.copyWith(fontWeight: FontWeight.w700),
+                    ),
                   ],
                 ),
                 if (entry.subtitle != null)
-                  Text(entry.subtitle!, style: mu.text.caption, maxLines: 1, overflow: TextOverflow.ellipsis),
+                  Text(
+                    entry.subtitle!,
+                    style: mu.text.caption,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 const SizedBox(height: 6),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(4),
@@ -172,7 +224,9 @@ class MuRankRow extends StatelessWidget {
                     height: 4,
                     child: Stack(
                       children: [
-                        Positioned.fill(child: ColoredBox(color: c.surfaceSunk)),
+                        Positioned.fill(
+                          child: ColoredBox(color: c.surfaceSunk),
+                        ),
                         FractionallySizedBox(
                           // Grow from the start edge (the default centres the bar).
                           alignment: AlignmentDirectional.centerStart,
@@ -192,9 +246,14 @@ class MuRankRow extends StatelessWidget {
     return Semantics(
       container: true,
       button: onTap != null,
-      label: 'Rank $rank, $name${entry.subtitle == null ? '' : ', ${entry.subtitle}'}, ${muGrouped(entry.karma)} karma',
+      label:
+          'Rank $rank, $name${entry.subtitle == null ? '' : ', ${entry.subtitle}'}, ${muGrouped(entry.karma)} karma',
       excludeSemantics: true,
-      child: GestureDetector(behavior: HitTestBehavior.opaque, onTap: onTap, child: row),
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: onTap,
+        child: row,
+      ),
     );
   }
 }

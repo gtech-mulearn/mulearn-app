@@ -49,7 +49,11 @@ class MuAvatarStack extends StatelessWidget {
             for (var i = 0; i < faces.length; i++)
               Positioned(
                 left: i * step,
-                child: MuAvatar(name: faces[i], url: i < urls.length ? urls[i] : null, size: size),
+                child: MuAvatar(
+                  name: faces[i],
+                  url: i < urls.length ? urls[i] : null,
+                  size: size,
+                ),
               ),
             if (more > 0)
               Positioned(
@@ -65,7 +69,11 @@ class MuAvatarStack extends StatelessWidget {
                   ),
                   child: Text(
                     '+${more > 99 ? 99 : more}',
-                    style: mu.text.codeSm.copyWith(color: c.onNight, fontSize: size * 0.34, height: 1),
+                    style: mu.text.codeSm.copyWith(
+                      color: c.onNight,
+                      fontSize: size * 0.34,
+                      height: 1,
+                    ),
                   ),
                 ),
               ),
@@ -80,7 +88,13 @@ class MuAvatarStack extends StatelessWidget {
 /// "Arjun, Sneha & 9 others from CET". Naming beats a bare "+11".
 class MuPeerLine extends StatelessWidget {
   /// [names] are the people we can name; [total] is everyone counted.
-  const MuPeerLine({required this.names, required this.total, this.urls = const [], this.scope, super.key});
+  const MuPeerLine({
+    required this.names,
+    required this.total,
+    this.urls = const [],
+    this.scope,
+    super.key,
+  });
 
   /// Named people, in display order.
   final List<String> names;
@@ -117,12 +131,19 @@ class MuPeerLine extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        MuAvatarStack(names: names, urls: urls, extraCount: total - names.length.clamp(0, total)),
+        MuAvatarStack(
+          names: names,
+          urls: urls,
+          extraCount: total - names.length.clamp(0, total),
+        ),
         const SizedBox(width: MuSpacing.space2),
         Flexible(
           child: Text(
             text,
-            style: mu.text.label.copyWith(color: mu.colors.ink2, fontWeight: FontWeight.w500),
+            style: mu.text.label.copyWith(
+              color: mu.colors.ink2,
+              fontWeight: FontWeight.w500,
+            ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),

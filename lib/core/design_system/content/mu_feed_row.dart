@@ -96,7 +96,11 @@ class MuFeedRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final mu = context.mu;
     final c = mu.colors;
-    final text = mu.text.body.copyWith(fontSize: 14, height: 20 / 14, color: c.ink2);
+    final text = mu.text.body.copyWith(
+      fontSize: 14,
+      height: 20 / 14,
+      color: c.ink2,
+    );
 
     final row = Container(
       padding: const EdgeInsets.symmetric(vertical: 14),
@@ -118,9 +122,13 @@ class MuFeedRow extends StatelessWidget {
                     children: [
                       TextSpan(
                         text: subject,
-                        style: text.copyWith(color: c.ink, fontWeight: FontWeight.w600),
+                        style: text.copyWith(
+                          color: c.ink,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                      if (body != null && body!.isNotEmpty) TextSpan(text: ' $body'),
+                      if (body != null && body!.isNotEmpty)
+                        TextSpan(text: ' $body'),
                       if (unread)
                         WidgetSpan(
                           alignment: PlaceholderAlignment.middle,
@@ -129,22 +137,35 @@ class MuFeedRow extends StatelessWidget {
                             child: Container(
                               width: 7,
                               height: 7,
-                              decoration: BoxDecoration(color: c.cobalt, shape: BoxShape.circle),
+                              decoration: BoxDecoration(
+                                color: c.cobalt,
+                                shape: BoxShape.circle,
+                              ),
                             ),
                           ),
                         ),
                     ],
                   ),
                 ),
-                if (time != null) ...[const SizedBox(height: 2), Text(time!, style: mu.text.caption)],
+                if (time != null) ...[
+                  const SizedBox(height: 2),
+                  Text(time!, style: mu.text.caption),
+                ],
                 if (actions.isNotEmpty) ...[
                   const SizedBox(height: MuSpacing.space2),
-                  Wrap(spacing: MuSpacing.space2, runSpacing: MuSpacing.space2, children: actions),
+                  Wrap(
+                    spacing: MuSpacing.space2,
+                    runSpacing: MuSpacing.space2,
+                    children: actions,
+                  ),
                 ],
               ],
             ),
           ),
-          if (trailing != null) ...[const SizedBox(width: MuSpacing.space2), trailing!],
+          if (trailing != null) ...[
+            const SizedBox(width: MuSpacing.space2),
+            trailing!,
+          ],
         ],
       ),
     );
@@ -172,7 +193,10 @@ class MuFeedAmount extends StatelessWidget {
     final mu = context.mu;
     return Text(
       text,
-      style: mu.text.code.copyWith(color: mu.colors.voltText, fontWeight: FontWeight.w700),
+      style: mu.text.code.copyWith(
+        color: mu.colors.voltText,
+        fontWeight: FontWeight.w700,
+      ),
     );
   }
 }
@@ -187,8 +211,14 @@ class MuFeedGroup extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: MuSpacing.space4, vertical: MuSpacing.space1),
-      decoration: BoxDecoration(color: context.mu.colors.surface, borderRadius: BorderRadius.circular(MuRadii.card)),
+      padding: const EdgeInsets.symmetric(
+        horizontal: MuSpacing.space4,
+        vertical: MuSpacing.space1,
+      ),
+      decoration: BoxDecoration(
+        color: context.mu.colors.surface,
+        borderRadius: BorderRadius.circular(MuRadii.card),
+      ),
       clipBehavior: Clip.antiAlias,
       child: Column(children: children),
     );

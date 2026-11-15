@@ -7,7 +7,8 @@ part 'user_preferences_controller.g.dart';
 @riverpod
 class UserPreferencesController extends _$UserPreferencesController {
   @override
-  Future<UserPreferences> build() => ref.watch(profileRepositoryProvider).getUserPreferences();
+  Future<UserPreferences> build() =>
+      ref.watch(profileRepositoryProvider).getUserPreferences();
 
   Future<void> save({
     List<String>? domains,

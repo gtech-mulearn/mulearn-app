@@ -26,10 +26,16 @@ class LearningCirclesScreen extends ConsumerStatefulWidget {
   const LearningCirclesScreen({super.key});
 
   @override
-  ConsumerState<LearningCirclesScreen> createState() => _LearningCirclesScreenState();
+  ConsumerState<LearningCirclesScreen> createState() =>
+      _LearningCirclesScreenState();
 }
 
-const _statuses = [('not_joined', 'Not joined'), (null, 'All'), ('joined', 'Joined'), ('pending', 'Pending')];
+const _statuses = [
+  ('not_joined', 'Not joined'),
+  (null, 'All'),
+  ('joined', 'Joined'),
+  ('pending', 'Pending'),
+];
 
 class _LearningCirclesScreenState extends ConsumerState<LearningCirclesScreen> {
   final _scrollController = ScrollController();
@@ -55,9 +61,18 @@ class _LearningCirclesScreenState extends ConsumerState<LearningCirclesScreen> {
   }
 
   Future<void> _pickInterestGroup() async {
-    final picked = await showMuSheet<({String? id})>(context, builder: (_) => _IgPickerSheet(selected: _filter.igId));
+    final picked = await showMuSheet<({String? id})>(
+      context,
+      builder: (_) => _IgPickerSheet(selected: _filter.igId),
+    );
     if (picked != null && mounted) {
-      _setFilter(CircleFilter(status: _filter.status, igId: picked.id, search: _filter.search));
+      _setFilter(
+        CircleFilter(
+          status: _filter.status,
+          igId: picked.id,
+          search: _filter.search,
+        ),
+      );
     }
   }
 
@@ -72,7 +87,8 @@ class _LearningCirclesScreenState extends ConsumerState<LearningCirclesScreen> {
     // After a failed page, only the explicit "Try again" retries — otherwise
     // every scroll frame would fire another request while offline.
     if (paged == null || paged.loadMoreError != null) return;
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
       ref.read(circlesListControllerProvider(_filter).notifier).loadMore();
     }
   }
@@ -87,7 +103,9 @@ class _LearningCirclesScreenState extends ConsumerState<LearningCirclesScreen> {
 
   Future<void> _requestToJoin(LearningCircle circle) async {
     setState(() => _requesting = circle.id);
-    await ref.read(circleActionsControllerProvider.notifier).requestToJoin(circle.id);
+    await ref
+        .read(circleActionsControllerProvider.notifier)
+        .requestToJoin(circle.id);
     if (!mounted) return;
     final state = ref.read(circleActionsControllerProvider);
     setState(() {
@@ -96,7 +114,9 @@ class _LearningCirclesScreenState extends ConsumerState<LearningCirclesScreen> {
     });
     MuToast.show(
       context,
-      message: state.hasError ? ApiException.messageFor(state.error!) : 'Request sent to the circle lead.',
+      message: state.hasError
+          ? ApiException.messageFor(state.error!)
+          : 'Request sent to the circle lead.',
       type: state.hasError ? MuToastType.error : MuToastType.success,
     );
   }
@@ -105,7 +125,12 @@ class _LearningCirclesScreenState extends ConsumerState<LearningCirclesScreen> {
   Widget _actionFor(LearningCircle circle) {
     void open() => context.push(RoutePaths.learningCircleDetailPath(circle.id));
     if (_filter.status == 'joined') {
-      return MuButton(label: 'Open', variant: MuButtonVariant.outline, size: MuButtonSize.small, onPressed: open);
+      return MuButton(
+        label: 'Open',
+        variant: MuButtonVariant.outline,
+        size: MuButtonSize.small,
+        onPressed: open,
+      );
     }
     if (_filter.status == 'pending' || _requested.contains(circle.id)) {
       return const MuButton(
@@ -131,7 +156,9 @@ class _LearningCirclesScreenState extends ConsumerState<LearningCirclesScreen> {
     final c = mu.colors;
     final myCirclesState = ref.watch(myCirclesProvider);
     final circlesState = ref.watch(circlesListControllerProvider(_filter));
-    final invites = ref.watch(myPendingCircleInvitesProvider).value ?? const <ReceivedCircleInvite>[];
+    final invites =
+        ref.watch(myPendingCircleInvitesProvider).value ??
+        const <ReceivedCircleInvite>[];
     final actionBusy = ref.watch(circleActionsControllerProvider).isLoading;
 
     final paged = circlesState.value;
@@ -139,7 +166,12 @@ class _LearningCirclesScreenState extends ConsumerState<LearningCirclesScreen> {
     final mine = myCirclesState.value ?? const <LearningCircle>[];
     final igLabel = _filter.igId == null
         ? 'Interest group'
-        : ref.watch(circleIgOptionsProvider).value?.where((o) => o.id == _filter.igId).firstOrNull?.label ??
+        : ref
+                  .watch(circleIgOptionsProvider)
+                  .value
+                  ?.where((o) => o.id == _filter.igId)
+                  .firstOrNull
+                  ?.label ??
               'Interest group';
     final hasMore = paged?.hasMore ?? false;
     final filtered = _filter != CircleFilter.discover;
@@ -148,7 +180,10 @@ class _LearningCirclesScreenState extends ConsumerState<LearningCirclesScreen> {
     if (circlesState.hasError && paged == null) {
       results = Padding(
         padding: const EdgeInsets.symmetric(vertical: MuSpacing.space4),
-        child: Text(ApiException.messageFor(circlesState.error!), style: mu.text.body.copyWith(color: c.danger)),
+        child: Text(
+          ApiException.messageFor(circlesState.error!),
+          style: mu.text.body.copyWith(color: c.danger),
+        ),
       );
     } else if (paged == null) {
       results = const Padding(
@@ -162,9 +197,15 @@ class _LearningCirclesScreenState extends ConsumerState<LearningCirclesScreen> {
         variant: MuStateVariant.noResults,
         size: MuStateSize.sm,
         title: filtered ? null : 'No Learning Circles Yet',
-        description: filtered ? null : 'Be the first to create a Learning Circle and start collaborating with peers!',
+        description: filtered
+            ? null
+            : 'Be the first to create a Learning Circle and start collaborating with peers!',
         action: filtered
-            ? MuButton(label: 'Clear filters', variant: MuButtonVariant.ghost, onPressed: _clearFilters)
+            ? MuButton(
+                label: 'Clear filters',
+                variant: MuButtonVariant.ghost,
+                onPressed: _clearFilters,
+              )
             : null,
       );
     } else {
@@ -178,18 +219,26 @@ class _LearningCirclesScreenState extends ConsumerState<LearningCirclesScreen> {
               total: discover[i].totalMembers,
               igName: discover[i].ig,
               caption: [
-                if (discover[i].org != null && discover[i].org!.isNotEmpty) discover[i].org!,
-                if (discover[i].totalMembers == 1) '1 member' else '${discover[i].totalMembers} members',
+                if (discover[i].org != null && discover[i].org!.isNotEmpty)
+                  discover[i].org!,
+                if (discover[i].totalMembers == 1)
+                  '1 member'
+                else
+                  '${discover[i].totalMembers} members',
               ].join(' · '),
               action: _actionFor(discover[i]),
-              onTap: () => context.push(RoutePaths.learningCircleDetailPath(discover[i].id)),
+              onTap: () => context.push(
+                RoutePaths.learningCircleDetailPath(discover[i].id),
+              ),
             ),
           ],
           if (hasMore)
             MuLoadMoreFooter(
               isLoading: paged.isLoadingMore,
               error: paged.loadMoreError,
-              onRetry: () => ref.read(circlesListControllerProvider(_filter).notifier).loadMore(),
+              onRetry: () => ref
+                  .read(circlesListControllerProvider(_filter).notifier)
+                  .loadMore(),
             ),
         ],
       );
@@ -207,19 +256,31 @@ class _LearningCirclesScreenState extends ConsumerState<LearningCirclesScreen> {
           ]),
           child: ListView(
             controller: _scrollController,
-            physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-            padding: const EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space2, MuSpacing.space5, 0),
+            physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics(),
+            ),
+            padding: const EdgeInsets.fromLTRB(
+              MuSpacing.space5,
+              MuSpacing.space2,
+              MuSpacing.space5,
+              0,
+            ),
             children: [
               Row(
                 children: [
                   if (Navigator.of(context).canPop())
-                    MuIconButton(icon: LucideIcons.arrowLeft, tooltip: 'Back', onPressed: () => context.pop()),
+                    MuIconButton(
+                      icon: LucideIcons.arrowLeft,
+                      tooltip: 'Back',
+                      onPressed: () => context.pop(),
+                    ),
                   const Spacer(),
                   MuButton(
                     label: 'Create',
                     icon: LucideIcons.plus,
                     size: MuButtonSize.small,
-                    onPressed: () => context.push(RoutePaths.createLearningCircle),
+                    onPressed: () =>
+                        context.push(RoutePaths.createLearningCircle),
                   ),
                 ],
               ),
@@ -229,8 +290,14 @@ class _LearningCirclesScreenState extends ConsumerState<LearningCirclesScreen> {
                 child: Text.rich(
                   TextSpan(
                     children: [
-                      TextSpan(text: 'Learn\n', style: mu.text.displayLight.copyWith(fontSize: 36)),
-                      TextSpan(text: 'together', style: mu.text.display.copyWith(fontSize: 36)),
+                      TextSpan(
+                        text: 'Learn\n',
+                        style: mu.text.displayLight.copyWith(fontSize: 36),
+                      ),
+                      TextSpan(
+                        text: 'together',
+                        style: mu.text.display.copyWith(fontSize: 36),
+                      ),
                     ],
                   ),
                 ),
@@ -242,11 +309,19 @@ class _LearningCirclesScreenState extends ConsumerState<LearningCirclesScreen> {
               ),
 
               if (invites.isNotEmpty) ...[
-                _Eyebrow(invites.length == 1 ? 'AN INVITATION' : 'INVITATIONS · ${invites.length}'),
+                _Eyebrow(
+                  invites.length == 1
+                      ? 'AN INVITATION'
+                      : 'INVITATIONS · ${invites.length}',
+                ),
                 MuFeedGroup(
                   children: [
                     for (var i = 0; i < invites.length; i++)
-                      _InviteRow(invite: invites[i], busy: actionBusy, last: i == invites.length - 1),
+                      _InviteRow(
+                        invite: invites[i],
+                        busy: actionBusy,
+                        last: i == invites.length - 1,
+                      ),
                   ],
                 ),
               ],
@@ -254,7 +329,9 @@ class _LearningCirclesScreenState extends ConsumerState<LearningCirclesScreen> {
               if (myCirclesState.isLoading && mine.isEmpty)
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: MuSpacing.space6),
-                  child: Center(child: MuDotsLoader(label: 'Loading your circles…')),
+                  child: Center(
+                    child: MuDotsLoader(label: 'Loading your circles…'),
+                  ),
                 ),
               if (mine.isNotEmpty) ...[
                 _Eyebrow(mine.length > 1 ? 'YOUR CIRCLES' : 'YOUR CIRCLE'),
@@ -265,7 +342,11 @@ class _LearningCirclesScreenState extends ConsumerState<LearningCirclesScreen> {
               ],
 
               const _Eyebrow('DISCOVER CIRCLES'),
-              MuSearchField(controller: _searchController, hint: 'Search circles', onChanged: _onSearchChanged),
+              MuSearchField(
+                controller: _searchController,
+                hint: 'Search circles',
+                onChanged: _onSearchChanged,
+              ),
               // A handful of chips: built all at once so each is reachable.
               SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
@@ -277,12 +358,23 @@ class _LearningCirclesScreenState extends ConsumerState<LearningCirclesScreen> {
                       MuFilterChip(
                         label: label,
                         selected: _filter.status == status,
-                        onTap: () =>
-                            _setFilter(CircleFilter(status: status, igId: _filter.igId, search: _filter.search)),
+                        onTap: () => _setFilter(
+                          CircleFilter(
+                            status: status,
+                            igId: _filter.igId,
+                            search: _filter.search,
+                          ),
+                        ),
                       ),
                       const SizedBox(width: MuSpacing.space2),
                     ],
-                    Center(child: Container(width: 1, height: 24, color: c.lineStrong)),
+                    Center(
+                      child: Container(
+                        width: 1,
+                        height: 24,
+                        color: c.lineStrong,
+                      ),
+                    ),
                     const SizedBox(width: MuSpacing.space2),
                     MuFilterChip(
                       label: igLabel,
@@ -310,21 +402,37 @@ class _Eyebrow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(top: MuSpacing.space8, bottom: MuSpacing.space3),
-    child: Semantics(header: true, child: Text(text, style: context.mu.text.eyebrow)),
+    padding: const EdgeInsets.only(
+      top: MuSpacing.space8,
+      bottom: MuSpacing.space3,
+    ),
+    child: Semantics(
+      header: true,
+      child: Text(text, style: context.mu.text.eyebrow),
+    ),
   );
 }
 
 /// An invitation to a circle, answered in the row.
 class _InviteRow extends ConsumerWidget {
-  const _InviteRow({required this.invite, required this.busy, required this.last});
+  const _InviteRow({
+    required this.invite,
+    required this.busy,
+    required this.last,
+  });
 
   final ReceivedCircleInvite invite;
   final bool busy;
   final bool last;
 
-  Future<void> _respond(BuildContext context, WidgetRef ref, {required bool accept}) async {
-    await ref.read(circleActionsControllerProvider.notifier).respondToInvite(invite.linkId, accept: accept);
+  Future<void> _respond(
+    BuildContext context,
+    WidgetRef ref, {
+    required bool accept,
+  }) async {
+    await ref
+        .read(circleActionsControllerProvider.notifier)
+        .respondToInvite(invite.linkId, accept: accept);
     if (!context.mounted) return;
     final state = ref.read(circleActionsControllerProvider);
     MuToast.show(
@@ -342,7 +450,9 @@ class _InviteRow extends ConsumerWidget {
     return MuFeedRow(
       leading: const MuFeedIcon(LucideIcons.mail, tone: MuFeedTone.event),
       subject: invite.circleTitle,
-      body: invite.isLeadInvite ? 'wants you to lead it.' : (who != null ? 'from $who' : null),
+      body: invite.isLeadInvite
+          ? 'wants you to lead it.'
+          : (who != null ? 'from $who' : null),
       time: invite.igName,
       divider: !last,
       actions: [
@@ -370,22 +480,36 @@ class _MyCircleCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final members = ref.watch(circleMembersProvider(circle.id)).value?.members ?? const <CircleMember>[];
+    final members =
+        ref.watch(circleMembersProvider(circle.id)).value?.members ??
+        const <CircleMember>[];
     final myMuid = ref.watch(currentUserMuidProvider).value;
-    final isLead = myMuid != null && members.any((m) => m.muid == myMuid && m.isLeader);
+    final isLead =
+        myMuid != null && members.any((m) => m.muid == myMuid && m.isLeader);
     void open() => context.push(RoutePaths.learningCircleDetailPath(circle.id));
 
     return MuCircleCard(
       title: circle.title,
       total: circle.totalMembers,
       igName: circle.ig,
-      members: [for (final m in members.take(5)) (name: m.fullName, url: m.profilePicUrl)],
+      members: [
+        for (final m in members.take(5))
+          (name: m.fullName, url: m.profilePicUrl),
+      ],
       badge: isLead ? const MuPill('You lead', tone: MuPillTone.volt) : null,
       caption: [
         if (circle.org != null && circle.org!.isNotEmpty) circle.org!,
-        if (circle.totalMembers == 1) '1 member' else '${circle.totalMembers} members',
+        if (circle.totalMembers == 1)
+          '1 member'
+        else
+          '${circle.totalMembers} members',
       ].join(' · '),
-      action: MuButton(label: 'Open', variant: MuButtonVariant.outline, size: MuButtonSize.small, onPressed: open),
+      action: MuButton(
+        label: 'Open',
+        variant: MuButtonVariant.outline,
+        size: MuButtonSize.small,
+        onPressed: open,
+      ),
       onTap: open,
     );
   }
@@ -420,8 +544,18 @@ class _IgPickerSheet extends ConsumerWidget {
             ),
             child: Row(
               children: [
-                Expanded(child: Text(label, style: on ? mu.text.bodyStrong : mu.text.body)),
-                if (on) Icon(LucideIcons.check, size: MuSizes.iconMd, color: c.cobaltText),
+                Expanded(
+                  child: Text(
+                    label,
+                    style: on ? mu.text.bodyStrong : mu.text.body,
+                  ),
+                ),
+                if (on)
+                  Icon(
+                    LucideIcons.check,
+                    size: MuSizes.iconMd,
+                    color: c.cobaltText,
+                  ),
               ],
             ),
           ),
@@ -430,14 +564,24 @@ class _IgPickerSheet extends ConsumerWidget {
     }
 
     return ConstrainedBox(
-      constraints: BoxConstraints(maxHeight: MediaQuery.sizeOf(context).height * 0.75),
+      constraints: BoxConstraints(
+        maxHeight: MediaQuery.sizeOf(context).height * 0.75,
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(MuSpacing.space5, 0, MuSpacing.space5, MuSpacing.space3),
-            child: Semantics(header: true, child: Text('Interest group', style: mu.text.title2)),
+            padding: const EdgeInsets.fromLTRB(
+              MuSpacing.space5,
+              0,
+              MuSpacing.space5,
+              MuSpacing.space3,
+            ),
+            child: Semantics(
+              header: true,
+              child: Text('Interest group', style: mu.text.title2),
+            ),
           ),
           Flexible(
             child: options.when(
@@ -447,12 +591,18 @@ class _IgPickerSheet extends ConsumerWidget {
               ),
               error: (error, _) => Padding(
                 padding: const EdgeInsets.all(MuSpacing.space5),
-                child: Text(ApiException.messageFor(error), style: mu.text.body.copyWith(color: c.danger)),
+                child: Text(
+                  ApiException.messageFor(error),
+                  style: mu.text.body.copyWith(color: c.danger),
+                ),
               ),
               data: (list) => ListView(
                 shrinkWrap: true,
                 padding: const EdgeInsets.only(bottom: MuSpacing.space4),
-                children: [row('Any interest group', null), for (final o in list) row(o.label, o.id)],
+                children: [
+                  row('Any interest group', null),
+                  for (final o in list) row(o.label, o.id),
+                ],
               ),
             ),
           ),

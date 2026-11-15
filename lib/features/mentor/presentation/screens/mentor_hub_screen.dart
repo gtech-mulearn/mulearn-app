@@ -32,7 +32,8 @@ class MentorHubScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mu = context.mu;
-    final canCreate = ref.watch(sessionTargetsProvider).value?.isNotEmpty ?? false;
+    final canCreate =
+        ref.watch(sessionTargetsProvider).value?.isNotEmpty ?? false;
     return MuWorkspacePage(
       body: MuRefresh(
         onRefresh: () => Future.wait([
@@ -44,10 +45,18 @@ class MentorHubScreen extends ConsumerWidget {
           ref.refresh(personaControllerProvider.future),
         ]),
         child: ListView(
-          physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+          physics: const BouncingScrollPhysics(
+            parent: AlwaysScrollableScrollPhysics(),
+          ),
           padding: muListPadding,
           children: [
-            Semantics(header: true, child: Text('Mentor workspace', style: mu.text.display.copyWith(fontSize: 32))),
+            Semantics(
+              header: true,
+              child: Text(
+                'Mentor workspace',
+                style: mu.text.display.copyWith(fontSize: 32),
+              ),
+            ),
             const ActingAsMenu(),
             const SizedBox(height: MuSpacing.space4),
             Row(
@@ -58,7 +67,9 @@ class MentorHubScreen extends ConsumerWidget {
                     icon: LucideIcons.plus,
                     block: true,
                     // Off until the mentor has somewhere to create one.
-                    onPressed: canCreate ? () => context.push(RoutePaths.mentorSessionNew) : null,
+                    onPressed: canCreate
+                        ? () => context.push(RoutePaths.mentorSessionNew)
+                        : null,
                   ),
                 ),
                 const SizedBox(width: MuSpacing.space2),
@@ -78,8 +89,14 @@ class MentorHubScreen extends ConsumerWidget {
                 .when(
                   skipError: true,
                   skipLoadingOnReload: true,
-                  loading: () => const SizedBox(height: 96, child: Center(child: MuDotsLoader())),
-                  error: (e, _) => _SectionError(e, () => ref.invalidate(mentorNextSessionsProvider)),
+                  loading: () => const SizedBox(
+                    height: 96,
+                    child: Center(child: MuDotsLoader()),
+                  ),
+                  error: (e, _) => _SectionError(
+                    e,
+                    () => ref.invalidate(mentorNextSessionsProvider),
+                  ),
                   data: (sessions) => sessions.isEmpty
                       ? const MuEmptyLine('No upcoming sessions.')
                       : Column(
@@ -90,8 +107,14 @@ class MentorHubScreen extends ConsumerWidget {
                               const SizedBox(height: MuSpacing.space3),
                               MuFeedGroup(
                                 children: [
-                                  for (final (i, s) in sessions.skip(1).take(2).indexed)
-                                    _SessionRow(session: s, last: i == sessions.skip(1).take(2).length - 1),
+                                  for (final (i, s)
+                                      in sessions.skip(1).take(2).indexed)
+                                    _SessionRow(
+                                      session: s,
+                                      last:
+                                          i ==
+                                          sessions.skip(1).take(2).length - 1,
+                                    ),
                                 ],
                               ),
                             ],
@@ -101,9 +124,14 @@ class MentorHubScreen extends ConsumerWidget {
             const SizedBox(height: MuSpacing.space4),
             MuFeedGroup(
               children: [
-                _RequestsRow(count: ref.watch(mentorRequestCountProvider).value),
+                _RequestsRow(
+                  count: ref.watch(mentorRequestCountProvider).value,
+                ),
                 MuFeedRow(
-                  leading: const MuFeedIcon(LucideIcons.clock, tone: MuFeedTone.event),
+                  leading: const MuFeedIcon(
+                    LucideIcons.clock,
+                    tone: MuFeedTone.event,
+                  ),
                   subject: 'Weekly availability',
                   time: 'When learners can book you',
                   trailing: const _Chevron(),
@@ -119,7 +147,10 @@ class MentorHubScreen extends ConsumerWidget {
                   skipError: true,
                   skipLoadingOnReload: true,
                   loading: () => const SizedBox.shrink(),
-                  error: (e, _) => _SectionError(e, () => ref.invalidate(mentorProfileCompletionProvider)),
+                  error: (e, _) => _SectionError(
+                    e,
+                    () => ref.invalidate(mentorProfileCompletionProvider),
+                  ),
                   data: (c) => _CompletionCard(completion: c),
                 ),
             const MuSectionEyebrow('Your mentoring'),
@@ -128,8 +159,14 @@ class MentorHubScreen extends ConsumerWidget {
                 .when(
                   skipError: true,
                   skipLoadingOnReload: true,
-                  loading: () => const SizedBox(height: 96, child: Center(child: MuDotsLoader())),
-                  error: (e, _) => _SectionError(e, () => ref.invalidate(mentorAnalyticsProvider)),
+                  loading: () => const SizedBox(
+                    height: 96,
+                    child: Center(child: MuDotsLoader()),
+                  ),
+                  error: (e, _) => _SectionError(
+                    e,
+                    () => ref.invalidate(mentorAnalyticsProvider),
+                  ),
                   data: (a) => _Totals(analytics: a),
                 ),
             const MuSectionEyebrow('Your scopes'),
@@ -138,13 +175,21 @@ class MentorHubScreen extends ConsumerWidget {
                 .when(
                   skipError: true,
                   skipLoadingOnReload: true,
-                  loading: () => const SizedBox(height: 96, child: Center(child: MuDotsLoader())),
-                  error: (e, _) => _SectionError(e, () => ref.invalidate(mentorOverviewProvider)),
+                  loading: () => const SizedBox(
+                    height: 96,
+                    child: Center(child: MuDotsLoader()),
+                  ),
+                  error: (e, _) => _SectionError(
+                    e,
+                    () => ref.invalidate(mentorOverviewProvider),
+                  ),
                   data: (scopes) {
                     if (scopes.isEmpty) return const _NoScope();
                     // The scope you act in comes first.
                     final active = ref.watch(personaControllerProvider).value;
-                    final activeId = active != null && active.isMentor ? active.scopeId : null;
+                    final activeId = active != null && active.isMentor
+                        ? active.scopeId
+                        : null;
                     final ordered = [
                       ...scopes.where((s) => s.id == activeId),
                       ...scopes.where((s) => s.id != activeId),
@@ -153,7 +198,10 @@ class MentorHubScreen extends ConsumerWidget {
                       children: [
                         for (var i = 0; i < ordered.length; i++) ...[
                           if (i > 0) const SizedBox(height: MuSpacing.space3),
-                          _ScopeCard(scope: ordered[i], active: ordered[i].id == activeId),
+                          _ScopeCard(
+                            scope: ordered[i],
+                            active: ordered[i].id == activeId,
+                          ),
                         ],
                       ],
                     );
@@ -170,8 +218,11 @@ class _Chevron extends StatelessWidget {
   const _Chevron();
 
   @override
-  Widget build(BuildContext context) =>
-      Icon(LucideIcons.chevronRight, size: MuSizes.iconSm + 2, color: context.mu.colors.ink3);
+  Widget build(BuildContext context) => Icon(
+    LucideIcons.chevronRight,
+    size: MuSizes.iconSm + 2,
+    color: context.mu.colors.ink3,
+  );
 }
 
 class _SectionError extends StatelessWidget {
@@ -186,9 +237,17 @@ class _SectionError extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: Text(ApiException.messageFor(error), style: mu.text.body.copyWith(color: mu.colors.ink2)),
+          child: Text(
+            ApiException.messageFor(error),
+            style: mu.text.body.copyWith(color: mu.colors.ink2),
+          ),
         ),
-        MuButton(label: 'Retry', variant: MuButtonVariant.ghost, size: MuButtonSize.small, onPressed: onRetry),
+        MuButton(
+          label: 'Retry',
+          variant: MuButtonVariant.ghost,
+          size: MuButtonSize.small,
+          onPressed: onRetry,
+        ),
       ],
     );
   }
@@ -206,26 +265,44 @@ class _NextSession extends ConsumerWidget {
     final mu = context.mu;
     final c = mu.colors;
     final now = ref.watch(clockProvider)().toLocal();
-    final when = formatWhen(starts: session.startsAt.toLocal(), ends: session.endsAt.toLocal(), now: now);
+    final when = formatWhen(
+      starts: session.startsAt.toLocal(),
+      ends: session.endsAt.toLocal(),
+      now: now,
+    );
     return Semantics(
       container: true,
       button: true,
       label: '${session.title}, $when',
       explicitChildNodes: true,
       child: MuPressable(
-        onTap: () => context.push(RoutePaths.mentorSessionDetailPath(session.id)),
+        onTap: () =>
+            context.push(RoutePaths.mentorSessionDetailPath(session.id)),
         pressedScale: 0.99,
         child: Container(
           padding: const EdgeInsets.all(MuSpacing.space5),
-          decoration: BoxDecoration(color: c.night, borderRadius: BorderRadius.circular(MuRadii.card)),
+          decoration: BoxDecoration(
+            color: c.night,
+            borderRadius: BorderRadius.circular(MuRadii.card),
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Row(
                 children: [
-                  Flexible(child: MuPill(when, tone: MuPillTone.volt, icon: LucideIcons.clock)),
+                  Flexible(
+                    child: MuPill(
+                      when,
+                      tone: MuPillTone.volt,
+                      icon: LucideIcons.clock,
+                    ),
+                  ),
                   const Spacer(),
-                  Icon(LucideIcons.chevronRight, size: MuSizes.iconSm + 2, color: c.onNight2),
+                  Icon(
+                    LucideIcons.chevronRight,
+                    size: MuSizes.iconSm + 2,
+                    color: c.onNight2,
+                  ),
                 ],
               ),
               const SizedBox(height: MuSpacing.space4),
@@ -237,7 +314,10 @@ class _NextSession extends ConsumerWidget {
               ),
               const SizedBox(height: MuSpacing.space1),
               Text(
-                [sessionModeLabel(session.mode), if (session.entityName.isNotEmpty) session.entityName].join(' · '),
+                [
+                  sessionModeLabel(session.mode),
+                  if (session.entityName.isNotEmpty) session.entityName,
+                ].join(' · '),
                 style: mu.text.body.copyWith(color: c.onNight2),
               ),
               MeetingLinkActions(session: session, compact: true),
@@ -259,10 +339,17 @@ class _SessionRow extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final now = ref.watch(clockProvider)().toLocal();
     return MuFeedRow(
-      leading: const MuFeedIcon(LucideIcons.calendarDays, tone: MuFeedTone.event),
+      leading: const MuFeedIcon(
+        LucideIcons.calendarDays,
+        tone: MuFeedTone.event,
+      ),
       subject: session.title,
       time: [
-        formatWhen(starts: session.startsAt.toLocal(), ends: session.endsAt.toLocal(), now: now),
+        formatWhen(
+          starts: session.startsAt.toLocal(),
+          ends: session.endsAt.toLocal(),
+          now: now,
+        ),
         sessionModeLabel(session.mode),
       ].join(' · '),
       trailing: const _Chevron(),
@@ -282,14 +369,21 @@ class _RequestsRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final waiting = (count ?? 0) > 0;
     return MuFeedRow(
-      leading: MuFeedIcon(LucideIcons.inbox, tone: waiting ? MuFeedTone.pending : MuFeedTone.neutral),
+      leading: MuFeedIcon(
+        LucideIcons.inbox,
+        tone: waiting ? MuFeedTone.pending : MuFeedTone.neutral,
+      ),
       subject: 'Session requests',
       time: count == null ? null : 'Learners asking for time with you',
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           if (count != null && waiting)
-            MuPill('$count waiting', tone: MuPillTone.warning, icon: LucideIcons.bell)
+            MuPill(
+              '$count waiting',
+              tone: MuPillTone.warning,
+              icon: LucideIcons.bell,
+            )
           else if (count != null)
             Text('None waiting', style: context.mu.text.caption),
           const SizedBox(width: MuSpacing.space1),
@@ -333,7 +427,10 @@ class _CompletionCard extends ConsumerWidget {
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 4),
-                  child: Text('of your mentor profile is done', style: mu.text.caption),
+                  child: Text(
+                    'of your mentor profile is done',
+                    style: mu.text.caption,
+                  ),
                 ),
               ),
             ],
@@ -352,8 +449,11 @@ class _CompletionCard extends ConsumerWidget {
               variant: MuButtonVariant.ghost,
               size: MuButtonSize.small,
               // The mentor profile is edited on the web dashboard.
-              onPressed: () =>
-                  ref.read(openExternalProvider)(Uri.parse('${FlavorConfig.instance.dashboardUrl}/dashboard/profile')),
+              onPressed: () => ref.read(openExternalProvider)(
+                Uri.parse(
+                  '${FlavorConfig.instance.dashboardUrl}/dashboard/profile',
+                ),
+              ),
             ),
           ],
         ],
@@ -373,17 +473,26 @@ class _Totals extends StatelessWidget {
     return Row(
       children: [
         Expanded(
-          child: MuStatTile(label: 'Sessions done', value: muGrouped(analytics.sessionsCompleted)),
+          child: MuStatTile(
+            label: 'Sessions done',
+            value: muGrouped(analytics.sessionsCompleted),
+          ),
         ),
         const SizedBox(width: MuSpacing.space2),
         Expanded(
-          child: MuStatTile(label: 'Karma earned', value: muGrouped(analytics.karmaEarned.toInt())),
+          child: MuStatTile(
+            label: 'Karma earned',
+            value: muGrouped(analytics.karmaEarned.toInt()),
+          ),
         ),
         const SizedBox(width: MuSpacing.space2),
         Expanded(
           child: rating == null
               ? const MuStatTile(label: 'No ratings yet', value: '—')
-              : MuStatTile(label: 'Rating (${analytics.ratingCount})', value: '★ ${rating.toStringAsFixed(1)}'),
+              : MuStatTile(
+                  label: 'Rating (${analytics.ratingCount})',
+                  value: '★ ${rating.toStringAsFixed(1)}',
+                ),
         ),
       ],
     );
@@ -409,7 +518,12 @@ class _ScopeCard extends StatelessWidget {
           Row(
             children: [
               Expanded(child: Text(scope.name, style: mu.text.title3)),
-              if (active) const MuPill('Acting in', tone: MuPillTone.success, icon: LucideIcons.check),
+              if (active)
+                const MuPill(
+                  'Acting in',
+                  tone: MuPillTone.success,
+                  icon: LucideIcons.check,
+                ),
             ],
           ),
           Text(scopeTypeLabel(scope.type), style: mu.text.caption),
@@ -425,17 +539,28 @@ class _ScopeCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: MuSpacing.space2),
-          MuBar(value: m.totalIgLearners <= 0 ? 0 : m.activeIgLearners / m.totalIgLearners),
+          MuBar(
+            value: m.totalIgLearners <= 0
+                ? 0
+                : m.activeIgLearners / m.totalIgLearners,
+          ),
           const SizedBox(height: MuSpacing.space3),
           Wrap(
             spacing: 6,
             runSpacing: 6,
             children: [
               MuPill(
-                m.upcomingSessions == 1 ? '1 upcoming session' : '${m.upcomingSessions} upcoming sessions',
+                m.upcomingSessions == 1
+                    ? '1 upcoming session'
+                    : '${m.upcomingSessions} upcoming sessions',
                 icon: LucideIcons.calendar,
               ),
-              MuPill(m.igLearningCircles == 1 ? '1 circle' : '${m.igLearningCircles} circles', icon: LucideIcons.users),
+              MuPill(
+                m.igLearningCircles == 1
+                    ? '1 circle'
+                    : '${m.igLearningCircles} circles',
+                icon: LucideIcons.users,
+              ),
             ],
           ),
         ],

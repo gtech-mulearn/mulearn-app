@@ -17,7 +17,8 @@ class MuOption {
   final String label;
 
   @override
-  bool operator ==(Object other) => other is MuOption && other.id == id && other.label == label;
+  bool operator ==(Object other) =>
+      other is MuOption && other.id == id && other.label == label;
 
   @override
   int get hashCode => Object.hash(id, label);
@@ -136,7 +137,13 @@ class MuSelectField extends StatelessWidget {
               dimension: MuSizes.touchMin,
               child: Center(
                 child: loading
-                    ? SizedBox.square(dimension: 18, child: CircularProgressIndicator(strokeWidth: 2, color: c.ink3))
+                    ? SizedBox.square(
+                        dimension: 18,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: c.ink3,
+                        ),
+                      )
                     : Icon(LucideIcons.chevronDown, size: 20, color: c.ink3),
               ),
             ),
@@ -144,7 +151,10 @@ class MuSelectField extends StatelessWidget {
               chosen ?? hint,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: mu.text.body.copyWith(fontSize: 16, color: chosen == null ? c.ink3 : c.ink),
+              style: mu.text.body.copyWith(
+                fontSize: 16,
+                color: chosen == null ? c.ink3 : c.ink,
+              ),
             ),
           ),
         );
@@ -180,7 +190,11 @@ class _SelectSheetState extends State<_SelectSheet> {
     final mu = context.mu;
     final c = mu.colors;
     final q = _query.trim().toLowerCase();
-    final shown = q.isEmpty ? widget.options : widget.options.where((o) => o.label.toLowerCase().contains(q)).toList();
+    final shown = q.isEmpty
+        ? widget.options
+        : widget.options
+              .where((o) => o.label.toLowerCase().contains(q))
+              .toList();
     final searchable = widget.options.length > 7;
 
     Widget row(String id, String text, {IconData? icon}) {
@@ -195,10 +209,16 @@ class _SelectSheetState extends State<_SelectSheet> {
           onTap: () => Navigator.of(context).pop(id),
           child: Container(
             constraints: const BoxConstraints(minHeight: 52),
-            padding: const EdgeInsets.symmetric(horizontal: MuSpacing.space5, vertical: MuSpacing.space2),
+            padding: const EdgeInsets.symmetric(
+              horizontal: MuSpacing.space5,
+              vertical: MuSpacing.space2,
+            ),
             child: Row(
               children: [
-                if (icon != null) ...[Icon(icon, size: MuSizes.iconSm, color: c.cobaltText), const SizedBox(width: 10)],
+                if (icon != null) ...[
+                  Icon(icon, size: MuSizes.iconSm, color: c.cobaltText),
+                  const SizedBox(width: 10),
+                ],
                 Expanded(
                   child: Text(
                     text,
@@ -223,12 +243,22 @@ class _SelectSheetState extends State<_SelectSheet> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(MuSpacing.space5, 0, MuSpacing.space5, MuSpacing.space3),
+            padding: const EdgeInsets.fromLTRB(
+              MuSpacing.space5,
+              0,
+              MuSpacing.space5,
+              MuSpacing.space3,
+            ),
             child: Text(widget.title, style: mu.text.title2),
           ),
           if (searchable)
             Padding(
-              padding: const EdgeInsets.fromLTRB(MuSpacing.space5, 0, MuSpacing.space5, MuSpacing.space2),
+              padding: const EdgeInsets.fromLTRB(
+                MuSpacing.space5,
+                0,
+                MuSpacing.space5,
+                MuSpacing.space2,
+              ),
               child: MuSearchField(
                 hint: 'Search ${widget.title.toLowerCase()}',
                 onChanged: (v) => setState(() => _query = v),
@@ -236,15 +266,26 @@ class _SelectSheetState extends State<_SelectSheet> {
             ),
           Expanded(
             child: ListView(
-              padding: EdgeInsets.only(bottom: MuSpacing.space5 + MediaQuery.viewInsetsOf(context).bottom),
+              padding: EdgeInsets.only(
+                bottom:
+                    MuSpacing.space5 + MediaQuery.viewInsetsOf(context).bottom,
+              ),
               children: [
                 if (shown.isEmpty)
                   Padding(
                     padding: const EdgeInsets.all(MuSpacing.space5),
-                    child: Text('Nothing matches "${_query.trim()}".', style: mu.text.body.copyWith(color: c.ink3)),
+                    child: Text(
+                      'Nothing matches "${_query.trim()}".',
+                      style: mu.text.body.copyWith(color: c.ink3),
+                    ),
                   ),
                 for (final o in shown) row(o.id, o.label),
-                if (widget.allowOther) row(muOtherOptionValue, widget.otherLabel, icon: LucideIcons.plus),
+                if (widget.allowOther)
+                  row(
+                    muOtherOptionValue,
+                    widget.otherLabel,
+                    icon: LucideIcons.plus,
+                  ),
               ],
             ),
           ),

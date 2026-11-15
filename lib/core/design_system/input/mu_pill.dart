@@ -32,7 +32,13 @@ enum MuPillTone {
 /// A 24dp read-only pill: status, a karma amount, a fact.
 class MuPill extends StatelessWidget {
   /// A pill reading [label].
-  const MuPill(this.label, {this.tone = MuPillTone.neutral, this.icon, this.mono = false, super.key});
+  const MuPill(
+    this.label, {
+    this.tone = MuPillTone.neutral,
+    this.icon,
+    this.mono = false,
+    super.key,
+  });
 
   /// Short text.
   final String label;
@@ -61,17 +67,32 @@ class MuPill extends StatelessWidget {
       MuPillTone.paper => (c.onCobalt.withValues(alpha: 0.88), c.inkPrint),
       MuPillTone.night => (c.night, c.onNight),
     };
-    final style = (mono ? mu.text.code : mu.text.label).copyWith(color: fg, fontSize: 12, height: 1);
+    final style = (mono ? mu.text.code : mu.text.label).copyWith(
+      color: fg,
+      fontSize: 12,
+      height: 1,
+    );
     return Container(
       height: 24,
       padding: const EdgeInsets.symmetric(horizontal: 10),
-      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(MuRadii.round)),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(MuRadii.round),
+      ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (icon != null) ...[Icon(icon, size: 14, color: fg), const SizedBox(width: MuSpacing.space1)],
+          if (icon != null) ...[
+            Icon(icon, size: 14, color: fg),
+            const SizedBox(width: MuSpacing.space1),
+          ],
           Flexible(
-            child: Text(label, style: style, maxLines: 1, overflow: TextOverflow.ellipsis),
+            child: Text(
+              label,
+              style: style,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
         ],
       ),

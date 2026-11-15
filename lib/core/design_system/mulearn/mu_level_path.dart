@@ -22,7 +22,13 @@ enum MuStopState {
 /// One station on the [MuLevelPath].
 class MuLevelStop {
   /// A level station.
-  const MuLevelStop({required this.number, required this.title, required this.state, this.meta, this.progress});
+  const MuLevelStop({
+    required this.number,
+    required this.title,
+    required this.state,
+    this.meta,
+    this.progress,
+  });
 
   /// Level number (1–7).
   final int number;
@@ -99,7 +105,10 @@ class _Stop extends StatelessWidget {
         height: 44,
         alignment: Alignment.center,
         decoration: BoxDecoration(color: c.cobalt, shape: BoxShape.circle),
-        child: Text('${stop.number}', style: mu.text.title3.copyWith(color: c.onCobalt)),
+        child: Text(
+          '${stop.number}',
+          style: mu.text.title3.copyWith(color: c.onCobalt),
+        ),
       ),
       MuStopState.now => Container(
         width: 44,
@@ -113,7 +122,10 @@ class _Stop extends StatelessWidget {
             BoxShadow(color: c.volt, spreadRadius: 8),
           ],
         ),
-        child: Text('${stop.number}', style: mu.text.title3.copyWith(color: c.onVolt)),
+        child: Text(
+          '${stop.number}',
+          style: mu.text.title3.copyWith(color: c.onVolt),
+        ),
       ),
       MuStopState.ahead => Container(
         width: 44,
@@ -124,27 +136,51 @@ class _Stop extends StatelessWidget {
           shape: BoxShape.circle,
           border: Border.all(color: c.lineStrong, width: 2),
         ),
-        child: Text('${stop.number}', style: mu.text.title3.copyWith(color: c.ink)),
+        child: Text(
+          '${stop.number}',
+          style: mu.text.title3.copyWith(color: c.ink),
+        ),
       ),
       MuStopState.locked => SizedBox.square(
         dimension: 44,
         child: CustomPaint(
-          painter: _HatchedDisc(fill: c.surface, stripe: c.surfaceSunk, ring: c.lineStrong),
+          painter: _HatchedDisc(
+            fill: c.surface,
+            stripe: c.surfaceSunk,
+            ring: c.lineStrong,
+          ),
           child: Center(
-            child: Text('${stop.number}', style: mu.text.title3.copyWith(color: c.ink3)),
+            child: Text(
+              '${stop.number}',
+              style: mu.text.title3.copyWith(color: c.ink3),
+            ),
           ),
         ),
       ),
     };
 
     final trailing = switch (stop.state) {
-      MuStopState.done => const MuPill('', tone: MuPillTone.success, icon: LucideIcons.check),
+      MuStopState.done => const MuPill(
+        '',
+        tone: MuPillTone.success,
+        icon: LucideIcons.check,
+      ),
       MuStopState.now => MuPill(
-        stop.progress == null ? "You're here" : "You're here · ${(stop.progress! * 100).round()}%",
+        stop.progress == null
+            ? "You're here"
+            : "You're here · ${(stop.progress! * 100).round()}%",
         tone: MuPillTone.volt,
       ),
-      MuStopState.ahead => Icon(LucideIcons.chevronRight, size: MuSizes.iconSm, color: c.ink3),
-      MuStopState.locked => Icon(LucideIcons.lock, size: MuSizes.iconSm, color: c.ink3),
+      MuStopState.ahead => Icon(
+        LucideIcons.chevronRight,
+        size: MuSizes.iconSm,
+        color: c.ink3,
+      ),
+      MuStopState.locked => Icon(
+        LucideIcons.lock,
+        size: MuSizes.iconSm,
+        color: c.ink3,
+      ),
     };
 
     final row = SizedBox(
@@ -154,14 +190,22 @@ class _Stop extends StatelessWidget {
           // Line: the half above the node is travelled once the previous
           // stop is done; the half below once this one is.
           if (!first)
-            Positioned(left: 20.5, width: 3, top: 0, height: 34, child: ColoredBox(color: arrived ? travelled : ahead)),
+            Positioned(
+              left: 20.5,
+              width: 3,
+              top: 0,
+              height: 34,
+              child: ColoredBox(color: arrived ? travelled : ahead),
+            ),
           if (!last)
             Positioned(
               left: 20.5,
               width: 3,
               top: 34,
               bottom: 0,
-              child: ColoredBox(color: stop.state == MuStopState.done ? travelled : ahead),
+              child: ColoredBox(
+                color: stop.state == MuStopState.done ? travelled : ahead,
+              ),
             ),
           Row(
             children: [
@@ -174,12 +218,20 @@ class _Stop extends StatelessWidget {
                   children: [
                     Text(
                       stop.title,
-                      style: mu.text.title3.copyWith(fontSize: 16, color: locked ? c.ink2 : c.ink),
+                      style: mu.text.title3.copyWith(
+                        fontSize: 16,
+                        color: locked ? c.ink2 : c.ink,
+                      ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
                     if (stop.meta != null)
-                      Text(stop.meta!, style: mu.text.caption, maxLines: 1, overflow: TextOverflow.ellipsis),
+                      Text(
+                        stop.meta!,
+                        style: mu.text.caption,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                   ],
                 ),
               ),
@@ -245,5 +297,6 @@ class _HatchedDisc extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_HatchedDisc old) => old.fill != fill || old.stripe != stripe || old.ring != ring;
+  bool shouldRepaint(_HatchedDisc old) =>
+      old.fill != fill || old.stripe != stripe || old.ring != ring;
 }

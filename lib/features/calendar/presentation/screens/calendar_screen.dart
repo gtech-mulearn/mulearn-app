@@ -48,7 +48,9 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
     final mu = context.mu;
     final c = mu.colors;
     final weekEnd = _week.add(const Duration(days: 7));
-    final entriesState = ref.watch(calendarEntriesProvider(start: _week, end: weekEnd));
+    final entriesState = ref.watch(
+      calendarEntriesProvider(start: _week, end: weekEnd),
+    );
     final entries = entriesState.value ?? const <CalendarEntry>[];
 
     final byDay = <DateTime, List<CalendarEntry>>{};
@@ -70,7 +72,12 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(MuSpacing.space3, MuSpacing.space2, MuSpacing.space3, 0),
+              padding: const EdgeInsets.fromLTRB(
+                MuSpacing.space3,
+                MuSpacing.space2,
+                MuSpacing.space3,
+                0,
+              ),
               child: Row(
                 children: [
                   MuIconButton(
@@ -82,7 +89,10 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                   Expanded(
                     child: Semantics(
                       header: true,
-                      child: Text('${_months[mid.month - 1]} ${mid.year}', style: mu.text.title1),
+                      child: Text(
+                        '${_months[mid.month - 1]} ${mid.year}',
+                        style: mu.text.title1,
+                      ),
                     ),
                   ),
                   if (_selected != today)
@@ -99,7 +109,12 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space4, MuSpacing.space5, 0),
+              padding: const EdgeInsets.fromLTRB(
+                MuSpacing.space5,
+                MuSpacing.space4,
+                MuSpacing.space5,
+                0,
+              ),
               child: MuDateStrip(
                 selected: _selected,
                 counts: {for (final e in byDay.entries) e.key: e.value.length},
@@ -118,20 +133,32 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                 MuSpacing.space5,
                 MuSpacing.space2,
               ),
-              child: Text(formatDayHeading(_selected, today), style: mu.text.title2),
+              child: Text(
+                formatDayHeading(_selected, today),
+                style: mu.text.title2,
+              ),
             ),
             Expanded(
               child: entriesState.hasError && entries.isEmpty
                   ? ErrorRetryView(
                       error: entriesState.error!,
-                      onRetry: () => ref.invalidate(calendarEntriesProvider(start: _week, end: weekEnd)),
+                      onRetry: () => ref.invalidate(
+                        calendarEntriesProvider(start: _week, end: weekEnd),
+                      ),
                     )
                   : entriesState.isLoading && entries.isEmpty
-                  ? const Center(child: MuDotsLoader(label: 'Loading your week…'))
+                  ? const Center(
+                      child: MuDotsLoader(label: 'Loading your week…'),
+                    )
                   : dayEntries.isEmpty
                   ? Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: MuSpacing.space5),
-                      child: Text('Nothing on this day.', style: mu.text.body.copyWith(color: c.ink3)),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: MuSpacing.space5,
+                      ),
+                      child: Text(
+                        'Nothing on this day.',
+                        style: mu.text.body.copyWith(color: c.ink3),
+                      ),
                     )
                   : ListView(
                       padding: const EdgeInsets.fromLTRB(
@@ -144,7 +171,10 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                         MuFeedGroup(
                           children: [
                             for (var i = 0; i < dayEntries.length; i++)
-                              _EntryRow(entry: dayEntries[i], last: i == dayEntries.length - 1),
+                              _EntryRow(
+                                entry: dayEntries[i],
+                                last: i == dayEntries.length - 1,
+                              ),
                           ],
                         ),
                       ],
@@ -174,9 +204,14 @@ class _EntryRow extends StatelessWidget {
         tone: isEvent ? MuFeedTone.event : MuFeedTone.done,
       ),
       subject: entry.title,
-      time: [if (start != null) formatTime(start), if (where != null && where.isNotEmpty) where].join(' · '),
+      time: [
+        if (start != null) formatTime(start),
+        if (where != null && where.isNotEmpty) where,
+      ].join(' · '),
       divider: !last,
-      onTap: isEvent ? () => context.push(RoutePaths.eventDetailPath(entry.id)) : null,
+      onTap: isEvent
+          ? () => context.push(RoutePaths.eventDetailPath(entry.id))
+          : null,
     );
   }
 }

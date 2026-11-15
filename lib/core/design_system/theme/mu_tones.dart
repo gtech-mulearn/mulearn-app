@@ -32,13 +32,14 @@ enum IgCategory {
 abstract final class MuTones {
   /// Sticker / tile fill for an IG category. Printed-matter colours: the
   /// same in both themes, always with `ink-print` text.
-  static Color forIgCategory(MuPalette p, IgCategory category) => switch (category) {
-    IgCategory.coder => p.igCoder,
-    IgCategory.maker => p.igMaker,
-    IgCategory.creative => p.igCreative,
-    IgCategory.manager => p.igManager,
-    IgCategory.others => p.igOthers,
-  };
+  static Color forIgCategory(MuPalette p, IgCategory category) =>
+      switch (category) {
+        IgCategory.coder => p.igCoder,
+        IgCategory.maker => p.igMaker,
+        IgCategory.creative => p.igCreative,
+        IgCategory.manager => p.igManager,
+        IgCategory.others => p.igOthers,
+      };
 
   /// A stable category for anything keyed by text (avatars without photos,
   /// IGs whose category the public API doesn't send). Same input, same

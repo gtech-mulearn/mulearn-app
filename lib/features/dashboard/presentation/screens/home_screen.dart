@@ -51,7 +51,9 @@ class HomeScreen extends ConsumerWidget {
         child: MuRefresh(
           onRefresh: () => _refreshAll(ref),
           child: CustomScrollView(
-            physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+            physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics(),
+            ),
             slivers: [
               SliverToBoxAdapter(
                 child: Padding(
@@ -77,7 +79,9 @@ class HomeScreen extends ConsumerWidget {
                       loading: () => const _KarmaPlaceholder(),
                       error: (error, _) => _LoadFailed(
                         message: "Couldn't load your karma",
-                        onRetry: () => ref.read(myProgressSummaryControllerProvider.notifier).refresh(),
+                        onRetry: () => ref
+                            .read(myProgressSummaryControllerProvider.notifier)
+                            .refresh(),
                       ),
                       data: (s) => MuKarmaMeter(
                         total: s.karma,
@@ -125,7 +129,9 @@ class _Greeting extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final s = summary;
-    final first = (s != null && s.fullName.trim().isNotEmpty) ? s.fullName.trim().split(' ').first : 'there';
+    final first = (s != null && s.fullName.trim().isNotEmpty)
+        ? s.fullName.trim().split(' ').first
+        : 'there';
     final unread = ref.watch(unreadNotificationsProvider).value ?? 0;
     return MuTopBar.greeting(
       greeting: 'Hey $first',
@@ -136,15 +142,26 @@ class _Greeting extends ConsumerWidget {
         excludeSemantics: true,
         child: MuPressable(
           onTap: () => context.openTab(RoutePaths.profile),
-          child: MuAvatar(name: s?.fullName ?? '', url: s?.profilePicUrl, size: MuSizes.avatarMd, ring: false),
+          child: MuAvatar(
+            name: s?.fullName ?? '',
+            url: s?.profilePicUrl,
+            size: MuSizes.avatarMd,
+            ring: false,
+          ),
         ),
       ),
       actions: [
-        MuIconButton(icon: LucideIcons.search, tooltip: 'Search', onPressed: () => context.push(RoutePaths.search)),
+        MuIconButton(
+          icon: LucideIcons.search,
+          tooltip: 'Search',
+          onPressed: () => context.push(RoutePaths.search),
+        ),
         MuIconButton(
           icon: LucideIcons.bell,
           badgeCount: unread,
-          tooltip: unread == 0 ? 'Notifications' : 'Notifications, $unread unread',
+          tooltip: unread == 0
+              ? 'Notifications'
+              : 'Notifications, $unread unread',
           onPressed: () => context.push(RoutePaths.notifications),
         ),
       ],
@@ -158,7 +175,10 @@ class _KarmaPlaceholder extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
     height: 196,
-    decoration: BoxDecoration(color: context.mu.colors.surfaceSunk, borderRadius: BorderRadius.circular(MuRadii.panel)),
+    decoration: BoxDecoration(
+      color: context.mu.colors.surfaceSunk,
+      borderRadius: BorderRadius.circular(MuRadii.panel),
+    ),
   );
 }
 
@@ -172,9 +192,19 @@ class _LoadFailed extends StatelessWidget {
   Widget build(BuildContext context) => Row(
     children: [
       Expanded(
-        child: Text(message, style: context.mu.text.caption.copyWith(color: context.mu.colors.ink2)),
+        child: Text(
+          message,
+          style: context.mu.text.caption.copyWith(
+            color: context.mu.colors.ink2,
+          ),
+        ),
       ),
-      MuButton(label: 'Retry', variant: MuButtonVariant.ghost, size: MuButtonSize.small, onPressed: onRetry),
+      MuButton(
+        label: 'Retry',
+        variant: MuButtonVariant.ghost,
+        size: MuButtonSize.small,
+        onPressed: onRetry,
+      ),
     ],
   );
 }
@@ -208,7 +238,11 @@ class _ThisWeek extends ConsumerWidget {
                   tone: MuPillTone.volt,
                   icon: LucideIcons.trendingUp,
                 ),
-                if (week.streakDays > 0) MuPill('${week.streakDays}-day streak', icon: LucideIcons.flame),
+                if (week.streakDays > 0)
+                  MuPill(
+                    '${week.streakDays}-day streak',
+                    icon: LucideIcons.flame,
+                  ),
               ],
             ),
           ),
@@ -226,7 +260,9 @@ class _UpNext extends ConsumerWidget {
     final week = ref.watch(learnerSummaryProvider).value;
     final meeting = week?.nextMeeting;
     final caps = ref.watch(capabilitiesProvider).value;
-    final needsDiscord = (caps?.needsDiscord ?? false) && ref.watch(discordAuthUriProvider) != null;
+    final needsDiscord =
+        (caps?.needsDiscord ?? false) &&
+        ref.watch(discordAuthUriProvider) != null;
     final canBrowseJobs = caps?.canBrowseJobs ?? false;
     final summary = ref.watch(myProgressSummaryControllerProvider).value;
     final needsGroups = summary != null && summary.interestGroupCount == 0;
@@ -237,8 +273,12 @@ class _UpNext extends ConsumerWidget {
           title: meeting.title,
           size: MuTileSize.tall,
           fill: MuTileFill.cobalt,
-          pill: MuPill('Circle · ${formatDay(meeting.startsAt.toLocal())}', tone: MuPillTone.paper),
-          meta: '${meeting.circleName}\n${formatTime(meeting.startsAt.toLocal())}',
+          pill: MuPill(
+            'Circle · ${formatDay(meeting.startsAt.toLocal())}',
+            tone: MuPillTone.paper,
+          ),
+          meta:
+              '${meeting.circleName}\n${formatTime(meeting.startsAt.toLocal())}',
           onTap: () => context.push(RoutePaths.meetingDetailPath(meeting.id)),
         ),
       MuTile(
@@ -300,7 +340,8 @@ class _UpNext extends ConsumerWidget {
           category: IgCategory.creative,
           size: MuTileSize.short,
           meta: 'Post your task proof there to earn karma',
-          onTap: () => unawaited(ref.read(discordConnectFlowProvider.notifier).start()),
+          onTap: () =>
+              unawaited(ref.read(discordConnectFlowProvider.notifier).start()),
         ),
       if (needsGroups)
         MuTile(
@@ -347,11 +388,20 @@ class _TopPerformers extends ConsumerWidget {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                MuSectionTitle('Top performers', onSeeAll: () => context.openTab(RoutePaths.leaderboard)),
+                MuSectionTitle(
+                  'Top performers',
+                  onSeeAll: () => context.openTab(RoutePaths.leaderboard),
+                ),
                 const SizedBox(height: MuSpacing.space3),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: MuSpacing.space4, vertical: MuSpacing.space1),
-                  decoration: BoxDecoration(color: c.surface, borderRadius: BorderRadius.circular(MuRadii.card)),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: MuSpacing.space4,
+                    vertical: MuSpacing.space1,
+                  ),
+                  decoration: BoxDecoration(
+                    color: c.surface,
+                    borderRadius: BorderRadius.circular(MuRadii.card),
+                  ),
                   child: Column(
                     children: [
                       for (var i = 0; i < top.length; i++)
@@ -366,7 +416,9 @@ class _TopPerformers extends ConsumerWidget {
                           ),
                           onTap: top[i].muid == null
                               ? null
-                              : () => context.push(RoutePaths.publicProfilePath(top[i].muid!)),
+                              : () => context.push(
+                                  RoutePaths.publicProfilePath(top[i].muid!),
+                                ),
                         ),
                     ],
                   ),
@@ -393,7 +445,10 @@ class _HappeningSoon extends ConsumerWidget {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                MuSectionTitle('Happening soon', onSeeAll: () => context.push(RoutePaths.events)),
+                MuSectionTitle(
+                  'Happening soon',
+                  onSeeAll: () => context.push(RoutePaths.events),
+                ),
                 const SizedBox(height: MuSpacing.space3),
                 for (final e in events.take(2)) ...[
                   Center(child: _Ticket(event: e)),
@@ -411,8 +466,9 @@ class _Ticket extends StatelessWidget {
 
   final FeaturedEvent event;
 
-  String get _place =>
-      event.venue.venueType == 'online' ? 'Online' : (event.venue.venueCity ?? 'Venue to be announced');
+  String get _place => event.venue.venueType == 'online'
+      ? 'Online'
+      : (event.venue.venueCity ?? 'Venue to be announced');
 
   @override
   Widget build(BuildContext context) {
@@ -427,16 +483,33 @@ class _Ticket extends StatelessWidget {
       when: when,
       posterUrl: event.coverImage,
       capacity: event.interestCount > 0
-          ? MuPill('${muGrouped(event.interestCount)} interested', tone: MuPillTone.night, icon: LucideIcons.users)
+          ? MuPill(
+              '${muGrouped(event.interestCount)} interested',
+              tone: MuPillTone.night,
+              icon: LucideIcons.users,
+            )
           : null,
       kind: event.eventScope.isEmpty
           ? null
-          : MuPill(event.eventScope[0].toUpperCase() + event.eventScope.substring(1), tone: MuPillTone.paper),
+          : MuPill(
+              event.eventScope[0].toUpperCase() + event.eventScope.substring(1),
+              tone: MuPillTone.paper,
+            ),
       pills: [
-        if ((event.minKarma ?? 0) > 0) MuPill('${muGrouped(event.minKarma!)}+ karma to join', icon: LucideIcons.zap),
+        if ((event.minKarma ?? 0) > 0)
+          MuPill(
+            '${muGrouped(event.minKarma!)}+ karma to join',
+            icon: LucideIcons.zap,
+          ),
         for (final tag in event.tags.take(2)) MuPill(tag, mono: true),
       ],
-      stub: MuButton(label: 'View event', variant: MuButtonVariant.ink, knob: true, block: true, onPressed: open),
+      stub: MuButton(
+        label: 'View event',
+        variant: MuButtonVariant.ink,
+        knob: true,
+        block: true,
+        onPressed: open,
+      ),
       onTap: open,
     );
   }

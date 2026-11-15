@@ -88,18 +88,40 @@ class MuTaskCard extends StatelessWidget {
     };
     final status = switch (state) {
       MuTaskState.open => _KarmaBadge(karma: karma),
-      MuTaskState.review => const MuPill('In review', tone: MuPillTone.warning, icon: LucideIcons.clock),
-      MuTaskState.done => MuPill('+${muGrouped(karma)} earned', tone: MuPillTone.success, icon: LucideIcons.check),
-      MuTaskState.rejected => const MuPill('Needs changes', tone: MuPillTone.danger, icon: LucideIcons.x),
-      MuTaskState.locked => MuPill(lockedLabel ?? 'Locked', icon: LucideIcons.lock),
+      MuTaskState.review => const MuPill(
+        'In review',
+        tone: MuPillTone.warning,
+        icon: LucideIcons.clock,
+      ),
+      MuTaskState.done => MuPill(
+        '+${muGrouped(karma)} earned',
+        tone: MuPillTone.success,
+        icon: LucideIcons.check,
+      ),
+      MuTaskState.rejected => const MuPill(
+        'Needs changes',
+        tone: MuPillTone.danger,
+        icon: LucideIcons.x,
+      ),
+      MuTaskState.locked => MuPill(
+        lockedLabel ?? 'Locked',
+        icon: LucideIcons.lock,
+      ),
     };
-    final tag = (hashtag == null || hashtag!.trim().isEmpty) ? 'task' : hashtag!.trim();
+    final tag = (hashtag == null || hashtag!.trim().isEmpty)
+        ? 'task'
+        : hashtag!.trim();
     final locked = state == MuTaskState.locked;
     const gap = SizedBox(height: 10);
 
     final body = Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(MuSpacing.space5, 18, MuSpacing.space5, MuSpacing.space5),
+      padding: const EdgeInsets.fromLTRB(
+        MuSpacing.space5,
+        18,
+        MuSpacing.space5,
+        MuSpacing.space5,
+      ),
       decoration: BoxDecoration(
         color: c.surface,
         borderRadius: const BorderRadius.only(
@@ -130,7 +152,10 @@ class MuTaskCard extends StatelessWidget {
                     ],
                     Text(
                       title,
-                      style: mu.text.title3.copyWith(fontSize: 19, color: locked ? c.ink2 : c.ink),
+                      style: mu.text.title3.copyWith(
+                        fontSize: 19,
+                        color: locked ? c.ink2 : c.ink,
+                      ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -150,7 +175,10 @@ class MuTaskCard extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
           ],
-          if (pills.isNotEmpty) ...[gap, Wrap(spacing: 6, runSpacing: 6, children: pills)],
+          if (pills.isNotEmpty) ...[
+            gap,
+            Wrap(spacing: 6, runSpacing: 6, children: pills),
+          ],
           if (footer != null) ...[gap, footer!],
         ],
       ),
@@ -171,11 +199,18 @@ class MuTaskCard extends StatelessWidget {
             alignment: AlignmentDirectional.centerStart,
             decoration: BoxDecoration(
               color: tabBg,
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(MuRadii.tag)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(MuRadii.tag),
+              ),
             ),
             child: Text(
               tag,
-              style: mu.text.code.copyWith(color: tabFg, fontSize: 12, fontWeight: FontWeight.w600, height: 1),
+              style: mu.text.code.copyWith(
+                color: tabFg,
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                height: 1,
+              ),
               maxLines: 1,
             ),
           ),
@@ -188,14 +223,17 @@ class MuTaskCard extends StatelessWidget {
       MuTaskState.review => 'in review',
       MuTaskState.done => 'done, ${muGrouped(karma)} karma earned',
       MuTaskState.rejected => 'needs changes',
-      MuTaskState.locked => 'locked${lockedLabel == null ? '' : ', $lockedLabel'}',
+      MuTaskState.locked =>
+        'locked${lockedLabel == null ? '' : ', $lockedLabel'}',
     };
     return Semantics(
       container: true,
       button: onTap != null,
       label: '$title, $tag, $stateWord',
       excludeSemantics: footer == null,
-      child: onTap == null ? card : MuPressable(onTap: onTap, pressedScale: 0.98, child: card),
+      child: onTap == null
+          ? card
+          : MuPressable(onTap: onTap, pressedScale: 0.98, child: card),
     );
   }
 }
@@ -212,10 +250,18 @@ class _KarmaBadge extends StatelessWidget {
     final mu = context.mu;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 7),
-      decoration: BoxDecoration(color: mu.colors.volt, borderRadius: BorderRadius.circular(MuRadii.round)),
+      decoration: BoxDecoration(
+        color: mu.colors.volt,
+        borderRadius: BorderRadius.circular(MuRadii.round),
+      ),
       child: Text(
         '+${muGrouped(karma)}',
-        style: mu.text.code.copyWith(color: mu.colors.onVolt, fontSize: 13, fontWeight: FontWeight.w700, height: 1),
+        style: mu.text.code.copyWith(
+          color: mu.colors.onVolt,
+          fontSize: 13,
+          fontWeight: FontWeight.w700,
+          height: 1,
+        ),
       ),
     );
   }

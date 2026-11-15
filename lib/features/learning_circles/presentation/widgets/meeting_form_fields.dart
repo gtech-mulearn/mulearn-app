@@ -4,7 +4,13 @@ import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/utils/date_format.dart';
 import 'package:mulearn_app/features/learning_circles/domain/entities/meeting_form.dart';
 
-const kMeetingPlatforms = ['Zoom', 'Google Meet', 'Microsoft Teams', 'Discord', 'Other'];
+const kMeetingPlatforms = [
+  'Zoom',
+  'Google Meet',
+  'Microsoft Teams',
+  'Discord',
+  'Other',
+];
 
 /// Shared create/edit meeting form, confirmed live (rules.md §3/§9):
 /// `platform` is required whenever mode is online, `meet_place` may never be
@@ -38,10 +44,14 @@ enum _Mode { online, offline }
 class _MeetingFormFieldsState extends State<MeetingFormFields> {
   final _formKey = GlobalKey<FormState>();
   late final _title = TextEditingController(text: widget.initial?.title);
-  late final _description = TextEditingController(text: widget.initial?.description);
+  late final _description = TextEditingController(
+    text: widget.initial?.description,
+  );
   late final _place = TextEditingController(text: widget.initial?.meetPlace);
   late final _link = TextEditingController(text: widget.initial?.meetLink);
-  late _Mode _mode = widget.initial?.mode == 'offline' ? _Mode.offline : _Mode.online;
+  late _Mode _mode = widget.initial?.mode == 'offline'
+      ? _Mode.offline
+      : _Mode.online;
   late String? _platform = widget.initial?.platform ?? kMeetingPlatforms.first;
   late DateTime? _meetTime = widget.initial?.meetTime != null
       ? DateTime.tryParse(widget.initial!.meetTime)?.toLocal()
@@ -53,7 +63,9 @@ class _MeetingFormFieldsState extends State<MeetingFormFields> {
   @override
   void initState() {
     super.initState();
-    if (_place.text.isEmpty && _mode == _Mode.online) _place.text = _platform ?? '';
+    if (_place.text.isEmpty && _mode == _Mode.online) {
+      _place.text = _platform ?? '';
+    }
   }
 
   @override
@@ -75,11 +87,19 @@ class _MeetingFormFieldsState extends State<MeetingFormFields> {
     if (date == null || !mounted) return;
     final time = await showTimePicker(
       context: context,
-      initialTime: _meetTime != null ? TimeOfDay.fromDateTime(_meetTime!) : const TimeOfDay(hour: 18, minute: 0),
+      initialTime: _meetTime != null
+          ? TimeOfDay.fromDateTime(_meetTime!)
+          : const TimeOfDay(hour: 18, minute: 0),
     );
     if (time == null) return;
     setState(() {
-      _meetTime = DateTime(date.year, date.month, date.day, time.hour, time.minute);
+      _meetTime = DateTime(
+        date.year,
+        date.month,
+        date.day,
+        time.hour,
+        time.minute,
+      );
       _timeMissing = false;
     });
   }
@@ -100,7 +120,9 @@ class _MeetingFormFieldsState extends State<MeetingFormFields> {
         isRecurring: widget.initial?.isRecurring ?? false,
         isReportNeeded: _reportNeeded,
         platform: online ? _platform : null,
-        meetLink: online && _link.text.trim().isNotEmpty ? _link.text.trim() : null,
+        meetLink: online && _link.text.trim().isNotEmpty
+            ? _link.text.trim()
+            : null,
         recurrenceType: widget.initial?.recurrenceType,
         recurrence: widget.initial?.recurrence,
         reportDescription: widget.initial?.reportDescription,
@@ -108,7 +130,8 @@ class _MeetingFormFieldsState extends State<MeetingFormFields> {
     );
   }
 
-  static String? _required(String? v) => (v == null || v.trim().isEmpty) ? 'Fill this in' : null;
+  static String? _required(String? v) =>
+      (v == null || v.trim().isEmpty) ? 'Fill this in' : null;
 
   @override
   Widget build(BuildContext context) {
@@ -123,7 +146,9 @@ class _MeetingFormFieldsState extends State<MeetingFormFields> {
           child: Form(
             key: _formKey,
             child: ListView(
-              physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+              physics: const BouncingScrollPhysics(
+                parent: AlwaysScrollableScrollPhysics(),
+              ),
               padding: const EdgeInsets.fromLTRB(
                 MuSpacing.space5,
                 MuSpacing.space2,
@@ -131,7 +156,13 @@ class _MeetingFormFieldsState extends State<MeetingFormFields> {
                 MuSpacing.space8,
               ),
               children: [
-                Semantics(header: true, child: Text(widget.title, style: mu.text.display.copyWith(fontSize: 32))),
+                Semantics(
+                  header: true,
+                  child: Text(
+                    widget.title,
+                    style: mu.text.display.copyWith(fontSize: 32),
+                  ),
+                ),
                 const SizedBox(height: MuSpacing.space6),
                 MuTextField(
                   label: 'Title',
@@ -162,8 +193,13 @@ class _MeetingFormFieldsState extends State<MeetingFormFields> {
                     _mode = m;
                     // The place label defaults to the platform online; an
                     // address is typed for in person.
-                    if (m == _Mode.online && _place.text.isEmpty) _place.text = _platform ?? '';
-                    if (m == _Mode.offline && kMeetingPlatforms.contains(_place.text)) _place.clear();
+                    if (m == _Mode.online && _place.text.isEmpty) {
+                      _place.text = _platform ?? '';
+                    }
+                    if (m == _Mode.offline &&
+                        kMeetingPlatforms.contains(_place.text)) {
+                      _place.clear();
+                    }
                   }),
                 ),
                 const SizedBox(height: MuSpacing.space4),
@@ -171,11 +207,16 @@ class _MeetingFormFieldsState extends State<MeetingFormFields> {
                   MuSelectField(
                     label: 'Platform',
                     value: _platform,
-                    options: [for (final p in kMeetingPlatforms) MuOption(p, p)],
+                    options: [
+                      for (final p in kMeetingPlatforms) MuOption(p, p),
+                    ],
                     onChanged: (v) => setState(() {
                       final previous = _platform;
                       _platform = v;
-                      if (v != null && (_place.text.isEmpty || _place.text == previous)) _place.text = v;
+                      if (v != null &&
+                          (_place.text.isEmpty || _place.text == previous)) {
+                        _place.text = v;
+                      }
                     }),
                   ),
                   const SizedBox(height: MuSpacing.space4),
@@ -187,7 +228,12 @@ class _MeetingFormFieldsState extends State<MeetingFormFields> {
                     keyboardType: TextInputType.url,
                   ),
                   const SizedBox(height: MuSpacing.space4),
-                  MuTextField(label: 'Place label', controller: _place, hint: 'Google Meet', validator: _required),
+                  MuTextField(
+                    label: 'Place label',
+                    controller: _place,
+                    hint: 'Google Meet',
+                    validator: _required,
+                  ),
                 ] else
                   MuTextField(
                     label: 'Venue',
@@ -199,7 +245,8 @@ class _MeetingFormFieldsState extends State<MeetingFormFields> {
                 const SizedBox(height: MuSpacing.space5),
                 Semantics(
                   button: true,
-                  label: 'When, ${_meetTime == null ? 'not set' : formatDayTime(_meetTime!)}',
+                  label:
+                      'When, ${_meetTime == null ? 'not set' : formatDayTime(_meetTime!)}',
                   excludeSemantics: true,
                   onTap: _pickTime,
                   child: MuFieldChrome(
@@ -208,11 +255,20 @@ class _MeetingFormFieldsState extends State<MeetingFormFields> {
                     onTap: _pickTime,
                     trailing: SizedBox.square(
                       dimension: MuSizes.touchMin,
-                      child: Icon(LucideIcons.calendarClock, size: 20, color: c.ink3),
+                      child: Icon(
+                        LucideIcons.calendarClock,
+                        size: 20,
+                        color: c.ink3,
+                      ),
                     ),
                     child: Text(
-                      _meetTime == null ? 'Pick a date and time' : formatDayTime(_meetTime!),
-                      style: mu.text.body.copyWith(fontSize: 16, color: _meetTime == null ? c.ink3 : c.ink),
+                      _meetTime == null
+                          ? 'Pick a date and time'
+                          : formatDayTime(_meetTime!),
+                      style: mu.text.body.copyWith(
+                        fontSize: 16,
+                        color: _meetTime == null ? c.ink3 : c.ink,
+                      ),
                     ),
                   ),
                 ),
@@ -234,7 +290,8 @@ class _MeetingFormFieldsState extends State<MeetingFormFields> {
                 const SizedBox(height: MuSpacing.space5),
                 MuSwitchTile(
                   label: 'Ask attendees for a report',
-                  subtitle: 'Each one writes what they learned after the meeting.',
+                  subtitle:
+                      'Each one writes what they learned after the meeting.',
                   value: _reportNeeded,
                   onChanged: (v) => setState(() => _reportNeeded = v),
                 ),
@@ -248,13 +305,21 @@ class _MeetingFormFieldsState extends State<MeetingFormFields> {
             border: Border(top: BorderSide(color: c.line)),
           ),
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space3, MuSpacing.space5, MuSpacing.space3),
+            padding: const EdgeInsets.fromLTRB(
+              MuSpacing.space5,
+              MuSpacing.space3,
+              MuSpacing.space5,
+              MuSpacing.space3,
+            ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 if (widget.errorMessage != null) ...[
-                  Text(widget.errorMessage!, style: mu.text.caption.copyWith(color: c.danger)),
+                  Text(
+                    widget.errorMessage!,
+                    style: mu.text.caption.copyWith(color: c.danger),
+                  ),
                   const SizedBox(height: MuSpacing.space2),
                 ],
                 MuButton(

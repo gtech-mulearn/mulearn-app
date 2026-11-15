@@ -53,7 +53,10 @@ class PublicCampusScreen extends ConsumerWidget {
             children: [
               const MuTopBar.detail(),
               Expanded(
-                child: ErrorRetryView(error: e, onRetry: () => ref.invalidate(publicCampusProvider(campusId))),
+                child: ErrorRetryView(
+                  error: e,
+                  onRetry: () => ref.invalidate(publicCampusProvider(campusId)),
+                ),
               ),
             ],
           ),
@@ -64,7 +67,9 @@ class PublicCampusScreen extends ConsumerWidget {
             ref.refresh(publicCampusWeeklyKarmaProvider(campusId).future),
           ]),
           child: ListView(
-            physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+            physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics(),
+            ),
             padding: EdgeInsets.zero,
             children: [
               _Hero(campus: campus),
@@ -91,8 +96,19 @@ class _Hero extends StatelessWidget {
   final PublicCampus campus;
 
   Future<void> _share(BuildContext context) async {
-    await Clipboard.setData(ClipboardData(text: '${FlavorConfig.instance.dashboardUrl}/dashboard/campus/${campus.id}'));
-    if (context.mounted) MuToast.show(context, message: 'Campus link copied', type: MuToastType.success);
+    await Clipboard.setData(
+      ClipboardData(
+        text:
+            '${FlavorConfig.instance.dashboardUrl}/dashboard/campus/${campus.id}',
+      ),
+    );
+    if (context.mounted) {
+      MuToast.show(
+        context,
+        message: 'Campus link copied',
+        type: MuToastType.success,
+      );
+    }
   }
 
   @override
@@ -130,14 +146,21 @@ class _Hero extends StatelessWidget {
           const SizedBox(height: MuSpacing.space5),
           Row(
             children: [
-              MuCampusSeal(code: campus.code, tone: IgCategory.others, size: 84),
+              MuCampusSeal(
+                code: campus.code,
+                tone: IgCategory.others,
+                size: 84,
+              ),
               const SizedBox(width: MuSpacing.space4),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      [if (campus.zone.isNotEmpty) campus.zone, 'Campus'].join(' · ').toUpperCase(),
+                      [
+                        if (campus.zone.isNotEmpty) campus.zone,
+                        'Campus',
+                      ].join(' · ').toUpperCase(),
                       style: mu.text.eyebrow.copyWith(color: c.onNight2),
                     ),
                     const SizedBox(height: MuSpacing.space1),
@@ -145,7 +168,11 @@ class _Hero extends StatelessWidget {
                       header: true,
                       child: Text(
                         campus.name,
-                        style: mu.text.title1.copyWith(color: c.onNight, fontSize: 24, height: 1.1),
+                        style: mu.text.title1.copyWith(
+                          color: c.onNight,
+                          fontSize: 24,
+                          height: 1.1,
+                        ),
                       ),
                     ),
                   ],
@@ -155,7 +182,11 @@ class _Hero extends StatelessWidget {
           ),
           if (campus.rank != null) ...[
             const SizedBox(height: MuSpacing.space4),
-            MuPill('#${campus.rank} on the campus leaderboard', tone: MuPillTone.volt, icon: LucideIcons.trophy),
+            MuPill(
+              '#${campus.rank} on the campus leaderboard',
+              tone: MuPillTone.volt,
+              icon: LucideIcons.trophy,
+            ),
           ],
         ],
       ),
@@ -171,10 +202,14 @@ class _Body extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mu = context.mu;
-    final clusters = [...campus.clusters]..sort((a, b) => b.members.compareTo(a.members));
-    final chapters = [...campus.chapters]..sort((a, b) => b.members.compareTo(a.members));
+    final clusters = [...campus.clusters]
+      ..sort((a, b) => b.members.compareTo(a.members));
+    final chapters = [...campus.chapters]
+      ..sort((a, b) => b.members.compareTo(a.members));
     final top = campus.topLearners;
-    final leaderKarma = top.isEmpty ? 0 : top.map((t) => t.karma).reduce((a, b) => a > b ? a : b);
+    final leaderKarma = top.isEmpty
+        ? 0
+        : top.map((t) => t.karma).reduce((a, b) => a > b ? a : b);
     final people = [?campus.lead, ...campus.execom];
 
     return Column(
@@ -183,15 +218,24 @@ class _Body extends ConsumerWidget {
         Row(
           children: [
             Expanded(
-              child: MuStatTile(label: 'Learners', value: muGrouped(campus.members)),
+              child: MuStatTile(
+                label: 'Learners',
+                value: muGrouped(campus.members),
+              ),
             ),
             const SizedBox(width: MuSpacing.space2),
             Expanded(
-              child: MuStatTile(label: 'Active', value: muGrouped(campus.activeMembers)),
+              child: MuStatTile(
+                label: 'Active',
+                value: muGrouped(campus.activeMembers),
+              ),
             ),
             const SizedBox(width: MuSpacing.space2),
             Expanded(
-              child: MuStatTile(label: 'Karma', value: muGrouped(campus.totalKarma)),
+              child: MuStatTile(
+                label: 'Karma',
+                value: muGrouped(campus.totalKarma),
+              ),
             ),
           ],
         ),
@@ -200,15 +244,24 @@ class _Body extends ConsumerWidget {
         if (top.isNotEmpty) ...[
           const MuSectionEyebrow('Top learners'),
           MuSurfaceCard(
-            padding: const EdgeInsets.symmetric(horizontal: MuSpacing.space4, vertical: MuSpacing.space1),
+            padding: const EdgeInsets.symmetric(
+              horizontal: MuSpacing.space4,
+              vertical: MuSpacing.space1,
+            ),
             child: Column(
               children: [
                 for (final t in top)
                   MuRankRow(
                     rank: t.rank,
-                    entry: MuRankEntry(name: t.fullName, karma: t.karma, subtitle: t.muid, photoUrl: t.profilePic),
+                    entry: MuRankEntry(
+                      name: t.fullName,
+                      karma: t.karma,
+                      subtitle: t.muid,
+                      photoUrl: t.profilePic,
+                    ),
                     maxKarma: leaderKarma,
-                    onTap: () => context.push(RoutePaths.publicProfilePath(t.muid)),
+                    onTap: () =>
+                        context.push(RoutePaths.publicProfilePath(t.muid)),
                   ),
               ],
             ),
@@ -234,12 +287,19 @@ class _Body extends ConsumerWidget {
             children: [
               for (var i = 0; i < chapters.length; i++)
                 MuFeedRow(
-                  leading: const MuFeedIcon(LucideIcons.layers, tone: MuFeedTone.event),
+                  leading: const MuFeedIcon(
+                    LucideIcons.layers,
+                    tone: MuFeedTone.event,
+                  ),
                   subject: chapters[i].name,
                   time: [
                     if (chapters[i].code.isNotEmpty) chapters[i].code,
-                    if (chapters[i].members == 1) '1 member' else '${chapters[i].members} members',
-                    if (chapters[i].leadName != null) 'Led by ${chapters[i].leadName}',
+                    if (chapters[i].members == 1)
+                      '1 member'
+                    else
+                      '${chapters[i].members} members',
+                    if (chapters[i].leadName != null)
+                      'Led by ${chapters[i].leadName}',
                   ].join(' · '),
                   divider: i < chapters.length - 1,
                 ),
@@ -252,11 +312,17 @@ class _Body extends ConsumerWidget {
             children: [
               for (var i = 0; i < people.length; i++)
                 MuFeedRow(
-                  leading: MuAvatar(name: people[i].fullName, url: people[i].profilePic, size: MuSizes.avatarMd),
+                  leading: MuAvatar(
+                    name: people[i].fullName,
+                    url: people[i].profilePic,
+                    size: MuSizes.avatarMd,
+                  ),
                   subject: people[i].fullName,
                   time: [?people[i].role, people[i].muid].join(' · '),
                   divider: i < people.length - 1,
-                  onTap: () => context.push(RoutePaths.publicProfilePath(people[i].muid)),
+                  onTap: () => context.push(
+                    RoutePaths.publicProfilePath(people[i].muid),
+                  ),
                 ),
             ],
           ),
@@ -275,14 +341,19 @@ class _Body extends ConsumerWidget {
                   size: MuButtonSize.small,
                   onPressed: () {
                     final uri = Uri.tryParse(l.url);
-                    if (uri != null) unawaited(ref.read(openExternalProvider)(uri));
+                    if (uri != null) {
+                      unawaited(ref.read(openExternalProvider)(uri));
+                    }
                   },
                 ),
             ],
           ),
         ],
         const SizedBox(height: MuSpacing.space4),
-        Text('Learners with private profiles open only their name.', style: mu.text.caption),
+        Text(
+          'Learners with private profiles open only their name.',
+          style: mu.text.caption,
+        ),
       ],
     );
   }
@@ -303,12 +374,20 @@ class _WeeklyKarma extends ConsumerWidget {
         .when(
           skipError: true,
           skipLoadingOnReload: true,
-          loading: () => const SizedBox(height: 120, child: Center(child: MuDotsLoader())),
-          error: (e, _) => Text(ApiException.messageFor(e), style: mu.text.caption),
+          loading: () =>
+              const SizedBox(height: 120, child: Center(child: MuDotsLoader())),
+          error: (e, _) =>
+              Text(ApiException.messageFor(e), style: mu.text.caption),
           data: (days) {
             final total = days.fold<int>(0, (s, d) => s + d.karma);
-            if (days.isEmpty || total == 0) return const MuEmptyLine('No karma earned at this campus this week yet.');
-            final peak = days.map((d) => d.karma).reduce((a, b) => a > b ? a : b);
+            if (days.isEmpty || total == 0) {
+              return const MuEmptyLine(
+                'No karma earned at this campus this week yet.',
+              );
+            }
+            final peak = days
+                .map((d) => d.karma)
+                .reduce((a, b) => a > b ? a : b);
             return MuSurfaceCard(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -316,7 +395,13 @@ class _WeeklyKarma extends ConsumerWidget {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
-                      Text(muGrouped(total), style: mu.text.numeral.copyWith(fontSize: 28, color: c.voltText)),
+                      Text(
+                        muGrouped(total),
+                        style: mu.text.numeral.copyWith(
+                          fontSize: 28,
+                          color: c.voltText,
+                        ),
+                      ),
                       const SizedBox(width: MuSpacing.space2),
                       Padding(
                         padding: const EdgeInsets.only(bottom: 4),
@@ -339,15 +424,28 @@ class _WeeklyKarma extends ConsumerWidget {
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: [
                                   Container(
-                                    height: peak == 0 ? 2 : (72 * d.karma / peak).clamp(2, 72).toDouble(),
-                                    margin: const EdgeInsets.symmetric(horizontal: 5),
+                                    height: peak == 0
+                                        ? 2
+                                        : (72 * d.karma / peak)
+                                              .clamp(2, 72)
+                                              .toDouble(),
+                                    margin: const EdgeInsets.symmetric(
+                                      horizontal: 5,
+                                    ),
                                     decoration: BoxDecoration(
-                                      color: d.karma == peak ? c.volt : c.cobalt,
-                                      borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
+                                      color: d.karma == peak
+                                          ? c.volt
+                                          : c.cobalt,
+                                      borderRadius: const BorderRadius.vertical(
+                                        top: Radius.circular(4),
+                                      ),
                                     ),
                                   ),
                                   const SizedBox(height: MuSpacing.space2),
-                                  Text(_dayLetters[d.day.weekday - 1], style: mu.text.caption),
+                                  Text(
+                                    _dayLetters[d.day.weekday - 1],
+                                    style: mu.text.caption,
+                                  ),
                                 ],
                               ),
                             ),

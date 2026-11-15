@@ -11,7 +11,8 @@ part 'editable_profile_controller.g.dart';
 @riverpod
 class EditableProfileController extends _$EditableProfileController {
   @override
-  Future<EditableProfile> build() => ref.watch(profileRepositoryProvider).getEditableProfile();
+  Future<EditableProfile> build() =>
+      ref.watch(profileRepositoryProvider).getEditableProfile();
 
   /// Saves the form, then refreshes the main profile so the header/sidebar
   /// reflect the change.

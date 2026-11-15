@@ -27,7 +27,8 @@ class MentorSessionsScreen extends ConsumerStatefulWidget {
   const MentorSessionsScreen({super.key});
 
   @override
-  ConsumerState<MentorSessionsScreen> createState() => _MentorSessionsScreenState();
+  ConsumerState<MentorSessionsScreen> createState() =>
+      _MentorSessionsScreenState();
 }
 
 class _MentorSessionsScreenState extends ConsumerState<MentorSessionsScreen> {
@@ -37,7 +38,8 @@ class _MentorSessionsScreenState extends ConsumerState<MentorSessionsScreen> {
   Widget build(BuildContext context) {
     final mu = context.mu;
     final state = ref.watch(mentorSessionsControllerProvider(_filter));
-    final canCreate = ref.watch(sessionTargetsProvider).value?.isNotEmpty ?? false;
+    final canCreate =
+        ref.watch(sessionTargetsProvider).value?.isNotEmpty ?? false;
     return MuWorkspacePage(
       bottom: canCreate
           ? MuButton(
@@ -51,16 +53,34 @@ class _MentorSessionsScreenState extends ConsumerState<MentorSessionsScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space2, MuSpacing.space5, 0),
-            child: Semantics(header: true, child: Text('Sessions', style: mu.text.display.copyWith(fontSize: 32))),
+            padding: const EdgeInsets.fromLTRB(
+              MuSpacing.space5,
+              MuSpacing.space2,
+              MuSpacing.space5,
+              0,
+            ),
+            child: Semantics(
+              header: true,
+              child: Text(
+                'Sessions',
+                style: mu.text.display.copyWith(fontSize: 32),
+              ),
+            ),
           ),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: MuSpacing.space5, vertical: MuSpacing.space3),
+            padding: const EdgeInsets.symmetric(
+              horizontal: MuSpacing.space5,
+              vertical: MuSpacing.space3,
+            ),
             child: Row(
               children: [
                 for (final f in SessionFilter.values) ...[
-                  MuFilterChip(label: f.label, selected: f == _filter, onTap: () => setState(() => _filter = f)),
+                  MuFilterChip(
+                    label: f.label,
+                    selected: f == _filter,
+                    onTap: () => setState(() => _filter = f),
+                  ),
                   const SizedBox(width: MuSpacing.space2),
                 ],
               ],
@@ -69,18 +89,29 @@ class _MentorSessionsScreenState extends ConsumerState<MentorSessionsScreen> {
           Expanded(
             child: state.when(
               skipError: true,
-              loading: () => const Center(child: MuDotsLoader(label: 'Loading sessions…')),
-              error: (e, _) =>
-                  ErrorRetryView(error: e, onRetry: () => ref.invalidate(mentorSessionsControllerProvider(_filter))),
+              loading: () =>
+                  const Center(child: MuDotsLoader(label: 'Loading sessions…')),
+              error: (e, _) => ErrorRetryView(
+                error: e,
+                onRetry: () =>
+                    ref.invalidate(mentorSessionsControllerProvider(_filter)),
+              ),
               data: (paged) {
-                Future<void> refresh() => ref.refresh(mentorSessionsControllerProvider(_filter).future);
+                Future<void> refresh() => ref.refresh(
+                  mentorSessionsControllerProvider(_filter).future,
+                );
                 if (paged.items.isEmpty) {
                   // The dashboard's sessions page: StateDisplay "no-results", small.
                   return MuRefresh(
                     onRefresh: refresh,
                     child: ListView(
                       physics: const AlwaysScrollableScrollPhysics(),
-                      children: const [MuStateDisplay(variant: MuStateVariant.noResults, size: MuStateSize.sm)],
+                      children: const [
+                        MuStateDisplay(
+                          variant: MuStateVariant.noResults,
+                          size: MuStateSize.sm,
+                        ),
+                      ],
                     ),
                   );
                 }
@@ -90,17 +121,37 @@ class _MentorSessionsScreenState extends ConsumerState<MentorSessionsScreen> {
                   onRefresh: refresh,
                   child: NotificationListener<ScrollNotification>(
                     onNotification: (n) {
-                      if (n.metrics.extentAfter < 400 && paged.hasMore && paged.loadMoreError == null) {
-                        unawaited(ref.read(mentorSessionsControllerProvider(_filter).notifier).loadMore());
+                      if (n.metrics.extentAfter < 400 &&
+                          paged.hasMore &&
+                          paged.loadMoreError == null) {
+                        unawaited(
+                          ref
+                              .read(
+                                mentorSessionsControllerProvider(
+                                  _filter,
+                                ).notifier,
+                              )
+                              .loadMore(),
+                        );
                       }
                       return false;
                     },
                     child: ListView(
-                      physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-                      padding: const EdgeInsets.fromLTRB(MuSpacing.space5, 0, MuSpacing.space5, MuSpacing.space8),
+                      physics: const BouncingScrollPhysics(
+                        parent: AlwaysScrollableScrollPhysics(),
+                      ),
+                      padding: const EdgeInsets.fromLTRB(
+                        MuSpacing.space5,
+                        0,
+                        MuSpacing.space5,
+                        MuSpacing.space8,
+                      ),
                       children: [
                         for (final g in groups) ...[
-                          MuSectionEyebrow(formatDayHeading(g.day, today), top: MuSpacing.space4),
+                          MuSectionEyebrow(
+                            formatDayHeading(g.day, today),
+                            top: MuSpacing.space4,
+                          ),
                           MuFeedGroup(
                             children: [
                               for (var i = 0; i < g.sessions.length; i++)
@@ -116,7 +167,13 @@ class _MentorSessionsScreenState extends ConsumerState<MentorSessionsScreen> {
                           MuLoadMoreFooter(
                             isLoading: paged.isLoadingMore,
                             error: paged.loadMoreError,
-                            onRetry: () => ref.read(mentorSessionsControllerProvider(_filter).notifier).loadMore(),
+                            onRetry: () => ref
+                                .read(
+                                  mentorSessionsControllerProvider(
+                                    _filter,
+                                  ).notifier,
+                                )
+                                .loadMore(),
                           ),
                       ],
                     ),
@@ -145,7 +202,11 @@ String statusLabel(SessionStatus s) => switch (s) {
 /// where, a Live now or status pill, Join or a chevron on the right. The
 /// row opens the session.
 class _SessionRow extends ConsumerWidget {
-  const _SessionRow({required this.session, required this.showStatus, required this.last});
+  const _SessionRow({
+    required this.session,
+    required this.showStatus,
+    required this.last,
+  });
 
   final MentorSession session;
   final bool showStatus;
@@ -158,7 +219,10 @@ class _SessionRow extends ConsumerWidget {
     final now = ref.watch(clockProvider)();
     final starts = session.startsAt.toLocal();
     final ends = session.endsAt.toLocal();
-    final live = hasStarted(session, now) && now.isBefore(session.endsAt) && session.status == SessionStatus.scheduled;
+    final live =
+        hasStarted(session, now) &&
+        now.isBefore(session.endsAt) &&
+        session.status == SessionStatus.scheduled;
     final joinable = canJoinSession(session, now);
     return MuFeedRow(
       leading: SizedBox(
@@ -166,23 +230,40 @@ class _SessionRow extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(formatTime(starts), style: mu.text.bodyStrong.copyWith(fontSize: 14, color: live ? c.success : c.ink)),
+            Text(
+              formatTime(starts),
+              style: mu.text.bodyStrong.copyWith(
+                fontSize: 14,
+                color: live ? c.success : c.ink,
+              ),
+            ),
             Text(formatTime(ends), style: mu.text.caption),
           ],
         ),
       ),
       subject: session.title,
-      time: [sessionModeLabel(session.mode), if (session.entityName.isNotEmpty) session.entityName].join(' · '),
+      time: [
+        sessionModeLabel(session.mode),
+        if (session.entityName.isNotEmpty) session.entityName,
+      ].join(' · '),
       trailing: joinable
           ? MuButton(
               label: 'Join',
               size: MuButtonSize.small,
               onPressed: () => openLink(context, ref, session.meetingLink!),
             )
-          : Icon(LucideIcons.chevronRight, size: MuSizes.iconSm + 2, color: c.ink3),
+          : Icon(
+              LucideIcons.chevronRight,
+              size: MuSizes.iconSm + 2,
+              color: c.ink3,
+            ),
       actions: [
         if (live)
-          const MuPill('Live now', tone: MuPillTone.volt, icon: LucideIcons.radio)
+          const MuPill(
+            'Live now',
+            tone: MuPillTone.volt,
+            icon: LucideIcons.radio,
+          )
         else if (showStatus)
           MuPill(statusLabel(session.status)),
       ],

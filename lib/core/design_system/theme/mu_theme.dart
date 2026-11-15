@@ -7,7 +7,11 @@ import 'package:mulearn_app/core/design_system/tokens/mu_tokens.g.dart';
 @immutable
 class MuTheme extends ThemeExtension<MuTheme> {
   /// A theme from its parts.
-  const MuTheme({required this.colors, required this.text, required this.shadows});
+  const MuTheme({
+    required this.colors,
+    required this.text,
+    required this.shadows,
+  });
 
   /// Light theme.
   factory MuTheme.light() => _light;
@@ -40,8 +44,15 @@ class MuTheme extends ThemeExtension<MuTheme> {
   bool get isDark => colors.chalk.computeLuminance() < 0.2;
 
   @override
-  MuTheme copyWith({MuPalette? colors, MuTextStyles? text, MuShadows? shadows}) =>
-      MuTheme(colors: colors ?? this.colors, text: text ?? this.text, shadows: shadows ?? this.shadows);
+  MuTheme copyWith({
+    MuPalette? colors,
+    MuTextStyles? text,
+    MuShadows? shadows,
+  }) => MuTheme(
+    colors: colors ?? this.colors,
+    text: text ?? this.text,
+    shadows: shadows ?? this.shadows,
+  );
 
   @override
   MuTheme lerp(MuTheme? other, double t) {

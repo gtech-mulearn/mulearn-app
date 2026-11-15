@@ -20,7 +20,8 @@ class CampusStudentsScreen extends ConsumerStatefulWidget {
   const CampusStudentsScreen({super.key});
 
   @override
-  ConsumerState<CampusStudentsScreen> createState() => _CampusStudentsScreenState();
+  ConsumerState<CampusStudentsScreen> createState() =>
+      _CampusStudentsScreenState();
 }
 
 class _CampusStudentsScreenState extends ConsumerState<CampusStudentsScreen> {
@@ -48,34 +49,56 @@ class _CampusStudentsScreenState extends ConsumerState<CampusStudentsScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space2, MuSpacing.space5, 0),
+            padding: const EdgeInsets.fromLTRB(
+              MuSpacing.space5,
+              MuSpacing.space2,
+              MuSpacing.space5,
+              0,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Semantics(header: true, child: Text('Students', style: mu.text.display.copyWith(fontSize: 32))),
+                Semantics(
+                  header: true,
+                  child: Text(
+                    'Students',
+                    style: mu.text.display.copyWith(fontSize: 32),
+                  ),
+                ),
                 const SizedBox(height: MuSpacing.space4),
-                MuSearchField(controller: _search, hint: 'Search by name', onChanged: _onSearch),
+                MuSearchField(
+                  controller: _search,
+                  hint: 'Search by name',
+                  onChanged: _onSearch,
+                ),
               ],
             ),
           ),
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
-            padding: const EdgeInsets.symmetric(horizontal: MuSpacing.space5, vertical: MuSpacing.space3),
+            padding: const EdgeInsets.symmetric(
+              horizontal: MuSpacing.space5,
+              vertical: MuSpacing.space3,
+            ),
             child: Row(
               children: [
                 for (final s in StudentSort.values) ...[
                   MuFilterChip(
                     label: s.label,
                     selected: _filter.sort == s,
-                    onTap: () => setState(() => _filter = _filter.copyWith(sort: s)),
+                    onTap: () =>
+                        setState(() => _filter = _filter.copyWith(sort: s)),
                   ),
                   const SizedBox(width: MuSpacing.space2),
                 ],
                 MuFilterChip(
                   label: 'Alumni',
                   selected: _filter.alumni ?? false,
-                  onTap: () =>
-                      setState(() => _filter = _filter.copyWith(alumni: (_filter.alumni ?? false) ? null : true)),
+                  onTap: () => setState(
+                    () => _filter = _filter.copyWith(
+                      alumni: (_filter.alumni ?? false) ? null : true,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -84,50 +107,99 @@ class _CampusStudentsScreenState extends ConsumerState<CampusStudentsScreen> {
             child: state.when(
               skipError: true,
               skipLoadingOnReload: true,
-              loading: () => const Center(child: MuDotsLoader(label: 'Loading students…')),
-              error: (e, _) =>
-                  ErrorRetryView(error: e, onRetry: () => ref.invalidate(campusStudentsControllerProvider(_filter))),
+              loading: () =>
+                  const Center(child: MuDotsLoader(label: 'Loading students…')),
+              error: (e, _) => ErrorRetryView(
+                error: e,
+                onRetry: () =>
+                    ref.invalidate(campusStudentsControllerProvider(_filter)),
+              ),
               data: (view) {
-                Future<void> refresh() => ref.refresh(campusStudentsControllerProvider(_filter).future);
+                Future<void> refresh() => ref.refresh(
+                  campusStudentsControllerProvider(_filter).future,
+                );
                 final items = view.paged.items;
                 if (items.isEmpty) {
                   return MuRefresh(
                     onRefresh: refresh,
                     child: ListView(
                       physics: const AlwaysScrollableScrollPhysics(),
-                      children: const [MuStateDisplay(variant: MuStateVariant.noResults, size: MuStateSize.sm)],
+                      children: const [
+                        MuStateDisplay(
+                          variant: MuStateVariant.noResults,
+                          size: MuStateSize.sm,
+                        ),
+                      ],
                     ),
                   );
                 }
-                final leader = items.fold<int>(0, (m, s) => s.karma > m ? s.karma : m);
+                final leader = items.fold<int>(
+                  0,
+                  (m, s) => s.karma > m ? s.karma : m,
+                );
                 return MuRefresh(
                   onRefresh: refresh,
                   child: NotificationListener<ScrollNotification>(
                     onNotification: (n) {
-                      if (n.metrics.extentAfter < 400 && view.paged.hasMore && view.paged.loadMoreError == null) {
-                        unawaited(ref.read(campusStudentsControllerProvider(_filter).notifier).loadMore());
+                      if (n.metrics.extentAfter < 400 &&
+                          view.paged.hasMore &&
+                          view.paged.loadMoreError == null) {
+                        unawaited(
+                          ref
+                              .read(
+                                campusStudentsControllerProvider(
+                                  _filter,
+                                ).notifier,
+                              )
+                              .loadMore(),
+                        );
                       }
                       return false;
                     },
                     child: ListView(
-                      physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-                      padding: const EdgeInsets.fromLTRB(MuSpacing.space5, 0, MuSpacing.space5, MuSpacing.space8),
+                      physics: const BouncingScrollPhysics(
+                        parent: AlwaysScrollableScrollPhysics(),
+                      ),
+                      padding: const EdgeInsets.fromLTRB(
+                        MuSpacing.space5,
+                        0,
+                        MuSpacing.space5,
+                        MuSpacing.space8,
+                      ),
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(bottom: MuSpacing.space2),
-                          child: Text(view.count == 1 ? '1 student' : '${view.count} students', style: mu.text.caption),
+                          padding: const EdgeInsets.only(
+                            bottom: MuSpacing.space2,
+                          ),
+                          child: Text(
+                            view.count == 1
+                                ? '1 student'
+                                : '${view.count} students',
+                            style: mu.text.caption,
+                          ),
                         ),
                         MuFeedGroup(
                           children: [
                             for (var i = 0; i < items.length; i++)
-                              _StudentRow(student: items[i], leader: leader, last: i == items.length - 1),
+                              _StudentRow(
+                                student: items[i],
+                                leader: leader,
+                                last: i == items.length - 1,
+                              ),
                           ],
                         ),
-                        if (view.paged.hasMore || view.paged.loadMoreError != null)
+                        if (view.paged.hasMore ||
+                            view.paged.loadMoreError != null)
                           MuLoadMoreFooter(
                             isLoading: view.paged.isLoadingMore,
                             error: view.paged.loadMoreError,
-                            onRetry: () => ref.read(campusStudentsControllerProvider(_filter).notifier).loadMore(),
+                            onRetry: () => ref
+                                .read(
+                                  campusStudentsControllerProvider(
+                                    _filter,
+                                  ).notifier,
+                                )
+                                .loadMore(),
                           ),
                       ],
                     ),
@@ -143,7 +215,11 @@ class _CampusStudentsScreenState extends ConsumerState<CampusStudentsScreen> {
 }
 
 class _StudentRow extends StatelessWidget {
-  const _StudentRow({required this.student, required this.leader, required this.last});
+  const _StudentRow({
+    required this.student,
+    required this.leader,
+    required this.last,
+  });
 
   final CampusStudent student;
 

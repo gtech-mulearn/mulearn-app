@@ -4,7 +4,12 @@ import 'package:mulearn_app/features/problem_statements/domain/entities/problem_
 /// learner views). Throws `ApiException` on failure.
 abstract interface class ProblemStatementsRepository {
   /// A page of the published feed, newest first.
-  Future<PsPage> feed({String search, bool openOnly, int pageIndex, int perPage});
+  Future<PsPage> feed({
+    String search,
+    bool openOnly,
+    int pageIndex,
+    int perPage,
+  });
 
   /// Every statement the caller is trying or has submitted to. The backend
   /// has no filter for this, so it reads the whole feed (as the dashboard's

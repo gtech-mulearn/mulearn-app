@@ -20,7 +20,8 @@ class ResetPasswordScreen extends ConsumerStatefulWidget {
   const ResetPasswordScreen({super.key});
 
   @override
-  ConsumerState<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
+  ConsumerState<ResetPasswordScreen> createState() =>
+      _ResetPasswordScreenState();
 }
 
 class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
@@ -44,7 +45,9 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
     if (!(_tokenFormKey.currentState?.validate() ?? false)) return;
     FocusScope.of(context).unfocus();
     try {
-      await ref.read(authControllerProvider.notifier).verifyResetToken(_tokenController.text.trim());
+      await ref
+          .read(authControllerProvider.notifier)
+          .verifyResetToken(_tokenController.text.trim());
       if (mounted) setState(() => _step = _ResetStep.newPassword);
     } on Object catch (_) {
       // Surfaced via the ref.listen toast below.
@@ -57,7 +60,10 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
     try {
       await ref
           .read(authControllerProvider.notifier)
-          .resetPassword(token: _tokenController.text.trim(), password: _passwordController.text);
+          .resetPassword(
+            token: _tokenController.text.trim(),
+            password: _passwordController.text,
+          );
       if (!mounted) return;
       unawaited(HapticFeedback.mediumImpact());
       setState(() => _step = _ResetStep.done);
@@ -72,7 +78,11 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
 
     ref.listen(authControllerProvider, (_, next) {
       if (next.hasError && !next.isLoading) {
-        MuToast.show(context, message: ApiException.messageFor(next.error!), type: MuToastType.error);
+        MuToast.show(
+          context,
+          message: ApiException.messageFor(next.error!),
+          type: MuToastType.error,
+        );
       }
     });
 
@@ -99,7 +109,9 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
               autofocus: true,
               textInputAction: TextInputAction.done,
               onSubmitted: (_) => _verifyToken(),
-              validator: (v) => (v?.trim().isEmpty ?? true) ? 'Paste the code from the email.' : null,
+              validator: (v) => (v?.trim().isEmpty ?? true)
+                  ? 'Paste the code from the email.'
+                  : null,
             ),
           ),
         ],
@@ -146,7 +158,9 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
                     enabled: !loading,
                     textInputAction: TextInputAction.done,
                     onSubmitted: (_) => _resetPassword(),
-                    validator: (v) => v != _passwordController.text ? "The two passwords don't match." : null,
+                    validator: (v) => v != _passwordController.text
+                        ? "The two passwords don't match."
+                        : null,
                   ),
                 ],
               ),
@@ -160,14 +174,26 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
         bold: 'changed',
         lead: 'Sign in with your new password.',
         onBack: () => context.go(RoutePaths.signIn),
-        bottom: MuButton(label: 'Sign in', block: true, knob: true, onPressed: () => context.go(RoutePaths.signIn)),
+        bottom: MuButton(
+          label: 'Sign in',
+          block: true,
+          knob: true,
+          onPressed: () => context.go(RoutePaths.signIn),
+        ),
         children: [
           Center(
             child: Container(
               width: 88,
               height: 88,
-              decoration: BoxDecoration(color: context.mu.colors.successTint, shape: BoxShape.circle),
-              child: Icon(LucideIcons.check, size: 40, color: context.mu.colors.success),
+              decoration: BoxDecoration(
+                color: context.mu.colors.successTint,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                LucideIcons.check,
+                size: 40,
+                color: context.mu.colors.success,
+              ),
             ),
           ),
         ],

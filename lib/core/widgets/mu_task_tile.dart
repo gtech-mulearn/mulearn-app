@@ -45,7 +45,12 @@ class MuTaskTile extends StatelessWidget {
             Wrap(spacing: MuSpace.s, runSpacing: MuSpace.xs, children: tags),
             const SizedBox(height: MuSpace.s),
           ],
-          Text(title, style: MuType.title, maxLines: 1, overflow: TextOverflow.ellipsis),
+          Text(
+            title,
+            style: MuType.title,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
           const SizedBox(height: 2),
           Text(
             subtitle,
@@ -64,7 +69,10 @@ class MuTaskTile extends StatelessWidget {
                 ),
               const Spacer(),
               if (trailingLabel != null)
-                _TrailingButton(label: trailingLabel!, onTap: onTrailingTap ?? onTap),
+                _TrailingButton(
+                  label: trailingLabel!,
+                  onTap: onTrailingTap ?? onTap,
+                ),
             ],
           ),
         ],

@@ -13,10 +13,20 @@ class CreateMeetingScreen extends ConsumerWidget {
 
   final String circleId;
 
-  Future<void> _submit(BuildContext context, WidgetRef ref, MeetingForm form) async {
-    final ok = await ref.read(meetingActionsControllerProvider.notifier).createMeeting(circleId, form);
+  Future<void> _submit(
+    BuildContext context,
+    WidgetRef ref,
+    MeetingForm form,
+  ) async {
+    final ok = await ref
+        .read(meetingActionsControllerProvider.notifier)
+        .createMeeting(circleId, form);
     if (ok && context.mounted) {
-      MuToast.show(context, message: 'Meeting scheduled', type: MuToastType.success);
+      MuToast.show(
+        context,
+        message: 'Meeting scheduled',
+        type: MuToastType.success,
+      );
       context.pop();
     }
   }
@@ -35,7 +45,9 @@ class CreateMeetingScreen extends ConsumerWidget {
                 title: 'New meeting',
                 isSubmitting: actionState.isLoading,
                 submitLabel: 'Schedule meeting',
-                errorMessage: actionState.hasError ? ApiException.messageFor(actionState.error!) : null,
+                errorMessage: actionState.hasError
+                    ? ApiException.messageFor(actionState.error!)
+                    : null,
                 onSubmit: (form) => _submit(context, ref, form),
               ),
             ),

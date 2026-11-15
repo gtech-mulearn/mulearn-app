@@ -25,16 +25,22 @@ abstract class Capabilities with _$Capabilities {
   /// applications (the Mentor role link itself can stay unverified after
   /// approval). Who gets a role workspace is decided in
   /// `workspace_access.dart`, which also reads role verification.
-  factory Capabilities.derive(CurrentUser user, List<MentorApplication> mentorApplications) {
+  factory Capabilities.derive(
+    CurrentUser user,
+    List<MentorApplication> mentorApplications,
+  ) {
     bool has(String title) => user.roles.contains(title);
     final isMentor = has(RoleTitles.mentor);
     final isEnabler = has(RoleTitles.enabler) || has(RoleTitles.leadEnabler);
     final isCampusLead =
-        has(RoleTitles.campusLead) || has(RoleTitles.zonalCampusLead) || has(RoleTitles.districtCampusLead);
+        has(RoleTitles.campusLead) ||
+        has(RoleTitles.zonalCampusLead) ||
+        has(RoleTitles.districtCampusLead);
     return Capabilities(
       isLearner: has(RoleTitles.student),
       isMentor: isMentor,
-      isMentorApproved: isMentor && mentorApplications.any((a) => a.status == 'APPROVED'),
+      isMentorApproved:
+          isMentor && mentorApplications.any((a) => a.status == 'APPROVED'),
       isEnabler: isEnabler,
       isCampusLead: isCampusLead,
       isCompany: has(RoleTitles.company),

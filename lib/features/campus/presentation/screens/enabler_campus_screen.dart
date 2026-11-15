@@ -12,7 +12,8 @@ import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/features/campus/domain/entities/enabler.dart';
 import 'package:mulearn_app/features/campus/presentation/providers/enabler_providers.dart';
 
-String _cap(String s) => s.isEmpty ? s : '${s[0].toUpperCase()}${s.substring(1)}';
+String _cap(String s) =>
+    s.isEmpty ? s : '${s[0].toUpperCase()}${s.substring(1)}';
 
 enum _Priority { low, medium, high }
 
@@ -42,14 +43,22 @@ class EnablerCampusScreen extends ConsumerWidget {
           ref.refresh(campusNotesControllerProvider(campusId).future),
         ]),
         child: ListView(
-          physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+          physics: const BouncingScrollPhysics(
+            parent: AlwaysScrollableScrollPhysics(),
+          ),
           padding: muListPadding,
           children: [
             campus.when(
               skipError: true,
               skipLoadingOnReload: true,
-              loading: () => const SizedBox(height: 64, child: Center(child: MuDotsLoader())),
-              error: (e, _) => ErrorRetryView(error: e, onRetry: () => ref.invalidate(enablerCampusProvider(campusId))),
+              loading: () => const SizedBox(
+                height: 64,
+                child: Center(child: MuDotsLoader()),
+              ),
+              error: (e, _) => ErrorRetryView(
+                error: e,
+                onRetry: () => ref.invalidate(enablerCampusProvider(campusId)),
+              ),
               data: (c) => Row(
                 children: [
                   MuCampusSeal(code: c.campusCode, size: 64),
@@ -58,10 +67,17 @@ class EnablerCampusScreen extends ConsumerWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Semantics(header: true, child: Text(c.collegeName, style: mu.text.title1)),
+                        Semantics(
+                          header: true,
+                          child: Text(c.collegeName, style: mu.text.title1),
+                        ),
                         const SizedBox(height: 2),
                         Text(
-                          [c.campusCode, c.zone, c.orgType].where((x) => x.isNotEmpty).join(' · '),
+                          [
+                            c.campusCode,
+                            c.zone,
+                            c.orgType,
+                          ].where((x) => x.isNotEmpty).join(' · '),
                           style: mu.text.caption,
                         ),
                       ],
@@ -74,11 +90,17 @@ class EnablerCampusScreen extends ConsumerWidget {
             notes.when(
               skipError: true,
               skipLoadingOnReload: true,
-              loading: () => const Center(child: MuDotsLoader(label: 'Loading notes…')),
-              error: (e, _) =>
-                  ErrorRetryView(error: e, onRetry: () => ref.invalidate(campusNotesControllerProvider(campusId))),
+              loading: () =>
+                  const Center(child: MuDotsLoader(label: 'Loading notes…')),
+              error: (e, _) => ErrorRetryView(
+                error: e,
+                onRetry: () =>
+                    ref.invalidate(campusNotesControllerProvider(campusId)),
+              ),
               data: (list) => list.isEmpty
-                  ? const MuEmptyLine('No notes yet. Add what you discussed and when to follow up.')
+                  ? const MuEmptyLine(
+                      'No notes yet. Add what you discussed and when to follow up.',
+                    )
                   : Column(
                       children: [
                         for (var i = 0; i < list.length; i++) ...[
@@ -95,20 +117,35 @@ class EnablerCampusScreen extends ConsumerWidget {
   }
 
   Future<void> _addNote(BuildContext context, WidgetRef ref) async {
-    final input = await showMuSheet<({String note, String priority, DateTime? followUp})>(
-      context,
-      builder: (_) => const _NoteSheet(),
-    );
+    final input =
+        await showMuSheet<({String note, String priority, DateTime? followUp})>(
+          context,
+          builder: (_) => const _NoteSheet(),
+        );
     if (input == null || !context.mounted) return;
     try {
       final message = await ref
           .read(campusNotesControllerProvider(campusId).notifier)
-          .add(note: input.note, priority: input.priority, followUp: input.followUp);
+          .add(
+            note: input.note,
+            priority: input.priority,
+            followUp: input.followUp,
+          );
       if (context.mounted) {
-        MuToast.show(context, message: message.isEmpty ? 'Note added' : message, type: MuToastType.success);
+        MuToast.show(
+          context,
+          message: message.isEmpty ? 'Note added' : message,
+          type: MuToastType.success,
+        );
       }
     } on Object catch (e) {
-      if (context.mounted) MuToast.show(context, message: ApiException.messageFor(e), type: MuToastType.error);
+      if (context.mounted) {
+        MuToast.show(
+          context,
+          message: ApiException.messageFor(e),
+          type: MuToastType.error,
+        );
+      }
     }
   }
 }
@@ -146,12 +183,24 @@ class _NoteCard extends ConsumerWidget {
     );
     if (!sure || !context.mounted) return;
     try {
-      final message = await ref.read(campusNotesControllerProvider(campusId).notifier).delete(note.id);
+      final message = await ref
+          .read(campusNotesControllerProvider(campusId).notifier)
+          .delete(note.id);
       if (context.mounted) {
-        MuToast.show(context, message: message.isEmpty ? 'Note deleted' : message, type: MuToastType.success);
+        MuToast.show(
+          context,
+          message: message.isEmpty ? 'Note deleted' : message,
+          type: MuToastType.success,
+        );
       }
     } on Object catch (e) {
-      if (context.mounted) MuToast.show(context, message: ApiException.messageFor(e), type: MuToastType.error);
+      if (context.mounted) {
+        MuToast.show(
+          context,
+          message: ApiException.messageFor(e),
+          type: MuToastType.error,
+        );
+      }
     }
   }
 
@@ -165,7 +214,12 @@ class _NoteCard extends ConsumerWidget {
     final open = n.status == 'open';
     final overdue = n.followUp != null && n.followUp!.isBefore(today) && open;
     return MuSurfaceCard(
-      padding: const EdgeInsets.fromLTRB(MuSpacing.space4, MuSpacing.space3, MuSpacing.space1, MuSpacing.space4),
+      padding: const EdgeInsets.fromLTRB(
+        MuSpacing.space4,
+        MuSpacing.space3,
+        MuSpacing.space1,
+        MuSpacing.space4,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -195,24 +249,41 @@ class _NoteCard extends ConsumerWidget {
               crossAxisAlignment: WrapCrossAlignment.center,
               children: [
                 if (n.priority == 'high')
-                  MuPill(_cap(n.priority), tone: MuPillTone.danger, icon: LucideIcons.flag)
+                  MuPill(
+                    _cap(n.priority),
+                    tone: MuPillTone.danger,
+                    icon: LucideIcons.flag,
+                  )
                 else
                   MuPill(_cap(n.priority)),
                 if (open)
-                  MuPill(_cap(n.status), tone: MuPillTone.warning, icon: LucideIcons.circleDot)
+                  MuPill(
+                    _cap(n.status),
+                    tone: MuPillTone.warning,
+                    icon: LucideIcons.circleDot,
+                  )
                 else
-                  MuPill(_cap(n.status), tone: MuPillTone.success, icon: LucideIcons.check),
+                  MuPill(
+                    _cap(n.status),
+                    tone: MuPillTone.success,
+                    icon: LucideIcons.check,
+                  ),
                 if (n.followUp != null)
                   Text(
                     'Follow up ${formatDay(n.followUp!)}',
-                    style: mu.text.caption.copyWith(color: overdue ? c.danger : null),
+                    style: mu.text.caption.copyWith(
+                      color: overdue ? c.danger : null,
+                    ),
                   ),
               ],
             ),
           ),
           const SizedBox(height: MuSpacing.space2),
           Text(
-            [if (n.author != null) n.author!, formatAgo(n.createdAt.toLocal(), now)].join(' · '),
+            [
+              if (n.author != null) n.author!,
+              formatAgo(n.createdAt.toLocal(), now),
+            ].join(' · '),
             style: mu.text.caption,
           ),
         ],
@@ -267,7 +338,11 @@ class _NoteSheetState extends State<_NoteSheet> {
             setState(() => _error = 'Write a note first.');
             return;
           }
-          Navigator.pop(context, (note: text, priority: _priority.name, followUp: _followUp));
+          Navigator.pop(context, (
+            note: text,
+            priority: _priority.name,
+            followUp: _followUp,
+          ));
         },
       ),
       children: [
@@ -298,7 +373,8 @@ class _NoteSheetState extends State<_NoteSheet> {
         ),
         Semantics(
           button: true,
-          label: 'Follow up, ${_followUp == null ? 'no date' : formatDay(_followUp!)}',
+          label:
+              'Follow up, ${_followUp == null ? 'no date' : formatDay(_followUp!)}',
           excludeSemantics: true,
           onTap: _pickFollowUp,
           child: MuFieldChrome(
@@ -307,7 +383,11 @@ class _NoteSheetState extends State<_NoteSheet> {
             trailing: _followUp == null
                 ? SizedBox.square(
                     dimension: MuSizes.touchMin,
-                    child: Icon(LucideIcons.calendarPlus, size: 20, color: c.ink3),
+                    child: Icon(
+                      LucideIcons.calendarPlus,
+                      size: 20,
+                      color: c.ink3,
+                    ),
                   )
                 : MuIconButton(
                     icon: LucideIcons.x,
@@ -317,7 +397,10 @@ class _NoteSheetState extends State<_NoteSheet> {
                   ),
             child: Text(
               _followUp == null ? 'No date' : formatDay(_followUp!),
-              style: mu.text.body.copyWith(fontSize: 16, color: _followUp == null ? c.ink3 : c.ink),
+              style: mu.text.body.copyWith(
+                fontSize: 16,
+                color: _followUp == null ? c.ink3 : c.ink,
+              ),
             ),
           ),
         ),

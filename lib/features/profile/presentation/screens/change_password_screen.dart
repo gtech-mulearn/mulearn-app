@@ -12,7 +12,8 @@ class ChangePasswordScreen extends ConsumerStatefulWidget {
   const ChangePasswordScreen({super.key});
 
   @override
-  ConsumerState<ChangePasswordScreen> createState() => _ChangePasswordScreenState();
+  ConsumerState<ChangePasswordScreen> createState() =>
+      _ChangePasswordScreenState();
 }
 
 class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
@@ -43,7 +44,11 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
         .submit(current: _current.text, next: _next.text);
     if (!mounted) return;
     if (ok) {
-      MuToast.show(context, message: 'Password changed', type: MuToastType.success);
+      MuToast.show(
+        context,
+        message: 'Password changed',
+        type: MuToastType.success,
+      );
       context.pop();
       return;
     }
@@ -61,7 +66,11 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
       }
     });
     if (_currentServerError == null && _nextServerError == null) {
-      MuToast.show(context, message: ApiException.messageFor(error ?? 'Something went wrong'), type: MuToastType.error);
+      MuToast.show(
+        context,
+        message: ApiException.messageFor(error ?? 'Something went wrong'),
+        type: MuToastType.error,
+      );
     }
   }
 
@@ -115,7 +124,10 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                             error: _nextServerError,
                             autofillHints: const [AutofillHints.newPassword],
                             textInputAction: TextInputAction.next,
-                            validator: (v) => newPasswordError(current: _current.text, next: v ?? ''),
+                            validator: (v) => newPasswordError(
+                              current: _current.text,
+                              next: v ?? '',
+                            ),
                           ),
                           const SizedBox(height: MuSpacing.space4),
                           MuTextField(
@@ -125,7 +137,10 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
                             autofillHints: const [AutofillHints.newPassword],
                             textInputAction: TextInputAction.done,
                             onSubmitted: (_) => _submit(),
-                            validator: (v) => confirmPasswordError(next: _next.text, confirm: v ?? ''),
+                            validator: (v) => confirmPasswordError(
+                              next: _next.text,
+                              confirm: v ?? '',
+                            ),
                           ),
                         ],
                       ),

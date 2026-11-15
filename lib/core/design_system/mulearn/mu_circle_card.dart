@@ -65,7 +65,10 @@ class MuCircleCard extends StatelessWidget {
 
     final card = Container(
       padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(color: c.surface, borderRadius: BorderRadius.circular(MuRadii.card)),
+      decoration: BoxDecoration(
+        color: c.surface,
+        borderRadius: BorderRadius.circular(MuRadii.card),
+      ),
       child: Row(
         children: [
           ExcludeSemantics(
@@ -91,12 +94,25 @@ class MuCircleCard extends StatelessWidget {
                     ],
                   ),
                 const SizedBox(height: 6),
-                Text(title, style: mu.text.title3, maxLines: 2, overflow: TextOverflow.ellipsis),
+                Text(
+                  title,
+                  style: mu.text.title3,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
                 if (caption != null) ...[
                   const SizedBox(height: 2),
-                  Text(caption!, style: mu.text.caption, maxLines: 2, overflow: TextOverflow.ellipsis),
+                  Text(
+                    caption!,
+                    style: mu.text.caption,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                 ],
-                if (action != null) ...[const SizedBox(height: MuSpacing.space3), action!],
+                if (action != null) ...[
+                  const SizedBox(height: MuSpacing.space3),
+                  action!,
+                ],
               ],
             ),
           ),
@@ -115,7 +131,9 @@ class MuCircleCard extends StatelessWidget {
         ?caption,
       ].join(', '),
       explicitChildNodes: true,
-      child: onTap == null ? card : MuPressable(onTap: onTap, pressedScale: 0.99, child: card),
+      child: onTap == null
+          ? card
+          : MuPressable(onTap: onTap, pressedScale: 0.99, child: card),
     );
   }
 }
@@ -135,12 +153,17 @@ class _Ring extends StatelessWidget {
   Widget build(BuildContext context) {
     final mu = context.mu;
     final c = mu.colors;
-    final seats = members.isNotEmpty ? math.min(members.length, 5) : math.min(total, 5);
+    final seats = members.isNotEmpty
+        ? math.min(members.length, 5)
+        : math.min(total, 5);
 
     Offset at(int i) {
       // 72° apart, the first at the top.
       final a = -math.pi / 2 + i * 2 * math.pi / 5;
-      return Offset(_size / 2 + _orbit * math.cos(a) - _seat / 2, _size / 2 + _orbit * math.sin(a) - _seat / 2);
+      return Offset(
+        _size / 2 + _orbit * math.cos(a) - _seat / 2,
+        _size / 2 + _orbit * math.sin(a) - _seat / 2,
+      );
     }
 
     return SizedBox.square(
@@ -161,7 +184,10 @@ class _Ring extends StatelessWidget {
               padding: const EdgeInsets.all(30),
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 220),
-                decoration: BoxDecoration(color: live ? c.volt : c.night, shape: BoxShape.circle),
+                decoration: BoxDecoration(
+                  color: live ? c.volt : c.night,
+                  shape: BoxShape.circle,
+                ),
                 alignment: Alignment.center,
                 child: FittedBox(
                   child: Padding(
@@ -184,7 +210,11 @@ class _Ring extends StatelessWidget {
               left: at(i).dx,
               top: at(i).dy,
               child: members.isNotEmpty
-                  ? MuAvatar(name: members[i].name, url: members[i].url, size: _seat)
+                  ? MuAvatar(
+                      name: members[i].name,
+                      url: members[i].url,
+                      size: _seat,
+                    )
                   : Container(
                       width: _seat,
                       height: _seat,

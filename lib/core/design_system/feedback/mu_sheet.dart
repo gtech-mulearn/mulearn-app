@@ -8,7 +8,11 @@ import 'package:mulearn_app/core/design_system/tokens/mu_tokens.g.dart';
 ///
 /// [builder] provides the content; use [MuSheetBody] for the standard
 /// eyebrow / title / body / actions layout.
-Future<T?> showMuSheet<T>(BuildContext context, {required WidgetBuilder builder, bool dismissible = true}) {
+Future<T?> showMuSheet<T>(
+  BuildContext context, {
+  required WidgetBuilder builder,
+  bool dismissible = true,
+}) {
   final mu = context.mu;
   return showModalBottomSheet<T>(
     context: context,
@@ -20,7 +24,9 @@ Future<T?> showMuSheet<T>(BuildContext context, {required WidgetBuilder builder,
     backgroundColor: mu.colors.surface,
     barrierColor: mu.colors.scrim,
     elevation: 0,
-    shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(MuRadii.panel))),
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(MuRadii.panel)),
+    ),
     clipBehavior: Clip.antiAlias,
     sheetAnimationStyle: const AnimationStyle(
       duration: Duration(milliseconds: 380),
@@ -39,7 +45,11 @@ class _SheetFrame extends StatelessWidget {
   Widget build(BuildContext context) {
     final c = context.mu.colors;
     return Padding(
-      padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom + MediaQuery.paddingOf(context).bottom),
+      padding: EdgeInsets.only(
+        bottom:
+            MediaQuery.viewInsetsOf(context).bottom +
+            MediaQuery.paddingOf(context).bottom,
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -66,7 +76,13 @@ class _SheetFrame extends StatelessWidget {
 /// full width (primary first).
 class MuSheetBody extends StatelessWidget {
   /// Sheet content.
-  const MuSheetBody({required this.title, this.eyebrow, this.body, this.actions = const [], super.key});
+  const MuSheetBody({
+    required this.title,
+    this.eyebrow,
+    this.body,
+    this.actions = const [],
+    super.key,
+  });
 
   /// Small capitals above the title ("ONE STEP").
   final String? eyebrow;
@@ -84,12 +100,20 @@ class MuSheetBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final mu = context.mu;
     return Padding(
-      padding: const EdgeInsets.fromLTRB(MuSpacing.space5, 0, MuSpacing.space5, MuSpacing.space6),
+      padding: const EdgeInsets.fromLTRB(
+        MuSpacing.space5,
+        0,
+        MuSpacing.space5,
+        MuSpacing.space6,
+      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (eyebrow != null) ...[Text(eyebrow!.toUpperCase(), style: mu.text.eyebrow), const SizedBox(height: 6)],
+          if (eyebrow != null) ...[
+            Text(eyebrow!.toUpperCase(), style: mu.text.eyebrow),
+            const SizedBox(height: 6),
+          ],
           Semantics(header: true, child: Text(title, style: mu.text.title2)),
           if (body != null) ...[
             const SizedBox(height: MuSpacing.space2),
@@ -114,7 +138,13 @@ class MuSheetBody extends StatelessWidget {
 /// Grows with its content up to most of the screen.
 class MuFormSheet extends StatelessWidget {
   /// A form sheet.
-  const MuFormSheet({required this.title, required this.children, required this.action, this.lead, super.key});
+  const MuFormSheet({
+    required this.title,
+    required this.children,
+    required this.action,
+    this.lead,
+    super.key,
+  });
 
   final String title;
 
@@ -139,11 +169,19 @@ class MuFormSheet extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(MuSpacing.space5, 0, MuSpacing.space5, MuSpacing.space4),
+            padding: const EdgeInsets.fromLTRB(
+              MuSpacing.space5,
+              0,
+              MuSpacing.space5,
+              MuSpacing.space4,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Semantics(header: true, child: Text(title, style: mu.text.title2)),
+                Semantics(
+                  header: true,
+                  child: Text(title, style: mu.text.title2),
+                ),
                 if (lead != null) ...[
                   const SizedBox(height: MuSpacing.space1),
                   Text(lead!, style: mu.text.body.copyWith(color: c.ink2)),
@@ -153,7 +191,12 @@ class MuFormSheet extends StatelessWidget {
           ),
           Flexible(
             child: SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(MuSpacing.space5, 0, MuSpacing.space5, MuSpacing.space4),
+              padding: const EdgeInsets.fromLTRB(
+                MuSpacing.space5,
+                0,
+                MuSpacing.space5,
+                MuSpacing.space4,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -202,7 +245,10 @@ class MuFormSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Semantics(header: true, child: Text(title.toUpperCase(), style: mu.text.eyebrow)),
+          Semantics(
+            header: true,
+            child: Text(title.toUpperCase(), style: mu.text.eyebrow),
+          ),
           if (note != null) ...[
             const SizedBox(height: 4),
             Text(note!, style: mu.text.caption.copyWith(color: mu.colors.ink3)),
@@ -239,12 +285,19 @@ Future<bool> showMuConfirm(
       destructive: destructive,
     ),
     transitionBuilder: (context, animation, _, child) {
-      final curved = CurvedAnimation(parent: animation, curve: Curves.easeOutCubic, reverseCurve: Curves.easeInCubic);
+      final curved = CurvedAnimation(
+        parent: animation,
+        curve: Curves.easeOutCubic,
+        reverseCurve: Curves.easeInCubic,
+      );
       return FadeTransition(
         opacity: curved,
         child: SlideTransition(
           // Same path in and out: from below.
-          position: Tween(begin: const Offset(0, 0.12), end: Offset.zero).animate(curved),
+          position: Tween(
+            begin: const Offset(0, 0.12),
+            end: Offset.zero,
+          ).animate(curved),
           child: child,
         ),
       );
@@ -295,7 +348,10 @@ class _ConfirmDialog extends StatelessWidget {
                       Text(title, style: mu.text.title2),
                       if (body != null) ...[
                         const SizedBox(height: MuSpacing.space2),
-                        Text(body!, style: mu.text.body.copyWith(color: mu.colors.ink2)),
+                        Text(
+                          body!,
+                          style: mu.text.body.copyWith(color: mu.colors.ink2),
+                        ),
                       ],
                       const SizedBox(height: MuSpacing.space5),
                       Row(
@@ -312,7 +368,9 @@ class _ConfirmDialog extends StatelessWidget {
                           Expanded(
                             child: MuButton(
                               label: confirmLabel,
-                              variant: destructive ? MuButtonVariant.danger : MuButtonVariant.cobalt,
+                              variant: destructive
+                                  ? MuButtonVariant.danger
+                                  : MuButtonVariant.cobalt,
                               block: true,
                               onPressed: () => Navigator.of(context).pop(true),
                             ),

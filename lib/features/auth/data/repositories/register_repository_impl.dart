@@ -24,16 +24,20 @@ class RegisterRepositoryImpl implements RegisterRepository {
   final TokenStorage _tokenStorage;
 
   @override
-  Future<List<ReferenceOption>> fetchRoles() => _fetchReferenceOptions(_remote.fetchRoles);
+  Future<List<ReferenceOption>> fetchRoles() =>
+      _fetchReferenceOptions(_remote.fetchRoles);
 
   @override
-  Future<List<ReferenceOption>> fetchColleges() => _fetchReferenceOptions(_remote.fetchColleges);
+  Future<List<ReferenceOption>> fetchColleges() =>
+      _fetchReferenceOptions(_remote.fetchColleges);
 
   @override
-  Future<List<ReferenceOption>> fetchDepartments() => _fetchReferenceOptions(_remote.fetchDepartments);
+  Future<List<ReferenceOption>> fetchDepartments() =>
+      _fetchReferenceOptions(_remote.fetchDepartments);
 
   @override
-  Future<List<ReferenceOption>> fetchCompanies() => _fetchReferenceOptions(_remote.fetchCompanies);
+  Future<List<ReferenceOption>> fetchCompanies() =>
+      _fetchReferenceOptions(_remote.fetchCompanies);
 
   @override
   Future<List<LocationOption>> fetchCountries() async {
@@ -62,10 +66,15 @@ class RegisterRepositoryImpl implements RegisterRepository {
     }
   }
 
-  Future<List<ReferenceOption>> _fetchReferenceOptions(Future<List<dynamic>> Function() fetch) async {
+  Future<List<ReferenceOption>> _fetchReferenceOptions(
+    Future<List<dynamic>> Function() fetch,
+  ) async {
     try {
       final items = await fetch();
-      return items.cast<Map<String, dynamic>>().map((json) => ReferenceOptionDto.fromJson(json).toDomain()).toList();
+      return items
+          .cast<Map<String, dynamic>>()
+          .map((json) => ReferenceOptionDto.fromJson(json).toDomain())
+          .toList();
     } on DioException catch (e) {
       throw ApiException.fromDioException(e);
     }
@@ -122,8 +131,14 @@ class RegisterRepositoryImpl implements RegisterRepository {
             'response.',
       );
     }
-    await _tokenStorage.saveTokens(accessToken: tokens.accessToken, refreshToken: tokens.refreshToken);
-    return AuthSession(accessToken: tokens.accessToken, refreshToken: tokens.refreshToken);
+    await _tokenStorage.saveTokens(
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
+    );
+    return AuthSession(
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
+    );
   }
 
   @override

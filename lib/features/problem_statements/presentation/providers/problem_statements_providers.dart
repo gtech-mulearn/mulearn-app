@@ -12,7 +12,9 @@ part 'problem_statements_providers.g.dart';
 
 @riverpod
 ProblemStatementsRepository problemStatementsRepository(Ref ref) =>
-    ProblemStatementsRepositoryImpl(ProblemStatementsRemoteDataSource(ref.watch(dioProvider)));
+    ProblemStatementsRepositoryImpl(
+      ProblemStatementsRemoteDataSource(ref.watch(dioProvider)),
+    );
 
 /// The published feed for a search (all when empty), optionally only those
 /// still open, page by page. Each search is kept for a while once seen.
@@ -22,21 +24,29 @@ class PsFeed extends _$PsFeed {
   Future<void>? _inFlight;
 
   @override
-  Future<PagedState<ProblemStatement>> build(String search, bool openOnly) async {
+  Future<PagedState<ProblemStatement>> build(
+    String search,
+    bool openOnly,
+  ) async {
     ref.keepRecent();
     _pageIndex = 1;
     _inFlight = null;
-    final page = await ref.watch(problemStatementsRepositoryProvider).feed(search: search, openOnly: openOnly);
+    final page = await ref
+        .watch(problemStatementsRepositoryProvider)
+        .feed(search: search, openOnly: openOnly);
     return PagedState(items: page.items, hasMore: page.hasNext);
   }
 
   /// Loads the next page (or retries it); concurrent calls share one request.
-  Future<void> loadMore() => _inFlight ??= _loadNextPage().whenComplete(() => _inFlight = null);
+  Future<void> loadMore() =>
+      _inFlight ??= _loadNextPage().whenComplete(() => _inFlight = null);
 
   Future<void> _loadNextPage() async {
     final current = state.value;
     if (current == null || !current.hasMore) return;
-    state = AsyncData(current.copyWith(isLoadingMore: true, loadMoreError: null));
+    state = AsyncData(
+      current.copyWith(isLoadingMore: true, loadMoreError: null),
+    );
     final next = _pageIndex + 1;
     try {
       final page = await ref
@@ -45,11 +55,22 @@ class PsFeed extends _$PsFeed {
       if (!ref.mounted) return;
       _pageIndex = next;
       state = AsyncData(
-        PagedState(items: mergeUniqueBy(current.items, page.items, (s) => s.id), hasMore: page.hasNext),
+        PagedState(
+          items: mergeUniqueBy(current.items, page.items, (s) => s.id),
+          hasMore: page.hasNext,
+        ),
       );
     } on Object catch (e, st) {
-      appLogger.w('Loading more problem statements failed', error: e, stackTrace: st);
-      if (ref.mounted) state = AsyncData(current.copyWith(isLoadingMore: false, loadMoreError: e));
+      appLogger.w(
+        'Loading more problem statements failed',
+        error: e,
+        stackTrace: st,
+      );
+      if (ref.mounted) {
+        state = AsyncData(
+          current.copyWith(isLoadingMore: false, loadMoreError: e),
+        );
+      }
     }
   }
 }
@@ -77,7 +98,10 @@ class PsActions extends _$PsActions {
   @override
   Future<void> build() async {}
 
-  Future<bool> _run(String id, Future<void> Function(ProblemStatementsRepository repo) action) async {
+  Future<bool> _run(
+    String id,
+    Future<void> Function(ProblemStatementsRepository repo) action,
+  ) async {
     final repo = ref.read(problemStatementsRepositoryProvider);
     final link = ref.keepAlive(); // finish the refresh even if the sheet closes
     state = const AsyncLoading();
@@ -96,8 +120,10 @@ class PsActions extends _$PsActions {
     }
   }
 
-  Future<bool> startTrying(String id) => _run(id, (repo) => repo.startTrying(id));
+  Future<bool> startTrying(String id) =>
+      _run(id, (repo) => repo.startTrying(id));
   Future<bool> leave(String id) => _run(id, (repo) => repo.leave(id));
-  Future<bool> submit(String id, String url) => _run(id, (repo) => repo.submit(id, url));
+  Future<bool> submit(String id, String url) =>
+      _run(id, (repo) => repo.submit(id, url));
   Future<bool> withdraw(String id) => _run(id, (repo) => repo.withdraw(id));
 }

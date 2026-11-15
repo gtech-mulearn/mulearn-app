@@ -22,7 +22,11 @@ import 'package:mulearn_app/features/learning_circles/presentation/widgets/circl
 /// (yours to submit, or the organiser's review). RSVP / join / leave sits
 /// pinned at the bottom.
 class MeetingDetailScreen extends ConsumerWidget {
-  const MeetingDetailScreen({required this.meetingId, super.key, this.circleId});
+  const MeetingDetailScreen({
+    required this.meetingId,
+    super.key,
+    this.circleId,
+  });
 
   final String meetingId;
 
@@ -31,7 +35,11 @@ class MeetingDetailScreen extends ConsumerWidget {
   /// delete. Detail responses don't carry their circle id.
   final String? circleId;
 
-  Future<void> _delete(BuildContext context, WidgetRef ref, String title) async {
+  Future<void> _delete(
+    BuildContext context,
+    WidgetRef ref,
+    String title,
+  ) async {
     final ok = await showMuConfirm(
       context,
       title: 'Delete $title?',
@@ -45,13 +53,19 @@ class MeetingDetailScreen extends ConsumerWidget {
         .deleteMeeting(meetingId, circleId: circleId);
     if (!context.mounted) return;
     if (deleted) {
-      MuToast.show(context, message: 'Meeting deleted', type: MuToastType.success);
+      MuToast.show(
+        context,
+        message: 'Meeting deleted',
+        type: MuToastType.success,
+      );
       context.pop();
     } else {
       final error = ref.read(meetingActionsControllerProvider).error;
       MuToast.show(
         context,
-        message: ApiException.messageFor(error ?? "Couldn't delete the meeting"),
+        message: ApiException.messageFor(
+          error ?? "Couldn't delete the meeting",
+        ),
         type: MuToastType.error,
       );
     }
@@ -76,13 +90,16 @@ class MeetingDetailScreen extends ConsumerWidget {
                         MuIconButton(
                           icon: LucideIcons.pencil,
                           tooltip: 'Edit meeting',
-                          onPressed: () => context.push(RoutePaths.editMeetingPath(meetingId)),
+                          onPressed: () => context.push(
+                            RoutePaths.editMeetingPath(meetingId),
+                          ),
                         ),
                         const SizedBox(width: MuSpacing.space2),
                         MuIconButton(
                           icon: LucideIcons.trash2,
                           tooltip: 'Delete meeting',
-                          onPressed: () => _delete(context, ref, meeting!.title),
+                          onPressed: () =>
+                              _delete(context, ref, meeting!.title),
                         ),
                       ],
                     )
@@ -91,9 +108,14 @@ class MeetingDetailScreen extends ConsumerWidget {
             Expanded(
               child: detailState.when(
                 skipError: true,
-                loading: () => const Center(child: MuDotsLoader(label: 'Loading the meeting…')),
-                error: (error, _) =>
-                    ErrorRetryView(error: error, onRetry: () => ref.invalidate(meetingDetailProvider(meetingId))),
+                loading: () => const Center(
+                  child: MuDotsLoader(label: 'Loading the meeting…'),
+                ),
+                error: (error, _) => ErrorRetryView(
+                  error: error,
+                  onRetry: () =>
+                      ref.invalidate(meetingDetailProvider(meetingId)),
+                ),
                 data: (m) => _Body(meetingId: meetingId, meeting: m),
               ),
             ),
@@ -101,7 +123,9 @@ class MeetingDetailScreen extends ConsumerWidget {
               DecoratedBox(
                 decoration: BoxDecoration(
                   color: context.mu.colors.chalk,
-                  border: Border(top: BorderSide(color: context.mu.colors.line)),
+                  border: Border(
+                    top: BorderSide(color: context.mu.colors.line),
+                  ),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(
@@ -113,8 +137,10 @@ class MeetingDetailScreen extends ConsumerWidget {
                   child: MeetingActionsBar(
                     meetingId: meetingId,
                     meeting: meeting,
-                    onJoinWithCode: () =>
-                        showMuSheet<void>(context, builder: (_) => _JoinCodeSheet(meetingId: meetingId)),
+                    onJoinWithCode: () => showMuSheet<void>(
+                      context,
+                      builder: (_) => _JoinCodeSheet(meetingId: meetingId),
+                    ),
                   ),
                 ),
               ),
@@ -137,15 +163,24 @@ class _Body extends ConsumerWidget {
     final c = mu.colors;
     final m = meeting;
     final start = DateTime.tryParse(m.meetTime)?.toLocal();
-    final end = start == null || m.duration <= 0 ? null : start.add(Duration(hours: m.duration));
+    final end = start == null || m.duration <= 0
+        ? null
+        : start.add(Duration(hours: m.duration));
     final link = m.meetLink?.trim() ?? '';
     final online = link.isNotEmpty || m.mode.toLowerCase() == 'online';
 
     return MuRefresh(
       onRefresh: () => ref.refresh(meetingDetailProvider(meetingId).future),
       child: ListView(
-        physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-        padding: const EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space2, MuSpacing.space5, MuSpacing.space8),
+        physics: const BouncingScrollPhysics(
+          parent: AlwaysScrollableScrollPhysics(),
+        ),
+        padding: const EdgeInsets.fromLTRB(
+          MuSpacing.space5,
+          MuSpacing.space2,
+          MuSpacing.space5,
+          MuSpacing.space8,
+        ),
         children: [
           Wrap(
             spacing: 6,
@@ -157,47 +192,87 @@ class _Body extends ConsumerWidget {
                 const MuPill('Live now', tone: MuPillTone.volt)
               else
                 const MuPill('Upcoming', tone: MuPillTone.cobalt),
-              MuPill(m.mode, icon: online ? LucideIcons.wifi : LucideIcons.mapPin),
-              if (m.isRecurring) const MuPill('Every week', icon: LucideIcons.repeat),
-              if (m.ig.isNotEmpty) MuIgChip(name: m.ig, category: IgCategory.others),
+              MuPill(
+                m.mode,
+                icon: online ? LucideIcons.wifi : LucideIcons.mapPin,
+              ),
+              if (m.isRecurring)
+                const MuPill('Every week', icon: LucideIcons.repeat),
+              if (m.ig.isNotEmpty)
+                MuIgChip(name: m.ig, category: IgCategory.others),
             ],
           ),
           const SizedBox(height: MuSpacing.space4),
-          Semantics(header: true, child: Text(m.title, style: mu.text.display.copyWith(fontSize: 32, height: 1.05))),
+          Semantics(
+            header: true,
+            child: Text(
+              m.title,
+              style: mu.text.display.copyWith(fontSize: 32, height: 1.05),
+            ),
+          ),
           const SizedBox(height: MuSpacing.space5),
           MuFeedGroup(
             children: [
               MuFeedRow(
-                leading: const MuFeedIcon(LucideIcons.calendar, tone: MuFeedTone.event),
+                leading: const MuFeedIcon(
+                  LucideIcons.calendar,
+                  tone: MuFeedTone.event,
+                ),
                 subject: start == null ? m.meetTime : formatDay(start),
                 time: start == null
                     ? null
-                    : (end == null ? formatTime(start) : '${formatTime(start)} – ${formatTime(end)}'),
+                    : (end == null
+                          ? formatTime(start)
+                          : '${formatTime(start)} – ${formatTime(end)}'),
               ),
               MuFeedRow(
-                leading: MuFeedIcon(online ? LucideIcons.video : LucideIcons.mapPin, tone: MuFeedTone.event),
-                subject: m.meetPlace.isEmpty ? (online ? 'Online' : 'Place to be announced') : m.meetPlace,
+                leading: MuFeedIcon(
+                  online ? LucideIcons.video : LucideIcons.mapPin,
+                  tone: MuFeedTone.event,
+                ),
+                subject: m.meetPlace.isEmpty
+                    ? (online ? 'Online' : 'Place to be announced')
+                    : m.meetPlace,
                 time: link.isNotEmpty ? 'Tap to open the link' : null,
-                trailing: link.isNotEmpty ? Icon(LucideIcons.arrowUpRight, size: MuSizes.iconSm, color: c.ink3) : null,
+                trailing: link.isNotEmpty
+                    ? Icon(
+                        LucideIcons.arrowUpRight,
+                        size: MuSizes.iconSm,
+                        color: c.ink3,
+                      )
+                    : null,
                 onTap: link.isNotEmpty
                     ? () {
                         final uri = Uri.tryParse(link);
-                        if (uri != null) unawaited(ref.read(openExternalProvider)(uri));
+                        if (uri != null) {
+                          unawaited(ref.read(openExternalProvider)(uri));
+                        }
                       }
                     : null,
                 divider: m.meetCode != null,
               ),
               if (m.meetCode != null)
                 MuFeedRow(
-                  leading: const MuFeedIcon(LucideIcons.keyRound, tone: MuFeedTone.karma),
+                  leading: const MuFeedIcon(
+                    LucideIcons.keyRound,
+                    tone: MuFeedTone.karma,
+                  ),
                   subject: m.meetCode!,
                   time: 'Meeting code · share it when the meeting starts',
-                  trailing: Icon(LucideIcons.copy, size: MuSizes.iconSm, color: c.ink3),
+                  trailing: Icon(
+                    LucideIcons.copy,
+                    size: MuSizes.iconSm,
+                    color: c.ink3,
+                  ),
                   divider: false,
                   onTap: () async {
                     await Clipboard.setData(ClipboardData(text: m.meetCode!));
                     if (context.mounted) {
-                      MuToast.show(context, message: 'Code copied', type: MuToastType.success);
+                      MuToast.show(
+                        context,
+                        message: 'Code copied',
+                        type: MuToastType.success,
+                      );
                     }
                   },
                 ),
@@ -205,7 +280,10 @@ class _Body extends ConsumerWidget {
           ),
           if (m.description.trim().isNotEmpty) ...[
             const _Eyebrow('ABOUT'),
-            Text(m.description.trim(), style: mu.text.body.copyWith(color: c.ink2, height: 1.55)),
+            Text(
+              m.description.trim(),
+              style: mu.text.body.copyWith(color: c.ink2, height: 1.55),
+            ),
           ],
           if (m.attendees.isNotEmpty) ...[
             _Eyebrow('GOING · ${m.attendees.length}'),
@@ -214,7 +292,9 @@ class _Body extends ConsumerWidget {
                 MuAvatarStack(
                   names: [for (final a in m.attendees.take(5)) a.fullName],
                   urls: [for (final a in m.attendees.take(5)) a.profilePicUrl],
-                  extraCount: m.attendees.length > 5 ? m.attendees.length - 5 : 0,
+                  extraCount: m.attendees.length > 5
+                      ? m.attendees.length - 5
+                      : 0,
                   size: MuSizes.avatarMd,
                 ),
                 const SizedBox(width: MuSpacing.space3),
@@ -250,8 +330,14 @@ class _Eyebrow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.only(top: MuSpacing.space8, bottom: MuSpacing.space3),
-    child: Semantics(header: true, child: Text(text, style: context.mu.text.eyebrow)),
+    padding: const EdgeInsets.only(
+      top: MuSpacing.space8,
+      bottom: MuSpacing.space3,
+    ),
+    child: Semantics(
+      header: true,
+      child: Text(text, style: context.mu.text.eyebrow),
+    ),
   );
 }
 
@@ -277,12 +363,16 @@ class _JoinCodeSheetState extends ConsumerState<_JoinCodeSheet> {
   Future<void> _join() async {
     final code = _code.text.trim();
     if (code.length != 6) return;
-    await ref.read(meetingActionsControllerProvider.notifier).joinWithCode(widget.meetingId, code);
+    await ref
+        .read(meetingActionsControllerProvider.notifier)
+        .joinWithCode(widget.meetingId, code);
     if (!mounted) return;
     final error = ref.read(meetingActionsControllerProvider).error;
     MuToast.show(
       context,
-      message: error == null ? "You're in the meeting" : ApiException.messageFor(error),
+      message: error == null
+          ? "You're in the meeting"
+          : ApiException.messageFor(error),
       type: error == null ? MuToastType.success : MuToastType.error,
     );
     if (error == null) Navigator.of(context).pop();
@@ -294,7 +384,12 @@ class _JoinCodeSheetState extends ConsumerState<_JoinCodeSheet> {
     return MuFormSheet(
       title: 'Join with code',
       lead: 'Ask the organiser for the 6-character code.',
-      action: MuButton(label: 'Join', block: true, loading: busy, onPressed: busy ? null : _join),
+      action: MuButton(
+        label: 'Join',
+        block: true,
+        loading: busy,
+        onPressed: busy ? null : _join,
+      ),
       children: [
         MuTextField(
           label: 'Meeting code',
@@ -346,7 +441,10 @@ class _OrganizerReportState extends ConsumerState<_OrganizerReport> {
       ),
       error: (error, _) => Padding(
         padding: const EdgeInsets.only(top: MuSpacing.space6),
-        child: Text(ApiException.messageFor(error), style: mu.text.body.copyWith(color: c.danger)),
+        child: Text(
+          ApiException.messageFor(error),
+          style: mu.text.body.copyWith(color: c.danger),
+        ),
       ),
       data: (report) {
         if (report.isReportSubmitted) {
@@ -354,14 +452,21 @@ class _OrganizerReportState extends ConsumerState<_OrganizerReport> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const _Eyebrow('MEETING REPORT'),
-              if (report.report != null && report.report!.trim().isNotEmpty) ...[
-                Text(report.report!.trim(), style: mu.text.body.copyWith(color: c.ink2, height: 1.55)),
+              if (report.report != null &&
+                  report.report!.trim().isNotEmpty) ...[
+                Text(
+                  report.report!.trim(),
+                  style: mu.text.body.copyWith(color: c.ink2, height: 1.55),
+                ),
                 const SizedBox(height: MuSpacing.space3),
               ],
               MuFeedGroup(
                 children: [
                   for (var i = 0; i < report.attendees.length; i++)
-                    _ReportAttendeeRow(attendee: report.attendees[i], last: i == report.attendees.length - 1),
+                    _ReportAttendeeRow(
+                      attendee: report.attendees[i],
+                      last: i == report.attendees.length - 1,
+                    ),
                 ],
               ),
             ],
@@ -388,7 +493,10 @@ class _OrganizerReportState extends ConsumerState<_OrganizerReport> {
             const SizedBox(height: MuSpacing.space2),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: MuSpacing.space4),
-              decoration: BoxDecoration(color: c.surface, borderRadius: BorderRadius.circular(MuRadii.card)),
+              decoration: BoxDecoration(
+                color: c.surface,
+                borderRadius: BorderRadius.circular(MuRadii.card),
+              ),
               child: Column(
                 children: [
                   for (final a in report.attendees)
@@ -403,7 +511,10 @@ class _OrganizerReportState extends ConsumerState<_OrganizerReport> {
             ),
             if (actions.hasError) ...[
               const SizedBox(height: MuSpacing.space2),
-              Text(ApiException.messageFor(actions.error!), style: mu.text.caption.copyWith(color: c.danger)),
+              Text(
+                ApiException.messageFor(actions.error!),
+                style: mu.text.caption.copyWith(color: c.danger),
+              ),
             ],
             const SizedBox(height: MuSpacing.space4),
             MuButton(
@@ -414,7 +525,11 @@ class _OrganizerReportState extends ConsumerState<_OrganizerReport> {
                   ? null
                   : () => ref
                         .read(meetingActionsControllerProvider.notifier)
-                        .submitMeetingReport(widget.meetingId, report: _report.text.trim(), attendees: _approved),
+                        .submitMeetingReport(
+                          widget.meetingId,
+                          report: _report.text.trim(),
+                          attendees: _approved,
+                        ),
             ),
           ],
         );
@@ -480,7 +595,10 @@ class _AttendeeReportState extends ConsumerState<_AttendeeReport> {
       ),
       error: (error, _) => Padding(
         padding: const EdgeInsets.only(top: MuSpacing.space6),
-        child: Text(ApiException.messageFor(error), style: mu.text.body.copyWith(color: c.danger)),
+        child: Text(
+          ApiException.messageFor(error),
+          style: mu.text.body.copyWith(color: c.danger),
+        ),
       ),
       data: (report) {
         if (report.report != null || report.reportLink != null) {
@@ -491,7 +609,10 @@ class _AttendeeReportState extends ConsumerState<_AttendeeReport> {
               MuFeedGroup(
                 children: [
                   MuFeedRow(
-                    leading: const MuFeedIcon(LucideIcons.fileText, tone: MuFeedTone.done),
+                    leading: const MuFeedIcon(
+                      LucideIcons.fileText,
+                      tone: MuFeedTone.done,
+                    ),
                     subject: report.report ?? 'Report link',
                     time: report.reportLink,
                     divider: false,
@@ -499,7 +620,9 @@ class _AttendeeReportState extends ConsumerState<_AttendeeReport> {
                         ? null
                         : () {
                             final uri = Uri.tryParse(report.reportLink!);
-                            if (uri != null) unawaited(ref.read(openExternalProvider)(uri));
+                            if (uri != null) {
+                              unawaited(ref.read(openExternalProvider)(uri));
+                            }
                           },
                   ),
                 ],
@@ -527,7 +650,10 @@ class _AttendeeReportState extends ConsumerState<_AttendeeReport> {
             ),
             if (actions.hasError) ...[
               const SizedBox(height: MuSpacing.space2),
-              Text(ApiException.messageFor(actions.error!), style: mu.text.caption.copyWith(color: c.danger)),
+              Text(
+                ApiException.messageFor(actions.error!),
+                style: mu.text.caption.copyWith(color: c.danger),
+              ),
             ],
             const SizedBox(height: MuSpacing.space4),
             MuButton(
@@ -540,8 +666,12 @@ class _AttendeeReportState extends ConsumerState<_AttendeeReport> {
                         .read(meetingActionsControllerProvider.notifier)
                         .submitAttendeeReport(
                           widget.meetingId,
-                          report: _report.text.trim().isEmpty ? null : _report.text.trim(),
-                          reportLink: _link.text.trim().isEmpty ? null : _link.text.trim(),
+                          report: _report.text.trim().isEmpty
+                              ? null
+                              : _report.text.trim(),
+                          reportLink: _link.text.trim().isEmpty
+                              ? null
+                              : _link.text.trim(),
                         ),
             ),
           ],

@@ -69,7 +69,10 @@ class MuSlab extends StatelessWidget {
     };
     final slab = Container(
       constraints: const BoxConstraints(minHeight: 164),
-      decoration: BoxDecoration(color: bg, borderRadius: BorderRadius.circular(MuRadii.panel)),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(MuRadii.panel),
+      ),
       clipBehavior: Clip.antiAlias,
       child: Stack(
         children: [
@@ -89,10 +92,17 @@ class MuSlab extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  if (badge != null) ...[badge!, const SizedBox(height: MuSpacing.space3)],
+                  if (badge != null) ...[
+                    badge!,
+                    const SizedBox(height: MuSpacing.space3),
+                  ],
                   Text(
                     title,
-                    style: mu.text.display.copyWith(fontSize: 30, height: 1, color: fg),
+                    style: mu.text.display.copyWith(
+                      fontSize: 30,
+                      height: 1,
+                      color: fg,
+                    ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -100,12 +110,18 @@ class MuSlab extends StatelessWidget {
                     const SizedBox(height: MuSpacing.space2),
                     Text(
                       body!,
-                      style: mu.text.label.copyWith(color: fg.withValues(alpha: 0.86), fontWeight: FontWeight.w500),
+                      style: mu.text.label.copyWith(
+                        color: fg.withValues(alpha: 0.86),
+                        fontWeight: FontWeight.w500,
+                      ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ],
-                  if (footer != null) ...[const SizedBox(height: MuSpacing.space4), footer!],
+                  if (footer != null) ...[
+                    const SizedBox(height: MuSpacing.space4),
+                    footer!,
+                  ],
                 ],
               ),
             ),
@@ -116,7 +132,11 @@ class MuSlab extends StatelessWidget {
     if (onTap == null) return slab;
     return Semantics(
       button: true,
-      child: GestureDetector(onTap: onTap, behavior: HitTestBehavior.opaque, child: slab),
+      child: GestureDetector(
+        onTap: onTap,
+        behavior: HitTestBehavior.opaque,
+        child: slab,
+      ),
     );
   }
 }
@@ -136,7 +156,8 @@ class _OrbsPainter extends CustomPainter {
       h = (h * 31 + u) & 0x7fffffff;
     }
     final rnd = math.Random(h);
-    double jitter(double v, double range) => v + (rnd.nextDouble() - 0.5) * range;
+    double jitter(double v, double range) =>
+        v + (rnd.nextDouble() - 0.5) * range;
     final right = size.width;
     final shapes = <(Offset, double, double, double)>[
       // centre, width, height, rotation
@@ -153,11 +174,15 @@ class _OrbsPainter extends CustomPainter {
         ..rotate(rot);
       final rect = Rect.fromCenter(center: Offset.zero, width: w, height: hgt);
       canvas
-        ..drawRRect(RRect.fromRectAndRadius(rect, Radius.circular(hgt / 2)), Paint()..color = colors[i % colors.length])
+        ..drawRRect(
+          RRect.fromRectAndRadius(rect, Radius.circular(hgt / 2)),
+          Paint()..color = colors[i % colors.length],
+        )
         ..restore();
     }
   }
 
   @override
-  bool shouldRepaint(_OrbsPainter old) => old.seed != seed || old.colors != colors;
+  bool shouldRepaint(_OrbsPainter old) =>
+      old.seed != seed || old.colors != colors;
 }

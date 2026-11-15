@@ -12,7 +12,11 @@ const searchDebounce = Duration(milliseconds: 350);
 /// search key ([submit]).
 class SearchDebouncer {
   /// Calls [_apply] with each settled query.
-  SearchDebouncer(this._apply, {this.delay = searchDebounce, this.minLength = 2});
+  SearchDebouncer(
+    this._apply, {
+    this.delay = searchDebounce,
+    this.minLength = 2,
+  });
 
   final void Function(String query) _apply;
 
@@ -26,7 +30,8 @@ class SearchDebouncer {
   Timer? _timer;
 
   /// [text] with its ends trimmed and inner runs of spaces collapsed.
-  static String normalize(String text) => text.trim().replaceAll(RegExp(r'\s+'), ' ');
+  static String normalize(String text) =>
+      text.trim().replaceAll(RegExp(r'\s+'), ' ');
 
   /// The field changed.
   void onChanged(String text) {
