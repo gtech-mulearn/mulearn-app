@@ -26,8 +26,7 @@ const registerWizardControllerProvider = RegisterWizardControllerProvider._();
 /// survive navigating from the basic-info screen to the role-selection screen
 /// to the role-details screen, each a separate route. [reset] is called once
 /// the flow completes (or is abandoned back at sign-in).
-final class RegisterWizardControllerProvider
-    extends $NotifierProvider<RegisterWizardController, RegisterWizardState> {
+final class RegisterWizardControllerProvider extends $NotifierProvider<RegisterWizardController, RegisterWizardState> {
   /// Holds steps 1–2's data (basic info + role) across the separate screens
   /// that make up the registration flow.
   ///
@@ -55,15 +54,11 @@ final class RegisterWizardControllerProvider
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(RegisterWizardState value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<RegisterWizardState>(value),
-    );
+    return $ProviderOverride(origin: this, providerOverride: $SyncValueProvider<RegisterWizardState>(value));
   }
 }
 
-String _$registerWizardControllerHash() =>
-    r'bd68c88e2e9f496d710d32e24b578fa4b0254b02';
+String _$registerWizardControllerHash() => r'bd68c88e2e9f496d710d32e24b578fa4b0254b02';
 
 /// Holds steps 1–2's data (basic info + role) across the separate screens
 /// that make up the registration flow.
@@ -73,8 +68,7 @@ String _$registerWizardControllerHash() =>
 /// to the role-details screen, each a separate route. [reset] is called once
 /// the flow completes (or is abandoned back at sign-in).
 
-abstract class _$RegisterWizardController
-    extends $Notifier<RegisterWizardState> {
+abstract class _$RegisterWizardController extends $Notifier<RegisterWizardState> {
   RegisterWizardState build();
   @$mustCallSuper
   @override

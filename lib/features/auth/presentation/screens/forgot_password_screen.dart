@@ -18,8 +18,7 @@ class ForgotPasswordScreen extends ConsumerStatefulWidget {
   const ForgotPasswordScreen({super.key});
 
   @override
-  ConsumerState<ForgotPasswordScreen> createState() =>
-      _ForgotPasswordScreenState();
+  ConsumerState<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
 }
 
 class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
@@ -37,9 +36,9 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
     if (!(_formKey.currentState?.validate() ?? false)) return;
     FocusScope.of(context).unfocus();
     try {
-      await ref.read(authControllerProvider.notifier).requestPasswordReset(
-            emailOrMuid: _emailOrMuidController.text.trim(),
-          );
+      await ref
+          .read(authControllerProvider.notifier)
+          .requestPasswordReset(emailOrMuid: _emailOrMuidController.text.trim());
       if (mounted) setState(() => _sent = true);
     } on Object catch (_) {
       // Surfaced via the ref.listen snackbar below.
@@ -76,7 +75,7 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                 _sent
                     ? 'Check your email for a link to reset your password.'
                     : "Enter your email or MuID and we'll send you a link to "
-                        'reset your password.',
+                          'reset your password.',
                 style: MuType.body.copyWith(color: MuColors.inkSecondary),
               ),
               const SizedBox(height: MuSpace.xxl),
@@ -91,13 +90,9 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                         textInputAction: TextInputAction.done,
                         enabled: !isLoading,
                         onFieldSubmitted: (_) => _submit(),
-                        decoration: const InputDecoration(
-                          labelText: 'EMAIL OR MUID',
-                          hintText: 'you@college.edu',
-                        ),
-                        validator: (value) => (value?.trim().isEmpty ?? true)
-                            ? 'Enter your email or MuID to continue.'
-                            : null,
+                        decoration: const InputDecoration(labelText: 'EMAIL OR MUID', hintText: 'you@college.edu'),
+                        validator: (value) =>
+                            (value?.trim().isEmpty ?? true) ? 'Enter your email or MuID to continue.' : null,
                       ),
                       const SizedBox(height: MuSpace.xl),
                       MuPrimaryButton(

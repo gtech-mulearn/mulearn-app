@@ -15,12 +15,10 @@ class RegisterBasicInfoScreen extends ConsumerStatefulWidget {
   const RegisterBasicInfoScreen({super.key});
 
   @override
-  ConsumerState<RegisterBasicInfoScreen> createState() =>
-      _RegisterBasicInfoScreenState();
+  ConsumerState<RegisterBasicInfoScreen> createState() => _RegisterBasicInfoScreenState();
 }
 
-class _RegisterBasicInfoScreenState
-    extends ConsumerState<RegisterBasicInfoScreen> {
+class _RegisterBasicInfoScreenState extends ConsumerState<RegisterBasicInfoScreen> {
   final _formKey = GlobalKey<FormState>();
   final _fullNameController = TextEditingController();
   final _emailController = TextEditingController();
@@ -31,8 +29,7 @@ class _RegisterBasicInfoScreenState
 
   /// Signing up from "Continue with Google": the email comes from the Google
   /// account (read-only) and there is no password.
-  bool get _isGoogleSignUp =>
-      ref.read(registerWizardControllerProvider).googleTempToken != null;
+  bool get _isGoogleSignUp => ref.read(registerWizardControllerProvider).googleTempToken != null;
 
   @override
   void initState() {
@@ -54,7 +51,9 @@ class _RegisterBasicInfoScreenState
   void _continue() {
     if (!(_formKey.currentState?.validate() ?? false)) return;
     FocusScope.of(context).unfocus();
-    ref.read(registerWizardControllerProvider.notifier).setBasicInfo(
+    ref
+        .read(registerWizardControllerProvider.notifier)
+        .setBasicInfo(
           fullName: _fullNameController.text.trim(),
           email: _emailController.text.trim(),
           password: _isGoogleSignUp ? null : _passwordController.text,
@@ -78,9 +77,7 @@ class _RegisterBasicInfoScreenState
               Text('Step into the community', style: MuType.display.copyWith(fontSize: 30)),
               const SizedBox(height: MuSpace.s),
               Text(
-                isGoogle
-                    ? 'Finish creating your account with your Google email'
-                    : 'Create your account to get started',
+                isGoogle ? 'Finish creating your account with your Google email' : 'Create your account to get started',
                 style: MuType.body.copyWith(color: MuColors.inkSecondary),
               ),
               const SizedBox(height: MuSpace.xxl),
@@ -92,10 +89,7 @@ class _RegisterBasicInfoScreenState
                     TextFormField(
                       controller: _fullNameController,
                       textInputAction: TextInputAction.next,
-                      decoration: const InputDecoration(
-                        labelText: 'Full Name',
-                        hintText: 'Enter your full name',
-                      ),
+                      decoration: const InputDecoration(labelText: 'Full Name', hintText: 'Enter your full name'),
                       validator: (value) {
                         final v = value?.trim() ?? '';
                         if (v.length < 3) {
@@ -127,63 +121,59 @@ class _RegisterBasicInfoScreenState
                       },
                     ),
                     if (!isGoogle) ...[
-                    const SizedBox(height: MuSpace.l),
-                    TextFormField(
-                      controller: _passwordController,
-                      obscureText: _obscurePassword,
-                      textInputAction: TextInputAction.next,
-                      decoration: InputDecoration(
-                        labelText: 'Password',
-                        hintText: 'Create password',
-                        suffixIcon: IconButton(
-                          tooltip: _obscurePassword ? 'Show password' : 'Hide password',
-                          icon: Icon(
-                            _obscurePassword ? LucideIcons.eye : LucideIcons.eyeOff,
-                            color: MuColors.inkSecondary,
-                          ),
-                          onPressed: () => setState(
-                            () => _obscurePassword = !_obscurePassword,
-                          ),
-                        ),
-                      ),
-                      validator: (value) {
-                        final v = value ?? '';
-                        if (v.length < 8) {
-                          return 'Password must be at least 8 characters.';
-                        }
-                        if (v.length > 100) {
-                          return 'Password must be at most 100 characters.';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: MuSpace.l),
-                    TextFormField(
-                      controller: _confirmPasswordController,
-                      obscureText: _obscureConfirm,
-                      textInputAction: TextInputAction.done,
-                      onFieldSubmitted: (_) => _continue(),
-                      decoration: InputDecoration(
-                        labelText: 'Confirm Password',
-                        hintText: 'Re-enter password',
-                        suffixIcon: IconButton(
-                          tooltip: _obscureConfirm ? 'Show password' : 'Hide password',
-                          icon: Icon(
-                            _obscureConfirm ? LucideIcons.eye : LucideIcons.eyeOff,
-                            color: MuColors.inkSecondary,
-                          ),
-                          onPressed: () => setState(
-                            () => _obscureConfirm = !_obscureConfirm,
+                      const SizedBox(height: MuSpace.l),
+                      TextFormField(
+                        controller: _passwordController,
+                        obscureText: _obscurePassword,
+                        textInputAction: TextInputAction.next,
+                        decoration: InputDecoration(
+                          labelText: 'Password',
+                          hintText: 'Create password',
+                          suffixIcon: IconButton(
+                            tooltip: _obscurePassword ? 'Show password' : 'Hide password',
+                            icon: Icon(
+                              _obscurePassword ? LucideIcons.eye : LucideIcons.eyeOff,
+                              color: MuColors.inkSecondary,
+                            ),
+                            onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
                           ),
                         ),
+                        validator: (value) {
+                          final v = value ?? '';
+                          if (v.length < 8) {
+                            return 'Password must be at least 8 characters.';
+                          }
+                          if (v.length > 100) {
+                            return 'Password must be at most 100 characters.';
+                          }
+                          return null;
+                        },
                       ),
-                      validator: (value) {
-                        if (value != _passwordController.text) {
-                          return "Passwords don't match.";
-                        }
-                        return null;
-                      },
-                    ),
+                      const SizedBox(height: MuSpace.l),
+                      TextFormField(
+                        controller: _confirmPasswordController,
+                        obscureText: _obscureConfirm,
+                        textInputAction: TextInputAction.done,
+                        onFieldSubmitted: (_) => _continue(),
+                        decoration: InputDecoration(
+                          labelText: 'Confirm Password',
+                          hintText: 'Re-enter password',
+                          suffixIcon: IconButton(
+                            tooltip: _obscureConfirm ? 'Show password' : 'Hide password',
+                            icon: Icon(
+                              _obscureConfirm ? LucideIcons.eye : LucideIcons.eyeOff,
+                              color: MuColors.inkSecondary,
+                            ),
+                            onPressed: () => setState(() => _obscureConfirm = !_obscureConfirm),
+                          ),
+                        ),
+                        validator: (value) {
+                          if (value != _passwordController.text) {
+                            return "Passwords don't match.";
+                          }
+                          return null;
+                        },
+                      ),
                     ],
                     const SizedBox(height: MuSpace.xl),
                     MuPrimaryButton(label: 'Continue', onPressed: _continue),

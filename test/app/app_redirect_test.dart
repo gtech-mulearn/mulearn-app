@@ -101,4 +101,29 @@ void main() {
     expect(appRedirect(auth: signedIn, uri: u('/register')), '/home');
     expect(appRedirect(auth: signedOut, uri: u('/register')), isNull);
   });
+
+  group('pre-login', () {
+    const firstLaunch = AsyncData(false);
+
+    test('the first signed-out launch shows the arrival; later ones open the Commons', () {
+      expect(appRedirect(auth: signedOut, arrivalSeen: firstLaunch, uri: u('/splash')), '/welcome');
+      expect(appRedirect(auth: signedOut, uri: u('/splash')), '/commons');
+    });
+
+    test('waits on the splash until the first-launch flag is read', () {
+      expect(appRedirect(auth: signedOut, arrivalSeen: const AsyncLoading(), uri: u('/splash')), isNull);
+    });
+
+    test('a deep link still goes through sign-in and resumes, arrival or not', () {
+      final r = appRedirect(auth: signedOut, arrivalSeen: firstLaunch, uri: u('/events/e1'));
+      expect(r, '/sign-in?from=${fromOf('/events/e1')}');
+    });
+
+    test('guests can stay on the arrival and the Commons; signing in leaves them', () {
+      expect(appRedirect(auth: signedOut, uri: u('/welcome')), isNull);
+      expect(appRedirect(auth: signedOut, uri: u('/commons')), isNull);
+      expect(appRedirect(auth: signedIn, uri: u('/commons')), '/home');
+      expect(appRedirect(auth: signedIn, uri: u('/welcome')), '/home');
+    });
+  });
 }

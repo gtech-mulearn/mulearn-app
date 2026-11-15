@@ -11,10 +11,7 @@ class AuthRemoteDataSource {
   final Dio _dio;
 
   /// `POST /api/v1/auth/user-authentication/` with `emailOrMuid` + `password`.
-  Future<Map<String, dynamic>> authenticateWithPassword({
-    required String emailOrMuid,
-    required String password,
-  }) async {
+  Future<Map<String, dynamic>> authenticateWithPassword({required String emailOrMuid, required String password}) async {
     final response = await _dio.post<dynamic>(
       ApiPaths.userAuthentication,
       data: {'emailOrMuid': emailOrMuid, 'password': password},
@@ -24,10 +21,7 @@ class AuthRemoteDataSource {
   }
 
   /// `POST /api/v1/auth/user-authentication/` with `emailOrMuid` + `otp`.
-  Future<Map<String, dynamic>> authenticateWithOtp({
-    required String emailOrMuid,
-    required String otp,
-  }) async {
+  Future<Map<String, dynamic>> authenticateWithOtp({required String emailOrMuid, required String otp}) async {
     final response = await _dio.post<dynamic>(
       ApiPaths.userAuthentication,
       data: {'emailOrMuid': emailOrMuid, 'otp': otp},
@@ -67,10 +61,7 @@ class AuthRemoteDataSource {
   }
 
   /// `POST /api/v1/dashboard/user/reset-password/{token}/` with `password`.
-  Future<void> resetPassword({
-    required String token,
-    required String password,
-  }) async {
+  Future<void> resetPassword({required String token, required String password}) async {
     final response = await _dio.post<dynamic>(
       '${ApiPaths.resetPassword}$token/',
       data: {'password': password},
@@ -81,9 +72,7 @@ class AuthRemoteDataSource {
 
   /// `POST /api/v1/auth/google-mobile/` — exchanges a native Google ID token
   /// for an app session.
-  Future<Map<String, dynamic>> authenticateWithGoogle({
-    required String idToken,
-  }) async {
+  Future<Map<String, dynamic>> authenticateWithGoogle({required String idToken}) async {
     final response = await _dio.post<dynamic>(
       ApiPaths.googleMobileLogin,
       data: {'id_token': idToken, 'idToken': idToken},
@@ -96,18 +85,12 @@ class AuthRemoteDataSource {
   /// Apple identity token for an app session. Only the token is sent: the
   /// authserver takes the email from the verified token, and an older
   /// deployment trusted a client-supplied `email`, so the app never sends one.
-  Future<Map<String, dynamic>> authenticateWithApple({
-    required String identityToken,
-  }) async {
+  Future<Map<String, dynamic>> authenticateWithApple({required String identityToken}) async {
     final response = await _dio.post<dynamic>(
       ApiPaths.appleMobileLogin,
-      data: {
-        'identity_token': identityToken,
-        'identityToken': identityToken,
-      },
+      data: {'identity_token': identityToken, 'identityToken': identityToken},
       options: Options(headers: {RequestFlags.skipAuth: true}),
     );
     return ApiEnvelope.unwrapObject(response);
   }
-
 }

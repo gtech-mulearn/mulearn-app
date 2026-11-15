@@ -13,11 +13,7 @@ final class SocialSignedIn extends SocialSignInOutcome {
 /// `POST /api/v1/register/`, which takes the email from it (the client can't
 /// choose it) and creates the account without a password.
 final class SocialNeedsRegistration extends SocialSignInOutcome {
-  const SocialNeedsRegistration({
-    required this.tempToken,
-    required this.email,
-    required this.fullName,
-  });
+  const SocialNeedsRegistration({required this.tempToken, required this.email, required this.fullName});
 
   final String tempToken;
 

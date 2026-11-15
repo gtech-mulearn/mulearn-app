@@ -54,7 +54,6 @@ abstract interface class RegisterRepository {
     String? referralMuid,
   });
 
-
   /// Links the newly-registered user to an existing college/company.
   /// Authenticated — must be called after [registerUser].
   ///
@@ -70,12 +69,7 @@ abstract interface class RegisterRepository {
   /// user to it. Authenticated — must be called after [registerUser].
   ///
   /// Throws [ApiException] on failure.
-  Future<void> createOrganization({
-    required String title,
-    String? orgType,
-    String? department,
-    int? graduationYear,
-  });
+  Future<void> createOrganization({required String title, String? orgType, String? department, int? graduationYear});
 
   /// `POST /api/v1/register/select-domains/` — saves chosen learning
   /// pathways. Authenticated.

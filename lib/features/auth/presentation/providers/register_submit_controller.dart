@@ -12,8 +12,7 @@ part 'register_submit_controller.g.dart';
 enum OrganizationType { college, company }
 
 extension OrganizationTypeApi on OrganizationType {
-  String get apiValue =>
-      this == OrganizationType.college ? 'College' : 'Company';
+  String get apiValue => this == OrganizationType.college ? 'College' : 'Company';
 }
 
 /// Performs the actual registration submission — the same multi-call
@@ -50,9 +49,7 @@ class RegisterSubmitController extends _$RegisterSubmitController {
       final email = wizard.email;
       final password = wizard.password;
       final googleTempToken = wizard.googleTempToken;
-      if (fullName == null ||
-          email == null ||
-          (googleTempToken == null && password == null)) {
+      if (fullName == null || email == null || (googleTempToken == null && password == null)) {
         throw const ApiException(message: 'Missing basic info. Please start over.');
       }
 
@@ -60,41 +57,26 @@ class RegisterSubmitController extends _$RegisterSubmitController {
       final roleId = resolveRoleId(roles, role.apiTitle);
       if (roleId == null) {
         throw ApiException(
-          message: 'Role list has not loaded yet or "${role.apiTitle}" not '
+          message:
+              'Role list has not loaded yet or "${role.apiTitle}" not '
               'found. Please try again.',
         );
       }
 
       final repo = ref.read(registerRepositoryProvider);
       if (googleTempToken != null) {
-        await repo.registerWithGoogle(
-          tempToken: googleTempToken,
-          fullName: fullName,
-          roleId: roleId,
-        );
+        await repo.registerWithGoogle(tempToken: googleTempToken, fullName: fullName, roleId: roleId);
       } else {
-        await repo.registerUser(
-          fullName: fullName,
-          email: email,
-          password: password!,
-          roleId: roleId,
-        );
+        await repo.registerUser(fullName: fullName, email: email, password: password!, roleId: roleId);
       }
       ref.read(appAuthControllerProvider.notifier).setSignedIn();
 
       // Now authenticated — handle org linking.
-      if (role == RegistrationRole.student &&
-          organizationType == OrganizationType.company) {
+      if (role == RegistrationRole.student && organizationType == OrganizationType.company) {
         if (organization == 'others' && customOrganization != null) {
-          await repo.createOrganization(
-            title: customOrganization,
-            orgType: 'Company',
-          );
+          await repo.createOrganization(title: customOrganization, orgType: 'Company');
         } else if (organization != null) {
-          await repo.selectOrganization(
-            organization: organization,
-            isStudent: true,
-          );
+          await repo.selectOrganization(organization: organization, isStudent: true);
         }
         return;
       }

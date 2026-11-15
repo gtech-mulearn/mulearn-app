@@ -126,6 +126,17 @@ abstract final class ApiPaths {
   /// this public alternative is the one that actually works for browsing.
   static String interestGroupDetail(String id) => '/api/v1/public/ig/$id/';
 
+  /// `GET`, no sign-in: community counts (`members`, `org_type_counts`,
+  /// `enablers_mentors_count`, `ig_count`, `learning_circle_count`) for the
+  /// pre-login arrival and Commons.
+  static const String publicGlobalCount = '/api/v1/public/global-count/';
+
+  /// `GET`, no sign-in: `{interestGroups: [{id, name, …}]}`.
+  static const String publicInterestGroups = '/api/v1/public/ig/list/';
+
+  /// `GET`, no sign-in: featured events, `{data: [...], pagination}`.
+  static const String publicFeaturedEvents = '/api/v1/public/events/featured/';
+
   /// `POST {"current_password", "password"}` — change the password
   /// (ResetPasswordAPI); 400 "Current Password is incorrect" otherwise.
   static const String changePassword = '/api/v1/dashboard/profile/change-password/';

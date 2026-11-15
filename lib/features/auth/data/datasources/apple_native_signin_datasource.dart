@@ -32,16 +32,11 @@ class AppleNativeSignInDataSource {
   Future<AppleSignInResult> signIn() async {
     try {
       final credential = await SignInWithApple.getAppleIDCredential(
-        scopes: [
-          AppleIDAuthorizationScopes.email,
-          AppleIDAuthorizationScopes.fullName,
-        ],
+        scopes: [AppleIDAuthorizationScopes.email, AppleIDAuthorizationScopes.fullName],
       );
       final token = credential.identityToken;
       if (token == null || token.isEmpty) {
-        throw const ApiException(
-          message: 'Apple sign-in did not return an identity token.',
-        );
+        throw const ApiException(message: 'Apple sign-in did not return an identity token.');
       }
       return (identityToken: token, email: credential.email);
     } on SignInWithAppleAuthorizationException catch (e) {

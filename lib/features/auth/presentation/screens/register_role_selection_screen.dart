@@ -18,12 +18,10 @@ class RegisterRoleSelectionScreen extends ConsumerStatefulWidget {
   const RegisterRoleSelectionScreen({super.key});
 
   @override
-  ConsumerState<RegisterRoleSelectionScreen> createState() =>
-      _RegisterRoleSelectionScreenState();
+  ConsumerState<RegisterRoleSelectionScreen> createState() => _RegisterRoleSelectionScreenState();
 }
 
-class _RegisterRoleSelectionScreenState
-    extends ConsumerState<RegisterRoleSelectionScreen> {
+class _RegisterRoleSelectionScreenState extends ConsumerState<RegisterRoleSelectionScreen> {
   RegistrationRole? _selected;
 
   @override
@@ -53,15 +51,13 @@ class _RegisterRoleSelectionScreenState
               const SizedBox(height: MuSpace.m),
               Text('Tell us about yourself', style: MuType.display.copyWith(fontSize: 30)),
               const SizedBox(height: MuSpace.s),
-              Text(
-                'Select your role to continue',
-                style: MuType.body.copyWith(color: MuColors.inkSecondary),
-              ),
+              Text('Select your role to continue', style: MuType.body.copyWith(color: MuColors.inkSecondary)),
               const SizedBox(height: MuSpace.l),
               _RoleOptionCard(
                 emoji: '🎓',
                 label: 'Learner',
-                description: "I'm a learner exploring and building skills "
+                description:
+                    "I'm a learner exploring and building skills "
                     'across diverse domains while earning karma through '
                     'meaningful contributions',
                 selected: _selected == RegistrationRole.student,
@@ -71,7 +67,8 @@ class _RegisterRoleSelectionScreenState
               _RoleOptionCard(
                 emoji: '👨‍🏫',
                 label: 'Mentor',
-                description: 'I guide and support learners. Company '
+                description:
+                    'I guide and support learners. Company '
                     'employees can choose this option and select their '
                     'company during setup.',
                 selected: _selected == RegistrationRole.mentor,
@@ -81,7 +78,8 @@ class _RegisterRoleSelectionScreenState
               _RoleOptionCard(
                 emoji: '🤝',
                 label: 'Enabler',
-                description: 'I represent an institution or organisation '
+                description:
+                    'I represent an institution or organisation '
                     'supporting the μLearn community.',
                 selected: _selected == RegistrationRole.enabler,
                 onTap: () => setState(() => _selected = RegistrationRole.enabler),
@@ -98,10 +96,7 @@ class _RegisterRoleSelectionScreenState
                 style: MuType.caption.copyWith(color: MuColors.primary),
               ),
               const SizedBox(height: MuSpace.xl),
-              MuPrimaryButton(
-                label: 'Continue',
-                onPressed: _selected == null ? null : _continue,
-              ),
+              MuPrimaryButton(label: 'Continue', onPressed: _selected == null ? null : _continue),
             ],
           ),
         ),
@@ -134,10 +129,7 @@ class _RoleOptionCard extends StatelessWidget {
         padding: const EdgeInsets.all(MuSpace.l),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(MuRadius.inner),
-          border: Border.all(
-            color: selected ? MuColors.primary : MuColors.divider,
-            width: selected ? 1.5 : 1,
-          ),
+          border: Border.all(color: selected ? MuColors.primary : MuColors.divider, width: selected ? 1.5 : 1),
           color: selected ? MuColors.primaryTint : MuColors.surface,
         ),
         child: Row(

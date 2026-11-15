@@ -43,17 +43,17 @@ class _MentorDetailsFormState extends ConsumerState<MentorDetailsForm> {
     FocusScope.of(context).unfocus();
 
     final isCollege = _organizationType == OrganizationType.college;
-    final graduationYear =
-        isCollege ? int.tryParse(_graduationYearController.text.trim()) : null;
+    final graduationYear = isCollege ? int.tryParse(_graduationYearController.text.trim()) : null;
 
     try {
-      await ref.read(registerSubmitControllerProvider.notifier).submitGeneric(
+      await ref
+          .read(registerSubmitControllerProvider.notifier)
+          .submitGeneric(
             role: RegistrationRole.mentor,
             organization: _organization,
-            customOrganization:
-                _organization == kSearchableSelectOthersValue
-                    ? _customOrganizationController.text.trim()
-                    : null,
+            customOrganization: _organization == kSearchableSelectOthersValue
+                ? _customOrganizationController.text.trim()
+                : null,
             department: isCollege ? _department : null,
             graduationYear: graduationYear,
             organizationType: _organizationType,
@@ -67,9 +67,7 @@ class _MentorDetailsFormState extends ConsumerState<MentorDetailsForm> {
   @override
   Widget build(BuildContext context) {
     final isCollege = _organizationType == OrganizationType.college;
-    final options = isCollege
-        ? ref.watch(registerCollegesProvider)
-        : ref.watch(registerCompaniesProvider);
+    final options = isCollege ? ref.watch(registerCollegesProvider) : ref.watch(registerCompaniesProvider);
     final departments = ref.watch(registerDepartmentsProvider);
     final isLoading = ref.watch(registerSubmitControllerProvider).isLoading;
     final orgLabel = isCollege ? 'College' : 'Organization';
@@ -87,9 +85,9 @@ class _MentorDetailsFormState extends ConsumerState<MentorDetailsForm> {
                 onTap: isLoading
                     ? () {}
                     : () => setState(() {
-                          _organizationType = OrganizationType.college;
-                          _organization = null;
-                        }),
+                        _organizationType = OrganizationType.college;
+                        _organization = null;
+                      }),
               ),
               const SizedBox(width: MuSpace.s),
               MuFilterChip(
@@ -98,9 +96,9 @@ class _MentorDetailsFormState extends ConsumerState<MentorDetailsForm> {
                 onTap: isLoading
                     ? () {}
                     : () => setState(() {
-                          _organizationType = OrganizationType.company;
-                          _organization = null;
-                        }),
+                        _organizationType = OrganizationType.company;
+                        _organization = null;
+                      }),
               ),
             ],
           ),
@@ -113,16 +111,11 @@ class _MentorDetailsFormState extends ConsumerState<MentorDetailsForm> {
               enabled: !isLoading,
               initialValue: _organization,
               onSelected: (value) => setState(() => _organization = value),
-              validator: (_) => _organization == null || _organization!.isEmpty
-                  ? 'Please select your $orgLabel.'
-                  : null,
+              validator: (_) =>
+                  _organization == null || _organization!.isEmpty ? 'Please select your $orgLabel.' : null,
             ),
-            loading: () => SearchableSelectField(
-              label: orgLabel,
-              options: const [],
-              isLoading: true,
-              onSelected: _noop,
-            ),
+            loading: () =>
+                SearchableSelectField(label: orgLabel, options: const [], isLoading: true, onSelected: _noop),
             error: (_, _) => SearchableSelectField(
               label: orgLabel,
               options: const [],
@@ -136,9 +129,8 @@ class _MentorDetailsFormState extends ConsumerState<MentorDetailsForm> {
               controller: _customOrganizationController,
               enabled: !isLoading,
               decoration: InputDecoration(labelText: '$orgLabel Name'),
-              validator: (value) => (value?.trim().length ?? 0) < 3
-                  ? '$orgLabel name must be at least 3 characters.'
-                  : null,
+              validator: (value) =>
+                  (value?.trim().length ?? 0) < 3 ? '$orgLabel name must be at least 3 characters.' : null,
             ),
           ],
           if (isCollege) ...[
@@ -150,16 +142,10 @@ class _MentorDetailsFormState extends ConsumerState<MentorDetailsForm> {
                 enabled: !isLoading,
                 initialValue: _department,
                 onSelected: (value) => setState(() => _department = value),
-                validator: (_) => _department == null || _department!.isEmpty
-                    ? 'Please select your department.'
-                    : null,
+                validator: (_) => _department == null || _department!.isEmpty ? 'Please select your department.' : null,
               ),
-              loading: () => const SearchableSelectField(
-                label: 'Department',
-                options: [],
-                isLoading: true,
-                onSelected: _noop,
-              ),
+              loading: () =>
+                  const SearchableSelectField(label: 'Department', options: [], isLoading: true, onSelected: _noop),
               error: (_, _) => const SearchableSelectField(
                 label: 'Department',
                 options: [],

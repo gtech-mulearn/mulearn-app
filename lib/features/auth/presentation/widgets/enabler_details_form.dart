@@ -35,12 +35,12 @@ class _EnablerDetailsFormState extends ConsumerState<EnablerDetailsForm> {
     FocusScope.of(context).unfocus();
 
     try {
-      await ref.read(registerSubmitControllerProvider.notifier).submitGeneric(
+      await ref
+          .read(registerSubmitControllerProvider.notifier)
+          .submitGeneric(
             role: RegistrationRole.enabler,
             college: _college,
-            customCollege: _college == kSearchableSelectOthersValue
-                ? _customCollegeController.text.trim()
-                : null,
+            customCollege: _college == kSearchableSelectOthersValue ? _customCollegeController.text.trim() : null,
           );
       widget.onSubmitted();
     } on Object catch (_) {
@@ -61,22 +61,15 @@ class _EnablerDetailsFormState extends ConsumerState<EnablerDetailsForm> {
           colleges.when(
             data: (options) => SearchableSelectField(
               label: 'College',
-              options:
-                  options.map((o) => SelectOption(id: o.id, label: o.title)).toList(),
+              options: options.map((o) => SelectOption(id: o.id, label: o.title)).toList(),
               allowOthers: true,
               enabled: !isLoading,
               initialValue: _college,
               onSelected: (value) => setState(() => _college = value),
-              validator: (_) => _college == null || _college!.isEmpty
-                  ? 'Please select your college.'
-                  : null,
+              validator: (_) => _college == null || _college!.isEmpty ? 'Please select your college.' : null,
             ),
-            loading: () => const SearchableSelectField(
-              label: 'College',
-              options: [],
-              isLoading: true,
-              onSelected: _noop,
-            ),
+            loading: () =>
+                const SearchableSelectField(label: 'College', options: [], isLoading: true, onSelected: _noop),
             error: (_, _) => const SearchableSelectField(
               label: 'College',
               options: [],
@@ -90,9 +83,8 @@ class _EnablerDetailsFormState extends ConsumerState<EnablerDetailsForm> {
               controller: _customCollegeController,
               enabled: !isLoading,
               decoration: const InputDecoration(labelText: 'College Name'),
-              validator: (value) => (value?.trim().length ?? 0) < 3
-                  ? 'College name must be at least 3 characters.'
-                  : null,
+              validator: (value) =>
+                  (value?.trim().length ?? 0) < 3 ? 'College name must be at least 3 characters.' : null,
             ),
           ],
           const SizedBox(height: MuSpace.xl),

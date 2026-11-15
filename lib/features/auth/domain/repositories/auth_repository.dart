@@ -8,19 +8,13 @@ abstract interface class AuthRepository {
   ///
   /// [emailOrMuid] accepts either an email address or a μLearn ID (MUID).
   /// Throws [ApiException] on failure.
-  Future<AuthSession> signInWithPassword({
-    required String emailOrMuid,
-    required String password,
-  });
+  Future<AuthSession> signInWithPassword({required String emailOrMuid, required String password});
 
   /// Sign in with an OTP previously sent via [requestOtp], persist the token
   /// pair, and return the session.
   ///
   /// Throws [ApiException] on failure.
-  Future<AuthSession> signInWithOtp({
-    required String emailOrMuid,
-    required String otp,
-  });
+  Future<AuthSession> signInWithOtp({required String emailOrMuid, required String otp});
 
   /// Request an OTP be sent to the account's email, for use with
   /// [signInWithOtp].
@@ -62,7 +56,6 @@ abstract interface class AuthRepository {
   /// Force a token refresh using the stored refresh token. Returns the new
   /// session, or null if there is no usable refresh token.
   Future<AuthSession?> refreshToken();
-
 
   /// The current session reconstructed from secure storage, or null if signed
   /// out. Does not hit the network.

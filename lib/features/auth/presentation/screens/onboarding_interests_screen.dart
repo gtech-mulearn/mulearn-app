@@ -54,12 +54,10 @@ class OnboardingInterestsScreen extends ConsumerStatefulWidget {
   const OnboardingInterestsScreen({super.key});
 
   @override
-  ConsumerState<OnboardingInterestsScreen> createState() =>
-      _OnboardingInterestsScreenState();
+  ConsumerState<OnboardingInterestsScreen> createState() => _OnboardingInterestsScreenState();
 }
 
-class _OnboardingInterestsScreenState
-    extends ConsumerState<OnboardingInterestsScreen> {
+class _OnboardingInterestsScreenState extends ConsumerState<OnboardingInterestsScreen> {
   int _step = 0;
   _InterestsMode _mode = _InterestsMode.choice;
 
@@ -95,11 +93,7 @@ class _OnboardingInterestsScreenState
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   const SizedBox(height: MuSpace.m),
-                  _ProgressRow(
-                    step: _step,
-                    dark: dark,
-                    onSkip: _step < 3 ? _skipToGoalStep : null,
-                  ),
+                  _ProgressRow(step: _step, dark: dark, onSkip: _step < 3 ? _skipToGoalStep : null),
                   const SizedBox(height: MuSpace.xl),
                   Expanded(
                     child: switch (_step) {
@@ -107,18 +101,14 @@ class _OnboardingInterestsScreenState
                       1 => _KarmaDemoStep(onNext: _next, onBack: _back),
                       2 => _LevelsStep(onNext: _next, onBack: _back),
                       _ => switch (_mode) {
-                          _InterestsMode.choice => _ChoiceView(
-                              onQuiz: () =>
-                                  setState(() => _mode = _InterestsMode.quiz),
-                              onDirect: () => setState(
-                                  () => _mode = _InterestsMode.direct),
-                              onBack: _back,
-                            ),
-                          _InterestsMode.quiz =>
-                            _QuizView(onComplete: _complete),
-                          _InterestsMode.direct =>
-                            _DirectView(onComplete: _complete),
-                        },
+                        _InterestsMode.choice => _ChoiceView(
+                          onQuiz: () => setState(() => _mode = _InterestsMode.quiz),
+                          onDirect: () => setState(() => _mode = _InterestsMode.direct),
+                          onBack: _back,
+                        ),
+                        _InterestsMode.quiz => _QuizView(onComplete: _complete),
+                        _InterestsMode.direct => _DirectView(onComplete: _complete),
+                      },
                     },
                   ),
                 ],
@@ -152,11 +142,7 @@ class _OnboardingBackdrop extends StatelessWidget {
                 left: -70,
                 child: _orb(dark ? MuColors.primary : MuColors.primary, 240, dark ? 0.22 : 0.16),
               ),
-              Positioned(
-                bottom: -90,
-                right: -80,
-                child: _orb(MuColors.karmaAccent, 260, dark ? 0.22 : 0.14),
-              ),
+              Positioned(bottom: -90, right: -80, child: _orb(MuColors.karmaAccent, 260, dark ? 0.22 : 0.14)),
             ],
           ),
         ),
@@ -168,7 +154,10 @@ class _OnboardingBackdrop extends StatelessWidget {
     return Container(
       height: size,
       width: size,
-      decoration: BoxDecoration(shape: BoxShape.circle, color: color.withValues(alpha: opacity)),
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: color.withValues(alpha: opacity),
+      ),
     );
   }
 }
@@ -225,13 +214,7 @@ class _ProgressRow extends StatelessWidget {
 
 /// Shared bottom CTA pill + optional text link below it, reused by steps 0–2.
 class _StepCtaRow extends StatelessWidget {
-  const _StepCtaRow({
-    required this.ctaLabel,
-    required this.onCta,
-    this.backLabel,
-    this.onBack,
-    this.dark = false,
-  });
+  const _StepCtaRow({required this.ctaLabel, required this.onCta, this.backLabel, this.onBack, this.dark = false});
 
   final String ctaLabel;
   final VoidCallback onCta;
@@ -253,7 +236,9 @@ class _StepCtaRow extends StatelessWidget {
               onPressed: onBack,
               child: Text(
                 backLabel!,
-                style: MuType.chip.copyWith(color: dark ? MuColors.onBrand.withValues(alpha: 0.7) : MuColors.inkSecondary),
+                style: MuType.chip.copyWith(
+                  color: dark ? MuColors.onBrand.withValues(alpha: 0.7) : MuColors.inkSecondary,
+                ),
               ),
             ),
           ],
@@ -279,10 +264,7 @@ class _IntroStep extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Text(
-                  '65,000 STUDENTS · A GTECH INITIATIVE',
-                  style: MuType.eyebrow.copyWith(color: MuColors.primary),
-                ),
+                Text('65,000 STUDENTS · A GTECH INITIATIVE', style: MuType.eyebrow.copyWith(color: MuColors.primary)),
                 const SizedBox(height: MuSpace.s),
                 Text(
                   'Your degree says what you studied. Karma says what you can do.',
@@ -329,80 +311,77 @@ class _IntroFloatingCards extends StatelessWidget {
   }
 
   Widget _taskCompleteCard() => Container(
-        padding: const EdgeInsets.all(MuSpace.m),
-        decoration: BoxDecoration(
-          color: MuColors.surface,
-          borderRadius: BorderRadius.circular(MuRadius.inner),
-          boxShadow: MuShadow.card,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text('TASK COMPLETE', style: MuType.tag.copyWith(color: MuColors.primary)),
-            const SizedBox(height: MuSpace.xs),
-            Text('Deployed my first landing page', style: MuType.bodyMed.copyWith(fontSize: 13)),
-            const SizedBox(height: MuSpace.xs),
-            Text(
-              '+250 karma',
-              style: MuType.bodyMed.copyWith(color: MuColors.karmaAccent, fontSize: 13),
-            ),
-          ],
-        ),
-      );
+    padding: const EdgeInsets.all(MuSpace.m),
+    decoration: BoxDecoration(
+      color: MuColors.surface,
+      borderRadius: BorderRadius.circular(MuRadius.inner),
+      boxShadow: MuShadow.card,
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text('TASK COMPLETE', style: MuType.tag.copyWith(color: MuColors.primary)),
+        const SizedBox(height: MuSpace.xs),
+        Text('Deployed my first landing page', style: MuType.bodyMed.copyWith(fontSize: 13)),
+        const SizedBox(height: MuSpace.xs),
+        Text('+250 karma', style: MuType.bodyMed.copyWith(color: MuColors.karmaAccent, fontSize: 13)),
+      ],
+    ),
+  );
 
   Widget _rankCard() => Container(
-        width: 170,
-        padding: const EdgeInsets.all(MuSpace.m),
-        decoration: BoxDecoration(
-          color: MuColors.ink,
-          borderRadius: BorderRadius.circular(MuRadius.inner),
-          boxShadow: MuShadow.card,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text('RANK', style: MuType.tag.copyWith(color: MuColors.onBrand.withValues(alpha: 0.6))),
-            const SizedBox(height: MuSpace.xs),
-            Text('#263', style: MuType.stat.copyWith(color: MuColors.onBrand, fontSize: 22)),
-            const SizedBox(height: MuSpace.xs),
-            Text('Top 1% this week', style: MuType.caption.copyWith(color: MuColors.onBrand.withValues(alpha: 0.6))),
-          ],
-        ),
-      );
+    width: 170,
+    padding: const EdgeInsets.all(MuSpace.m),
+    decoration: BoxDecoration(
+      color: MuColors.ink,
+      borderRadius: BorderRadius.circular(MuRadius.inner),
+      boxShadow: MuShadow.card,
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text('RANK', style: MuType.tag.copyWith(color: MuColors.onBrand.withValues(alpha: 0.6))),
+        const SizedBox(height: MuSpace.xs),
+        Text('#263', style: MuType.stat.copyWith(color: MuColors.onBrand, fontSize: 22)),
+        const SizedBox(height: MuSpace.xs),
+        Text('Top 1% this week', style: MuType.caption.copyWith(color: MuColors.onBrand.withValues(alpha: 0.6))),
+      ],
+    ),
+  );
 
   Widget _approvedCard() => Container(
-        padding: const EdgeInsets.all(MuSpace.m),
-        decoration: BoxDecoration(
-          color: MuColors.surface,
-          borderRadius: BorderRadius.circular(MuRadius.inner),
-          boxShadow: MuShadow.card,
+    padding: const EdgeInsets.all(MuSpace.m),
+    decoration: BoxDecoration(
+      color: MuColors.surface,
+      borderRadius: BorderRadius.circular(MuRadius.inner),
+      boxShadow: MuShadow.card,
+    ),
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          height: 28,
+          width: 28,
+          decoration: const BoxDecoration(color: MuColors.successBg, shape: BoxShape.circle),
+          alignment: Alignment.center,
+          child: const Icon(LucideIcons.check, size: 14, color: MuColors.success),
         ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              height: 28,
-              width: 28,
-              decoration: const BoxDecoration(color: MuColors.successBg, shape: BoxShape.circle),
-              alignment: Alignment.center,
-              child: const Icon(LucideIcons.check, size: 14, color: MuColors.success),
-            ),
-            const SizedBox(width: MuSpace.s),
-            Flexible(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text('Mentor approved it', style: MuType.bodyMed.copyWith(fontSize: 13)),
-                  Text('Anand K · 4 hours ago', style: MuType.caption),
-                ],
-              ),
-            ),
-          ],
+        const SizedBox(width: MuSpace.s),
+        Flexible(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Mentor approved it', style: MuType.bodyMed.copyWith(fontSize: 13)),
+              Text('Anand K · 4 hours ago', style: MuType.caption),
+            ],
+          ),
         ),
-      );
+      ],
+    ),
+  );
 }
 
 /// Step 1 — interactive karma demo (DESIGN_SPEC.md §2 Onboarding "Step 1").
@@ -440,8 +419,8 @@ class _KarmaDemoStepState extends State<_KarmaDemoStep> {
   }
 
   void _toggle(int i) => setState(() {
-        if (!_done.remove(i)) _done.add(i);
-      });
+    if (!_done.remove(i)) _done.add(i);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -455,10 +434,7 @@ class _KarmaDemoStepState extends State<_KarmaDemoStep> {
               children: [
                 Text('HOW IT WORKS', style: MuType.eyebrow.copyWith(color: MuColors.primary)),
                 const SizedBox(height: MuSpace.s),
-                Text(
-                  'Do a task. Prove it. Earn karma.',
-                  style: MuType.display.copyWith(fontSize: 30),
-                ),
+                Text('Do a task. Prove it. Earn karma.', style: MuType.display.copyWith(fontSize: 30)),
                 const SizedBox(height: MuSpace.s),
                 Text(
                   'Tap the three starter tasks below and watch karma land. Real '
@@ -466,13 +442,7 @@ class _KarmaDemoStepState extends State<_KarmaDemoStep> {
                   style: MuType.body.copyWith(color: MuColors.inkSecondary),
                 ),
                 const SizedBox(height: MuSpace.xl),
-                _KarmaDemoCard(
-                  demoTasks: _demoTasks,
-                  done: _done,
-                  earned: _earned,
-                  hint: _hint,
-                  onToggle: _toggle,
-                ),
+                _KarmaDemoCard(demoTasks: _demoTasks, done: _done, earned: _earned, hint: _hint, onToggle: _toggle),
               ],
             ),
           ),
@@ -582,9 +552,7 @@ class _DemoTaskRow extends StatelessWidget {
         decoration: BoxDecoration(
           color: done ? MuColors.karmaAccent.withValues(alpha: 0.2) : MuColors.onBrand.withValues(alpha: 0.05),
           borderRadius: BorderRadius.circular(MuRadius.inner),
-          border: Border.all(
-            color: done ? MuColors.karmaAccent : MuColors.onBrand.withValues(alpha: 0.1),
-          ),
+          border: Border.all(color: done ? MuColors.karmaAccent : MuColors.onBrand.withValues(alpha: 0.1)),
         ),
         child: Row(
           children: [
@@ -595,15 +563,9 @@ class _DemoTaskRow extends StatelessWidget {
             ),
             const SizedBox(width: MuSpace.s),
             Expanded(
-              child: Text(
-                task.label,
-                style: MuType.bodyMed.copyWith(color: MuColors.onBrand, fontSize: 14),
-              ),
+              child: Text(task.label, style: MuType.bodyMed.copyWith(color: MuColors.onBrand, fontSize: 14)),
             ),
-            Text(
-              '+${task.karma}',
-              style: MuType.bodyMed.copyWith(color: MuColors.karmaAccent, fontSize: 13),
-            ),
+            Text('+${task.karma}', style: MuType.bodyMed.copyWith(color: MuColors.karmaAccent, fontSize: 13)),
           ],
         ),
       ),
@@ -641,10 +603,7 @@ class _LevelsStep extends StatelessWidget {
       children: [
         Text('SEVEN LEVELS', style: MuType.eyebrow.copyWith(color: MuColors.karmaAccent)),
         const SizedBox(height: MuSpace.s),
-        Text(
-          'Every level unlocks harder work.',
-          style: MuType.display.copyWith(fontSize: 30, color: MuColors.surface),
-        ),
+        Text('Every level unlocks harder work.', style: MuType.display.copyWith(fontSize: 30, color: MuColors.surface)),
         const SizedBox(height: MuSpace.s),
         Text(
           'Interest groups open at level 4. By level 7 you have mastered a '
@@ -659,13 +618,7 @@ class _LevelsStep extends StatelessWidget {
             itemBuilder: (context, i) => _LevelRow(level: _levels[i]),
           ),
         ),
-        _StepCtaRow(
-          ctaLabel: 'Makes sense',
-          onCta: onNext,
-          backLabel: 'Back',
-          onBack: onBack,
-          dark: true,
-        ),
+        _StepCtaRow(ctaLabel: 'Makes sense', onCta: onNext, backLabel: 'Back', onBack: onBack, dark: true),
       ],
     );
   }
@@ -781,12 +734,7 @@ class _ChoiceView extends StatelessWidget {
 }
 
 class _ChoiceCard extends StatelessWidget {
-  const _ChoiceCard({
-    required this.icon,
-    required this.title,
-    required this.description,
-    required this.onTap,
-  });
+  const _ChoiceCard({required this.icon, required this.title, required this.description, required this.onTap});
 
   final IconData icon;
   final String title;
@@ -803,10 +751,7 @@ class _ChoiceCard extends StatelessWidget {
           Container(
             height: 44,
             width: 44,
-            decoration: BoxDecoration(
-              color: MuColors.primaryTint,
-              borderRadius: BorderRadius.circular(MuRadius.inner),
-            ),
+            decoration: BoxDecoration(color: MuColors.primaryTint, borderRadius: BorderRadius.circular(MuRadius.inner)),
             alignment: Alignment.center,
             child: Icon(icon, color: MuColors.primary, size: 22),
           ),
@@ -855,14 +800,11 @@ class _QuizViewState extends ConsumerState<_QuizView> {
       return;
     }
 
-    final ranked = _tally.entries.toList()
-      ..sort((a, b) => b.value.compareTo(a.value));
+    final ranked = _tally.entries.toList()..sort((a, b) => b.value.compareTo(a.value));
     final topPathways = ranked.take(2).map((e) => e.key.name).toList();
 
     try {
-      await ref
-          .read(interestsControllerProvider.notifier)
-          .submitPathwaysOnly(topPathways);
+      await ref.read(interestsControllerProvider.notifier).submitPathwaysOnly(topPathways);
       widget.onComplete();
     } on Object catch (_) {
       // Surfaced via the ref.listen snackbar in the parent screen.
@@ -889,24 +831,15 @@ class _QuizViewState extends ConsumerState<_QuizView> {
             ),
           ),
           const SizedBox(height: MuSpace.xl),
-          Text(
-            'Question ${_index + 1} of ${_questions.length}',
-            style: MuType.caption,
-          ),
+          Text('Question ${_index + 1} of ${_questions.length}', style: MuType.caption),
           const SizedBox(height: MuSpace.s),
           Text(question.question, style: MuType.display.copyWith(fontSize: 24)),
           const SizedBox(height: MuSpace.xl),
           for (final option in question.options) ...[
-            MuGhostButton(
-              label: option.text,
-              onPressed: isLoading ? null : () => _answer(option.pathway),
-            ),
+            MuGhostButton(label: option.text, onPressed: isLoading ? null : () => _answer(option.pathway)),
             const SizedBox(height: MuSpace.m),
           ],
-          if (isLoading) ...[
-            const SizedBox(height: MuSpace.m),
-            const Center(child: CircularProgressIndicator()),
-          ],
+          if (isLoading) ...[const SizedBox(height: MuSpace.m), const Center(child: CircularProgressIndicator())],
         ],
       ),
     );
@@ -929,7 +862,9 @@ class _DirectViewState extends ConsumerState<_DirectView> {
 
   Future<void> _submit() async {
     try {
-      await ref.read(interestsControllerProvider.notifier).submitPathwaysAndEndgoals(
+      await ref
+          .read(interestsControllerProvider.notifier)
+          .submitPathwaysAndEndgoals(
             _selectedPathways.map((p) => p.name).toList(),
             _selectedEndgoals.map((e) => e.apiValue).toList(),
           );
@@ -977,9 +912,7 @@ class _DirectViewState extends ConsumerState<_DirectView> {
             const SizedBox(height: MuSpace.xl),
             MuPrimaryButton(
               label: 'Continue',
-              onPressed: _selectedPathways.isEmpty
-                  ? null
-                  : () => setState(() => _onEndgoalsStep = true),
+              onPressed: _selectedPathways.isEmpty ? null : () => setState(() => _onEndgoalsStep = true),
             ),
           ],
         ),
@@ -995,18 +928,12 @@ class _DirectViewState extends ConsumerState<_DirectView> {
             onPressed: () => setState(() => _onEndgoalsStep = false),
             icon: const Icon(LucideIcons.arrowLeft, size: 18),
             label: const Text('Back'),
-            style: TextButton.styleFrom(
-              padding: EdgeInsets.zero,
-              alignment: Alignment.centerLeft,
-            ),
+            style: TextButton.styleFrom(padding: EdgeInsets.zero, alignment: Alignment.centerLeft),
           ),
           const SizedBox(height: MuSpace.s),
           Text('What are your end goals?', style: MuType.display.copyWith(fontSize: 26)),
           const SizedBox(height: MuSpace.s),
-          Text(
-            'Select at least one.',
-            style: MuType.body.copyWith(color: MuColors.inkSecondary),
-          ),
+          Text('Select at least one.', style: MuType.body.copyWith(color: MuColors.inkSecondary)),
           const SizedBox(height: MuSpace.xl),
           Wrap(
             spacing: MuSpace.m,
@@ -1037,18 +964,18 @@ class _DirectViewState extends ConsumerState<_DirectView> {
   }
 
   String _pathwayLabel(Pathway pathway) => switch (pathway) {
-        Pathway.coder => 'Coder',
-        Pathway.maker => 'Maker',
-        Pathway.manager => 'Manager',
-        Pathway.creative => 'Creative',
-      };
+    Pathway.coder => 'Coder',
+    Pathway.maker => 'Maker',
+    Pathway.manager => 'Manager',
+    Pathway.creative => 'Creative',
+  };
 
   String _endgoalLabel(Endgoal endgoal) => switch (endgoal) {
-        Endgoal.job => 'Job',
-        Endgoal.researchAndDevelopment => 'Research & Development',
-        Endgoal.entrepreneurship => 'Entrepreneurship',
-        Endgoal.gigWork => 'Gig Work',
-        Endgoal.higherEducation => 'Higher Education',
-        Endgoal.socialImpact => 'Social Impact',
-      };
+    Endgoal.job => 'Job',
+    Endgoal.researchAndDevelopment => 'Research & Development',
+    Endgoal.entrepreneurship => 'Entrepreneurship',
+    Endgoal.gigWork => 'Gig Work',
+    Endgoal.higherEducation => 'Higher Education',
+    Endgoal.socialImpact => 'Social Impact',
+  };
 }

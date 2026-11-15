@@ -13,12 +13,7 @@ part of 'auth_controller.dart';
 const authRemoteDataSourceProvider = AuthRemoteDataSourceProvider._();
 
 final class AuthRemoteDataSourceProvider
-    extends
-        $FunctionalProvider<
-          AuthRemoteDataSource,
-          AuthRemoteDataSource,
-          AuthRemoteDataSource
-        >
+    extends $FunctionalProvider<AuthRemoteDataSource, AuthRemoteDataSource, AuthRemoteDataSource>
     with $Provider<AuthRemoteDataSource> {
   const AuthRemoteDataSourceProvider._()
     : super(
@@ -36,9 +31,7 @@ final class AuthRemoteDataSourceProvider
 
   @$internal
   @override
-  $ProviderElement<AuthRemoteDataSource> $createElement(
-    $ProviderPointer pointer,
-  ) => $ProviderElement(pointer);
+  $ProviderElement<AuthRemoteDataSource> $createElement($ProviderPointer pointer) => $ProviderElement(pointer);
 
   @override
   AuthRemoteDataSource create(Ref ref) {
@@ -47,15 +40,11 @@ final class AuthRemoteDataSourceProvider
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(AuthRemoteDataSource value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<AuthRemoteDataSource>(value),
-    );
+    return $ProviderOverride(origin: this, providerOverride: $SyncValueProvider<AuthRemoteDataSource>(value));
   }
 }
 
-String _$authRemoteDataSourceHash() =>
-    r'342226fe7f872bc7314ad608d768239951db2132';
+String _$authRemoteDataSourceHash() => r'342226fe7f872bc7314ad608d768239951db2132';
 
 /// Presentation depends on the [AuthRepository] contract, wired to the concrete
 /// impl here via DI (rules.md §2/§5) so tests can override it.
@@ -66,8 +55,7 @@ const authRepositoryProvider = AuthRepositoryProvider._();
 /// Presentation depends on the [AuthRepository] contract, wired to the concrete
 /// impl here via DI (rules.md §2/§5) so tests can override it.
 
-final class AuthRepositoryProvider
-    extends $FunctionalProvider<AuthRepository, AuthRepository, AuthRepository>
+final class AuthRepositoryProvider extends $FunctionalProvider<AuthRepository, AuthRepository, AuthRepository>
     with $Provider<AuthRepository> {
   /// Presentation depends on the [AuthRepository] contract, wired to the concrete
   /// impl here via DI (rules.md §2/§5) so tests can override it.
@@ -87,8 +75,7 @@ final class AuthRepositoryProvider
 
   @$internal
   @override
-  $ProviderElement<AuthRepository> $createElement($ProviderPointer pointer) =>
-      $ProviderElement(pointer);
+  $ProviderElement<AuthRepository> $createElement($ProviderPointer pointer) => $ProviderElement(pointer);
 
   @override
   AuthRepository create(Ref ref) {
@@ -97,26 +84,18 @@ final class AuthRepositoryProvider
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(AuthRepository value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<AuthRepository>(value),
-    );
+    return $ProviderOverride(origin: this, providerOverride: $SyncValueProvider<AuthRepository>(value));
   }
 }
 
 String _$authRepositoryHash() => r'b692f41f48a45408bfa74b9900c3932eda1b3e2a';
 
 @ProviderFor(googleNativeSignInDataSource)
-const googleNativeSignInDataSourceProvider =
-    GoogleNativeSignInDataSourceProvider._();
+const googleNativeSignInDataSourceProvider = GoogleNativeSignInDataSourceProvider._();
 
 final class GoogleNativeSignInDataSourceProvider
     extends
-        $FunctionalProvider<
-          GoogleNativeSignInDataSource,
-          GoogleNativeSignInDataSource,
-          GoogleNativeSignInDataSource
-        >
+        $FunctionalProvider<GoogleNativeSignInDataSource, GoogleNativeSignInDataSource, GoogleNativeSignInDataSource>
     with $Provider<GoogleNativeSignInDataSource> {
   const GoogleNativeSignInDataSourceProvider._()
     : super(
@@ -134,9 +113,7 @@ final class GoogleNativeSignInDataSourceProvider
 
   @$internal
   @override
-  $ProviderElement<GoogleNativeSignInDataSource> $createElement(
-    $ProviderPointer pointer,
-  ) => $ProviderElement(pointer);
+  $ProviderElement<GoogleNativeSignInDataSource> $createElement($ProviderPointer pointer) => $ProviderElement(pointer);
 
   @override
   GoogleNativeSignInDataSource create(Ref ref) {
@@ -145,27 +122,17 @@ final class GoogleNativeSignInDataSourceProvider
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(GoogleNativeSignInDataSource value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<GoogleNativeSignInDataSource>(value),
-    );
+    return $ProviderOverride(origin: this, providerOverride: $SyncValueProvider<GoogleNativeSignInDataSource>(value));
   }
 }
 
-String _$googleNativeSignInDataSourceHash() =>
-    r'8c451a213a48ea7823b90e2537452e68de69008a';
+String _$googleNativeSignInDataSourceHash() => r'8c451a213a48ea7823b90e2537452e68de69008a';
 
 @ProviderFor(appleNativeSignInDataSource)
-const appleNativeSignInDataSourceProvider =
-    AppleNativeSignInDataSourceProvider._();
+const appleNativeSignInDataSourceProvider = AppleNativeSignInDataSourceProvider._();
 
 final class AppleNativeSignInDataSourceProvider
-    extends
-        $FunctionalProvider<
-          AppleNativeSignInDataSource,
-          AppleNativeSignInDataSource,
-          AppleNativeSignInDataSource
-        >
+    extends $FunctionalProvider<AppleNativeSignInDataSource, AppleNativeSignInDataSource, AppleNativeSignInDataSource>
     with $Provider<AppleNativeSignInDataSource> {
   const AppleNativeSignInDataSourceProvider._()
     : super(
@@ -183,9 +150,7 @@ final class AppleNativeSignInDataSourceProvider
 
   @$internal
   @override
-  $ProviderElement<AppleNativeSignInDataSource> $createElement(
-    $ProviderPointer pointer,
-  ) => $ProviderElement(pointer);
+  $ProviderElement<AppleNativeSignInDataSource> $createElement($ProviderPointer pointer) => $ProviderElement(pointer);
 
   @override
   AppleNativeSignInDataSource create(Ref ref) {
@@ -194,15 +159,11 @@ final class AppleNativeSignInDataSourceProvider
 
   /// {@macro riverpod.override_with_value}
   Override overrideWithValue(AppleNativeSignInDataSource value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<AppleNativeSignInDataSource>(value),
-    );
+    return $ProviderOverride(origin: this, providerOverride: $SyncValueProvider<AppleNativeSignInDataSource>(value));
   }
 }
 
-String _$appleNativeSignInDataSourceHash() =>
-    r'c34dbec30a90b18f16da5654260664f67637d25f';
+String _$appleNativeSignInDataSourceHash() => r'c34dbec30a90b18f16da5654260664f67637d25f';
 
 /// Drives the sign-in / sign-out actions. Exposes `AsyncValue<void>` so
 /// screens get automatic loading/error states via [AsyncValue.guard]
@@ -226,8 +187,7 @@ const authControllerProvider = AuthControllerProvider._();
 /// `ref.listen(authControllerProvider, ...)` for a shared snackbar.
 ///
 /// The coarse routing signal lives in the core [AppAuthController].
-final class AuthControllerProvider
-    extends $AsyncNotifierProvider<AuthController, void> {
+final class AuthControllerProvider extends $AsyncNotifierProvider<AuthController, void> {
   /// Drives the sign-in / sign-out actions. Exposes `AsyncValue<void>` so
   /// screens get automatic loading/error states via [AsyncValue.guard]
   /// (rules.md §4). Every action also rethrows its error after recording it, so
@@ -276,13 +236,7 @@ abstract class _$AuthController extends $AsyncNotifier<void> {
     build();
     final ref = this.ref as $Ref<AsyncValue<void>, void>;
     final element =
-        ref.element
-            as $ClassProviderElement<
-              AnyNotifier<AsyncValue<void>, void>,
-              AsyncValue<void>,
-              Object?,
-              Object?
-            >;
+        ref.element as $ClassProviderElement<AnyNotifier<AsyncValue<void>, void>, AsyncValue<void>, Object?, Object?>;
     element.handleValue(ref, null);
   }
 }

@@ -8,8 +8,8 @@ enum RegistrationRole { student, mentor, enabler }
 /// UUIDs are resolved by a case-insensitive match against this title.
 extension RegistrationRoleTitle on RegistrationRole {
   String get apiTitle => switch (this) {
-        RegistrationRole.student => 'Student',
-        RegistrationRole.mentor => 'Mentor',
-        RegistrationRole.enabler => 'Enabler',
-      };
+    RegistrationRole.student => 'Student',
+    RegistrationRole.mentor => 'Mentor',
+    RegistrationRole.enabler => 'Enabler',
+  };
 }

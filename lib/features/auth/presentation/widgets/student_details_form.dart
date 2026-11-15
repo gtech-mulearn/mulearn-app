@@ -50,18 +50,18 @@ class _StudentDetailsFormState extends ConsumerState<StudentDetailsForm> {
     final graduationYear = int.tryParse(_graduationYearController.text.trim());
 
     try {
-      await ref.read(registerSubmitControllerProvider.notifier).submitGeneric(
+      await ref
+          .read(registerSubmitControllerProvider.notifier)
+          .submitGeneric(
             role: RegistrationRole.student,
             college: isCollege ? _college : null,
-            customCollege:
-                isCollege && _college == kSearchableSelectOthersValue
-                    ? _customCollegeController.text.trim()
-                    : null,
+            customCollege: isCollege && _college == kSearchableSelectOthersValue
+                ? _customCollegeController.text.trim()
+                : null,
             department: isCollege ? _department : null,
             graduationYear: isCollege ? graduationYear : null,
             organization: isCollege ? null : _organization,
-            customOrganization: !isCollege &&
-                    _organization == kSearchableSelectOthersValue
+            customOrganization: !isCollege && _organization == kSearchableSelectOthersValue
                 ? _customOrganizationController.text.trim()
                 : null,
             organizationType: _organizationType,
@@ -90,17 +90,13 @@ class _StudentDetailsFormState extends ConsumerState<StudentDetailsForm> {
               MuFilterChip(
                 label: 'College',
                 selected: _organizationType == OrganizationType.college,
-                onTap: isLoading
-                    ? () {}
-                    : () => setState(() => _organizationType = OrganizationType.college),
+                onTap: isLoading ? () {} : () => setState(() => _organizationType = OrganizationType.college),
               ),
               const SizedBox(width: MuSpace.s),
               MuFilterChip(
                 label: 'Company',
                 selected: _organizationType == OrganizationType.company,
-                onTap: isLoading
-                    ? () {}
-                    : () => setState(() => _organizationType = OrganizationType.company),
+                onTap: isLoading ? () {} : () => setState(() => _organizationType = OrganizationType.company),
               ),
             ],
           ),
@@ -109,21 +105,15 @@ class _StudentDetailsFormState extends ConsumerState<StudentDetailsForm> {
             colleges.when(
               data: (options) => SearchableSelectField(
                 label: 'College',
-                options:
-                    options.map((o) => SelectOption(id: o.id, label: o.title)).toList(),
+                options: options.map((o) => SelectOption(id: o.id, label: o.title)).toList(),
                 allowOthers: true,
                 enabled: !isLoading,
                 initialValue: _college,
                 onSelected: (value) => setState(() => _college = value),
-                validator: (_) =>
-                    _college == null || _college!.isEmpty ? 'Please select your college.' : null,
+                validator: (_) => _college == null || _college!.isEmpty ? 'Please select your college.' : null,
               ),
-              loading: () => const SearchableSelectField(
-                label: 'College',
-                options: [],
-                isLoading: true,
-                onSelected: _noop,
-              ),
+              loading: () =>
+                  const SearchableSelectField(label: 'College', options: [], isLoading: true, onSelected: _noop),
               error: (_, _) => const SearchableSelectField(
                 label: 'College',
                 options: [],
@@ -137,30 +127,22 @@ class _StudentDetailsFormState extends ConsumerState<StudentDetailsForm> {
                 controller: _customCollegeController,
                 enabled: !isLoading,
                 decoration: const InputDecoration(labelText: 'College Name'),
-                validator: (value) => (value?.trim().length ?? 0) < 3
-                    ? 'College name must be at least 3 characters.'
-                    : null,
+                validator: (value) =>
+                    (value?.trim().length ?? 0) < 3 ? 'College name must be at least 3 characters.' : null,
               ),
             ],
             const SizedBox(height: MuSpace.l),
             departments.when(
               data: (options) => SearchableSelectField(
                 label: 'Department',
-                options:
-                    options.map((o) => SelectOption(id: o.id, label: o.title)).toList(),
+                options: options.map((o) => SelectOption(id: o.id, label: o.title)).toList(),
                 enabled: !isLoading,
                 initialValue: _department,
                 onSelected: (value) => setState(() => _department = value),
-                validator: (_) => _department == null || _department!.isEmpty
-                    ? 'Please select your department.'
-                    : null,
+                validator: (_) => _department == null || _department!.isEmpty ? 'Please select your department.' : null,
               ),
-              loading: () => const SearchableSelectField(
-                label: 'Department',
-                options: [],
-                isLoading: true,
-                onSelected: _noop,
-              ),
+              loading: () =>
+                  const SearchableSelectField(label: 'Department', options: [], isLoading: true, onSelected: _noop),
               error: (_, _) => const SearchableSelectField(
                 label: 'Department',
                 options: [],
@@ -186,22 +168,16 @@ class _StudentDetailsFormState extends ConsumerState<StudentDetailsForm> {
             companies.when(
               data: (options) => SearchableSelectField(
                 label: 'Organization',
-                options:
-                    options.map((o) => SelectOption(id: o.id, label: o.title)).toList(),
+                options: options.map((o) => SelectOption(id: o.id, label: o.title)).toList(),
                 allowOthers: true,
                 enabled: !isLoading,
                 initialValue: _organization,
                 onSelected: (value) => setState(() => _organization = value),
-                validator: (_) => _organization == null || _organization!.isEmpty
-                    ? 'Please select your organization.'
-                    : null,
+                validator: (_) =>
+                    _organization == null || _organization!.isEmpty ? 'Please select your organization.' : null,
               ),
-              loading: () => const SearchableSelectField(
-                label: 'Organization',
-                options: [],
-                isLoading: true,
-                onSelected: _noop,
-              ),
+              loading: () =>
+                  const SearchableSelectField(label: 'Organization', options: [], isLoading: true, onSelected: _noop),
               error: (_, _) => const SearchableSelectField(
                 label: 'Organization',
                 options: [],
@@ -215,9 +191,8 @@ class _StudentDetailsFormState extends ConsumerState<StudentDetailsForm> {
                 controller: _customOrganizationController,
                 enabled: !isLoading,
                 decoration: const InputDecoration(labelText: 'Organization Name'),
-                validator: (value) => (value?.trim().length ?? 0) < 3
-                    ? 'Organization name must be at least 3 characters.'
-                    : null,
+                validator: (value) =>
+                    (value?.trim().length ?? 0) < 3 ? 'Organization name must be at least 3 characters.' : null,
               ),
             ],
           ],

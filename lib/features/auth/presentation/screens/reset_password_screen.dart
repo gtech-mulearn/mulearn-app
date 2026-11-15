@@ -49,9 +49,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
     if (!(_tokenFormKey.currentState?.validate() ?? false)) return;
     FocusScope.of(context).unfocus();
     try {
-      await ref
-          .read(authControllerProvider.notifier)
-          .verifyResetToken(_tokenController.text.trim());
+      await ref.read(authControllerProvider.notifier).verifyResetToken(_tokenController.text.trim());
       if (mounted) setState(() => _step = _ResetStep.newPassword);
     } on Object catch (_) {
       // Surfaced via the ref.listen snackbar below.
@@ -62,10 +60,9 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
     if (!(_passwordFormKey.currentState?.validate() ?? false)) return;
     FocusScope.of(context).unfocus();
     try {
-      await ref.read(authControllerProvider.notifier).resetPassword(
-            token: _tokenController.text.trim(),
-            password: _passwordController.text,
-          );
+      await ref
+          .read(authControllerProvider.notifier)
+          .resetPassword(token: _tokenController.text.trim(), password: _passwordController.text);
       if (mounted) setState(() => _step = _ResetStep.done);
     } on Object catch (_) {
       // Surfaced via the ref.listen snackbar below.
@@ -98,26 +95,23 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
               const SizedBox(height: MuSpace.m),
               switch (_step) {
                 _ResetStep.enterToken => _EnterTokenStep(
-                    formKey: _tokenFormKey,
-                    tokenController: _tokenController,
-                    isLoading: isLoading,
-                    onSubmit: _verifyToken,
-                  ),
+                  formKey: _tokenFormKey,
+                  tokenController: _tokenController,
+                  isLoading: isLoading,
+                  onSubmit: _verifyToken,
+                ),
                 _ResetStep.newPassword => _NewPasswordStep(
-                    formKey: _passwordFormKey,
-                    passwordController: _passwordController,
-                    confirmPasswordController: _confirmPasswordController,
-                    obscure: _obscure,
-                    obscureConfirm: _obscureConfirm,
-                    isLoading: isLoading,
-                    onToggleObscure: () => setState(() => _obscure = !_obscure),
-                    onToggleObscureConfirm: () =>
-                        setState(() => _obscureConfirm = !_obscureConfirm),
-                    onSubmit: _resetPassword,
-                  ),
-                _ResetStep.done => _DoneStep(
-                    onSignIn: () => context.go(RoutePaths.signIn),
-                  ),
+                  formKey: _passwordFormKey,
+                  passwordController: _passwordController,
+                  confirmPasswordController: _confirmPasswordController,
+                  obscure: _obscure,
+                  obscureConfirm: _obscureConfirm,
+                  isLoading: isLoading,
+                  onToggleObscure: () => setState(() => _obscure = !_obscure),
+                  onToggleObscureConfirm: () => setState(() => _obscureConfirm = !_obscureConfirm),
+                  onSubmit: _resetPassword,
+                ),
+                _ResetStep.done => _DoneStep(onSignIn: () => context.go(RoutePaths.signIn)),
               },
             ],
           ),
@@ -163,15 +157,10 @@ class _EnterTokenStep extends StatelessWidget {
                 textInputAction: TextInputAction.done,
                 onFieldSubmitted: (_) => onSubmit(),
                 decoration: const InputDecoration(labelText: 'Reset code'),
-                validator: (value) => (value?.trim().isEmpty ?? true)
-                    ? 'Reset code is required.'
-                    : null,
+                validator: (value) => (value?.trim().isEmpty ?? true) ? 'Reset code is required.' : null,
               ),
               const SizedBox(height: MuSpace.xl),
-              MuPrimaryButton(
-                label: isLoading ? 'Verifying…' : 'Verify code',
-                onPressed: isLoading ? null : onSubmit,
-              ),
+              MuPrimaryButton(label: isLoading ? 'Verifying…' : 'Verify code', onPressed: isLoading ? null : onSubmit),
             ],
           ),
         ),
@@ -229,10 +218,7 @@ class _NewPasswordStep extends StatelessWidget {
                   labelText: 'New password',
                   suffixIcon: IconButton(
                     tooltip: obscure ? 'Show password' : 'Hide password',
-                    icon: Icon(
-                      obscure ? LucideIcons.eye : LucideIcons.eyeOff,
-                      color: MuColors.inkSecondary,
-                    ),
+                    icon: Icon(obscure ? LucideIcons.eye : LucideIcons.eyeOff, color: MuColors.inkSecondary),
                     onPressed: onToggleObscure,
                   ),
                 ),
@@ -254,22 +240,14 @@ class _NewPasswordStep extends StatelessWidget {
                   labelText: 'Confirm new password',
                   suffixIcon: IconButton(
                     tooltip: obscureConfirm ? 'Show password' : 'Hide password',
-                    icon: Icon(
-                      obscureConfirm ? LucideIcons.eye : LucideIcons.eyeOff,
-                      color: MuColors.inkSecondary,
-                    ),
+                    icon: Icon(obscureConfirm ? LucideIcons.eye : LucideIcons.eyeOff, color: MuColors.inkSecondary),
                     onPressed: onToggleObscureConfirm,
                   ),
                 ),
-                validator: (value) => value != passwordController.text
-                    ? "Passwords don't match."
-                    : null,
+                validator: (value) => value != passwordController.text ? "Passwords don't match." : null,
               ),
               const SizedBox(height: MuSpace.xl),
-              MuPrimaryButton(
-                label: isLoading ? 'Saving…' : 'Reset password',
-                onPressed: isLoading ? null : onSubmit,
-              ),
+              MuPrimaryButton(label: isLoading ? 'Saving…' : 'Reset password', onPressed: isLoading ? null : onSubmit),
             ],
           ),
         ),
@@ -290,10 +268,7 @@ class _DoneStep extends StatelessWidget {
       children: [
         Text('Password reset!', style: MuType.display.copyWith(fontSize: 30)),
         const SizedBox(height: MuSpace.s),
-        Text(
-          'You can now sign in with your new password.',
-          style: MuType.body.copyWith(color: MuColors.inkSecondary),
-        ),
+        Text('You can now sign in with your new password.', style: MuType.body.copyWith(color: MuColors.inkSecondary)),
         const SizedBox(height: MuSpace.l),
         MuPrimaryButton(label: 'Sign in', onPressed: onSignIn),
       ],

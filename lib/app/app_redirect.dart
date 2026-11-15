@@ -4,6 +4,8 @@ import 'package:mulearn_app/core/router/route_paths.dart';
 // Reachable while signed out — registration itself signs the user in partway
 // through, so `/register/details` must tolerate both states.
 const _allowedSignedOut = {
+  RoutePaths.welcome,
+  RoutePaths.commons,
   RoutePaths.signIn,
   RoutePaths.forgotPassword,
   RoutePaths.resetPassword,
@@ -42,8 +44,8 @@ const _allowedSignedInExtra = {
 
 /// Role workspaces (Plan 4): `/mentor…`, `/campus…`, `/enabler…`. Access
 /// is decided by `WorkspaceGate` on the screen, not here.
-bool _isWorkspace(String path) => const ['/mentor', '/campus', '/enabler']
-    .any((root) => path == root || path.startsWith('$root/'));
+bool _isWorkspace(String path) =>
+    const ['/mentor', '/campus', '/enabler'].any((root) => path == root || path.startsWith('$root/'));
 
 bool _isSignedInScreen(String path) =>
     _allowedSignedIn.contains(path) ||
@@ -67,29 +69,36 @@ String? _resumable(String? from) {
   return _isSignedInScreen(_normalise(uri.path)) ? from : null;
 }
 
-String _with(String path, String? from) =>
-    from == null ? path : '$path?from=${Uri.encodeQueryComponent(from)}';
+String _with(String path, String? from) => from == null ? path : '$path?from=${Uri.encodeQueryComponent(from)}';
 
 /// The router's auth guard. A deep link (e.g. Discord's redirect App Link)
 /// keeps its target: through the splash screen while the session loads
 /// (`/splash?from=`), and through sign-in when signed out
-/// (`/sign-in?from=`); it is resumed once signed in.
-String? appRedirect({required AsyncValue<bool> auth, required Uri uri}) {
+/// (`/sign-in?from=`); it is resumed once signed in. Signed out with no
+/// target, the first launch shows the arrival beats ([arrivalSeen] false)
+/// and later launches open the Commons, the guest home.
+String? appRedirect({
+  required AsyncValue<bool> auth,
+  required Uri uri,
+  AsyncValue<bool> arrivalSeen = const AsyncData(true),
+}) {
   final path = _normalise(uri.path);
   final from = _resumable(uri.queryParameters['from']);
   // A real App Link reaches the router as its full URI (Android passes the
   // intent's data; go_router keeps scheme and host): resume its in-app part.
   final here = _resumable(Uri(path: uri.path, query: uri.hasQuery ? uri.query : null).toString());
 
-  // Session still being resolved from secure storage.
-  if (auth.isLoading || !auth.hasValue) {
+  // Session (or the first-launch flag) still being read from storage.
+  if (auth.isLoading || !auth.hasValue || !arrivalSeen.hasValue) {
     return path == RoutePaths.splash ? null : _with(RoutePaths.splash, here);
   }
 
   final loggedIn = auth.value ?? false;
   if (!loggedIn) {
     if (_allowedSignedOut.contains(path)) return null;
-    return _with(RoutePaths.signIn, path == RoutePaths.splash ? from : here);
+    final target = path == RoutePaths.splash ? from : here;
+    if (target != null) return _with(RoutePaths.signIn, target);
+    return (arrivalSeen.value ?? true) ? RoutePaths.commons : RoutePaths.welcome;
   }
   if ((path == RoutePaths.splash || path == RoutePaths.signIn) && from != null) return from;
   if (_isSignedInScreen(path)) return null;

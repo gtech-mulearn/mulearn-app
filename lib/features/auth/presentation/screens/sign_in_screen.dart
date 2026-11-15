@@ -71,10 +71,9 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     if (!(_passwordFormKey.currentState?.validate() ?? false)) return;
     FocusScope.of(context).unfocus();
     try {
-      await ref.read(authControllerProvider.notifier).signInWithPassword(
-            emailOrMuid: _emailOrMuidController.text.trim(),
-            password: _passwordController.text,
-          );
+      await ref
+          .read(authControllerProvider.notifier)
+          .signInWithPassword(emailOrMuid: _emailOrMuidController.text.trim(), password: _passwordController.text);
     } on Object catch (_) {
       // Surfaced via the ref.listen snackbar below.
     }
@@ -84,9 +83,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     if (!(_otpRequestFormKey.currentState?.validate() ?? false)) return;
     FocusScope.of(context).unfocus();
     try {
-      await ref.read(authControllerProvider.notifier).requestOtp(
-            emailOrMuid: _otpEmailOrMuidController.text.trim(),
-          );
+      await ref.read(authControllerProvider.notifier).requestOtp(emailOrMuid: _otpEmailOrMuidController.text.trim());
       if (mounted) setState(() => _mode = _AuthMode.otpVerify);
     } on Object catch (_) {
       // Surfaced via the ref.listen snackbar below.
@@ -97,10 +94,9 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
     if (!(_otpVerifyFormKey.currentState?.validate() ?? false)) return;
     FocusScope.of(context).unfocus();
     try {
-      await ref.read(authControllerProvider.notifier).signInWithOtp(
-            emailOrMuid: _otpEmailOrMuidController.text.trim(),
-            otp: _otpController.text.trim(),
-          );
+      await ref
+          .read(authControllerProvider.notifier)
+          .signInWithOtp(emailOrMuid: _otpEmailOrMuidController.text.trim(), otp: _otpController.text.trim());
     } on Object catch (_) {
       // Surfaced via the ref.listen snackbar below.
     }
@@ -116,11 +112,9 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       return; // Surfaced via the ref.listen snackbar below.
     }
     if (outcome is SocialNeedsRegistration && mounted) {
-      ref.read(registerWizardControllerProvider.notifier).setGoogleSignUp(
-            tempToken: outcome.tempToken,
-            email: outcome.email,
-            fullName: outcome.fullName,
-          );
+      ref
+          .read(registerWizardControllerProvider.notifier)
+          .setGoogleSignUp(tempToken: outcome.tempToken, email: outcome.email, fullName: outcome.fullName);
       await context.push(RoutePaths.registerBasicInfo);
     }
   }
@@ -136,28 +130,25 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
   }
 
   Future<void> _showAppleAccountNotFound() => showDialog<void>(
-        context: context,
-        builder: (dialogContext) => AlertDialog(
-          title: const Text('No account yet'),
-          content: const Text(
-            "No μLearn account uses this Apple ID's email yet. Create an "
-            'account with that email first, then sign in with Apple.',
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(dialogContext).pop(),
-              child: const Text('Close'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(dialogContext).pop();
-                _startSignUp();
-              },
-              child: const Text('Create account'),
-            ),
-          ],
+    context: context,
+    builder: (dialogContext) => AlertDialog(
+      title: const Text('No account yet'),
+      content: const Text(
+        "No μLearn account uses this Apple ID's email yet. Create an "
+        'account with that email first, then sign in with Apple.',
+      ),
+      actions: [
+        TextButton(onPressed: () => Navigator.of(dialogContext).pop(), child: const Text('Close')),
+        TextButton(
+          onPressed: () {
+            Navigator.of(dialogContext).pop();
+            _startSignUp();
+          },
+          child: const Text('Create account'),
         ),
-      );
+      ],
+    ),
+  );
 
   /// Normal (password) sign-up: drop any half-finished Google sign-up first.
   void _startSignUp() {
@@ -195,32 +186,30 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                   const SizedBox(height: 40),
                   switch (_mode) {
                     _AuthMode.password => _PasswordForm(
-                        formKey: _passwordFormKey,
-                        emailOrMuidController: _emailOrMuidController,
-                        passwordController: _passwordController,
-                        obscure: _obscure,
-                        isLoading: isLoading,
-                        onToggleObscure: () =>
-                            setState(() => _obscure = !_obscure),
-                        onForgotPassword: () =>
-                            context.push(RoutePaths.forgotPassword),
-                        onSwitchToOtp: () => _switchMode(_AuthMode.otpRequest),
-                        onSubmit: _submitPassword,
-                      ),
+                      formKey: _passwordFormKey,
+                      emailOrMuidController: _emailOrMuidController,
+                      passwordController: _passwordController,
+                      obscure: _obscure,
+                      isLoading: isLoading,
+                      onToggleObscure: () => setState(() => _obscure = !_obscure),
+                      onForgotPassword: () => context.push(RoutePaths.forgotPassword),
+                      onSwitchToOtp: () => _switchMode(_AuthMode.otpRequest),
+                      onSubmit: _submitPassword,
+                    ),
                     _AuthMode.otpRequest => _OtpRequestForm(
-                        formKey: _otpRequestFormKey,
-                        emailOrMuidController: _otpEmailOrMuidController,
-                        isLoading: isLoading,
-                        onSwitchToPassword: () => _switchMode(_AuthMode.password),
-                        onSubmit: _submitOtpRequest,
-                      ),
+                      formKey: _otpRequestFormKey,
+                      emailOrMuidController: _otpEmailOrMuidController,
+                      isLoading: isLoading,
+                      onSwitchToPassword: () => _switchMode(_AuthMode.password),
+                      onSubmit: _submitOtpRequest,
+                    ),
                     _AuthMode.otpVerify => _OtpVerifyForm(
-                        formKey: _otpVerifyFormKey,
-                        otpController: _otpController,
-                        isLoading: isLoading,
-                        onBack: () => _switchMode(_AuthMode.otpRequest),
-                        onSubmit: _submitOtpVerify,
-                      ),
+                      formKey: _otpVerifyFormKey,
+                      otpController: _otpController,
+                      isLoading: isLoading,
+                      onBack: () => _switchMode(_AuthMode.otpRequest),
+                      onSubmit: _submitOtpVerify,
+                    ),
                   },
                   if (_mode == _AuthMode.password) ...[
                     const SizedBox(height: MuSpace.xl),
@@ -233,9 +222,7 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                       onApple: _signInWithApple,
                     ),
                     const SizedBox(height: MuSpace.xl),
-                    _SignUpFooter(
-                      onSignUp: _startSignUp,
-                    ),
+                    _SignUpFooter(onSignUp: _startSignUp),
                   ],
                 ],
               ),
@@ -260,16 +247,8 @@ class _AuthBackdrop extends StatelessWidget {
         child: ClipRect(
           child: Stack(
             children: [
-              Positioned(
-                top: -80,
-                left: -70,
-                child: _orb(MuColors.primary, 240, 0.16),
-              ),
-              Positioned(
-                bottom: -100,
-                right: -70,
-                child: _orb(MuColors.karmaAccent, 260, 0.14),
-              ),
+              Positioned(top: -80, left: -70, child: _orb(MuColors.primary, 240, 0.16)),
+              Positioned(bottom: -100, right: -70, child: _orb(MuColors.karmaAccent, 260, 0.14)),
             ],
           ),
         ),
@@ -281,7 +260,10 @@ class _AuthBackdrop extends StatelessWidget {
     return Container(
       height: size,
       width: size,
-      decoration: BoxDecoration(shape: BoxShape.circle, color: color.withValues(alpha: opacity)),
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: color.withValues(alpha: opacity),
+      ),
     );
   }
 }
@@ -330,13 +312,8 @@ class _PasswordForm extends StatelessWidget {
                 controller: emailOrMuidController,
                 textInputAction: TextInputAction.next,
                 enabled: !isLoading,
-                decoration: const InputDecoration(
-                  labelText: 'EMAIL OR MUID',
-                  hintText: 'you@college.edu',
-                ),
-                validator: (value) => (value?.trim().isEmpty ?? true)
-                    ? 'Enter your email or MuID to continue.'
-                    : null,
+                decoration: const InputDecoration(labelText: 'EMAIL OR MUID', hintText: 'you@college.edu'),
+                validator: (value) => (value?.trim().isEmpty ?? true) ? 'Enter your email or MuID to continue.' : null,
               ),
               const SizedBox(height: MuSpace.l),
               TextFormField(
@@ -350,15 +327,11 @@ class _PasswordForm extends StatelessWidget {
                   hintText: '••••••••',
                   suffixIcon: IconButton(
                     tooltip: obscure ? 'Show password' : 'Hide password',
-                    icon: Icon(
-                      obscure ? LucideIcons.eye : LucideIcons.eyeOff,
-                      color: MuColors.inkSecondary,
-                    ),
+                    icon: Icon(obscure ? LucideIcons.eye : LucideIcons.eyeOff, color: MuColors.inkSecondary),
                     onPressed: onToggleObscure,
                   ),
                 ),
-                validator: (value) =>
-                    (value == null || value.isEmpty) ? 'Password is required.' : null,
+                validator: (value) => (value == null || value.isEmpty) ? 'Password is required.' : null,
               ),
               const SizedBox(height: MuSpace.m),
               Row(
@@ -377,10 +350,7 @@ class _PasswordForm extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: MuSpace.l),
-              MuPrimaryButton(
-                label: isLoading ? 'Signing you in…' : 'Sign in',
-                onPressed: isLoading ? null : onSubmit,
-              ),
+              MuPrimaryButton(label: isLoading ? 'Signing you in…' : 'Sign in', onPressed: isLoading ? null : onSubmit),
             ],
           ),
         ),
@@ -426,13 +396,8 @@ class _OtpRequestForm extends StatelessWidget {
                 textInputAction: TextInputAction.done,
                 enabled: !isLoading,
                 onFieldSubmitted: (_) => onSubmit(),
-                decoration: const InputDecoration(
-                  labelText: 'EMAIL OR MUID',
-                  hintText: 'you@college.edu',
-                ),
-                validator: (value) => (value?.trim().isEmpty ?? true)
-                    ? 'Enter your email or MuID to continue.'
-                    : null,
+                decoration: const InputDecoration(labelText: 'EMAIL OR MUID', hintText: 'you@college.edu'),
+                validator: (value) => (value?.trim().isEmpty ?? true) ? 'Enter your email or MuID to continue.' : null,
               ),
               const SizedBox(height: MuSpace.s),
               Align(
@@ -444,10 +409,7 @@ class _OtpRequestForm extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: MuSpace.s),
-              MuPrimaryButton(
-                label: isLoading ? 'Sending…' : 'Send code',
-                onPressed: isLoading ? null : onSubmit,
-              ),
+              MuPrimaryButton(label: isLoading ? 'Sending…' : 'Send code', onPressed: isLoading ? null : onSubmit),
             ],
           ),
         ),
@@ -478,10 +440,7 @@ class _OtpVerifyForm extends StatelessWidget {
       children: [
         TextButton.icon(
           onPressed: isLoading ? null : onBack,
-          style: TextButton.styleFrom(
-            padding: EdgeInsets.zero,
-            alignment: Alignment.centerLeft,
-          ),
+          style: TextButton.styleFrom(padding: EdgeInsets.zero, alignment: Alignment.centerLeft),
           icon: const Icon(LucideIcons.arrowLeft, size: 18),
           label: const Text('Back'),
         ),
@@ -504,13 +463,8 @@ class _OtpVerifyForm extends StatelessWidget {
                 textInputAction: TextInputAction.done,
                 enabled: !isLoading,
                 onFieldSubmitted: (_) => onSubmit(),
-                decoration: const InputDecoration(
-                  labelText: '6-DIGIT CODE',
-                  hintText: '000000',
-                ),
-                validator: (value) => (value?.trim().isEmpty ?? true)
-                    ? 'Enter all six digits of your code.'
-                    : null,
+                decoration: const InputDecoration(labelText: '6-DIGIT CODE', hintText: '000000'),
+                validator: (value) => (value?.trim().isEmpty ?? true) ? 'Enter all six digits of your code.' : null,
               ),
               const SizedBox(height: MuSpace.l),
               MuPrimaryButton(
@@ -573,11 +527,7 @@ class _SocialSignInButtons extends StatelessWidget {
         // has no native Apple ID picker, so the button is never shown there.
         if (showApple) ...[
           if (showGoogle) const SizedBox(height: MuSpace.m),
-          MuGhostButton(
-            label: 'Continue with Apple',
-            icon: LucideIcons.apple,
-            onPressed: isLoading ? null : onApple,
-          ),
+          MuGhostButton(label: 'Continue with Apple', icon: LucideIcons.apple, onPressed: isLoading ? null : onApple),
         ],
       ],
     );
@@ -599,10 +549,7 @@ class _SignUpFooter extends StatelessWidget {
             const TextSpan(text: "Don't have an account? "),
             TextSpan(
               text: 'Sign up',
-              style: const TextStyle(
-                color: MuColors.primary,
-                fontWeight: FontWeight.w600,
-              ),
+              style: const TextStyle(color: MuColors.primary, fontWeight: FontWeight.w600),
               recognizer: TapGestureRecognizer()..onTap = onSignUp,
             ),
           ],

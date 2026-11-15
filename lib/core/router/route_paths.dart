@@ -5,6 +5,12 @@ abstract final class RoutePaths {
 
   static const String splash = '/splash';
   static const String signIn = '/sign-in';
+
+  /// First-launch arrival beats (signed out, once per device).
+  static const String welcome = '/welcome';
+
+  /// The guest home: μLearn before signing in.
+  static const String commons = '/commons';
   static const String forgotPassword = '/forgot-password';
   static const String resetPassword = '/reset-password';
   static const String registerBasicInfo = '/register';
@@ -71,8 +77,7 @@ abstract final class RoutePaths {
   static const String learningCircleDetail = '/circles/:id';
   static String learningCircleDetailPath(String id) => '/circles/$id';
   static const String createMeeting = '/circles/:id/meetings/create';
-  static String createMeetingPath(String circleId) =>
-      '/circles/$circleId/meetings/create';
+  static String createMeetingPath(String circleId) => '/circles/$circleId/meetings/create';
   static const String meetingDetail = '/meetings/:id';
   static String meetingDetailPath(String id) => '/meetings/$id';
   static const String editMeeting = '/meetings/:id/edit';

@@ -20,21 +20,20 @@ import 'package:mulearn_app/core/network/api_exception.dart';
 /// the sign-in screen hides the button instead of offering one that fails.
 class GoogleNativeSignInDataSource {
   GoogleNativeSignInDataSource({TargetPlatform? platform, String? serverClientId})
-      : _platform = platform ?? defaultTargetPlatform,
-        _serverClientId = serverClientId ?? FlavorConfig.instance.googleServerClientId;
+    : _platform = platform ?? defaultTargetPlatform,
+      _serverClientId = serverClientId ?? FlavorConfig.instance.googleServerClientId;
 
   final TargetPlatform _platform;
   final String _serverClientId;
 
   /// Whether this platform can complete a native Google sign-in.
   bool get isAvailable => switch (_platform) {
-        TargetPlatform.iOS => true,
-        TargetPlatform.android => _serverClientId.isNotEmpty,
-        _ => false,
-      };
+    TargetPlatform.iOS => true,
+    TargetPlatform.android => _serverClientId.isNotEmpty,
+    _ => false,
+  };
 
-  static const _iosClientId =
-      '966772588752-tr5qq5cs4d6kfqsv6tivk3v58n26tnes.apps.googleusercontent.com';
+  static const _iosClientId = '966772588752-tr5qq5cs4d6kfqsv6tivk3v58n26tnes.apps.googleusercontent.com';
 
   bool _initialized = false;
 
@@ -56,9 +55,7 @@ class GoogleNativeSignInDataSource {
       final account = await GoogleSignIn.instance.authenticate();
       final idToken = account.authentication.idToken;
       if (idToken == null || idToken.isEmpty) {
-        throw const ApiException(
-          message: 'Google sign-in did not return an ID token.',
-        );
+        throw const ApiException(message: 'Google sign-in did not return an ID token.');
       }
       return idToken;
     } on GoogleSignInException catch (e) {

@@ -24,8 +24,7 @@ const registerSubmitControllerProvider = RegisterSubmitControllerProvider._();
 /// enabler) link an organization, or (for company) create the company record.
 ///
 /// Exposes `AsyncValue<void>` for automatic loading/error state (rules.md §4).
-final class RegisterSubmitControllerProvider
-    extends $AsyncNotifierProvider<RegisterSubmitController, void> {
+final class RegisterSubmitControllerProvider extends $AsyncNotifierProvider<RegisterSubmitController, void> {
   /// Performs the actual registration submission — the same multi-call
   /// sequence as the reference `register-client.tsx`'s `handleGenericSignup`/
   /// `handleCompanySignup`: create the account, then (for student/mentor/
@@ -51,8 +50,7 @@ final class RegisterSubmitControllerProvider
   RegisterSubmitController create() => RegisterSubmitController();
 }
 
-String _$registerSubmitControllerHash() =>
-    r'd6683b995eb0a0241f0b4a71a8894dab3bfaca53';
+String _$registerSubmitControllerHash() => r'd6683b995eb0a0241f0b4a71a8894dab3bfaca53';
 
 /// Performs the actual registration submission — the same multi-call
 /// sequence as the reference `register-client.tsx`'s `handleGenericSignup`/
@@ -69,13 +67,7 @@ abstract class _$RegisterSubmitController extends $AsyncNotifier<void> {
     build();
     final ref = this.ref as $Ref<AsyncValue<void>, void>;
     final element =
-        ref.element
-            as $ClassProviderElement<
-              AnyNotifier<AsyncValue<void>, void>,
-              AsyncValue<void>,
-              Object?,
-              Object?
-            >;
+        ref.element as $ClassProviderElement<AnyNotifier<AsyncValue<void>, void>, AsyncValue<void>, Object?, Object?>;
     element.handleValue(ref, null);
   }
 }

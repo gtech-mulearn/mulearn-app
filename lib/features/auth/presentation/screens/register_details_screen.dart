@@ -51,15 +51,9 @@ class RegisterDetailsScreen extends ConsumerWidget {
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 26),
           child: switch (role) {
-            RegistrationRole.student => StudentDetailsForm(
-                onSubmitted: () => _onSubmitted(context, ref),
-              ),
-            RegistrationRole.enabler => EnablerDetailsForm(
-                onSubmitted: () => _onSubmitted(context, ref),
-              ),
-            RegistrationRole.mentor => MentorDetailsForm(
-                onSubmitted: () => _onSubmitted(context, ref),
-              ),
+            RegistrationRole.student => StudentDetailsForm(onSubmitted: () => _onSubmitted(context, ref)),
+            RegistrationRole.enabler => EnablerDetailsForm(onSubmitted: () => _onSubmitted(context, ref)),
+            RegistrationRole.mentor => MentorDetailsForm(onSubmitted: () => _onSubmitted(context, ref)),
           },
         ),
       ),
