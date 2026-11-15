@@ -60,6 +60,7 @@ dependencies:
 
   # Images
   cached_network_image: ^3.4.1
+  image: ^4.5.0
   image_picker: ^1.1.2
   # Cache directory for the persistent HTTP cache (already in the lock file
   # transitively; now used directly by core/storage/cache_store_factory.dart).
