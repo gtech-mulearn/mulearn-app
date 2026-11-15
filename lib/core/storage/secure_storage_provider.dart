@@ -6,7 +6,11 @@ part 'secure_storage_provider.g.dart';
 /// Secure key/value store — tokens only (rules.md §1). Never put tokens in
 /// SharedPreferences.
 ///
-/// `useDataProtectionKeyChain: false` on macOS: the default (`true`) uses the
+/// Android uses the package's default cipher storage (AES-GCM keys wrapped by
+/// RSA-OAEP in the Android Keystore); the old Jetpack `EncryptedSharedPreferences`
+/// option was deprecated and then removed upstream (flutter_secure_storage 11).
+///
+/// `usesDataProtectionKeychain: false` on macOS: the default (`true`) uses the
 /// newer per-app "Data Protection Keychain", which requires a
 /// `keychain-access-groups` entitlement tied to a real Apple Developer Team
 /// signing identity — regardless of App Sandbox state. This project has no
@@ -17,10 +21,9 @@ part 'secure_storage_provider.g.dart';
 /// requirement entirely.
 @Riverpod(keepAlive: true)
 FlutterSecureStorage secureStorage(Ref ref) => const FlutterSecureStorage(
-      aOptions: AndroidOptions(encryptedSharedPreferences: true),
-      iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock),
-      mOptions: MacOsOptions(useDataProtectionKeyChain: false),
-    );
+  iOptions: IOSOptions(accessibility: KeychainAccessibility.first_unlock),
+  mOptions: MacOsOptions(usesDataProtectionKeychain: false),
+);
 
 /// Well-known secure-storage keys. Centralized so a rename touches one place.
 abstract final class TokenKeys {
@@ -39,9 +42,11 @@ class TokenStorage {
 
   final FlutterSecureStorage _storage;
 
-  Future<String?> readAccessToken() => _storage.read(key: TokenKeys.accessToken);
+  Future<String?> readAccessToken() =>
+      _storage.read(key: TokenKeys.accessToken);
 
-  Future<String?> readRefreshToken() => _storage.read(key: TokenKeys.refreshToken);
+  Future<String?> readRefreshToken() =>
+      _storage.read(key: TokenKeys.refreshToken);
 
   Future<void> saveTokens({
     required String accessToken,
