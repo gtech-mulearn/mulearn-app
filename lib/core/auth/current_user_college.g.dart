@@ -23,7 +23,7 @@ part of 'current_user_college.dart';
 /// namespace `learningcircle/create/` validates against (rules.md §3/§9).
 
 @ProviderFor(currentUserCollege)
-const currentUserCollegeProvider = CurrentUserCollegeProvider._();
+final currentUserCollegeProvider = CurrentUserCollegeProvider._();
 
 /// The signed-in user's own college — just `{id, code}`, not a full profile.
 ///
@@ -62,7 +62,7 @@ final class CurrentUserCollegeProvider
   /// `org` field expects — it's set via the college-change flow's `org_id`,
   /// which is itself sourced from `/api/v1/register/college/list/`, the same
   /// namespace `learningcircle/create/` validates against (rules.md §3/§9).
-  const CurrentUserCollegeProvider._()
+  CurrentUserCollegeProvider._()
     : super(
         from: null,
         argument: null,

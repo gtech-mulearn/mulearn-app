@@ -10,11 +10,11 @@ part of 'campus_students_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(CampusStudentsController)
-const campusStudentsControllerProvider = CampusStudentsControllerFamily._();
+final campusStudentsControllerProvider = CampusStudentsControllerFamily._();
 
 final class CampusStudentsControllerProvider
     extends $AsyncNotifierProvider<CampusStudentsController, StudentsView> {
-  const CampusStudentsControllerProvider._({
+  CampusStudentsControllerProvider._({
     required CampusStudentsControllerFamily super.from,
     required StudentFilter super.argument,
   }) : super(
@@ -63,7 +63,7 @@ final class CampusStudentsControllerFamily extends $Family
           FutureOr<StudentsView>,
           StudentFilter
         > {
-  const CampusStudentsControllerFamily._()
+  CampusStudentsControllerFamily._()
     : super(
         retry: noRetry,
         name: r'campusStudentsControllerProvider',
@@ -86,8 +86,7 @@ abstract class _$CampusStudentsController extends $AsyncNotifier<StudentsView> {
   FutureOr<StudentsView> build(StudentFilter filter);
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build(_$args);
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<StudentsView>, StudentsView>;
     final element =
         ref.element
@@ -97,14 +96,14 @@ abstract class _$CampusStudentsController extends $AsyncNotifier<StudentsView> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, () => build(_$args));
   }
 }
 
 /// A student's karma entries, page by page.
 
 @ProviderFor(StudentActivityController)
-const studentActivityControllerProvider = StudentActivityControllerFamily._();
+final studentActivityControllerProvider = StudentActivityControllerFamily._();
 
 /// A student's karma entries, page by page.
 final class StudentActivityControllerProvider
@@ -114,7 +113,7 @@ final class StudentActivityControllerProvider
           PagedState<StudentActivity>
         > {
   /// A student's karma entries, page by page.
-  const StudentActivityControllerProvider._({
+  StudentActivityControllerProvider._({
     required StudentActivityControllerFamily super.from,
     required String super.argument,
   }) : super(
@@ -165,7 +164,7 @@ final class StudentActivityControllerFamily extends $Family
           FutureOr<PagedState<StudentActivity>>,
           String
         > {
-  const StudentActivityControllerFamily._()
+  StudentActivityControllerFamily._()
     : super(
         retry: noRetry,
         name: r'studentActivityControllerProvider',
@@ -193,8 +192,7 @@ abstract class _$StudentActivityController
   FutureOr<PagedState<StudentActivity>> build(String muid);
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build(_$args);
+  WhenComplete runBuild() {
     final ref =
         this.ref
             as $Ref<
@@ -212,6 +210,6 @@ abstract class _$StudentActivityController
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, () => build(_$args));
   }
 }

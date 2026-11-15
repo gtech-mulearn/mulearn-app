@@ -11,7 +11,7 @@ part of 'recent_results.dart';
 /// The app-wide [RecentResults].
 
 @ProviderFor(recentResults)
-const recentResultsProvider = RecentResultsProvider._();
+final recentResultsProvider = RecentResultsProvider._();
 
 /// The app-wide [RecentResults].
 
@@ -19,7 +19,7 @@ final class RecentResultsProvider
     extends $FunctionalProvider<RecentResults, RecentResults, RecentResults>
     with $Provider<RecentResults> {
   /// The app-wide [RecentResults].
-  const RecentResultsProvider._()
+  RecentResultsProvider._()
     : super(
         from: null,
         argument: null,

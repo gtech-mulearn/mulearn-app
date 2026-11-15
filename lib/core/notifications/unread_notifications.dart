@@ -15,12 +15,14 @@ part 'unread_notifications.g.dart';
 const Duration unreadStaleAfter = Duration(minutes: 5);
 
 /// `GET /api/v1/notification/unread-count/` → `{unread_count}`.
-@riverpod
+@Riverpod(keepAlive: true) // UnreadNotifications (kept alive) depends on it
 Future<int> Function() fetchUnreadCount(Ref ref) {
   final dio = ref.watch(dioProvider);
   return () async {
     try {
-      final body = ApiEnvelope.unwrapObject(await dio.get<dynamic>(NotificationPaths.unreadCount));
+      final body = ApiEnvelope.unwrapObject(
+        await dio.get<dynamic>(NotificationPaths.unreadCount),
+      );
       return body['unread_count'] as int? ?? 0;
     } on DioException catch (e) {
       throw ApiException.fromDioException(e);
@@ -64,8 +66,11 @@ class UnreadNotifications extends _$UnreadNotifications {
     final inFlight = _inFlight;
     if (inFlight != null) return inFlight;
     final fetchedAt = _fetchedAt;
-    if (fetchedAt == null && state.isLoading) return Future.value(); // the first load is running
-    if (fetchedAt != null && ref.read(clockProvider)().difference(fetchedAt) < unreadStaleAfter) {
+    if (fetchedAt == null && state.isLoading) {
+      return Future.value(); // the first load is running
+    }
+    if (fetchedAt != null &&
+        ref.read(clockProvider)().difference(fetchedAt) < unreadStaleAfter) {
       return Future.value();
     }
     return refresh();
@@ -73,7 +78,8 @@ class UnreadNotifications extends _$UnreadNotifications {
 
   /// Fetches now. Concurrent calls share one request; a failure keeps the
   /// last known count and isn't retried (the next trigger tries again).
-  Future<void> refresh() => _inFlight ??= _fetch().whenComplete(() => _inFlight = null);
+  Future<void> refresh() =>
+      _inFlight ??= _fetch().whenComplete(() => _inFlight = null);
 
   Future<void> _fetch() async {
     if (ref.read(appAuthControllerProvider).value != true) return;
@@ -85,7 +91,11 @@ class UnreadNotifications extends _$UnreadNotifications {
       _fetchedAt = now();
       state = AsyncData(count);
     } on Object catch (e, st) {
-      appLogger.w('Unread notification count unavailable; keeping the last value', error: e, stackTrace: st);
+      appLogger.w(
+        'Unread notification count unavailable; keeping the last value',
+        error: e,
+        stackTrace: st,
+      );
     }
   }
 

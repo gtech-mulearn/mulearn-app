@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'circle_user_ref_dto.dart';
@@ -9,6 +9,7 @@ part of 'circle_user_ref_dto.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $CircleUserRefDtoCopyWith<CircleUserRefDto> get copyWith => _$CircleUserRefDtoCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CircleUserRefDto&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.id, id) || other.id == id)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.profilePic, profilePic) || other.profilePic == profilePic));
+  final _this = this as CircleUserRefDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CircleUserRefDto&&(identical(other.fullName, _this.fullName) || other.fullName == _this.fullName)&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.muid, _this.muid) || other.muid == _this.muid)&&(identical(other.profilePic, _this.profilePic) || other.profilePic == _this.profilePic));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,fullName,id,muid,profilePic);
+int get hashCode {
+  final _this = this as CircleUserRefDto;
+  return Object.hash(runtimeType,_this.fullName,_this.id,_this.muid,_this.profilePic);
+}
 
 @override
 String toString() {
-  return 'CircleUserRefDto(fullName: $fullName, id: $id, muid: $muid, profilePic: $profilePic)';
+  final _this = this as CircleUserRefDto;
+  return 'CircleUserRefDto(fullName: ${_this.fullName}, id: ${_this.id}, muid: ${_this.muid}, profilePic: ${_this.profilePic})';
 }
 
 
@@ -66,7 +72,7 @@ class _$CircleUserRefDtoCopyWithImpl<$Res>
 /// Create a copy of CircleUserRefDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? fullName = freezed,Object? id = freezed,Object? muid = freezed,Object? profilePic = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(CircleUserRefDto(
 fullName: freezed == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
 as String?,id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,muid: freezed == muid ? _self.muid : muid // ignore: cast_nullable_to_non_nullable
@@ -233,16 +239,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CircleUserRefDto&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.id, id) || other.id == id)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.profilePic, profilePic) || other.profilePic == profilePic));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CircleUserRefDto&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.id, id) || other.id == id)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.profilePic, profilePic) || other.profilePic == profilePic));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,fullName,id,muid,profilePic);
+int get hashCode {
+    return Object.hash(runtimeType,fullName,id,muid,profilePic);
+}
 
 @override
 String toString() {
-  return 'CircleUserRefDto(fullName: $fullName, id: $id, muid: $muid, profilePic: $profilePic)';
+    return 'CircleUserRefDto(fullName: $fullName, id: $id, muid: $muid, profilePic: $profilePic)';
 }
 
 

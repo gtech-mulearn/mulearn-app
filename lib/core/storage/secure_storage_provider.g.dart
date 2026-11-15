@@ -26,7 +26,7 @@ part of 'secure_storage_provider.dart';
 /// requirement entirely.
 
 @ProviderFor(secureStorage)
-const secureStorageProvider = SecureStorageProvider._();
+final secureStorageProvider = SecureStorageProvider._();
 
 /// Secure key/value store — tokens only (rules.md §1). Never put tokens in
 /// SharedPreferences.
@@ -69,7 +69,7 @@ final class SecureStorageProvider
   /// even after disabling the sandbox (confirmed by reproducing the exact
   /// failure live). Falling back to the legacy keychain avoids that entitlement
   /// requirement entirely.
-  const SecureStorageProvider._()
+  SecureStorageProvider._()
     : super(
         from: null,
         argument: null,
@@ -106,12 +106,12 @@ final class SecureStorageProvider
 String _$secureStorageHash() => r'e5affa1471c1cc90fa3f0e1208add72ae8640bc1';
 
 @ProviderFor(tokenStorage)
-const tokenStorageProvider = TokenStorageProvider._();
+final tokenStorageProvider = TokenStorageProvider._();
 
 final class TokenStorageProvider
     extends $FunctionalProvider<TokenStorage, TokenStorage, TokenStorage>
     with $Provider<TokenStorage> {
-  const TokenStorageProvider._()
+  TokenStorageProvider._()
     : super(
         from: null,
         argument: null,

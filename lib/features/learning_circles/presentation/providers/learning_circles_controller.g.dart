@@ -10,7 +10,7 @@ part of 'learning_circles_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(learningCirclesRemoteDataSource)
-const learningCirclesRemoteDataSourceProvider =
+final learningCirclesRemoteDataSourceProvider =
     LearningCirclesRemoteDataSourceProvider._();
 
 final class LearningCirclesRemoteDataSourceProvider
@@ -21,7 +21,7 @@ final class LearningCirclesRemoteDataSourceProvider
           LearningCirclesRemoteDataSource
         >
     with $Provider<LearningCirclesRemoteDataSource> {
-  const LearningCirclesRemoteDataSourceProvider._()
+  LearningCirclesRemoteDataSourceProvider._()
     : super(
         from: null,
         argument: null,
@@ -64,7 +64,7 @@ String _$learningCirclesRemoteDataSourceHash() =>
 /// (rules.md §2/§5).
 
 @ProviderFor(learningCirclesRepository)
-const learningCirclesRepositoryProvider = LearningCirclesRepositoryProvider._();
+final learningCirclesRepositoryProvider = LearningCirclesRepositoryProvider._();
 
 /// Presentation depends on the [LearningCirclesRepository] contract
 /// (rules.md §2/§5).
@@ -79,7 +79,7 @@ final class LearningCirclesRepositoryProvider
     with $Provider<LearningCirclesRepository> {
   /// Presentation depends on the [LearningCirclesRepository] contract
   /// (rules.md §2/§5).
-  const LearningCirclesRepositoryProvider._()
+  LearningCirclesRepositoryProvider._()
     : super(
         from: null,
         argument: null,
@@ -117,7 +117,7 @@ String _$learningCirclesRepositoryHash() =>
     r'edd8d64217e58b023a75bdf17ae4ff242fed470f';
 
 @ProviderFor(myCircles)
-const myCirclesProvider = MyCirclesProvider._();
+final myCirclesProvider = MyCirclesProvider._();
 
 final class MyCirclesProvider
     extends
@@ -129,7 +129,7 @@ final class MyCirclesProvider
     with
         $FutureModifier<List<LearningCircle>>,
         $FutureProvider<List<LearningCircle>> {
-  const MyCirclesProvider._()
+  MyCirclesProvider._()
     : super(
         from: null,
         argument: null,
@@ -158,7 +158,7 @@ final class MyCirclesProvider
 String _$myCirclesHash() => r'1fe2564b81aa0ce7d0502f2fa31fff8b9912b373';
 
 @ProviderFor(circleDetail)
-const circleDetailProvider = CircleDetailFamily._();
+final circleDetailProvider = CircleDetailFamily._();
 
 final class CircleDetailProvider
     extends
@@ -170,7 +170,7 @@ final class CircleDetailProvider
     with
         $FutureModifier<LearningCircleDetail>,
         $FutureProvider<LearningCircleDetail> {
-  const CircleDetailProvider._({
+  CircleDetailProvider._({
     required CircleDetailFamily super.from,
     required String super.argument,
   }) : super(
@@ -218,7 +218,7 @@ String _$circleDetailHash() => r'6a94a629c7d0b5fbacac51c7a7c9f2f5b0a2f4ec';
 
 final class CircleDetailFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<LearningCircleDetail>, String> {
-  const CircleDetailFamily._()
+  CircleDetailFamily._()
     : super(
         retry: null,
         name: r'circleDetailProvider',
@@ -235,7 +235,7 @@ final class CircleDetailFamily extends $Family
 }
 
 @ProviderFor(circleMembers)
-const circleMembersProvider = CircleMembersFamily._();
+final circleMembersProvider = CircleMembersFamily._();
 
 final class CircleMembersProvider
     extends
@@ -245,7 +245,7 @@ final class CircleMembersProvider
           FutureOr<CircleMembers>
         >
     with $FutureModifier<CircleMembers>, $FutureProvider<CircleMembers> {
-  const CircleMembersProvider._({
+  CircleMembersProvider._({
     required CircleMembersFamily super.from,
     required String super.argument,
   }) : super(
@@ -293,7 +293,7 @@ String _$circleMembersHash() => r'61f1da6b05c32912b2c83f9cac9d4f49a0a36ffd';
 
 final class CircleMembersFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<CircleMembers>, String> {
-  const CircleMembersFamily._()
+  CircleMembersFamily._()
     : super(
         retry: null,
         name: r'circleMembersProvider',
@@ -310,7 +310,7 @@ final class CircleMembersFamily extends $Family
 }
 
 @ProviderFor(circleJoinRequests)
-const circleJoinRequestsProvider = CircleJoinRequestsFamily._();
+final circleJoinRequestsProvider = CircleJoinRequestsFamily._();
 
 final class CircleJoinRequestsProvider
     extends
@@ -322,7 +322,7 @@ final class CircleJoinRequestsProvider
     with
         $FutureModifier<List<JoinRequest>>,
         $FutureProvider<List<JoinRequest>> {
-  const CircleJoinRequestsProvider._({
+  CircleJoinRequestsProvider._({
     required CircleJoinRequestsFamily super.from,
     required String super.argument,
   }) : super(
@@ -371,7 +371,7 @@ String _$circleJoinRequestsHash() =>
 
 final class CircleJoinRequestsFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<List<JoinRequest>>, String> {
-  const CircleJoinRequestsFamily._()
+  CircleJoinRequestsFamily._()
     : super(
         retry: null,
         name: r'circleJoinRequestsProvider',
@@ -388,7 +388,7 @@ final class CircleJoinRequestsFamily extends $Family
 }
 
 @ProviderFor(circleSentInvites)
-const circleSentInvitesProvider = CircleSentInvitesFamily._();
+final circleSentInvitesProvider = CircleSentInvitesFamily._();
 
 final class CircleSentInvitesProvider
     extends
@@ -400,7 +400,7 @@ final class CircleSentInvitesProvider
     with
         $FutureModifier<List<CircleInvite>>,
         $FutureProvider<List<CircleInvite>> {
-  const CircleSentInvitesProvider._({
+  CircleSentInvitesProvider._({
     required CircleSentInvitesFamily super.from,
     required String super.argument,
   }) : super(
@@ -448,7 +448,7 @@ String _$circleSentInvitesHash() => r'38134681215caab627bb3de8217bfd403a2d3f62';
 
 final class CircleSentInvitesFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<List<CircleInvite>>, String> {
-  const CircleSentInvitesFamily._()
+  CircleSentInvitesFamily._()
     : super(
         retry: null,
         name: r'circleSentInvitesProvider',
@@ -465,7 +465,7 @@ final class CircleSentInvitesFamily extends $Family
 }
 
 @ProviderFor(myPendingCircleInvites)
-const myPendingCircleInvitesProvider = MyPendingCircleInvitesProvider._();
+final myPendingCircleInvitesProvider = MyPendingCircleInvitesProvider._();
 
 final class MyPendingCircleInvitesProvider
     extends
@@ -477,7 +477,7 @@ final class MyPendingCircleInvitesProvider
     with
         $FutureModifier<List<ReceivedCircleInvite>>,
         $FutureProvider<List<ReceivedCircleInvite>> {
-  const MyPendingCircleInvitesProvider._()
+  MyPendingCircleInvitesProvider._()
     : super(
         from: null,
         argument: null,
@@ -511,7 +511,7 @@ String _$myPendingCircleInvitesHash() =>
 /// feature's richer catalog).
 
 @ProviderFor(circleIgOptions)
-const circleIgOptionsProvider = CircleIgOptionsProvider._();
+final circleIgOptionsProvider = CircleIgOptionsProvider._();
 
 /// IG options for the create-circle picker — `{id, name}` only (rules.md
 /// §2: fetched independently rather than importing the `interest_groups`
@@ -530,7 +530,7 @@ final class CircleIgOptionsProvider
   /// IG options for the create-circle picker — `{id, name}` only (rules.md
   /// §2: fetched independently rather than importing the `interest_groups`
   /// feature's richer catalog).
-  const CircleIgOptionsProvider._()
+  CircleIgOptionsProvider._()
     : super(
         from: null,
         argument: null,
@@ -563,7 +563,7 @@ String _$circleIgOptionsHash() => r'b0089f447a4e2bc35866de0b8d41304bb9a5b09a';
 /// the circles already shown and records the error for an inline retry.
 
 @ProviderFor(CirclesListController)
-const circlesListControllerProvider = CirclesListControllerFamily._();
+final circlesListControllerProvider = CirclesListControllerFamily._();
 
 /// Accumulates circle catalog pages across "load more", one list per
 /// [CircleFilter] (a new filter starts again at page 1). A failed page keeps
@@ -577,7 +577,7 @@ final class CirclesListControllerProvider
   /// Accumulates circle catalog pages across "load more", one list per
   /// [CircleFilter] (a new filter starts again at page 1). A failed page keeps
   /// the circles already shown and records the error for an inline retry.
-  const CirclesListControllerProvider._({
+  CirclesListControllerProvider._({
     required CirclesListControllerFamily super.from,
     required CircleFilter super.argument,
   }) : super(
@@ -629,7 +629,7 @@ final class CirclesListControllerFamily extends $Family
           FutureOr<PagedState<LearningCircle>>,
           CircleFilter
         > {
-  const CirclesListControllerFamily._()
+  CirclesListControllerFamily._()
     : super(
         retry: null,
         name: r'circlesListControllerProvider',
@@ -661,8 +661,7 @@ abstract class _$CirclesListController
   FutureOr<PagedState<LearningCircle>> build(CircleFilter filter);
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build(_$args);
+  WhenComplete runBuild() {
     final ref =
         this.ref
             as $Ref<
@@ -680,7 +679,7 @@ abstract class _$CirclesListController
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, () => build(_$args));
   }
 }
 
@@ -689,7 +688,7 @@ abstract class _$CirclesListController
 /// state, mirroring [InterestGroupMembershipController]'s pattern.
 
 @ProviderFor(CircleActionsController)
-const circleActionsControllerProvider = CircleActionsControllerProvider._();
+final circleActionsControllerProvider = CircleActionsControllerProvider._();
 
 /// Every mutating circle action (create/edit/delete/join/membership/
 /// invites) — a single notifier so screens show one consistent busy/error
@@ -699,7 +698,7 @@ final class CircleActionsControllerProvider
   /// Every mutating circle action (create/edit/delete/join/membership/
   /// invites) — a single notifier so screens show one consistent busy/error
   /// state, mirroring [InterestGroupMembershipController]'s pattern.
-  const CircleActionsControllerProvider._()
+  CircleActionsControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -729,8 +728,7 @@ abstract class _$CircleActionsController extends $AsyncNotifier<void> {
   FutureOr<void> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<void>, void>;
     final element =
         ref.element
@@ -740,6 +738,6 @@ abstract class _$CircleActionsController extends $AsyncNotifier<void> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, null);
+    return element.handleCreate(ref, build);
   }
 }

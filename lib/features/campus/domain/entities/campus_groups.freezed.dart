@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'campus_groups.dart';
@@ -9,6 +9,7 @@ part of 'campus_groups.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $CampusCircleCopyWith<CampusCircle> get copyWith => _$CampusCircleCopyWithImpl<C
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CampusCircle&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.igName, igName) || other.igName == igName)&&(identical(other.memberCount, memberCount) || other.memberCount == memberCount)&&(identical(other.meetingCount, meetingCount) || other.meetingCount == meetingCount)&&(identical(other.lastMeetingTime, lastMeetingTime) || other.lastMeetingTime == lastMeetingTime));
+  final _this = this as CampusCircle;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CampusCircle&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.igName, _this.igName) || other.igName == _this.igName)&&(identical(other.memberCount, _this.memberCount) || other.memberCount == _this.memberCount)&&(identical(other.meetingCount, _this.meetingCount) || other.meetingCount == _this.meetingCount)&&(identical(other.lastMeetingTime, _this.lastMeetingTime) || other.lastMeetingTime == _this.lastMeetingTime));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,igName,memberCount,meetingCount,lastMeetingTime);
+int get hashCode {
+  final _this = this as CampusCircle;
+  return Object.hash(runtimeType,_this.id,_this.name,_this.igName,_this.memberCount,_this.meetingCount,_this.lastMeetingTime);
+}
 
 @override
 String toString() {
-  return 'CampusCircle(id: $id, name: $name, igName: $igName, memberCount: $memberCount, meetingCount: $meetingCount, lastMeetingTime: $lastMeetingTime)';
+  final _this = this as CampusCircle;
+  return 'CampusCircle(id: ${_this.id}, name: ${_this.name}, igName: ${_this.igName}, memberCount: ${_this.memberCount}, meetingCount: ${_this.meetingCount}, lastMeetingTime: ${_this.lastMeetingTime})';
 }
 
 
@@ -63,7 +69,7 @@ class _$CampusCircleCopyWithImpl<$Res>
 /// Create a copy of CampusCircle
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? igName = null,Object? memberCount = null,Object? meetingCount = null,Object? lastMeetingTime = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(CampusCircle(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,igName: null == igName ? _self.igName : igName // ignore: cast_nullable_to_non_nullable
@@ -231,16 +237,18 @@ _$CampusCircleCopyWith<_CampusCircle> get copyWith => __$CampusCircleCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CampusCircle&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.igName, igName) || other.igName == igName)&&(identical(other.memberCount, memberCount) || other.memberCount == memberCount)&&(identical(other.meetingCount, meetingCount) || other.meetingCount == meetingCount)&&(identical(other.lastMeetingTime, lastMeetingTime) || other.lastMeetingTime == lastMeetingTime));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CampusCircle&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.igName, igName) || other.igName == igName)&&(identical(other.memberCount, memberCount) || other.memberCount == memberCount)&&(identical(other.meetingCount, meetingCount) || other.meetingCount == meetingCount)&&(identical(other.lastMeetingTime, lastMeetingTime) || other.lastMeetingTime == lastMeetingTime));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,igName,memberCount,meetingCount,lastMeetingTime);
+int get hashCode {
+    return Object.hash(runtimeType,id,name,igName,memberCount,meetingCount,lastMeetingTime);
+}
 
 @override
 String toString() {
-  return 'CampusCircle(id: $id, name: $name, igName: $igName, memberCount: $memberCount, meetingCount: $meetingCount, lastMeetingTime: $lastMeetingTime)';
+    return 'CampusCircle(id: $id, name: $name, igName: $igName, memberCount: $memberCount, meetingCount: $meetingCount, lastMeetingTime: $lastMeetingTime)';
 }
 
 
@@ -297,16 +305,21 @@ $CampusIgCopyWith<CampusIg> get copyWith => _$CampusIgCopyWithImpl<CampusIg>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CampusIg&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.code, code) || other.code == code)&&(identical(other.campusMemberCount, campusMemberCount) || other.campusMemberCount == campusMemberCount)&&(identical(other.iconImage, iconImage) || other.iconImage == iconImage));
+  final _this = this as CampusIg;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CampusIg&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.code, _this.code) || other.code == _this.code)&&(identical(other.campusMemberCount, _this.campusMemberCount) || other.campusMemberCount == _this.campusMemberCount)&&(identical(other.iconImage, _this.iconImage) || other.iconImage == _this.iconImage));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,code,campusMemberCount,iconImage);
+int get hashCode {
+  final _this = this as CampusIg;
+  return Object.hash(runtimeType,_this.id,_this.name,_this.code,_this.campusMemberCount,_this.iconImage);
+}
 
 @override
 String toString() {
-  return 'CampusIg(id: $id, name: $name, code: $code, campusMemberCount: $campusMemberCount, iconImage: $iconImage)';
+  final _this = this as CampusIg;
+  return 'CampusIg(id: ${_this.id}, name: ${_this.name}, code: ${_this.code}, campusMemberCount: ${_this.campusMemberCount}, iconImage: ${_this.iconImage})';
 }
 
 
@@ -335,7 +348,7 @@ class _$CampusIgCopyWithImpl<$Res>
 /// Create a copy of CampusIg
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? code = null,Object? campusMemberCount = null,Object? iconImage = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(CampusIg(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
@@ -501,16 +514,18 @@ _$CampusIgCopyWith<_CampusIg> get copyWith => __$CampusIgCopyWithImpl<_CampusIg>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CampusIg&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.code, code) || other.code == code)&&(identical(other.campusMemberCount, campusMemberCount) || other.campusMemberCount == campusMemberCount)&&(identical(other.iconImage, iconImage) || other.iconImage == iconImage));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CampusIg&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.code, code) || other.code == code)&&(identical(other.campusMemberCount, campusMemberCount) || other.campusMemberCount == campusMemberCount)&&(identical(other.iconImage, iconImage) || other.iconImage == iconImage));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,code,campusMemberCount,iconImage);
+int get hashCode {
+    return Object.hash(runtimeType,id,name,code,campusMemberCount,iconImage);
+}
 
 @override
 String toString() {
-  return 'CampusIg(id: $id, name: $name, code: $code, campusMemberCount: $campusMemberCount, iconImage: $iconImage)';
+    return 'CampusIg(id: $id, name: $name, code: $code, campusMemberCount: $campusMemberCount, iconImage: $iconImage)';
 }
 
 

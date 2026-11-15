@@ -10,7 +10,7 @@ part of 'weekly_twitches_providers.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(weeklyTwitchesRepository)
-const weeklyTwitchesRepositoryProvider = WeeklyTwitchesRepositoryProvider._();
+final weeklyTwitchesRepositoryProvider = WeeklyTwitchesRepositoryProvider._();
 
 final class WeeklyTwitchesRepositoryProvider
     extends
@@ -20,7 +20,7 @@ final class WeeklyTwitchesRepositoryProvider
           WeeklyTwitchesRepository
         >
     with $Provider<WeeklyTwitchesRepository> {
-  const WeeklyTwitchesRepositoryProvider._()
+  WeeklyTwitchesRepositoryProvider._()
     : super(
         from: null,
         argument: null,
@@ -61,7 +61,7 @@ String _$weeklyTwitchesRepositoryHash() =>
 /// a handful a month, so one page of 50 covers it.
 
 @ProviderFor(twitchesComingUp)
-const twitchesComingUpProvider = TwitchesComingUpFamily._();
+final twitchesComingUpProvider = TwitchesComingUpFamily._();
 
 /// Today's and upcoming episodes of [show], soonest first. A show announces
 /// a handful a month, so one page of 50 covers it.
@@ -78,7 +78,7 @@ final class TwitchesComingUpProvider
         $FutureProvider<List<TwitchEpisode>> {
   /// Today's and upcoming episodes of [show], soonest first. A show announces
   /// a handful a month, so one page of 50 covers it.
-  const TwitchesComingUpProvider._({
+  TwitchesComingUpProvider._({
     required TwitchesComingUpFamily super.from,
     required TwitchShow super.argument,
   }) : super(
@@ -129,7 +129,7 @@ String _$twitchesComingUpHash() => r'1087733f85b57d615fb962f9cd84fdf435b78431';
 
 final class TwitchesComingUpFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<List<TwitchEpisode>>, TwitchShow> {
-  const TwitchesComingUpFamily._()
+  TwitchesComingUpFamily._()
     : super(
         retry: noRetry,
         name: r'twitchesComingUpProvider',
@@ -151,13 +151,13 @@ final class TwitchesComingUpFamily extends $Family
 /// Past episodes of [show], newest first, page by page.
 
 @ProviderFor(TwitchesPast)
-const twitchesPastProvider = TwitchesPastFamily._();
+final twitchesPastProvider = TwitchesPastFamily._();
 
 /// Past episodes of [show], newest first, page by page.
 final class TwitchesPastProvider
     extends $AsyncNotifierProvider<TwitchesPast, PagedState<TwitchEpisode>> {
   /// Past episodes of [show], newest first, page by page.
-  const TwitchesPastProvider._({
+  TwitchesPastProvider._({
     required TwitchesPastFamily super.from,
     required TwitchShow super.argument,
   }) : super(
@@ -206,7 +206,7 @@ final class TwitchesPastFamily extends $Family
           FutureOr<PagedState<TwitchEpisode>>,
           TwitchShow
         > {
-  const TwitchesPastFamily._()
+  TwitchesPastFamily._()
     : super(
         retry: noRetry,
         name: r'twitchesPastProvider',
@@ -234,8 +234,7 @@ abstract class _$TwitchesPast
   FutureOr<PagedState<TwitchEpisode>> build(TwitchShow show);
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build(_$args);
+  WhenComplete runBuild() {
     final ref =
         this.ref
             as $Ref<
@@ -253,14 +252,14 @@ abstract class _$TwitchesPast
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, () => build(_$args));
   }
 }
 
 /// One episode (from a notification or a list row).
 
 @ProviderFor(twitchEpisode)
-const twitchEpisodeProvider = TwitchEpisodeFamily._();
+final twitchEpisodeProvider = TwitchEpisodeFamily._();
 
 /// One episode (from a notification or a list row).
 
@@ -273,7 +272,7 @@ final class TwitchEpisodeProvider
         >
     with $FutureModifier<TwitchEpisode>, $FutureProvider<TwitchEpisode> {
   /// One episode (from a notification or a list row).
-  const TwitchEpisodeProvider._({
+  TwitchEpisodeProvider._({
     required TwitchEpisodeFamily super.from,
     required (TwitchShow, String) super.argument,
   }) : super(
@@ -327,7 +326,7 @@ final class TwitchEpisodeFamily extends $Family
           FutureOr<TwitchEpisode>,
           (TwitchShow, String)
         > {
-  const TwitchEpisodeFamily._()
+  TwitchEpisodeFamily._()
     : super(
         retry: noRetry,
         name: r'twitchEpisodeProvider',

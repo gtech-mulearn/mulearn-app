@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'public_campus.dart';
@@ -9,6 +9,7 @@ part of 'public_campus.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $CampusPersonCopyWith<CampusPerson> get copyWith => _$CampusPersonCopyWithImpl<C
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CampusPerson&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.profilePic, profilePic) || other.profilePic == profilePic)&&(identical(other.role, role) || other.role == role));
+  final _this = this as CampusPerson;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CampusPerson&&(identical(other.muid, _this.muid) || other.muid == _this.muid)&&(identical(other.fullName, _this.fullName) || other.fullName == _this.fullName)&&(identical(other.profilePic, _this.profilePic) || other.profilePic == _this.profilePic)&&(identical(other.role, _this.role) || other.role == _this.role));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,muid,fullName,profilePic,role);
+int get hashCode {
+  final _this = this as CampusPerson;
+  return Object.hash(runtimeType,_this.muid,_this.fullName,_this.profilePic,_this.role);
+}
 
 @override
 String toString() {
-  return 'CampusPerson(muid: $muid, fullName: $fullName, profilePic: $profilePic, role: $role)';
+  final _this = this as CampusPerson;
+  return 'CampusPerson(muid: ${_this.muid}, fullName: ${_this.fullName}, profilePic: ${_this.profilePic}, role: ${_this.role})';
 }
 
 
@@ -63,7 +69,7 @@ class _$CampusPersonCopyWithImpl<$Res>
 /// Create a copy of CampusPerson
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? muid = null,Object? fullName = null,Object? profilePic = freezed,Object? role = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(CampusPerson(
 muid: null == muid ? _self.muid : muid // ignore: cast_nullable_to_non_nullable
 as String,fullName: null == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
 as String,profilePic: freezed == profilePic ? _self.profilePic : profilePic // ignore: cast_nullable_to_non_nullable
@@ -227,16 +233,18 @@ _$CampusPersonCopyWith<_CampusPerson> get copyWith => __$CampusPersonCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CampusPerson&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.profilePic, profilePic) || other.profilePic == profilePic)&&(identical(other.role, role) || other.role == role));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CampusPerson&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.profilePic, profilePic) || other.profilePic == profilePic)&&(identical(other.role, role) || other.role == role));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,muid,fullName,profilePic,role);
+int get hashCode {
+    return Object.hash(runtimeType,muid,fullName,profilePic,role);
+}
 
 @override
 String toString() {
-  return 'CampusPerson(muid: $muid, fullName: $fullName, profilePic: $profilePic, role: $role)';
+    return 'CampusPerson(muid: $muid, fullName: $fullName, profilePic: $profilePic, role: $role)';
 }
 
 
@@ -291,16 +299,21 @@ $CampusLeaderCopyWith<CampusLeader> get copyWith => _$CampusLeaderCopyWithImpl<C
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CampusLeader&&(identical(other.rank, rank) || other.rank == rank)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.profilePic, profilePic) || other.profilePic == profilePic));
+  final _this = this as CampusLeader;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CampusLeader&&(identical(other.rank, _this.rank) || other.rank == _this.rank)&&(identical(other.muid, _this.muid) || other.muid == _this.muid)&&(identical(other.fullName, _this.fullName) || other.fullName == _this.fullName)&&(identical(other.karma, _this.karma) || other.karma == _this.karma)&&(identical(other.profilePic, _this.profilePic) || other.profilePic == _this.profilePic));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,rank,muid,fullName,karma,profilePic);
+int get hashCode {
+  final _this = this as CampusLeader;
+  return Object.hash(runtimeType,_this.rank,_this.muid,_this.fullName,_this.karma,_this.profilePic);
+}
 
 @override
 String toString() {
-  return 'CampusLeader(rank: $rank, muid: $muid, fullName: $fullName, karma: $karma, profilePic: $profilePic)';
+  final _this = this as CampusLeader;
+  return 'CampusLeader(rank: ${_this.rank}, muid: ${_this.muid}, fullName: ${_this.fullName}, karma: ${_this.karma}, profilePic: ${_this.profilePic})';
 }
 
 
@@ -329,7 +342,7 @@ class _$CampusLeaderCopyWithImpl<$Res>
 /// Create a copy of CampusLeader
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? rank = null,Object? muid = null,Object? fullName = null,Object? karma = null,Object? profilePic = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(CampusLeader(
 rank: null == rank ? _self.rank : rank // ignore: cast_nullable_to_non_nullable
 as int,muid: null == muid ? _self.muid : muid // ignore: cast_nullable_to_non_nullable
 as String,fullName: null == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
@@ -495,16 +508,18 @@ _$CampusLeaderCopyWith<_CampusLeader> get copyWith => __$CampusLeaderCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CampusLeader&&(identical(other.rank, rank) || other.rank == rank)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.profilePic, profilePic) || other.profilePic == profilePic));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CampusLeader&&(identical(other.rank, rank) || other.rank == rank)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.profilePic, profilePic) || other.profilePic == profilePic));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,rank,muid,fullName,karma,profilePic);
+int get hashCode {
+    return Object.hash(runtimeType,rank,muid,fullName,karma,profilePic);
+}
 
 @override
 String toString() {
-  return 'CampusLeader(rank: $rank, muid: $muid, fullName: $fullName, karma: $karma, profilePic: $profilePic)';
+    return 'CampusLeader(rank: $rank, muid: $muid, fullName: $fullName, karma: $karma, profilePic: $profilePic)';
 }
 
 
@@ -560,16 +575,21 @@ $CampusChapterCopyWith<CampusChapter> get copyWith => _$CampusChapterCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CampusChapter&&(identical(other.name, name) || other.name == name)&&(identical(other.code, code) || other.code == code)&&(identical(other.members, members) || other.members == members)&&(identical(other.leadName, leadName) || other.leadName == leadName));
+  final _this = this as CampusChapter;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CampusChapter&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.code, _this.code) || other.code == _this.code)&&(identical(other.members, _this.members) || other.members == _this.members)&&(identical(other.leadName, _this.leadName) || other.leadName == _this.leadName));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,name,code,members,leadName);
+int get hashCode {
+  final _this = this as CampusChapter;
+  return Object.hash(runtimeType,_this.name,_this.code,_this.members,_this.leadName);
+}
 
 @override
 String toString() {
-  return 'CampusChapter(name: $name, code: $code, members: $members, leadName: $leadName)';
+  final _this = this as CampusChapter;
+  return 'CampusChapter(name: ${_this.name}, code: ${_this.code}, members: ${_this.members}, leadName: ${_this.leadName})';
 }
 
 
@@ -598,7 +618,7 @@ class _$CampusChapterCopyWithImpl<$Res>
 /// Create a copy of CampusChapter
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? code = null,Object? members = null,Object? leadName = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(CampusChapter(
 name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,members: null == members ? _self.members : members // ignore: cast_nullable_to_non_nullable
@@ -762,16 +782,18 @@ _$CampusChapterCopyWith<_CampusChapter> get copyWith => __$CampusChapterCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CampusChapter&&(identical(other.name, name) || other.name == name)&&(identical(other.code, code) || other.code == code)&&(identical(other.members, members) || other.members == members)&&(identical(other.leadName, leadName) || other.leadName == leadName));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CampusChapter&&(identical(other.name, name) || other.name == name)&&(identical(other.code, code) || other.code == code)&&(identical(other.members, members) || other.members == members)&&(identical(other.leadName, leadName) || other.leadName == leadName));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,name,code,members,leadName);
+int get hashCode {
+    return Object.hash(runtimeType,name,code,members,leadName);
+}
 
 @override
 String toString() {
-  return 'CampusChapter(name: $name, code: $code, members: $members, leadName: $leadName)';
+    return 'CampusChapter(name: $name, code: $code, members: $members, leadName: $leadName)';
 }
 
 
@@ -826,16 +848,21 @@ $CampusClusterCopyWith<CampusCluster> get copyWith => _$CampusClusterCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CampusCluster&&(identical(other.cluster, cluster) || other.cluster == cluster)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.members, members) || other.members == members));
+  final _this = this as CampusCluster;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CampusCluster&&(identical(other.cluster, _this.cluster) || other.cluster == _this.cluster)&&(identical(other.karma, _this.karma) || other.karma == _this.karma)&&(identical(other.members, _this.members) || other.members == _this.members));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,cluster,karma,members);
+int get hashCode {
+  final _this = this as CampusCluster;
+  return Object.hash(runtimeType,_this.cluster,_this.karma,_this.members);
+}
 
 @override
 String toString() {
-  return 'CampusCluster(cluster: $cluster, karma: $karma, members: $members)';
+  final _this = this as CampusCluster;
+  return 'CampusCluster(cluster: ${_this.cluster}, karma: ${_this.karma}, members: ${_this.members})';
 }
 
 
@@ -864,7 +891,7 @@ class _$CampusClusterCopyWithImpl<$Res>
 /// Create a copy of CampusCluster
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? cluster = null,Object? karma = null,Object? members = null,}) {
-  return _then(_self.copyWith(
+  return _then(CampusCluster(
 cluster: null == cluster ? _self.cluster : cluster // ignore: cast_nullable_to_non_nullable
 as String,karma: null == karma ? _self.karma : karma // ignore: cast_nullable_to_non_nullable
 as int,members: null == members ? _self.members : members // ignore: cast_nullable_to_non_nullable
@@ -1026,16 +1053,18 @@ _$CampusClusterCopyWith<_CampusCluster> get copyWith => __$CampusClusterCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CampusCluster&&(identical(other.cluster, cluster) || other.cluster == cluster)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.members, members) || other.members == members));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CampusCluster&&(identical(other.cluster, cluster) || other.cluster == cluster)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.members, members) || other.members == members));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,cluster,karma,members);
+int get hashCode {
+    return Object.hash(runtimeType,cluster,karma,members);
+}
 
 @override
 String toString() {
-  return 'CampusCluster(cluster: $cluster, karma: $karma, members: $members)';
+    return 'CampusCluster(cluster: $cluster, karma: $karma, members: $members)';
 }
 
 
@@ -1089,16 +1118,21 @@ $CampusLinkCopyWith<CampusLink> get copyWith => _$CampusLinkCopyWithImpl<CampusL
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CampusLink&&(identical(other.platform, platform) || other.platform == platform)&&(identical(other.url, url) || other.url == url));
+  final _this = this as CampusLink;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CampusLink&&(identical(other.platform, _this.platform) || other.platform == _this.platform)&&(identical(other.url, _this.url) || other.url == _this.url));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,platform,url);
+int get hashCode {
+  final _this = this as CampusLink;
+  return Object.hash(runtimeType,_this.platform,_this.url);
+}
 
 @override
 String toString() {
-  return 'CampusLink(platform: $platform, url: $url)';
+  final _this = this as CampusLink;
+  return 'CampusLink(platform: ${_this.platform}, url: ${_this.url})';
 }
 
 
@@ -1127,7 +1161,7 @@ class _$CampusLinkCopyWithImpl<$Res>
 /// Create a copy of CampusLink
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? platform = null,Object? url = null,}) {
-  return _then(_self.copyWith(
+  return _then(CampusLink(
 platform: null == platform ? _self.platform : platform // ignore: cast_nullable_to_non_nullable
 as String,url: null == url ? _self.url : url // ignore: cast_nullable_to_non_nullable
 as String,
@@ -1287,16 +1321,18 @@ _$CampusLinkCopyWith<_CampusLink> get copyWith => __$CampusLinkCopyWithImpl<_Cam
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CampusLink&&(identical(other.platform, platform) || other.platform == platform)&&(identical(other.url, url) || other.url == url));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CampusLink&&(identical(other.platform, platform) || other.platform == platform)&&(identical(other.url, url) || other.url == url));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,platform,url);
+int get hashCode {
+    return Object.hash(runtimeType,platform,url);
+}
 
 @override
 String toString() {
-  return 'CampusLink(platform: $platform, url: $url)';
+    return 'CampusLink(platform: $platform, url: $url)';
 }
 
 
@@ -1349,16 +1385,21 @@ $PublicCampusCopyWith<PublicCampus> get copyWith => _$PublicCampusCopyWithImpl<P
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PublicCampus&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.code, code) || other.code == code)&&(identical(other.zone, zone) || other.zone == zone)&&(identical(other.totalKarma, totalKarma) || other.totalKarma == totalKarma)&&(identical(other.members, members) || other.members == members)&&(identical(other.activeMembers, activeMembers) || other.activeMembers == activeMembers)&&(identical(other.rank, rank) || other.rank == rank)&&(identical(other.lead, lead) || other.lead == lead)&&const DeepCollectionEquality().equals(other.execom, execom)&&const DeepCollectionEquality().equals(other.topLearners, topLearners)&&const DeepCollectionEquality().equals(other.chapters, chapters)&&const DeepCollectionEquality().equals(other.clusters, clusters)&&const DeepCollectionEquality().equals(other.links, links));
+  final _this = this as PublicCampus;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PublicCampus&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.code, _this.code) || other.code == _this.code)&&(identical(other.zone, _this.zone) || other.zone == _this.zone)&&(identical(other.totalKarma, _this.totalKarma) || other.totalKarma == _this.totalKarma)&&(identical(other.members, _this.members) || other.members == _this.members)&&(identical(other.activeMembers, _this.activeMembers) || other.activeMembers == _this.activeMembers)&&(identical(other.rank, _this.rank) || other.rank == _this.rank)&&(identical(other.lead, _this.lead) || other.lead == _this.lead)&&const DeepCollectionEquality().equals(other.execom, _this.execom)&&const DeepCollectionEquality().equals(other.topLearners, _this.topLearners)&&const DeepCollectionEquality().equals(other.chapters, _this.chapters)&&const DeepCollectionEquality().equals(other.clusters, _this.clusters)&&const DeepCollectionEquality().equals(other.links, _this.links));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,code,zone,totalKarma,members,activeMembers,rank,lead,const DeepCollectionEquality().hash(execom),const DeepCollectionEquality().hash(topLearners),const DeepCollectionEquality().hash(chapters),const DeepCollectionEquality().hash(clusters),const DeepCollectionEquality().hash(links));
+int get hashCode {
+  final _this = this as PublicCampus;
+  return Object.hash(runtimeType,_this.id,_this.name,_this.code,_this.zone,_this.totalKarma,_this.members,_this.activeMembers,_this.rank,_this.lead,const DeepCollectionEquality().hash(_this.execom),const DeepCollectionEquality().hash(_this.topLearners),const DeepCollectionEquality().hash(_this.chapters),const DeepCollectionEquality().hash(_this.clusters),const DeepCollectionEquality().hash(_this.links));
+}
 
 @override
 String toString() {
-  return 'PublicCampus(id: $id, name: $name, code: $code, zone: $zone, totalKarma: $totalKarma, members: $members, activeMembers: $activeMembers, rank: $rank, lead: $lead, execom: $execom, topLearners: $topLearners, chapters: $chapters, clusters: $clusters, links: $links)';
+  final _this = this as PublicCampus;
+  return 'PublicCampus(id: ${_this.id}, name: ${_this.name}, code: ${_this.code}, zone: ${_this.zone}, totalKarma: ${_this.totalKarma}, members: ${_this.members}, activeMembers: ${_this.activeMembers}, rank: ${_this.rank}, lead: ${_this.lead}, execom: ${_this.execom}, topLearners: ${_this.topLearners}, chapters: ${_this.chapters}, clusters: ${_this.clusters}, links: ${_this.links})';
 }
 
 
@@ -1387,7 +1428,7 @@ class _$PublicCampusCopyWithImpl<$Res>
 /// Create a copy of PublicCampus
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? code = null,Object? zone = null,Object? totalKarma = null,Object? members = null,Object? activeMembers = null,Object? rank = freezed,Object? lead = freezed,Object? execom = null,Object? topLearners = null,Object? chapters = null,Object? clusters = null,Object? links = null,}) {
-  return _then(_self.copyWith(
+  return _then(PublicCampus(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
@@ -1555,7 +1596,7 @@ return $default(_that.id,_that.name,_that.code,_that.zone,_that.totalKarma,_that
 
 
 class _PublicCampus implements PublicCampus {
-  const _PublicCampus({required this.id, required this.name, required this.code, required this.zone, required this.totalKarma, required this.members, required this.activeMembers, this.rank, this.lead, final  List<CampusPerson> execom = const <CampusPerson>[], final  List<CampusLeader> topLearners = const <CampusLeader>[], final  List<CampusChapter> chapters = const <CampusChapter>[], final  List<CampusCluster> clusters = const <CampusCluster>[], final  List<CampusLink> links = const <CampusLink>[]}): _execom = execom,_topLearners = topLearners,_chapters = chapters,_clusters = clusters,_links = links;
+  const _PublicCampus({required this.id, required this.name, required this.code, required this.zone, required this.totalKarma, required this.members, required this.activeMembers, this.rank, this.lead,  List<CampusPerson> execom = const <CampusPerson>[],  List<CampusLeader> topLearners = const <CampusLeader>[],  List<CampusChapter> chapters = const <CampusChapter>[],  List<CampusCluster> clusters = const <CampusCluster>[],  List<CampusLink> links = const <CampusLink>[]}): _execom = execom,_topLearners = topLearners,_chapters = chapters,_clusters = clusters,_links = links;
   
 
 @override final  String id;
@@ -1613,16 +1654,18 @@ _$PublicCampusCopyWith<_PublicCampus> get copyWith => __$PublicCampusCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PublicCampus&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.code, code) || other.code == code)&&(identical(other.zone, zone) || other.zone == zone)&&(identical(other.totalKarma, totalKarma) || other.totalKarma == totalKarma)&&(identical(other.members, members) || other.members == members)&&(identical(other.activeMembers, activeMembers) || other.activeMembers == activeMembers)&&(identical(other.rank, rank) || other.rank == rank)&&(identical(other.lead, lead) || other.lead == lead)&&const DeepCollectionEquality().equals(other._execom, _execom)&&const DeepCollectionEquality().equals(other._topLearners, _topLearners)&&const DeepCollectionEquality().equals(other._chapters, _chapters)&&const DeepCollectionEquality().equals(other._clusters, _clusters)&&const DeepCollectionEquality().equals(other._links, _links));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PublicCampus&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.code, code) || other.code == code)&&(identical(other.zone, zone) || other.zone == zone)&&(identical(other.totalKarma, totalKarma) || other.totalKarma == totalKarma)&&(identical(other.members, members) || other.members == members)&&(identical(other.activeMembers, activeMembers) || other.activeMembers == activeMembers)&&(identical(other.rank, rank) || other.rank == rank)&&(identical(other.lead, lead) || other.lead == lead)&&const DeepCollectionEquality().equals(other.execom, _execom)&&const DeepCollectionEquality().equals(other.topLearners, _topLearners)&&const DeepCollectionEquality().equals(other.chapters, _chapters)&&const DeepCollectionEquality().equals(other.clusters, _clusters)&&const DeepCollectionEquality().equals(other.links, _links));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name,code,zone,totalKarma,members,activeMembers,rank,lead,const DeepCollectionEquality().hash(_execom),const DeepCollectionEquality().hash(_topLearners),const DeepCollectionEquality().hash(_chapters),const DeepCollectionEquality().hash(_clusters),const DeepCollectionEquality().hash(_links));
+int get hashCode {
+    return Object.hash(runtimeType,id,name,code,zone,totalKarma,members,activeMembers,rank,lead,const DeepCollectionEquality().hash(_execom),const DeepCollectionEquality().hash(_topLearners),const DeepCollectionEquality().hash(_chapters),const DeepCollectionEquality().hash(_clusters),const DeepCollectionEquality().hash(_links));
+}
 
 @override
 String toString() {
-  return 'PublicCampus(id: $id, name: $name, code: $code, zone: $zone, totalKarma: $totalKarma, members: $members, activeMembers: $activeMembers, rank: $rank, lead: $lead, execom: $execom, topLearners: $topLearners, chapters: $chapters, clusters: $clusters, links: $links)';
+    return 'PublicCampus(id: $id, name: $name, code: $code, zone: $zone, totalKarma: $totalKarma, members: $members, activeMembers: $activeMembers, rank: $rank, lead: $lead, execom: $execom, topLearners: $topLearners, chapters: $chapters, clusters: $clusters, links: $links)';
 }
 
 

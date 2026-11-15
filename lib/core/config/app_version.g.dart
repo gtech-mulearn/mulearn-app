@@ -11,7 +11,7 @@ part of 'app_version.dart';
 /// Read once per launch.
 
 @ProviderFor(appVersion)
-const appVersionProvider = AppVersionProvider._();
+final appVersionProvider = AppVersionProvider._();
 
 /// Read once per launch.
 
@@ -24,7 +24,7 @@ final class AppVersionProvider
         >
     with $FutureModifier<AppVersion>, $FutureProvider<AppVersion> {
   /// Read once per launch.
-  const AppVersionProvider._()
+  AppVersionProvider._()
     : super(
         from: null,
         argument: null,

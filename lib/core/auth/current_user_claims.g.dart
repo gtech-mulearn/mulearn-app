@@ -19,7 +19,7 @@ part of 'current_user_claims.dart';
 /// without any of them importing `features/auth` or `features/profile`.
 
 @ProviderFor(currentUserMuid)
-const currentUserMuidProvider = CurrentUserMuidProvider._();
+final currentUserMuidProvider = CurrentUserMuidProvider._();
 
 /// The signed-in user's `muid`, read directly off the stored JWT access
 /// token's payload claim (confirmed live: `{"id", "muid", "roles", "expiry",
@@ -43,7 +43,7 @@ final class CurrentUserMuidProvider
   /// Lives in `core/` (rules.md §2) because "which user am I" is needed by
   /// multiple features (e.g. `learning_circles` determining lead/ownership)
   /// without any of them importing `features/auth` or `features/profile`.
-  const CurrentUserMuidProvider._()
+  CurrentUserMuidProvider._()
     : super(
         from: null,
         argument: null,
@@ -74,7 +74,7 @@ String _$currentUserMuidHash() => r'0007585e118fe0de0bd4cfe73b707c7eec4b45f2';
 /// are listed by (`attendees[].user_id`).
 
 @ProviderFor(currentUserId)
-const currentUserIdProvider = CurrentUserIdProvider._();
+final currentUserIdProvider = CurrentUserIdProvider._();
 
 /// The signed-in user's id (the JWT `id` claim) — the id meeting attendees
 /// are listed by (`attendees[].user_id`).
@@ -84,7 +84,7 @@ final class CurrentUserIdProvider
     with $FutureModifier<String?>, $FutureProvider<String?> {
   /// The signed-in user's id (the JWT `id` claim) — the id meeting attendees
   /// are listed by (`attendees[].user_id`).
-  const CurrentUserIdProvider._()
+  CurrentUserIdProvider._()
     : super(
         from: null,
         argument: null,

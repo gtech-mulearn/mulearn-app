@@ -10,7 +10,7 @@ part of 'campus_profile_providers.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(campusProfileRepository)
-const campusProfileRepositoryProvider = CampusProfileRepositoryProvider._();
+final campusProfileRepositoryProvider = CampusProfileRepositoryProvider._();
 
 final class CampusProfileRepositoryProvider
     extends
@@ -20,7 +20,7 @@ final class CampusProfileRepositoryProvider
           CampusProfileRepository
         >
     with $Provider<CampusProfileRepository> {
-  const CampusProfileRepositoryProvider._()
+  CampusProfileRepositoryProvider._()
     : super(
         from: null,
         argument: null,
@@ -60,7 +60,7 @@ String _$campusProfileRepositoryHash() =>
 /// A college's public page.
 
 @ProviderFor(publicCampus)
-const publicCampusProvider = PublicCampusFamily._();
+final publicCampusProvider = PublicCampusFamily._();
 
 /// A college's public page.
 
@@ -73,7 +73,7 @@ final class PublicCampusProvider
         >
     with $FutureModifier<PublicCampus>, $FutureProvider<PublicCampus> {
   /// A college's public page.
-  const PublicCampusProvider._({
+  PublicCampusProvider._({
     required PublicCampusFamily super.from,
     required String super.argument,
   }) : super(
@@ -123,7 +123,7 @@ String _$publicCampusHash() => r'9b6c8b989d4486bcb5baf3cd5eb4f16b7191c41a';
 
 final class PublicCampusFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<PublicCampus>, String> {
-  const PublicCampusFamily._()
+  PublicCampusFamily._()
     : super(
         retry: noRetry,
         name: r'publicCampusProvider',
@@ -144,7 +144,7 @@ final class PublicCampusFamily extends $Family
 /// Its last seven days of karma.
 
 @ProviderFor(publicCampusWeeklyKarma)
-const publicCampusWeeklyKarmaProvider = PublicCampusWeeklyKarmaFamily._();
+final publicCampusWeeklyKarmaProvider = PublicCampusWeeklyKarmaFamily._();
 
 /// Its last seven days of karma.
 
@@ -159,7 +159,7 @@ final class PublicCampusWeeklyKarmaProvider
         $FutureModifier<List<CampusKarmaDay>>,
         $FutureProvider<List<CampusKarmaDay>> {
   /// Its last seven days of karma.
-  const PublicCampusWeeklyKarmaProvider._({
+  PublicCampusWeeklyKarmaProvider._({
     required PublicCampusWeeklyKarmaFamily super.from,
     required String super.argument,
   }) : super(
@@ -211,7 +211,7 @@ String _$publicCampusWeeklyKarmaHash() =>
 
 final class PublicCampusWeeklyKarmaFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<List<CampusKarmaDay>>, String> {
-  const PublicCampusWeeklyKarmaFamily._()
+  PublicCampusWeeklyKarmaFamily._()
     : super(
         retry: noRetry,
         name: r'publicCampusWeeklyKarmaProvider',

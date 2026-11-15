@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'featured_event_dto.dart';
@@ -9,6 +9,7 @@ part of 'featured_event_dto.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $FeaturedEventDtoCopyWith<FeaturedEventDto> get copyWith => _$FeaturedEventDtoCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeaturedEventDto&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.slug, slug) || other.slug == slug)&&(identical(other.status, status) || other.status == status)&&(identical(other.eventScope, eventScope) || other.eventScope == eventScope)&&(identical(other.startDatetime, startDatetime) || other.startDatetime == startDatetime)&&(identical(other.endDatetime, endDatetime) || other.endDatetime == endDatetime)&&(identical(other.venue, venue) || other.venue == venue)&&(identical(other.organizer, organizer) || other.organizer == organizer)&&(identical(other.isCollaboration, isCollaboration) || other.isCollaboration == isCollaboration)&&(identical(other.interestCount, interestCount) || other.interestCount == interestCount)&&const DeepCollectionEquality().equals(other.tags, tags)&&(identical(other.coverImage, coverImage) || other.coverImage == coverImage)&&(identical(other.minKarma, minKarma) || other.minKarma == minKarma));
+  final _this = this as FeaturedEventDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FeaturedEventDto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.slug, _this.slug) || other.slug == _this.slug)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.eventScope, _this.eventScope) || other.eventScope == _this.eventScope)&&(identical(other.startDatetime, _this.startDatetime) || other.startDatetime == _this.startDatetime)&&(identical(other.endDatetime, _this.endDatetime) || other.endDatetime == _this.endDatetime)&&(identical(other.venue, _this.venue) || other.venue == _this.venue)&&(identical(other.organizer, _this.organizer) || other.organizer == _this.organizer)&&(identical(other.isCollaboration, _this.isCollaboration) || other.isCollaboration == _this.isCollaboration)&&(identical(other.interestCount, _this.interestCount) || other.interestCount == _this.interestCount)&&const DeepCollectionEquality().equals(other.tags, _this.tags)&&(identical(other.coverImage, _this.coverImage) || other.coverImage == _this.coverImage)&&(identical(other.minKarma, _this.minKarma) || other.minKarma == _this.minKarma));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,slug,status,eventScope,startDatetime,endDatetime,venue,organizer,isCollaboration,interestCount,const DeepCollectionEquality().hash(tags),coverImage,minKarma);
+int get hashCode {
+  final _this = this as FeaturedEventDto;
+  return Object.hash(runtimeType,_this.id,_this.title,_this.slug,_this.status,_this.eventScope,_this.startDatetime,_this.endDatetime,_this.venue,_this.organizer,_this.isCollaboration,_this.interestCount,const DeepCollectionEquality().hash(_this.tags),_this.coverImage,_this.minKarma);
+}
 
 @override
 String toString() {
-  return 'FeaturedEventDto(id: $id, title: $title, slug: $slug, status: $status, eventScope: $eventScope, startDatetime: $startDatetime, endDatetime: $endDatetime, venue: $venue, organizer: $organizer, isCollaboration: $isCollaboration, interestCount: $interestCount, tags: $tags, coverImage: $coverImage, minKarma: $minKarma)';
+  final _this = this as FeaturedEventDto;
+  return 'FeaturedEventDto(id: ${_this.id}, title: ${_this.title}, slug: ${_this.slug}, status: ${_this.status}, eventScope: ${_this.eventScope}, startDatetime: ${_this.startDatetime}, endDatetime: ${_this.endDatetime}, venue: ${_this.venue}, organizer: ${_this.organizer}, isCollaboration: ${_this.isCollaboration}, interestCount: ${_this.interestCount}, tags: ${_this.tags}, coverImage: ${_this.coverImage}, minKarma: ${_this.minKarma})';
 }
 
 
@@ -66,7 +72,7 @@ class _$FeaturedEventDtoCopyWithImpl<$Res>
 /// Create a copy of FeaturedEventDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? slug = null,Object? status = null,Object? eventScope = null,Object? startDatetime = null,Object? endDatetime = null,Object? venue = null,Object? organizer = null,Object? isCollaboration = null,Object? interestCount = null,Object? tags = null,Object? coverImage = freezed,Object? minKarma = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(FeaturedEventDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,slug: null == slug ? _self.slug : slug // ignore: cast_nullable_to_non_nullable
@@ -240,7 +246,7 @@ return $default(_that.id,_that.title,_that.slug,_that.status,_that.eventScope,_t
 @JsonSerializable()
 
 class _FeaturedEventDto extends FeaturedEventDto {
-  const _FeaturedEventDto({required this.id, required this.title, required this.slug, required this.status, required this.eventScope, required this.startDatetime, required this.endDatetime, required this.venue, required this.organizer, this.isCollaboration = false, this.interestCount = 0, final  List<String> tags = const [], this.coverImage, this.minKarma}): _tags = tags,super._();
+  const _FeaturedEventDto({required this.id, required this.title, required this.slug, required this.status, required this.eventScope, required this.startDatetime, required this.endDatetime, required this.venue, required this.organizer, this.isCollaboration = false, this.interestCount = 0,  List<String> tags = const [], this.coverImage, this.minKarma}): _tags = tags,super._();
   factory _FeaturedEventDto.fromJson(Map<String, dynamic> json) => _$FeaturedEventDtoFromJson(json);
 
 @override final  String id;
@@ -277,16 +283,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FeaturedEventDto&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.slug, slug) || other.slug == slug)&&(identical(other.status, status) || other.status == status)&&(identical(other.eventScope, eventScope) || other.eventScope == eventScope)&&(identical(other.startDatetime, startDatetime) || other.startDatetime == startDatetime)&&(identical(other.endDatetime, endDatetime) || other.endDatetime == endDatetime)&&(identical(other.venue, venue) || other.venue == venue)&&(identical(other.organizer, organizer) || other.organizer == organizer)&&(identical(other.isCollaboration, isCollaboration) || other.isCollaboration == isCollaboration)&&(identical(other.interestCount, interestCount) || other.interestCount == interestCount)&&const DeepCollectionEquality().equals(other._tags, _tags)&&(identical(other.coverImage, coverImage) || other.coverImage == coverImage)&&(identical(other.minKarma, minKarma) || other.minKarma == minKarma));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _FeaturedEventDto&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.slug, slug) || other.slug == slug)&&(identical(other.status, status) || other.status == status)&&(identical(other.eventScope, eventScope) || other.eventScope == eventScope)&&(identical(other.startDatetime, startDatetime) || other.startDatetime == startDatetime)&&(identical(other.endDatetime, endDatetime) || other.endDatetime == endDatetime)&&(identical(other.venue, venue) || other.venue == venue)&&(identical(other.organizer, organizer) || other.organizer == organizer)&&(identical(other.isCollaboration, isCollaboration) || other.isCollaboration == isCollaboration)&&(identical(other.interestCount, interestCount) || other.interestCount == interestCount)&&const DeepCollectionEquality().equals(other.tags, _tags)&&(identical(other.coverImage, coverImage) || other.coverImage == coverImage)&&(identical(other.minKarma, minKarma) || other.minKarma == minKarma));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,slug,status,eventScope,startDatetime,endDatetime,venue,organizer,isCollaboration,interestCount,const DeepCollectionEquality().hash(_tags),coverImage,minKarma);
+int get hashCode {
+    return Object.hash(runtimeType,id,title,slug,status,eventScope,startDatetime,endDatetime,venue,organizer,isCollaboration,interestCount,const DeepCollectionEquality().hash(_tags),coverImage,minKarma);
+}
 
 @override
 String toString() {
-  return 'FeaturedEventDto(id: $id, title: $title, slug: $slug, status: $status, eventScope: $eventScope, startDatetime: $startDatetime, endDatetime: $endDatetime, venue: $venue, organizer: $organizer, isCollaboration: $isCollaboration, interestCount: $interestCount, tags: $tags, coverImage: $coverImage, minKarma: $minKarma)';
+    return 'FeaturedEventDto(id: $id, title: $title, slug: $slug, status: $status, eventScope: $eventScope, startDatetime: $startDatetime, endDatetime: $endDatetime, venue: $venue, organizer: $organizer, isCollaboration: $isCollaboration, interestCount: $interestCount, tags: $tags, coverImage: $coverImage, minKarma: $minKarma)';
 }
 
 

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'campus_search_result.dart';
@@ -9,6 +9,7 @@ part of 'campus_search_result.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $CampusSearchResultCopyWith<CampusSearchResult> get copyWith => _$CampusSearchRe
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CampusSearchResult&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.code, code) || other.code == code)&&(identical(other.learners, learners) || other.learners == learners)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.isSchool, isSchool) || other.isSchool == isSchool)&&(identical(other.district, district) || other.district == district)&&(identical(other.zone, zone) || other.zone == zone)&&(identical(other.state, state) || other.state == state));
+  final _this = this as CampusSearchResult;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CampusSearchResult&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.code, _this.code) || other.code == _this.code)&&(identical(other.learners, _this.learners) || other.learners == _this.learners)&&(identical(other.karma, _this.karma) || other.karma == _this.karma)&&(identical(other.isSchool, _this.isSchool) || other.isSchool == _this.isSchool)&&(identical(other.district, _this.district) || other.district == _this.district)&&(identical(other.zone, _this.zone) || other.zone == _this.zone)&&(identical(other.state, _this.state) || other.state == _this.state));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,title,code,learners,karma,isSchool,district,zone,state);
+int get hashCode {
+  final _this = this as CampusSearchResult;
+  return Object.hash(runtimeType,_this.id,_this.title,_this.code,_this.learners,_this.karma,_this.isSchool,_this.district,_this.zone,_this.state);
+}
 
 @override
 String toString() {
-  return 'CampusSearchResult(id: $id, title: $title, code: $code, learners: $learners, karma: $karma, isSchool: $isSchool, district: $district, zone: $zone, state: $state)';
+  final _this = this as CampusSearchResult;
+  return 'CampusSearchResult(id: ${_this.id}, title: ${_this.title}, code: ${_this.code}, learners: ${_this.learners}, karma: ${_this.karma}, isSchool: ${_this.isSchool}, district: ${_this.district}, zone: ${_this.zone}, state: ${_this.state})';
 }
 
 
@@ -63,7 +69,7 @@ class _$CampusSearchResultCopyWithImpl<$Res>
 /// Create a copy of CampusSearchResult
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? code = null,Object? learners = null,Object? karma = null,Object? isSchool = null,Object? district = freezed,Object? zone = freezed,Object? state = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(CampusSearchResult(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
@@ -237,16 +243,18 @@ _$CampusSearchResultCopyWith<_CampusSearchResult> get copyWith => __$CampusSearc
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CampusSearchResult&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.code, code) || other.code == code)&&(identical(other.learners, learners) || other.learners == learners)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.isSchool, isSchool) || other.isSchool == isSchool)&&(identical(other.district, district) || other.district == district)&&(identical(other.zone, zone) || other.zone == zone)&&(identical(other.state, state) || other.state == state));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CampusSearchResult&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.code, code) || other.code == code)&&(identical(other.learners, learners) || other.learners == learners)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.isSchool, isSchool) || other.isSchool == isSchool)&&(identical(other.district, district) || other.district == district)&&(identical(other.zone, zone) || other.zone == zone)&&(identical(other.state, state) || other.state == state));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,title,code,learners,karma,isSchool,district,zone,state);
+int get hashCode {
+    return Object.hash(runtimeType,id,title,code,learners,karma,isSchool,district,zone,state);
+}
 
 @override
 String toString() {
-  return 'CampusSearchResult(id: $id, title: $title, code: $code, learners: $learners, karma: $karma, isSchool: $isSchool, district: $district, zone: $zone, state: $state)';
+    return 'CampusSearchResult(id: $id, title: $title, code: $code, learners: $learners, karma: $karma, isSchool: $isSchool, district: $district, zone: $zone, state: $state)';
 }
 
 
@@ -306,16 +314,21 @@ $CampusSearchPageCopyWith<CampusSearchPage> get copyWith => _$CampusSearchPageCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CampusSearchPage&&const DeepCollectionEquality().equals(other.results, results)&&(identical(other.hasMore, hasMore) || other.hasMore == hasMore));
+  final _this = this as CampusSearchPage;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CampusSearchPage&&const DeepCollectionEquality().equals(other.results, _this.results)&&(identical(other.hasMore, _this.hasMore) || other.hasMore == _this.hasMore));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(results),hasMore);
+int get hashCode {
+  final _this = this as CampusSearchPage;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.results),_this.hasMore);
+}
 
 @override
 String toString() {
-  return 'CampusSearchPage(results: $results, hasMore: $hasMore)';
+  final _this = this as CampusSearchPage;
+  return 'CampusSearchPage(results: ${_this.results}, hasMore: ${_this.hasMore})';
 }
 
 
@@ -344,7 +357,7 @@ class _$CampusSearchPageCopyWithImpl<$Res>
 /// Create a copy of CampusSearchPage
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? results = null,Object? hasMore = null,}) {
-  return _then(_self.copyWith(
+  return _then(CampusSearchPage(
 results: null == results ? _self.results : results // ignore: cast_nullable_to_non_nullable
 as List<CampusSearchResult>,hasMore: null == hasMore ? _self.hasMore : hasMore // ignore: cast_nullable_to_non_nullable
 as bool,
@@ -488,7 +501,7 @@ return $default(_that.results,_that.hasMore);case _:
 
 
 class _CampusSearchPage implements CampusSearchPage {
-  const _CampusSearchPage({required final  List<CampusSearchResult> results, required this.hasMore}): _results = results;
+  const _CampusSearchPage({required  List<CampusSearchResult> results, required this.hasMore}): _results = results;
   
 
  final  List<CampusSearchResult> _results;
@@ -510,16 +523,18 @@ _$CampusSearchPageCopyWith<_CampusSearchPage> get copyWith => __$CampusSearchPag
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CampusSearchPage&&const DeepCollectionEquality().equals(other._results, _results)&&(identical(other.hasMore, hasMore) || other.hasMore == hasMore));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CampusSearchPage&&const DeepCollectionEquality().equals(other.results, _results)&&(identical(other.hasMore, hasMore) || other.hasMore == hasMore));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_results),hasMore);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_results),hasMore);
+}
 
 @override
 String toString() {
-  return 'CampusSearchPage(results: $results, hasMore: $hasMore)';
+    return 'CampusSearchPage(results: $results, hasMore: $hasMore)';
 }
 
 

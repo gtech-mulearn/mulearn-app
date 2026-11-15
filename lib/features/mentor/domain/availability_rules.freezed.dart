@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'availability_rules.dart';
@@ -9,6 +9,7 @@ part of 'availability_rules.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $SlotInputCopyWith<SlotInput> get copyWith => _$SlotInputCopyWithImpl<SlotInput>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SlotInput&&(identical(other.weekday, weekday) || other.weekday == weekday)&&(identical(other.startMinutes, startMinutes) || other.startMinutes == startMinutes)&&(identical(other.endMinutes, endMinutes) || other.endMinutes == endMinutes)&&(identical(other.timezone, timezone) || other.timezone == timezone)&&(identical(other.igId, igId) || other.igId == igId)&&(identical(other.isActive, isActive) || other.isActive == isActive));
+  final _this = this as SlotInput;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SlotInput&&(identical(other.weekday, _this.weekday) || other.weekday == _this.weekday)&&(identical(other.startMinutes, _this.startMinutes) || other.startMinutes == _this.startMinutes)&&(identical(other.endMinutes, _this.endMinutes) || other.endMinutes == _this.endMinutes)&&(identical(other.timezone, _this.timezone) || other.timezone == _this.timezone)&&(identical(other.igId, _this.igId) || other.igId == _this.igId)&&(identical(other.isActive, _this.isActive) || other.isActive == _this.isActive));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,weekday,startMinutes,endMinutes,timezone,igId,isActive);
+int get hashCode {
+  final _this = this as SlotInput;
+  return Object.hash(runtimeType,_this.weekday,_this.startMinutes,_this.endMinutes,_this.timezone,_this.igId,_this.isActive);
+}
 
 @override
 String toString() {
-  return 'SlotInput(weekday: $weekday, startMinutes: $startMinutes, endMinutes: $endMinutes, timezone: $timezone, igId: $igId, isActive: $isActive)';
+  final _this = this as SlotInput;
+  return 'SlotInput(weekday: ${_this.weekday}, startMinutes: ${_this.startMinutes}, endMinutes: ${_this.endMinutes}, timezone: ${_this.timezone}, igId: ${_this.igId}, isActive: ${_this.isActive})';
 }
 
 
@@ -63,7 +69,7 @@ class _$SlotInputCopyWithImpl<$Res>
 /// Create a copy of SlotInput
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? weekday = null,Object? startMinutes = null,Object? endMinutes = null,Object? timezone = null,Object? igId = freezed,Object? isActive = null,}) {
-  return _then(_self.copyWith(
+  return _then(SlotInput(
 weekday: null == weekday ? _self.weekday : weekday // ignore: cast_nullable_to_non_nullable
 as int,startMinutes: null == startMinutes ? _self.startMinutes : startMinutes // ignore: cast_nullable_to_non_nullable
 as int,endMinutes: null == endMinutes ? _self.endMinutes : endMinutes // ignore: cast_nullable_to_non_nullable
@@ -231,16 +237,18 @@ _$SlotInputCopyWith<_SlotInput> get copyWith => __$SlotInputCopyWithImpl<_SlotIn
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SlotInput&&(identical(other.weekday, weekday) || other.weekday == weekday)&&(identical(other.startMinutes, startMinutes) || other.startMinutes == startMinutes)&&(identical(other.endMinutes, endMinutes) || other.endMinutes == endMinutes)&&(identical(other.timezone, timezone) || other.timezone == timezone)&&(identical(other.igId, igId) || other.igId == igId)&&(identical(other.isActive, isActive) || other.isActive == isActive));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SlotInput&&(identical(other.weekday, weekday) || other.weekday == weekday)&&(identical(other.startMinutes, startMinutes) || other.startMinutes == startMinutes)&&(identical(other.endMinutes, endMinutes) || other.endMinutes == endMinutes)&&(identical(other.timezone, timezone) || other.timezone == timezone)&&(identical(other.igId, igId) || other.igId == igId)&&(identical(other.isActive, isActive) || other.isActive == isActive));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,weekday,startMinutes,endMinutes,timezone,igId,isActive);
+int get hashCode {
+    return Object.hash(runtimeType,weekday,startMinutes,endMinutes,timezone,igId,isActive);
+}
 
 @override
 String toString() {
-  return 'SlotInput(weekday: $weekday, startMinutes: $startMinutes, endMinutes: $endMinutes, timezone: $timezone, igId: $igId, isActive: $isActive)';
+    return 'SlotInput(weekday: $weekday, startMinutes: $startMinutes, endMinutes: $endMinutes, timezone: $timezone, igId: $igId, isActive: $isActive)';
 }
 
 

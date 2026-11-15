@@ -19,7 +19,7 @@ part 'session_providers.g.dart';
 // resets it — nothing from one account survives into the next. None is
 // auto-retried ([noRetry]): a failure surfaces at once as an error.
 
-@riverpod
+@Riverpod(keepAlive: true) // the kept-alive session providers depend on it
 SessionRemoteDataSource sessionRemoteDataSource(Ref ref) =>
     SessionRemoteDataSource(ref.watch(dioProvider));
 
@@ -41,7 +41,10 @@ Future<List<MentorApplication>> mentorApplications(Ref ref) async {
   if (user == null || !user.roles.contains(RoleTitles.mentor)) return const [];
   final items = await _guard(datasource.fetchMentorApplications);
   return items
-      .map((j) => MentorApplicationDto.fromJson(j as Map<String, dynamic>).toDomain())
+      .map(
+        (j) =>
+            MentorApplicationDto.fromJson(j as Map<String, dynamic>).toDomain(),
+      )
       .toList();
 }
 
@@ -60,7 +63,9 @@ Future<Capabilities?> capabilities(Ref ref) async {
 /// without this a failed load (or an approval since launch) lasts until
 /// sign-out. Pass `ref.invalidate`. A workspace's Retry and pull-to-refresh
 /// on Home and Profile call it.
-void invalidateSessionState(void Function(ProviderOrFamily provider) invalidate) {
+void invalidateSessionState(
+  void Function(ProviderOrFamily provider) invalidate,
+) {
   invalidate(currentUserProvider);
   invalidate(mentorApplicationsProvider);
 }

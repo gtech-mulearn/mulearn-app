@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'job.dart';
@@ -9,6 +9,7 @@ part of 'job.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -27,16 +28,21 @@ $JobRuleCheckCopyWith<JobRuleCheck> get copyWith => _$JobRuleCheckCopyWithImpl<J
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is JobRuleCheck&&(identical(other.ruleType, ruleType) || other.ruleType == ruleType)&&(identical(other.ruleValue, ruleValue) || other.ruleValue == ruleValue)&&(identical(other.met, met) || other.met == met)&&(identical(other.message, message) || other.message == message));
+  final _this = this as JobRuleCheck;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is JobRuleCheck&&(identical(other.ruleType, _this.ruleType) || other.ruleType == _this.ruleType)&&(identical(other.ruleValue, _this.ruleValue) || other.ruleValue == _this.ruleValue)&&(identical(other.met, _this.met) || other.met == _this.met)&&(identical(other.message, _this.message) || other.message == _this.message));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,ruleType,ruleValue,met,message);
+int get hashCode {
+  final _this = this as JobRuleCheck;
+  return Object.hash(runtimeType,_this.ruleType,_this.ruleValue,_this.met,_this.message);
+}
 
 @override
 String toString() {
-  return 'JobRuleCheck(ruleType: $ruleType, ruleValue: $ruleValue, met: $met, message: $message)';
+  final _this = this as JobRuleCheck;
+  return 'JobRuleCheck(ruleType: ${_this.ruleType}, ruleValue: ${_this.ruleValue}, met: ${_this.met}, message: ${_this.message})';
 }
 
 
@@ -65,7 +71,7 @@ class _$JobRuleCheckCopyWithImpl<$Res>
 /// Create a copy of JobRuleCheck
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? ruleType = null,Object? ruleValue = null,Object? met = null,Object? message = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(JobRuleCheck(
 ruleType: null == ruleType ? _self.ruleType : ruleType // ignore: cast_nullable_to_non_nullable
 as String,ruleValue: null == ruleValue ? _self.ruleValue : ruleValue // ignore: cast_nullable_to_non_nullable
 as String,met: null == met ? _self.met : met // ignore: cast_nullable_to_non_nullable
@@ -231,16 +237,18 @@ _$JobRuleCheckCopyWith<_JobRuleCheck> get copyWith => __$JobRuleCheckCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _JobRuleCheck&&(identical(other.ruleType, ruleType) || other.ruleType == ruleType)&&(identical(other.ruleValue, ruleValue) || other.ruleValue == ruleValue)&&(identical(other.met, met) || other.met == met)&&(identical(other.message, message) || other.message == message));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _JobRuleCheck&&(identical(other.ruleType, ruleType) || other.ruleType == ruleType)&&(identical(other.ruleValue, ruleValue) || other.ruleValue == ruleValue)&&(identical(other.met, met) || other.met == met)&&(identical(other.message, message) || other.message == message));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,ruleType,ruleValue,met,message);
+int get hashCode {
+    return Object.hash(runtimeType,ruleType,ruleValue,met,message);
+}
 
 @override
 String toString() {
-  return 'JobRuleCheck(ruleType: $ruleType, ruleValue: $ruleValue, met: $met, message: $message)';
+    return 'JobRuleCheck(ruleType: $ruleType, ruleValue: $ruleValue, met: $met, message: $message)';
 }
 
 
@@ -299,16 +307,21 @@ $JobCopyWith<Job> get copyWith => _$JobCopyWithImpl<Job>(this as Job, _$identity
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Job&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.companyName, companyName) || other.companyName == companyName)&&(identical(other.companyLogo, companyLogo) || other.companyLogo == companyLogo)&&(identical(other.jobType, jobType) || other.jobType == jobType)&&(identical(other.location, location) || other.location == location)&&(identical(other.salaryRange, salaryRange) || other.salaryRange == salaryRange)&&(identical(other.stipend, stipend) || other.stipend == stipend)&&(identical(other.experience, experience) || other.experience == experience)&&(identical(other.description, description) || other.description == description)&&(identical(other.durationValue, durationValue) || other.durationValue == durationValue)&&(identical(other.durationUnit, durationUnit) || other.durationUnit == durationUnit)&&(identical(other.hourlyRate, hourlyRate) || other.hourlyRate == hourlyRate)&&const DeepCollectionEquality().equals(other.deliverables, deliverables)&&(identical(other.certificateProvided, certificateProvided) || other.certificateProvided == certificateProvided)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.eligible, eligible) || other.eligible == eligible)&&const DeepCollectionEquality().equals(other.checks, checks));
+  final _this = this as Job;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Job&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.companyName, _this.companyName) || other.companyName == _this.companyName)&&(identical(other.companyLogo, _this.companyLogo) || other.companyLogo == _this.companyLogo)&&(identical(other.jobType, _this.jobType) || other.jobType == _this.jobType)&&(identical(other.location, _this.location) || other.location == _this.location)&&(identical(other.salaryRange, _this.salaryRange) || other.salaryRange == _this.salaryRange)&&(identical(other.stipend, _this.stipend) || other.stipend == _this.stipend)&&(identical(other.experience, _this.experience) || other.experience == _this.experience)&&(identical(other.description, _this.description) || other.description == _this.description)&&(identical(other.durationValue, _this.durationValue) || other.durationValue == _this.durationValue)&&(identical(other.durationUnit, _this.durationUnit) || other.durationUnit == _this.durationUnit)&&(identical(other.hourlyRate, _this.hourlyRate) || other.hourlyRate == _this.hourlyRate)&&const DeepCollectionEquality().equals(other.deliverables, _this.deliverables)&&(identical(other.certificateProvided, _this.certificateProvided) || other.certificateProvided == _this.certificateProvided)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.expiresAt, _this.expiresAt) || other.expiresAt == _this.expiresAt)&&(identical(other.eligible, _this.eligible) || other.eligible == _this.eligible)&&const DeepCollectionEquality().equals(other.checks, _this.checks));
 }
 
 
 @override
-int get hashCode => Object.hashAll([runtimeType,id,title,companyName,companyLogo,jobType,location,salaryRange,stipend,experience,description,durationValue,durationUnit,hourlyRate,const DeepCollectionEquality().hash(deliverables),certificateProvided,createdAt,expiresAt,eligible,const DeepCollectionEquality().hash(checks)]);
+int get hashCode {
+  final _this = this as Job;
+  return Object.hashAll([runtimeType,_this.id,_this.title,_this.companyName,_this.companyLogo,_this.jobType,_this.location,_this.salaryRange,_this.stipend,_this.experience,_this.description,_this.durationValue,_this.durationUnit,_this.hourlyRate,const DeepCollectionEquality().hash(_this.deliverables),_this.certificateProvided,_this.createdAt,_this.expiresAt,_this.eligible,const DeepCollectionEquality().hash(_this.checks)]);
+}
 
 @override
 String toString() {
-  return 'Job(id: $id, title: $title, companyName: $companyName, companyLogo: $companyLogo, jobType: $jobType, location: $location, salaryRange: $salaryRange, stipend: $stipend, experience: $experience, description: $description, durationValue: $durationValue, durationUnit: $durationUnit, hourlyRate: $hourlyRate, deliverables: $deliverables, certificateProvided: $certificateProvided, createdAt: $createdAt, expiresAt: $expiresAt, eligible: $eligible, checks: $checks)';
+  final _this = this as Job;
+  return 'Job(id: ${_this.id}, title: ${_this.title}, companyName: ${_this.companyName}, companyLogo: ${_this.companyLogo}, jobType: ${_this.jobType}, location: ${_this.location}, salaryRange: ${_this.salaryRange}, stipend: ${_this.stipend}, experience: ${_this.experience}, description: ${_this.description}, durationValue: ${_this.durationValue}, durationUnit: ${_this.durationUnit}, hourlyRate: ${_this.hourlyRate}, deliverables: ${_this.deliverables}, certificateProvided: ${_this.certificateProvided}, createdAt: ${_this.createdAt}, expiresAt: ${_this.expiresAt}, eligible: ${_this.eligible}, checks: ${_this.checks})';
 }
 
 
@@ -337,7 +350,7 @@ class _$JobCopyWithImpl<$Res>
 /// Create a copy of Job
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? companyName = freezed,Object? companyLogo = freezed,Object? jobType = freezed,Object? location = freezed,Object? salaryRange = freezed,Object? stipend = freezed,Object? experience = freezed,Object? description = freezed,Object? durationValue = freezed,Object? durationUnit = freezed,Object? hourlyRate = freezed,Object? deliverables = null,Object? certificateProvided = null,Object? createdAt = freezed,Object? expiresAt = freezed,Object? eligible = freezed,Object? checks = null,}) {
-  return _then(_self.copyWith(
+  return _then(Job(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,companyName: freezed == companyName ? _self.companyName : companyName // ignore: cast_nullable_to_non_nullable
@@ -498,7 +511,7 @@ return $default(_that.id,_that.title,_that.companyName,_that.companyLogo,_that.j
 
 
 class _Job implements Job {
-  const _Job({required this.id, required this.title, this.companyName, this.companyLogo, this.jobType, this.location, this.salaryRange, this.stipend, this.experience, this.description, this.durationValue, this.durationUnit, this.hourlyRate, final  List<String> deliverables = const <String>[], this.certificateProvided = false, this.createdAt, this.expiresAt, this.eligible, final  List<JobRuleCheck> checks = const <JobRuleCheck>[]}): _deliverables = deliverables,_checks = checks;
+  const _Job({required this.id, required this.title, this.companyName, this.companyLogo, this.jobType, this.location, this.salaryRange, this.stipend, this.experience, this.description, this.durationValue, this.durationUnit, this.hourlyRate,  List<String> deliverables = const <String>[], this.certificateProvided = false, this.createdAt, this.expiresAt, this.eligible,  List<JobRuleCheck> checks = const <JobRuleCheck>[]}): _deliverables = deliverables,_checks = checks;
   
 
 @override final  String id;
@@ -547,16 +560,18 @@ _$JobCopyWith<_Job> get copyWith => __$JobCopyWithImpl<_Job>(this, _$identity);
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Job&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.companyName, companyName) || other.companyName == companyName)&&(identical(other.companyLogo, companyLogo) || other.companyLogo == companyLogo)&&(identical(other.jobType, jobType) || other.jobType == jobType)&&(identical(other.location, location) || other.location == location)&&(identical(other.salaryRange, salaryRange) || other.salaryRange == salaryRange)&&(identical(other.stipend, stipend) || other.stipend == stipend)&&(identical(other.experience, experience) || other.experience == experience)&&(identical(other.description, description) || other.description == description)&&(identical(other.durationValue, durationValue) || other.durationValue == durationValue)&&(identical(other.durationUnit, durationUnit) || other.durationUnit == durationUnit)&&(identical(other.hourlyRate, hourlyRate) || other.hourlyRate == hourlyRate)&&const DeepCollectionEquality().equals(other._deliverables, _deliverables)&&(identical(other.certificateProvided, certificateProvided) || other.certificateProvided == certificateProvided)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.eligible, eligible) || other.eligible == eligible)&&const DeepCollectionEquality().equals(other._checks, _checks));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Job&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.companyName, companyName) || other.companyName == companyName)&&(identical(other.companyLogo, companyLogo) || other.companyLogo == companyLogo)&&(identical(other.jobType, jobType) || other.jobType == jobType)&&(identical(other.location, location) || other.location == location)&&(identical(other.salaryRange, salaryRange) || other.salaryRange == salaryRange)&&(identical(other.stipend, stipend) || other.stipend == stipend)&&(identical(other.experience, experience) || other.experience == experience)&&(identical(other.description, description) || other.description == description)&&(identical(other.durationValue, durationValue) || other.durationValue == durationValue)&&(identical(other.durationUnit, durationUnit) || other.durationUnit == durationUnit)&&(identical(other.hourlyRate, hourlyRate) || other.hourlyRate == hourlyRate)&&const DeepCollectionEquality().equals(other.deliverables, _deliverables)&&(identical(other.certificateProvided, certificateProvided) || other.certificateProvided == certificateProvided)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.expiresAt, expiresAt) || other.expiresAt == expiresAt)&&(identical(other.eligible, eligible) || other.eligible == eligible)&&const DeepCollectionEquality().equals(other.checks, _checks));
 }
 
 
 @override
-int get hashCode => Object.hashAll([runtimeType,id,title,companyName,companyLogo,jobType,location,salaryRange,stipend,experience,description,durationValue,durationUnit,hourlyRate,const DeepCollectionEquality().hash(_deliverables),certificateProvided,createdAt,expiresAt,eligible,const DeepCollectionEquality().hash(_checks)]);
+int get hashCode {
+    return Object.hashAll([runtimeType,id,title,companyName,companyLogo,jobType,location,salaryRange,stipend,experience,description,durationValue,durationUnit,hourlyRate,const DeepCollectionEquality().hash(_deliverables),certificateProvided,createdAt,expiresAt,eligible,const DeepCollectionEquality().hash(_checks)]);
+}
 
 @override
 String toString() {
-  return 'Job(id: $id, title: $title, companyName: $companyName, companyLogo: $companyLogo, jobType: $jobType, location: $location, salaryRange: $salaryRange, stipend: $stipend, experience: $experience, description: $description, durationValue: $durationValue, durationUnit: $durationUnit, hourlyRate: $hourlyRate, deliverables: $deliverables, certificateProvided: $certificateProvided, createdAt: $createdAt, expiresAt: $expiresAt, eligible: $eligible, checks: $checks)';
+    return 'Job(id: $id, title: $title, companyName: $companyName, companyLogo: $companyLogo, jobType: $jobType, location: $location, salaryRange: $salaryRange, stipend: $stipend, experience: $experience, description: $description, durationValue: $durationValue, durationUnit: $durationUnit, hourlyRate: $hourlyRate, deliverables: $deliverables, certificateProvided: $certificateProvided, createdAt: $createdAt, expiresAt: $expiresAt, eligible: $eligible, checks: $checks)';
 }
 
 
@@ -627,16 +642,21 @@ $JobApplicationCopyWith<JobApplication> get copyWith => _$JobApplicationCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is JobApplication&&(identical(other.id, id) || other.id == id)&&(identical(other.job, job) || other.job == job)&&(identical(other.status, status) || other.status == status)&&(identical(other.rawStatus, rawStatus) || other.rawStatus == rawStatus)&&(identical(other.resumeLink, resumeLink) || other.resumeLink == resumeLink)&&(identical(other.coverLetter, coverLetter) || other.coverLetter == coverLetter)&&(identical(other.rejectionReason, rejectionReason) || other.rejectionReason == rejectionReason)&&(identical(other.appliedAt, appliedAt) || other.appliedAt == appliedAt));
+  final _this = this as JobApplication;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is JobApplication&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.job, _this.job) || other.job == _this.job)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.rawStatus, _this.rawStatus) || other.rawStatus == _this.rawStatus)&&(identical(other.resumeLink, _this.resumeLink) || other.resumeLink == _this.resumeLink)&&(identical(other.coverLetter, _this.coverLetter) || other.coverLetter == _this.coverLetter)&&(identical(other.rejectionReason, _this.rejectionReason) || other.rejectionReason == _this.rejectionReason)&&(identical(other.appliedAt, _this.appliedAt) || other.appliedAt == _this.appliedAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,job,status,rawStatus,resumeLink,coverLetter,rejectionReason,appliedAt);
+int get hashCode {
+  final _this = this as JobApplication;
+  return Object.hash(runtimeType,_this.id,_this.job,_this.status,_this.rawStatus,_this.resumeLink,_this.coverLetter,_this.rejectionReason,_this.appliedAt);
+}
 
 @override
 String toString() {
-  return 'JobApplication(id: $id, job: $job, status: $status, rawStatus: $rawStatus, resumeLink: $resumeLink, coverLetter: $coverLetter, rejectionReason: $rejectionReason, appliedAt: $appliedAt)';
+  final _this = this as JobApplication;
+  return 'JobApplication(id: ${_this.id}, job: ${_this.job}, status: ${_this.status}, rawStatus: ${_this.rawStatus}, resumeLink: ${_this.resumeLink}, coverLetter: ${_this.coverLetter}, rejectionReason: ${_this.rejectionReason}, appliedAt: ${_this.appliedAt})';
 }
 
 
@@ -665,7 +685,7 @@ class _$JobApplicationCopyWithImpl<$Res>
 /// Create a copy of JobApplication
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? job = null,Object? status = null,Object? rawStatus = null,Object? resumeLink = freezed,Object? coverLetter = freezed,Object? rejectionReason = freezed,Object? appliedAt = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(JobApplication(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,job: null == job ? _self.job : job // ignore: cast_nullable_to_non_nullable
 as Job,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
@@ -847,16 +867,18 @@ _$JobApplicationCopyWith<_JobApplication> get copyWith => __$JobApplicationCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _JobApplication&&(identical(other.id, id) || other.id == id)&&(identical(other.job, job) || other.job == job)&&(identical(other.status, status) || other.status == status)&&(identical(other.rawStatus, rawStatus) || other.rawStatus == rawStatus)&&(identical(other.resumeLink, resumeLink) || other.resumeLink == resumeLink)&&(identical(other.coverLetter, coverLetter) || other.coverLetter == coverLetter)&&(identical(other.rejectionReason, rejectionReason) || other.rejectionReason == rejectionReason)&&(identical(other.appliedAt, appliedAt) || other.appliedAt == appliedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _JobApplication&&(identical(other.id, id) || other.id == id)&&(identical(other.job, job) || other.job == job)&&(identical(other.status, status) || other.status == status)&&(identical(other.rawStatus, rawStatus) || other.rawStatus == rawStatus)&&(identical(other.resumeLink, resumeLink) || other.resumeLink == resumeLink)&&(identical(other.coverLetter, coverLetter) || other.coverLetter == coverLetter)&&(identical(other.rejectionReason, rejectionReason) || other.rejectionReason == rejectionReason)&&(identical(other.appliedAt, appliedAt) || other.appliedAt == appliedAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,job,status,rawStatus,resumeLink,coverLetter,rejectionReason,appliedAt);
+int get hashCode {
+    return Object.hash(runtimeType,id,job,status,rawStatus,resumeLink,coverLetter,rejectionReason,appliedAt);
+}
 
 @override
 String toString() {
-  return 'JobApplication(id: $id, job: $job, status: $status, rawStatus: $rawStatus, resumeLink: $resumeLink, coverLetter: $coverLetter, rejectionReason: $rejectionReason, appliedAt: $appliedAt)';
+    return 'JobApplication(id: $id, job: $job, status: $status, rawStatus: $rawStatus, resumeLink: $resumeLink, coverLetter: $coverLetter, rejectionReason: $rejectionReason, appliedAt: $appliedAt)';
 }
 
 
@@ -924,16 +946,21 @@ $OpportunityPageCopyWith<T, OpportunityPage<T>> get copyWith => _$OpportunityPag
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is OpportunityPage<T>&&const DeepCollectionEquality().equals(other.items, items)&&(identical(other.hasNext, hasNext) || other.hasNext == hasNext)&&(identical(other.count, count) || other.count == count));
+  final _this = this as OpportunityPage<T>;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is OpportunityPage<T>&&const DeepCollectionEquality().equals(other.items, _this.items)&&(identical(other.hasNext, _this.hasNext) || other.hasNext == _this.hasNext)&&(identical(other.count, _this.count) || other.count == _this.count));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(items),hasNext,count);
+int get hashCode {
+  final _this = this as OpportunityPage<T>;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.items),_this.hasNext,_this.count);
+}
 
 @override
 String toString() {
-  return 'OpportunityPage<$T>(items: $items, hasNext: $hasNext, count: $count)';
+  final _this = this as OpportunityPage<T>;
+  return 'OpportunityPage<$T>(items: ${_this.items}, hasNext: ${_this.hasNext}, count: ${_this.count})';
 }
 
 
@@ -962,7 +989,7 @@ class _$OpportunityPageCopyWithImpl<T,$Res>
 /// Create a copy of OpportunityPage
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? items = null,Object? hasNext = null,Object? count = null,}) {
-  return _then(_self.copyWith(
+  return _then(OpportunityPage(
 items: null == items ? _self.items : items // ignore: cast_nullable_to_non_nullable
 as List<T>,hasNext: null == hasNext ? _self.hasNext : hasNext // ignore: cast_nullable_to_non_nullable
 as bool,count: null == count ? _self.count : count // ignore: cast_nullable_to_non_nullable
@@ -1107,7 +1134,7 @@ return $default(_that.items,_that.hasNext,_that.count);case _:
 
 
 class _OpportunityPage<T> implements OpportunityPage<T> {
-  const _OpportunityPage({required final  List<T> items, required this.hasNext, required this.count}): _items = items;
+  const _OpportunityPage({required  List<T> items, required this.hasNext, required this.count}): _items = items;
   
 
  final  List<T> _items;
@@ -1130,16 +1157,18 @@ _$OpportunityPageCopyWith<T, _OpportunityPage<T>> get copyWith => __$Opportunity
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _OpportunityPage<T>&&const DeepCollectionEquality().equals(other._items, _items)&&(identical(other.hasNext, hasNext) || other.hasNext == hasNext)&&(identical(other.count, count) || other.count == count));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _OpportunityPage<T>&&const DeepCollectionEquality().equals(other.items, _items)&&(identical(other.hasNext, hasNext) || other.hasNext == hasNext)&&(identical(other.count, count) || other.count == count));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_items),hasNext,count);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_items),hasNext,count);
+}
 
 @override
 String toString() {
-  return 'OpportunityPage<$T>(items: $items, hasNext: $hasNext, count: $count)';
+    return 'OpportunityPage<$T>(items: $items, hasNext: $hasNext, count: $count)';
 }
 
 

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'persona_dto.dart';
@@ -9,6 +9,7 @@ part of 'persona_dto.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $PersonaDtoCopyWith<PersonaDto> get copyWith => _$PersonaDtoCopyWithImpl<Persona
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PersonaDto&&(identical(other.activePersona, activePersona) || other.activePersona == activePersona)&&(identical(other.activeScopeType, activeScopeType) || other.activeScopeType == activeScopeType)&&(identical(other.activeScopeId, activeScopeId) || other.activeScopeId == activeScopeId)&&(identical(other.activeScopeName, activeScopeName) || other.activeScopeName == activeScopeName));
+  final _this = this as PersonaDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PersonaDto&&(identical(other.activePersona, _this.activePersona) || other.activePersona == _this.activePersona)&&(identical(other.activeScopeType, _this.activeScopeType) || other.activeScopeType == _this.activeScopeType)&&(identical(other.activeScopeId, _this.activeScopeId) || other.activeScopeId == _this.activeScopeId)&&(identical(other.activeScopeName, _this.activeScopeName) || other.activeScopeName == _this.activeScopeName));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,activePersona,activeScopeType,activeScopeId,activeScopeName);
+int get hashCode {
+  final _this = this as PersonaDto;
+  return Object.hash(runtimeType,_this.activePersona,_this.activeScopeType,_this.activeScopeId,_this.activeScopeName);
+}
 
 @override
 String toString() {
-  return 'PersonaDto(activePersona: $activePersona, activeScopeType: $activeScopeType, activeScopeId: $activeScopeId, activeScopeName: $activeScopeName)';
+  final _this = this as PersonaDto;
+  return 'PersonaDto(activePersona: ${_this.activePersona}, activeScopeType: ${_this.activeScopeType}, activeScopeId: ${_this.activeScopeId}, activeScopeName: ${_this.activeScopeName})';
 }
 
 
@@ -66,7 +72,7 @@ class _$PersonaDtoCopyWithImpl<$Res>
 /// Create a copy of PersonaDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? activePersona = null,Object? activeScopeType = freezed,Object? activeScopeId = freezed,Object? activeScopeName = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(PersonaDto(
 activePersona: null == activePersona ? _self.activePersona : activePersona // ignore: cast_nullable_to_non_nullable
 as String,activeScopeType: freezed == activeScopeType ? _self.activeScopeType : activeScopeType // ignore: cast_nullable_to_non_nullable
 as String?,activeScopeId: freezed == activeScopeId ? _self.activeScopeId : activeScopeId // ignore: cast_nullable_to_non_nullable
@@ -233,16 +239,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PersonaDto&&(identical(other.activePersona, activePersona) || other.activePersona == activePersona)&&(identical(other.activeScopeType, activeScopeType) || other.activeScopeType == activeScopeType)&&(identical(other.activeScopeId, activeScopeId) || other.activeScopeId == activeScopeId)&&(identical(other.activeScopeName, activeScopeName) || other.activeScopeName == activeScopeName));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PersonaDto&&(identical(other.activePersona, activePersona) || other.activePersona == activePersona)&&(identical(other.activeScopeType, activeScopeType) || other.activeScopeType == activeScopeType)&&(identical(other.activeScopeId, activeScopeId) || other.activeScopeId == activeScopeId)&&(identical(other.activeScopeName, activeScopeName) || other.activeScopeName == activeScopeName));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,activePersona,activeScopeType,activeScopeId,activeScopeName);
+int get hashCode {
+    return Object.hash(runtimeType,activePersona,activeScopeType,activeScopeId,activeScopeName);
+}
 
 @override
 String toString() {
-  return 'PersonaDto(activePersona: $activePersona, activeScopeType: $activeScopeType, activeScopeId: $activeScopeId, activeScopeName: $activeScopeName)';
+    return 'PersonaDto(activePersona: $activePersona, activeScopeType: $activeScopeType, activeScopeId: $activeScopeId, activeScopeName: $activeScopeName)';
 }
 
 

@@ -10,7 +10,7 @@ part of 'learner_sessions_providers.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(learnerSessionsRepository)
-const learnerSessionsRepositoryProvider = LearnerSessionsRepositoryProvider._();
+final learnerSessionsRepositoryProvider = LearnerSessionsRepositoryProvider._();
 
 final class LearnerSessionsRepositoryProvider
     extends
@@ -20,7 +20,7 @@ final class LearnerSessionsRepositoryProvider
           LearnerSessionsRepository
         >
     with $Provider<LearnerSessionsRepository> {
-  const LearnerSessionsRepositoryProvider._()
+  LearnerSessionsRepositoryProvider._()
     : super(
         from: null,
         argument: null,
@@ -60,7 +60,7 @@ String _$learnerSessionsRepositoryHash() =>
 /// Sessions open to join, soonest first.
 
 @ProviderFor(availableSessions)
-const availableSessionsProvider = AvailableSessionsProvider._();
+final availableSessionsProvider = AvailableSessionsProvider._();
 
 /// Sessions open to join, soonest first.
 
@@ -75,7 +75,7 @@ final class AvailableSessionsProvider
         $FutureModifier<List<AvailableSession>>,
         $FutureProvider<List<AvailableSession>> {
   /// Sessions open to join, soonest first.
-  const AvailableSessionsProvider._()
+  AvailableSessionsProvider._()
     : super(
         from: null,
         argument: null,
@@ -106,7 +106,7 @@ String _$availableSessionsHash() => r'76360518e26efba1bfa8e4f998b7bca44f027bbf';
 /// What the learner joined or asked for, newest first.
 
 @ProviderFor(mySessionHistory)
-const mySessionHistoryProvider = MySessionHistoryProvider._();
+final mySessionHistoryProvider = MySessionHistoryProvider._();
 
 /// What the learner joined or asked for, newest first.
 
@@ -121,7 +121,7 @@ final class MySessionHistoryProvider
         $FutureModifier<List<SessionRecord>>,
         $FutureProvider<List<SessionRecord>> {
   /// What the learner joined or asked for, newest first.
-  const MySessionHistoryProvider._()
+  MySessionHistoryProvider._()
     : super(
         from: null,
         argument: null,
@@ -152,7 +152,7 @@ String _$mySessionHistoryHash() => r'5e6745676868f9b6343ab89b1865214149be9944';
 /// The learner's requests to mentors.
 
 @ProviderFor(mySessionRequests)
-const mySessionRequestsProvider = MySessionRequestsProvider._();
+final mySessionRequestsProvider = MySessionRequestsProvider._();
 
 /// The learner's requests to mentors.
 
@@ -167,7 +167,7 @@ final class MySessionRequestsProvider
         $FutureModifier<List<MySessionRequest>>,
         $FutureProvider<List<MySessionRequest>> {
   /// The learner's requests to mentors.
-  const MySessionRequestsProvider._()
+  MySessionRequestsProvider._()
     : super(
         from: null,
         argument: null,
@@ -198,7 +198,7 @@ String _$mySessionRequestsHash() => r'300dc458324120f91bac9318103e1cec4efd1b14';
 /// The ids of sessions the learner already joined (from their history).
 
 @ProviderFor(joinedSessionIds)
-const joinedSessionIdsProvider = JoinedSessionIdsProvider._();
+final joinedSessionIdsProvider = JoinedSessionIdsProvider._();
 
 /// The ids of sessions the learner already joined (from their history).
 
@@ -211,7 +211,7 @@ final class JoinedSessionIdsProvider
         >
     with $FutureModifier<Set<String>>, $FutureProvider<Set<String>> {
   /// The ids of sessions the learner already joined (from their history).
-  const JoinedSessionIdsProvider._()
+  JoinedSessionIdsProvider._()
     : super(
         from: null,
         argument: null,
@@ -242,7 +242,7 @@ String _$joinedSessionIdsHash() => r'ae455d2c862f276309d40b80cbdb41af4bc29a92';
 /// The learner's Interest Groups: where they can ask for a session.
 
 @ProviderFor(myIgChoices)
-const myIgChoicesProvider = MyIgChoicesProvider._();
+final myIgChoicesProvider = MyIgChoicesProvider._();
 
 /// The learner's Interest Groups: where they can ask for a session.
 
@@ -255,7 +255,7 @@ final class MyIgChoicesProvider
         >
     with $FutureModifier<List<IgChoice>>, $FutureProvider<List<IgChoice>> {
   /// The learner's Interest Groups: where they can ask for a session.
-  const MyIgChoicesProvider._()
+  MyIgChoicesProvider._()
     : super(
         from: null,
         argument: null,
@@ -288,7 +288,7 @@ String _$myIgChoicesHash() => r'2e7805e7bad35d7b157ebd08006482dbf63f429a';
 /// message on success, null on failure (the error is in [state]).
 
 @ProviderFor(LearnerSessionActions)
-const learnerSessionActionsProvider = LearnerSessionActionsProvider._();
+final learnerSessionActionsProvider = LearnerSessionActionsProvider._();
 
 /// Join, request and feedback: one notifier for one busy / error state.
 /// Each success refreshes the lists it changes. Returns the backend's
@@ -298,7 +298,7 @@ final class LearnerSessionActionsProvider
   /// Join, request and feedback: one notifier for one busy / error state.
   /// Each success refreshes the lists it changes. Returns the backend's
   /// message on success, null on failure (the error is in [state]).
-  const LearnerSessionActionsProvider._()
+  LearnerSessionActionsProvider._()
     : super(
         from: null,
         argument: null,
@@ -328,8 +328,7 @@ abstract class _$LearnerSessionActions extends $AsyncNotifier<void> {
   FutureOr<void> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<void>, void>;
     final element =
         ref.element
@@ -339,6 +338,6 @@ abstract class _$LearnerSessionActions extends $AsyncNotifier<void> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, null);
+    return element.handleCreate(ref, build);
   }
 }

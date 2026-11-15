@@ -38,6 +38,8 @@ class _FakeProfile extends ProfileController {
 }
 
 class _FakeSocials extends SocialsController {
+  // A test spy: what was saved is read by the test.
+  // ignore: riverpod_lint/avoid_public_notifier_properties
   Socials? saved;
 
   @override

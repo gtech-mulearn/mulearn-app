@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'campus_dtos.dart';
@@ -9,6 +9,7 @@ part of 'campus_dtos.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $CampusCircleDtoCopyWith<CampusCircleDto> get copyWith => _$CampusCircleDtoCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CampusCircleDto&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.igName, igName) || other.igName == igName)&&(identical(other.memberCount, memberCount) || other.memberCount == memberCount)&&(identical(other.meetingCount, meetingCount) || other.meetingCount == meetingCount)&&(identical(other.lastMeetingTime, lastMeetingTime) || other.lastMeetingTime == lastMeetingTime));
+  final _this = this as CampusCircleDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CampusCircleDto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.igName, _this.igName) || other.igName == _this.igName)&&(identical(other.memberCount, _this.memberCount) || other.memberCount == _this.memberCount)&&(identical(other.meetingCount, _this.meetingCount) || other.meetingCount == _this.meetingCount)&&(identical(other.lastMeetingTime, _this.lastMeetingTime) || other.lastMeetingTime == _this.lastMeetingTime));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,igName,memberCount,meetingCount,lastMeetingTime);
+int get hashCode {
+  final _this = this as CampusCircleDto;
+  return Object.hash(runtimeType,_this.id,_this.name,_this.igName,_this.memberCount,_this.meetingCount,_this.lastMeetingTime);
+}
 
 @override
 String toString() {
-  return 'CampusCircleDto(id: $id, name: $name, igName: $igName, memberCount: $memberCount, meetingCount: $meetingCount, lastMeetingTime: $lastMeetingTime)';
+  final _this = this as CampusCircleDto;
+  return 'CampusCircleDto(id: ${_this.id}, name: ${_this.name}, igName: ${_this.igName}, memberCount: ${_this.memberCount}, meetingCount: ${_this.meetingCount}, lastMeetingTime: ${_this.lastMeetingTime})';
 }
 
 
@@ -66,7 +72,7 @@ class _$CampusCircleDtoCopyWithImpl<$Res>
 /// Create a copy of CampusCircleDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? igName = freezed,Object? memberCount = null,Object? meetingCount = null,Object? lastMeetingTime = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(CampusCircleDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,igName: freezed == igName ? _self.igName : igName // ignore: cast_nullable_to_non_nullable
@@ -237,16 +243,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CampusCircleDto&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.igName, igName) || other.igName == igName)&&(identical(other.memberCount, memberCount) || other.memberCount == memberCount)&&(identical(other.meetingCount, meetingCount) || other.meetingCount == meetingCount)&&(identical(other.lastMeetingTime, lastMeetingTime) || other.lastMeetingTime == lastMeetingTime));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CampusCircleDto&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.igName, igName) || other.igName == igName)&&(identical(other.memberCount, memberCount) || other.memberCount == memberCount)&&(identical(other.meetingCount, meetingCount) || other.meetingCount == meetingCount)&&(identical(other.lastMeetingTime, lastMeetingTime) || other.lastMeetingTime == lastMeetingTime));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,igName,memberCount,meetingCount,lastMeetingTime);
+int get hashCode {
+    return Object.hash(runtimeType,id,name,igName,memberCount,meetingCount,lastMeetingTime);
+}
 
 @override
 String toString() {
-  return 'CampusCircleDto(id: $id, name: $name, igName: $igName, memberCount: $memberCount, meetingCount: $meetingCount, lastMeetingTime: $lastMeetingTime)';
+    return 'CampusCircleDto(id: $id, name: $name, igName: $igName, memberCount: $memberCount, meetingCount: $meetingCount, lastMeetingTime: $lastMeetingTime)';
 }
 
 
@@ -306,16 +314,21 @@ $CampusIgDtoCopyWith<CampusIgDto> get copyWith => _$CampusIgDtoCopyWithImpl<Camp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CampusIgDto&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.code, code) || other.code == code)&&(identical(other.campusMemberCount, campusMemberCount) || other.campusMemberCount == campusMemberCount)&&(identical(other.iconImage, iconImage) || other.iconImage == iconImage));
+  final _this = this as CampusIgDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CampusIgDto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.code, _this.code) || other.code == _this.code)&&(identical(other.campusMemberCount, _this.campusMemberCount) || other.campusMemberCount == _this.campusMemberCount)&&(identical(other.iconImage, _this.iconImage) || other.iconImage == _this.iconImage));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,code,campusMemberCount,iconImage);
+int get hashCode {
+  final _this = this as CampusIgDto;
+  return Object.hash(runtimeType,_this.id,_this.name,_this.code,_this.campusMemberCount,_this.iconImage);
+}
 
 @override
 String toString() {
-  return 'CampusIgDto(id: $id, name: $name, code: $code, campusMemberCount: $campusMemberCount, iconImage: $iconImage)';
+  final _this = this as CampusIgDto;
+  return 'CampusIgDto(id: ${_this.id}, name: ${_this.name}, code: ${_this.code}, campusMemberCount: ${_this.campusMemberCount}, iconImage: ${_this.iconImage})';
 }
 
 
@@ -344,7 +357,7 @@ class _$CampusIgDtoCopyWithImpl<$Res>
 /// Create a copy of CampusIgDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? code = null,Object? campusMemberCount = null,Object? iconImage = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(CampusIgDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
@@ -513,16 +526,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CampusIgDto&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.code, code) || other.code == code)&&(identical(other.campusMemberCount, campusMemberCount) || other.campusMemberCount == campusMemberCount)&&(identical(other.iconImage, iconImage) || other.iconImage == iconImage));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CampusIgDto&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.code, code) || other.code == code)&&(identical(other.campusMemberCount, campusMemberCount) || other.campusMemberCount == campusMemberCount)&&(identical(other.iconImage, iconImage) || other.iconImage == iconImage));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,code,campusMemberCount,iconImage);
+int get hashCode {
+    return Object.hash(runtimeType,id,name,code,campusMemberCount,iconImage);
+}
 
 @override
 String toString() {
-  return 'CampusIgDto(id: $id, name: $name, code: $code, campusMemberCount: $campusMemberCount, iconImage: $iconImage)';
+    return 'CampusIgDto(id: $id, name: $name, code: $code, campusMemberCount: $campusMemberCount, iconImage: $iconImage)';
 }
 
 
@@ -581,16 +596,21 @@ $StudentActivityDtoCopyWith<StudentActivityDto> get copyWith => _$StudentActivit
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is StudentActivityDto&&(identical(other.id, id) || other.id == id)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.taskName, taskName) || other.taskName == taskName)&&(identical(other.igName, igName) || other.igName == igName)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.status, status) || other.status == status));
+  final _this = this as StudentActivityDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StudentActivityDto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt)&&(identical(other.taskName, _this.taskName) || other.taskName == _this.taskName)&&(identical(other.igName, _this.igName) || other.igName == _this.igName)&&(identical(other.karma, _this.karma) || other.karma == _this.karma)&&(identical(other.status, _this.status) || other.status == _this.status));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,createdAt,taskName,igName,karma,status);
+int get hashCode {
+  final _this = this as StudentActivityDto;
+  return Object.hash(runtimeType,_this.id,_this.createdAt,_this.taskName,_this.igName,_this.karma,_this.status);
+}
 
 @override
 String toString() {
-  return 'StudentActivityDto(id: $id, createdAt: $createdAt, taskName: $taskName, igName: $igName, karma: $karma, status: $status)';
+  final _this = this as StudentActivityDto;
+  return 'StudentActivityDto(id: ${_this.id}, createdAt: ${_this.createdAt}, taskName: ${_this.taskName}, igName: ${_this.igName}, karma: ${_this.karma}, status: ${_this.status})';
 }
 
 
@@ -619,7 +639,7 @@ class _$StudentActivityDtoCopyWithImpl<$Res>
 /// Create a copy of StudentActivityDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? createdAt = null,Object? taskName = null,Object? igName = freezed,Object? karma = null,Object? status = null,}) {
-  return _then(_self.copyWith(
+  return _then(StudentActivityDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as String,taskName: null == taskName ? _self.taskName : taskName // ignore: cast_nullable_to_non_nullable
@@ -790,16 +810,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StudentActivityDto&&(identical(other.id, id) || other.id == id)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.taskName, taskName) || other.taskName == taskName)&&(identical(other.igName, igName) || other.igName == igName)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.status, status) || other.status == status));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _StudentActivityDto&&(identical(other.id, id) || other.id == id)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.taskName, taskName) || other.taskName == taskName)&&(identical(other.igName, igName) || other.igName == igName)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.status, status) || other.status == status));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,createdAt,taskName,igName,karma,status);
+int get hashCode {
+    return Object.hash(runtimeType,id,createdAt,taskName,igName,karma,status);
+}
 
 @override
 String toString() {
-  return 'StudentActivityDto(id: $id, createdAt: $createdAt, taskName: $taskName, igName: $igName, karma: $karma, status: $status)';
+    return 'StudentActivityDto(id: $id, createdAt: $createdAt, taskName: $taskName, igName: $igName, karma: $karma, status: $status)';
 }
 
 
@@ -859,16 +881,21 @@ $CampusStudentDtoCopyWith<CampusStudentDto> get copyWith => _$CampusStudentDtoCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CampusStudentDto&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.rank, rank) || other.rank == rank)&&(identical(other.level, level) || other.level == level)&&(identical(other.joinDate, joinDate) || other.joinDate == joinDate)&&(identical(other.lastKarmaGained, lastKarmaGained) || other.lastKarmaGained == lastKarmaGained)&&(identical(other.graduationYear, graduationYear) || other.graduationYear == graduationYear)&&(identical(other.department, department) || other.department == department)&&(identical(other.isAlumni, isAlumni) || other.isAlumni == isAlumni)&&(identical(other.igCount, igCount) || other.igCount == igCount)&&(identical(other.lcCount, lcCount) || other.lcCount == lcCount));
+  final _this = this as CampusStudentDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CampusStudentDto&&(identical(other.fullName, _this.fullName) || other.fullName == _this.fullName)&&(identical(other.muid, _this.muid) || other.muid == _this.muid)&&(identical(other.karma, _this.karma) || other.karma == _this.karma)&&(identical(other.rank, _this.rank) || other.rank == _this.rank)&&(identical(other.level, _this.level) || other.level == _this.level)&&(identical(other.joinDate, _this.joinDate) || other.joinDate == _this.joinDate)&&(identical(other.lastKarmaGained, _this.lastKarmaGained) || other.lastKarmaGained == _this.lastKarmaGained)&&(identical(other.graduationYear, _this.graduationYear) || other.graduationYear == _this.graduationYear)&&(identical(other.department, _this.department) || other.department == _this.department)&&(identical(other.isAlumni, _this.isAlumni) || other.isAlumni == _this.isAlumni)&&(identical(other.igCount, _this.igCount) || other.igCount == _this.igCount)&&(identical(other.lcCount, _this.lcCount) || other.lcCount == _this.lcCount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,fullName,muid,karma,rank,level,joinDate,lastKarmaGained,graduationYear,department,isAlumni,igCount,lcCount);
+int get hashCode {
+  final _this = this as CampusStudentDto;
+  return Object.hash(runtimeType,_this.fullName,_this.muid,_this.karma,_this.rank,_this.level,_this.joinDate,_this.lastKarmaGained,_this.graduationYear,_this.department,_this.isAlumni,_this.igCount,_this.lcCount);
+}
 
 @override
 String toString() {
-  return 'CampusStudentDto(fullName: $fullName, muid: $muid, karma: $karma, rank: $rank, level: $level, joinDate: $joinDate, lastKarmaGained: $lastKarmaGained, graduationYear: $graduationYear, department: $department, isAlumni: $isAlumni, igCount: $igCount, lcCount: $lcCount)';
+  final _this = this as CampusStudentDto;
+  return 'CampusStudentDto(fullName: ${_this.fullName}, muid: ${_this.muid}, karma: ${_this.karma}, rank: ${_this.rank}, level: ${_this.level}, joinDate: ${_this.joinDate}, lastKarmaGained: ${_this.lastKarmaGained}, graduationYear: ${_this.graduationYear}, department: ${_this.department}, isAlumni: ${_this.isAlumni}, igCount: ${_this.igCount}, lcCount: ${_this.lcCount})';
 }
 
 
@@ -897,7 +924,7 @@ class _$CampusStudentDtoCopyWithImpl<$Res>
 /// Create a copy of CampusStudentDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? fullName = null,Object? muid = null,Object? karma = null,Object? rank = freezed,Object? level = null,Object? joinDate = freezed,Object? lastKarmaGained = freezed,Object? graduationYear = freezed,Object? department = freezed,Object? isAlumni = null,Object? igCount = null,Object? lcCount = null,}) {
-  return _then(_self.copyWith(
+  return _then(CampusStudentDto(
 fullName: null == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
 as String,muid: null == muid ? _self.muid : muid // ignore: cast_nullable_to_non_nullable
 as String,karma: null == karma ? _self.karma : karma // ignore: cast_nullable_to_non_nullable
@@ -1080,16 +1107,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CampusStudentDto&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.rank, rank) || other.rank == rank)&&(identical(other.level, level) || other.level == level)&&(identical(other.joinDate, joinDate) || other.joinDate == joinDate)&&(identical(other.lastKarmaGained, lastKarmaGained) || other.lastKarmaGained == lastKarmaGained)&&(identical(other.graduationYear, graduationYear) || other.graduationYear == graduationYear)&&(identical(other.department, department) || other.department == department)&&(identical(other.isAlumni, isAlumni) || other.isAlumni == isAlumni)&&(identical(other.igCount, igCount) || other.igCount == igCount)&&(identical(other.lcCount, lcCount) || other.lcCount == lcCount));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CampusStudentDto&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.rank, rank) || other.rank == rank)&&(identical(other.level, level) || other.level == level)&&(identical(other.joinDate, joinDate) || other.joinDate == joinDate)&&(identical(other.lastKarmaGained, lastKarmaGained) || other.lastKarmaGained == lastKarmaGained)&&(identical(other.graduationYear, graduationYear) || other.graduationYear == graduationYear)&&(identical(other.department, department) || other.department == department)&&(identical(other.isAlumni, isAlumni) || other.isAlumni == isAlumni)&&(identical(other.igCount, igCount) || other.igCount == igCount)&&(identical(other.lcCount, lcCount) || other.lcCount == lcCount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,fullName,muid,karma,rank,level,joinDate,lastKarmaGained,graduationYear,department,isAlumni,igCount,lcCount);
+int get hashCode {
+    return Object.hash(runtimeType,fullName,muid,karma,rank,level,joinDate,lastKarmaGained,graduationYear,department,isAlumni,igCount,lcCount);
+}
 
 @override
 String toString() {
-  return 'CampusStudentDto(fullName: $fullName, muid: $muid, karma: $karma, rank: $rank, level: $level, joinDate: $joinDate, lastKarmaGained: $lastKarmaGained, graduationYear: $graduationYear, department: $department, isAlumni: $isAlumni, igCount: $igCount, lcCount: $lcCount)';
+    return 'CampusStudentDto(fullName: $fullName, muid: $muid, karma: $karma, rank: $rank, level: $level, joinDate: $joinDate, lastKarmaGained: $lastKarmaGained, graduationYear: $graduationYear, department: $department, isAlumni: $isAlumni, igCount: $igCount, lcCount: $lcCount)';
 }
 
 

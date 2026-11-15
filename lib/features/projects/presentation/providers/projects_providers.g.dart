@@ -10,7 +10,7 @@ part of 'projects_providers.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(projectsRepository)
-const projectsRepositoryProvider = ProjectsRepositoryProvider._();
+final projectsRepositoryProvider = ProjectsRepositoryProvider._();
 
 final class ProjectsRepositoryProvider
     extends
@@ -20,7 +20,7 @@ final class ProjectsRepositoryProvider
           ProjectsRepository
         >
     with $Provider<ProjectsRepository> {
-  const ProjectsRepositoryProvider._()
+  ProjectsRepositoryProvider._()
     : super(
         from: null,
         argument: null,
@@ -60,7 +60,7 @@ String _$projectsRepositoryHash() =>
 /// The signed-in member's id (votes and comments carry it) and muid.
 
 @ProviderFor(projectsViewer)
-const projectsViewerProvider = ProjectsViewerProvider._();
+final projectsViewerProvider = ProjectsViewerProvider._();
 
 /// The signed-in member's id (votes and comments carry it) and muid.
 
@@ -75,7 +75,7 @@ final class ProjectsViewerProvider
         $FutureModifier<({String id, String muid})>,
         $FutureProvider<({String id, String muid})> {
   /// The signed-in member's id (votes and comments carry it) and muid.
-  const ProjectsViewerProvider._()
+  ProjectsViewerProvider._()
     : super(
         from: null,
         argument: null,
@@ -107,7 +107,7 @@ String _$projectsViewerHash() => r'4a4cc85eb413c42dd4460e1bb0a4b2af981a1e7d';
 /// Each search is kept for a while once seen.
 
 @ProviderFor(ProjectsFeed)
-const projectsFeedProvider = ProjectsFeedFamily._();
+final projectsFeedProvider = ProjectsFeedFamily._();
 
 /// Published projects for a search (all when empty), a page at a time.
 /// Each search is kept for a while once seen.
@@ -115,7 +115,7 @@ final class ProjectsFeedProvider
     extends $AsyncNotifierProvider<ProjectsFeed, PagedState<Project>> {
   /// Published projects for a search (all when empty), a page at a time.
   /// Each search is kept for a while once seen.
-  const ProjectsFeedProvider._({
+  ProjectsFeedProvider._({
     required ProjectsFeedFamily super.from,
     required String super.argument,
   }) : super(
@@ -165,7 +165,7 @@ final class ProjectsFeedFamily extends $Family
           FutureOr<PagedState<Project>>,
           String
         > {
-  const ProjectsFeedFamily._()
+  ProjectsFeedFamily._()
     : super(
         retry: noRetry,
         name: r'projectsFeedProvider',
@@ -194,8 +194,7 @@ abstract class _$ProjectsFeed extends $AsyncNotifier<PagedState<Project>> {
   FutureOr<PagedState<Project>> build(String search);
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build(_$args);
+  WhenComplete runBuild() {
     final ref =
         this.ref as $Ref<AsyncValue<PagedState<Project>>, PagedState<Project>>;
     final element =
@@ -206,14 +205,14 @@ abstract class _$ProjectsFeed extends $AsyncNotifier<PagedState<Project>> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, () => build(_$args));
   }
 }
 
 /// What the viewer made or is on, drafts included, newest first.
 
 @ProviderFor(myProjects)
-const myProjectsProvider = MyProjectsProvider._();
+final myProjectsProvider = MyProjectsProvider._();
 
 /// What the viewer made or is on, drafts included, newest first.
 
@@ -226,7 +225,7 @@ final class MyProjectsProvider
         >
     with $FutureModifier<List<Project>>, $FutureProvider<List<Project>> {
   /// What the viewer made or is on, drafts included, newest first.
-  const MyProjectsProvider._()
+  MyProjectsProvider._()
     : super(
         from: null,
         argument: null,
@@ -257,7 +256,7 @@ String _$myProjectsHash() => r'b3c89ce8f26114f013675c2710670b0cd134655a';
 /// One project.
 
 @ProviderFor(project)
-const projectProvider = ProjectFamily._();
+final projectProvider = ProjectFamily._();
 
 /// One project.
 
@@ -265,7 +264,7 @@ final class ProjectProvider
     extends $FunctionalProvider<AsyncValue<Project>, Project, FutureOr<Project>>
     with $FutureModifier<Project>, $FutureProvider<Project> {
   /// One project.
-  const ProjectProvider._({
+  ProjectProvider._({
     required ProjectFamily super.from,
     required String super.argument,
   }) : super(
@@ -314,7 +313,7 @@ String _$projectHash() => r'3f88303e5c61cabb4c899ade2f10b0505994b3d7';
 
 final class ProjectFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<Project>, String> {
-  const ProjectFamily._()
+  ProjectFamily._()
     : super(
         retry: noRetry,
         name: r'projectProvider',
@@ -337,7 +336,7 @@ final class ProjectFamily extends $Family
 /// a slower, older answer can't replace a newer one.
 
 @ProviderFor(projectPeopleSearch)
-const projectPeopleSearchProvider = ProjectPeopleSearchFamily._();
+final projectPeopleSearchProvider = ProjectPeopleSearchFamily._();
 
 /// μLearn members matching [query], for the team picker; nothing under two
 /// characters. Each query is kept a while, so retyping costs no request and
@@ -356,7 +355,7 @@ final class ProjectPeopleSearchProvider
   /// μLearn members matching [query], for the team picker; nothing under two
   /// characters. Each query is kept a while, so retyping costs no request and
   /// a slower, older answer can't replace a newer one.
-  const ProjectPeopleSearchProvider._({
+  ProjectPeopleSearchProvider._({
     required ProjectPeopleSearchFamily super.from,
     required String super.argument,
   }) : super(
@@ -409,7 +408,7 @@ String _$projectPeopleSearchHash() =>
 
 final class ProjectPeopleSearchFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<List<ProjectMember>>, String> {
-  const ProjectPeopleSearchFamily._()
+  ProjectPeopleSearchFamily._()
     : super(
         retry: noRetry,
         name: r'projectPeopleSearchProvider',
@@ -432,7 +431,7 @@ final class ProjectPeopleSearchFamily extends $Family
 /// Skills to tag a project with.
 
 @ProviderFor(projectSkills)
-const projectSkillsProvider = ProjectSkillsProvider._();
+final projectSkillsProvider = ProjectSkillsProvider._();
 
 /// Skills to tag a project with.
 
@@ -447,7 +446,7 @@ final class ProjectSkillsProvider
         $FutureModifier<List<ProjectSkill>>,
         $FutureProvider<List<ProjectSkill>> {
   /// Skills to tag a project with.
-  const ProjectSkillsProvider._()
+  ProjectSkillsProvider._()
     : super(
         from: null,
         argument: null,
@@ -480,7 +479,7 @@ String _$projectSkillsHash() => r'3bee99ba56302748dc2bad1abd5747926efe7ace';
 /// true on success (the error is in [state]).
 
 @ProviderFor(ProjectActions)
-const projectActionsProvider = ProjectActionsProvider._();
+final projectActionsProvider = ProjectActionsProvider._();
 
 /// Every change to a project: one notifier for one busy / error state. Each
 /// success refreshes the project, the viewer's list and the feed. Returns
@@ -490,7 +489,7 @@ final class ProjectActionsProvider
   /// Every change to a project: one notifier for one busy / error state. Each
   /// success refreshes the project, the viewer's list and the feed. Returns
   /// true on success (the error is in [state]).
-  const ProjectActionsProvider._()
+  ProjectActionsProvider._()
     : super(
         from: null,
         argument: null,
@@ -519,8 +518,7 @@ abstract class _$ProjectActions extends $AsyncNotifier<void> {
   FutureOr<void> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<void>, void>;
     final element =
         ref.element
@@ -530,6 +528,6 @@ abstract class _$ProjectActions extends $AsyncNotifier<void> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, null);
+    return element.handleCreate(ref, build);
   }
 }

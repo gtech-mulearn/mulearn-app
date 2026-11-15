@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'mentor_analytics.dart';
@@ -9,6 +9,7 @@ part of 'mentor_analytics.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $MentorAnalyticsCopyWith<MentorAnalytics> get copyWith => _$MentorAnalyticsCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MentorAnalytics&&(identical(other.sessionsTotal, sessionsTotal) || other.sessionsTotal == sessionsTotal)&&(identical(other.sessionsCompleted, sessionsCompleted) || other.sessionsCompleted == sessionsCompleted)&&(identical(other.sessionsUpcoming, sessionsUpcoming) || other.sessionsUpcoming == sessionsUpcoming)&&(identical(other.sessionsCancelled, sessionsCancelled) || other.sessionsCancelled == sessionsCancelled)&&(identical(other.karmaEarned, karmaEarned) || other.karmaEarned == karmaEarned)&&(identical(other.hoursContributed, hoursContributed) || other.hoursContributed == hoursContributed)&&(identical(other.ratingCount, ratingCount) || other.ratingCount == ratingCount)&&(identical(other.ratingAverage, ratingAverage) || other.ratingAverage == ratingAverage));
+  final _this = this as MentorAnalytics;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MentorAnalytics&&(identical(other.sessionsTotal, _this.sessionsTotal) || other.sessionsTotal == _this.sessionsTotal)&&(identical(other.sessionsCompleted, _this.sessionsCompleted) || other.sessionsCompleted == _this.sessionsCompleted)&&(identical(other.sessionsUpcoming, _this.sessionsUpcoming) || other.sessionsUpcoming == _this.sessionsUpcoming)&&(identical(other.sessionsCancelled, _this.sessionsCancelled) || other.sessionsCancelled == _this.sessionsCancelled)&&(identical(other.karmaEarned, _this.karmaEarned) || other.karmaEarned == _this.karmaEarned)&&(identical(other.hoursContributed, _this.hoursContributed) || other.hoursContributed == _this.hoursContributed)&&(identical(other.ratingCount, _this.ratingCount) || other.ratingCount == _this.ratingCount)&&(identical(other.ratingAverage, _this.ratingAverage) || other.ratingAverage == _this.ratingAverage));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,sessionsTotal,sessionsCompleted,sessionsUpcoming,sessionsCancelled,karmaEarned,hoursContributed,ratingCount,ratingAverage);
+int get hashCode {
+  final _this = this as MentorAnalytics;
+  return Object.hash(runtimeType,_this.sessionsTotal,_this.sessionsCompleted,_this.sessionsUpcoming,_this.sessionsCancelled,_this.karmaEarned,_this.hoursContributed,_this.ratingCount,_this.ratingAverage);
+}
 
 @override
 String toString() {
-  return 'MentorAnalytics(sessionsTotal: $sessionsTotal, sessionsCompleted: $sessionsCompleted, sessionsUpcoming: $sessionsUpcoming, sessionsCancelled: $sessionsCancelled, karmaEarned: $karmaEarned, hoursContributed: $hoursContributed, ratingCount: $ratingCount, ratingAverage: $ratingAverage)';
+  final _this = this as MentorAnalytics;
+  return 'MentorAnalytics(sessionsTotal: ${_this.sessionsTotal}, sessionsCompleted: ${_this.sessionsCompleted}, sessionsUpcoming: ${_this.sessionsUpcoming}, sessionsCancelled: ${_this.sessionsCancelled}, karmaEarned: ${_this.karmaEarned}, hoursContributed: ${_this.hoursContributed}, ratingCount: ${_this.ratingCount}, ratingAverage: ${_this.ratingAverage})';
 }
 
 
@@ -63,7 +69,7 @@ class _$MentorAnalyticsCopyWithImpl<$Res>
 /// Create a copy of MentorAnalytics
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? sessionsTotal = null,Object? sessionsCompleted = null,Object? sessionsUpcoming = null,Object? sessionsCancelled = null,Object? karmaEarned = null,Object? hoursContributed = null,Object? ratingCount = null,Object? ratingAverage = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(MentorAnalytics(
 sessionsTotal: null == sessionsTotal ? _self.sessionsTotal : sessionsTotal // ignore: cast_nullable_to_non_nullable
 as int,sessionsCompleted: null == sessionsCompleted ? _self.sessionsCompleted : sessionsCompleted // ignore: cast_nullable_to_non_nullable
 as int,sessionsUpcoming: null == sessionsUpcoming ? _self.sessionsUpcoming : sessionsUpcoming // ignore: cast_nullable_to_non_nullable
@@ -235,16 +241,18 @@ _$MentorAnalyticsCopyWith<_MentorAnalytics> get copyWith => __$MentorAnalyticsCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MentorAnalytics&&(identical(other.sessionsTotal, sessionsTotal) || other.sessionsTotal == sessionsTotal)&&(identical(other.sessionsCompleted, sessionsCompleted) || other.sessionsCompleted == sessionsCompleted)&&(identical(other.sessionsUpcoming, sessionsUpcoming) || other.sessionsUpcoming == sessionsUpcoming)&&(identical(other.sessionsCancelled, sessionsCancelled) || other.sessionsCancelled == sessionsCancelled)&&(identical(other.karmaEarned, karmaEarned) || other.karmaEarned == karmaEarned)&&(identical(other.hoursContributed, hoursContributed) || other.hoursContributed == hoursContributed)&&(identical(other.ratingCount, ratingCount) || other.ratingCount == ratingCount)&&(identical(other.ratingAverage, ratingAverage) || other.ratingAverage == ratingAverage));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MentorAnalytics&&(identical(other.sessionsTotal, sessionsTotal) || other.sessionsTotal == sessionsTotal)&&(identical(other.sessionsCompleted, sessionsCompleted) || other.sessionsCompleted == sessionsCompleted)&&(identical(other.sessionsUpcoming, sessionsUpcoming) || other.sessionsUpcoming == sessionsUpcoming)&&(identical(other.sessionsCancelled, sessionsCancelled) || other.sessionsCancelled == sessionsCancelled)&&(identical(other.karmaEarned, karmaEarned) || other.karmaEarned == karmaEarned)&&(identical(other.hoursContributed, hoursContributed) || other.hoursContributed == hoursContributed)&&(identical(other.ratingCount, ratingCount) || other.ratingCount == ratingCount)&&(identical(other.ratingAverage, ratingAverage) || other.ratingAverage == ratingAverage));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,sessionsTotal,sessionsCompleted,sessionsUpcoming,sessionsCancelled,karmaEarned,hoursContributed,ratingCount,ratingAverage);
+int get hashCode {
+    return Object.hash(runtimeType,sessionsTotal,sessionsCompleted,sessionsUpcoming,sessionsCancelled,karmaEarned,hoursContributed,ratingCount,ratingAverage);
+}
 
 @override
 String toString() {
-  return 'MentorAnalytics(sessionsTotal: $sessionsTotal, sessionsCompleted: $sessionsCompleted, sessionsUpcoming: $sessionsUpcoming, sessionsCancelled: $sessionsCancelled, karmaEarned: $karmaEarned, hoursContributed: $hoursContributed, ratingCount: $ratingCount, ratingAverage: $ratingAverage)';
+    return 'MentorAnalytics(sessionsTotal: $sessionsTotal, sessionsCompleted: $sessionsCompleted, sessionsUpcoming: $sessionsUpcoming, sessionsCancelled: $sessionsCancelled, karmaEarned: $karmaEarned, hoursContributed: $hoursContributed, ratingCount: $ratingCount, ratingAverage: $ratingAverage)';
 }
 
 

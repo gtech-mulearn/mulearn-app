@@ -10,7 +10,7 @@ part of 'welcome_providers.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(welcomeRemoteDataSource)
-const welcomeRemoteDataSourceProvider = WelcomeRemoteDataSourceProvider._();
+final welcomeRemoteDataSourceProvider = WelcomeRemoteDataSourceProvider._();
 
 final class WelcomeRemoteDataSourceProvider
     extends
@@ -20,7 +20,7 @@ final class WelcomeRemoteDataSourceProvider
           WelcomeRemoteDataSource
         >
     with $Provider<WelcomeRemoteDataSource> {
-  const WelcomeRemoteDataSourceProvider._()
+  WelcomeRemoteDataSourceProvider._()
     : super(
         from: null,
         argument: null,
@@ -60,7 +60,7 @@ String _$welcomeRemoteDataSourceHash() =>
 /// Community counts for the arrival beats and the Commons.
 
 @ProviderFor(publicStats)
-const publicStatsProvider = PublicStatsProvider._();
+final publicStatsProvider = PublicStatsProvider._();
 
 /// Community counts for the arrival beats and the Commons.
 
@@ -73,7 +73,7 @@ final class PublicStatsProvider
         >
     with $FutureModifier<PublicStats>, $FutureProvider<PublicStats> {
   /// Community counts for the arrival beats and the Commons.
-  const PublicStatsProvider._()
+  PublicStatsProvider._()
     : super(
         from: null,
         argument: null,
@@ -104,7 +104,7 @@ String _$publicStatsHash() => r'231f0619bfe709925684061a7fc33b5e5907ac2c';
 /// Featured events, for the "Then show up" beat and the Commons.
 
 @ProviderFor(guestFeaturedEvents)
-const guestFeaturedEventsProvider = GuestFeaturedEventsProvider._();
+final guestFeaturedEventsProvider = GuestFeaturedEventsProvider._();
 
 /// Featured events, for the "Then show up" beat and the Commons.
 
@@ -117,7 +117,7 @@ final class GuestFeaturedEventsProvider
         >
     with $FutureModifier<List<GuestEvent>>, $FutureProvider<List<GuestEvent>> {
   /// Featured events, for the "Then show up" beat and the Commons.
-  const GuestFeaturedEventsProvider._()
+  GuestFeaturedEventsProvider._()
     : super(
         from: null,
         argument: null,
@@ -149,7 +149,7 @@ String _$guestFeaturedEventsHash() =>
 /// Every Interest Group's name, for the ring that bursts into stickers.
 
 @ProviderFor(guestInterestGroups)
-const guestInterestGroupsProvider = GuestInterestGroupsProvider._();
+final guestInterestGroupsProvider = GuestInterestGroupsProvider._();
 
 /// Every Interest Group's name, for the ring that bursts into stickers.
 
@@ -164,7 +164,7 @@ final class GuestInterestGroupsProvider
         $FutureModifier<List<GuestInterestGroup>>,
         $FutureProvider<List<GuestInterestGroup>> {
   /// Every Interest Group's name, for the ring that bursts into stickers.
-  const GuestInterestGroupsProvider._()
+  GuestInterestGroupsProvider._()
     : super(
         from: null,
         argument: null,
@@ -197,7 +197,7 @@ String _$guestInterestGroupsHash() =>
 /// app already keeps one small store, so it lives in secure storage.
 
 @ProviderFor(ArrivalSeen)
-const arrivalSeenProvider = ArrivalSeenProvider._();
+final arrivalSeenProvider = ArrivalSeenProvider._();
 
 /// Whether this device has seen the arrival beats. Not a secret, but the
 /// app already keeps one small store, so it lives in secure storage.
@@ -205,7 +205,7 @@ final class ArrivalSeenProvider
     extends $AsyncNotifierProvider<ArrivalSeen, bool> {
   /// Whether this device has seen the arrival beats. Not a secret, but the
   /// app already keeps one small store, so it lives in secure storage.
-  const ArrivalSeenProvider._()
+  ArrivalSeenProvider._()
     : super(
         from: null,
         argument: null,
@@ -233,8 +233,7 @@ abstract class _$ArrivalSeen extends $AsyncNotifier<bool> {
   FutureOr<bool> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<bool>, bool>;
     final element =
         ref.element
@@ -244,6 +243,6 @@ abstract class _$ArrivalSeen extends $AsyncNotifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'paging.dart';
@@ -9,6 +9,7 @@ part of 'paging.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $PageInfoCopyWith<PageInfo> get copyWith => _$PageInfoCopyWithImpl<PageInfo>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PageInfo&&(identical(other.hasNext, hasNext) || other.hasNext == hasNext)&&(identical(other.totalPages, totalPages) || other.totalPages == totalPages)&&(identical(other.count, count) || other.count == count));
+  final _this = this as PageInfo;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PageInfo&&(identical(other.hasNext, _this.hasNext) || other.hasNext == _this.hasNext)&&(identical(other.totalPages, _this.totalPages) || other.totalPages == _this.totalPages)&&(identical(other.count, _this.count) || other.count == _this.count));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,hasNext,totalPages,count);
+int get hashCode {
+  final _this = this as PageInfo;
+  return Object.hash(runtimeType,_this.hasNext,_this.totalPages,_this.count);
+}
 
 @override
 String toString() {
-  return 'PageInfo(hasNext: $hasNext, totalPages: $totalPages, count: $count)';
+  final _this = this as PageInfo;
+  return 'PageInfo(hasNext: ${_this.hasNext}, totalPages: ${_this.totalPages}, count: ${_this.count})';
 }
 
 
@@ -63,7 +69,7 @@ class _$PageInfoCopyWithImpl<$Res>
 /// Create a copy of PageInfo
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? hasNext = null,Object? totalPages = null,Object? count = null,}) {
-  return _then(_self.copyWith(
+  return _then(PageInfo(
 hasNext: null == hasNext ? _self.hasNext : hasNext // ignore: cast_nullable_to_non_nullable
 as bool,totalPages: null == totalPages ? _self.totalPages : totalPages // ignore: cast_nullable_to_non_nullable
 as int,count: null == count ? _self.count : count // ignore: cast_nullable_to_non_nullable
@@ -225,16 +231,18 @@ _$PageInfoCopyWith<_PageInfo> get copyWith => __$PageInfoCopyWithImpl<_PageInfo>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PageInfo&&(identical(other.hasNext, hasNext) || other.hasNext == hasNext)&&(identical(other.totalPages, totalPages) || other.totalPages == totalPages)&&(identical(other.count, count) || other.count == count));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PageInfo&&(identical(other.hasNext, hasNext) || other.hasNext == hasNext)&&(identical(other.totalPages, totalPages) || other.totalPages == totalPages)&&(identical(other.count, count) || other.count == count));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,hasNext,totalPages,count);
+int get hashCode {
+    return Object.hash(runtimeType,hasNext,totalPages,count);
+}
 
 @override
 String toString() {
-  return 'PageInfo(hasNext: $hasNext, totalPages: $totalPages, count: $count)';
+    return 'PageInfo(hasNext: $hasNext, totalPages: $totalPages, count: $count)';
 }
 
 
@@ -288,16 +296,21 @@ $PagedStateCopyWith<T, PagedState<T>> get copyWith => _$PagedStateCopyWithImpl<T
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PagedState<T>&&const DeepCollectionEquality().equals(other.items, items)&&(identical(other.hasMore, hasMore) || other.hasMore == hasMore)&&(identical(other.isLoadingMore, isLoadingMore) || other.isLoadingMore == isLoadingMore)&&const DeepCollectionEquality().equals(other.loadMoreError, loadMoreError));
+  final _this = this as PagedState<T>;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PagedState<T>&&const DeepCollectionEquality().equals(other.items, _this.items)&&(identical(other.hasMore, _this.hasMore) || other.hasMore == _this.hasMore)&&(identical(other.isLoadingMore, _this.isLoadingMore) || other.isLoadingMore == _this.isLoadingMore)&&const DeepCollectionEquality().equals(other.loadMoreError, _this.loadMoreError));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(items),hasMore,isLoadingMore,const DeepCollectionEquality().hash(loadMoreError));
+int get hashCode {
+  final _this = this as PagedState<T>;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.items),_this.hasMore,_this.isLoadingMore,const DeepCollectionEquality().hash(_this.loadMoreError));
+}
 
 @override
 String toString() {
-  return 'PagedState<$T>(items: $items, hasMore: $hasMore, isLoadingMore: $isLoadingMore, loadMoreError: $loadMoreError)';
+  final _this = this as PagedState<T>;
+  return 'PagedState<$T>(items: ${_this.items}, hasMore: ${_this.hasMore}, isLoadingMore: ${_this.isLoadingMore}, loadMoreError: ${_this.loadMoreError})';
 }
 
 
@@ -326,7 +339,7 @@ class _$PagedStateCopyWithImpl<T,$Res>
 /// Create a copy of PagedState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? items = null,Object? hasMore = null,Object? isLoadingMore = null,Object? loadMoreError = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(PagedState(
 items: null == items ? _self.items : items // ignore: cast_nullable_to_non_nullable
 as List<T>,hasMore: null == hasMore ? _self.hasMore : hasMore // ignore: cast_nullable_to_non_nullable
 as bool,isLoadingMore: null == isLoadingMore ? _self.isLoadingMore : isLoadingMore // ignore: cast_nullable_to_non_nullable
@@ -471,7 +484,7 @@ return $default(_that.items,_that.hasMore,_that.isLoadingMore,_that.loadMoreErro
 
 
 class _PagedState<T> implements PagedState<T> {
-  const _PagedState({required final  List<T> items, required this.hasMore, this.isLoadingMore = false, this.loadMoreError}): _items = items;
+  const _PagedState({required  List<T> items, required this.hasMore, this.isLoadingMore = false, this.loadMoreError}): _items = items;
   
 
  final  List<T> _items;
@@ -495,16 +508,18 @@ _$PagedStateCopyWith<T, _PagedState<T>> get copyWith => __$PagedStateCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PagedState<T>&&const DeepCollectionEquality().equals(other._items, _items)&&(identical(other.hasMore, hasMore) || other.hasMore == hasMore)&&(identical(other.isLoadingMore, isLoadingMore) || other.isLoadingMore == isLoadingMore)&&const DeepCollectionEquality().equals(other.loadMoreError, loadMoreError));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _PagedState<T>&&const DeepCollectionEquality().equals(other.items, _items)&&(identical(other.hasMore, hasMore) || other.hasMore == hasMore)&&(identical(other.isLoadingMore, isLoadingMore) || other.isLoadingMore == isLoadingMore)&&const DeepCollectionEquality().equals(other.loadMoreError, loadMoreError));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_items),hasMore,isLoadingMore,const DeepCollectionEquality().hash(loadMoreError));
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_items),hasMore,isLoadingMore,const DeepCollectionEquality().hash(loadMoreError));
+}
 
 @override
 String toString() {
-  return 'PagedState<$T>(items: $items, hasMore: $hasMore, isLoadingMore: $isLoadingMore, loadMoreError: $loadMoreError)';
+    return 'PagedState<$T>(items: $items, hasMore: $hasMore, isLoadingMore: $isLoadingMore, loadMoreError: $loadMoreError)';
 }
 
 

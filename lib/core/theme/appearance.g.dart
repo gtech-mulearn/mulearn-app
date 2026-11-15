@@ -13,7 +13,7 @@ part of 'appearance.dart';
 /// choice is remembered on this device.
 
 @ProviderFor(Appearance)
-const appearanceProvider = AppearanceProvider._();
+final appearanceProvider = AppearanceProvider._();
 
 /// System, Light or Dark (artifact Screen patterns → Settings →
 /// Appearance). Follows the phone until the person picks otherwise; the
@@ -23,7 +23,7 @@ final class AppearanceProvider
   /// System, Light or Dark (artifact Screen patterns → Settings →
   /// Appearance). Follows the phone until the person picks otherwise; the
   /// choice is remembered on this device.
-  const AppearanceProvider._()
+  AppearanceProvider._()
     : super(
         from: null,
         argument: null,
@@ -60,8 +60,7 @@ abstract class _$Appearance extends $Notifier<ThemeMode> {
   ThemeMode build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<ThemeMode, ThemeMode>;
     final element =
         ref.element
@@ -71,6 +70,6 @@ abstract class _$Appearance extends $Notifier<ThemeMode> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }

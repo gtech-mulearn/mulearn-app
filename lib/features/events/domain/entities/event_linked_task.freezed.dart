@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'event_linked_task.dart';
@@ -9,6 +9,7 @@ part of 'event_linked_task.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $EventLinkedTaskCopyWith<EventLinkedTask> get copyWith => _$EventLinkedTaskCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EventLinkedTask&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.hashtag, hashtag) || other.hashtag == hashtag)&&(identical(other.description, description) || other.description == description)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.igName, igName) || other.igName == igName));
+  final _this = this as EventLinkedTask;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EventLinkedTask&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.hashtag, _this.hashtag) || other.hashtag == _this.hashtag)&&(identical(other.description, _this.description) || other.description == _this.description)&&(identical(other.karma, _this.karma) || other.karma == _this.karma)&&(identical(other.igName, _this.igName) || other.igName == _this.igName));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,title,hashtag,description,karma,igName);
+int get hashCode {
+  final _this = this as EventLinkedTask;
+  return Object.hash(runtimeType,_this.id,_this.title,_this.hashtag,_this.description,_this.karma,_this.igName);
+}
 
 @override
 String toString() {
-  return 'EventLinkedTask(id: $id, title: $title, hashtag: $hashtag, description: $description, karma: $karma, igName: $igName)';
+  final _this = this as EventLinkedTask;
+  return 'EventLinkedTask(id: ${_this.id}, title: ${_this.title}, hashtag: ${_this.hashtag}, description: ${_this.description}, karma: ${_this.karma}, igName: ${_this.igName})';
 }
 
 
@@ -63,7 +69,7 @@ class _$EventLinkedTaskCopyWithImpl<$Res>
 /// Create a copy of EventLinkedTask
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? hashtag = freezed,Object? description = freezed,Object? karma = freezed,Object? igName = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(EventLinkedTask(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,hashtag: freezed == hashtag ? _self.hashtag : hashtag // ignore: cast_nullable_to_non_nullable
@@ -231,16 +237,18 @@ _$EventLinkedTaskCopyWith<_EventLinkedTask> get copyWith => __$EventLinkedTaskCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EventLinkedTask&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.hashtag, hashtag) || other.hashtag == hashtag)&&(identical(other.description, description) || other.description == description)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.igName, igName) || other.igName == igName));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _EventLinkedTask&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.hashtag, hashtag) || other.hashtag == hashtag)&&(identical(other.description, description) || other.description == description)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.igName, igName) || other.igName == igName));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,title,hashtag,description,karma,igName);
+int get hashCode {
+    return Object.hash(runtimeType,id,title,hashtag,description,karma,igName);
+}
 
 @override
 String toString() {
-  return 'EventLinkedTask(id: $id, title: $title, hashtag: $hashtag, description: $description, karma: $karma, igName: $igName)';
+    return 'EventLinkedTask(id: $id, title: $title, hashtag: $hashtag, description: $description, karma: $karma, igName: $igName)';
 }
 
 

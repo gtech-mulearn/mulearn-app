@@ -10,7 +10,7 @@ part of 'opportunities_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(opportunitiesRemoteDataSource)
-const opportunitiesRemoteDataSourceProvider =
+final opportunitiesRemoteDataSourceProvider =
     OpportunitiesRemoteDataSourceProvider._();
 
 final class OpportunitiesRemoteDataSourceProvider
@@ -21,7 +21,7 @@ final class OpportunitiesRemoteDataSourceProvider
           OpportunitiesRemoteDataSource
         >
     with $Provider<OpportunitiesRemoteDataSource> {
-  const OpportunitiesRemoteDataSourceProvider._()
+  OpportunitiesRemoteDataSourceProvider._()
     : super(
         from: null,
         argument: null,
@@ -63,7 +63,7 @@ String _$opportunitiesRemoteDataSourceHash() =>
 /// Presentation depends on the [OpportunitiesRepository] contract.
 
 @ProviderFor(opportunitiesRepository)
-const opportunitiesRepositoryProvider = OpportunitiesRepositoryProvider._();
+final opportunitiesRepositoryProvider = OpportunitiesRepositoryProvider._();
 
 /// Presentation depends on the [OpportunitiesRepository] contract.
 
@@ -76,7 +76,7 @@ final class OpportunitiesRepositoryProvider
         >
     with $Provider<OpportunitiesRepository> {
   /// Presentation depends on the [OpportunitiesRepository] contract.
-  const OpportunitiesRepositoryProvider._()
+  OpportunitiesRepositoryProvider._()
     : super(
         from: null,
         argument: null,
@@ -117,7 +117,7 @@ String _$opportunitiesRepositoryHash() =>
 /// already shown and records the error for an inline retry.
 
 @ProviderFor(JobsController)
-const jobsControllerProvider = JobsControllerFamily._();
+final jobsControllerProvider = JobsControllerFamily._();
 
 /// Jobs matching [search], page by page. A failed page keeps the jobs
 /// already shown and records the error for an inline retry.
@@ -125,7 +125,7 @@ final class JobsControllerProvider
     extends $AsyncNotifierProvider<JobsController, PagedState<Job>> {
   /// Jobs matching [search], page by page. A failed page keeps the jobs
   /// already shown and records the error for an inline retry.
-  const JobsControllerProvider._({
+  JobsControllerProvider._({
     required JobsControllerFamily super.from,
     required String super.argument,
   }) : super(
@@ -175,7 +175,7 @@ final class JobsControllerFamily extends $Family
           FutureOr<PagedState<Job>>,
           String
         > {
-  const JobsControllerFamily._()
+  JobsControllerFamily._()
     : super(
         retry: null,
         name: r'jobsControllerProvider',
@@ -204,8 +204,7 @@ abstract class _$JobsController extends $AsyncNotifier<PagedState<Job>> {
   FutureOr<PagedState<Job>> build(String search);
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build(_$args);
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<PagedState<Job>>, PagedState<Job>>;
     final element =
         ref.element
@@ -215,7 +214,7 @@ abstract class _$JobsController extends $AsyncNotifier<PagedState<Job>> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, () => build(_$args));
   }
 }
 
@@ -223,7 +222,7 @@ abstract class _$JobsController extends $AsyncNotifier<PagedState<Job>> {
 /// rarely have more than a handful).
 
 @ProviderFor(myJobApplications)
-const myJobApplicationsProvider = MyJobApplicationsProvider._();
+final myJobApplicationsProvider = MyJobApplicationsProvider._();
 
 /// The learner's applications, newest first (the first page; learners
 /// rarely have more than a handful).
@@ -240,7 +239,7 @@ final class MyJobApplicationsProvider
         $FutureProvider<List<JobApplication>> {
   /// The learner's applications, newest first (the first page; learners
   /// rarely have more than a handful).
-  const MyJobApplicationsProvider._()
+  MyJobApplicationsProvider._()
     : super(
         from: null,
         argument: null,
@@ -272,7 +271,7 @@ String _$myJobApplicationsHash() => r'a063a3fbc400acf243030fb0f9ca98d8305bef02';
 /// error state. Each success refreshes the jobs and applications.
 
 @ProviderFor(ApplicationActionsController)
-const applicationActionsControllerProvider =
+final applicationActionsControllerProvider =
     ApplicationActionsControllerProvider._();
 
 /// Apply, resubmit and withdraw: one notifier so screens show one busy /
@@ -281,7 +280,7 @@ final class ApplicationActionsControllerProvider
     extends $AsyncNotifierProvider<ApplicationActionsController, void> {
   /// Apply, resubmit and withdraw: one notifier so screens show one busy /
   /// error state. Each success refreshes the jobs and applications.
-  const ApplicationActionsControllerProvider._()
+  ApplicationActionsControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -310,8 +309,7 @@ abstract class _$ApplicationActionsController extends $AsyncNotifier<void> {
   FutureOr<void> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<void>, void>;
     final element =
         ref.element
@@ -321,6 +319,6 @@ abstract class _$ApplicationActionsController extends $AsyncNotifier<void> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, null);
+    return element.handleCreate(ref, build);
   }
 }

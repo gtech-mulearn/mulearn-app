@@ -14,10 +14,10 @@ This file is the standing reference for anyone (human or AI agent) working on th
 | Networking | Dio | Generated client (see §4) for standard CRUD; hand-written Retrofit interfaces only for non-standard endpoints. |
 | Models | Freezed + json_serializable | All domain entities and DTOs. No hand-written `copyWith`/`==`/`toJson`. |
 | Backend | Django REST Framework + SimpleJWT + drf-spectacular | Response envelope and auth patterns are backend-defined — see §3. |
-| Local cache | dio_cache_interceptor (Hive store) | HTTP response caching only. No offline-first datastore (Isar/Drift) unless a specific feature explicitly requires true offline capability — that's a per-feature decision, not a blanket one. |
+| Local cache | dio_cache_interceptor 4 + http_cache_hive_store (hive_ce) | HTTP response caching only. No offline-first datastore (Isar/Drift) unless a specific feature explicitly requires true offline capability — that's a per-feature decision, not a blanket one. |
 | Secure storage | flutter_secure_storage | Tokens only. Never put tokens in `SharedPreferences`. |
 | App info | package_info_plus | Reads the installed versionName / versionCode (`core/config/app_version.dart`, shown in Settings). The version itself comes from `pubspec.yaml` + CI — see docs/CI-CD.md "Versioning". |
-| Lints | very_good_analysis (or flutter_lints, strict) | `flutter analyze` must pass with zero warnings before a PR is opened. |
+| Lints | very_good_analysis + riverpod_lint | riverpod_lint runs as a native analyzer plugin (`plugins:` in analysis_options.yaml), not custom_lint. `flutter analyze` must pass with zero issues before a PR is opened. |
 
 ---
 

@@ -10,7 +10,7 @@ part of 'search_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(searchRemoteDataSource)
-const searchRemoteDataSourceProvider = SearchRemoteDataSourceProvider._();
+final searchRemoteDataSourceProvider = SearchRemoteDataSourceProvider._();
 
 final class SearchRemoteDataSourceProvider
     extends
@@ -20,7 +20,7 @@ final class SearchRemoteDataSourceProvider
           SearchRemoteDataSource
         >
     with $Provider<SearchRemoteDataSource> {
-  const SearchRemoteDataSourceProvider._()
+  SearchRemoteDataSourceProvider._()
     : super(
         from: null,
         argument: null,
@@ -60,7 +60,7 @@ String _$searchRemoteDataSourceHash() =>
 /// Presentation depends on the [SearchRepository] contract (rules.md §2/§5).
 
 @ProviderFor(searchRepository)
-const searchRepositoryProvider = SearchRepositoryProvider._();
+final searchRepositoryProvider = SearchRepositoryProvider._();
 
 /// Presentation depends on the [SearchRepository] contract (rules.md §2/§5).
 
@@ -73,7 +73,7 @@ final class SearchRepositoryProvider
         >
     with $Provider<SearchRepository> {
   /// Presentation depends on the [SearchRepository] contract (rules.md §2/§5).
-  const SearchRepositoryProvider._()
+  SearchRepositoryProvider._()
     : super(
         from: null,
         argument: null,
@@ -115,7 +115,7 @@ String _$searchRepositoryHash() => r'f14ca810804bec88f67d6b2cffb39fb21c05544e';
 /// concurrent "load more" calls share one request.
 
 @ProviderFor(UserSearch)
-const userSearchProvider = UserSearchFamily._();
+final userSearchProvider = UserSearchFamily._();
 
 /// People (or, with `role: 'mentor'`, mentors) matching [query], page by
 /// page; an empty query lists everyone, like the dashboard's search pages.
@@ -129,7 +129,7 @@ final class UserSearchProvider
   /// Each query is its own list, kept for a while once seen
   /// ([KeepRecentResults]), so going back to a query or tab costs no request;
   /// concurrent "load more" calls share one request.
-  const UserSearchProvider._({
+  UserSearchProvider._({
     required UserSearchFamily super.from,
     required (String, String?) super.argument,
   }) : super(
@@ -182,7 +182,7 @@ final class UserSearchFamily extends $Family
           FutureOr<PagedState<UserSearchResult>>,
           (String, String?)
         > {
-  const UserSearchFamily._()
+  UserSearchFamily._()
     : super(
         retry: noRetry,
         name: r'userSearchProvider',
@@ -219,8 +219,7 @@ abstract class _$UserSearch
   FutureOr<PagedState<UserSearchResult>> build(String query, String? role);
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build(_$args.$1, _$args.$2);
+  WhenComplete runBuild() {
     final ref =
         this.ref
             as $Ref<
@@ -238,7 +237,7 @@ abstract class _$UserSearch
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, () => build(_$args.$1, _$args.$2));
   }
 }
 
@@ -246,7 +245,7 @@ abstract class _$UserSearch
 /// page, with the same caching as [UserSearch].
 
 @ProviderFor(CampusSearch)
-const campusSearchProvider = CampusSearchFamily._();
+final campusSearchProvider = CampusSearchFamily._();
 
 /// Colleges and schools matching [query] (all of them when empty), page by
 /// page, with the same caching as [UserSearch].
@@ -255,7 +254,7 @@ final class CampusSearchProvider
         $AsyncNotifierProvider<CampusSearch, PagedState<CampusSearchResult>> {
   /// Colleges and schools matching [query] (all of them when empty), page by
   /// page, with the same caching as [UserSearch].
-  const CampusSearchProvider._({
+  CampusSearchProvider._({
     required CampusSearchFamily super.from,
     required String super.argument,
   }) : super(
@@ -305,7 +304,7 @@ final class CampusSearchFamily extends $Family
           FutureOr<PagedState<CampusSearchResult>>,
           String
         > {
-  const CampusSearchFamily._()
+  CampusSearchFamily._()
     : super(
         retry: noRetry,
         name: r'campusSearchProvider',
@@ -335,8 +334,7 @@ abstract class _$CampusSearch
   FutureOr<PagedState<CampusSearchResult>> build(String query);
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build(_$args);
+  WhenComplete runBuild() {
     final ref =
         this.ref
             as $Ref<
@@ -354,6 +352,6 @@ abstract class _$CampusSearch
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, () => build(_$args));
   }
 }

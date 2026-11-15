@@ -11,7 +11,7 @@ part of 'campus_groups_controllers.dart';
 /// The campus's circles for a search, page by page.
 
 @ProviderFor(CampusCirclesController)
-const campusCirclesControllerProvider = CampusCirclesControllerFamily._();
+final campusCirclesControllerProvider = CampusCirclesControllerFamily._();
 
 /// The campus's circles for a search, page by page.
 final class CampusCirclesControllerProvider
@@ -21,7 +21,7 @@ final class CampusCirclesControllerProvider
           PagedState<CampusCircle>
         > {
   /// The campus's circles for a search, page by page.
-  const CampusCirclesControllerProvider._({
+  CampusCirclesControllerProvider._({
     required CampusCirclesControllerFamily super.from,
     required String super.argument,
   }) : super(
@@ -72,7 +72,7 @@ final class CampusCirclesControllerFamily extends $Family
           FutureOr<PagedState<CampusCircle>>,
           String
         > {
-  const CampusCirclesControllerFamily._()
+  CampusCirclesControllerFamily._()
     : super(
         retry: noRetry,
         name: r'campusCirclesControllerProvider',
@@ -100,8 +100,7 @@ abstract class _$CampusCirclesController
   FutureOr<PagedState<CampusCircle>> build(String search);
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build(_$args);
+  WhenComplete runBuild() {
     final ref =
         this.ref
             as $Ref<
@@ -119,20 +118,20 @@ abstract class _$CampusCirclesController
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, () => build(_$args));
   }
 }
 
 /// Interest groups for a search, page by page.
 
 @ProviderFor(CampusIgsController)
-const campusIgsControllerProvider = CampusIgsControllerFamily._();
+final campusIgsControllerProvider = CampusIgsControllerFamily._();
 
 /// Interest groups for a search, page by page.
 final class CampusIgsControllerProvider
     extends $AsyncNotifierProvider<CampusIgsController, PagedState<CampusIg>> {
   /// Interest groups for a search, page by page.
-  const CampusIgsControllerProvider._({
+  CampusIgsControllerProvider._({
     required CampusIgsControllerFamily super.from,
     required String super.argument,
   }) : super(
@@ -182,7 +181,7 @@ final class CampusIgsControllerFamily extends $Family
           FutureOr<PagedState<CampusIg>>,
           String
         > {
-  const CampusIgsControllerFamily._()
+  CampusIgsControllerFamily._()
     : super(
         retry: noRetry,
         name: r'campusIgsControllerProvider',
@@ -210,8 +209,7 @@ abstract class _$CampusIgsController
   FutureOr<PagedState<CampusIg>> build(String search);
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build(_$args);
+  WhenComplete runBuild() {
     final ref =
         this.ref
             as $Ref<AsyncValue<PagedState<CampusIg>>, PagedState<CampusIg>>;
@@ -226,6 +224,6 @@ abstract class _$CampusIgsController
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, () => build(_$args));
   }
 }

@@ -17,7 +17,7 @@ part of 'register_wizard_controller.dart';
 /// the flow completes (or is abandoned back at sign-in).
 
 @ProviderFor(RegisterWizardController)
-const registerWizardControllerProvider = RegisterWizardControllerProvider._();
+final registerWizardControllerProvider = RegisterWizardControllerProvider._();
 
 /// Holds steps 1–2's data (basic info + role) across the separate screens
 /// that make up the registration flow.
@@ -35,7 +35,7 @@ final class RegisterWizardControllerProvider
   /// survive navigating from the basic-info screen to the role-selection screen
   /// to the role-details screen, each a separate route. [reset] is called once
   /// the flow completes (or is abandoned back at sign-in).
-  const RegisterWizardControllerProvider._()
+  RegisterWizardControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -78,8 +78,7 @@ abstract class _$RegisterWizardController
   RegisterWizardState build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<RegisterWizardState, RegisterWizardState>;
     final element =
         ref.element
@@ -89,6 +88,6 @@ abstract class _$RegisterWizardController
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }

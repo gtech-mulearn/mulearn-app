@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'circle_invite_dto.dart';
@@ -9,6 +9,7 @@ part of 'circle_invite_dto.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $CircleInviteDtoCopyWith<CircleInviteDto> get copyWith => _$CircleInviteDtoCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CircleInviteDto&&(identical(other.linkId, linkId) || other.linkId == linkId)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.status, status) || other.status == status)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.profilePic, profilePic) || other.profilePic == profilePic)&&(identical(other.invitedAt, invitedAt) || other.invitedAt == invitedAt)&&(identical(other.isLeadInvite, isLeadInvite) || other.isLeadInvite == isLeadInvite));
+  final _this = this as CircleInviteDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CircleInviteDto&&(identical(other.linkId, _this.linkId) || other.linkId == _this.linkId)&&(identical(other.fullName, _this.fullName) || other.fullName == _this.fullName)&&(identical(other.muid, _this.muid) || other.muid == _this.muid)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.userId, _this.userId) || other.userId == _this.userId)&&(identical(other.profilePic, _this.profilePic) || other.profilePic == _this.profilePic)&&(identical(other.invitedAt, _this.invitedAt) || other.invitedAt == _this.invitedAt)&&(identical(other.isLeadInvite, _this.isLeadInvite) || other.isLeadInvite == _this.isLeadInvite));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,linkId,fullName,muid,status,userId,profilePic,invitedAt,isLeadInvite);
+int get hashCode {
+  final _this = this as CircleInviteDto;
+  return Object.hash(runtimeType,_this.linkId,_this.fullName,_this.muid,_this.status,_this.userId,_this.profilePic,_this.invitedAt,_this.isLeadInvite);
+}
 
 @override
 String toString() {
-  return 'CircleInviteDto(linkId: $linkId, fullName: $fullName, muid: $muid, status: $status, userId: $userId, profilePic: $profilePic, invitedAt: $invitedAt, isLeadInvite: $isLeadInvite)';
+  final _this = this as CircleInviteDto;
+  return 'CircleInviteDto(linkId: ${_this.linkId}, fullName: ${_this.fullName}, muid: ${_this.muid}, status: ${_this.status}, userId: ${_this.userId}, profilePic: ${_this.profilePic}, invitedAt: ${_this.invitedAt}, isLeadInvite: ${_this.isLeadInvite})';
 }
 
 
@@ -66,7 +72,7 @@ class _$CircleInviteDtoCopyWithImpl<$Res>
 /// Create a copy of CircleInviteDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? linkId = null,Object? fullName = null,Object? muid = null,Object? status = null,Object? userId = freezed,Object? profilePic = freezed,Object? invitedAt = freezed,Object? isLeadInvite = null,}) {
-  return _then(_self.copyWith(
+  return _then(CircleInviteDto(
 linkId: null == linkId ? _self.linkId : linkId // ignore: cast_nullable_to_non_nullable
 as String,fullName: null == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
 as String,muid: null == muid ? _self.muid : muid // ignore: cast_nullable_to_non_nullable
@@ -241,16 +247,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CircleInviteDto&&(identical(other.linkId, linkId) || other.linkId == linkId)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.status, status) || other.status == status)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.profilePic, profilePic) || other.profilePic == profilePic)&&(identical(other.invitedAt, invitedAt) || other.invitedAt == invitedAt)&&(identical(other.isLeadInvite, isLeadInvite) || other.isLeadInvite == isLeadInvite));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CircleInviteDto&&(identical(other.linkId, linkId) || other.linkId == linkId)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.status, status) || other.status == status)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.profilePic, profilePic) || other.profilePic == profilePic)&&(identical(other.invitedAt, invitedAt) || other.invitedAt == invitedAt)&&(identical(other.isLeadInvite, isLeadInvite) || other.isLeadInvite == isLeadInvite));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,linkId,fullName,muid,status,userId,profilePic,invitedAt,isLeadInvite);
+int get hashCode {
+    return Object.hash(runtimeType,linkId,fullName,muid,status,userId,profilePic,invitedAt,isLeadInvite);
+}
 
 @override
 String toString() {
-  return 'CircleInviteDto(linkId: $linkId, fullName: $fullName, muid: $muid, status: $status, userId: $userId, profilePic: $profilePic, invitedAt: $invitedAt, isLeadInvite: $isLeadInvite)';
+    return 'CircleInviteDto(linkId: $linkId, fullName: $fullName, muid: $muid, status: $status, userId: $userId, profilePic: $profilePic, invitedAt: $invitedAt, isLeadInvite: $isLeadInvite)';
 }
 
 

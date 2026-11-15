@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'workspace_access.dart';
@@ -9,6 +9,7 @@ part of 'workspace_access.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -30,16 +31,21 @@ $WorkspaceAccessCopyWith<WorkspaceAccess> get copyWith => _$WorkspaceAccessCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is WorkspaceAccess&&(identical(other.mentor, mentor) || other.mentor == mentor)&&(identical(other.campus, campus) || other.campus == campus)&&(identical(other.enablerCampuses, enablerCampuses) || other.enablerCampuses == enablerCampuses)&&(identical(other.campusLead, campusLead) || other.campusLead == campusLead)&&const DeepCollectionEquality().equals(other.pendingCampusRoles, pendingCampusRoles));
+  final _this = this as WorkspaceAccess;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is WorkspaceAccess&&(identical(other.mentor, _this.mentor) || other.mentor == _this.mentor)&&(identical(other.campus, _this.campus) || other.campus == _this.campus)&&(identical(other.enablerCampuses, _this.enablerCampuses) || other.enablerCampuses == _this.enablerCampuses)&&(identical(other.campusLead, _this.campusLead) || other.campusLead == _this.campusLead)&&const DeepCollectionEquality().equals(other.pendingCampusRoles, _this.pendingCampusRoles));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,mentor,campus,enablerCampuses,campusLead,const DeepCollectionEquality().hash(pendingCampusRoles));
+int get hashCode {
+  final _this = this as WorkspaceAccess;
+  return Object.hash(runtimeType,_this.mentor,_this.campus,_this.enablerCampuses,_this.campusLead,const DeepCollectionEquality().hash(_this.pendingCampusRoles));
+}
 
 @override
 String toString() {
-  return 'WorkspaceAccess(mentor: $mentor, campus: $campus, enablerCampuses: $enablerCampuses, campusLead: $campusLead, pendingCampusRoles: $pendingCampusRoles)';
+  final _this = this as WorkspaceAccess;
+  return 'WorkspaceAccess(mentor: ${_this.mentor}, campus: ${_this.campus}, enablerCampuses: ${_this.enablerCampuses}, campusLead: ${_this.campusLead}, pendingCampusRoles: ${_this.pendingCampusRoles})';
 }
 
 
@@ -68,7 +74,7 @@ class _$WorkspaceAccessCopyWithImpl<$Res>
 /// Create a copy of WorkspaceAccess
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? mentor = null,Object? campus = null,Object? enablerCampuses = null,Object? campusLead = null,Object? pendingCampusRoles = null,}) {
-  return _then(_self.copyWith(
+  return _then(WorkspaceAccess(
 mentor: null == mentor ? _self.mentor : mentor // ignore: cast_nullable_to_non_nullable
 as WorkspaceState,campus: null == campus ? _self.campus : campus // ignore: cast_nullable_to_non_nullable
 as WorkspaceState,enablerCampuses: null == enablerCampuses ? _self.enablerCampuses : enablerCampuses // ignore: cast_nullable_to_non_nullable
@@ -215,7 +221,7 @@ return $default(_that.mentor,_that.campus,_that.enablerCampuses,_that.campusLead
 
 
 class _WorkspaceAccess implements WorkspaceAccess {
-  const _WorkspaceAccess({required this.mentor, required this.campus, required this.enablerCampuses, required this.campusLead, final  List<String> pendingCampusRoles = const <String>[]}): _pendingCampusRoles = pendingCampusRoles;
+  const _WorkspaceAccess({required this.mentor, required this.campus, required this.enablerCampuses, required this.campusLead,  List<String> pendingCampusRoles = const <String>[]}): _pendingCampusRoles = pendingCampusRoles;
   
 
 @override final  WorkspaceState mentor;
@@ -248,16 +254,18 @@ _$WorkspaceAccessCopyWith<_WorkspaceAccess> get copyWith => __$WorkspaceAccessCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _WorkspaceAccess&&(identical(other.mentor, mentor) || other.mentor == mentor)&&(identical(other.campus, campus) || other.campus == campus)&&(identical(other.enablerCampuses, enablerCampuses) || other.enablerCampuses == enablerCampuses)&&(identical(other.campusLead, campusLead) || other.campusLead == campusLead)&&const DeepCollectionEquality().equals(other._pendingCampusRoles, _pendingCampusRoles));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _WorkspaceAccess&&(identical(other.mentor, mentor) || other.mentor == mentor)&&(identical(other.campus, campus) || other.campus == campus)&&(identical(other.enablerCampuses, enablerCampuses) || other.enablerCampuses == enablerCampuses)&&(identical(other.campusLead, campusLead) || other.campusLead == campusLead)&&const DeepCollectionEquality().equals(other.pendingCampusRoles, _pendingCampusRoles));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,mentor,campus,enablerCampuses,campusLead,const DeepCollectionEquality().hash(_pendingCampusRoles));
+int get hashCode {
+    return Object.hash(runtimeType,mentor,campus,enablerCampuses,campusLead,const DeepCollectionEquality().hash(_pendingCampusRoles));
+}
 
 @override
 String toString() {
-  return 'WorkspaceAccess(mentor: $mentor, campus: $campus, enablerCampuses: $enablerCampuses, campusLead: $campusLead, pendingCampusRoles: $pendingCampusRoles)';
+    return 'WorkspaceAccess(mentor: $mentor, campus: $campus, enablerCampuses: $enablerCampuses, campusLead: $campusLead, pendingCampusRoles: $pendingCampusRoles)';
 }
 
 

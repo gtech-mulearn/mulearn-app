@@ -13,7 +13,7 @@ part of 'public_profile_controller.dart';
 /// specific muid instead of the signed-in user.
 
 @ProviderFor(publicUserProfile)
-const publicUserProfileProvider = PublicUserProfileFamily._();
+final publicUserProfileProvider = PublicUserProfileFamily._();
 
 /// Read-only providers for viewing another user's profile by muid —
 /// mirrors [ProfileController]/[SocialsController]/etc but scoped to a
@@ -30,7 +30,7 @@ final class PublicUserProfileProvider
   /// Read-only providers for viewing another user's profile by muid —
   /// mirrors [ProfileController]/[SocialsController]/etc but scoped to a
   /// specific muid instead of the signed-in user.
-  const PublicUserProfileProvider._({
+  PublicUserProfileProvider._({
     required PublicUserProfileFamily super.from,
     required String super.argument,
   }) : super(
@@ -82,7 +82,7 @@ String _$publicUserProfileHash() => r'fd506f4f80b7cac6f2bddab8d029558dffa1c504';
 
 final class PublicUserProfileFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<UserProfile>, String> {
-  const PublicUserProfileFamily._()
+  PublicUserProfileFamily._()
     : super(
         retry: null,
         name: r'publicUserProfileProvider',
@@ -103,7 +103,7 @@ final class PublicUserProfileFamily extends $Family
 }
 
 @ProviderFor(publicUserLog)
-const publicUserLogProvider = PublicUserLogFamily._();
+final publicUserLogProvider = PublicUserLogFamily._();
 
 final class PublicUserLogProvider
     extends
@@ -115,7 +115,7 @@ final class PublicUserLogProvider
     with
         $FutureModifier<List<UserLogEntry>>,
         $FutureProvider<List<UserLogEntry>> {
-  const PublicUserLogProvider._({
+  PublicUserLogProvider._({
     required PublicUserLogFamily super.from,
     required String super.argument,
   }) : super(
@@ -163,7 +163,7 @@ String _$publicUserLogHash() => r'6595132ce0af53c82b07b9f3dcac464cb56c5fe3';
 
 final class PublicUserLogFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<List<UserLogEntry>>, String> {
-  const PublicUserLogFamily._()
+  PublicUserLogFamily._()
     : super(
         retry: null,
         name: r'publicUserLogProvider',
@@ -180,7 +180,7 @@ final class PublicUserLogFamily extends $Family
 }
 
 @ProviderFor(publicUserLevels)
-const publicUserLevelsProvider = PublicUserLevelsFamily._();
+final publicUserLevelsProvider = PublicUserLevelsFamily._();
 
 final class PublicUserLevelsProvider
     extends
@@ -190,7 +190,7 @@ final class PublicUserLevelsProvider
           FutureOr<List<UserLevel>>
         >
     with $FutureModifier<List<UserLevel>>, $FutureProvider<List<UserLevel>> {
-  const PublicUserLevelsProvider._({
+  PublicUserLevelsProvider._({
     required PublicUserLevelsFamily super.from,
     required String super.argument,
   }) : super(
@@ -238,7 +238,7 @@ String _$publicUserLevelsHash() => r'81ce377ea39e59f9357b6f5a579ce0c36caae9fa';
 
 final class PublicUserLevelsFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<List<UserLevel>>, String> {
-  const PublicUserLevelsFamily._()
+  PublicUserLevelsFamily._()
     : super(
         retry: null,
         name: r'publicUserLevelsProvider',
@@ -255,12 +255,12 @@ final class PublicUserLevelsFamily extends $Family
 }
 
 @ProviderFor(publicSocials)
-const publicSocialsProvider = PublicSocialsFamily._();
+final publicSocialsProvider = PublicSocialsFamily._();
 
 final class PublicSocialsProvider
     extends $FunctionalProvider<AsyncValue<Socials>, Socials, FutureOr<Socials>>
     with $FutureModifier<Socials>, $FutureProvider<Socials> {
-  const PublicSocialsProvider._({
+  PublicSocialsProvider._({
     required PublicSocialsFamily super.from,
     required String super.argument,
   }) : super(
@@ -307,7 +307,7 @@ String _$publicSocialsHash() => r'69be152d7a876af652822989c84b7493ac23155b';
 
 final class PublicSocialsFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<Socials>, String> {
-  const PublicSocialsFamily._()
+  PublicSocialsFamily._()
     : super(
         retry: null,
         name: r'publicSocialsProvider',

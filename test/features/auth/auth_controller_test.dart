@@ -322,6 +322,8 @@ void main() {
 
 /// Records sign-out calls; flips the router state like the real one.
 class FakeSessionActions extends SessionActions {
+  // A test spy: the count is read by the test, not by app code.
+  // ignore: riverpod_lint/avoid_public_notifier_properties
   int signOutCalls = 0;
 
   @override

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'achievement.dart';
@@ -9,6 +9,7 @@ part of 'achievement.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $AchievementCopyWith<Achievement> get copyWith => _$AchievementCopyWithImpl<Achi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Achievement&&(identical(other.id, id) || other.id == id)&&(identical(other.achievementName, achievementName) || other.achievementName == achievementName)&&(identical(other.description, description) || other.description == description)&&(identical(other.icon, icon) || other.icon == icon)&&(identical(other.levelId, levelId) || other.levelId == levelId)&&const DeepCollectionEquality().equals(other.tags, tags)&&(identical(other.templateId, templateId) || other.templateId == templateId));
+  final _this = this as Achievement;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Achievement&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.achievementName, _this.achievementName) || other.achievementName == _this.achievementName)&&(identical(other.description, _this.description) || other.description == _this.description)&&(identical(other.icon, _this.icon) || other.icon == _this.icon)&&(identical(other.levelId, _this.levelId) || other.levelId == _this.levelId)&&const DeepCollectionEquality().equals(other.tags, _this.tags)&&(identical(other.templateId, _this.templateId) || other.templateId == _this.templateId));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,achievementName,description,icon,levelId,const DeepCollectionEquality().hash(tags),templateId);
+int get hashCode {
+  final _this = this as Achievement;
+  return Object.hash(runtimeType,_this.id,_this.achievementName,_this.description,_this.icon,_this.levelId,const DeepCollectionEquality().hash(_this.tags),_this.templateId);
+}
 
 @override
 String toString() {
-  return 'Achievement(id: $id, achievementName: $achievementName, description: $description, icon: $icon, levelId: $levelId, tags: $tags, templateId: $templateId)';
+  final _this = this as Achievement;
+  return 'Achievement(id: ${_this.id}, achievementName: ${_this.achievementName}, description: ${_this.description}, icon: ${_this.icon}, levelId: ${_this.levelId}, tags: ${_this.tags}, templateId: ${_this.templateId})';
 }
 
 
@@ -63,7 +69,7 @@ class _$AchievementCopyWithImpl<$Res>
 /// Create a copy of Achievement
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? achievementName = null,Object? description = freezed,Object? icon = freezed,Object? levelId = freezed,Object? tags = null,Object? templateId = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(Achievement(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,achievementName: null == achievementName ? _self.achievementName : achievementName // ignore: cast_nullable_to_non_nullable
 as String,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
@@ -212,7 +218,7 @@ return $default(_that.id,_that.achievementName,_that.description,_that.icon,_tha
 
 
 class _Achievement implements Achievement {
-  const _Achievement({required this.id, required this.achievementName, this.description, this.icon, this.levelId, final  List<String> tags = const [], this.templateId}): _tags = tags;
+  const _Achievement({required this.id, required this.achievementName, this.description, this.icon, this.levelId,  List<String> tags = const [], this.templateId}): _tags = tags;
   
 
 @override final  String id;
@@ -239,16 +245,18 @@ _$AchievementCopyWith<_Achievement> get copyWith => __$AchievementCopyWithImpl<_
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Achievement&&(identical(other.id, id) || other.id == id)&&(identical(other.achievementName, achievementName) || other.achievementName == achievementName)&&(identical(other.description, description) || other.description == description)&&(identical(other.icon, icon) || other.icon == icon)&&(identical(other.levelId, levelId) || other.levelId == levelId)&&const DeepCollectionEquality().equals(other._tags, _tags)&&(identical(other.templateId, templateId) || other.templateId == templateId));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Achievement&&(identical(other.id, id) || other.id == id)&&(identical(other.achievementName, achievementName) || other.achievementName == achievementName)&&(identical(other.description, description) || other.description == description)&&(identical(other.icon, icon) || other.icon == icon)&&(identical(other.levelId, levelId) || other.levelId == levelId)&&const DeepCollectionEquality().equals(other.tags, _tags)&&(identical(other.templateId, templateId) || other.templateId == templateId));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,achievementName,description,icon,levelId,const DeepCollectionEquality().hash(_tags),templateId);
+int get hashCode {
+    return Object.hash(runtimeType,id,achievementName,description,icon,levelId,const DeepCollectionEquality().hash(_tags),templateId);
+}
 
 @override
 String toString() {
-  return 'Achievement(id: $id, achievementName: $achievementName, description: $description, icon: $icon, levelId: $levelId, tags: $tags, templateId: $templateId)';
+    return 'Achievement(id: $id, achievementName: $achievementName, description: $description, icon: $icon, levelId: $levelId, tags: $tags, templateId: $templateId)';
 }
 
 

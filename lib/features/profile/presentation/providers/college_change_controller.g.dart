@@ -10,7 +10,7 @@ part of 'college_change_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(profileCountries)
-const profileCountriesProvider = ProfileCountriesProvider._();
+final profileCountriesProvider = ProfileCountriesProvider._();
 
 final class ProfileCountriesProvider
     extends
@@ -22,7 +22,7 @@ final class ProfileCountriesProvider
     with
         $FutureModifier<List<LocationOption>>,
         $FutureProvider<List<LocationOption>> {
-  const ProfileCountriesProvider._()
+  ProfileCountriesProvider._()
     : super(
         from: null,
         argument: null,
@@ -51,7 +51,7 @@ final class ProfileCountriesProvider
 String _$profileCountriesHash() => r'7df9b2c6f5da7f9d2eb800bd64a930620cb31b3f';
 
 @ProviderFor(profileStates)
-const profileStatesProvider = ProfileStatesFamily._();
+final profileStatesProvider = ProfileStatesFamily._();
 
 final class ProfileStatesProvider
     extends
@@ -63,7 +63,7 @@ final class ProfileStatesProvider
     with
         $FutureModifier<List<LocationOption>>,
         $FutureProvider<List<LocationOption>> {
-  const ProfileStatesProvider._({
+  ProfileStatesProvider._({
     required ProfileStatesFamily super.from,
     required String super.argument,
   }) : super(
@@ -111,7 +111,7 @@ String _$profileStatesHash() => r'9f9b94e2133098d5b21afe1e22bf8b3b7e377ed1';
 
 final class ProfileStatesFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<List<LocationOption>>, String> {
-  const ProfileStatesFamily._()
+  ProfileStatesFamily._()
     : super(
         retry: null,
         name: r'profileStatesProvider',
@@ -128,7 +128,7 @@ final class ProfileStatesFamily extends $Family
 }
 
 @ProviderFor(profileDistricts)
-const profileDistrictsProvider = ProfileDistrictsFamily._();
+final profileDistrictsProvider = ProfileDistrictsFamily._();
 
 final class ProfileDistrictsProvider
     extends
@@ -140,7 +140,7 @@ final class ProfileDistrictsProvider
     with
         $FutureModifier<List<LocationOption>>,
         $FutureProvider<List<LocationOption>> {
-  const ProfileDistrictsProvider._({
+  ProfileDistrictsProvider._({
     required ProfileDistrictsFamily super.from,
     required String super.argument,
   }) : super(
@@ -188,7 +188,7 @@ String _$profileDistrictsHash() => r'540111b91db56bc39f055bf508e72ced207af077';
 
 final class ProfileDistrictsFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<List<LocationOption>>, String> {
-  const ProfileDistrictsFamily._()
+  ProfileDistrictsFamily._()
     : super(
         retry: null,
         name: r'profileDistrictsProvider',
@@ -205,7 +205,7 @@ final class ProfileDistrictsFamily extends $Family
 }
 
 @ProviderFor(organizationsAndDepartments)
-const organizationsAndDepartmentsProvider =
+final organizationsAndDepartmentsProvider =
     OrganizationsAndDepartmentsFamily._();
 
 final class OrganizationsAndDepartmentsProvider
@@ -241,7 +241,7 @@ final class OrganizationsAndDepartmentsProvider
             List<ReferenceOption> organizations,
           })
         > {
-  const OrganizationsAndDepartmentsProvider._({
+  OrganizationsAndDepartmentsProvider._({
     required OrganizationsAndDepartmentsFamily super.from,
     required String super.argument,
   }) : super(
@@ -304,7 +304,7 @@ final class OrganizationsAndDepartmentsFamily extends $Family
           >,
           String
         > {
-  const OrganizationsAndDepartmentsFamily._()
+  OrganizationsAndDepartmentsFamily._()
     : super(
         retry: null,
         name: r'organizationsAndDepartmentsProvider',
@@ -321,7 +321,7 @@ final class OrganizationsAndDepartmentsFamily extends $Family
 }
 
 @ProviderFor(communities)
-const communitiesProvider = CommunitiesProvider._();
+final communitiesProvider = CommunitiesProvider._();
 
 final class CommunitiesProvider
     extends
@@ -333,7 +333,7 @@ final class CommunitiesProvider
     with
         $FutureModifier<List<ReferenceOption>>,
         $FutureProvider<List<ReferenceOption>> {
-  const CommunitiesProvider._()
+  CommunitiesProvider._()
     : super(
         from: null,
         argument: null,
@@ -365,7 +365,7 @@ String _$communitiesHash() => r'4eceed0f998a9f1adf8ba9d99c1330b78229466c';
 /// the sidebar reflects the new college/department.
 
 @ProviderFor(ChangeCollegeController)
-const changeCollegeControllerProvider = ChangeCollegeControllerProvider._();
+final changeCollegeControllerProvider = ChangeCollegeControllerProvider._();
 
 /// Submits the college-change request, then refreshes the main profile so
 /// the sidebar reflects the new college/department.
@@ -373,7 +373,7 @@ final class ChangeCollegeControllerProvider
     extends $AsyncNotifierProvider<ChangeCollegeController, void> {
   /// Submits the college-change request, then refreshes the main profile so
   /// the sidebar reflects the new college/department.
-  const ChangeCollegeControllerProvider._()
+  ChangeCollegeControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -402,8 +402,7 @@ abstract class _$ChangeCollegeController extends $AsyncNotifier<void> {
   FutureOr<void> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<void>, void>;
     final element =
         ref.element
@@ -413,6 +412,6 @@ abstract class _$ChangeCollegeController extends $AsyncNotifier<void> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, null);
+    return element.handleCreate(ref, build);
   }
 }

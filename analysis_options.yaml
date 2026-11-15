@@ -2,9 +2,11 @@
 # `flutter analyze` must pass with zero warnings before a PR (rules.md §7).
 include: package:very_good_analysis/analysis_options.yaml
 
+# riverpod_lint runs as a native analyzer plugin (Dart 3.10+); no custom_lint.
+plugins:
+  riverpod_lint: ^3.2.0
+
 analyzer:
-  plugins:
-    - custom_lint          # riverpod_lint
   exclude:
     # Generated artifacts — committed (rules.md §7) but not linted.
     - "**/*.g.dart"
@@ -27,12 +29,6 @@ analyzer:
     # generated `.g.dart` output — but the analyzer doesn't know freezed
     # constructor params count as "fields" for this check.
     invalid_annotation_target: ignore
-    # riverpod_lint 3.0.x only runs through the legacy custom_lint plugin
-    # entry above, which Dart 3.13 reports as deprecated. riverpod_lint
-    # >= 3.1.9 uses the new plugin system but requires riverpod_generator
-    # >= 4.0.1 (analyzer_buffer ^0.3.0 vs riverpod_generator 3.x's ^0.1.9).
-    # Remove this line when riverpod_generator is upgraded to 4.x.
-    analysis_options_deprecated_plugins: ignore
 
 linter:
   rules:

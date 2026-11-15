@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'calendar_session_dto.dart';
@@ -9,6 +9,7 @@ part of 'calendar_session_dto.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $CalendarSessionDtoCopyWith<CalendarSessionDto> get copyWith => _$CalendarSessio
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CalendarSessionDto&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.startsAt, startsAt) || other.startsAt == startsAt)&&(identical(other.endsAt, endsAt) || other.endsAt == endsAt)&&(identical(other.status, status) || other.status == status)&&(identical(other.mode, mode) || other.mode == mode)&&(identical(other.meetingLink, meetingLink) || other.meetingLink == meetingLink)&&(identical(other.venue, venue) || other.venue == venue)&&(identical(other.mentorName, mentorName) || other.mentorName == mentorName)&&(identical(other.menteeCount, menteeCount) || other.menteeCount == menteeCount));
+  final _this = this as CalendarSessionDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CalendarSessionDto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.startsAt, _this.startsAt) || other.startsAt == _this.startsAt)&&(identical(other.endsAt, _this.endsAt) || other.endsAt == _this.endsAt)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.mode, _this.mode) || other.mode == _this.mode)&&(identical(other.meetingLink, _this.meetingLink) || other.meetingLink == _this.meetingLink)&&(identical(other.venue, _this.venue) || other.venue == _this.venue)&&(identical(other.mentorName, _this.mentorName) || other.mentorName == _this.mentorName)&&(identical(other.menteeCount, _this.menteeCount) || other.menteeCount == _this.menteeCount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,startsAt,endsAt,status,mode,meetingLink,venue,mentorName,menteeCount);
+int get hashCode {
+  final _this = this as CalendarSessionDto;
+  return Object.hash(runtimeType,_this.id,_this.title,_this.startsAt,_this.endsAt,_this.status,_this.mode,_this.meetingLink,_this.venue,_this.mentorName,_this.menteeCount);
+}
 
 @override
 String toString() {
-  return 'CalendarSessionDto(id: $id, title: $title, startsAt: $startsAt, endsAt: $endsAt, status: $status, mode: $mode, meetingLink: $meetingLink, venue: $venue, mentorName: $mentorName, menteeCount: $menteeCount)';
+  final _this = this as CalendarSessionDto;
+  return 'CalendarSessionDto(id: ${_this.id}, title: ${_this.title}, startsAt: ${_this.startsAt}, endsAt: ${_this.endsAt}, status: ${_this.status}, mode: ${_this.mode}, meetingLink: ${_this.meetingLink}, venue: ${_this.venue}, mentorName: ${_this.mentorName}, menteeCount: ${_this.menteeCount})';
 }
 
 
@@ -66,7 +72,7 @@ class _$CalendarSessionDtoCopyWithImpl<$Res>
 /// Create a copy of CalendarSessionDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? startsAt = null,Object? endsAt = null,Object? status = null,Object? mode = freezed,Object? meetingLink = freezed,Object? venue = freezed,Object? mentorName = freezed,Object? menteeCount = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(CalendarSessionDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,startsAt: null == startsAt ? _self.startsAt : startsAt // ignore: cast_nullable_to_non_nullable
@@ -245,16 +251,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CalendarSessionDto&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.startsAt, startsAt) || other.startsAt == startsAt)&&(identical(other.endsAt, endsAt) || other.endsAt == endsAt)&&(identical(other.status, status) || other.status == status)&&(identical(other.mode, mode) || other.mode == mode)&&(identical(other.meetingLink, meetingLink) || other.meetingLink == meetingLink)&&(identical(other.venue, venue) || other.venue == venue)&&(identical(other.mentorName, mentorName) || other.mentorName == mentorName)&&(identical(other.menteeCount, menteeCount) || other.menteeCount == menteeCount));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CalendarSessionDto&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.startsAt, startsAt) || other.startsAt == startsAt)&&(identical(other.endsAt, endsAt) || other.endsAt == endsAt)&&(identical(other.status, status) || other.status == status)&&(identical(other.mode, mode) || other.mode == mode)&&(identical(other.meetingLink, meetingLink) || other.meetingLink == meetingLink)&&(identical(other.venue, venue) || other.venue == venue)&&(identical(other.mentorName, mentorName) || other.mentorName == mentorName)&&(identical(other.menteeCount, menteeCount) || other.menteeCount == menteeCount));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,startsAt,endsAt,status,mode,meetingLink,venue,mentorName,menteeCount);
+int get hashCode {
+    return Object.hash(runtimeType,id,title,startsAt,endsAt,status,mode,meetingLink,venue,mentorName,menteeCount);
+}
 
 @override
 String toString() {
-  return 'CalendarSessionDto(id: $id, title: $title, startsAt: $startsAt, endsAt: $endsAt, status: $status, mode: $mode, meetingLink: $meetingLink, venue: $venue, mentorName: $mentorName, menteeCount: $menteeCount)';
+    return 'CalendarSessionDto(id: $id, title: $title, startsAt: $startsAt, endsAt: $endsAt, status: $status, mode: $mode, meetingLink: $meetingLink, venue: $venue, mentorName: $mentorName, menteeCount: $menteeCount)';
 }
 
 

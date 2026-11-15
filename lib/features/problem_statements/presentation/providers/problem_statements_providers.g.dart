@@ -10,7 +10,7 @@ part of 'problem_statements_providers.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(problemStatementsRepository)
-const problemStatementsRepositoryProvider =
+final problemStatementsRepositoryProvider =
     ProblemStatementsRepositoryProvider._();
 
 final class ProblemStatementsRepositoryProvider
@@ -21,7 +21,7 @@ final class ProblemStatementsRepositoryProvider
           ProblemStatementsRepository
         >
     with $Provider<ProblemStatementsRepository> {
-  const ProblemStatementsRepositoryProvider._()
+  ProblemStatementsRepositoryProvider._()
     : super(
         from: null,
         argument: null,
@@ -62,7 +62,7 @@ String _$problemStatementsRepositoryHash() =>
 /// still open, page by page. Each search is kept for a while once seen.
 
 @ProviderFor(PsFeed)
-const psFeedProvider = PsFeedFamily._();
+final psFeedProvider = PsFeedFamily._();
 
 /// The published feed for a search (all when empty), optionally only those
 /// still open, page by page. Each search is kept for a while once seen.
@@ -70,7 +70,7 @@ final class PsFeedProvider
     extends $AsyncNotifierProvider<PsFeed, PagedState<ProblemStatement>> {
   /// The published feed for a search (all when empty), optionally only those
   /// still open, page by page. Each search is kept for a while once seen.
-  const PsFeedProvider._({
+  PsFeedProvider._({
     required PsFeedFamily super.from,
     required (String, bool) super.argument,
   }) : super(
@@ -120,7 +120,7 @@ final class PsFeedFamily extends $Family
           FutureOr<PagedState<ProblemStatement>>,
           (String, bool)
         > {
-  const PsFeedFamily._()
+  PsFeedFamily._()
     : super(
         retry: noRetry,
         name: r'psFeedProvider',
@@ -150,8 +150,7 @@ abstract class _$PsFeed extends $AsyncNotifier<PagedState<ProblemStatement>> {
   FutureOr<PagedState<ProblemStatement>> build(String search, bool openOnly);
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build(_$args.$1, _$args.$2);
+  WhenComplete runBuild() {
     final ref =
         this.ref
             as $Ref<
@@ -169,14 +168,14 @@ abstract class _$PsFeed extends $AsyncNotifier<PagedState<ProblemStatement>> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, () => build(_$args.$1, _$args.$2));
   }
 }
 
 /// What the learner is trying or has submitted to, newest first.
 
 @ProviderFor(psParticipating)
-const psParticipatingProvider = PsParticipatingProvider._();
+final psParticipatingProvider = PsParticipatingProvider._();
 
 /// What the learner is trying or has submitted to, newest first.
 
@@ -191,7 +190,7 @@ final class PsParticipatingProvider
         $FutureModifier<List<ProblemStatement>>,
         $FutureProvider<List<ProblemStatement>> {
   /// What the learner is trying or has submitted to, newest first.
-  const PsParticipatingProvider._()
+  PsParticipatingProvider._()
     : super(
         from: null,
         argument: null,
@@ -222,7 +221,7 @@ String _$psParticipatingHash() => r'5975c10aaadc67bf749aed01d0b7c117f53b524d';
 /// One statement.
 
 @ProviderFor(problemStatement)
-const problemStatementProvider = ProblemStatementFamily._();
+final problemStatementProvider = ProblemStatementFamily._();
 
 /// One statement.
 
@@ -235,7 +234,7 @@ final class ProblemStatementProvider
         >
     with $FutureModifier<ProblemStatement>, $FutureProvider<ProblemStatement> {
   /// One statement.
-  const ProblemStatementProvider._({
+  ProblemStatementProvider._({
     required ProblemStatementFamily super.from,
     required String super.argument,
   }) : super(
@@ -285,7 +284,7 @@ String _$problemStatementHash() => r'88f4db8821804b34d0473974353d05d0bcc7adb7';
 
 final class ProblemStatementFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<ProblemStatement>, String> {
-  const ProblemStatementFamily._()
+  ProblemStatementFamily._()
     : super(
         retry: noRetry,
         name: r'problemStatementProvider',
@@ -306,7 +305,7 @@ final class ProblemStatementFamily extends $Family
 /// The learner's own interaction with it (status and solution link).
 
 @ProviderFor(myPsParticipation)
-const myPsParticipationProvider = MyPsParticipationFamily._();
+final myPsParticipationProvider = MyPsParticipationFamily._();
 
 /// The learner's own interaction with it (status and solution link).
 
@@ -321,7 +320,7 @@ final class MyPsParticipationProvider
         $FutureModifier<MyPsParticipation>,
         $FutureProvider<MyPsParticipation> {
   /// The learner's own interaction with it (status and solution link).
-  const MyPsParticipationProvider._({
+  MyPsParticipationProvider._({
     required MyPsParticipationFamily super.from,
     required String super.argument,
   }) : super(
@@ -371,7 +370,7 @@ String _$myPsParticipationHash() => r'207e6bd9dae6db84bd6e7569744c17f977177093';
 
 final class MyPsParticipationFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<MyPsParticipation>, String> {
-  const MyPsParticipationFamily._()
+  MyPsParticipationFamily._()
     : super(
         retry: noRetry,
         name: r'myPsParticipationProvider',
@@ -394,7 +393,7 @@ final class MyPsParticipationFamily extends $Family
 /// interaction, the participating list and the feeds (their counts).
 
 @ProviderFor(PsActions)
-const psActionsProvider = PsActionsProvider._();
+final psActionsProvider = PsActionsProvider._();
 
 /// Try, leave, submit and withdraw: one notifier so the screen shows one
 /// busy / error state. Each success refreshes the statement, the learner's
@@ -403,7 +402,7 @@ final class PsActionsProvider extends $AsyncNotifierProvider<PsActions, void> {
   /// Try, leave, submit and withdraw: one notifier so the screen shows one
   /// busy / error state. Each success refreshes the statement, the learner's
   /// interaction, the participating list and the feeds (their counts).
-  const PsActionsProvider._()
+  PsActionsProvider._()
     : super(
         from: null,
         argument: null,
@@ -432,8 +431,7 @@ abstract class _$PsActions extends $AsyncNotifier<void> {
   FutureOr<void> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<void>, void>;
     final element =
         ref.element
@@ -443,6 +441,6 @@ abstract class _$PsActions extends $AsyncNotifier<void> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, null);
+    return element.handleCreate(ref, build);
   }
 }

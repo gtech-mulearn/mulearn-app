@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'issued_vc_subject_info_dto.dart';
@@ -9,6 +9,7 @@ part of 'issued_vc_subject_info_dto.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $IssuedVcSubjectInfoDtoCopyWith<IssuedVcSubjectInfoDto> get copyWith => _$Issued
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is IssuedVcSubjectInfoDto&&(identical(other.courseName, courseName) || other.courseName == courseName)&&(identical(other.credentialId, credentialId) || other.credentialId == credentialId)&&(identical(other.credentialType, credentialType) || other.credentialType == credentialType)&&(identical(other.did, did) || other.did == did)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.s3Url, s3Url) || other.s3Url == s3Url)&&(identical(other.templateId, templateId) || other.templateId == templateId)&&(identical(other.type, type) || other.type == type)&&(identical(other.completedDate, completedDate) || other.completedDate == completedDate)&&(identical(other.description, description) || other.description == description)&&(identical(other.email, email) || other.email == email));
+  final _this = this as IssuedVcSubjectInfoDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is IssuedVcSubjectInfoDto&&(identical(other.courseName, _this.courseName) || other.courseName == _this.courseName)&&(identical(other.credentialId, _this.credentialId) || other.credentialId == _this.credentialId)&&(identical(other.credentialType, _this.credentialType) || other.credentialType == _this.credentialType)&&(identical(other.did, _this.did) || other.did == _this.did)&&(identical(other.fullName, _this.fullName) || other.fullName == _this.fullName)&&(identical(other.s3Url, _this.s3Url) || other.s3Url == _this.s3Url)&&(identical(other.templateId, _this.templateId) || other.templateId == _this.templateId)&&(identical(other.type, _this.type) || other.type == _this.type)&&(identical(other.completedDate, _this.completedDate) || other.completedDate == _this.completedDate)&&(identical(other.description, _this.description) || other.description == _this.description)&&(identical(other.email, _this.email) || other.email == _this.email));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,courseName,credentialId,credentialType,did,fullName,s3Url,templateId,type,completedDate,description,email);
+int get hashCode {
+  final _this = this as IssuedVcSubjectInfoDto;
+  return Object.hash(runtimeType,_this.courseName,_this.credentialId,_this.credentialType,_this.did,_this.fullName,_this.s3Url,_this.templateId,_this.type,_this.completedDate,_this.description,_this.email);
+}
 
 @override
 String toString() {
-  return 'IssuedVcSubjectInfoDto(courseName: $courseName, credentialId: $credentialId, credentialType: $credentialType, did: $did, fullName: $fullName, s3Url: $s3Url, templateId: $templateId, type: $type, completedDate: $completedDate, description: $description, email: $email)';
+  final _this = this as IssuedVcSubjectInfoDto;
+  return 'IssuedVcSubjectInfoDto(courseName: ${_this.courseName}, credentialId: ${_this.credentialId}, credentialType: ${_this.credentialType}, did: ${_this.did}, fullName: ${_this.fullName}, s3Url: ${_this.s3Url}, templateId: ${_this.templateId}, type: ${_this.type}, completedDate: ${_this.completedDate}, description: ${_this.description}, email: ${_this.email})';
 }
 
 
@@ -66,7 +72,7 @@ class _$IssuedVcSubjectInfoDtoCopyWithImpl<$Res>
 /// Create a copy of IssuedVcSubjectInfoDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? courseName = null,Object? credentialId = null,Object? credentialType = null,Object? did = null,Object? fullName = null,Object? s3Url = null,Object? templateId = null,Object? type = null,Object? completedDate = freezed,Object? description = freezed,Object? email = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(IssuedVcSubjectInfoDto(
 courseName: null == courseName ? _self.courseName : courseName // ignore: cast_nullable_to_non_nullable
 as String,credentialId: null == credentialId ? _self.credentialId : credentialId // ignore: cast_nullable_to_non_nullable
 as String,credentialType: null == credentialType ? _self.credentialType : credentialType // ignore: cast_nullable_to_non_nullable
@@ -247,16 +253,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _IssuedVcSubjectInfoDto&&(identical(other.courseName, courseName) || other.courseName == courseName)&&(identical(other.credentialId, credentialId) || other.credentialId == credentialId)&&(identical(other.credentialType, credentialType) || other.credentialType == credentialType)&&(identical(other.did, did) || other.did == did)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.s3Url, s3Url) || other.s3Url == s3Url)&&(identical(other.templateId, templateId) || other.templateId == templateId)&&(identical(other.type, type) || other.type == type)&&(identical(other.completedDate, completedDate) || other.completedDate == completedDate)&&(identical(other.description, description) || other.description == description)&&(identical(other.email, email) || other.email == email));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _IssuedVcSubjectInfoDto&&(identical(other.courseName, courseName) || other.courseName == courseName)&&(identical(other.credentialId, credentialId) || other.credentialId == credentialId)&&(identical(other.credentialType, credentialType) || other.credentialType == credentialType)&&(identical(other.did, did) || other.did == did)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.s3Url, s3Url) || other.s3Url == s3Url)&&(identical(other.templateId, templateId) || other.templateId == templateId)&&(identical(other.type, type) || other.type == type)&&(identical(other.completedDate, completedDate) || other.completedDate == completedDate)&&(identical(other.description, description) || other.description == description)&&(identical(other.email, email) || other.email == email));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,courseName,credentialId,credentialType,did,fullName,s3Url,templateId,type,completedDate,description,email);
+int get hashCode {
+    return Object.hash(runtimeType,courseName,credentialId,credentialType,did,fullName,s3Url,templateId,type,completedDate,description,email);
+}
 
 @override
 String toString() {
-  return 'IssuedVcSubjectInfoDto(courseName: $courseName, credentialId: $credentialId, credentialType: $credentialType, did: $did, fullName: $fullName, s3Url: $s3Url, templateId: $templateId, type: $type, completedDate: $completedDate, description: $description, email: $email)';
+    return 'IssuedVcSubjectInfoDto(courseName: $courseName, credentialId: $credentialId, credentialType: $credentialType, did: $did, fullName: $fullName, s3Url: $s3Url, templateId: $templateId, type: $type, completedDate: $completedDate, description: $description, email: $email)';
 }
 
 

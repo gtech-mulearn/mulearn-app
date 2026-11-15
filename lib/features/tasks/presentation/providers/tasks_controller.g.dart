@@ -10,7 +10,7 @@ part of 'tasks_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(tasksRemoteDataSource)
-const tasksRemoteDataSourceProvider = TasksRemoteDataSourceProvider._();
+final tasksRemoteDataSourceProvider = TasksRemoteDataSourceProvider._();
 
 final class TasksRemoteDataSourceProvider
     extends
@@ -20,7 +20,7 @@ final class TasksRemoteDataSourceProvider
           TasksRemoteDataSource
         >
     with $Provider<TasksRemoteDataSource> {
-  const TasksRemoteDataSourceProvider._()
+  TasksRemoteDataSourceProvider._()
     : super(
         from: null,
         argument: null,
@@ -58,13 +58,13 @@ String _$tasksRemoteDataSourceHash() =>
     r'dcd67a5bfe07896be9b04ae88d60ecb5e27854d8';
 
 @ProviderFor(tasksRepository)
-const tasksRepositoryProvider = TasksRepositoryProvider._();
+final tasksRepositoryProvider = TasksRepositoryProvider._();
 
 final class TasksRepositoryProvider
     extends
         $FunctionalProvider<TasksRepository, TasksRepository, TasksRepository>
     with $Provider<TasksRepository> {
-  const TasksRepositoryProvider._()
+  TasksRepositoryProvider._()
     : super(
         from: null,
         argument: null,
@@ -102,7 +102,7 @@ String _$tasksRepositoryHash() => r'89827fb8aac3c7cbed3fb8acfb022138b45e97c4';
 /// Flat, filterable catalog of every task across every level (rules.md §4).
 
 @ProviderFor(tasksController)
-const tasksControllerProvider = TasksControllerProvider._();
+final tasksControllerProvider = TasksControllerProvider._();
 
 /// Flat, filterable catalog of every task across every level (rules.md §4).
 
@@ -117,7 +117,7 @@ final class TasksControllerProvider
         $FutureModifier<List<TaskCatalogItem>>,
         $FutureProvider<List<TaskCatalogItem>> {
   /// Flat, filterable catalog of every task across every level (rules.md §4).
-  const TasksControllerProvider._()
+  TasksControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -149,7 +149,7 @@ String _$tasksControllerHash() => r'5f2318301cc0b2adad25f679603444ec00158d01';
 /// "you're here" marker; null when the profile has none.
 
 @ProviderFor(myTaskLevel)
-const myTaskLevelProvider = MyTaskLevelProvider._();
+final myTaskLevelProvider = MyTaskLevelProvider._();
 
 /// The signed-in user's level name (`"lvl4"`) for the Tasks title and the
 /// "you're here" marker; null when the profile has none.
@@ -159,7 +159,7 @@ final class MyTaskLevelProvider
     with $FutureModifier<String?>, $FutureProvider<String?> {
   /// The signed-in user's level name (`"lvl4"`) for the Tasks title and the
   /// "you're here" marker; null when the profile has none.
-  const MyTaskLevelProvider._()
+  MyTaskLevelProvider._()
     : super(
         from: null,
         argument: null,

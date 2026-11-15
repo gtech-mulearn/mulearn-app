@@ -10,7 +10,7 @@ part of 'auth_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(authRemoteDataSource)
-const authRemoteDataSourceProvider = AuthRemoteDataSourceProvider._();
+final authRemoteDataSourceProvider = AuthRemoteDataSourceProvider._();
 
 final class AuthRemoteDataSourceProvider
     extends
@@ -20,7 +20,7 @@ final class AuthRemoteDataSourceProvider
           AuthRemoteDataSource
         >
     with $Provider<AuthRemoteDataSource> {
-  const AuthRemoteDataSourceProvider._()
+  AuthRemoteDataSourceProvider._()
     : super(
         from: null,
         argument: null,
@@ -61,7 +61,7 @@ String _$authRemoteDataSourceHash() =>
 /// impl here via DI (rules.md §2/§5) so tests can override it.
 
 @ProviderFor(authRepository)
-const authRepositoryProvider = AuthRepositoryProvider._();
+final authRepositoryProvider = AuthRepositoryProvider._();
 
 /// Presentation depends on the [AuthRepository] contract, wired to the concrete
 /// impl here via DI (rules.md §2/§5) so tests can override it.
@@ -71,7 +71,7 @@ final class AuthRepositoryProvider
     with $Provider<AuthRepository> {
   /// Presentation depends on the [AuthRepository] contract, wired to the concrete
   /// impl here via DI (rules.md §2/§5) so tests can override it.
-  const AuthRepositoryProvider._()
+  AuthRepositoryProvider._()
     : super(
         from: null,
         argument: null,
@@ -107,7 +107,7 @@ final class AuthRepositoryProvider
 String _$authRepositoryHash() => r'b692f41f48a45408bfa74b9900c3932eda1b3e2a';
 
 @ProviderFor(googleNativeSignInDataSource)
-const googleNativeSignInDataSourceProvider =
+final googleNativeSignInDataSourceProvider =
     GoogleNativeSignInDataSourceProvider._();
 
 final class GoogleNativeSignInDataSourceProvider
@@ -118,7 +118,7 @@ final class GoogleNativeSignInDataSourceProvider
           GoogleNativeSignInDataSource
         >
     with $Provider<GoogleNativeSignInDataSource> {
-  const GoogleNativeSignInDataSourceProvider._()
+  GoogleNativeSignInDataSourceProvider._()
     : super(
         from: null,
         argument: null,
@@ -156,7 +156,7 @@ String _$googleNativeSignInDataSourceHash() =>
     r'8c451a213a48ea7823b90e2537452e68de69008a';
 
 @ProviderFor(appleNativeSignInDataSource)
-const appleNativeSignInDataSourceProvider =
+final appleNativeSignInDataSourceProvider =
     AppleNativeSignInDataSourceProvider._();
 
 final class AppleNativeSignInDataSourceProvider
@@ -167,7 +167,7 @@ final class AppleNativeSignInDataSourceProvider
           AppleNativeSignInDataSource
         >
     with $Provider<AppleNativeSignInDataSource> {
-  const AppleNativeSignInDataSourceProvider._()
+  AppleNativeSignInDataSourceProvider._()
     : super(
         from: null,
         argument: null,
@@ -215,7 +215,7 @@ String _$appleNativeSignInDataSourceHash() =>
 /// The coarse routing signal lives in the core [AppAuthController].
 
 @ProviderFor(AuthController)
-const authControllerProvider = AuthControllerProvider._();
+final authControllerProvider = AuthControllerProvider._();
 
 /// Drives the sign-in / sign-out actions. Exposes `AsyncValue<void>` so
 /// screens get automatic loading/error states via [AsyncValue.guard]
@@ -237,7 +237,7 @@ final class AuthControllerProvider
   /// `ref.listen(authControllerProvider, ...)` for a shared snackbar.
   ///
   /// The coarse routing signal lives in the core [AppAuthController].
-  const AuthControllerProvider._()
+  AuthControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -272,8 +272,7 @@ abstract class _$AuthController extends $AsyncNotifier<void> {
   FutureOr<void> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<void>, void>;
     final element =
         ref.element
@@ -283,6 +282,6 @@ abstract class _$AuthController extends $AsyncNotifier<void> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, null);
+    return element.handleCreate(ref, build);
   }
 }

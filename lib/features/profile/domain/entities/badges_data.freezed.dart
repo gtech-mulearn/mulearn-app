@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'badges_data.dart';
@@ -9,6 +9,7 @@ part of 'badges_data.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $BadgesDataCopyWith<BadgesData> get copyWith => _$BadgesDataCopyWithImpl<BadgesD
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is BadgesData&&(identical(other.fullName, fullName) || other.fullName == fullName)&&const DeepCollectionEquality().equals(other.completedTasks, completedTasks));
+  final _this = this as BadgesData;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is BadgesData&&(identical(other.fullName, _this.fullName) || other.fullName == _this.fullName)&&const DeepCollectionEquality().equals(other.completedTasks, _this.completedTasks));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,fullName,const DeepCollectionEquality().hash(completedTasks));
+int get hashCode {
+  final _this = this as BadgesData;
+  return Object.hash(runtimeType,_this.fullName,const DeepCollectionEquality().hash(_this.completedTasks));
+}
 
 @override
 String toString() {
-  return 'BadgesData(fullName: $fullName, completedTasks: $completedTasks)';
+  final _this = this as BadgesData;
+  return 'BadgesData(fullName: ${_this.fullName}, completedTasks: ${_this.completedTasks})';
 }
 
 
@@ -63,7 +69,7 @@ class _$BadgesDataCopyWithImpl<$Res>
 /// Create a copy of BadgesData
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? fullName = null,Object? completedTasks = null,}) {
-  return _then(_self.copyWith(
+  return _then(BadgesData(
 fullName: null == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
 as String,completedTasks: null == completedTasks ? _self.completedTasks : completedTasks // ignore: cast_nullable_to_non_nullable
 as List<String>,
@@ -207,7 +213,7 @@ return $default(_that.fullName,_that.completedTasks);case _:
 
 
 class _BadgesData implements BadgesData {
-  const _BadgesData({required this.fullName, final  List<String> completedTasks = const []}): _completedTasks = completedTasks;
+  const _BadgesData({required this.fullName,  List<String> completedTasks = const []}): _completedTasks = completedTasks;
   
 
 @override final  String fullName;
@@ -229,16 +235,18 @@ _$BadgesDataCopyWith<_BadgesData> get copyWith => __$BadgesDataCopyWithImpl<_Bad
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _BadgesData&&(identical(other.fullName, fullName) || other.fullName == fullName)&&const DeepCollectionEquality().equals(other._completedTasks, _completedTasks));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _BadgesData&&(identical(other.fullName, fullName) || other.fullName == fullName)&&const DeepCollectionEquality().equals(other.completedTasks, _completedTasks));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,fullName,const DeepCollectionEquality().hash(_completedTasks));
+int get hashCode {
+    return Object.hash(runtimeType,fullName,const DeepCollectionEquality().hash(_completedTasks));
+}
 
 @override
 String toString() {
-  return 'BadgesData(fullName: $fullName, completedTasks: $completedTasks)';
+    return 'BadgesData(fullName: $fullName, completedTasks: $completedTasks)';
 }
 
 

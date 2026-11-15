@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'user_preferences.dart';
@@ -9,6 +9,7 @@ part of 'user_preferences.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $UserPreferencesCopyWith<UserPreferences> get copyWith => _$UserPreferencesCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserPreferences&&(identical(other.interestedInWork, interestedInWork) || other.interestedInWork == interestedInWork)&&(identical(other.interestedInGigWork, interestedInGigWork) || other.interestedInGigWork == interestedInGigWork)&&const DeepCollectionEquality().equals(other.domains, domains)&&const DeepCollectionEquality().equals(other.endgoals, endgoals)&&const DeepCollectionEquality().equals(other.orgs, orgs));
+  final _this = this as UserPreferences;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserPreferences&&(identical(other.interestedInWork, _this.interestedInWork) || other.interestedInWork == _this.interestedInWork)&&(identical(other.interestedInGigWork, _this.interestedInGigWork) || other.interestedInGigWork == _this.interestedInGigWork)&&const DeepCollectionEquality().equals(other.domains, _this.domains)&&const DeepCollectionEquality().equals(other.endgoals, _this.endgoals)&&const DeepCollectionEquality().equals(other.orgs, _this.orgs));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,interestedInWork,interestedInGigWork,const DeepCollectionEquality().hash(domains),const DeepCollectionEquality().hash(endgoals),const DeepCollectionEquality().hash(orgs));
+int get hashCode {
+  final _this = this as UserPreferences;
+  return Object.hash(runtimeType,_this.interestedInWork,_this.interestedInGigWork,const DeepCollectionEquality().hash(_this.domains),const DeepCollectionEquality().hash(_this.endgoals),const DeepCollectionEquality().hash(_this.orgs));
+}
 
 @override
 String toString() {
-  return 'UserPreferences(interestedInWork: $interestedInWork, interestedInGigWork: $interestedInGigWork, domains: $domains, endgoals: $endgoals, orgs: $orgs)';
+  final _this = this as UserPreferences;
+  return 'UserPreferences(interestedInWork: ${_this.interestedInWork}, interestedInGigWork: ${_this.interestedInGigWork}, domains: ${_this.domains}, endgoals: ${_this.endgoals}, orgs: ${_this.orgs})';
 }
 
 
@@ -63,7 +69,7 @@ class _$UserPreferencesCopyWithImpl<$Res>
 /// Create a copy of UserPreferences
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? interestedInWork = null,Object? interestedInGigWork = null,Object? domains = freezed,Object? endgoals = freezed,Object? orgs = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(UserPreferences(
 interestedInWork: null == interestedInWork ? _self.interestedInWork : interestedInWork // ignore: cast_nullable_to_non_nullable
 as bool,interestedInGigWork: null == interestedInGigWork ? _self.interestedInGigWork : interestedInGigWork // ignore: cast_nullable_to_non_nullable
 as bool,domains: freezed == domains ? _self.domains : domains // ignore: cast_nullable_to_non_nullable
@@ -210,7 +216,7 @@ return $default(_that.interestedInWork,_that.interestedInGigWork,_that.domains,_
 
 
 class _UserPreferences implements UserPreferences {
-  const _UserPreferences({required this.interestedInWork, required this.interestedInGigWork, final  List<String>? domains, final  List<String>? endgoals, final  List<OrgRef>? orgs}): _domains = domains,_endgoals = endgoals,_orgs = orgs;
+  const _UserPreferences({required this.interestedInWork, required this.interestedInGigWork,  List<String>? domains,  List<String>? endgoals,  List<OrgRef>? orgs}): _domains = domains,_endgoals = endgoals,_orgs = orgs;
   
 
 @override final  bool interestedInWork;
@@ -253,16 +259,18 @@ _$UserPreferencesCopyWith<_UserPreferences> get copyWith => __$UserPreferencesCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserPreferences&&(identical(other.interestedInWork, interestedInWork) || other.interestedInWork == interestedInWork)&&(identical(other.interestedInGigWork, interestedInGigWork) || other.interestedInGigWork == interestedInGigWork)&&const DeepCollectionEquality().equals(other._domains, _domains)&&const DeepCollectionEquality().equals(other._endgoals, _endgoals)&&const DeepCollectionEquality().equals(other._orgs, _orgs));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserPreferences&&(identical(other.interestedInWork, interestedInWork) || other.interestedInWork == interestedInWork)&&(identical(other.interestedInGigWork, interestedInGigWork) || other.interestedInGigWork == interestedInGigWork)&&const DeepCollectionEquality().equals(other.domains, _domains)&&const DeepCollectionEquality().equals(other.endgoals, _endgoals)&&const DeepCollectionEquality().equals(other.orgs, _orgs));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,interestedInWork,interestedInGigWork,const DeepCollectionEquality().hash(_domains),const DeepCollectionEquality().hash(_endgoals),const DeepCollectionEquality().hash(_orgs));
+int get hashCode {
+    return Object.hash(runtimeType,interestedInWork,interestedInGigWork,const DeepCollectionEquality().hash(_domains),const DeepCollectionEquality().hash(_endgoals),const DeepCollectionEquality().hash(_orgs));
+}
 
 @override
 String toString() {
-  return 'UserPreferences(interestedInWork: $interestedInWork, interestedInGigWork: $interestedInGigWork, domains: $domains, endgoals: $endgoals, orgs: $orgs)';
+    return 'UserPreferences(interestedInWork: $interestedInWork, interestedInGigWork: $interestedInGigWork, domains: $domains, endgoals: $endgoals, orgs: $orgs)';
 }
 
 

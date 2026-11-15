@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'user_search_org_dto.dart';
@@ -9,6 +9,7 @@ part of 'user_search_org_dto.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $UserSearchOrgDtoCopyWith<UserSearchOrgDto> get copyWith => _$UserSearchOrgDtoCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserSearchOrgDto&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.code, code) || other.code == code)&&(identical(other.orgType, orgType) || other.orgType == orgType));
+  final _this = this as UserSearchOrgDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserSearchOrgDto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.code, _this.code) || other.code == _this.code)&&(identical(other.orgType, _this.orgType) || other.orgType == _this.orgType));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,code,orgType);
+int get hashCode {
+  final _this = this as UserSearchOrgDto;
+  return Object.hash(runtimeType,_this.id,_this.title,_this.code,_this.orgType);
+}
 
 @override
 String toString() {
-  return 'UserSearchOrgDto(id: $id, title: $title, code: $code, orgType: $orgType)';
+  final _this = this as UserSearchOrgDto;
+  return 'UserSearchOrgDto(id: ${_this.id}, title: ${_this.title}, code: ${_this.code}, orgType: ${_this.orgType})';
 }
 
 
@@ -66,7 +72,7 @@ class _$UserSearchOrgDtoCopyWithImpl<$Res>
 /// Create a copy of UserSearchOrgDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? code = freezed,Object? orgType = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(UserSearchOrgDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,code: freezed == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
@@ -233,16 +239,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserSearchOrgDto&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.code, code) || other.code == code)&&(identical(other.orgType, orgType) || other.orgType == orgType));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserSearchOrgDto&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.code, code) || other.code == code)&&(identical(other.orgType, orgType) || other.orgType == orgType));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,code,orgType);
+int get hashCode {
+    return Object.hash(runtimeType,id,title,code,orgType);
+}
 
 @override
 String toString() {
-  return 'UserSearchOrgDto(id: $id, title: $title, code: $code, orgType: $orgType)';
+    return 'UserSearchOrgDto(id: $id, title: $title, code: $code, orgType: $orgType)';
 }
 
 

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'capabilities.dart';
@@ -9,6 +9,7 @@ part of 'capabilities.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $CapabilitiesCopyWith<Capabilities> get copyWith => _$CapabilitiesCopyWithImpl<C
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Capabilities&&(identical(other.isLearner, isLearner) || other.isLearner == isLearner)&&(identical(other.isMentor, isMentor) || other.isMentor == isMentor)&&(identical(other.isMentorApproved, isMentorApproved) || other.isMentorApproved == isMentorApproved)&&(identical(other.isEnabler, isEnabler) || other.isEnabler == isEnabler)&&(identical(other.isCampusLead, isCampusLead) || other.isCampusLead == isCampusLead)&&(identical(other.isCompany, isCompany) || other.isCompany == isCompany)&&(identical(other.needsDiscord, needsDiscord) || other.needsDiscord == needsDiscord));
+  final _this = this as Capabilities;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Capabilities&&(identical(other.isLearner, _this.isLearner) || other.isLearner == _this.isLearner)&&(identical(other.isMentor, _this.isMentor) || other.isMentor == _this.isMentor)&&(identical(other.isMentorApproved, _this.isMentorApproved) || other.isMentorApproved == _this.isMentorApproved)&&(identical(other.isEnabler, _this.isEnabler) || other.isEnabler == _this.isEnabler)&&(identical(other.isCampusLead, _this.isCampusLead) || other.isCampusLead == _this.isCampusLead)&&(identical(other.isCompany, _this.isCompany) || other.isCompany == _this.isCompany)&&(identical(other.needsDiscord, _this.needsDiscord) || other.needsDiscord == _this.needsDiscord));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isLearner,isMentor,isMentorApproved,isEnabler,isCampusLead,isCompany,needsDiscord);
+int get hashCode {
+  final _this = this as Capabilities;
+  return Object.hash(runtimeType,_this.isLearner,_this.isMentor,_this.isMentorApproved,_this.isEnabler,_this.isCampusLead,_this.isCompany,_this.needsDiscord);
+}
 
 @override
 String toString() {
-  return 'Capabilities(isLearner: $isLearner, isMentor: $isMentor, isMentorApproved: $isMentorApproved, isEnabler: $isEnabler, isCampusLead: $isCampusLead, isCompany: $isCompany, needsDiscord: $needsDiscord)';
+  final _this = this as Capabilities;
+  return 'Capabilities(isLearner: ${_this.isLearner}, isMentor: ${_this.isMentor}, isMentorApproved: ${_this.isMentorApproved}, isEnabler: ${_this.isEnabler}, isCampusLead: ${_this.isCampusLead}, isCompany: ${_this.isCompany}, needsDiscord: ${_this.needsDiscord})';
 }
 
 
@@ -63,7 +69,7 @@ class _$CapabilitiesCopyWithImpl<$Res>
 /// Create a copy of Capabilities
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? isLearner = null,Object? isMentor = null,Object? isMentorApproved = null,Object? isEnabler = null,Object? isCampusLead = null,Object? isCompany = null,Object? needsDiscord = null,}) {
-  return _then(_self.copyWith(
+  return _then(Capabilities(
 isLearner: null == isLearner ? _self.isLearner : isLearner // ignore: cast_nullable_to_non_nullable
 as bool,isMentor: null == isMentor ? _self.isMentor : isMentor // ignore: cast_nullable_to_non_nullable
 as bool,isMentorApproved: null == isMentorApproved ? _self.isMentorApproved : isMentorApproved // ignore: cast_nullable_to_non_nullable
@@ -233,16 +239,18 @@ _$CapabilitiesCopyWith<_Capabilities> get copyWith => __$CapabilitiesCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Capabilities&&(identical(other.isLearner, isLearner) || other.isLearner == isLearner)&&(identical(other.isMentor, isMentor) || other.isMentor == isMentor)&&(identical(other.isMentorApproved, isMentorApproved) || other.isMentorApproved == isMentorApproved)&&(identical(other.isEnabler, isEnabler) || other.isEnabler == isEnabler)&&(identical(other.isCampusLead, isCampusLead) || other.isCampusLead == isCampusLead)&&(identical(other.isCompany, isCompany) || other.isCompany == isCompany)&&(identical(other.needsDiscord, needsDiscord) || other.needsDiscord == needsDiscord));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Capabilities&&(identical(other.isLearner, isLearner) || other.isLearner == isLearner)&&(identical(other.isMentor, isMentor) || other.isMentor == isMentor)&&(identical(other.isMentorApproved, isMentorApproved) || other.isMentorApproved == isMentorApproved)&&(identical(other.isEnabler, isEnabler) || other.isEnabler == isEnabler)&&(identical(other.isCampusLead, isCampusLead) || other.isCampusLead == isCampusLead)&&(identical(other.isCompany, isCompany) || other.isCompany == isCompany)&&(identical(other.needsDiscord, needsDiscord) || other.needsDiscord == needsDiscord));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isLearner,isMentor,isMentorApproved,isEnabler,isCampusLead,isCompany,needsDiscord);
+int get hashCode {
+    return Object.hash(runtimeType,isLearner,isMentor,isMentorApproved,isEnabler,isCampusLead,isCompany,needsDiscord);
+}
 
 @override
 String toString() {
-  return 'Capabilities(isLearner: $isLearner, isMentor: $isMentor, isMentorApproved: $isMentorApproved, isEnabler: $isEnabler, isCampusLead: $isCampusLead, isCompany: $isCompany, needsDiscord: $needsDiscord)';
+    return 'Capabilities(isLearner: $isLearner, isMentor: $isMentor, isMentorApproved: $isMentorApproved, isEnabler: $isEnabler, isCampusLead: $isCampusLead, isCompany: $isCompany, needsDiscord: $needsDiscord)';
 }
 
 

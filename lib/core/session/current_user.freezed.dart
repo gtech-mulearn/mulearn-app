@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'current_user.dart';
@@ -9,6 +9,7 @@ part of 'current_user.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $CurrentUserCopyWith<CurrentUser> get copyWith => _$CurrentUserCopyWithImpl<Curr
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CurrentUser&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&const DeepCollectionEquality().equals(other.roles, roles)&&(identical(other.existInGuild, existInGuild) || other.existInGuild == existInGuild)&&(identical(other.profilePic, profilePic) || other.profilePic == profilePic)&&(identical(other.company, company) || other.company == company));
+  final _this = this as CurrentUser;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CurrentUser&&(identical(other.muid, _this.muid) || other.muid == _this.muid)&&(identical(other.fullName, _this.fullName) || other.fullName == _this.fullName)&&const DeepCollectionEquality().equals(other.roles, _this.roles)&&(identical(other.existInGuild, _this.existInGuild) || other.existInGuild == _this.existInGuild)&&(identical(other.profilePic, _this.profilePic) || other.profilePic == _this.profilePic)&&(identical(other.company, _this.company) || other.company == _this.company));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,muid,fullName,const DeepCollectionEquality().hash(roles),existInGuild,profilePic,company);
+int get hashCode {
+  final _this = this as CurrentUser;
+  return Object.hash(runtimeType,_this.muid,_this.fullName,const DeepCollectionEquality().hash(_this.roles),_this.existInGuild,_this.profilePic,_this.company);
+}
 
 @override
 String toString() {
-  return 'CurrentUser(muid: $muid, fullName: $fullName, roles: $roles, existInGuild: $existInGuild, profilePic: $profilePic, company: $company)';
+  final _this = this as CurrentUser;
+  return 'CurrentUser(muid: ${_this.muid}, fullName: ${_this.fullName}, roles: ${_this.roles}, existInGuild: ${_this.existInGuild}, profilePic: ${_this.profilePic}, company: ${_this.company})';
 }
 
 
@@ -63,7 +69,7 @@ class _$CurrentUserCopyWithImpl<$Res>
 /// Create a copy of CurrentUser
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? muid = null,Object? fullName = null,Object? roles = null,Object? existInGuild = null,Object? profilePic = freezed,Object? company = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(CurrentUser(
 muid: null == muid ? _self.muid : muid // ignore: cast_nullable_to_non_nullable
 as String,fullName: null == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
 as String,roles: null == roles ? _self.roles : roles // ignore: cast_nullable_to_non_nullable
@@ -211,7 +217,7 @@ return $default(_that.muid,_that.fullName,_that.roles,_that.existInGuild,_that.p
 
 
 class _CurrentUser implements CurrentUser {
-  const _CurrentUser({required this.muid, required this.fullName, final  List<String> roles = const [], this.existInGuild = false, this.profilePic, this.company}): _roles = roles;
+  const _CurrentUser({required this.muid, required this.fullName,  List<String> roles = const [], this.existInGuild = false, this.profilePic, this.company}): _roles = roles;
   
 
 @override final  String muid;
@@ -237,16 +243,18 @@ _$CurrentUserCopyWith<_CurrentUser> get copyWith => __$CurrentUserCopyWithImpl<_
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CurrentUser&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&const DeepCollectionEquality().equals(other._roles, _roles)&&(identical(other.existInGuild, existInGuild) || other.existInGuild == existInGuild)&&(identical(other.profilePic, profilePic) || other.profilePic == profilePic)&&(identical(other.company, company) || other.company == company));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CurrentUser&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&const DeepCollectionEquality().equals(other.roles, _roles)&&(identical(other.existInGuild, existInGuild) || other.existInGuild == existInGuild)&&(identical(other.profilePic, profilePic) || other.profilePic == profilePic)&&(identical(other.company, company) || other.company == company));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,muid,fullName,const DeepCollectionEquality().hash(_roles),existInGuild,profilePic,company);
+int get hashCode {
+    return Object.hash(runtimeType,muid,fullName,const DeepCollectionEquality().hash(_roles),existInGuild,profilePic,company);
+}
 
 @override
 String toString() {
-  return 'CurrentUser(muid: $muid, fullName: $fullName, roles: $roles, existInGuild: $existInGuild, profilePic: $profilePic, company: $company)';
+    return 'CurrentUser(muid: $muid, fullName: $fullName, roles: $roles, existInGuild: $existInGuild, profilePic: $profilePic, company: $company)';
 }
 
 
