@@ -8,7 +8,14 @@ import 'package:mulearn_app/core/design_system/tokens/mu_tokens.g.dart';
 /// ring while focused.
 class MuSearchField extends StatefulWidget {
   /// A search field; [onChanged] gets every edit, clearing included.
-  const MuSearchField({required this.hint, required this.onChanged, this.controller, super.key});
+  const MuSearchField({
+    required this.hint,
+    required this.onChanged,
+    this.controller,
+    this.onSubmitted,
+    this.autofocus = false,
+    super.key,
+  });
 
   /// Placeholder, e.g. "Search title, hashtag, IG…".
   final String hint;
@@ -18,6 +25,12 @@ class MuSearchField extends StatefulWidget {
 
   /// Optional controller; the field makes its own otherwise.
   final TextEditingController? controller;
+
+  /// The keyboard's search key.
+  final ValueChanged<String>? onSubmitted;
+
+  /// Focus (and raise the keyboard) on open.
+  final bool autofocus;
 
   @override
   State<MuSearchField> createState() => _MuSearchFieldState();
@@ -79,6 +92,8 @@ class _MuSearchFieldState extends State<MuSearchField> {
                 controller: _controller,
                 focusNode: _focus,
                 onChanged: widget.onChanged,
+                onSubmitted: widget.onSubmitted,
+                autofocus: widget.autofocus,
                 textInputAction: TextInputAction.search,
                 textAlignVertical: TextAlignVertical.center,
                 // A single tight line so text and placeholder sit on the

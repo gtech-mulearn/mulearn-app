@@ -1,18 +1,21 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
-import 'package:mulearn_app/core/theme/mu_space.dart';
-import 'package:mulearn_app/core/theme/mulearn_colors.dart';
-import 'package:mulearn_app/core/widgets/mu_empty_state.dart';
 import 'package:mulearn_app/core/widgets/mu_state_display.dart';
+import 'package:mulearn_app/features/search/domain/entities/user_search_result.dart';
 import 'package:mulearn_app/features/search/presentation/providers/search_controller.dart';
-import 'package:mulearn_app/features/search/presentation/widgets/user_search_result_tile.dart';
 
-/// Find users or mentors by name/MUID — mirrors the reference dashboard's
-/// search page.
+enum _Who { people, mentors }
+
+/// Find people or mentors by name or muid, like the dashboard's search
+/// page: the search field opens focused, People / Mentors narrows it, and
+/// results are rows with their karma; each opens the public profile.
 class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({super.key});
 
@@ -20,14 +23,10 @@ class SearchScreen extends ConsumerStatefulWidget {
   ConsumerState<SearchScreen> createState() => _SearchScreenState();
 }
 
-class _SearchScreenState extends ConsumerState<SearchScreen>
-    with SingleTickerProviderStateMixin {
-  late final _tabController = TabController(length: 2, vsync: this)
-    ..addListener(_onTabChanged);
+class _SearchScreenState extends ConsumerState<SearchScreen> {
   final _queryController = TextEditingController();
   final _scrollController = ScrollController();
-
-  String get _role => _tabController.index == 1 ? 'mentor' : '';
+  _Who _who = _Who.people;
 
   @override
   void initState() {
@@ -35,27 +34,22 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
     _scrollController.addListener(_onScroll);
   }
 
-  void _onTabChanged() {
-    if (_tabController.indexIsChanging) return;
-    _runSearch();
-  }
-
   void _onScroll() {
-    if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent - 200) {
-      ref.read(searchControllerProvider.notifier).loadMore();
+    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
+      unawaited(ref.read(searchControllerProvider.notifier).loadMore());
     }
   }
 
   void _runSearch() {
-    ref
-        .read(searchControllerProvider.notifier)
-        .search(_queryController.text, role: _role.isEmpty ? null : _role);
+    unawaited(
+      ref
+          .read(searchControllerProvider.notifier)
+          .search(_queryController.text, role: _who == _Who.mentors ? 'mentor' : null),
+    );
   }
 
   @override
   void dispose() {
-    _tabController.dispose();
     _queryController.dispose();
     _scrollController.dispose();
     super.dispose();
@@ -63,90 +57,140 @@ class _SearchScreenState extends ConsumerState<SearchScreen>
 
   @override
   Widget build(BuildContext context) {
+    final mu = context.mu;
+    final c = mu.colors;
     final resultsState = ref.watch(searchControllerProvider);
+    final query = _queryController.text.trim();
 
     return Scaffold(
-      backgroundColor: MuColors.canvas,
-      appBar: AppBar(
-        title: const Text('Search'),
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(text: 'Users'),
-            Tab(text: 'Mentors'),
+      backgroundColor: c.chalk,
+      body: SafeArea(
+        bottom: false,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(MuSpacing.space3, MuSpacing.space2, MuSpacing.space5, 0),
+              child: Row(
+                children: [
+                  MuIconButton(
+                    icon: LucideIcons.arrowLeft,
+                    tooltip: 'Back',
+                    onPressed: () => Navigator.of(context).maybePop(),
+                  ),
+                  const SizedBox(width: MuSpacing.space1),
+                  Expanded(
+                    child: MuSearchField(
+                      controller: _queryController,
+                      hint: 'Name or muid',
+                      autofocus: true,
+                      onChanged: (_) => setState(() {}),
+                      onSubmitted: (_) => _runSearch(),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space3, MuSpacing.space5, 0),
+              child: MuSegmented<_Who>(
+                values: _Who.values,
+                selected: _who,
+                label: (w) => w == _Who.people ? 'People' : 'Mentors',
+                onChanged: (w) {
+                  setState(() => _who = w);
+                  if (query.isNotEmpty) _runSearch();
+                },
+              ),
+            ),
+            Expanded(
+              child: resultsState.when(
+                loading: () => const Center(child: MuDotsLoader(label: 'Searching…')),
+                error: (error, _) => Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(MuSpacing.space8),
+                    child: Text(ApiException.messageFor(error), textAlign: TextAlign.center, style: mu.text.body),
+                  ),
+                ),
+                data: (results) {
+                  if (query.isEmpty) {
+                    return Padding(
+                      padding: const EdgeInsets.all(MuSpacing.space8),
+                      child: Column(
+                        children: [
+                          const SizedBox(height: MuSpacing.space8),
+                          const MuFeedIcon(LucideIcons.search, tone: MuFeedTone.event),
+                          const SizedBox(height: MuSpacing.space4),
+                          Text('Find someone', style: mu.text.title2),
+                          const SizedBox(height: MuSpacing.space1),
+                          Text(
+                            'Search learners and mentors by name or muid.',
+                            textAlign: TextAlign.center,
+                            style: mu.text.body.copyWith(color: c.ink2),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                  if (results.isEmpty) {
+                    // The dashboard's SearchResults copy.
+                    return SingleChildScrollView(
+                      child: MuStateDisplay(
+                        variant: MuStateVariant.noResults,
+                        size: MuStateSize.sm,
+                        description: 'No members match "$query". Try a different path and keep exploring.',
+                      ),
+                    );
+                  }
+                  final hasMore = ref.read(searchControllerProvider.notifier).hasMore;
+                  return ListView(
+                    controller: _scrollController,
+                    padding: const EdgeInsets.fromLTRB(
+                      MuSpacing.space5,
+                      MuSpacing.space4,
+                      MuSpacing.space5,
+                      MuSpacing.space8,
+                    ),
+                    children: [
+                      MuFeedGroup(
+                        children: [
+                          for (var i = 0; i < results.length; i++)
+                            _ResultRow(result: results[i], last: i == results.length - 1),
+                        ],
+                      ),
+                      if (hasMore)
+                        const Padding(
+                          padding: EdgeInsets.all(MuSpacing.space5),
+                          child: Center(child: MuDotsLoader()),
+                        ),
+                    ],
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(MuSpace.screenH),
-            child: TextField(
-              controller: _queryController,
-              autofocus: true,
-              decoration: const InputDecoration(
-                prefixIcon: Icon(LucideIcons.search, size: 20),
-                hintText: 'Search by name or MUID…',
-              ),
-              onSubmitted: (_) => _runSearch(),
-              textInputAction: TextInputAction.search,
-            ),
-          ),
-          Expanded(
-            child: resultsState.when(
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, _) =>
-                  Center(child: Text(ApiException.messageFor(error))),
-              data: (results) {
-                if (_queryController.text.trim().isEmpty) {
-                  return const MuEmptyState(
-                    icon: LucideIcons.search,
-                    title: 'Search for someone',
-                    message: 'Find users and mentors by name or MUID.',
-                  );
-                }
-                if (results.isEmpty) {
-                  // The dashboard's SearchResults copy.
-                  return SingleChildScrollView(
-                    child: MuStateDisplay(
-                      variant: MuStateVariant.noResults,
-                      size: MuStateSize.sm,
-                      description:
-                          'No members match "${_queryController.text.trim()}". Try a different path and keep exploring.',
-                    ),
-                  );
-                }
-                final hasMore =
-                    ref.read(searchControllerProvider.notifier).hasMore;
-                return ListView.builder(
-                  controller: _scrollController,
-                  padding: const EdgeInsets.fromLTRB(
-                    MuSpace.screenH,
-                    0,
-                    MuSpace.screenH,
-                    MuSpace.l,
-                  ),
-                  itemCount: results.length + (hasMore ? 1 : 0),
-                  itemBuilder: (context, index) {
-                    if (index >= results.length) {
-                      return const Padding(
-                        padding: EdgeInsets.all(MuSpace.l),
-                        child: Center(child: CircularProgressIndicator()),
-                      );
-                    }
-                    final result = results[index];
-                    return UserSearchResultTile(
-                      result: result,
-                      onTap: () => context
-                          .push(RoutePaths.publicProfilePath(result.muid)),
-                    );
-                  },
-                );
-              },
-            ),
-          ),
-        ],
-      ),
+    );
+  }
+}
+
+class _ResultRow extends StatelessWidget {
+  const _ResultRow({required this.result, required this.last});
+
+  final UserSearchResult result;
+  final bool last;
+
+  @override
+  Widget build(BuildContext context) {
+    final org = result.organization;
+    return MuFeedRow(
+      leading: MuAvatar(name: result.fullName, url: result.profilePicUrl, size: MuSizes.avatarMd, ring: false),
+      subject: result.fullName,
+      time: [result.muid, if (org != null && org.isNotEmpty) org].join(' · '),
+      trailing: MuFeedAmount(muGrouped(result.karma)),
+      divider: !last,
+      onTap: () => context.push(RoutePaths.publicProfilePath(result.muid)),
     );
   }
 }
