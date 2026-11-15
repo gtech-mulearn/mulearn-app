@@ -12,7 +12,6 @@ import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/core/widgets/mu_state_display.dart';
 import 'package:mulearn_app/features/campus/domain/entities/approvals.dart';
 import 'package:mulearn_app/features/campus/presentation/providers/approvals_providers.dart';
-import 'package:mulearn_app/features/campus/presentation/widgets/campus_kit.dart';
 
 /// What needs the campus's decision (K4): college links and collaboration
 /// invites for the Campus Lead, campus events for every campus role. A
@@ -31,7 +30,7 @@ class CampusApprovalsScreen extends ConsumerWidget {
     final empty =
         (links.value?.isEmpty ?? false) && (events.value?.isEmpty ?? false) && (invites.value?.isEmpty ?? false);
 
-    return CampusPage(
+    return MuWorkspacePage(
       body: MuRefresh(
         onRefresh: () => Future.wait([
           if (lead) ref.refresh(orgLinkRequestsProvider.future),
@@ -40,7 +39,7 @@ class CampusApprovalsScreen extends ConsumerWidget {
         ]),
         child: ListView(
           physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-          padding: campusListPadding,
+          padding: muListPadding,
           children: [
             Semantics(header: true, child: Text('Approvals', style: mu.text.display.copyWith(fontSize: 32))),
             const SizedBox(height: MuSpacing.space4),
@@ -49,17 +48,17 @@ class CampusApprovalsScreen extends ConsumerWidget {
                 children: [
                   if (lead) ...[
                     Expanded(
-                      child: CampusStatTile(label: 'Links', value: '${links.value?.length ?? '–'}'),
+                      child: MuStatTile(label: 'Links', value: '${links.value?.length ?? '–'}'),
                     ),
                     const SizedBox(width: MuSpacing.space2),
                   ],
                   Expanded(
-                    child: CampusStatTile(label: 'Events', value: '${events.value?.length ?? '–'}'),
+                    child: MuStatTile(label: 'Events', value: '${events.value?.length ?? '–'}'),
                   ),
                   if (lead) ...[
                     const SizedBox(width: MuSpacing.space2),
                     Expanded(
-                      child: CampusStatTile(label: 'Invites', value: '${invites.value?.length ?? '–'}'),
+                      child: MuStatTile(label: 'Invites', value: '${invites.value?.length ?? '–'}'),
                     ),
                   ],
                 ],
@@ -125,7 +124,7 @@ class _Section<T> extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        CampusEyebrow('$title (${items.length})'),
+        MuSectionEyebrow('$title (${items.length})'),
         MuFeedGroup(children: [for (var i = 0; i < items.length; i++) row(items[i], last: i == items.length - 1)]),
       ],
     );

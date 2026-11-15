@@ -10,6 +10,7 @@ export 'content/mu_ig_sticker.dart';
 export 'content/mu_opportunity_row.dart';
 export 'content/mu_slab.dart';
 export 'content/mu_task_card.dart';
+export 'content/mu_workspace.dart';
 export 'events/mu_event_ticket.dart';
 export 'feedback/mu_loading.dart';
 export 'feedback/mu_sheet.dart';

@@ -14,7 +14,6 @@ import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/features/campus/domain/entities/campus_student.dart';
 import 'package:mulearn_app/features/campus/domain/entities/campus_summary.dart';
 import 'package:mulearn_app/features/campus/presentation/providers/campus_overview_providers.dart';
-import 'package:mulearn_app/features/campus/presentation/widgets/campus_kit.dart';
 
 /// The campus at a glance (K1): the campus seal and name, headline
 /// numbers, what's waiting for review, the member funnel, circles that
@@ -26,7 +25,7 @@ class CampusOverviewScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final summary = ref.watch(campusSummaryProvider);
-    return CampusPage(
+    return MuWorkspacePage(
       body: summary.when(
         skipError: true,
         skipLoadingOnReload: true,
@@ -40,17 +39,17 @@ class CampusOverviewScreen extends ConsumerWidget {
           ]),
           child: ListView(
             physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-            padding: campusListPadding,
+            padding: muListPadding,
             // Keep every section built while scrolling, so the karma chart and
             // top students don't refetch each time they come back into view.
             scrollCacheExtent: const ScrollCacheExtent.pixels(4000),
             children: [
               _Header(summary: s),
               const SizedBox(height: MuSpacing.space5),
-              CampusStatGrid(
+              MuStatGrid(
                 tiles: [
                   for (final st in s.stats)
-                    CampusStatTile(
+                    MuStatTile(
                       label: st.label,
                       value: st.value == null ? '—' : '${st.value}',
                       change: (st.delta ?? 0) != 0 && st.deltaType != 'neutral'
@@ -74,24 +73,24 @@ class CampusOverviewScreen extends ConsumerWidget {
                 ],
               ),
               if (s.funnel.isNotEmpty) ...[
-                const CampusEyebrow('Members'),
-                CampusBarList(
+                const MuSectionEyebrow('Members'),
+                MuBarList(
                   items: [
                     for (final f in s.funnel)
                       (label: f.label, value: f.count, icon: null, note: '${f.percentage.round()}%'),
                   ],
                 ),
               ],
-              CampusEyebrow(
+              MuSectionEyebrow(
                 'Circles',
                 action: 'All circles and groups',
                 onAction: () => context.push(RoutePaths.campusGroups),
               ),
               _CircleHealthSection(circles: s.circleHealth),
-              const CampusEyebrow('Karma this week'),
+              const MuSectionEyebrow('Karma this week'),
               const _WeeklyKarma(),
               if (s.recentActivity.isNotEmpty) ...[
-                const CampusEyebrow('Recent activity'),
+                const MuSectionEyebrow('Recent activity'),
                 MuFeedGroup(
                   children: [
                     for (var i = 0; i < s.recentActivity.length; i++)
@@ -99,7 +98,7 @@ class CampusOverviewScreen extends ConsumerWidget {
                   ],
                 ),
               ],
-              CampusEyebrow(
+              MuSectionEyebrow(
                 'Top students',
                 action: 'All students',
                 onAction: () => context.push(RoutePaths.campusStudents),
@@ -166,14 +165,14 @@ class _CircleHealthSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final mu = context.mu;
-    if (circles.isEmpty) return const CampusEmptyLine('No circles at this campus yet.');
+    if (circles.isEmpty) return const MuEmptyLine('No circles at this campus yet.');
     int count(String status) => circles.where((c) => c.status == status).length;
     final attention = [...circles.where((c) => c.status == 'inactive'), ...circles.where((c) => c.status == 'slow')];
     final now = ref.watch(clockProvider)().toLocal();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        CampusBarList(
+        MuBarList(
           items: [
             (label: 'Meeting regularly', value: count('active'), icon: LucideIcons.checkCircle2, note: null),
             (label: 'Going slow', value: count('slow'), icon: LucideIcons.clock, note: null),
@@ -240,10 +239,10 @@ class _WeeklyKarmaState extends ConsumerState<_WeeklyKarma> {
           error: (e, _) => Text(ApiException.messageFor(e), style: mu.text.caption),
           data: (days) {
             final total = days.fold<int>(0, (sum, d) => sum + d.karma);
-            if (total == 0) return const CampusEmptyLine('No karma earned this week yet.');
+            if (total == 0) return const MuEmptyLine('No karma earned this week yet.');
             final peak = days.map((d) => d.karma).reduce((a, b) => a > b ? a : b);
             final picked = _picked != null && _picked! < days.length ? days[_picked!] : null;
-            return CampusCard(
+            return MuSurfaceCard(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -354,7 +353,7 @@ class _TopStudents extends ConsumerWidget {
           loading: () => const SizedBox(height: 120, child: Center(child: MuDotsLoader())),
           error: (e, _) => Text(ApiException.messageFor(e), style: mu.text.caption),
           data: (students) => students.isEmpty
-              ? const CampusEmptyLine('No students yet.')
+              ? const MuEmptyLine('No students yet.')
               : MuFeedGroup(
                   children: [
                     for (var i = 0; i < students.length; i++)
@@ -378,7 +377,7 @@ class _StudentRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final s = student;
     return MuFeedRow(
-      leading: CampusRankDisc(s.rank),
+      leading: MuRankDisc(s.rank),
       subject: s.fullName.isEmpty ? s.muid : s.fullName,
       body: s.level.isEmpty ? null : levelLabel(s.level),
       time: s.muid,
@@ -389,7 +388,7 @@ class _StudentRow extends StatelessWidget {
           children: [
             MuFeedAmount(muGrouped(s.karma)),
             const SizedBox(height: 6),
-            CampusBar(value: leader <= 0 ? 0 : s.karma / leader),
+            MuBar(value: leader <= 0 ? 0 : s.karma / leader),
           ],
         ),
       ),

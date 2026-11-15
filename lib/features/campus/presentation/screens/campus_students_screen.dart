@@ -13,7 +13,6 @@ import 'package:mulearn_app/core/widgets/mu_state_display.dart';
 import 'package:mulearn_app/features/campus/domain/entities/campus_student.dart';
 import 'package:mulearn_app/features/campus/domain/student_filter.dart';
 import 'package:mulearn_app/features/campus/presentation/providers/campus_students_controller.dart';
-import 'package:mulearn_app/features/campus/presentation/widgets/campus_kit.dart';
 
 /// The campus's students (K2): search, order, alumni; each opens its page.
 class CampusStudentsScreen extends ConsumerStatefulWidget {
@@ -46,7 +45,7 @@ class _CampusStudentsScreenState extends ConsumerState<CampusStudentsScreen> {
   Widget build(BuildContext context) {
     final mu = context.mu;
     final state = ref.watch(campusStudentsControllerProvider(_filter));
-    return CampusPage(
+    return MuWorkspacePage(
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -159,7 +158,7 @@ class _StudentRow extends StatelessWidget {
     final s = student;
     String plural(int n, String one) => '$n ${n == 1 ? one : '${one}s'}';
     return MuFeedRow(
-      leading: CampusRankDisc(s.rank),
+      leading: MuRankDisc(s.rank),
       subject: s.fullName.isEmpty ? s.muid : s.fullName,
       body: s.isAlumni ? '· Alumni' : null,
       time: s.muid,
@@ -180,7 +179,7 @@ class _StudentRow extends StatelessWidget {
           children: [
             MuFeedAmount(muGrouped(s.karma)),
             const SizedBox(height: 6),
-            CampusBar(value: leader <= 0 ? 0 : s.karma / leader),
+            MuBar(value: leader <= 0 ? 0 : s.karma / leader),
           ],
         ),
       ),

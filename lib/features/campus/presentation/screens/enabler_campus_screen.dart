@@ -11,7 +11,6 @@ import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/features/campus/domain/entities/enabler.dart';
 import 'package:mulearn_app/features/campus/presentation/providers/enabler_providers.dart';
-import 'package:mulearn_app/features/campus/presentation/widgets/campus_kit.dart';
 
 String _cap(String s) => s.isEmpty ? s : '${s[0].toUpperCase()}${s.substring(1)}';
 
@@ -30,7 +29,7 @@ class EnablerCampusScreen extends ConsumerWidget {
     final mu = context.mu;
     final campus = ref.watch(enablerCampusProvider(campusId));
     final notes = ref.watch(campusNotesControllerProvider(campusId));
-    return CampusPage(
+    return MuWorkspacePage(
       bottom: MuButton(
         label: 'Add note',
         icon: LucideIcons.plus,
@@ -44,7 +43,7 @@ class EnablerCampusScreen extends ConsumerWidget {
         ]),
         child: ListView(
           physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-          padding: campusListPadding,
+          padding: muListPadding,
           children: [
             campus.when(
               skipError: true,
@@ -71,7 +70,7 @@ class EnablerCampusScreen extends ConsumerWidget {
                 ],
               ),
             ),
-            const CampusEyebrow('Notes'),
+            const MuSectionEyebrow('Notes'),
             notes.when(
               skipError: true,
               skipLoadingOnReload: true,
@@ -79,7 +78,7 @@ class EnablerCampusScreen extends ConsumerWidget {
               error: (e, _) =>
                   ErrorRetryView(error: e, onRetry: () => ref.invalidate(campusNotesControllerProvider(campusId))),
               data: (list) => list.isEmpty
-                  ? const CampusEmptyLine('No notes yet. Add what you discussed and when to follow up.')
+                  ? const MuEmptyLine('No notes yet. Add what you discussed and when to follow up.')
                   : Column(
                       children: [
                         for (var i = 0; i < list.length; i++) ...[
@@ -165,7 +164,7 @@ class _NoteCard extends ConsumerWidget {
     final today = DateTime(now.year, now.month, now.day);
     final open = n.status == 'open';
     final overdue = n.followUp != null && n.followUp!.isBefore(today) && open;
-    return CampusCard(
+    return MuSurfaceCard(
       padding: const EdgeInsets.fromLTRB(MuSpacing.space4, MuSpacing.space3, MuSpacing.space1, MuSpacing.space4),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

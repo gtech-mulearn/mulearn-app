@@ -15,7 +15,6 @@ import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/features/campus/domain/entities/campus_student.dart';
 import 'package:mulearn_app/features/campus/domain/entities/student_activity.dart';
 import 'package:mulearn_app/features/campus/presentation/providers/campus_students_controller.dart';
-import 'package:mulearn_app/features/campus/presentation/widgets/campus_kit.dart';
 
 /// One student at the campus: who they are, their numbers and their karma
 /// activity, with their public profile one tap away.
@@ -33,7 +32,7 @@ class CampusStudentScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final mu = context.mu;
     final activity = ref.watch(studentActivityControllerProvider(muid));
-    return CampusPage(
+    return MuWorkspacePage(
       action: MuIconButton(
         icon: LucideIcons.user,
         tooltip: 'Public profile',
@@ -51,7 +50,7 @@ class CampusStudentScreen extends ConsumerWidget {
           },
           child: ListView(
             physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-            padding: campusListPadding,
+            padding: muListPadding,
             children: [
               if (student case final s?) _Header(student: s) else _MuidHeader(muid: muid),
               const SizedBox(height: MuSpacing.space4),
@@ -65,7 +64,7 @@ class CampusStudentScreen extends ConsumerWidget {
                   onPressed: () => context.push(RoutePaths.publicProfilePath(muid)),
                 ),
               ),
-              const CampusEyebrow('Activity'),
+              const MuSectionEyebrow('Activity'),
               activity.when(
                 skipError: true,
                 skipLoadingOnReload: true,
@@ -164,15 +163,15 @@ class _Header extends ConsumerWidget {
         Row(
           children: [
             Expanded(
-              child: CampusStatTile(label: 'Karma', value: muGrouped(s.karma)),
+              child: MuStatTile(label: 'Karma', value: muGrouped(s.karma)),
             ),
             const SizedBox(width: MuSpacing.space2),
             Expanded(
-              child: CampusStatTile(label: 'Level', value: s.level.isEmpty ? '—' : levelLabel(s.level)),
+              child: MuStatTile(label: 'Level', value: s.level.isEmpty ? '—' : levelLabel(s.level)),
             ),
             const SizedBox(width: MuSpacing.space2),
             Expanded(
-              child: CampusStatTile(label: 'Rank', value: s.rank == null ? '—' : '#${s.rank}'),
+              child: MuStatTile(label: 'Rank', value: s.rank == null ? '—' : '#${s.rank}'),
             ),
           ],
         ),

@@ -8,7 +8,6 @@ import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/core/widgets/mu_state_display.dart';
 import 'package:mulearn_app/features/campus/presentation/providers/enabler_providers.dart';
-import 'package:mulearn_app/features/campus/presentation/widgets/campus_kit.dart';
 
 /// The campuses an enabler looks after (K5): the totals as tiles, then each
 /// campus as its crest.
@@ -19,7 +18,7 @@ class EnablerCampusesScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final mu = context.mu;
     final summary = ref.watch(enablerSummaryProvider).value;
-    return CampusPage(
+    return MuWorkspacePage(
       body: ref
           .watch(enablerCampusesProvider)
           .when(
@@ -34,7 +33,7 @@ class EnablerCampusesScreen extends ConsumerWidget {
               ]),
               child: ListView(
                 physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-                padding: campusListPadding,
+                padding: muListPadding,
                 children: [
                   Semantics(header: true, child: Text('My campuses', style: mu.text.display.copyWith(fontSize: 32))),
                   if (summary != null) ...[
@@ -42,15 +41,15 @@ class EnablerCampusesScreen extends ConsumerWidget {
                     Row(
                       children: [
                         Expanded(
-                          child: CampusStatTile(label: 'Campuses', value: muGrouped(summary.campuses)),
+                          child: MuStatTile(label: 'Campuses', value: muGrouped(summary.campuses)),
                         ),
                         const SizedBox(width: MuSpacing.space2),
                         Expanded(
-                          child: CampusStatTile(label: 'Students', value: muGrouped(summary.students)),
+                          child: MuStatTile(label: 'Students', value: muGrouped(summary.students)),
                         ),
                         const SizedBox(width: MuSpacing.space2),
                         Expanded(
-                          child: CampusStatTile(label: 'Karma', value: muGrouped(summary.karma)),
+                          child: MuStatTile(label: 'Karma', value: muGrouped(summary.karma)),
                         ),
                       ],
                     ),

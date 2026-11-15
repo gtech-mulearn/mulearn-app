@@ -1,10 +1,19 @@
+/// Building blocks for the role workspaces (campus, enabler, mentor):
+/// the page frame, section eyebrows with an action, stat tiles, bars and
+/// labelled bar lists, surface cards, empty lines and rank discs.
+library;
+
 import 'package:flutter/material.dart';
-import 'package:mulearn_app/core/design_system/design_system.dart';
+import 'package:mulearn_app/core/design_system/input/mu_button.dart';
+import 'package:mulearn_app/core/design_system/mulearn/mu_leaderboard.dart' show muGrouped;
+import 'package:mulearn_app/core/design_system/navigation/mu_top_bar.dart';
+import 'package:mulearn_app/core/design_system/theme/mu_theme.dart';
+import 'package:mulearn_app/core/design_system/tokens/mu_tokens.g.dart';
 
 /// The frame of a campus workspace screen: `chalk`, the detail top bar
 /// (with an optional [title] and [action]), then [body].
-class CampusPage extends StatelessWidget {
-  const CampusPage({required this.body, this.title, this.action, this.bottom, super.key});
+class MuWorkspacePage extends StatelessWidget {
+  const MuWorkspacePage({required this.body, this.title, this.action, this.bottom, super.key});
 
   final String? title;
   final Widget? action;
@@ -51,12 +60,12 @@ class CampusPage extends StatelessWidget {
 }
 
 /// The standard scrolling list padding for workspace screens.
-const campusListPadding = EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space2, MuSpacing.space5, MuSpacing.space8);
+const muListPadding = EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space2, MuSpacing.space5, MuSpacing.space8);
 
 /// A section heading in eyebrow caps, with an optional small action on the
 /// right ("All students").
-class CampusEyebrow extends StatelessWidget {
-  const CampusEyebrow(this.text, {this.action, this.onAction, this.top = MuSpacing.space8, super.key});
+class MuSectionEyebrow extends StatelessWidget {
+  const MuSectionEyebrow(this.text, {this.action, this.onAction, this.top = MuSpacing.space8, super.key});
 
   final String text;
   final String? action;
@@ -89,8 +98,8 @@ class CampusEyebrow extends StatelessWidget {
 
 /// A headline number on `surface`: the label in eyebrow caps, the value as
 /// a numeral, an optional change line under it ([up] green, otherwise red).
-class CampusStatTile extends StatelessWidget {
-  const CampusStatTile({required this.label, required this.value, this.change, this.up = true, super.key});
+class MuStatTile extends StatelessWidget {
+  const MuStatTile({required this.label, required this.value, this.change, this.up = true, super.key});
 
   final String label;
   final String value;
@@ -126,8 +135,8 @@ class CampusStatTile extends StatelessWidget {
 }
 
 /// Lays [tiles] out two to a row.
-class CampusStatGrid extends StatelessWidget {
-  const CampusStatGrid({required this.tiles, super.key});
+class MuStatGrid extends StatelessWidget {
+  const MuStatGrid({required this.tiles, super.key});
 
   final List<Widget> tiles;
 
@@ -148,8 +157,8 @@ class CampusStatGrid extends StatelessWidget {
 }
 
 /// A thin progress bar: [value] 0–1 of `cobalt` on `surface-sunk`.
-class CampusBar extends StatelessWidget {
-  const CampusBar({required this.value, this.color, super.key});
+class MuBar extends StatelessWidget {
+  const MuBar({required this.value, this.color, super.key});
 
   final double value;
   final Color? color;
@@ -176,8 +185,8 @@ class CampusBar extends StatelessWidget {
 }
 
 /// A card on `surface` with the standard padding.
-class CampusCard extends StatelessWidget {
-  const CampusCard({required this.child, this.padding = const EdgeInsets.all(MuSpacing.space4), super.key});
+class MuSurfaceCard extends StatelessWidget {
+  const MuSurfaceCard({required this.child, this.padding = const EdgeInsets.all(MuSpacing.space4), super.key});
 
   final Widget child;
   final EdgeInsetsGeometry padding;
@@ -191,8 +200,8 @@ class CampusCard extends StatelessWidget {
 }
 
 /// A muted line for an empty section.
-class CampusEmptyLine extends StatelessWidget {
-  const CampusEmptyLine(this.text, {super.key});
+class MuEmptyLine extends StatelessWidget {
+  const MuEmptyLine(this.text, {super.key});
 
   final String text;
 
@@ -201,8 +210,8 @@ class CampusEmptyLine extends StatelessWidget {
 }
 
 /// A rank badge for a feed row's leading slot ("#3").
-class CampusRankDisc extends StatelessWidget {
-  const CampusRankDisc(this.rank, {super.key});
+class MuRankDisc extends StatelessWidget {
+  const MuRankDisc(this.rank, {super.key});
 
   final int? rank;
 
@@ -224,24 +233,24 @@ class CampusRankDisc extends StatelessWidget {
   }
 }
 
-/// One row of a [CampusBarList].
-typedef CampusBarItem = ({String label, int value, IconData? icon, String? note});
+/// One row of a [MuBarList].
+typedef MuBarItem = ({String label, int value, IconData? icon, String? note});
 
 /// Magnitudes as labelled horizontal bars in one hue, compared by length
 /// (no colour coding, so it reads the same in any colour vision): each row
 /// is the label (with an optional icon), the value, an optional [note]
 /// ("38%"), and a bar scaled to the largest value.
-class CampusBarList extends StatelessWidget {
-  const CampusBarList({required this.items, super.key});
+class MuBarList extends StatelessWidget {
+  const MuBarList({required this.items, super.key});
 
-  final List<CampusBarItem> items;
+  final List<MuBarItem> items;
 
   @override
   Widget build(BuildContext context) {
     final mu = context.mu;
     final c = mu.colors;
     final peak = items.fold<int>(0, (m, i) => i.value > m ? i.value : m);
-    return CampusCard(
+    return MuSurfaceCard(
       child: Column(
         children: [
           for (var i = 0; i < items.length; i++)
@@ -271,7 +280,7 @@ class CampusBarList extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: MuSpacing.space2),
-                    CampusBar(value: peak <= 0 ? 0 : items[i].value / peak),
+                    MuBar(value: peak <= 0 ? 0 : items[i].value / peak),
                   ],
                 ),
               ),

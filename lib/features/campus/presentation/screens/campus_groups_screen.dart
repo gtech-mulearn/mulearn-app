@@ -15,7 +15,6 @@ import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/core/widgets/mu_state_display.dart';
 import 'package:mulearn_app/features/campus/domain/entities/campus_groups.dart';
 import 'package:mulearn_app/features/campus/presentation/providers/campus_groups_controllers.dart';
-import 'package:mulearn_app/features/campus/presentation/widgets/campus_kit.dart';
 
 enum _Tab { circles, groups }
 
@@ -53,7 +52,7 @@ class _CampusGroupsScreenState extends ConsumerState<CampusGroupsScreen> {
   @override
   Widget build(BuildContext context) {
     final mu = context.mu;
-    return CampusPage(
+    return MuWorkspacePage(
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -229,7 +228,7 @@ class _IgRow extends StatelessWidget {
       ),
       subject: g.name,
       time: g.campusMemberCount == 1 ? '1 member from your campus' : '${g.campusMemberCount} members from your campus',
-      trailing: SizedBox(width: 56, child: CampusBar(value: peak <= 0 ? 0 : g.campusMemberCount / peak)),
+      trailing: SizedBox(width: 56, child: MuBar(value: peak <= 0 ? 0 : g.campusMemberCount / peak)),
       divider: !last,
       onTap: () => context.push(RoutePaths.interestGroupDetailPath(g.id)),
     );
