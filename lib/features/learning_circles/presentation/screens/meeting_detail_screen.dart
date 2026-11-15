@@ -137,7 +137,7 @@ class _Body extends ConsumerWidget {
     final c = mu.colors;
     final m = meeting;
     final start = DateTime.tryParse(m.meetTime)?.toLocal();
-    final end = start == null || m.duration <= 0 ? null : start.add(Duration(minutes: m.duration));
+    final end = start == null || m.duration <= 0 ? null : start.add(Duration(hours: m.duration));
     final link = m.meetLink?.trim() ?? '';
     final online = link.isNotEmpty || m.mode.toLowerCase() == 'online';
 

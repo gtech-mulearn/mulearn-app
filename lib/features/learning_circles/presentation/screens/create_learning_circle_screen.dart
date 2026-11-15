@@ -1,158 +1,186 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/auth/current_user_college.dart';
-import 'package:mulearn_app/core/design_system/feedback/mu_toast.dart';
+import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
-import 'package:mulearn_app/core/theme/mu_space.dart';
-import 'package:mulearn_app/core/theme/mulearn_colors.dart';
-import 'package:mulearn_app/core/theme/mulearn_typography.dart';
-import 'package:mulearn_app/core/widgets/mu_buttons.dart';
-import 'package:mulearn_app/core/widgets/searchable_select_field.dart';
 import 'package:mulearn_app/features/learning_circles/presentation/providers/learning_circles_controller.dart';
 
-/// Create-circle form — IG picker, title, description. The college is no
-/// longer a picker: it defaults to the signed-in user's own college
-/// ([currentUserCollegeProvider]) — a circle only ever makes sense at the
-/// creator's own campus, so asking them to re-pick it from a 1000+ row list
-/// was pure friction, not a real choice.
+/// Start a circle: an interest group, a title and what it's for. The
+/// campus isn't a picker: a circle lives at its creator's own college
+/// ([currentUserCollegeProvider]), shown so it's clear where.
 class CreateLearningCircleScreen extends ConsumerStatefulWidget {
   const CreateLearningCircleScreen({super.key});
 
   @override
-  ConsumerState<CreateLearningCircleScreen> createState() =>
-      _CreateLearningCircleScreenState();
+  ConsumerState<CreateLearningCircleScreen> createState() => _CreateLearningCircleScreenState();
 }
 
-class _CreateLearningCircleScreenState
-    extends ConsumerState<CreateLearningCircleScreen> {
+class _CreateLearningCircleScreenState extends ConsumerState<CreateLearningCircleScreen> {
   final _formKey = GlobalKey<FormState>();
-  final _titleController = TextEditingController();
-  final _descriptionController = TextEditingController();
+  final _title = TextEditingController();
+  final _description = TextEditingController();
   String? _igId;
 
   @override
   void dispose() {
-    _titleController.dispose();
-    _descriptionController.dispose();
+    _title.dispose();
+    _description.dispose();
     super.dispose();
   }
 
   Future<void> _submit(String? orgId) async {
     if (!(_formKey.currentState?.validate() ?? false)) return;
-    if (_igId == null) {
-      MuToast.show(
-        context,
-        message: 'Please select an interest group.',
-        type: MuToastType.error,
-      );
-      return;
-    }
     if (orgId == null) {
       MuToast.show(
         context,
-        message:
-            'Your account has no college on file — update your profile before creating a circle.',
+        message: 'Your account has no college on file. Add it in Edit profile, then start a circle.',
         type: MuToastType.error,
       );
       return;
     }
     final circleId = await ref
         .read(circleActionsControllerProvider.notifier)
-        .createCircle(
-          igId: _igId!,
-          orgId: orgId,
-          title: _titleController.text.trim(),
-          description: _descriptionController.text.trim(),
-        );
+        .createCircle(igId: _igId!, orgId: orgId, title: _title.text.trim(), description: _description.text.trim());
     if (!mounted) return;
     if (circleId != null) {
       ref
         ..invalidate(circlesListControllerProvider)
         ..invalidate(myCirclesProvider);
+      MuToast.show(context, message: 'Your circle is live', type: MuToastType.success);
       context.pushReplacement(RoutePaths.learningCircleDetailPath(circleId));
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final igOptionsState = ref.watch(circleIgOptionsProvider);
-    final collegeState = ref.watch(currentUserCollegeProvider);
-    final actionState = ref.watch(circleActionsControllerProvider);
-    final orgId = collegeState.value?.id;
+    final mu = context.mu;
+    final c = mu.colors;
+    final igOptions = ref.watch(circleIgOptionsProvider);
+    final college = ref.watch(currentUserCollegeProvider);
+    final action = ref.watch(circleActionsControllerProvider);
+    final orgId = college.value?.id;
 
     return Scaffold(
-      backgroundColor: MuColors.canvas,
-      appBar: AppBar(),
-      body: Padding(
-        padding: const EdgeInsets.all(MuSpace.screenH),
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            children: [
-              Text('Start a circle', style: MuType.display.copyWith(fontSize: 26)),
-              const SizedBox(height: MuSpace.xs),
-              Text(
-                'Pick a skill, invite a few friends, and learn weekly.',
-                style: MuType.body.copyWith(color: MuColors.inkSecondary),
-              ),
-              const SizedBox(height: MuSpace.xxl),
-              SearchableSelectField(
-                label: 'Interest group',
-                options: igOptionsState.value ?? const [],
-                isLoading: igOptionsState.isLoading,
-                onSelected: (value) => setState(() => _igId = value),
-              ),
-              const SizedBox(height: MuSpace.s),
-              collegeState.when(
-                loading: () => Text(
-                  'Loading your college…',
-                  style: MuType.caption,
+      backgroundColor: c.chalk,
+      body: SafeArea(
+        child: Column(
+          children: [
+            const MuTopBar.detail(),
+            Expanded(
+              child: Form(
+                key: _formKey,
+                child: ListView(
+                  physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+                  padding: const EdgeInsets.fromLTRB(
+                    MuSpacing.space5,
+                    MuSpacing.space2,
+                    MuSpacing.space5,
+                    MuSpacing.space8,
+                  ),
+                  children: [
+                    Semantics(
+                      header: true,
+                      child: Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(text: 'Start a\n', style: mu.text.displayLight.copyWith(fontSize: 36)),
+                            TextSpan(text: 'circle', style: mu.text.display.copyWith(fontSize: 36)),
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: MuSpacing.space2),
+                    Text(
+                      'Pick a skill, bring a few friends, and meet every week.',
+                      style: mu.text.body.copyWith(color: c.ink2),
+                    ),
+                    const SizedBox(height: MuSpacing.space6),
+                    MuSelectField(
+                      label: 'Interest group',
+                      value: _igId,
+                      loading: igOptions.isLoading,
+                      options: igOptions.value?.map((o) => MuOption(o.id, o.label)).toList() ?? const [],
+                      validator: (v) => v == null ? 'Pick the group this circle learns in' : null,
+                      onChanged: (v) => setState(() => _igId = v),
+                    ),
+                    const SizedBox(height: MuSpacing.space4),
+                    MuTextField(
+                      label: 'Title',
+                      controller: _title,
+                      hint: 'Pandas Saturdays',
+                      maxLength: 100,
+                      textCapitalization: TextCapitalization.words,
+                      validator: (v) => (v == null || v.trim().isEmpty) ? 'Give it a name' : null,
+                    ),
+                    const SizedBox(height: MuSpacing.space4),
+                    MuTextField(
+                      label: 'What you will learn',
+                      controller: _description,
+                      hint: 'We work through the Kaggle Pandas course, one lesson a week.',
+                      maxLength: 500,
+                      maxLines: 5,
+                      minLines: 3,
+                      textCapitalization: TextCapitalization.sentences,
+                      validator: (v) => (v == null || v.trim().isEmpty) ? 'Say what the circle is for' : null,
+                    ),
+                    const SizedBox(height: MuSpacing.space4),
+                    Row(
+                      children: [
+                        Icon(LucideIcons.mapPin, size: MuSizes.iconSm, color: c.ink3),
+                        const SizedBox(width: MuSpacing.space2),
+                        Expanded(
+                          child: Text(
+                            college.when(
+                              loading: () => 'Finding your college…',
+                              error: (_, _) => "Couldn't load your college. Pull to try again.",
+                              data: (col) =>
+                                  col.code != null ? 'Meets at your college (${col.code})' : 'Meets at your college',
+                            ),
+                            style: mu.text.caption.copyWith(color: college.hasError ? c.danger : c.ink3),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-                error: (_, __) => Text(
-                  "Couldn't load your college — try again.",
-                  style: MuType.caption.copyWith(color: MuColors.error),
+              ),
+            ),
+            DecoratedBox(
+              decoration: BoxDecoration(
+                color: c.chalk,
+                border: Border(top: BorderSide(color: c.line)),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  MuSpacing.space5,
+                  MuSpacing.space3,
+                  MuSpacing.space5,
+                  MuSpacing.space3,
                 ),
-                data: (college) => Text(
-                  college.code != null
-                      ? 'Circle location: your college (${college.code})'
-                      : 'Circle location: your college',
-                  style: MuType.caption,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    if (action.hasError) ...[
+                      Text(ApiException.messageFor(action.error!), style: mu.text.caption.copyWith(color: c.danger)),
+                      const SizedBox(height: MuSpacing.space2),
+                    ],
+                    MuButton(
+                      label: 'Start circle',
+                      variant: MuButtonVariant.ink,
+                      knob: true,
+                      block: true,
+                      loading: action.isLoading,
+                      onPressed: action.isLoading ? null : () => _submit(orgId),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: MuSpace.l),
-              TextFormField(
-                controller: _titleController,
-                maxLength: 100,
-                decoration: const InputDecoration(labelText: 'Title'),
-                validator: (value) => (value == null || value.trim().isEmpty)
-                    ? 'Title is required'
-                    : null,
-              ),
-              TextFormField(
-                controller: _descriptionController,
-                maxLength: 500,
-                maxLines: 4,
-                decoration: const InputDecoration(labelText: 'Description'),
-                validator: (value) => (value == null || value.trim().isEmpty)
-                    ? 'Description is required'
-                    : null,
-              ),
-              if (actionState.hasError) ...[
-                const SizedBox(height: MuSpace.s),
-                Text(
-                  ApiException.messageFor(actionState.error!),
-                  style: MuType.caption.copyWith(color: MuColors.error),
-                ),
-              ],
-              const SizedBox(height: MuSpace.l),
-              MuPrimaryButton(
-                label: actionState.isLoading ? 'Creating…' : 'Create',
-                onPressed: actionState.isLoading ? null : () => _submit(orgId),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
