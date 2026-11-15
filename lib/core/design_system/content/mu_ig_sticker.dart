@@ -102,7 +102,10 @@ class MuIgSticker extends StatelessWidget {
             children: [
               Expanded(
                 child: ExcludeSemantics(
-                  child: Text(members == null ? '' : _compact(members!), style: mu.text.caption.copyWith(color: ink)),
+                  child: Text(
+                    members == null ? '' : (members == 1 ? '1 member' : '${_compact(members!)} members'),
+                    style: mu.text.caption.copyWith(color: ink),
+                  ),
                 ),
               ),
               if (onJoin != null) _JoinButton(joined: joined, joining: joining, name: name, onPressed: onJoin!),
@@ -188,7 +191,7 @@ class MuIgChip extends StatelessWidget {
     final c = mu.colors;
     final chip = Container(
       height: 32,
-      padding: const EdgeInsetsDirectional.fromSTEB(6, 0, 12, 0),
+      padding: const EdgeInsets.symmetric(horizontal: 14),
       decoration: BoxDecoration(
         color: MuTones.forIgCategory(c, category),
         borderRadius: BorderRadius.circular(MuRadii.round),
@@ -196,12 +199,6 @@ class MuIgChip extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            width: 20,
-            height: 20,
-            decoration: BoxDecoration(color: c.inkPrint.withValues(alpha: 0.88), shape: BoxShape.circle),
-          ),
-          const SizedBox(width: 6),
           Flexible(
             child: Text(
               name,

@@ -26,7 +26,7 @@ DateTime _day(DateTime d) => DateTime(d.year, d.month, d.day);
 DateTime muWeekStart(DateTime d) => _day(d).subtract(Duration(days: d.weekday - 1));
 
 /// Seven days as tall stadium cells (artifact DateStrip): weekday over the
-/// date, a dot for days with something on ([counts]); the selected day in
+/// date, a dot under it for days with something on ([counts]); the selected day in
 /// `night` with a volt dot; past days faded. Swipe sideways a week at a
 /// time; [onWeekChanged] reports the Monday now showing.
 class MuDateStrip extends StatefulWidget {
@@ -84,13 +84,16 @@ class _MuDateStripState extends State<MuDateStrip> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 64,
+      height: 68,
       child: PageView.builder(
         controller: _pages,
         onPageChanged: (p) => widget.onWeekChanged?.call(_weekAt(p)),
         itemBuilder: (context, page) {
           final start = _weekAt(page);
+          // Stretch: each cell takes the strip's full height, so the dot
+          // under the date has room.
           return Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               for (var i = 0; i < 7; i++) ...[
                 if (i > 0) const SizedBox(width: 6),
@@ -139,21 +142,29 @@ class _MuDateStripState extends State<MuDateStrip> {
             child: Stack(
               alignment: Alignment.center,
               children: [
+                // Under the date, clear of the weekday.
                 if (count > 0)
                   Positioned(
-                    top: 7,
+                    bottom: 8,
                     child: Container(
                       width: 5,
                       height: 5,
                       decoration: BoxDecoration(color: on ? c.volt : c.ink, shape: BoxShape.circle),
                     ),
                   ),
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(_weekdays[day.weekday - 1], style: mu.text.caption.copyWith(color: on ? c.onNight2 : c.ink3)),
-                    Text('${day.day}', style: mu.text.title3.copyWith(fontSize: 15, color: on ? c.onNight : c.ink)),
-                  ],
+                // Lifted a little so the dot below has room.
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        _weekdays[day.weekday - 1],
+                        style: mu.text.caption.copyWith(color: on ? c.onNight2 : c.ink3),
+                      ),
+                      Text('${day.day}', style: mu.text.title3.copyWith(fontSize: 15, color: on ? c.onNight : c.ink)),
+                    ],
+                  ),
                 ),
               ],
             ),

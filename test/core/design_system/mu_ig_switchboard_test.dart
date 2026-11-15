@@ -29,7 +29,7 @@ void main() {
       ),
     );
     expect(find.text('WEB · CODER'), findsOneWidget);
-    expect(find.text('4.1k'), findsOneWidget);
+    expect(find.text('4.1k members'), findsOneWidget);
     expect(find.bySemanticsLabel('Web Development, coder Interest Group, 4100 members'), findsOneWidget);
     await tester.tap(find.bySemanticsLabel('Join Web Development'));
     await tester.pumpAndSettle();
