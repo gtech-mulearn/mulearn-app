@@ -178,6 +178,8 @@ class _MuTextFieldState extends State<MuTextField> {
           onSubmitted: widget.onSubmitted,
           decoration: InputDecoration(
             isCollapsed: true,
+            // Explicit: the app theme's input padding must not leak in.
+            contentPadding: EdgeInsets.zero,
             filled: false,
             border: InputBorder.none,
             enabledBorder: InputBorder.none,

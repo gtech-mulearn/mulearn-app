@@ -98,6 +98,8 @@ class _MuSearchFieldState extends State<MuSearchField> {
                 cursorColor: c.cobalt,
                 decoration: InputDecoration(
                   isCollapsed: true,
+                  // Explicit: the app theme's input padding must not leak in.
+                  contentPadding: EdgeInsets.zero,
                   border: InputBorder.none,
                   enabledBorder: InputBorder.none,
                   focusedBorder: InputBorder.none,
