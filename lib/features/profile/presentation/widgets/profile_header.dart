@@ -64,19 +64,30 @@ class ProfileHeader extends ConsumerWidget {
       maxWidth: 1800,
     );
     if (bytes == null) return;
-    if (bytes.lengthInBytes > coverPicMaxBytes) {
-      if (context.mounted) {
-        MuToast.show(
-          context,
-          message: 'Cover image must be under 5 MB.',
-          type: MuToastType.error,
-        );
-      }
-      return;
-    }
     await ref
         .read(coverPhotoControllerProvider.notifier)
         .upload(bytes, 'cover.jpg');
+    if (context.mounted) {
+      _report(
+        context,
+        ref.read(coverPhotoControllerProvider),
+        'Cover photo updated',
+      );
+    }
+  }
+
+  /// Every photo action ends in a toast: what went wrong (too large, not an
+  /// image, the server refused), or that it worked.
+  static void _report(
+    BuildContext context,
+    AsyncValue<void> result,
+    String done,
+  ) {
+    MuToast.show(
+      context,
+      message: result.hasError ? ApiException.messageFor(result.error!) : done,
+      type: result.hasError ? MuToastType.error : MuToastType.success,
+    );
   }
 
   Future<void> _deleteCover(BuildContext context, WidgetRef ref) async {
@@ -89,6 +100,13 @@ class ProfileHeader extends ConsumerWidget {
     );
     if (confirmed) {
       await ref.read(coverPhotoControllerProvider.notifier).delete();
+      if (context.mounted) {
+        _report(
+          context,
+          ref.read(coverPhotoControllerProvider),
+          'Cover photo removed',
+        );
+      }
     }
   }
 
@@ -113,6 +131,13 @@ class ProfileHeader extends ConsumerWidget {
     await ref
         .read(profileImageControllerProvider.notifier)
         .upload(bytes, 'profile.jpg');
+    if (context.mounted) {
+      _report(
+        context,
+        ref.read(profileImageControllerProvider),
+        'Profile photo updated',
+      );
+    }
   }
 
   Future<void> _copyMuid(BuildContext context) async {
@@ -128,18 +153,6 @@ class ProfileHeader extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    if (isOwn) {
-      // A failed upload/delete must never vanish silently.
-      ref.listen(coverPhotoControllerProvider, (_, next) {
-        if (next.hasError && !next.isLoading) {
-          MuToast.show(
-            context,
-            message: ApiException.messageFor(next.error!),
-            type: MuToastType.error,
-          );
-        }
-      });
-    }
     final mu = context.mu;
     final c = mu.colors;
     final coverPending =
@@ -184,7 +197,9 @@ class ProfileHeader extends ConsumerWidget {
           onPressed: onTap,
         );
 
-    final photo = Container(
+    final photoPending =
+        isOwn && ref.watch(profileImageControllerProvider).isLoading;
+    final circle = Container(
       width: _photoSize,
       height: _photoSize,
       clipBehavior: Clip.antiAlias,
@@ -200,6 +215,45 @@ class ProfileHeader extends ConsumerWidget {
               fit: BoxFit.cover,
               errorWidget: (_, _, _) => _Initials(name: name),
             ),
+    );
+    final photo = SizedBox(
+      width: _photoSize,
+      height: _photoSize,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          circle,
+          if (photoPending)
+            Positioned.fill(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: c.night.withValues(alpha: 0.45),
+                  shape: BoxShape.circle,
+                ),
+                child: const Center(child: MuDotsLoader()),
+              ),
+            ),
+          if (isOwn)
+            PositionedDirectional(
+              end: 2,
+              bottom: 2,
+              child: Container(
+                width: 34,
+                height: 34,
+                decoration: BoxDecoration(
+                  color: c.night,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: c.onCobalt, width: 2),
+                ),
+                child: Icon(
+                  LucideIcons.pencil,
+                  size: MuSizes.iconSm,
+                  color: c.onNight,
+                ),
+              ),
+            ),
+        ],
+      ),
     );
 
     return ColoredBox(
@@ -284,7 +338,9 @@ class ProfileHeader extends ConsumerWidget {
                     label: 'Change profile photo',
                     excludeSemantics: true,
                     child: MuPressable(
-                      onTap: () => _pickAndUploadProfilePic(context, ref),
+                      onTap: photoPending
+                          ? null
+                          : () => _pickAndUploadProfilePic(context, ref),
                       child: photo,
                     ),
                   )
