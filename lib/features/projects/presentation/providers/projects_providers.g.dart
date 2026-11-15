@@ -151,7 +151,7 @@ final class ProjectsFeedProvider
   }
 }
 
-String _$projectsFeedHash() => r'5513fc7e8ffad1e8acf39fe1ecb830780afea7da';
+String _$projectsFeedHash() => r'b12a8318d1f9441ae3c1f5c40d3c461b983771a4';
 
 /// Published projects for a search (all when empty), a page at a time.
 /// Each search is kept for a while once seen.

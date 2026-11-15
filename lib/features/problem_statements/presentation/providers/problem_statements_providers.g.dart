@@ -106,7 +106,7 @@ final class PsFeedProvider
   }
 }
 
-String _$psFeedHash() => r'7a5559e896ab2acb01e8fb7bd31bfd4e7aca55af';
+String _$psFeedHash() => r'835bce179795ad1b742574cefc0109211f2cadec';
 
 /// The published feed for a search (all when empty), optionally only those
 /// still open, page by page. Each search is kept for a while once seen.

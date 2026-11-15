@@ -256,7 +256,7 @@ final class AuthControllerProvider
   AuthController create() => AuthController();
 }
 
-String _$authControllerHash() => r'd819419614d55ad7f83634964a3b4ae8143427f7';
+String _$authControllerHash() => r'95faa5600190880bb5025a3279d60054c404a431';
 
 /// Drives the sign-in / sign-out actions. Exposes `AsyncValue<void>` so
 /// screens get automatic loading/error states via [AsyncValue.guard]

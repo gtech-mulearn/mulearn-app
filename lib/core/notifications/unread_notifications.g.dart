@@ -125,7 +125,7 @@ final class UnreadNotificationsProvider
 }
 
 String _$unreadNotificationsHash() =>
-    r'a0ce99d3f60176590045b5cc56158ea682b8a493';
+    r'fdf4f0bc336553f3ff6d666a36428e27eda3c80d';
 
 /// The unread badge: unread, non-archived personal notifications
 /// (`UnreadCountView`; broadcasts aren't counted). In core because Home and
