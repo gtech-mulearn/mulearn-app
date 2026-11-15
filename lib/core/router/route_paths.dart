@@ -77,6 +77,9 @@ abstract final class RoutePaths {
   static const String opportunities = '/opportunities';
 
   /// Weekly Twitches; `?show=<slug>` opens on a show.
+  /// A learner's mentor sessions: join one, ask for one, rate one.
+  static const String learnerSessions = '/sessions';
+
   static const String problemStatements = '/problem-statements';
   static const String problemStatement = '/problem-statements/:id';
   static String problemStatementPath(String id) => '/problem-statements/$id';

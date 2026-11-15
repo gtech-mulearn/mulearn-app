@@ -38,6 +38,7 @@ import 'package:mulearn_app/features/learning_circles/presentation/screens/learn
 import 'package:mulearn_app/features/learning_circles/presentation/screens/learning_circles_screen.dart';
 import 'package:mulearn_app/features/learning_circles/presentation/screens/meeting_detail_screen.dart';
 import 'package:mulearn_app/features/mentor/presentation/screens/availability_screen.dart';
+import 'package:mulearn_app/features/mentor/presentation/screens/learner_sessions_screen.dart';
 import 'package:mulearn_app/features/mentor/presentation/screens/mentor_hub_screen.dart';
 import 'package:mulearn_app/features/mentor/presentation/screens/mentor_session_detail_screen.dart';
 import 'package:mulearn_app/features/mentor/presentation/screens/mentor_sessions_screen.dart';
@@ -129,6 +130,7 @@ GoRouter goRouter(Ref ref) {
       GoRoute(path: RoutePaths.calendar, builder: (_, __) => const CalendarScreen()),
       GoRoute(path: RoutePaths.opportunities, builder: (_, __) => const OpportunitiesScreen()),
       GoRoute(path: RoutePaths.problemStatements, builder: (_, __) => const ProblemStatementsScreen()),
+      GoRoute(path: RoutePaths.learnerSessions, builder: (_, __) => const LearnerSessionsScreen()),
       GoRoute(
         path: RoutePaths.problemStatement,
         builder: (_, state) => ProblemStatementDetailScreen(id: state.pathParameters['id']!),

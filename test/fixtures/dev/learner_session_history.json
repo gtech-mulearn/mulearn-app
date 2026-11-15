@@ -1,0 +1,119 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/mentor/session/participant/history/?pageIndex=1&perPage=20",
+    "account": "qa-student",
+    "status": 200,
+    "recorded_at": "2026-11-15T16:27:00.044Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "data": [
+        {
+          "id": "137c8639-03c6-411b-a154-c839b2c75d3c",
+          "session_id": "64d31001-27d5-422b-a64c-1155a257d0c8",
+          "user_id": "04afe242-e329-4491-af58-d555abd82e5f",
+          "user_full_name": "QA Student One",
+          "mu_id": "qastudentone@mulearn",
+          "participant_role": "MENTEE",
+          "attendance_status": "INVITED",
+          "progress_note": null,
+          "feedback": null,
+          "contributed_minutes": null,
+          "created_at": "2026-11-13T09:26:59Z",
+          "session_title": "[QA] second request",
+          "session_starts_at": "2026-11-17T12:00:00Z",
+          "session_ends_at": "2026-11-17T12:30:00Z",
+          "session_mode": "ONLINE",
+          "session_meeting_link": "",
+          "session_venue": "",
+          "session_status": "REJECTED",
+          "session_entity_id": "4ff0a5e5-d1ef-44dd-ac13-9a2f9e7717e3",
+          "session_type": "IG_SESSION",
+          "session_entity_name": "Web Development"
+        },
+        {
+          "id": "28a3fb34-7bc9-44ce-9d22-5e0152b84c15",
+          "session_id": "e1d23e38-2392-41ac-905a-3645f37d5517",
+          "user_id": "04afe242-e329-4491-af58-d555abd82e5f",
+          "user_full_name": "QA Student One",
+          "mu_id": "qastudentone@mulearn",
+          "participant_role": "MENTEE",
+          "attendance_status": "INVITED",
+          "progress_note": null,
+          "feedback": null,
+          "contributed_minutes": null,
+          "created_at": "2026-11-13T09:30:20Z",
+          "session_title": "[QA] Help with my first Flutter widget test",
+          "session_starts_at": "2026-11-16T12:30:00Z",
+          "session_ends_at": "2026-11-16T13:15:00Z",
+          "session_mode": "ONLINE",
+          "session_meeting_link": "",
+          "session_venue": "",
+          "session_status": "REQUESTED",
+          "session_entity_id": "4ff0a5e5-d1ef-44dd-ac13-9a2f9e7717e3",
+          "session_type": "IG_SESSION",
+          "session_entity_name": "Web Development"
+        },
+        {
+          "id": "a7cd7411-6572-4308-aa5f-6199055c2c59",
+          "session_id": "fa6356a5-b601-491f-9172-7a73e9f1cabe",
+          "user_id": "04afe242-e329-4491-af58-d555abd82e5f",
+          "user_full_name": "QA Student One",
+          "mu_id": "qastudentone@mulearn",
+          "participant_role": "MENTEE",
+          "attendance_status": "INVITED",
+          "progress_note": null,
+          "feedback": null,
+          "contributed_minutes": null,
+          "created_at": "2026-11-13T09:18:29Z",
+          "session_title": "[QA] Help with my first Flutter widget test",
+          "session_starts_at": "2026-11-16T12:30:00Z",
+          "session_ends_at": "2026-11-16T13:15:00Z",
+          "session_mode": "ONLINE",
+          "session_meeting_link": "https://meet.example/qa-help",
+          "session_venue": "",
+          "session_status": "SCHEDULED",
+          "session_entity_id": "4ff0a5e5-d1ef-44dd-ac13-9a2f9e7717e3",
+          "session_type": "IG_SESSION",
+          "session_entity_name": "Web Development"
+        },
+        {
+          "id": "debe224f-d3b8-4fae-ada7-99091c2a56d8",
+          "session_id": "6a68bfc9-957f-4684-aea9-3795d2d7c4a0",
+          "user_id": "04afe242-e329-4491-af58-d555abd82e5f",
+          "user_full_name": "QA Student One",
+          "mu_id": "qastudentone@mulearn",
+          "participant_role": "MENTEE",
+          "attendance_status": "ATTENDED",
+          "progress_note": "QA: fixed the bug",
+          "feedback": null,
+          "contributed_minutes": 30,
+          "created_at": "2026-11-13T09:02:59Z",
+          "session_title": "[QA] plan 4 attendance check",
+          "session_starts_at": "2026-11-13T10:02:00Z",
+          "session_ends_at": "2026-11-13T10:47:00Z",
+          "session_mode": "ONLINE",
+          "session_meeting_link": "https://meet.example/qa",
+          "session_venue": "",
+          "session_status": "COMPLETED",
+          "session_entity_id": "4ff0a5e5-d1ef-44dd-ac13-9a2f9e7717e3",
+          "session_type": "IG_SESSION",
+          "session_entity_name": "Web Development"
+        }
+      ],
+      "pagination": {
+        "count": 4,
+        "totalPages": 1,
+        "isNext": false,
+        "isPrev": false,
+        "nextPage": null
+      }
+    }
+  }
+}

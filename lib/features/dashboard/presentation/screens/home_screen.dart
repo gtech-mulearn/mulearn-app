@@ -268,6 +268,12 @@ class _UpNext extends ConsumerWidget {
         onTap: () => context.push(RoutePaths.weeklyTwitches),
       ),
       MuTile(
+        title: 'Mentor sessions',
+        category: IgCategory.creative,
+        meta: 'Join one, or ask for help',
+        onTap: () => context.push(RoutePaths.learnerSessions),
+      ),
+      MuTile(
         title: 'Problem statements',
         category: IgCategory.manager,
         meta: 'Solve real problems, share your fix',

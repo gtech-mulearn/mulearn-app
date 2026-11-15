@@ -36,6 +36,7 @@ const _allowedSignedInExtra = {
   RoutePaths.opportunities,
   RoutePaths.weeklyTwitches,
   RoutePaths.problemStatements,
+  RoutePaths.learnerSessions,
   RoutePaths.createLearningCircle,
   RoutePaths.learningCircles,
   RoutePaths.notifications,
