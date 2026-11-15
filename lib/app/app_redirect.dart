@@ -35,6 +35,7 @@ const _allowedSignedInExtra = {
   RoutePaths.calendar,
   RoutePaths.opportunities,
   RoutePaths.weeklyTwitches,
+  RoutePaths.problemStatements,
   RoutePaths.createLearningCircle,
   RoutePaths.learningCircles,
   RoutePaths.notifications,
@@ -55,6 +56,7 @@ bool _isSignedInScreen(String path) =>
     path.startsWith('/u/') ||
     path.startsWith('/campuses/') ||
     path.startsWith('/weekly-twitches/') ||
+    path.startsWith('/problem-statements/') ||
     path.startsWith('/interest-groups/') ||
     path.startsWith('/events/') ||
     path.startsWith('/circles/') ||

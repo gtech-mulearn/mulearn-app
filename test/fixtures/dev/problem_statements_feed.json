@@ -1,0 +1,202 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/problem-statements/?pageIndex=1&perPage=20",
+    "account": "qa-student",
+    "status": 200,
+    "recorded_at": "2026-11-15T16:19:20.284Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "data": [
+        {
+          "id": "1eb84140-b539-45f5-bad0-5b36bb79c0b8",
+          "title": "A problem statement by admin",
+          "description": "This problem statement was created to test this feature",
+          "category": "Web Development",
+          "skills": [],
+          "deadline": "2026-11-09T20:19:00Z",
+          "status": "Published",
+          "company": {
+            "id": null,
+            "name": "muLearn",
+            "logo": null
+          },
+          "is_open": false,
+          "interaction_counts": {
+            "Trying": 0,
+            "Submitted": 0
+          },
+          "my_interaction": null,
+          "created_at": "2026-11-09T14:49:47.916617Z",
+          "updated_at": "2026-11-09T14:50:18.780072Z",
+          "published_at": "2026-11-09T14:50:18.779938Z"
+        },
+        {
+          "id": "8b12f9aa-b810-40d6-b663-e1cd45de9291",
+          "title": "muLearn Submission Test - Deadline Race",
+          "description": "Short-lived statement used to check that no submission is accepted after the deadline.",
+          "category": "Testing",
+          "skills": [
+            "Python"
+          ],
+          "deadline": "2026-10-18T08:15:22Z",
+          "status": "Published",
+          "company": {
+            "id": null,
+            "name": "muLearn",
+            "logo": null
+          },
+          "is_open": false,
+          "interaction_counts": {
+            "Trying": 0,
+            "Submitted": 1
+          },
+          "my_interaction": null,
+          "created_at": "2026-10-18T08:14:45.075927Z",
+          "updated_at": "2026-10-18T08:14:48.131839Z",
+          "published_at": "2026-10-18T08:14:48.131839Z"
+        },
+        {
+          "id": "75a109fb-0f03-496c-a3ce-b697fb5c21e3",
+          "title": "muLearn Submission Test - Short Deadline",
+          "description": "Build a tool that tracks and reduces food waste across campus canteens.",
+          "category": "Sustainability",
+          "skills": [
+            "Python",
+            "Django"
+          ],
+          "deadline": "2026-10-18T07:17:57Z",
+          "status": "Published",
+          "company": {
+            "id": null,
+            "name": "muLearn",
+            "logo": null
+          },
+          "is_open": false,
+          "interaction_counts": {
+            "Trying": 0,
+            "Submitted": 1
+          },
+          "my_interaction": null,
+          "created_at": "2026-10-18T07:17:00.172842Z",
+          "updated_at": "2026-10-18T07:17:03.119710Z",
+          "published_at": "2026-10-18T07:17:03.119710Z"
+        },
+        {
+          "id": "f0e48327-5624-4487-a7df-d294d6cbc086",
+          "title": "muLearn Submission Test - Short Deadline",
+          "description": "Build a tool that tracks and reduces food waste across campus canteens.",
+          "category": "Sustainability",
+          "skills": [
+            "Python",
+            "Django"
+          ],
+          "deadline": "2026-10-18T07:13:44Z",
+          "status": "Published",
+          "company": {
+            "id": null,
+            "name": "muLearn",
+            "logo": null
+          },
+          "is_open": false,
+          "interaction_counts": {
+            "Trying": 0,
+            "Submitted": 0
+          },
+          "my_interaction": null,
+          "created_at": "2026-10-18T07:12:11.152261Z",
+          "updated_at": "2026-10-18T07:12:17.038110Z",
+          "published_at": "2026-10-18T07:12:17.038110Z"
+        },
+        {
+          "id": "11f6a96a-47a6-4f00-88db-83daca87f085",
+          "title": "AI-Powered Student Success Predictor",
+          "description": "## Background\n\nStudents often struggle academically because of learning gaps, irregular attendance, poor time management, and a lack of personalized guidance. Educational institutions typically identify students who need help only after their academic performance has declined significantly.\n\n## Problem Statement\n\nDevelop an AI-powered system that analyzes student academic records, attendance, assignment completion, and study habits to identify students who may be at risk of poor academic performance.\n\nThe system should use machine learning to predict potential academic difficulties and provide personalized, actionable recommendations to help students improve their performance.\n\n## Key Requirements\n\n1. **Student Data Analysis:** Process academic scores, attendance, assignment submissions, and study patterns.\n2. **Performance Prediction:** Build a machine learning model that estimates academic performance or identifies students at risk.\n3. **Early-Warning System:** Highlight students who may need additional academic support.\n4. **Personalized Recommendations:** Suggest targeted study plans, revision topics, and time-management improvements.\n5. **Dashboard:** Provide a simple interface for students and educators to view predictions, progress, and recommendations.\n6. **Progress Tracking:** Compare predicted performance with subsequent results and monitor improvements.\n\n## Expected Outcome\n\nA functional prototype that demonstrates how machine learning can support early identification of academic difficulties and deliver personalized learning recommendations.\n\n## Constraints and Considerations\n\n- Use synthetic or anonymized student data.\n- Protect student privacy and restrict access to sensitive information.\n- Evaluate model performance using suitable metrics such as precision, recall, and F1-score.\n- Ensure predictions support educators' decisions rather than automatically determining a student's future.\n\n## Evaluation Criteria\n\nSolutions will be evaluated based on prediction quality, usefulness of recommendations, usability, responsible data handling, and the completeness of the working prototype.",
+          "category": "AI / ML",
+          "skills": [],
+          "deadline": null,
+          "status": "Published",
+          "company": {
+            "id": null,
+            "name": "muLearn",
+            "logo": null
+          },
+          "is_open": true,
+          "interaction_counts": {
+            "Trying": 2,
+            "Submitted": 1
+          },
+          "my_interaction": null,
+          "created_at": "2026-10-10T13:17:31.020373Z",
+          "updated_at": "2026-10-10T13:19:28.717459Z",
+          "published_at": "2026-10-10T13:19:28.717340Z"
+        },
+        {
+          "id": "523833d6-3f67-4f43-a0fb-280325d6a426",
+          "title": "Build a Fraud Detection Model",
+          "description": "Design a model to flag suspicious transactions in real time for our platform.",
+          "category": "Data Science",
+          "skills": [
+            "python",
+            "machine-learning"
+          ],
+          "deadline": "2026-12-15T23:59:00Z",
+          "status": "Published",
+          "company": {
+            "id": "30ea3d9d-cb9b-4c71-8427-7d24c85c6869",
+            "name": "company 1",
+            "logo": null
+          },
+          "is_open": true,
+          "interaction_counts": {
+            "Trying": 1,
+            "Submitted": 0
+          },
+          "my_interaction": null,
+          "created_at": "2026-10-10T06:02:26.340322Z",
+          "updated_at": "2026-10-10T06:02:33.861145Z",
+          "published_at": "2026-10-10T06:02:33.861145Z"
+        },
+        {
+          "id": "030157e3-580b-44ca-bbec-00182289fb41",
+          "title": "muLearn Platform Challenge",
+          "description": "Build an open-source contribution tracker for campus communities.",
+          "category": "Open Source",
+          "skills": [
+            "python",
+            "django"
+          ],
+          "deadline": "2026-12-31T23:59:00Z",
+          "status": "Published",
+          "company": {
+            "id": null,
+            "name": "muLearn",
+            "logo": null
+          },
+          "is_open": true,
+          "interaction_counts": {
+            "Trying": 0,
+            "Submitted": 0
+          },
+          "my_interaction": null,
+          "created_at": "2026-10-10T06:02:06.751428Z",
+          "updated_at": "2026-10-10T06:02:16.274490Z",
+          "published_at": "2026-10-10T06:02:16.274490Z"
+        }
+      ],
+      "pagination": {
+        "count": 7,
+        "totalPages": 1,
+        "isNext": false,
+        "isPrev": false,
+        "nextPage": null
+      }
+    }
+  }
+}

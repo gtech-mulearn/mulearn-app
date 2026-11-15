@@ -267,6 +267,12 @@ class _UpNext extends ConsumerWidget {
         meta: 'Talks and campus shows',
         onTap: () => context.push(RoutePaths.weeklyTwitches),
       ),
+      MuTile(
+        title: 'Problem statements',
+        category: IgCategory.manager,
+        meta: 'Solve real problems, share your fix',
+        onTap: () => context.push(RoutePaths.problemStatements),
+      ),
       if (canBrowseJobs)
         MuTile(
           title: 'Internships & gigs',

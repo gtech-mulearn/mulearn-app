@@ -77,6 +77,10 @@ abstract final class RoutePaths {
   static const String opportunities = '/opportunities';
 
   /// Weekly Twitches; `?show=<slug>` opens on a show.
+  static const String problemStatements = '/problem-statements';
+  static const String problemStatement = '/problem-statements/:id';
+  static String problemStatementPath(String id) => '/problem-statements/$id';
+
   static const String weeklyTwitches = '/weekly-twitches';
   static String weeklyTwitchesShowPath(String show) => '/weekly-twitches?show=$show';
   static const String weeklyTwitch = '/weekly-twitches/:show/:id';
