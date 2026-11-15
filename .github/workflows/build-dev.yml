@@ -29,6 +29,9 @@ jobs:
   build:
     name: Android
     uses: ./.github/workflows/android-build.yml
+    # Required for the called workflow to read the Production/Development
+    # environment secrets, even though its build job names the environment.
+    secrets: inherit
     with:
       channel: dev
       signing: optional

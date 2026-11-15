@@ -38,7 +38,11 @@ jobs:
     uses: ./.github/workflows/android-build.yml
     with:
       channel: ci
-      format-base: ${{ github.event.pull_request.base.sha }}
+      # Blocking format check of the PR's changed files — except the dev →
+      # main promotion PR: everything on dev already passed this gate on its
+      # way in, so re-checking would only re-flag pre-gate debt (report only).
+      # (Inverted on purpose: `cond && '' || sha` would always give sha.)
+      format-base: ${{ (github.head_ref != 'dev' || github.event.pull_request.head.repo.full_name != github.repository) && github.event.pull_request.base.sha || '' }}
       build: true
       signing: none
 
