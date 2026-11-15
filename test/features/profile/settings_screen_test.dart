@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mulearn_app/core/config/app_links.dart';
 import 'package:mulearn_app/features/profile/presentation/screens/settings_screen.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../support/fake_http_adapter.dart';
 import 'settings_test_support.dart';
@@ -36,6 +37,21 @@ void main() {
     await tester.scrollUntilVisible(find.text('Delete account'), 200);
     expect(find.text('Sign out'), findsOneWidget);
     expect(find.text('Delete account'), findsOneWidget);
+  });
+
+  testWidgets('the installed version sits at the bottom, as CI named it', (
+    tester,
+  ) async {
+    PackageInfo.setMockInitialValues(
+      appName: 'μLearn',
+      packageName: 'org.mulearn.muapp.dev',
+      version: '1.0.0-dev.84',
+      buildNumber: '84',
+      buildSignature: '',
+    );
+    await openSettings(tester, settingsAdapter());
+    await tester.scrollUntilVisible(find.text('μLearn 1.0.0-dev.84 (84)'), 200);
+    expect(find.text('μLearn 1.0.0-dev.84 (84)'), findsOneWidget);
   });
 
   testWidgets('Discord shows whether the account is connected', (tester) async {

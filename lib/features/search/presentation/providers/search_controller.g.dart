@@ -165,7 +165,7 @@ final class UserSearchProvider
   }
 }
 
-String _$userSearchHash() => r'6bfc6f34c16feae54ec97354eae265a800253ba2';
+String _$userSearchHash() => r'92508238cebfc6a4ceb53cfed958c3225f1edcae';
 
 /// People (or, with `role: 'mentor'`, mentors) matching [query], page by
 /// page; an empty query lists everyone, like the dashboard's search pages.
@@ -291,7 +291,7 @@ final class CampusSearchProvider
   }
 }
 
-String _$campusSearchHash() => r'075c8f95eda9360012f506d7cc0cd618d1d054d0';
+String _$campusSearchHash() => r'f0c040d363bc67a3651df5f74af9849ed9ef8bec';
 
 /// Colleges and schools matching [query] (all of them when empty), page by
 /// page, with the same caching as [UserSearch].

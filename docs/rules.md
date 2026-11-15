@@ -16,6 +16,7 @@ This file is the standing reference for anyone (human or AI agent) working on th
 | Backend | Django REST Framework + SimpleJWT + drf-spectacular | Response envelope and auth patterns are backend-defined — see §3. |
 | Local cache | dio_cache_interceptor (Hive store) | HTTP response caching only. No offline-first datastore (Isar/Drift) unless a specific feature explicitly requires true offline capability — that's a per-feature decision, not a blanket one. |
 | Secure storage | flutter_secure_storage | Tokens only. Never put tokens in `SharedPreferences`. |
+| App info | package_info_plus | Reads the installed versionName / versionCode (`core/config/app_version.dart`, shown in Settings). The version itself comes from `pubspec.yaml` + CI — see docs/CI-CD.md "Versioning". |
 | Lints | very_good_analysis (or flutter_lints, strict) | `flutter analyze` must pass with zero warnings before a PR is opened. |
 
 ---

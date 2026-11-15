@@ -84,6 +84,7 @@ dependencies:
   lucide_icons: ^0.257.0
   flutter_markdown_plus: ^1.0.12
   flutter_svg: ^2.4.0
+  package_info_plus: ^9.0.1
 
 dev_dependencies:
   flutter_test:

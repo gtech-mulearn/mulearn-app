@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/config/app_links.dart';
+import 'package:mulearn_app/core/config/app_version.dart';
 import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
@@ -23,11 +25,23 @@ import 'package:mulearn_app/features/profile/presentation/providers/profile_cont
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
-  Future<void> _togglePublic(BuildContext context, WidgetRef ref, bool value) async {
+  Future<void> _togglePublic(
+    BuildContext context,
+    WidgetRef ref,
+    bool value,
+  ) async {
     try {
-      await ref.read(profileControllerProvider.notifier).togglePublic(isPublic: value);
+      await ref
+          .read(profileControllerProvider.notifier)
+          .togglePublic(isPublic: value);
     } on Object catch (e) {
-      if (context.mounted) MuToast.show(context, message: ApiException.messageFor(e), type: MuToastType.error);
+      if (context.mounted) {
+        MuToast.show(
+          context,
+          message: ApiException.messageFor(e),
+          type: MuToastType.error,
+        );
+      }
     }
   }
 
@@ -35,7 +49,8 @@ class SettingsScreen extends ConsumerWidget {
     final confirmed = await showMuConfirm(
       context,
       title: 'Sign out?',
-      body: "You'll need your email or muid and password, or Google, to come back.",
+      body:
+          "You'll need your email or muid and password, or Google, to come back.",
       confirmLabel: 'Sign out',
       destructive: true,
     );
@@ -52,7 +67,12 @@ class SettingsScreen extends ConsumerWidget {
           final mu = sheetContext.mu;
           final c = mu.colors;
           return Padding(
-            padding: const EdgeInsets.fromLTRB(MuSpacing.space5, 0, MuSpacing.space5, MuSpacing.space5),
+            padding: const EdgeInsets.fromLTRB(
+              MuSpacing.space5,
+              0,
+              MuSpacing.space5,
+              MuSpacing.space5,
+            ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -65,7 +85,10 @@ class SettingsScreen extends ConsumerWidget {
                   style: mu.text.body.copyWith(color: c.ink2),
                 ),
                 const SizedBox(height: MuSpacing.space2),
-                Text('Your email goes to ${AppLinks.supportEmail}.', style: mu.text.caption),
+                Text(
+                  'Your email goes to ${AppLinks.supportEmail}.',
+                  style: mu.text.caption,
+                ),
                 const SizedBox(height: MuSpacing.space5),
                 MuButton(
                   label: 'Email support',
@@ -126,8 +149,14 @@ class SettingsScreen extends ConsumerWidget {
                           true => 'Not connected',
                           false => 'Connected',
                         },
-                        onTap: (needsDiscord ?? false) && ref.watch(discordAuthUriProvider) != null
-                            ? () => unawaited(ref.read(discordConnectFlowProvider.notifier).start())
+                        onTap:
+                            (needsDiscord ?? false) &&
+                                ref.watch(discordAuthUriProvider) != null
+                            ? () => unawaited(
+                                ref
+                                    .read(discordConnectFlowProvider.notifier)
+                                    .start(),
+                              )
                             : null,
                         last: true,
                       ),
@@ -140,20 +169,27 @@ class SettingsScreen extends ConsumerWidget {
                         label: 'Public profile',
                         subtitle: 'Anyone with your link can see your profile',
                         value: isPublic ?? false,
-                        onChanged: isPublic == null ? null : (v) => _togglePublic(context, ref, v),
+                        onChanged: isPublic == null
+                            ? null
+                            : (v) => _togglePublic(context, ref, v),
                       ),
                     ],
                   ),
                   const _SectionLabel('Appearance'),
                   MuSegmented<ThemeMode>(
-                    values: const [ThemeMode.system, ThemeMode.light, ThemeMode.dark],
+                    values: const [
+                      ThemeMode.system,
+                      ThemeMode.light,
+                      ThemeMode.dark,
+                    ],
                     selected: appearance,
                     label: (m) => switch (m) {
                       ThemeMode.system => 'System',
                       ThemeMode.light => 'Light',
                       ThemeMode.dark => 'Dark',
                     },
-                    onChanged: (m) => unawaited(ref.read(appearanceProvider.notifier).set(m)),
+                    onChanged: (m) =>
+                        unawaited(ref.read(appearanceProvider.notifier).set(m)),
                   ),
                   const _SectionLabel('Legal'),
                   _Group(
@@ -191,10 +227,51 @@ class SettingsScreen extends ConsumerWidget {
                       ),
                     ],
                   ),
+                  const SizedBox(height: MuSpacing.space6),
+                  const _VersionLine(),
                 ],
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// "μLearn 1.0.0-dev.84 (84)" under everything; tap copies it for a bug
+/// report.
+class _VersionLine extends ConsumerWidget {
+  const _VersionLine();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final version = ref.watch(appVersionProvider).value;
+    if (version == null) return const SizedBox.shrink();
+    final text = 'μLearn ${version.label}';
+    return Semantics(
+      button: true,
+      label: '$text. Copy version',
+      excludeSemantics: true,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(MuRadii.control),
+        onTap: () async {
+          await Clipboard.setData(ClipboardData(text: text));
+          if (context.mounted) {
+            MuToast.show(
+              context,
+              message: 'Version copied',
+              type: MuToastType.success,
+            );
+          }
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: MuSpacing.space2),
+          child: Text(
+            text,
+            textAlign: TextAlign.center,
+            style: context.mu.text.caption,
+          ),
         ),
       ),
     );
@@ -208,10 +285,18 @@ class _SectionLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-    padding: const EdgeInsets.fromLTRB(MuSpacing.space1, MuSpacing.space6, MuSpacing.space1, MuSpacing.space2),
+    padding: const EdgeInsets.fromLTRB(
+      MuSpacing.space1,
+      MuSpacing.space6,
+      MuSpacing.space1,
+      MuSpacing.space2,
+    ),
     child: Semantics(
       header: true,
-      child: Text(text.toUpperCase(), style: context.mu.text.eyebrow.copyWith(color: context.mu.colors.ink3)),
+      child: Text(
+        text.toUpperCase(),
+        style: context.mu.text.eyebrow.copyWith(color: context.mu.colors.ink3),
+      ),
     ),
   );
 }
@@ -225,7 +310,10 @@ class _Group extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
     padding: const EdgeInsets.symmetric(horizontal: MuSpacing.space4),
-    decoration: BoxDecoration(color: context.mu.colors.surface, borderRadius: BorderRadius.circular(MuRadii.card)),
+    decoration: BoxDecoration(
+      color: context.mu.colors.surface,
+      borderRadius: BorderRadius.circular(MuRadii.card),
+    ),
     clipBehavior: Clip.antiAlias,
     child: Column(children: children),
   );
@@ -270,10 +358,17 @@ class _Row extends StatelessWidget {
           ),
           child: Row(
             children: [
-              Icon(icon, size: MuSizes.iconMd, color: danger ? c.danger : c.ink2),
+              Icon(
+                icon,
+                size: MuSizes.iconMd,
+                color: danger ? c.danger : c.ink2,
+              ),
               const SizedBox(width: MuSpacing.space3),
               Expanded(
-                child: Text(label, style: mu.text.bodyStrong.copyWith(color: fg)),
+                child: Text(
+                  label,
+                  style: mu.text.bodyStrong.copyWith(color: fg),
+                ),
               ),
               if (value != null) ...[
                 Text(value!, style: mu.text.body.copyWith(color: c.ink3)),
@@ -281,7 +376,9 @@ class _Row extends StatelessWidget {
               ],
               if (onTap != null)
                 Icon(
-                  external ? LucideIcons.arrowUpRight : LucideIcons.chevronRight,
+                  external
+                      ? LucideIcons.arrowUpRight
+                      : LucideIcons.chevronRight,
                   size: MuSizes.iconSm,
                   color: c.ink3,
                 ),
