@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'learning_circle_page.dart';
@@ -9,6 +9,7 @@ part of 'learning_circle_page.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $LearningCirclePageCopyWith<LearningCirclePage> get copyWith => _$LearningCircle
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LearningCirclePage&&const DeepCollectionEquality().equals(other.circles, circles)&&(identical(other.hasNext, hasNext) || other.hasNext == hasNext));
+  final _this = this as LearningCirclePage;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LearningCirclePage&&const DeepCollectionEquality().equals(other.circles, _this.circles)&&(identical(other.hasNext, _this.hasNext) || other.hasNext == _this.hasNext));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(circles),hasNext);
+int get hashCode {
+  final _this = this as LearningCirclePage;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.circles),_this.hasNext);
+}
 
 @override
 String toString() {
-  return 'LearningCirclePage(circles: $circles, hasNext: $hasNext)';
+  final _this = this as LearningCirclePage;
+  return 'LearningCirclePage(circles: ${_this.circles}, hasNext: ${_this.hasNext})';
 }
 
 
@@ -63,7 +69,7 @@ class _$LearningCirclePageCopyWithImpl<$Res>
 /// Create a copy of LearningCirclePage
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? circles = null,Object? hasNext = null,}) {
-  return _then(_self.copyWith(
+  return _then(LearningCirclePage(
 circles: null == circles ? _self.circles : circles // ignore: cast_nullable_to_non_nullable
 as List<LearningCircle>,hasNext: null == hasNext ? _self.hasNext : hasNext // ignore: cast_nullable_to_non_nullable
 as bool,
@@ -207,7 +213,7 @@ return $default(_that.circles,_that.hasNext);case _:
 
 
 class _LearningCirclePage implements LearningCirclePage {
-  const _LearningCirclePage({required final  List<LearningCircle> circles, required this.hasNext}): _circles = circles;
+  const _LearningCirclePage({required  List<LearningCircle> circles, required this.hasNext}): _circles = circles;
   
 
  final  List<LearningCircle> _circles;
@@ -229,16 +235,18 @@ _$LearningCirclePageCopyWith<_LearningCirclePage> get copyWith => __$LearningCir
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LearningCirclePage&&const DeepCollectionEquality().equals(other._circles, _circles)&&(identical(other.hasNext, hasNext) || other.hasNext == hasNext));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _LearningCirclePage&&const DeepCollectionEquality().equals(other.circles, _circles)&&(identical(other.hasNext, hasNext) || other.hasNext == hasNext));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_circles),hasNext);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_circles),hasNext);
+}
 
 @override
 String toString() {
-  return 'LearningCirclePage(circles: $circles, hasNext: $hasNext)';
+    return 'LearningCirclePage(circles: $circles, hasNext: $hasNext)';
 }
 
 

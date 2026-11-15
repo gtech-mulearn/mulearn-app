@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'meeting_detail.dart';
@@ -9,6 +9,7 @@ part of 'meeting_detail.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $MeetingDetailCopyWith<MeetingDetail> get copyWith => _$MeetingDetailCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MeetingDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.mode, mode) || other.mode == mode)&&(identical(other.meetPlace, meetPlace) || other.meetPlace == meetPlace)&&(identical(other.meetTime, meetTime) || other.meetTime == meetTime)&&(identical(other.ig, ig) || other.ig == ig)&&(identical(other.isStarted, isStarted) || other.isStarted == isStarted)&&(identical(other.isEnded, isEnded) || other.isEnded == isEnded)&&(identical(other.isMember, isMember) || other.isMember == isMember)&&(identical(other.isReportNeeded, isReportNeeded) || other.isReportNeeded == isReportNeeded)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.createdById, createdById) || other.createdById == createdById)&&const DeepCollectionEquality().equals(other.attendees, attendees)&&(identical(other.meetLink, meetLink) || other.meetLink == meetLink)&&(identical(other.reportDescription, reportDescription) || other.reportDescription == reportDescription)&&(identical(other.meetCode, meetCode) || other.meetCode == meetCode)&&(identical(other.isRecurring, isRecurring) || other.isRecurring == isRecurring));
+  final _this = this as MeetingDetail;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MeetingDetail&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.description, _this.description) || other.description == _this.description)&&(identical(other.mode, _this.mode) || other.mode == _this.mode)&&(identical(other.meetPlace, _this.meetPlace) || other.meetPlace == _this.meetPlace)&&(identical(other.meetTime, _this.meetTime) || other.meetTime == _this.meetTime)&&(identical(other.ig, _this.ig) || other.ig == _this.ig)&&(identical(other.isStarted, _this.isStarted) || other.isStarted == _this.isStarted)&&(identical(other.isEnded, _this.isEnded) || other.isEnded == _this.isEnded)&&(identical(other.isMember, _this.isMember) || other.isMember == _this.isMember)&&(identical(other.isReportNeeded, _this.isReportNeeded) || other.isReportNeeded == _this.isReportNeeded)&&(identical(other.duration, _this.duration) || other.duration == _this.duration)&&(identical(other.createdById, _this.createdById) || other.createdById == _this.createdById)&&const DeepCollectionEquality().equals(other.attendees, _this.attendees)&&(identical(other.meetLink, _this.meetLink) || other.meetLink == _this.meetLink)&&(identical(other.reportDescription, _this.reportDescription) || other.reportDescription == _this.reportDescription)&&(identical(other.meetCode, _this.meetCode) || other.meetCode == _this.meetCode)&&(identical(other.isRecurring, _this.isRecurring) || other.isRecurring == _this.isRecurring));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,title,description,mode,meetPlace,meetTime,ig,isStarted,isEnded,isMember,isReportNeeded,duration,createdById,const DeepCollectionEquality().hash(attendees),meetLink,reportDescription,meetCode,isRecurring);
+int get hashCode {
+  final _this = this as MeetingDetail;
+  return Object.hash(runtimeType,_this.id,_this.title,_this.description,_this.mode,_this.meetPlace,_this.meetTime,_this.ig,_this.isStarted,_this.isEnded,_this.isMember,_this.isReportNeeded,_this.duration,_this.createdById,const DeepCollectionEquality().hash(_this.attendees),_this.meetLink,_this.reportDescription,_this.meetCode,_this.isRecurring);
+}
 
 @override
 String toString() {
-  return 'MeetingDetail(id: $id, title: $title, description: $description, mode: $mode, meetPlace: $meetPlace, meetTime: $meetTime, ig: $ig, isStarted: $isStarted, isEnded: $isEnded, isMember: $isMember, isReportNeeded: $isReportNeeded, duration: $duration, createdById: $createdById, attendees: $attendees, meetLink: $meetLink, reportDescription: $reportDescription, meetCode: $meetCode, isRecurring: $isRecurring)';
+  final _this = this as MeetingDetail;
+  return 'MeetingDetail(id: ${_this.id}, title: ${_this.title}, description: ${_this.description}, mode: ${_this.mode}, meetPlace: ${_this.meetPlace}, meetTime: ${_this.meetTime}, ig: ${_this.ig}, isStarted: ${_this.isStarted}, isEnded: ${_this.isEnded}, isMember: ${_this.isMember}, isReportNeeded: ${_this.isReportNeeded}, duration: ${_this.duration}, createdById: ${_this.createdById}, attendees: ${_this.attendees}, meetLink: ${_this.meetLink}, reportDescription: ${_this.reportDescription}, meetCode: ${_this.meetCode}, isRecurring: ${_this.isRecurring})';
 }
 
 
@@ -63,7 +69,7 @@ class _$MeetingDetailCopyWithImpl<$Res>
 /// Create a copy of MeetingDetail
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? description = null,Object? mode = null,Object? meetPlace = null,Object? meetTime = null,Object? ig = null,Object? isStarted = null,Object? isEnded = null,Object? isMember = null,Object? isReportNeeded = null,Object? duration = null,Object? createdById = null,Object? attendees = null,Object? meetLink = freezed,Object? reportDescription = freezed,Object? meetCode = freezed,Object? isRecurring = null,}) {
-  return _then(_self.copyWith(
+  return _then(MeetingDetail(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
@@ -223,7 +229,7 @@ return $default(_that.id,_that.title,_that.description,_that.mode,_that.meetPlac
 
 
 class _MeetingDetail implements MeetingDetail {
-  const _MeetingDetail({required this.id, required this.title, required this.description, required this.mode, required this.meetPlace, required this.meetTime, required this.ig, required this.isStarted, required this.isEnded, required this.isMember, required this.isReportNeeded, required this.duration, required this.createdById, required final  List<MeetingAttendee> attendees, this.meetLink, this.reportDescription, this.meetCode, this.isRecurring = false}): _attendees = attendees;
+  const _MeetingDetail({required this.id, required this.title, required this.description, required this.mode, required this.meetPlace, required this.meetTime, required this.ig, required this.isStarted, required this.isEnded, required this.isMember, required this.isReportNeeded, required this.duration, required this.createdById, required  List<MeetingAttendee> attendees, this.meetLink, this.reportDescription, this.meetCode, this.isRecurring = false}): _attendees = attendees;
   
 
 @override final  String id;
@@ -261,16 +267,18 @@ _$MeetingDetailCopyWith<_MeetingDetail> get copyWith => __$MeetingDetailCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MeetingDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.mode, mode) || other.mode == mode)&&(identical(other.meetPlace, meetPlace) || other.meetPlace == meetPlace)&&(identical(other.meetTime, meetTime) || other.meetTime == meetTime)&&(identical(other.ig, ig) || other.ig == ig)&&(identical(other.isStarted, isStarted) || other.isStarted == isStarted)&&(identical(other.isEnded, isEnded) || other.isEnded == isEnded)&&(identical(other.isMember, isMember) || other.isMember == isMember)&&(identical(other.isReportNeeded, isReportNeeded) || other.isReportNeeded == isReportNeeded)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.createdById, createdById) || other.createdById == createdById)&&const DeepCollectionEquality().equals(other._attendees, _attendees)&&(identical(other.meetLink, meetLink) || other.meetLink == meetLink)&&(identical(other.reportDescription, reportDescription) || other.reportDescription == reportDescription)&&(identical(other.meetCode, meetCode) || other.meetCode == meetCode)&&(identical(other.isRecurring, isRecurring) || other.isRecurring == isRecurring));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MeetingDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.mode, mode) || other.mode == mode)&&(identical(other.meetPlace, meetPlace) || other.meetPlace == meetPlace)&&(identical(other.meetTime, meetTime) || other.meetTime == meetTime)&&(identical(other.ig, ig) || other.ig == ig)&&(identical(other.isStarted, isStarted) || other.isStarted == isStarted)&&(identical(other.isEnded, isEnded) || other.isEnded == isEnded)&&(identical(other.isMember, isMember) || other.isMember == isMember)&&(identical(other.isReportNeeded, isReportNeeded) || other.isReportNeeded == isReportNeeded)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.createdById, createdById) || other.createdById == createdById)&&const DeepCollectionEquality().equals(other.attendees, _attendees)&&(identical(other.meetLink, meetLink) || other.meetLink == meetLink)&&(identical(other.reportDescription, reportDescription) || other.reportDescription == reportDescription)&&(identical(other.meetCode, meetCode) || other.meetCode == meetCode)&&(identical(other.isRecurring, isRecurring) || other.isRecurring == isRecurring));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,title,description,mode,meetPlace,meetTime,ig,isStarted,isEnded,isMember,isReportNeeded,duration,createdById,const DeepCollectionEquality().hash(_attendees),meetLink,reportDescription,meetCode,isRecurring);
+int get hashCode {
+    return Object.hash(runtimeType,id,title,description,mode,meetPlace,meetTime,ig,isStarted,isEnded,isMember,isReportNeeded,duration,createdById,const DeepCollectionEquality().hash(_attendees),meetLink,reportDescription,meetCode,isRecurring);
+}
 
 @override
 String toString() {
-  return 'MeetingDetail(id: $id, title: $title, description: $description, mode: $mode, meetPlace: $meetPlace, meetTime: $meetTime, ig: $ig, isStarted: $isStarted, isEnded: $isEnded, isMember: $isMember, isReportNeeded: $isReportNeeded, duration: $duration, createdById: $createdById, attendees: $attendees, meetLink: $meetLink, reportDescription: $reportDescription, meetCode: $meetCode, isRecurring: $isRecurring)';
+    return 'MeetingDetail(id: $id, title: $title, description: $description, mode: $mode, meetPlace: $meetPlace, meetTime: $meetTime, ig: $ig, isStarted: $isStarted, isEnded: $isEnded, isMember: $isMember, isReportNeeded: $isReportNeeded, duration: $duration, createdById: $createdById, attendees: $attendees, meetLink: $meetLink, reportDescription: $reportDescription, meetCode: $meetCode, isRecurring: $isRecurring)';
 }
 
 

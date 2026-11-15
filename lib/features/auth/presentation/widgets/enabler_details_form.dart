@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mulearn_app/core/theme/mu_space.dart';
-import 'package:mulearn_app/core/widgets/mu_buttons.dart';
-import 'package:mulearn_app/core/widgets/searchable_select_field.dart';
+import 'package:mulearn_app/core/design_system/design_system.dart';
+import 'package:mulearn_app/core/models/reference_option.dart';
 import 'package:mulearn_app/features/auth/domain/entities/registration_role.dart';
 import 'package:mulearn_app/features/auth/presentation/providers/register_providers.dart';
 import 'package:mulearn_app/features/auth/presentation/providers/register_submit_controller.dart';
 
-/// Enabler role details — just a college pick with the "others" custom-entry
-/// escape hatch, matching the reference's `enablerDetailsSchema` exactly (no
-/// department/graduation-year/organization fields at all).
+/// Enabler details, the dashboard's `enablerDetailsSchema`: just the
+/// college, with a "not listed" entry.
 class EnablerDetailsForm extends ConsumerStatefulWidget {
   const EnablerDetailsForm({required this.onSubmitted, super.key});
 
@@ -35,75 +33,74 @@ class _EnablerDetailsFormState extends ConsumerState<EnablerDetailsForm> {
     FocusScope.of(context).unfocus();
 
     try {
-      await ref.read(registerSubmitControllerProvider.notifier).submitGeneric(
+      await ref
+          .read(registerSubmitControllerProvider.notifier)
+          .submitGeneric(
             role: RegistrationRole.enabler,
             college: _college,
-            customCollege: _college == kSearchableSelectOthersValue
+            customCollege: _college == muOtherOptionValue
                 ? _customCollegeController.text.trim()
                 : null,
           );
       widget.onSubmitted();
     } on Object catch (_) {
-      // Surfaced via the ref.listen snackbar in the parent screen.
+      // Surfaced via the ref.listen toast in the parent screen.
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final colleges = ref.watch(registerCollegesProvider);
-    final isLoading = ref.watch(registerSubmitControllerProvider).isLoading;
+    final loading = ref.watch(registerSubmitControllerProvider).isLoading;
 
     return Form(
       key: _formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          colleges.when(
-            data: (options) => SearchableSelectField(
-              label: 'College',
-              options:
-                  options.map((o) => SelectOption(id: o.id, label: o.title)).toList(),
-              allowOthers: true,
-              enabled: !isLoading,
-              initialValue: _college,
-              onSelected: (value) => setState(() => _college = value),
-              validator: (_) => _college == null || _college!.isEmpty
-                  ? 'Please select your college.'
-                  : null,
-            ),
-            loading: () => const SearchableSelectField(
-              label: 'College',
-              options: [],
-              isLoading: true,
-              onSelected: _noop,
-            ),
-            error: (_, _) => const SearchableSelectField(
-              label: 'College',
-              options: [],
-              hintText: 'Failed to load — pull to retry',
-              onSelected: _noop,
-            ),
+          MuSelectField(
+            label: 'College',
+            hint: 'Search your college',
+            options: [
+              for (final o in colleges.value ?? const <ReferenceOption>[])
+                MuOption(o.id, o.title),
+            ],
+            loading: colleges.isLoading,
+            error: colleges.hasError
+                ? "Couldn't load colleges. Go back and try again."
+                : null,
+            enabled: !loading,
+            allowOther: true,
+            otherLabel: 'My college is not listed',
+            value: _college,
+            onChanged: (v) => setState(() => _college = v),
+            validator: (_) => (_college ?? '').isEmpty
+                ? 'Pick your college to continue.'
+                : null,
           ),
-          if (_college == kSearchableSelectOthersValue) ...[
-            const SizedBox(height: MuSpace.l),
-            TextFormField(
+          if (_college == muOtherOptionValue) ...[
+            const SizedBox(height: MuSpacing.space4),
+            MuTextField(
+              label: 'College name',
               controller: _customCollegeController,
-              enabled: !isLoading,
-              decoration: const InputDecoration(labelText: 'College Name'),
-              validator: (value) => (value?.trim().length ?? 0) < 3
-                  ? 'College name must be at least 3 characters.'
+              enabled: !loading,
+              textCapitalization: TextCapitalization.words,
+              validator: (v) => (v?.trim().length ?? 0) < 3
+                  ? 'Use at least 3 characters.'
                   : null,
             ),
           ],
-          const SizedBox(height: MuSpace.xl),
-          MuPrimaryButton(
-            label: isLoading ? 'Submitting…' : 'Complete Registration',
-            onPressed: isLoading ? null : _submit,
+          const SizedBox(height: MuSpacing.space6),
+          MuButton(
+            label: 'Finish sign-up',
+            block: true,
+            knob: true,
+            loading: loading,
+            loadingLabel: 'Creating your account…',
+            onPressed: _submit,
           ),
         ],
       ),
     );
   }
 }
-
-void _noop(String? _) {}

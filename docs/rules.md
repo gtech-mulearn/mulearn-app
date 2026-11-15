@@ -14,9 +14,10 @@ This file is the standing reference for anyone (human or AI agent) working on th
 | Networking | Dio | Generated client (see §4) for standard CRUD; hand-written Retrofit interfaces only for non-standard endpoints. |
 | Models | Freezed + json_serializable | All domain entities and DTOs. No hand-written `copyWith`/`==`/`toJson`. |
 | Backend | Django REST Framework + SimpleJWT + drf-spectacular | Response envelope and auth patterns are backend-defined — see §3. |
-| Local cache | dio_cache_interceptor (Hive store) | HTTP response caching only. No offline-first datastore (Isar/Drift) unless a specific feature explicitly requires true offline capability — that's a per-feature decision, not a blanket one. |
+| Local cache | dio_cache_interceptor 4 + http_cache_hive_store (hive_ce) | HTTP response caching only. No offline-first datastore (Isar/Drift) unless a specific feature explicitly requires true offline capability — that's a per-feature decision, not a blanket one. |
 | Secure storage | flutter_secure_storage | Tokens only. Never put tokens in `SharedPreferences`. |
-| Lints | very_good_analysis (or flutter_lints, strict) | `flutter analyze` must pass with zero warnings before a PR is opened. |
+| App info | package_info_plus | Reads the installed versionName / versionCode (`core/config/app_version.dart`, shown in Settings). The version itself comes from `pubspec.yaml` + CI — see docs/CI-CD.md "Versioning". |
+| Lints | very_good_analysis + riverpod_lint | riverpod_lint runs as a native analyzer plugin (`plugins:` in analysis_options.yaml), not custom_lint. `flutter analyze` must pass with zero issues before a PR is opened. |
 
 ---
 
@@ -100,9 +101,9 @@ lib/
 
 ## 8. Design & theming
 
-- Brand tokens live in `core/theme/mulearn_colors.dart` and `core/theme/mulearn_theme.dart` — this is the single source of truth, ported from the landing page's CSS custom properties. Never hardcode a hex color inline in a widget; reference `MulearnColors.primary` etc.
-- Primary blue `#0961F5`; brand gradient 135° `#2E85FE → #8F44ED` (karma purple aligned to the dashboard's `--brand-purple`, 2026-11-12); supporting neutrals greyish `#C4C4C4`, blackish `#1A1A1A`, whitish `#FEFEFE`, gray-600 `#666771`.
-- Match heading weight hierarchy from the web app (h1 heaviest/black down to h5 medium) rather than inventing a new scale.
+- **New UI is built from the design system in `core/design_system/`** (import `design_system.dart`). Its spec is the μLearn Mobile design system artifact (https://claude.ai/artifact/7K3eV2dVDNYdkBcc5iyXFj): tokens, components, guidelines, screen patterns. Tokens come from `design/tokens.json` via `dart run tool/gen_tokens.dart`; never edit `mu_tokens.g.dart` or hardcode a colour, radius or spacing value in a widget. Read colours and type through `context.mu` (`context.mu.colors.cobalt`, `context.mu.text.title3`).
+- Colour roles: `cobalt` `#0961F5` = identity and commitment; `night` = the forward action, nav, toasts; `volt` = karma and "now" only; `ig-*` fills = Interest Group category. Type: Plus Jakarta Sans (display and text), JetBrains Mono (hashtags, muids, karma amounts). Motion: springs from `MuSprings`, press feedback via `MuPressable`.
+- `core/theme/` and the old `core/widgets/` Mu* components are the previous UI, kept only until each screen is migrated (plan 5 onwards). Don't use them in new or migrated code.
 - **Who sees a role workspace is decided only in `core/session/workspace_access.dart`;** workspace routes are wrapped in `WorkspaceGate`, live under `/mentor`, `/campus` or `/enabler` (signed-in prefixes in `app_redirect.dart`), and open from Home cards and Profile rows, never new tabs. A person can hold several roles: decide each workspace on its own and never branch on "the" role.
 - **The logo is `MuLogo`** (`core/widgets/mu_logo.dart`, the dashboard's images); never type a μ glyph as a logo (enforced by `test/architecture/brand_logo_test.dart`).
 - **Small interaction details are part of done** (user, 2026-11-13): anything that looks like an item opens it; the action the user came for (Join, Copy link, Directions) sits where they look, not behind Edit; times read as people say them (Today, Starts in 10 min, Live now, 3h ago); odd or destructive actions confirm with context; after creating something, show it; check it on a phone.

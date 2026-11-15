@@ -21,7 +21,7 @@ part of 'app_auth_controller.dart';
 /// [setSignedOut] after performing the actual sign-in/out work.
 
 @ProviderFor(AppAuthController)
-const appAuthControllerProvider = AppAuthControllerProvider._();
+final appAuthControllerProvider = AppAuthControllerProvider._();
 
 /// Coarse, app-wide authentication signal used by the router (rules.md §4:
 /// auth state is genuinely cross-feature, so it lives in `core/`, which is what
@@ -47,7 +47,7 @@ final class AppAuthControllerProvider
   ///
   /// The auth *feature* controller drives the transitions via [setSignedIn] /
   /// [setSignedOut] after performing the actual sign-in/out work.
-  const AppAuthControllerProvider._()
+  AppAuthControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -84,8 +84,7 @@ abstract class _$AppAuthController extends $AsyncNotifier<bool> {
   FutureOr<bool> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<bool>, bool>;
     final element =
         ref.element
@@ -95,6 +94,6 @@ abstract class _$AppAuthController extends $AsyncNotifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }

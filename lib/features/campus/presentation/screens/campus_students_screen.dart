@@ -3,15 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
-import 'package:mulearn_app/core/theme/mu_space.dart';
-import 'package:mulearn_app/core/theme/mulearn_colors.dart';
-import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 import 'package:mulearn_app/core/utils/level_label.dart';
+import 'package:mulearn_app/core/utils/search_debouncer.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
-import 'package:mulearn_app/core/widgets/mu_card.dart';
-import 'package:mulearn_app/core/widgets/mu_chip.dart';
 import 'package:mulearn_app/core/widgets/mu_load_more_footer.dart';
 import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/core/widgets/mu_state_display.dart';
@@ -24,66 +20,85 @@ class CampusStudentsScreen extends ConsumerStatefulWidget {
   const CampusStudentsScreen({super.key});
 
   @override
-  ConsumerState<CampusStudentsScreen> createState() => _CampusStudentsScreenState();
+  ConsumerState<CampusStudentsScreen> createState() =>
+      _CampusStudentsScreenState();
 }
 
 class _CampusStudentsScreenState extends ConsumerState<CampusStudentsScreen> {
   final _search = TextEditingController();
-  Timer? _debounce;
+  late final _debouncer = SearchDebouncer((q) {
+    if (mounted) setState(() => _filter = _filter.copyWith(search: q));
+  });
   StudentFilter _filter = const StudentFilter();
 
   @override
   void dispose() {
-    _debounce?.cancel();
+    _debouncer.dispose();
     _search.dispose();
     super.dispose();
   }
 
-  void _onSearch(String value) {
-    _debounce?.cancel();
-    _debounce = Timer(const Duration(milliseconds: 300), () {
-      if (mounted) setState(() => _filter = _filter.copyWith(search: value.trim()));
-    });
-  }
+  void _onSearch(String value) => _debouncer.onChanged(value);
 
   @override
   Widget build(BuildContext context) {
+    final mu = context.mu;
     final state = ref.watch(campusStudentsControllerProvider(_filter));
-    return Scaffold(
-      backgroundColor: MuColors.canvas,
-      appBar: AppBar(backgroundColor: MuColors.canvas, elevation: 0, title: const Text('Students')),
+    return MuWorkspacePage(
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(MuSpace.screenH, 0, MuSpace.screenH, MuSpace.s),
-            child: TextField(
-              controller: _search,
-              onChanged: _onSearch,
-              textInputAction: TextInputAction.search,
-              decoration: const InputDecoration(
-                hintText: 'Search by name',
-                prefixIcon: Icon(LucideIcons.search, size: 18),
-              ),
+            padding: const EdgeInsets.fromLTRB(
+              MuSpacing.space5,
+              MuSpacing.space2,
+              MuSpacing.space5,
+              0,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Semantics(
+                  header: true,
+                  child: Text(
+                    'Students',
+                    style: mu.text.display.copyWith(fontSize: 32),
+                  ),
+                ),
+                const SizedBox(height: MuSpacing.space4),
+                MuSearchField(
+                  controller: _search,
+                  hint: 'Search by name',
+                  onChanged: _onSearch,
+                ),
+              ],
             ),
           ),
-          SizedBox(
-            height: 40,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: MuSpace.screenH),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(
+              horizontal: MuSpacing.space5,
+              vertical: MuSpacing.space3,
+            ),
+            child: Row(
               children: [
                 for (final s in StudentSort.values) ...[
                   MuFilterChip(
                     label: s.label,
                     selected: _filter.sort == s,
-                    onTap: () => setState(() => _filter = _filter.copyWith(sort: s)),
+                    onTap: () =>
+                        setState(() => _filter = _filter.copyWith(sort: s)),
                   ),
-                  const SizedBox(width: MuSpace.s),
+                  const SizedBox(width: MuSpacing.space2),
                 ],
                 MuFilterChip(
                   label: 'Alumni',
                   selected: _filter.alumni ?? false,
-                  onTap: () => setState(() => _filter = _filter.copyWith(alumni: (_filter.alumni ?? false) ? null : true)),
+                  onTap: () => setState(
+                    () => _filter = _filter.copyWith(
+                      alumni: (_filter.alumni ?? false) ? null : true,
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -92,46 +107,99 @@ class _CampusStudentsScreenState extends ConsumerState<CampusStudentsScreen> {
             child: state.when(
               skipError: true,
               skipLoadingOnReload: true,
-              loading: () => const Center(child: CircularProgressIndicator()),
+              loading: () =>
+                  const Center(child: MuDotsLoader(label: 'Loading students…')),
               error: (e, _) => ErrorRetryView(
                 error: e,
-                onRetry: () => ref.invalidate(campusStudentsControllerProvider(_filter)),
+                onRetry: () =>
+                    ref.invalidate(campusStudentsControllerProvider(_filter)),
               ),
               data: (view) {
-                Future<void> refresh() => ref.refresh(campusStudentsControllerProvider(_filter).future);
+                Future<void> refresh() => ref.refresh(
+                  campusStudentsControllerProvider(_filter).future,
+                );
                 final items = view.paged.items;
                 if (items.isEmpty) {
                   return MuRefresh(
                     onRefresh: refresh,
                     child: ListView(
                       physics: const AlwaysScrollableScrollPhysics(),
-                      children: const [MuStateDisplay(variant: MuStateVariant.noResults, size: MuStateSize.sm)],
+                      children: const [
+                        MuStateDisplay(
+                          variant: MuStateVariant.noResults,
+                          size: MuStateSize.sm,
+                        ),
+                      ],
                     ),
                   );
                 }
+                final leader = items.fold<int>(
+                  0,
+                  (m, s) => s.karma > m ? s.karma : m,
+                );
                 return MuRefresh(
                   onRefresh: refresh,
                   child: NotificationListener<ScrollNotification>(
                     onNotification: (n) {
-                      if (n.metrics.extentAfter < 400 && view.paged.hasMore && view.paged.loadMoreError == null) {
-                        unawaited(ref.read(campusStudentsControllerProvider(_filter).notifier).loadMore());
+                      if (n.metrics.extentAfter < 400 &&
+                          view.paged.hasMore &&
+                          view.paged.loadMoreError == null) {
+                        unawaited(
+                          ref
+                              .read(
+                                campusStudentsControllerProvider(
+                                  _filter,
+                                ).notifier,
+                              )
+                              .loadMore(),
+                        );
                       }
                       return false;
                     },
                     child: ListView(
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      padding: const EdgeInsets.fromLTRB(MuSpace.screenH, MuSpace.s, MuSpace.screenH, MuSpace.xxl),
+                      physics: const BouncingScrollPhysics(
+                        parent: AlwaysScrollableScrollPhysics(),
+                      ),
+                      padding: const EdgeInsets.fromLTRB(
+                        MuSpacing.space5,
+                        0,
+                        MuSpacing.space5,
+                        MuSpacing.space8,
+                      ),
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(bottom: MuSpace.s),
-                          child: Text(view.count == 1 ? '1 student' : '${view.count} students', style: MuType.caption),
+                          padding: const EdgeInsets.only(
+                            bottom: MuSpacing.space2,
+                          ),
+                          child: Text(
+                            view.count == 1
+                                ? '1 student'
+                                : '${view.count} students',
+                            style: mu.text.caption,
+                          ),
                         ),
-                        for (final s in items) _StudentTile(student: s),
-                        if (view.paged.hasMore || view.paged.loadMoreError != null)
+                        MuFeedGroup(
+                          children: [
+                            for (var i = 0; i < items.length; i++)
+                              _StudentRow(
+                                student: items[i],
+                                leader: leader,
+                                last: i == items.length - 1,
+                              ),
+                          ],
+                        ),
+                        if (view.paged.hasMore ||
+                            view.paged.loadMoreError != null)
                           MuLoadMoreFooter(
                             isLoading: view.paged.isLoadingMore,
                             error: view.paged.loadMoreError,
-                            onRetry: () => ref.read(campusStudentsControllerProvider(_filter).notifier).loadMore(),
+                            onRetry: () => ref
+                                .read(
+                                  campusStudentsControllerProvider(
+                                    _filter,
+                                  ).notifier,
+                                )
+                                .loadMore(),
                           ),
                       ],
                     ),
@@ -146,62 +214,51 @@ class _CampusStudentsScreenState extends ConsumerState<CampusStudentsScreen> {
   }
 }
 
-class _StudentTile extends StatelessWidget {
-  const _StudentTile({required this.student});
+class _StudentRow extends StatelessWidget {
+  const _StudentRow({
+    required this.student,
+    required this.leader,
+    required this.last,
+  });
 
   final CampusStudent student;
+
+  /// The top karma shown, for the bar.
+  final int leader;
+  final bool last;
 
   @override
   Widget build(BuildContext context) {
     final s = student;
     String plural(int n, String one) => '$n ${n == 1 ? one : '${one}s'}';
-    return Padding(
-      padding: const EdgeInsets.only(bottom: MuSpace.s),
-      child: MuCard(
-        onTap: () => context.push(RoutePaths.campusStudentPath(s.muid), extra: s),
-        padding: const EdgeInsets.fromLTRB(MuSpace.l, MuSpace.m, MuSpace.s, MuSpace.m),
-        child: Row(
+    return MuFeedRow(
+      leading: MuRankDisc(s.rank),
+      subject: s.fullName.isEmpty ? s.muid : s.fullName,
+      body: s.isAlumni ? '· Alumni' : null,
+      time: s.muid,
+      actions: [
+        Text(
+          [
+            if (s.level.isNotEmpty) levelLabel(s.level),
+            plural(s.igCount, 'group'),
+            plural(s.lcCount, 'circle'),
+          ].join(' · '),
+          style: context.mu.text.caption,
+        ),
+      ],
+      trailing: SizedBox(
+        width: 72,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Flexible(
-                        child: Text(
-                          s.fullName.isEmpty ? s.muid : s.fullName,
-                          style: MuType.bodyMed,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      if (s.isAlumni) ...[const SizedBox(width: MuSpace.s), const MuTagChip(label: 'Alumni')],
-                    ],
-                  ),
-                  Text(s.muid, style: MuType.caption),
-                  Text(
-                    [
-                      if (s.level.isNotEmpty) levelLabel(s.level),
-                      plural(s.igCount, 'group'),
-                      plural(s.lcCount, 'circle'),
-                    ].join(' · '),
-                    style: MuType.caption,
-                  ),
-                ],
-              ),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text('${s.karma}', style: MuType.bodyMed),
-                Text('karma', style: MuType.caption),
-              ],
-            ),
-            const SizedBox(width: MuSpace.xs),
-            const Icon(LucideIcons.chevronRight, size: 18, color: MuColors.inkSecondary),
+            MuFeedAmount(muGrouped(s.karma)),
+            const SizedBox(height: 6),
+            MuBar(value: leader <= 0 ? 0 : s.karma / leader),
           ],
         ),
       ),
+      divider: !last,
+      onTap: () => context.push(RoutePaths.campusStudentPath(s.muid), extra: s),
     );
   }
 }

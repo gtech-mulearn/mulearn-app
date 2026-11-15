@@ -10,7 +10,7 @@ part of 'campus_overview_providers.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(campusSummary)
-const campusSummaryProvider = CampusSummaryProvider._();
+final campusSummaryProvider = CampusSummaryProvider._();
 
 final class CampusSummaryProvider
     extends
@@ -20,7 +20,7 @@ final class CampusSummaryProvider
           FutureOr<CampusSummary>
         >
     with $FutureModifier<CampusSummary>, $FutureProvider<CampusSummary> {
-  const CampusSummaryProvider._()
+  CampusSummaryProvider._()
     : super(
         from: null,
         argument: null,
@@ -49,7 +49,7 @@ final class CampusSummaryProvider
 String _$campusSummaryHash() => r'fc50a5be63f5c2a1ee25ced94d97b80d9bc0f898';
 
 @ProviderFor(campusWeeklyKarma)
-const campusWeeklyKarmaProvider = CampusWeeklyKarmaProvider._();
+final campusWeeklyKarmaProvider = CampusWeeklyKarmaProvider._();
 
 final class CampusWeeklyKarmaProvider
     extends
@@ -59,7 +59,7 @@ final class CampusWeeklyKarmaProvider
           FutureOr<List<KarmaDay>>
         >
     with $FutureModifier<List<KarmaDay>>, $FutureProvider<List<KarmaDay>> {
-  const CampusWeeklyKarmaProvider._()
+  CampusWeeklyKarmaProvider._()
     : super(
         from: null,
         argument: null,
@@ -90,7 +90,7 @@ String _$campusWeeklyKarmaHash() => r'338247b6ddc28ced9894847e73d979c3897a1af0';
 /// The five students with the most karma.
 
 @ProviderFor(campusTopStudents)
-const campusTopStudentsProvider = CampusTopStudentsProvider._();
+final campusTopStudentsProvider = CampusTopStudentsProvider._();
 
 /// The five students with the most karma.
 
@@ -105,7 +105,7 @@ final class CampusTopStudentsProvider
         $FutureModifier<List<CampusStudent>>,
         $FutureProvider<List<CampusStudent>> {
   /// The five students with the most karma.
-  const CampusTopStudentsProvider._()
+  CampusTopStudentsProvider._()
     : super(
         from: null,
         argument: null,

@@ -10,13 +10,13 @@ part of 'session_event_bus.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(sessionEventBus)
-const sessionEventBusProvider = SessionEventBusProvider._();
+final sessionEventBusProvider = SessionEventBusProvider._();
 
 final class SessionEventBusProvider
     extends
         $FunctionalProvider<SessionEventBus, SessionEventBus, SessionEventBus>
     with $Provider<SessionEventBus> {
-  const SessionEventBusProvider._()
+  SessionEventBusProvider._()
     : super(
         from: null,
         argument: null,

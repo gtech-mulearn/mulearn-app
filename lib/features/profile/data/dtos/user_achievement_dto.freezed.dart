@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'user_achievement_dto.dart';
@@ -9,6 +9,7 @@ part of 'user_achievement_dto.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $UserAchievementDtoCopyWith<UserAchievementDto> get copyWith => _$UserAchievemen
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserAchievementDto&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.achievement, achievement) || other.achievement == achievement)&&(identical(other.isIssued, isIssued) || other.isIssued == isIssued)&&(identical(other.vcUrl, vcUrl) || other.vcUrl == vcUrl));
+  final _this = this as UserAchievementDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserAchievementDto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.userId, _this.userId) || other.userId == _this.userId)&&(identical(other.achievement, _this.achievement) || other.achievement == _this.achievement)&&(identical(other.isIssued, _this.isIssued) || other.isIssued == _this.isIssued)&&(identical(other.vcUrl, _this.vcUrl) || other.vcUrl == _this.vcUrl));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,userId,achievement,isIssued,vcUrl);
+int get hashCode {
+  final _this = this as UserAchievementDto;
+  return Object.hash(runtimeType,_this.id,_this.userId,_this.achievement,_this.isIssued,_this.vcUrl);
+}
 
 @override
 String toString() {
-  return 'UserAchievementDto(id: $id, userId: $userId, achievement: $achievement, isIssued: $isIssued, vcUrl: $vcUrl)';
+  final _this = this as UserAchievementDto;
+  return 'UserAchievementDto(id: ${_this.id}, userId: ${_this.userId}, achievement: ${_this.achievement}, isIssued: ${_this.isIssued}, vcUrl: ${_this.vcUrl})';
 }
 
 
@@ -66,7 +72,7 @@ class _$UserAchievementDtoCopyWithImpl<$Res>
 /// Create a copy of UserAchievementDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? userId = null,Object? achievement = null,Object? isIssued = null,Object? vcUrl = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(UserAchievementDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,achievement: null == achievement ? _self.achievement : achievement // ignore: cast_nullable_to_non_nullable
@@ -244,16 +250,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserAchievementDto&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.achievement, achievement) || other.achievement == achievement)&&(identical(other.isIssued, isIssued) || other.isIssued == isIssued)&&(identical(other.vcUrl, vcUrl) || other.vcUrl == vcUrl));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserAchievementDto&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.achievement, achievement) || other.achievement == achievement)&&(identical(other.isIssued, isIssued) || other.isIssued == isIssued)&&(identical(other.vcUrl, vcUrl) || other.vcUrl == vcUrl));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,userId,achievement,isIssued,vcUrl);
+int get hashCode {
+    return Object.hash(runtimeType,id,userId,achievement,isIssued,vcUrl);
+}
 
 @override
 String toString() {
-  return 'UserAchievementDto(id: $id, userId: $userId, achievement: $achievement, isIssued: $isIssued, vcUrl: $vcUrl)';
+    return 'UserAchievementDto(id: $id, userId: $userId, achievement: $achievement, isIssued: $isIssued, vcUrl: $vcUrl)';
 }
 
 

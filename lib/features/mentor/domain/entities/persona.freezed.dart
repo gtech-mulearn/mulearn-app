@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'persona.dart';
@@ -9,6 +9,7 @@ part of 'persona.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $PersonaCopyWith<Persona> get copyWith => _$PersonaCopyWithImpl<Persona>(this as
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Persona&&(identical(other.isMentor, isMentor) || other.isMentor == isMentor)&&(identical(other.scopeType, scopeType) || other.scopeType == scopeType)&&(identical(other.scopeId, scopeId) || other.scopeId == scopeId)&&(identical(other.scopeName, scopeName) || other.scopeName == scopeName));
+  final _this = this as Persona;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Persona&&(identical(other.isMentor, _this.isMentor) || other.isMentor == _this.isMentor)&&(identical(other.scopeType, _this.scopeType) || other.scopeType == _this.scopeType)&&(identical(other.scopeId, _this.scopeId) || other.scopeId == _this.scopeId)&&(identical(other.scopeName, _this.scopeName) || other.scopeName == _this.scopeName));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isMentor,scopeType,scopeId,scopeName);
+int get hashCode {
+  final _this = this as Persona;
+  return Object.hash(runtimeType,_this.isMentor,_this.scopeType,_this.scopeId,_this.scopeName);
+}
 
 @override
 String toString() {
-  return 'Persona(isMentor: $isMentor, scopeType: $scopeType, scopeId: $scopeId, scopeName: $scopeName)';
+  final _this = this as Persona;
+  return 'Persona(isMentor: ${_this.isMentor}, scopeType: ${_this.scopeType}, scopeId: ${_this.scopeId}, scopeName: ${_this.scopeName})';
 }
 
 
@@ -63,7 +69,7 @@ class _$PersonaCopyWithImpl<$Res>
 /// Create a copy of Persona
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? isMentor = null,Object? scopeType = freezed,Object? scopeId = freezed,Object? scopeName = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(Persona(
 isMentor: null == isMentor ? _self.isMentor : isMentor // ignore: cast_nullable_to_non_nullable
 as bool,scopeType: freezed == scopeType ? _self.scopeType : scopeType // ignore: cast_nullable_to_non_nullable
 as MentorScopeType?,scopeId: freezed == scopeId ? _self.scopeId : scopeId // ignore: cast_nullable_to_non_nullable
@@ -227,16 +233,18 @@ _$PersonaCopyWith<_Persona> get copyWith => __$PersonaCopyWithImpl<_Persona>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Persona&&(identical(other.isMentor, isMentor) || other.isMentor == isMentor)&&(identical(other.scopeType, scopeType) || other.scopeType == scopeType)&&(identical(other.scopeId, scopeId) || other.scopeId == scopeId)&&(identical(other.scopeName, scopeName) || other.scopeName == scopeName));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _Persona&&(identical(other.isMentor, isMentor) || other.isMentor == isMentor)&&(identical(other.scopeType, scopeType) || other.scopeType == scopeType)&&(identical(other.scopeId, scopeId) || other.scopeId == scopeId)&&(identical(other.scopeName, scopeName) || other.scopeName == scopeName));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isMentor,scopeType,scopeId,scopeName);
+int get hashCode {
+    return Object.hash(runtimeType,isMentor,scopeType,scopeId,scopeName);
+}
 
 @override
 String toString() {
-  return 'Persona(isMentor: $isMentor, scopeType: $scopeType, scopeId: $scopeId, scopeName: $scopeName)';
+    return 'Persona(isMentor: $isMentor, scopeType: $scopeType, scopeId: $scopeId, scopeName: $scopeName)';
 }
 
 

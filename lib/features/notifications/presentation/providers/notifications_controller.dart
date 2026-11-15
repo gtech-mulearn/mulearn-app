@@ -43,26 +43,37 @@ class NotificationsController extends _$NotificationsController {
 
   /// Loads the next page, or retries it after a failure. Calls made while a
   /// page is in flight share that request.
-  Future<void> loadMore() => _inFlight ??= _loadNextPage().whenComplete(() => _inFlight = null);
+  Future<void> loadMore() =>
+      _inFlight ??= _loadNextPage().whenComplete(() => _inFlight = null);
 
   Future<void> _loadNextPage() async {
     final current = state.value;
     if (current == null || !current.hasMore) return;
     final repository = ref.read(notificationsRepositoryProvider);
-    state = AsyncData(current.copyWith(isLoadingMore: true, loadMoreError: null));
+    state = AsyncData(
+      current.copyWith(isLoadingMore: true, loadMoreError: null),
+    );
     final next = _page + 1;
     try {
       final page = await repository.getPage(next);
       if (!ref.mounted) return;
       _page = next;
-      state = AsyncData(PagedState(
-        items: mergeUniqueBy(current.items, page.items, (n) => n.id),
-        hasMore: page.hasNext,
-      ));
+      state = AsyncData(
+        PagedState(
+          items: mergeUniqueBy(current.items, page.items, (n) => n.id),
+          hasMore: page.hasNext,
+        ),
+      );
     } on Object catch (e, st) {
-      appLogger.w('Loading more notifications failed', error: e, stackTrace: st);
+      appLogger.w(
+        'Loading more notifications failed',
+        error: e,
+        stackTrace: st,
+      );
       if (!ref.mounted) return;
-      state = AsyncData(current.copyWith(isLoadingMore: false, loadMoreError: e));
+      state = AsyncData(
+        current.copyWith(isLoadingMore: false, loadMoreError: e),
+      );
     }
   }
 
@@ -93,7 +104,11 @@ class NotificationsController extends _$NotificationsController {
     if (!ref.mounted) return;
     final current = state.value;
     if (current == null) return;
-    state = AsyncData(current.copyWith(items: [for (final n in current.items) n.copyWith(read: true)]));
+    state = AsyncData(
+      current.copyWith(
+        items: [for (final n in current.items) n.copyWith(read: true)],
+      ),
+    );
   }
 
   /// Hides one item; it comes back at its place if the server refuses.
@@ -104,16 +119,23 @@ class NotificationsController extends _$NotificationsController {
     final target = current.items[index];
     final repository = ref.read(notificationsRepositoryProvider);
     final unread = ref.read(unreadNotificationsProvider.notifier);
-    state = AsyncData(current.copyWith(items: [...current.items]..removeAt(index)));
+    state = AsyncData(
+      current.copyWith(items: [...current.items]..removeAt(index)),
+    );
     try {
       await repository.archive(id);
-      unread.onArchived(wasUnread: !target.read, isBroadcast: target.isBroadcast);
+      unread.onArchived(
+        wasUnread: !target.read,
+        isBroadcast: target.isBroadcast,
+      );
     } on Object {
       if (ref.mounted) {
         final now = state.value;
         if (now != null && now.items.every((n) => n.id != id)) {
           final at = index.clamp(0, now.items.length);
-          state = AsyncData(now.copyWith(items: [...now.items]..insert(at, target)));
+          state = AsyncData(
+            now.copyWith(items: [...now.items]..insert(at, target)),
+          );
         }
       }
       rethrow;
@@ -123,7 +145,9 @@ class NotificationsController extends _$NotificationsController {
   void _replace(int index, AppNotification value) {
     final current = state.value;
     if (current == null) return;
-    state = AsyncData(current.copyWith(items: [...current.items]..[index] = value));
+    state = AsyncData(
+      current.copyWith(items: [...current.items]..[index] = value),
+    );
   }
 
   void _replaceById(String id, AppNotification value) {

@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:lucide_icons/lucide_icons.dart';
+import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
-import 'package:mulearn_app/core/theme/mu_space.dart';
-import 'package:mulearn_app/core/theme/mulearn_colors.dart';
-import 'package:mulearn_app/core/theme/mulearn_typography.dart';
-import 'package:mulearn_app/core/widgets/mu_buttons.dart';
-import 'package:mulearn_app/core/widgets/mu_toast.dart';
 import 'package:mulearn_app/features/auth/presentation/providers/auth_controller.dart';
+import 'package:mulearn_app/features/auth/presentation/widgets/auth_page.dart';
 
-/// Requests a password-reset email, matching the reference dashboard's
-/// `/forgot-password` page. Once sent, offers a manual-entry path
-/// ([RoutePaths.resetPassword]) to paste the emailed code/token, since this
-/// app doesn't consume the reset link via a deep link.
+/// Requests a password-reset email, like the dashboard's `/forgot-password`.
+/// Once sent, offers the manual path ([RoutePaths.resetPassword]) to paste
+/// the emailed code, since the app doesn't consume the reset link itself.
 class ForgotPasswordScreen extends ConsumerStatefulWidget {
   const ForgotPasswordScreen({super.key});
 
@@ -37,89 +34,123 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
     if (!(_formKey.currentState?.validate() ?? false)) return;
     FocusScope.of(context).unfocus();
     try {
-      await ref.read(authControllerProvider.notifier).requestPasswordReset(
+      await ref
+          .read(authControllerProvider.notifier)
+          .requestPasswordReset(
             emailOrMuid: _emailOrMuidController.text.trim(),
           );
       if (mounted) setState(() => _sent = true);
     } on Object catch (_) {
-      // Surfaced via the ref.listen snackbar below.
+      // Surfaced via the ref.listen toast below.
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(authControllerProvider);
+    final mu = context.mu;
+    final c = mu.colors;
+    final loading = ref.watch(authControllerProvider).isLoading;
 
     ref.listen(authControllerProvider, (_, next) {
       if (next.hasError && !next.isLoading) {
-        final error = next.error;
-        final message = ApiException.messageFor(error!);
-        MuToast.show(context, message: message, type: MuToastType.error);
+        MuToast.show(
+          context,
+          message: ApiException.messageFor(next.error!),
+          type: MuToastType.error,
+        );
       }
     });
 
-    final isLoading = state.isLoading;
-
-    return Scaffold(
-      backgroundColor: MuColors.canvas,
-      appBar: AppBar(),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 26),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SizedBox(height: MuSpace.m),
-              Text('Forgot password?', style: MuType.display.copyWith(fontSize: 30)),
-              const SizedBox(height: MuSpace.s),
-              Text(
-                _sent
-                    ? 'Check your email for a link to reset your password.'
-                    : "Enter your email or MuID and we'll send you a link to "
-                        'reset your password.',
-                style: MuType.body.copyWith(color: MuColors.inkSecondary),
-              ),
-              const SizedBox(height: MuSpace.xxl),
-              if (!_sent)
-                Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      TextFormField(
-                        controller: _emailOrMuidController,
-                        textInputAction: TextInputAction.done,
-                        enabled: !isLoading,
-                        onFieldSubmitted: (_) => _submit(),
-                        decoration: const InputDecoration(
-                          labelText: 'EMAIL OR MUID',
-                          hintText: 'you@college.edu',
-                        ),
-                        validator: (value) => (value?.trim().isEmpty ?? true)
-                            ? 'Enter your email or MuID to continue.'
-                            : null,
-                      ),
-                      const SizedBox(height: MuSpace.xl),
-                      MuPrimaryButton(
-                        label: isLoading ? 'Sending…' : 'Send reset link',
-                        onPressed: isLoading ? null : _submit,
-                      ),
-                    ],
+    if (_sent) {
+      return AuthPage(
+        eyebrow: 'Check your email',
+        light: 'Link ',
+        bold: 'on its way',
+        lead:
+            'We sent a reset link for ${_emailOrMuidController.text.trim()}. '
+            'Open it on this phone, or paste the code from the email here.',
+        bottom: MuButton(
+          label: 'I have a reset code',
+          block: true,
+          knob: true,
+          onPressed: () => context.push(RoutePaths.resetPassword),
+        ),
+        children: [
+          Container(
+            padding: const EdgeInsets.all(MuSpacing.space4),
+            decoration: BoxDecoration(
+              color: c.surface,
+              borderRadius: BorderRadius.circular(MuRadii.card),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: c.successTint,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    LucideIcons.mailCheck,
+                    color: c.success,
+                    size: MuSizes.iconMd,
                   ),
                 ),
-              if (_sent) ...[
-                const SizedBox(height: MuSpace.s),
-                Center(
-                  child: TextButton(
-                    onPressed: () => context.push(RoutePaths.resetPassword),
-                    child: const Text('Already have a reset code? Enter it here'),
+                const SizedBox(width: MuSpacing.space3),
+                Expanded(
+                  child: Text(
+                    "Didn't get it? Check spam, or send it again.",
+                    style: mu.text.body.copyWith(color: c.ink2),
                   ),
                 ),
               ],
-            ],
+            ),
+          ),
+          const SizedBox(height: MuSpacing.space2),
+          Center(
+            child: MuButton(
+              label: 'Send it again',
+              variant: MuButtonVariant.ghost,
+              size: MuButtonSize.small,
+              onPressed: loading ? null : _submit,
+            ),
+          ),
+        ],
+      );
+    }
+
+    return AuthPage(
+      eyebrow: 'Reset your password',
+      light: 'Forgot ',
+      bold: 'your password?',
+      lead:
+          "Enter your email or muid and we'll send you a link to set a new one.",
+      bottom: MuButton(
+        label: 'Send reset link',
+        block: true,
+        loading: loading,
+        loadingLabel: 'Sending…',
+        onPressed: _submit,
+      ),
+      children: [
+        Form(
+          key: _formKey,
+          child: MuTextField(
+            label: 'Email or muid',
+            hint: 'you@college.edu',
+            controller: _emailOrMuidController,
+            enabled: !loading,
+            autofocus: true,
+            keyboardType: TextInputType.emailAddress,
+            textInputAction: TextInputAction.send,
+            onSubmitted: (_) => _submit(),
+            validator: (v) => (v?.trim().isEmpty ?? true)
+                ? 'Enter your email or muid to continue.'
+                : null,
           ),
         ),
-      ),
+      ],
     );
   }
 }

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'mentor_application_dto.dart';
@@ -9,6 +9,7 @@ part of 'mentor_application_dto.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $MentorApplicationDtoCopyWith<MentorApplicationDto> get copyWith => _$MentorAppl
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MentorApplicationDto&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.mentorTier, mentorTier) || other.mentorTier == mentorTier));
+  final _this = this as MentorApplicationDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MentorApplicationDto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.mentorTier, _this.mentorTier) || other.mentorTier == _this.mentorTier));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,status,mentorTier);
+int get hashCode {
+  final _this = this as MentorApplicationDto;
+  return Object.hash(runtimeType,_this.id,_this.status,_this.mentorTier);
+}
 
 @override
 String toString() {
-  return 'MentorApplicationDto(id: $id, status: $status, mentorTier: $mentorTier)';
+  final _this = this as MentorApplicationDto;
+  return 'MentorApplicationDto(id: ${_this.id}, status: ${_this.status}, mentorTier: ${_this.mentorTier})';
 }
 
 
@@ -66,7 +72,7 @@ class _$MentorApplicationDtoCopyWithImpl<$Res>
 /// Create a copy of MentorApplicationDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? status = null,Object? mentorTier = null,}) {
-  return _then(_self.copyWith(
+  return _then(MentorApplicationDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as String,mentorTier: null == mentorTier ? _self.mentorTier : mentorTier // ignore: cast_nullable_to_non_nullable
@@ -231,16 +237,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MentorApplicationDto&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.mentorTier, mentorTier) || other.mentorTier == mentorTier));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MentorApplicationDto&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.mentorTier, mentorTier) || other.mentorTier == mentorTier));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,status,mentorTier);
+int get hashCode {
+    return Object.hash(runtimeType,id,status,mentorTier);
+}
 
 @override
 String toString() {
-  return 'MentorApplicationDto(id: $id, status: $status, mentorTier: $mentorTier)';
+    return 'MentorApplicationDto(id: $id, status: $status, mentorTier: $mentorTier)';
 }
 
 

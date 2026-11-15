@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'vc_credential_info.dart';
@@ -9,6 +9,7 @@ part of 'vc_credential_info.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $VcCredentialInfoCopyWith<VcCredentialInfo> get copyWith => _$VcCredentialInfoCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is VcCredentialInfo&&(identical(other.courseName, courseName) || other.courseName == courseName)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other.tags, tags));
+  final _this = this as VcCredentialInfo;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is VcCredentialInfo&&(identical(other.courseName, _this.courseName) || other.courseName == _this.courseName)&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.description, _this.description) || other.description == _this.description)&&const DeepCollectionEquality().equals(other.tags, _this.tags));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,courseName,name,description,const DeepCollectionEquality().hash(tags));
+int get hashCode {
+  final _this = this as VcCredentialInfo;
+  return Object.hash(runtimeType,_this.courseName,_this.name,_this.description,const DeepCollectionEquality().hash(_this.tags));
+}
 
 @override
 String toString() {
-  return 'VcCredentialInfo(courseName: $courseName, name: $name, description: $description, tags: $tags)';
+  final _this = this as VcCredentialInfo;
+  return 'VcCredentialInfo(courseName: ${_this.courseName}, name: ${_this.name}, description: ${_this.description}, tags: ${_this.tags})';
 }
 
 
@@ -63,7 +69,7 @@ class _$VcCredentialInfoCopyWithImpl<$Res>
 /// Create a copy of VcCredentialInfo
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? courseName = null,Object? name = null,Object? description = null,Object? tags = null,}) {
-  return _then(_self.copyWith(
+  return _then(VcCredentialInfo(
 courseName: null == courseName ? _self.courseName : courseName // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
@@ -209,7 +215,7 @@ return $default(_that.courseName,_that.name,_that.description,_that.tags);case _
 
 
 class _VcCredentialInfo implements VcCredentialInfo {
-  const _VcCredentialInfo({required this.courseName, required this.name, required this.description, final  List<String> tags = const []}): _tags = tags;
+  const _VcCredentialInfo({required this.courseName, required this.name, required this.description,  List<String> tags = const []}): _tags = tags;
   
 
 @override final  String courseName;
@@ -233,16 +239,18 @@ _$VcCredentialInfoCopyWith<_VcCredentialInfo> get copyWith => __$VcCredentialInf
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _VcCredentialInfo&&(identical(other.courseName, courseName) || other.courseName == courseName)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other._tags, _tags));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _VcCredentialInfo&&(identical(other.courseName, courseName) || other.courseName == courseName)&&(identical(other.name, name) || other.name == name)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other.tags, _tags));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,courseName,name,description,const DeepCollectionEquality().hash(_tags));
+int get hashCode {
+    return Object.hash(runtimeType,courseName,name,description,const DeepCollectionEquality().hash(_tags));
+}
 
 @override
 String toString() {
-  return 'VcCredentialInfo(courseName: $courseName, name: $name, description: $description, tags: $tags)';
+    return 'VcCredentialInfo(courseName: $courseName, name: $name, description: $description, tags: $tags)';
 }
 
 

@@ -16,7 +16,7 @@ part of 'register_submit_controller.dart';
 /// Exposes `AsyncValue<void>` for automatic loading/error state (rules.md §4).
 
 @ProviderFor(RegisterSubmitController)
-const registerSubmitControllerProvider = RegisterSubmitControllerProvider._();
+final registerSubmitControllerProvider = RegisterSubmitControllerProvider._();
 
 /// Performs the actual registration submission — the same multi-call
 /// sequence as the reference `register-client.tsx`'s `handleGenericSignup`/
@@ -32,7 +32,7 @@ final class RegisterSubmitControllerProvider
   /// enabler) link an organization, or (for company) create the company record.
   ///
   /// Exposes `AsyncValue<void>` for automatic loading/error state (rules.md §4).
-  const RegisterSubmitControllerProvider._()
+  RegisterSubmitControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -65,8 +65,7 @@ abstract class _$RegisterSubmitController extends $AsyncNotifier<void> {
   FutureOr<void> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<void>, void>;
     final element =
         ref.element
@@ -76,6 +75,6 @@ abstract class _$RegisterSubmitController extends $AsyncNotifier<void> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, null);
+    return element.handleCreate(ref, build);
   }
 }

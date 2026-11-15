@@ -8,7 +8,9 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'discord_connect.g.dart';
 
 /// The μLearn Discord server (the dashboard links it after connecting).
-final Uri discordServerInvite = Uri.parse('https://discord.gg/gtech-mulearn-771670169691881483');
+final Uri discordServerInvite = Uri.parse(
+  'https://discord.gg/gtech-mulearn-771670169691881483',
+);
 
 /// Discord's OAuth authorize URL for this flavour (the dashboard's), or null
 /// when not configured — every Connect Discord entry point hides then.
@@ -33,7 +35,8 @@ class DiscordConnectController extends _$DiscordConnectController {
     if (code == _code) return;
     _code = code;
     final datasource = ref.read(sessionRemoteDataSourceProvider);
-    final link = ref.keepAlive(); // finish the refresh even if the screen closes
+    final link = ref
+        .keepAlive(); // finish the refresh even if the screen closes
     state = const AsyncLoading();
     try {
       final result = await AsyncValue.guard(() async {
@@ -58,9 +61,6 @@ class DiscordConnectController extends _$DiscordConnectController {
 class DiscordConnectFlow extends _$DiscordConnectFlow {
   @override
   bool build() => false;
-
-  /// Whether this build can connect Discord at all.
-  bool get available => ref.read(discordAuthUriProvider) != null;
 
   Future<void> start() async {
     final uri = ref.read(discordAuthUriProvider);

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'mentor_session_dto.dart';
@@ -9,6 +9,7 @@ part of 'mentor_session_dto.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $MentorSessionDtoCopyWith<MentorSessionDto> get copyWith => _$MentorSessionDtoCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MentorSessionDto&&(identical(other.id, id) || other.id == id)&&(identical(other.startsAt, startsAt) || other.startsAt == startsAt)&&(identical(other.endsAt, endsAt) || other.endsAt == endsAt)&&(identical(other.entityId, entityId) || other.entityId == entityId)&&(identical(other.entityName, entityName) || other.entityName == entityName)&&(identical(other.sessionType, sessionType) || other.sessionType == sessionType)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.mode, mode) || other.mode == mode)&&(identical(other.status, status) || other.status == status)&&(identical(other.maxParticipants, maxParticipants) || other.maxParticipants == maxParticipants)&&(identical(other.meetingLink, meetingLink) || other.meetingLink == meetingLink)&&(identical(other.venue, venue) || other.venue == venue)&&(identical(other.isRecurring, isRecurring) || other.isRecurring == isRecurring));
+  final _this = this as MentorSessionDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MentorSessionDto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.startsAt, _this.startsAt) || other.startsAt == _this.startsAt)&&(identical(other.endsAt, _this.endsAt) || other.endsAt == _this.endsAt)&&(identical(other.entityId, _this.entityId) || other.entityId == _this.entityId)&&(identical(other.entityName, _this.entityName) || other.entityName == _this.entityName)&&(identical(other.sessionType, _this.sessionType) || other.sessionType == _this.sessionType)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.description, _this.description) || other.description == _this.description)&&(identical(other.mode, _this.mode) || other.mode == _this.mode)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.maxParticipants, _this.maxParticipants) || other.maxParticipants == _this.maxParticipants)&&(identical(other.meetingLink, _this.meetingLink) || other.meetingLink == _this.meetingLink)&&(identical(other.venue, _this.venue) || other.venue == _this.venue)&&(identical(other.isRecurring, _this.isRecurring) || other.isRecurring == _this.isRecurring));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,startsAt,endsAt,entityId,entityName,sessionType,title,description,mode,status,maxParticipants,meetingLink,venue,isRecurring);
+int get hashCode {
+  final _this = this as MentorSessionDto;
+  return Object.hash(runtimeType,_this.id,_this.startsAt,_this.endsAt,_this.entityId,_this.entityName,_this.sessionType,_this.title,_this.description,_this.mode,_this.status,_this.maxParticipants,_this.meetingLink,_this.venue,_this.isRecurring);
+}
 
 @override
 String toString() {
-  return 'MentorSessionDto(id: $id, startsAt: $startsAt, endsAt: $endsAt, entityId: $entityId, entityName: $entityName, sessionType: $sessionType, title: $title, description: $description, mode: $mode, status: $status, maxParticipants: $maxParticipants, meetingLink: $meetingLink, venue: $venue, isRecurring: $isRecurring)';
+  final _this = this as MentorSessionDto;
+  return 'MentorSessionDto(id: ${_this.id}, startsAt: ${_this.startsAt}, endsAt: ${_this.endsAt}, entityId: ${_this.entityId}, entityName: ${_this.entityName}, sessionType: ${_this.sessionType}, title: ${_this.title}, description: ${_this.description}, mode: ${_this.mode}, status: ${_this.status}, maxParticipants: ${_this.maxParticipants}, meetingLink: ${_this.meetingLink}, venue: ${_this.venue}, isRecurring: ${_this.isRecurring})';
 }
 
 
@@ -66,7 +72,7 @@ class _$MentorSessionDtoCopyWithImpl<$Res>
 /// Create a copy of MentorSessionDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? startsAt = null,Object? endsAt = null,Object? entityId = null,Object? entityName = null,Object? sessionType = freezed,Object? title = null,Object? description = freezed,Object? mode = freezed,Object? status = freezed,Object? maxParticipants = freezed,Object? meetingLink = freezed,Object? venue = freezed,Object? isRecurring = null,}) {
-  return _then(_self.copyWith(
+  return _then(MentorSessionDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,startsAt: null == startsAt ? _self.startsAt : startsAt // ignore: cast_nullable_to_non_nullable
 as String,endsAt: null == endsAt ? _self.endsAt : endsAt // ignore: cast_nullable_to_non_nullable
@@ -253,16 +259,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MentorSessionDto&&(identical(other.id, id) || other.id == id)&&(identical(other.startsAt, startsAt) || other.startsAt == startsAt)&&(identical(other.endsAt, endsAt) || other.endsAt == endsAt)&&(identical(other.entityId, entityId) || other.entityId == entityId)&&(identical(other.entityName, entityName) || other.entityName == entityName)&&(identical(other.sessionType, sessionType) || other.sessionType == sessionType)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.mode, mode) || other.mode == mode)&&(identical(other.status, status) || other.status == status)&&(identical(other.maxParticipants, maxParticipants) || other.maxParticipants == maxParticipants)&&(identical(other.meetingLink, meetingLink) || other.meetingLink == meetingLink)&&(identical(other.venue, venue) || other.venue == venue)&&(identical(other.isRecurring, isRecurring) || other.isRecurring == isRecurring));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MentorSessionDto&&(identical(other.id, id) || other.id == id)&&(identical(other.startsAt, startsAt) || other.startsAt == startsAt)&&(identical(other.endsAt, endsAt) || other.endsAt == endsAt)&&(identical(other.entityId, entityId) || other.entityId == entityId)&&(identical(other.entityName, entityName) || other.entityName == entityName)&&(identical(other.sessionType, sessionType) || other.sessionType == sessionType)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.mode, mode) || other.mode == mode)&&(identical(other.status, status) || other.status == status)&&(identical(other.maxParticipants, maxParticipants) || other.maxParticipants == maxParticipants)&&(identical(other.meetingLink, meetingLink) || other.meetingLink == meetingLink)&&(identical(other.venue, venue) || other.venue == venue)&&(identical(other.isRecurring, isRecurring) || other.isRecurring == isRecurring));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,startsAt,endsAt,entityId,entityName,sessionType,title,description,mode,status,maxParticipants,meetingLink,venue,isRecurring);
+int get hashCode {
+    return Object.hash(runtimeType,id,startsAt,endsAt,entityId,entityName,sessionType,title,description,mode,status,maxParticipants,meetingLink,venue,isRecurring);
+}
 
 @override
 String toString() {
-  return 'MentorSessionDto(id: $id, startsAt: $startsAt, endsAt: $endsAt, entityId: $entityId, entityName: $entityName, sessionType: $sessionType, title: $title, description: $description, mode: $mode, status: $status, maxParticipants: $maxParticipants, meetingLink: $meetingLink, venue: $venue, isRecurring: $isRecurring)';
+    return 'MentorSessionDto(id: $id, startsAt: $startsAt, endsAt: $endsAt, entityId: $entityId, entityName: $entityName, sessionType: $sessionType, title: $title, description: $description, mode: $mode, status: $status, maxParticipants: $maxParticipants, meetingLink: $meetingLink, venue: $venue, isRecurring: $isRecurring)';
 }
 
 

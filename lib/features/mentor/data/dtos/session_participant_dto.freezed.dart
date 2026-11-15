@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'session_participant_dto.dart';
@@ -9,6 +9,7 @@ part of 'session_participant_dto.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $SessionParticipantDtoCopyWith<SessionParticipantDto> get copyWith => _$SessionP
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SessionParticipantDto&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.userFullName, userFullName) || other.userFullName == userFullName)&&(identical(other.muId, muId) || other.muId == muId)&&(identical(other.participantRole, participantRole) || other.participantRole == participantRole)&&(identical(other.attendanceStatus, attendanceStatus) || other.attendanceStatus == attendanceStatus)&&(identical(other.progressNote, progressNote) || other.progressNote == progressNote)&&(identical(other.feedback, feedback) || other.feedback == feedback)&&(identical(other.contributedMinutes, contributedMinutes) || other.contributedMinutes == contributedMinutes));
+  final _this = this as SessionParticipantDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SessionParticipantDto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.userId, _this.userId) || other.userId == _this.userId)&&(identical(other.userFullName, _this.userFullName) || other.userFullName == _this.userFullName)&&(identical(other.muId, _this.muId) || other.muId == _this.muId)&&(identical(other.participantRole, _this.participantRole) || other.participantRole == _this.participantRole)&&(identical(other.attendanceStatus, _this.attendanceStatus) || other.attendanceStatus == _this.attendanceStatus)&&(identical(other.progressNote, _this.progressNote) || other.progressNote == _this.progressNote)&&(identical(other.feedback, _this.feedback) || other.feedback == _this.feedback)&&(identical(other.contributedMinutes, _this.contributedMinutes) || other.contributedMinutes == _this.contributedMinutes));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,userId,userFullName,muId,participantRole,attendanceStatus,progressNote,feedback,contributedMinutes);
+int get hashCode {
+  final _this = this as SessionParticipantDto;
+  return Object.hash(runtimeType,_this.id,_this.userId,_this.userFullName,_this.muId,_this.participantRole,_this.attendanceStatus,_this.progressNote,_this.feedback,_this.contributedMinutes);
+}
 
 @override
 String toString() {
-  return 'SessionParticipantDto(id: $id, userId: $userId, userFullName: $userFullName, muId: $muId, participantRole: $participantRole, attendanceStatus: $attendanceStatus, progressNote: $progressNote, feedback: $feedback, contributedMinutes: $contributedMinutes)';
+  final _this = this as SessionParticipantDto;
+  return 'SessionParticipantDto(id: ${_this.id}, userId: ${_this.userId}, userFullName: ${_this.userFullName}, muId: ${_this.muId}, participantRole: ${_this.participantRole}, attendanceStatus: ${_this.attendanceStatus}, progressNote: ${_this.progressNote}, feedback: ${_this.feedback}, contributedMinutes: ${_this.contributedMinutes})';
 }
 
 
@@ -66,7 +72,7 @@ class _$SessionParticipantDtoCopyWithImpl<$Res>
 /// Create a copy of SessionParticipantDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? userId = null,Object? userFullName = null,Object? muId = null,Object? participantRole = null,Object? attendanceStatus = freezed,Object? progressNote = freezed,Object? feedback = freezed,Object? contributedMinutes = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(SessionParticipantDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,userFullName: null == userFullName ? _self.userFullName : userFullName // ignore: cast_nullable_to_non_nullable
@@ -243,16 +249,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SessionParticipantDto&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.userFullName, userFullName) || other.userFullName == userFullName)&&(identical(other.muId, muId) || other.muId == muId)&&(identical(other.participantRole, participantRole) || other.participantRole == participantRole)&&(identical(other.attendanceStatus, attendanceStatus) || other.attendanceStatus == attendanceStatus)&&(identical(other.progressNote, progressNote) || other.progressNote == progressNote)&&(identical(other.feedback, feedback) || other.feedback == feedback)&&(identical(other.contributedMinutes, contributedMinutes) || other.contributedMinutes == contributedMinutes));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SessionParticipantDto&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.userFullName, userFullName) || other.userFullName == userFullName)&&(identical(other.muId, muId) || other.muId == muId)&&(identical(other.participantRole, participantRole) || other.participantRole == participantRole)&&(identical(other.attendanceStatus, attendanceStatus) || other.attendanceStatus == attendanceStatus)&&(identical(other.progressNote, progressNote) || other.progressNote == progressNote)&&(identical(other.feedback, feedback) || other.feedback == feedback)&&(identical(other.contributedMinutes, contributedMinutes) || other.contributedMinutes == contributedMinutes));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,userId,userFullName,muId,participantRole,attendanceStatus,progressNote,feedback,contributedMinutes);
+int get hashCode {
+    return Object.hash(runtimeType,id,userId,userFullName,muId,participantRole,attendanceStatus,progressNote,feedback,contributedMinutes);
+}
 
 @override
 String toString() {
-  return 'SessionParticipantDto(id: $id, userId: $userId, userFullName: $userFullName, muId: $muId, participantRole: $participantRole, attendanceStatus: $attendanceStatus, progressNote: $progressNote, feedback: $feedback, contributedMinutes: $contributedMinutes)';
+    return 'SessionParticipantDto(id: $id, userId: $userId, userFullName: $userFullName, muId: $muId, participantRole: $participantRole, attendanceStatus: $attendanceStatus, progressNote: $progressNote, feedback: $feedback, contributedMinutes: $contributedMinutes)';
 }
 
 

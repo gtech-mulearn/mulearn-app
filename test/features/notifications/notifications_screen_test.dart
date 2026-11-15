@@ -28,8 +28,15 @@ void main() {
 
   setUp(() {
     items = [
-      {...item('t1'), 'created_at': iso(now.subtract(const Duration(minutes: 5))), 'entity_id': 'c1'},
-      {...item('old', read: true), 'created_at': iso(now.subtract(const Duration(days: 3)))},
+      {
+        ...item('t1'),
+        'created_at': iso(now.subtract(const Duration(minutes: 5))),
+        'entity_id': 'c1',
+      },
+      {
+        ...item('old', read: true),
+        'created_at': iso(now.subtract(const Duration(days: 3))),
+      },
     ];
     adapter = FakeHttpAdapter({
       'GET $feedPath': (_) => feedPage(items, page: 1, count: items.length),
@@ -46,20 +53,30 @@ void main() {
     final router = GoRouter(
       initialLocation: '/notifications',
       routes: [
-        GoRoute(path: '/notifications', builder: (_, __) => const NotificationsScreen()),
-        GoRoute(path: '/circles/:id', builder: (_, s) => Text('circle ${s.pathParameters['id']}')),
+        GoRoute(
+          path: '/notifications',
+          builder: (_, __) => const NotificationsScreen(),
+        ),
+        GoRoute(
+          path: '/circles/:id',
+          builder: (_, s) => Text('circle ${s.pathParameters['id']}'),
+        ),
       ],
     );
     addTearDown(router.dispose);
-    await tester.pumpWidget(UncontrolledProviderScope(
-      container: container,
-      child: MaterialApp.router(routerConfig: router),
-    ));
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp.router(routerConfig: router),
+      ),
+    );
     await tester.pumpAndSettle();
     return router;
   }
 
-  testWidgets('groups items under Today and Earlier and marks unread ones', (tester) async {
+  testWidgets('groups items under Today and Earlier and marks unread ones', (
+    tester,
+  ) async {
     await pumpInbox(tester);
 
     expect(find.text('Today'), findsOneWidget);
@@ -76,7 +93,7 @@ void main() {
   testWidgets('tapping marks it read and opens its circle', (tester) async {
     await pumpInbox(tester);
 
-    await tester.tap(find.text('Title t1'));
+    await tester.tap(find.textContaining('Title t1', findRichText: true));
     await tester.pumpAndSettle();
 
     expect(callsTo(adapter, 'PATCH', readPath('t1')), 1);
@@ -86,13 +103,16 @@ void main() {
   testWidgets('swiping archives with a toast', (tester) async {
     await pumpInbox(tester);
 
-    await tester.drag(find.text('Title t1'), const Offset(-600, 0));
+    await tester.drag(
+      find.textContaining('Title t1', findRichText: true),
+      const Offset(-600, 0),
+    );
     await tester.pumpAndSettle();
     await settleRequests(tester);
 
     expect(callsTo(adapter, 'PATCH', archivePath('t1')), 1);
     expect(find.text('Notification archived'), findsOneWidget);
-    expect(find.text('Title t1'), findsNothing);
+    expect(find.textContaining('Title t1', findRichText: true), findsNothing);
     await tester.pump(const Duration(seconds: 4)); // let the toast go
     await tester.pumpAndSettle();
   });
@@ -110,13 +130,16 @@ void main() {
     await tester.pumpAndSettle();
   });
 
-  testWidgets('an empty inbox shows the illustrated state with the dashboard label', (tester) async {
-    items = [];
-    await pumpInbox(tester);
+  testWidgets(
+    'an empty inbox shows the illustrated state with the dashboard label',
+    (tester) async {
+      items = [];
+      await pumpInbox(tester);
 
-    expect(find.byType(MuStateDisplay), findsOneWidget);
-    expect(find.text('No notifications'), findsOneWidget);
-  });
+      expect(find.byType(MuStateDisplay), findsOneWidget);
+      expect(find.text('No notifications'), findsOneWidget);
+    },
+  );
 
   testWidgets('a failed first load offers retry', (tester) async {
     adapter.routes['GET $feedPath'] = (_) => const FakeResponse(-1, null);

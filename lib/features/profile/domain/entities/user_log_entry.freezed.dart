@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'user_log_entry.dart';
@@ -9,6 +9,7 @@ part of 'user_log_entry.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $UserLogEntryCopyWith<UserLogEntry> get copyWith => _$UserLogEntryCopyWithImpl<U
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserLogEntry&&(identical(other.taskName, taskName) || other.taskName == taskName)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.createdDate, createdDate) || other.createdDate == createdDate));
+  final _this = this as UserLogEntry;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserLogEntry&&(identical(other.taskName, _this.taskName) || other.taskName == _this.taskName)&&(identical(other.karma, _this.karma) || other.karma == _this.karma)&&(identical(other.createdDate, _this.createdDate) || other.createdDate == _this.createdDate));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,taskName,karma,createdDate);
+int get hashCode {
+  final _this = this as UserLogEntry;
+  return Object.hash(runtimeType,_this.taskName,_this.karma,_this.createdDate);
+}
 
 @override
 String toString() {
-  return 'UserLogEntry(taskName: $taskName, karma: $karma, createdDate: $createdDate)';
+  final _this = this as UserLogEntry;
+  return 'UserLogEntry(taskName: ${_this.taskName}, karma: ${_this.karma}, createdDate: ${_this.createdDate})';
 }
 
 
@@ -63,7 +69,7 @@ class _$UserLogEntryCopyWithImpl<$Res>
 /// Create a copy of UserLogEntry
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? taskName = null,Object? karma = null,Object? createdDate = null,}) {
-  return _then(_self.copyWith(
+  return _then(UserLogEntry(
 taskName: null == taskName ? _self.taskName : taskName // ignore: cast_nullable_to_non_nullable
 as String,karma: null == karma ? _self.karma : karma // ignore: cast_nullable_to_non_nullable
 as num,createdDate: null == createdDate ? _self.createdDate : createdDate // ignore: cast_nullable_to_non_nullable
@@ -225,16 +231,18 @@ _$UserLogEntryCopyWith<_UserLogEntry> get copyWith => __$UserLogEntryCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserLogEntry&&(identical(other.taskName, taskName) || other.taskName == taskName)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.createdDate, createdDate) || other.createdDate == createdDate));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserLogEntry&&(identical(other.taskName, taskName) || other.taskName == taskName)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.createdDate, createdDate) || other.createdDate == createdDate));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,taskName,karma,createdDate);
+int get hashCode {
+    return Object.hash(runtimeType,taskName,karma,createdDate);
+}
 
 @override
 String toString() {
-  return 'UserLogEntry(taskName: $taskName, karma: $karma, createdDate: $createdDate)';
+    return 'UserLogEntry(taskName: $taskName, karma: $karma, createdDate: $createdDate)';
 }
 
 

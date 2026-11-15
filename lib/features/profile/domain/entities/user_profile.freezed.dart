@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'user_profile.dart';
@@ -9,6 +9,7 @@ part of 'user_profile.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $UserProfileCopyWith<UserProfile> get copyWith => _$UserProfileCopyWithImpl<User
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserProfile&&(identical(other.id, id) || other.id == id)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.isPublic, isPublic) || other.isPublic == isPublic)&&(identical(other.joined, joined) || other.joined == joined)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.level, level) || other.level == level)&&(identical(other.profilePicUrl, profilePicUrl) || other.profilePicUrl == profilePicUrl)&&(identical(other.coverPicUrl, coverPicUrl) || other.coverPicUrl == coverPicUrl)&&(identical(other.collegeCode, collegeCode) || other.collegeCode == collegeCode)&&(identical(other.collegeId, collegeId) || other.collegeId == collegeId)&&(identical(other.orgDistrictId, orgDistrictId) || other.orgDistrictId == orgDistrictId)&&(identical(other.rank, rank) || other.rank == rank)&&(identical(other.percentile, percentile) || other.percentile == percentile)&&const DeepCollectionEquality().equals(other.roles, roles)&&const DeepCollectionEquality().equals(other.roleVerification, roleVerification)&&(identical(other.leadEnablerVerified, leadEnablerVerified) || other.leadEnablerVerified == leadEnablerVerified)&&const DeepCollectionEquality().equals(other.interestGroups, interestGroups)&&const DeepCollectionEquality().equals(other.karmaDistribution, karmaDistribution));
+  final _this = this as UserProfile;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserProfile&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.fullName, _this.fullName) || other.fullName == _this.fullName)&&(identical(other.muid, _this.muid) || other.muid == _this.muid)&&(identical(other.karma, _this.karma) || other.karma == _this.karma)&&(identical(other.isPublic, _this.isPublic) || other.isPublic == _this.isPublic)&&(identical(other.joined, _this.joined) || other.joined == _this.joined)&&(identical(other.gender, _this.gender) || other.gender == _this.gender)&&(identical(other.level, _this.level) || other.level == _this.level)&&(identical(other.profilePicUrl, _this.profilePicUrl) || other.profilePicUrl == _this.profilePicUrl)&&(identical(other.coverPicUrl, _this.coverPicUrl) || other.coverPicUrl == _this.coverPicUrl)&&(identical(other.collegeCode, _this.collegeCode) || other.collegeCode == _this.collegeCode)&&(identical(other.collegeId, _this.collegeId) || other.collegeId == _this.collegeId)&&(identical(other.orgDistrictId, _this.orgDistrictId) || other.orgDistrictId == _this.orgDistrictId)&&(identical(other.rank, _this.rank) || other.rank == _this.rank)&&(identical(other.percentile, _this.percentile) || other.percentile == _this.percentile)&&const DeepCollectionEquality().equals(other.roles, _this.roles)&&const DeepCollectionEquality().equals(other.roleVerification, _this.roleVerification)&&(identical(other.leadEnablerVerified, _this.leadEnablerVerified) || other.leadEnablerVerified == _this.leadEnablerVerified)&&const DeepCollectionEquality().equals(other.interestGroups, _this.interestGroups)&&const DeepCollectionEquality().equals(other.karmaDistribution, _this.karmaDistribution));
 }
 
 
 @override
-int get hashCode => Object.hashAll([runtimeType,id,fullName,muid,karma,isPublic,joined,gender,level,profilePicUrl,coverPicUrl,collegeCode,collegeId,orgDistrictId,rank,percentile,const DeepCollectionEquality().hash(roles),const DeepCollectionEquality().hash(roleVerification),leadEnablerVerified,const DeepCollectionEquality().hash(interestGroups),const DeepCollectionEquality().hash(karmaDistribution)]);
+int get hashCode {
+  final _this = this as UserProfile;
+  return Object.hashAll([runtimeType,_this.id,_this.fullName,_this.muid,_this.karma,_this.isPublic,_this.joined,_this.gender,_this.level,_this.profilePicUrl,_this.coverPicUrl,_this.collegeCode,_this.collegeId,_this.orgDistrictId,_this.rank,_this.percentile,const DeepCollectionEquality().hash(_this.roles),const DeepCollectionEquality().hash(_this.roleVerification),_this.leadEnablerVerified,const DeepCollectionEquality().hash(_this.interestGroups),const DeepCollectionEquality().hash(_this.karmaDistribution)]);
+}
 
 @override
 String toString() {
-  return 'UserProfile(id: $id, fullName: $fullName, muid: $muid, karma: $karma, isPublic: $isPublic, joined: $joined, gender: $gender, level: $level, profilePicUrl: $profilePicUrl, coverPicUrl: $coverPicUrl, collegeCode: $collegeCode, collegeId: $collegeId, orgDistrictId: $orgDistrictId, rank: $rank, percentile: $percentile, roles: $roles, roleVerification: $roleVerification, leadEnablerVerified: $leadEnablerVerified, interestGroups: $interestGroups, karmaDistribution: $karmaDistribution)';
+  final _this = this as UserProfile;
+  return 'UserProfile(id: ${_this.id}, fullName: ${_this.fullName}, muid: ${_this.muid}, karma: ${_this.karma}, isPublic: ${_this.isPublic}, joined: ${_this.joined}, gender: ${_this.gender}, level: ${_this.level}, profilePicUrl: ${_this.profilePicUrl}, coverPicUrl: ${_this.coverPicUrl}, collegeCode: ${_this.collegeCode}, collegeId: ${_this.collegeId}, orgDistrictId: ${_this.orgDistrictId}, rank: ${_this.rank}, percentile: ${_this.percentile}, roles: ${_this.roles}, roleVerification: ${_this.roleVerification}, leadEnablerVerified: ${_this.leadEnablerVerified}, interestGroups: ${_this.interestGroups}, karmaDistribution: ${_this.karmaDistribution})';
 }
 
 
@@ -63,7 +69,7 @@ class _$UserProfileCopyWithImpl<$Res>
 /// Create a copy of UserProfile
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? fullName = null,Object? muid = null,Object? karma = null,Object? isPublic = null,Object? joined = null,Object? gender = freezed,Object? level = freezed,Object? profilePicUrl = freezed,Object? coverPicUrl = freezed,Object? collegeCode = freezed,Object? collegeId = freezed,Object? orgDistrictId = freezed,Object? rank = freezed,Object? percentile = freezed,Object? roles = null,Object? roleVerification = null,Object? leadEnablerVerified = freezed,Object? interestGroups = null,Object? karmaDistribution = null,}) {
-  return _then(_self.copyWith(
+  return _then(UserProfile(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,fullName: null == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
 as String,muid: null == muid ? _self.muid : muid // ignore: cast_nullable_to_non_nullable
@@ -225,7 +231,7 @@ return $default(_that.id,_that.fullName,_that.muid,_that.karma,_that.isPublic,_t
 
 
 class _UserProfile implements UserProfile {
-  const _UserProfile({required this.id, required this.fullName, required this.muid, required this.karma, required this.isPublic, required this.joined, this.gender, this.level, this.profilePicUrl, this.coverPicUrl, this.collegeCode, this.collegeId, this.orgDistrictId, this.rank, this.percentile, final  List<String> roles = const [], final  List<RoleVerification> roleVerification = const [], this.leadEnablerVerified, final  List<InterestGroup> interestGroups = const [], final  List<KarmaDistributionEntry> karmaDistribution = const []}): _roles = roles,_roleVerification = roleVerification,_interestGroups = interestGroups,_karmaDistribution = karmaDistribution;
+  const _UserProfile({required this.id, required this.fullName, required this.muid, required this.karma, required this.isPublic, required this.joined, this.gender, this.level, this.profilePicUrl, this.coverPicUrl, this.collegeCode, this.collegeId, this.orgDistrictId, this.rank, this.percentile,  List<String> roles = const [],  List<RoleVerification> roleVerification = const [], this.leadEnablerVerified,  List<InterestGroup> interestGroups = const [],  List<KarmaDistributionEntry> karmaDistribution = const []}): _roles = roles,_roleVerification = roleVerification,_interestGroups = interestGroups,_karmaDistribution = karmaDistribution;
   
 
 @override final  String id;
@@ -283,16 +289,18 @@ _$UserProfileCopyWith<_UserProfile> get copyWith => __$UserProfileCopyWithImpl<_
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserProfile&&(identical(other.id, id) || other.id == id)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.isPublic, isPublic) || other.isPublic == isPublic)&&(identical(other.joined, joined) || other.joined == joined)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.level, level) || other.level == level)&&(identical(other.profilePicUrl, profilePicUrl) || other.profilePicUrl == profilePicUrl)&&(identical(other.coverPicUrl, coverPicUrl) || other.coverPicUrl == coverPicUrl)&&(identical(other.collegeCode, collegeCode) || other.collegeCode == collegeCode)&&(identical(other.collegeId, collegeId) || other.collegeId == collegeId)&&(identical(other.orgDistrictId, orgDistrictId) || other.orgDistrictId == orgDistrictId)&&(identical(other.rank, rank) || other.rank == rank)&&(identical(other.percentile, percentile) || other.percentile == percentile)&&const DeepCollectionEquality().equals(other._roles, _roles)&&const DeepCollectionEquality().equals(other._roleVerification, _roleVerification)&&(identical(other.leadEnablerVerified, leadEnablerVerified) || other.leadEnablerVerified == leadEnablerVerified)&&const DeepCollectionEquality().equals(other._interestGroups, _interestGroups)&&const DeepCollectionEquality().equals(other._karmaDistribution, _karmaDistribution));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserProfile&&(identical(other.id, id) || other.id == id)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.isPublic, isPublic) || other.isPublic == isPublic)&&(identical(other.joined, joined) || other.joined == joined)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.level, level) || other.level == level)&&(identical(other.profilePicUrl, profilePicUrl) || other.profilePicUrl == profilePicUrl)&&(identical(other.coverPicUrl, coverPicUrl) || other.coverPicUrl == coverPicUrl)&&(identical(other.collegeCode, collegeCode) || other.collegeCode == collegeCode)&&(identical(other.collegeId, collegeId) || other.collegeId == collegeId)&&(identical(other.orgDistrictId, orgDistrictId) || other.orgDistrictId == orgDistrictId)&&(identical(other.rank, rank) || other.rank == rank)&&(identical(other.percentile, percentile) || other.percentile == percentile)&&const DeepCollectionEquality().equals(other.roles, _roles)&&const DeepCollectionEquality().equals(other.roleVerification, _roleVerification)&&(identical(other.leadEnablerVerified, leadEnablerVerified) || other.leadEnablerVerified == leadEnablerVerified)&&const DeepCollectionEquality().equals(other.interestGroups, _interestGroups)&&const DeepCollectionEquality().equals(other.karmaDistribution, _karmaDistribution));
 }
 
 
 @override
-int get hashCode => Object.hashAll([runtimeType,id,fullName,muid,karma,isPublic,joined,gender,level,profilePicUrl,coverPicUrl,collegeCode,collegeId,orgDistrictId,rank,percentile,const DeepCollectionEquality().hash(_roles),const DeepCollectionEquality().hash(_roleVerification),leadEnablerVerified,const DeepCollectionEquality().hash(_interestGroups),const DeepCollectionEquality().hash(_karmaDistribution)]);
+int get hashCode {
+    return Object.hashAll([runtimeType,id,fullName,muid,karma,isPublic,joined,gender,level,profilePicUrl,coverPicUrl,collegeCode,collegeId,orgDistrictId,rank,percentile,const DeepCollectionEquality().hash(_roles),const DeepCollectionEquality().hash(_roleVerification),leadEnablerVerified,const DeepCollectionEquality().hash(_interestGroups),const DeepCollectionEquality().hash(_karmaDistribution)]);
+}
 
 @override
 String toString() {
-  return 'UserProfile(id: $id, fullName: $fullName, muid: $muid, karma: $karma, isPublic: $isPublic, joined: $joined, gender: $gender, level: $level, profilePicUrl: $profilePicUrl, coverPicUrl: $coverPicUrl, collegeCode: $collegeCode, collegeId: $collegeId, orgDistrictId: $orgDistrictId, rank: $rank, percentile: $percentile, roles: $roles, roleVerification: $roleVerification, leadEnablerVerified: $leadEnablerVerified, interestGroups: $interestGroups, karmaDistribution: $karmaDistribution)';
+    return 'UserProfile(id: $id, fullName: $fullName, muid: $muid, karma: $karma, isPublic: $isPublic, joined: $joined, gender: $gender, level: $level, profilePicUrl: $profilePicUrl, coverPicUrl: $coverPicUrl, collegeCode: $collegeCode, collegeId: $collegeId, orgDistrictId: $orgDistrictId, rank: $rank, percentile: $percentile, roles: $roles, roleVerification: $roleVerification, leadEnablerVerified: $leadEnablerVerified, interestGroups: $interestGroups, karmaDistribution: $karmaDistribution)';
 }
 
 

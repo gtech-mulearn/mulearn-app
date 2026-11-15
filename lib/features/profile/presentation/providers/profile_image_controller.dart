@@ -10,11 +10,14 @@ class ProfileImageController extends _$ProfileImageController {
   Future<void> build() async {}
 
   Future<void> upload(List<int> bytes, String filename) async {
-    final link = ref.keepAlive(); // finish the follow-up refresh even if the screen closes
+    final link = ref
+        .keepAlive(); // finish the follow-up refresh even if the screen closes
     state = const AsyncLoading();
     final result = await AsyncValue.guard(() async {
       final profile = await ref.read(profileControllerProvider.future);
-      await ref.read(profileRepositoryProvider).updateProfileImage(
+      await ref
+          .read(profileRepositoryProvider)
+          .updateProfileImage(
             bytes: bytes,
             filename: filename,
             userId: profile.id,

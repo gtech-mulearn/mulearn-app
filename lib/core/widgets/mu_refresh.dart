@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mulearn_app/core/design_system/feedback/mu_toast.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
-import 'package:mulearn_app/core/widgets/mu_toast.dart';
 
 /// Pull-to-refresh, the same on every screen (UX-05): the indicator stays
 /// until [onRefresh]'s refetch finishes, and a failure is a toast with the
@@ -15,15 +15,19 @@ class MuRefresh extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => RefreshIndicator(
-        onRefresh: () async {
-          try {
-            await onRefresh();
-          } on Object catch (e) {
-            if (context.mounted) {
-              MuToast.show(context, message: ApiException.messageFor(e), type: MuToastType.error);
-            }
-          }
-        },
-        child: child,
-      );
+    onRefresh: () async {
+      try {
+        await onRefresh();
+      } on Object catch (e) {
+        if (context.mounted) {
+          MuToast.show(
+            context,
+            message: ApiException.messageFor(e),
+            type: MuToastType.error,
+          );
+        }
+      }
+    },
+    child: child,
+  );
 }

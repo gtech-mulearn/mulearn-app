@@ -15,9 +15,9 @@ class RegisterRepositoryImpl implements RegisterRepository {
     required RegisterRemoteDataSource remote,
     required LocationRemoteDataSource locationRemote,
     required TokenStorage tokenStorage,
-  })  : _remote = remote,
-        _locationRemote = locationRemote,
-        _tokenStorage = tokenStorage;
+  }) : _remote = remote,
+       _locationRemote = locationRemote,
+       _tokenStorage = tokenStorage;
 
   final RegisterRemoteDataSource _remote;
   final LocationRemoteDataSource _locationRemote;
@@ -126,7 +126,8 @@ class RegisterRepositoryImpl implements RegisterRepository {
     final tokens = AuthTokenParser.tryParse(payload);
     if (tokens == null) {
       throw const ApiException(
-        message: 'Registered, but could not read the auth tokens from the '
+        message:
+            'Registered, but could not read the auth tokens from the '
             'response.',
       );
     }
@@ -139,7 +140,6 @@ class RegisterRepositoryImpl implements RegisterRepository {
       refreshToken: tokens.refreshToken,
     );
   }
-
 
   @override
   Future<void> selectOrganization({

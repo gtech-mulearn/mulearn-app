@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'join_request_dto.dart';
@@ -9,6 +9,7 @@ part of 'join_request_dto.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $JoinRequestDtoCopyWith<JoinRequestDto> get copyWith => _$JoinRequestDtoCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is JoinRequestDto&&(identical(other.linkId, linkId) || other.linkId == linkId)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.profilePic, profilePic) || other.profilePic == profilePic)&&(identical(other.requestedAt, requestedAt) || other.requestedAt == requestedAt));
+  final _this = this as JoinRequestDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is JoinRequestDto&&(identical(other.linkId, _this.linkId) || other.linkId == _this.linkId)&&(identical(other.userId, _this.userId) || other.userId == _this.userId)&&(identical(other.fullName, _this.fullName) || other.fullName == _this.fullName)&&(identical(other.muid, _this.muid) || other.muid == _this.muid)&&(identical(other.profilePic, _this.profilePic) || other.profilePic == _this.profilePic)&&(identical(other.requestedAt, _this.requestedAt) || other.requestedAt == _this.requestedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,linkId,userId,fullName,muid,profilePic,requestedAt);
+int get hashCode {
+  final _this = this as JoinRequestDto;
+  return Object.hash(runtimeType,_this.linkId,_this.userId,_this.fullName,_this.muid,_this.profilePic,_this.requestedAt);
+}
 
 @override
 String toString() {
-  return 'JoinRequestDto(linkId: $linkId, userId: $userId, fullName: $fullName, muid: $muid, profilePic: $profilePic, requestedAt: $requestedAt)';
+  final _this = this as JoinRequestDto;
+  return 'JoinRequestDto(linkId: ${_this.linkId}, userId: ${_this.userId}, fullName: ${_this.fullName}, muid: ${_this.muid}, profilePic: ${_this.profilePic}, requestedAt: ${_this.requestedAt})';
 }
 
 
@@ -66,7 +72,7 @@ class _$JoinRequestDtoCopyWithImpl<$Res>
 /// Create a copy of JoinRequestDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? linkId = null,Object? userId = null,Object? fullName = null,Object? muid = null,Object? profilePic = freezed,Object? requestedAt = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(JoinRequestDto(
 linkId: null == linkId ? _self.linkId : linkId // ignore: cast_nullable_to_non_nullable
 as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,fullName: null == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
@@ -237,16 +243,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _JoinRequestDto&&(identical(other.linkId, linkId) || other.linkId == linkId)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.profilePic, profilePic) || other.profilePic == profilePic)&&(identical(other.requestedAt, requestedAt) || other.requestedAt == requestedAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _JoinRequestDto&&(identical(other.linkId, linkId) || other.linkId == linkId)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.profilePic, profilePic) || other.profilePic == profilePic)&&(identical(other.requestedAt, requestedAt) || other.requestedAt == requestedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,linkId,userId,fullName,muid,profilePic,requestedAt);
+int get hashCode {
+    return Object.hash(runtimeType,linkId,userId,fullName,muid,profilePic,requestedAt);
+}
 
 @override
 String toString() {
-  return 'JoinRequestDto(linkId: $linkId, userId: $userId, fullName: $fullName, muid: $muid, profilePic: $profilePic, requestedAt: $requestedAt)';
+    return 'JoinRequestDto(linkId: $linkId, userId: $userId, fullName: $fullName, muid: $muid, profilePic: $profilePic, requestedAt: $requestedAt)';
 }
 
 

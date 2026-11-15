@@ -11,7 +11,7 @@ part of 'mentor_hub_providers.dart';
 /// The mentor's scopes with their numbers (`overview/`).
 
 @ProviderFor(mentorOverview)
-const mentorOverviewProvider = MentorOverviewProvider._();
+final mentorOverviewProvider = MentorOverviewProvider._();
 
 /// The mentor's scopes with their numbers (`overview/`).
 
@@ -26,7 +26,7 @@ final class MentorOverviewProvider
         $FutureModifier<List<MentorScope>>,
         $FutureProvider<List<MentorScope>> {
   /// The mentor's scopes with their numbers (`overview/`).
-  const MentorOverviewProvider._()
+  MentorOverviewProvider._()
     : super(
         from: null,
         argument: null,
@@ -55,7 +55,7 @@ final class MentorOverviewProvider
 String _$mentorOverviewHash() => r'd0224b85dbc0e48d444e20ee5f590e07c2f38fff';
 
 @ProviderFor(mentorAnalytics)
-const mentorAnalyticsProvider = MentorAnalyticsProvider._();
+final mentorAnalyticsProvider = MentorAnalyticsProvider._();
 
 final class MentorAnalyticsProvider
     extends
@@ -65,7 +65,7 @@ final class MentorAnalyticsProvider
           FutureOr<MentorAnalytics>
         >
     with $FutureModifier<MentorAnalytics>, $FutureProvider<MentorAnalytics> {
-  const MentorAnalyticsProvider._()
+  MentorAnalyticsProvider._()
     : super(
         from: null,
         argument: null,
@@ -94,7 +94,7 @@ final class MentorAnalyticsProvider
 String _$mentorAnalyticsHash() => r'e88f18ea62fe58961a5af5c2bfa5016aa4af7c3d';
 
 @ProviderFor(mentorProfileCompletion)
-const mentorProfileCompletionProvider = MentorProfileCompletionProvider._();
+final mentorProfileCompletionProvider = MentorProfileCompletionProvider._();
 
 final class MentorProfileCompletionProvider
     extends
@@ -106,7 +106,7 @@ final class MentorProfileCompletionProvider
     with
         $FutureModifier<MentorProfileCompletion>,
         $FutureProvider<MentorProfileCompletion> {
-  const MentorProfileCompletionProvider._()
+  MentorProfileCompletionProvider._()
     : super(
         from: null,
         argument: null,
@@ -144,7 +144,7 @@ String _$mentorProfileCompletionHash() =>
 /// one is still ahead.
 
 @ProviderFor(mentorNextSessions)
-const mentorNextSessionsProvider = MentorNextSessionsProvider._();
+final mentorNextSessionsProvider = MentorNextSessionsProvider._();
 
 /// The next scheduled sessions, soonest first (5 at most), without any that
 /// already ended.
@@ -171,7 +171,7 @@ final class MentorNextSessionsProvider
   /// stay SCHEDULED and come first by start time, so a soonest-first page can
   /// be all stale. A further page is read (3 at most) only while every row on
   /// one is still ahead.
-  const MentorNextSessionsProvider._()
+  MentorNextSessionsProvider._()
     : super(
         from: null,
         argument: null,
@@ -203,7 +203,7 @@ String _$mentorNextSessionsHash() =>
 /// How many student session requests wait for the mentor.
 
 @ProviderFor(mentorRequestCount)
-const mentorRequestCountProvider = MentorRequestCountProvider._();
+final mentorRequestCountProvider = MentorRequestCountProvider._();
 
 /// How many student session requests wait for the mentor.
 
@@ -211,7 +211,7 @@ final class MentorRequestCountProvider
     extends $FunctionalProvider<AsyncValue<int>, int, FutureOr<int>>
     with $FutureModifier<int>, $FutureProvider<int> {
   /// How many student session requests wait for the mentor.
-  const MentorRequestCountProvider._()
+  MentorRequestCountProvider._()
     : super(
         from: null,
         argument: null,

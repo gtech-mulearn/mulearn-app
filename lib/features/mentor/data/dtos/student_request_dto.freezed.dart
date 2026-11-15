@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'student_request_dto.dart';
@@ -9,6 +9,7 @@ part of 'student_request_dto.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $StudentRequestDtoCopyWith<StudentRequestDto> get copyWith => _$StudentRequestDt
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is StudentRequestDto&&(identical(other.id, id) || other.id == id)&&(identical(other.startsAt, startsAt) || other.startsAt == startsAt)&&(identical(other.endsAt, endsAt) || other.endsAt == endsAt)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.mode, mode) || other.mode == mode)&&(identical(other.entityName, entityName) || other.entityName == entityName)&&(identical(other.meetingLink, meetingLink) || other.meetingLink == meetingLink)&&(identical(other.venue, venue) || other.venue == venue)&&(identical(other.requestedByName, requestedByName) || other.requestedByName == requestedByName)&&(identical(other.requestedByMuid, requestedByMuid) || other.requestedByMuid == requestedByMuid));
+  final _this = this as StudentRequestDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StudentRequestDto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.startsAt, _this.startsAt) || other.startsAt == _this.startsAt)&&(identical(other.endsAt, _this.endsAt) || other.endsAt == _this.endsAt)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.description, _this.description) || other.description == _this.description)&&(identical(other.mode, _this.mode) || other.mode == _this.mode)&&(identical(other.entityName, _this.entityName) || other.entityName == _this.entityName)&&(identical(other.meetingLink, _this.meetingLink) || other.meetingLink == _this.meetingLink)&&(identical(other.venue, _this.venue) || other.venue == _this.venue)&&(identical(other.requestedByName, _this.requestedByName) || other.requestedByName == _this.requestedByName)&&(identical(other.requestedByMuid, _this.requestedByMuid) || other.requestedByMuid == _this.requestedByMuid));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,startsAt,endsAt,title,description,mode,entityName,meetingLink,venue,requestedByName,requestedByMuid);
+int get hashCode {
+  final _this = this as StudentRequestDto;
+  return Object.hash(runtimeType,_this.id,_this.startsAt,_this.endsAt,_this.title,_this.description,_this.mode,_this.entityName,_this.meetingLink,_this.venue,_this.requestedByName,_this.requestedByMuid);
+}
 
 @override
 String toString() {
-  return 'StudentRequestDto(id: $id, startsAt: $startsAt, endsAt: $endsAt, title: $title, description: $description, mode: $mode, entityName: $entityName, meetingLink: $meetingLink, venue: $venue, requestedByName: $requestedByName, requestedByMuid: $requestedByMuid)';
+  final _this = this as StudentRequestDto;
+  return 'StudentRequestDto(id: ${_this.id}, startsAt: ${_this.startsAt}, endsAt: ${_this.endsAt}, title: ${_this.title}, description: ${_this.description}, mode: ${_this.mode}, entityName: ${_this.entityName}, meetingLink: ${_this.meetingLink}, venue: ${_this.venue}, requestedByName: ${_this.requestedByName}, requestedByMuid: ${_this.requestedByMuid})';
 }
 
 
@@ -66,7 +72,7 @@ class _$StudentRequestDtoCopyWithImpl<$Res>
 /// Create a copy of StudentRequestDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? startsAt = null,Object? endsAt = null,Object? title = null,Object? description = freezed,Object? mode = freezed,Object? entityName = null,Object? meetingLink = freezed,Object? venue = freezed,Object? requestedByName = null,Object? requestedByMuid = null,}) {
-  return _then(_self.copyWith(
+  return _then(StudentRequestDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,startsAt: null == startsAt ? _self.startsAt : startsAt // ignore: cast_nullable_to_non_nullable
 as String,endsAt: null == endsAt ? _self.endsAt : endsAt // ignore: cast_nullable_to_non_nullable
@@ -247,16 +253,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StudentRequestDto&&(identical(other.id, id) || other.id == id)&&(identical(other.startsAt, startsAt) || other.startsAt == startsAt)&&(identical(other.endsAt, endsAt) || other.endsAt == endsAt)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.mode, mode) || other.mode == mode)&&(identical(other.entityName, entityName) || other.entityName == entityName)&&(identical(other.meetingLink, meetingLink) || other.meetingLink == meetingLink)&&(identical(other.venue, venue) || other.venue == venue)&&(identical(other.requestedByName, requestedByName) || other.requestedByName == requestedByName)&&(identical(other.requestedByMuid, requestedByMuid) || other.requestedByMuid == requestedByMuid));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _StudentRequestDto&&(identical(other.id, id) || other.id == id)&&(identical(other.startsAt, startsAt) || other.startsAt == startsAt)&&(identical(other.endsAt, endsAt) || other.endsAt == endsAt)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.mode, mode) || other.mode == mode)&&(identical(other.entityName, entityName) || other.entityName == entityName)&&(identical(other.meetingLink, meetingLink) || other.meetingLink == meetingLink)&&(identical(other.venue, venue) || other.venue == venue)&&(identical(other.requestedByName, requestedByName) || other.requestedByName == requestedByName)&&(identical(other.requestedByMuid, requestedByMuid) || other.requestedByMuid == requestedByMuid));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,startsAt,endsAt,title,description,mode,entityName,meetingLink,venue,requestedByName,requestedByMuid);
+int get hashCode {
+    return Object.hash(runtimeType,id,startsAt,endsAt,title,description,mode,entityName,meetingLink,venue,requestedByName,requestedByMuid);
+}
 
 @override
 String toString() {
-  return 'StudentRequestDto(id: $id, startsAt: $startsAt, endsAt: $endsAt, title: $title, description: $description, mode: $mode, entityName: $entityName, meetingLink: $meetingLink, venue: $venue, requestedByName: $requestedByName, requestedByMuid: $requestedByMuid)';
+    return 'StudentRequestDto(id: $id, startsAt: $startsAt, endsAt: $endsAt, title: $title, description: $description, mode: $mode, entityName: $entityName, meetingLink: $meetingLink, venue: $venue, requestedByName: $requestedByName, requestedByMuid: $requestedByMuid)';
 }
 
 

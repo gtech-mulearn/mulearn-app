@@ -26,71 +26,110 @@ void main() {
   setUp(() {
     opened = [];
     adapter = FakeHttpAdapter({
-      'GET $_base/overview/': (_) => FakeResponse(200, loadFixture('dev/mentor_overview')),
-      'GET $_base/analytics/personal/': (_) => FakeResponse(200, loadFixture('dev/mentor_analytics')),
-      'GET $_base/profile/completion/': (_) => FakeResponse(200, loadFixture('dev/mentor_profile_completion')),
-      'GET $_base/session/list/': (_) => FakeResponse(200, loadFixture('dev/mentor_sessions_scheduled')),
-      'GET $_base/session/student-requests/': (_) => FakeResponse(200, loadFixture('dev/mentor_student_requests')),
+      'GET $_base/overview/': (_) =>
+          FakeResponse(200, loadFixture('dev/mentor_overview')),
+      'GET $_base/analytics/personal/': (_) =>
+          FakeResponse(200, loadFixture('dev/mentor_analytics')),
+      'GET $_base/profile/completion/': (_) =>
+          FakeResponse(200, loadFixture('dev/mentor_profile_completion')),
+      'GET $_base/session/list/': (_) =>
+          FakeResponse(200, loadFixture('dev/mentor_sessions_scheduled')),
+      'GET $_base/session/student-requests/': (_) =>
+          FakeResponse(200, loadFixture('dev/mentor_student_requests')),
     });
   });
 
   Future<void> pumpHub(WidgetTester tester, {DateTime? now}) async {
     final tokens = TokenStorage(FakeSecureStorage());
     await tokens.saveTokens(accessToken: 'a', refreshToken: 'r');
-    final container = ProviderContainer(retry: (_, __) => null, overrides: [
-      dioProvider.overrideWithValue(fakeDio(adapter)),
-      tokenStorageProvider.overrideWithValue(tokens),
-      clockProvider.overrideWithValue(() => now ?? DateTime.utc(2026, 11, 13, 9)),
-      openExternalProvider.overrideWithValue((uri) async {
-        opened.add(uri);
-        return true;
-      }),
-    ]);
+    final container = ProviderContainer(
+      retry: (_, __) => null,
+      overrides: [
+        dioProvider.overrideWithValue(fakeDio(adapter)),
+        tokenStorageProvider.overrideWithValue(tokens),
+        clockProvider.overrideWithValue(
+          () => now ?? DateTime.utc(2026, 11, 13, 9),
+        ),
+        openExternalProvider.overrideWithValue((uri) async {
+          opened.add(uri);
+          return true;
+        }),
+      ],
+    );
     addTearDown(container.dispose);
-    final router = GoRouter(initialLocation: '/mentor', routes: [
-      GoRoute(path: '/mentor', builder: (_, __) => const MentorHubScreen()),
-    ]);
+    final router = GoRouter(
+      initialLocation: '/mentor',
+      routes: [
+        GoRoute(path: '/mentor', builder: (_, __) => const MentorHubScreen()),
+      ],
+    );
     addTearDown(router.dispose);
     tester.view.physicalSize = const Size(1080, 4000);
     addTearDown(tester.view.resetPhysicalSize);
-    await tester.pumpWidget(UncontrolledProviderScope(container: container, child: MaterialApp.router(routerConfig: router)));
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp.router(routerConfig: router),
+      ),
+    );
     for (var i = 0; i < 8; i++) {
       await tester.pump(const Duration(milliseconds: 50));
     }
   }
 
-  testWidgets('the hub shows the next sessions, requests, completion, totals and scopes', (tester) async {
-    await pumpHub(tester);
+  testWidgets(
+    'the hub shows the next sessions, requests, completion, totals and scopes',
+    (tester) async {
+      await pumpHub(tester);
 
-    expect(find.text('NEXT UP'), findsOneWidget);
-    expect(find.text('Office hours: debugging your first Flutter app'), findsWidgets);
-    expect(find.text('Session requests'), findsOneWidget);
-    expect(find.text('None waiting'), findsOneWidget);
-    expect(find.text('Profile 75% complete'), findsOneWidget);
-    expect(find.text('Missing: LinkedIn'), findsOneWidget);
-    expect(find.text('SESSIONS COMPLETED'), findsOneWidget);
-    expect(find.text('NO RATINGS YET'), findsOneWidget);
-    expect(find.text('Web Development'), findsWidgets);
-    expect(find.text('IG mentor'), findsOneWidget);
-    expect(find.text('6 learners · 6 active · 2 upcoming sessions · 3 circles'), findsOneWidget);
-  });
+      expect(find.text('NEXT UP'), findsOneWidget);
+      expect(
+        find.text('Office hours: debugging your first Flutter app'),
+        findsWidgets,
+      );
+      expect(find.text('Session requests'), findsOneWidget);
+      expect(find.text('None waiting'), findsOneWidget);
+      expect(find.text('75%'), findsOneWidget);
+      expect(find.text('Missing: LinkedIn'), findsOneWidget);
+      expect(find.text('SESSIONS DONE'), findsOneWidget);
+      expect(find.text('NO RATINGS YET'), findsOneWidget);
+      await tester.scrollUntilVisible(find.text('IG mentor'), 300);
+      expect(find.text('Web Development'), findsWidgets);
+      expect(find.text('IG mentor'), findsOneWidget);
+      expect(find.text('6 of 6 learners active'), findsOneWidget);
+      expect(find.text('2 upcoming sessions'), findsOneWidget);
+      expect(find.text('3 circles'), findsOneWidget);
+    },
+  );
 
-  testWidgets('the next sessions are read latest first, so stale ones never crowd them out', (tester) async {
-    await pumpHub(tester);
+  testWidgets(
+    'the next sessions are read latest first, so stale ones never crowd them out',
+    (tester) async {
+      await pumpHub(tester);
 
-    final q = adapter.requests.firstWhere((r) => r.uri.path == '$_base/session/list/').queryParameters;
-    expect(q['status'], 'SCHEDULED');
-    expect(q['sortBy'], '-starts_at');
-  });
+      final q = adapter.requests
+          .firstWhere((r) => r.uri.path == '$_base/session/list/')
+          .queryParameters;
+      expect(q['status'], 'SCHEDULED');
+      expect(q['sortBy'], '-starts_at');
+    },
+  );
 
   testWidgets('a session that already ended is not "next up"', (tester) async {
     final body = loadFixture('dev/mentor_sessions_scheduled');
-    final response = Map<String, dynamic>.of(body['response'] as Map<String, dynamic>);
+    final response = Map<String, dynamic>.of(
+      body['response'] as Map<String, dynamic>,
+    );
     response['data'] = [
       for (final row in response['data'] as List)
-        {...row as Map<String, dynamic>, 'starts_at': '2026-11-01T10:00:00Z', 'ends_at': '2026-11-01T11:00:00Z'},
+        {
+          ...row as Map<String, dynamic>,
+          'starts_at': '2026-11-01T10:00:00Z',
+          'ends_at': '2026-11-01T11:00:00Z',
+        },
     ];
-    adapter.routes['GET $_base/session/list/'] = (_) => FakeResponse(200, {...body, 'response': response});
+    adapter.routes['GET $_base/session/list/'] = (_) =>
+        FakeResponse(200, {...body, 'response': response});
     await pumpHub(tester);
 
     expect(find.text('No upcoming sessions.'), findsOneWidget);
@@ -99,26 +138,35 @@ void main() {
   // Final review, Minor 8 → Important: SCHEDULED sessions that ended but were
   // never marked complete come first in starts_at order; five of them hid
   // the next real session behind "No upcoming sessions.".
-  testWidgets('ended sessions never marked complete do not hide the next one', (tester) async {
+  testWidgets('ended sessions never marked complete do not hide the next one', (
+    tester,
+  ) async {
     final body = loadFixture('dev/mentor_sessions_scheduled');
     final response = body['response'] as Map<String, dynamic>;
     final template = (response['data'] as List).first as Map<String, dynamic>;
     Map<String, dynamic> row(String id, String title, DateTime start) => {
-          ...template,
-          'id': id,
-          'title': title,
-          'starts_at': start.toIso8601String(),
-          'ends_at': start.add(const Duration(hours: 1)).toIso8601String(),
-        };
+      ...template,
+      'id': id,
+      'title': title,
+      'starts_at': start.toIso8601String(),
+      'ends_at': start.add(const Duration(hours: 1)).toIso8601String(),
+    };
     final all = [
-      for (var i = 1; i <= 6; i++) row('old$i', 'Old session $i', DateTime.utc(2026, 10, i, 10)),
+      for (var i = 1; i <= 6; i++)
+        row('old$i', 'Old session $i', DateTime.utc(2026, 10, i, 10)),
       row('next', 'The real next session', DateTime.utc(2026, 11, 14, 10)),
     ];
     // Serves the list the way session/list/ does: sorted by sortBy, paged.
     adapter.routes['GET $_base/session/list/'] = (o) {
       final q = o.queryParameters;
-      final sorted = [...all]..sort((a, b) => (a['starts_at'] as String).compareTo(b['starts_at'] as String));
-      final ordered = q['sortBy'] == '-starts_at' ? sorted.reversed.toList() : sorted;
+      final sorted = [...all]
+        ..sort(
+          (a, b) =>
+              (a['starts_at'] as String).compareTo(b['starts_at'] as String),
+        );
+      final ordered = q['sortBy'] == '-starts_at'
+          ? sorted.reversed.toList()
+          : sorted;
       final perPage = int.parse('${q['perPage'] ?? 20}');
       final page = int.parse('${q['pageIndex'] ?? 1}');
       final items = ordered.skip((page - 1) * perPage).take(perPage).toList();
@@ -126,7 +174,11 @@ void main() {
         ...body,
         'response': {
           'data': items,
-          'pagination': {'count': all.length, 'totalPages': (all.length / perPage).ceil(), 'isNext': page * perPage < all.length},
+          'pagination': {
+            'count': all.length,
+            'totalPages': (all.length / perPage).ceil(),
+            'isNext': page * perPage < all.length,
+          },
         },
       });
     };
@@ -143,27 +195,34 @@ void main() {
     await tester.tap(find.text('Finish on web'));
     await tester.pump();
 
-    expect(opened.single.toString(), '${FlavorConfig.instance.dashboardUrl}/dashboard/profile');
+    expect(
+      opened.single.toString(),
+      '${FlavorConfig.instance.dashboardUrl}/dashboard/profile',
+    );
   });
 
-  testWidgets('the next session can be joined from the hub when it is about to start', (tester) async {
-    await pumpHub(tester, now: DateTime.utc(2026, 11, 20, 12, 20));
+  testWidgets(
+    'the next session can be joined from the hub when it is about to start',
+    (tester) async {
+      await pumpHub(tester, now: DateTime.utc(2026, 11, 20, 12, 20));
 
-    expect(find.text('Starts in 10 min'), findsOneWidget);
-    await tester.tap(find.text('Join session'));
-    await tester.pump();
-    expect(opened.single.toString(), startsWith('https://meet.google.com/'));
-  });
+      expect(find.text('Starts in 10 min'), findsOneWidget);
+      await tester.tap(find.text('Join session'));
+      await tester.pump();
+      expect(opened.single.toString(), startsWith('https://meet.google.com/'));
+    },
+  );
 
   testWidgets('a mentor with no scope is told so', (tester) async {
     adapter.routes['GET $_base/overview/'] = (_) => const FakeResponse(200, {
-          'hasError': false,
-          'statusCode': 200,
-          'message': {'general': <String>[]},
-          'response': {'scopes': <Object>[]},
-        });
+      'hasError': false,
+      'statusCode': 200,
+      'message': {'general': <String>[]},
+      'response': {'scopes': <Object>[]},
+    });
     await pumpHub(tester);
 
+    await tester.scrollUntilVisible(find.text('No mentoring scope yet'), 300);
     expect(find.text('No mentoring scope yet'), findsOneWidget);
   });
 }

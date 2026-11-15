@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'session_draft.dart';
@@ -9,6 +9,7 @@ part of 'session_draft.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $SessionTargetCopyWith<SessionTarget> get copyWith => _$SessionTargetCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SessionTarget&&(identical(other.type, type) || other.type == type)&&(identical(other.entityId, entityId) || other.entityId == entityId)&&(identical(other.label, label) || other.label == label));
+  final _this = this as SessionTarget;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SessionTarget&&(identical(other.type, _this.type) || other.type == _this.type)&&(identical(other.entityId, _this.entityId) || other.entityId == _this.entityId)&&(identical(other.label, _this.label) || other.label == _this.label));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,type,entityId,label);
+int get hashCode {
+  final _this = this as SessionTarget;
+  return Object.hash(runtimeType,_this.type,_this.entityId,_this.label);
+}
 
 @override
 String toString() {
-  return 'SessionTarget(type: $type, entityId: $entityId, label: $label)';
+  final _this = this as SessionTarget;
+  return 'SessionTarget(type: ${_this.type}, entityId: ${_this.entityId}, label: ${_this.label})';
 }
 
 
@@ -63,7 +69,7 @@ class _$SessionTargetCopyWithImpl<$Res>
 /// Create a copy of SessionTarget
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? type = null,Object? entityId = null,Object? label = null,}) {
-  return _then(_self.copyWith(
+  return _then(SessionTarget(
 type: null == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as SessionType,entityId: null == entityId ? _self.entityId : entityId // ignore: cast_nullable_to_non_nullable
 as String,label: null == label ? _self.label : label // ignore: cast_nullable_to_non_nullable
@@ -225,16 +231,18 @@ _$SessionTargetCopyWith<_SessionTarget> get copyWith => __$SessionTargetCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SessionTarget&&(identical(other.type, type) || other.type == type)&&(identical(other.entityId, entityId) || other.entityId == entityId)&&(identical(other.label, label) || other.label == label));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SessionTarget&&(identical(other.type, type) || other.type == type)&&(identical(other.entityId, entityId) || other.entityId == entityId)&&(identical(other.label, label) || other.label == label));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,type,entityId,label);
+int get hashCode {
+    return Object.hash(runtimeType,type,entityId,label);
+}
 
 @override
 String toString() {
-  return 'SessionTarget(type: $type, entityId: $entityId, label: $label)';
+    return 'SessionTarget(type: $type, entityId: $entityId, label: $label)';
 }
 
 
@@ -288,16 +296,21 @@ $IgOptionCopyWith<IgOption> get copyWith => _$IgOptionCopyWithImpl<IgOption>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is IgOption&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name));
+  final _this = this as IgOption;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is IgOption&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.name, _this.name) || other.name == _this.name));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name);
+int get hashCode {
+  final _this = this as IgOption;
+  return Object.hash(runtimeType,_this.id,_this.name);
+}
 
 @override
 String toString() {
-  return 'IgOption(id: $id, name: $name)';
+  final _this = this as IgOption;
+  return 'IgOption(id: ${_this.id}, name: ${_this.name})';
 }
 
 
@@ -326,7 +339,7 @@ class _$IgOptionCopyWithImpl<$Res>
 /// Create a copy of IgOption
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,}) {
-  return _then(_self.copyWith(
+  return _then(IgOption(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,
@@ -486,16 +499,18 @@ _$IgOptionCopyWith<_IgOption> get copyWith => __$IgOptionCopyWithImpl<_IgOption>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _IgOption&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _IgOption&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,name);
+int get hashCode {
+    return Object.hash(runtimeType,id,name);
+}
 
 @override
 String toString() {
-  return 'IgOption(id: $id, name: $name)';
+    return 'IgOption(id: $id, name: $name)';
 }
 
 
@@ -548,16 +563,21 @@ $SessionDraftCopyWith<SessionDraft> get copyWith => _$SessionDraftCopyWithImpl<S
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SessionDraft&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.mode, mode) || other.mode == mode)&&(identical(other.meetingLink, meetingLink) || other.meetingLink == meetingLink)&&(identical(other.venue, venue) || other.venue == venue)&&(identical(other.target, target) || other.target == target)&&(identical(other.startsLocal, startsLocal) || other.startsLocal == startsLocal)&&(identical(other.endsLocal, endsLocal) || other.endsLocal == endsLocal)&&(identical(other.maxParticipants, maxParticipants) || other.maxParticipants == maxParticipants)&&(identical(other.isRecurring, isRecurring) || other.isRecurring == isRecurring)&&(identical(other.recurrenceType, recurrenceType) || other.recurrenceType == recurrenceType)&&(identical(other.recurrenceInterval, recurrenceInterval) || other.recurrenceInterval == recurrenceInterval)&&(identical(other.recurrenceEndDate, recurrenceEndDate) || other.recurrenceEndDate == recurrenceEndDate));
+  final _this = this as SessionDraft;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SessionDraft&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.description, _this.description) || other.description == _this.description)&&(identical(other.mode, _this.mode) || other.mode == _this.mode)&&(identical(other.meetingLink, _this.meetingLink) || other.meetingLink == _this.meetingLink)&&(identical(other.venue, _this.venue) || other.venue == _this.venue)&&(identical(other.target, _this.target) || other.target == _this.target)&&(identical(other.startsLocal, _this.startsLocal) || other.startsLocal == _this.startsLocal)&&(identical(other.endsLocal, _this.endsLocal) || other.endsLocal == _this.endsLocal)&&(identical(other.maxParticipants, _this.maxParticipants) || other.maxParticipants == _this.maxParticipants)&&(identical(other.isRecurring, _this.isRecurring) || other.isRecurring == _this.isRecurring)&&(identical(other.recurrenceType, _this.recurrenceType) || other.recurrenceType == _this.recurrenceType)&&(identical(other.recurrenceInterval, _this.recurrenceInterval) || other.recurrenceInterval == _this.recurrenceInterval)&&(identical(other.recurrenceEndDate, _this.recurrenceEndDate) || other.recurrenceEndDate == _this.recurrenceEndDate));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,title,description,mode,meetingLink,venue,target,startsLocal,endsLocal,maxParticipants,isRecurring,recurrenceType,recurrenceInterval,recurrenceEndDate);
+int get hashCode {
+  final _this = this as SessionDraft;
+  return Object.hash(runtimeType,_this.title,_this.description,_this.mode,_this.meetingLink,_this.venue,_this.target,_this.startsLocal,_this.endsLocal,_this.maxParticipants,_this.isRecurring,_this.recurrenceType,_this.recurrenceInterval,_this.recurrenceEndDate);
+}
 
 @override
 String toString() {
-  return 'SessionDraft(title: $title, description: $description, mode: $mode, meetingLink: $meetingLink, venue: $venue, target: $target, startsLocal: $startsLocal, endsLocal: $endsLocal, maxParticipants: $maxParticipants, isRecurring: $isRecurring, recurrenceType: $recurrenceType, recurrenceInterval: $recurrenceInterval, recurrenceEndDate: $recurrenceEndDate)';
+  final _this = this as SessionDraft;
+  return 'SessionDraft(title: ${_this.title}, description: ${_this.description}, mode: ${_this.mode}, meetingLink: ${_this.meetingLink}, venue: ${_this.venue}, target: ${_this.target}, startsLocal: ${_this.startsLocal}, endsLocal: ${_this.endsLocal}, maxParticipants: ${_this.maxParticipants}, isRecurring: ${_this.isRecurring}, recurrenceType: ${_this.recurrenceType}, recurrenceInterval: ${_this.recurrenceInterval}, recurrenceEndDate: ${_this.recurrenceEndDate})';
 }
 
 
@@ -586,7 +606,7 @@ class _$SessionDraftCopyWithImpl<$Res>
 /// Create a copy of SessionDraft
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? title = null,Object? description = null,Object? mode = null,Object? meetingLink = null,Object? venue = null,Object? target = freezed,Object? startsLocal = freezed,Object? endsLocal = freezed,Object? maxParticipants = freezed,Object? isRecurring = null,Object? recurrenceType = freezed,Object? recurrenceInterval = null,Object? recurrenceEndDate = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(SessionDraft(
 title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,mode: null == mode ? _self.mode : mode // ignore: cast_nullable_to_non_nullable
@@ -780,16 +800,18 @@ _$SessionDraftCopyWith<_SessionDraft> get copyWith => __$SessionDraftCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SessionDraft&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.mode, mode) || other.mode == mode)&&(identical(other.meetingLink, meetingLink) || other.meetingLink == meetingLink)&&(identical(other.venue, venue) || other.venue == venue)&&(identical(other.target, target) || other.target == target)&&(identical(other.startsLocal, startsLocal) || other.startsLocal == startsLocal)&&(identical(other.endsLocal, endsLocal) || other.endsLocal == endsLocal)&&(identical(other.maxParticipants, maxParticipants) || other.maxParticipants == maxParticipants)&&(identical(other.isRecurring, isRecurring) || other.isRecurring == isRecurring)&&(identical(other.recurrenceType, recurrenceType) || other.recurrenceType == recurrenceType)&&(identical(other.recurrenceInterval, recurrenceInterval) || other.recurrenceInterval == recurrenceInterval)&&(identical(other.recurrenceEndDate, recurrenceEndDate) || other.recurrenceEndDate == recurrenceEndDate));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SessionDraft&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.mode, mode) || other.mode == mode)&&(identical(other.meetingLink, meetingLink) || other.meetingLink == meetingLink)&&(identical(other.venue, venue) || other.venue == venue)&&(identical(other.target, target) || other.target == target)&&(identical(other.startsLocal, startsLocal) || other.startsLocal == startsLocal)&&(identical(other.endsLocal, endsLocal) || other.endsLocal == endsLocal)&&(identical(other.maxParticipants, maxParticipants) || other.maxParticipants == maxParticipants)&&(identical(other.isRecurring, isRecurring) || other.isRecurring == isRecurring)&&(identical(other.recurrenceType, recurrenceType) || other.recurrenceType == recurrenceType)&&(identical(other.recurrenceInterval, recurrenceInterval) || other.recurrenceInterval == recurrenceInterval)&&(identical(other.recurrenceEndDate, recurrenceEndDate) || other.recurrenceEndDate == recurrenceEndDate));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,title,description,mode,meetingLink,venue,target,startsLocal,endsLocal,maxParticipants,isRecurring,recurrenceType,recurrenceInterval,recurrenceEndDate);
+int get hashCode {
+    return Object.hash(runtimeType,title,description,mode,meetingLink,venue,target,startsLocal,endsLocal,maxParticipants,isRecurring,recurrenceType,recurrenceInterval,recurrenceEndDate);
+}
 
 @override
 String toString() {
-  return 'SessionDraft(title: $title, description: $description, mode: $mode, meetingLink: $meetingLink, venue: $venue, target: $target, startsLocal: $startsLocal, endsLocal: $endsLocal, maxParticipants: $maxParticipants, isRecurring: $isRecurring, recurrenceType: $recurrenceType, recurrenceInterval: $recurrenceInterval, recurrenceEndDate: $recurrenceEndDate)';
+    return 'SessionDraft(title: $title, description: $description, mode: $mode, meetingLink: $meetingLink, venue: $venue, target: $target, startsLocal: $startsLocal, endsLocal: $endsLocal, maxParticipants: $maxParticipants, isRecurring: $isRecurring, recurrenceType: $recurrenceType, recurrenceInterval: $recurrenceInterval, recurrenceEndDate: $recurrenceEndDate)';
 }
 
 

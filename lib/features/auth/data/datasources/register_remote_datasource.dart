@@ -10,25 +10,17 @@ class RegisterRemoteDataSource {
 
   final Dio _dio;
 
-  Future<List<dynamic>> fetchRoles() => _fetchList(
-        ApiPaths.registerRoles,
-        key: 'roles',
-      );
+  Future<List<dynamic>> fetchRoles() =>
+      _fetchList(ApiPaths.registerRoles, key: 'roles');
 
-  Future<List<dynamic>> fetchColleges() => _fetchList(
-        ApiPaths.registerColleges,
-        key: 'colleges',
-      );
+  Future<List<dynamic>> fetchColleges() =>
+      _fetchList(ApiPaths.registerColleges, key: 'colleges');
 
-  Future<List<dynamic>> fetchDepartments() => _fetchList(
-        ApiPaths.registerDepartments,
-        key: 'departments',
-      );
+  Future<List<dynamic>> fetchDepartments() =>
+      _fetchList(ApiPaths.registerDepartments, key: 'departments');
 
-  Future<List<dynamic>> fetchCompanies() => _fetchList(
-        ApiPaths.registerCompanies,
-        key: 'companies',
-      );
+  Future<List<dynamic>> fetchCompanies() =>
+      _fetchList(ApiPaths.registerCompanies, key: 'companies');
 
   Future<List<dynamic>> _fetchList(String path, {required String key}) async {
     final response = await _dio.get<dynamic>(
@@ -84,7 +76,6 @@ class RegisterRemoteDataSource {
     return ApiEnvelope.unwrapObject(response);
   }
 
-
   /// `POST /api/v1/dashboard/user/organization/` — authenticated.
   Future<void> selectOrganization({
     required String organization,
@@ -123,8 +114,10 @@ class RegisterRemoteDataSource {
       'graduation_year': graduationYear,
     }..removeWhere((_, value) => value == null);
 
-    final response =
-        await _dio.post<dynamic>(ApiPaths.createOrganization, data: body);
+    final response = await _dio.post<dynamic>(
+      ApiPaths.createOrganization,
+      data: body,
+    );
     ApiEnvelope.unwrapObject(response);
   }
 

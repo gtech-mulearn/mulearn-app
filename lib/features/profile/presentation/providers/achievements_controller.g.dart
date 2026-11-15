@@ -10,7 +10,7 @@ part of 'achievements_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(userAchievements)
-const userAchievementsProvider = UserAchievementsFamily._();
+final userAchievementsProvider = UserAchievementsFamily._();
 
 final class UserAchievementsProvider
     extends
@@ -22,7 +22,7 @@ final class UserAchievementsProvider
     with
         $FutureModifier<List<UserAchievement>>,
         $FutureProvider<List<UserAchievement>> {
-  const UserAchievementsProvider._({
+  UserAchievementsProvider._({
     required UserAchievementsFamily super.from,
     required String super.argument,
   }) : super(
@@ -70,7 +70,7 @@ String _$userAchievementsHash() => r'ae11739bc76106945ab08a2e1864c6c5775c7513';
 
 final class UserAchievementsFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<List<UserAchievement>>, String> {
-  const UserAchievementsFamily._()
+  UserAchievementsFamily._()
     : super(
         retry: noRetry,
         name: r'userAchievementsProvider',
@@ -89,7 +89,7 @@ final class UserAchievementsFamily extends $Family
 /// What the signed-in user can claim now.
 
 @ProviderFor(eligibleAchievements)
-const eligibleAchievementsProvider = EligibleAchievementsProvider._();
+final eligibleAchievementsProvider = EligibleAchievementsProvider._();
 
 /// What the signed-in user can claim now.
 
@@ -104,7 +104,7 @@ final class EligibleAchievementsProvider
         $FutureModifier<List<AchievementProgress>>,
         $FutureProvider<List<AchievementProgress>> {
   /// What the signed-in user can claim now.
-  const EligibleAchievementsProvider._()
+  EligibleAchievementsProvider._()
     : super(
         from: null,
         argument: null,
@@ -136,7 +136,7 @@ String _$eligibleAchievementsHash() =>
 /// Progress towards every achievement (filtered into "In Progress").
 
 @ProviderFor(achievementProgress)
-const achievementProgressProvider = AchievementProgressProvider._();
+final achievementProgressProvider = AchievementProgressProvider._();
 
 /// Progress towards every achievement (filtered into "In Progress").
 
@@ -151,7 +151,7 @@ final class AchievementProgressProvider
         $FutureModifier<List<AchievementProgress>>,
         $FutureProvider<List<AchievementProgress>> {
   /// Progress towards every achievement (filtered into "In Progress").
-  const AchievementProgressProvider._()
+  AchievementProgressProvider._()
     : super(
         from: null,
         argument: null,
@@ -183,7 +183,7 @@ String _$achievementProgressHash() =>
 /// Catalog descriptions by id, to describe eligible and in-progress items.
 
 @ProviderFor(achievementDescriptions)
-const achievementDescriptionsProvider = AchievementDescriptionsProvider._();
+final achievementDescriptionsProvider = AchievementDescriptionsProvider._();
 
 /// Catalog descriptions by id, to describe eligible and in-progress items.
 
@@ -198,7 +198,7 @@ final class AchievementDescriptionsProvider
         $FutureModifier<Map<String, String>>,
         $FutureProvider<Map<String, String>> {
   /// Catalog descriptions by id, to describe eligible and in-progress items.
-  const AchievementDescriptionsProvider._()
+  AchievementDescriptionsProvider._()
     : super(
         from: null,
         argument: null,
@@ -231,7 +231,7 @@ String _$achievementDescriptionsHash() =>
 /// whether the VC-issuance flow can proceed without an extra connect step.
 
 @ProviderFor(connectedDids)
-const connectedDidsProvider = ConnectedDidsFamily._();
+final connectedDidsProvider = ConnectedDidsFamily._();
 
 /// DIDs already connected/verified via QSeverse for [muid] — used to decide
 /// whether the VC-issuance flow can proceed without an extra connect step.
@@ -246,7 +246,7 @@ final class ConnectedDidsProvider
     with $FutureModifier<List<String>>, $FutureProvider<List<String>> {
   /// DIDs already connected/verified via QSeverse for [muid] — used to decide
   /// whether the VC-issuance flow can proceed without an extra connect step.
-  const ConnectedDidsProvider._({
+  ConnectedDidsProvider._({
     required ConnectedDidsFamily super.from,
     required String super.argument,
   }) : super(
@@ -297,7 +297,7 @@ String _$connectedDidsHash() => r'9db4182e1690a292baf536e70d1c3b711967a0e8';
 
 final class ConnectedDidsFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<List<String>>, String> {
-  const ConnectedDidsFamily._()
+  ConnectedDidsFamily._()
     : super(
         retry: null,
         name: r'connectedDidsProvider',
@@ -320,7 +320,7 @@ final class ConnectedDidsFamily extends $Family
 /// lists. Throws the backend's reason when refused.
 
 @ProviderFor(AchievementClaimController)
-const achievementClaimControllerProvider =
+final achievementClaimControllerProvider =
     AchievementClaimControllerProvider._();
 
 /// Claims an achievement, then refreshes the earned, eligible and progress
@@ -329,7 +329,7 @@ final class AchievementClaimControllerProvider
     extends $AsyncNotifierProvider<AchievementClaimController, void> {
   /// Claims an achievement, then refreshes the earned, eligible and progress
   /// lists. Throws the backend's reason when refused.
-  const AchievementClaimControllerProvider._()
+  AchievementClaimControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -358,8 +358,7 @@ abstract class _$AchievementClaimController extends $AsyncNotifier<void> {
   FutureOr<void> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<void>, void>;
     final element =
         ref.element
@@ -369,6 +368,6 @@ abstract class _$AchievementClaimController extends $AsyncNotifier<void> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, null);
+    return element.handleCreate(ref, build);
   }
 }

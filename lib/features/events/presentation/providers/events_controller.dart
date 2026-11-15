@@ -1,6 +1,7 @@
 import 'package:mulearn_app/core/network/dio_provider.dart';
 import 'package:mulearn_app/core/network/paging.dart';
 import 'package:mulearn_app/core/utils/app_logger.dart';
+import 'package:mulearn_app/core/utils/recent_results.dart';
 import 'package:mulearn_app/features/events/data/datasources/events_remote_datasource.dart';
 import 'package:mulearn_app/features/events/data/repositories/events_repository_impl.dart';
 import 'package:mulearn_app/features/events/domain/entities/event.dart';
@@ -33,9 +34,12 @@ class EventsListController extends _$EventsListController {
 
   @override
   Future<PagedState<Event>> build(EventFilter filter) async {
+    ref.keepRecent();
     _pageIndex = 1;
     _inFlight = null;
-    final page = await ref.watch(eventsRepositoryProvider).getEvents(pageIndex: 1, filter: filter);
+    final page = await ref
+        .watch(eventsRepositoryProvider)
+        .getEvents(pageIndex: 1, filter: filter);
     return PagedState(items: page.events, hasMore: page.hasNext);
   }
 
@@ -48,20 +52,28 @@ class EventsListController extends _$EventsListController {
   Future<void> _loadNextPage() async {
     final current = state.value;
     if (current == null || !current.hasMore) return;
-    state = AsyncData(current.copyWith(isLoadingMore: true, loadMoreError: null));
+    state = AsyncData(
+      current.copyWith(isLoadingMore: true, loadMoreError: null),
+    );
     final next = _pageIndex + 1;
     try {
-      final page = await ref.read(eventsRepositoryProvider).getEvents(pageIndex: next, filter: filter);
+      final page = await ref
+          .read(eventsRepositoryProvider)
+          .getEvents(pageIndex: next, filter: filter);
       if (!ref.mounted) return;
       _pageIndex = next;
-      state = AsyncData(PagedState(
-        items: mergeUniqueBy(current.items, page.events, (e) => e.id),
-        hasMore: page.hasNext,
-      ));
+      state = AsyncData(
+        PagedState(
+          items: mergeUniqueBy(current.items, page.events, (e) => e.id),
+          hasMore: page.hasNext,
+        ),
+      );
     } on Object catch (e, st) {
       appLogger.w('Loading more events failed', error: e, stackTrace: st);
       if (!ref.mounted) return;
-      state = AsyncData(current.copyWith(isLoadingMore: false, loadMoreError: e));
+      state = AsyncData(
+        current.copyWith(isLoadingMore: false, loadMoreError: e),
+      );
     }
   }
 }

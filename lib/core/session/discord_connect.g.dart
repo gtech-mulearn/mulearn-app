@@ -12,7 +12,7 @@ part of 'discord_connect.dart';
 /// when not configured — every Connect Discord entry point hides then.
 
 @ProviderFor(discordAuthUri)
-const discordAuthUriProvider = DiscordAuthUriProvider._();
+final discordAuthUriProvider = DiscordAuthUriProvider._();
 
 /// Discord's OAuth authorize URL for this flavour (the dashboard's), or null
 /// when not configured — every Connect Discord entry point hides then.
@@ -21,7 +21,7 @@ final class DiscordAuthUriProvider extends $FunctionalProvider<Uri?, Uri?, Uri?>
     with $Provider<Uri?> {
   /// Discord's OAuth authorize URL for this flavour (the dashboard's), or null
   /// when not configured — every Connect Discord entry point hides then.
-  const DiscordAuthUriProvider._()
+  DiscordAuthUriProvider._()
     : super(
         from: null,
         argument: null,
@@ -61,7 +61,7 @@ String _$discordAuthUriHash() => r'b2ae4158bb24f6af006e8c66a86711164188e029';
 /// `needsDiscord`. Value: the backend's message once connected.
 
 @ProviderFor(DiscordConnectController)
-const discordConnectControllerProvider = DiscordConnectControllerProvider._();
+final discordConnectControllerProvider = DiscordConnectControllerProvider._();
 
 /// Exchanges the code Discord sent back (via the dashboard redirect App
 /// Link) and re-reads the signed-in user, whose `exist_in_guild` drives
@@ -71,7 +71,7 @@ final class DiscordConnectControllerProvider
   /// Exchanges the code Discord sent back (via the dashboard redirect App
   /// Link) and re-reads the signed-in user, whose `exist_in_guild` drives
   /// `needsDiscord`. Value: the backend's message once connected.
-  const DiscordConnectControllerProvider._()
+  DiscordConnectControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -101,8 +101,7 @@ abstract class _$DiscordConnectController extends $AsyncNotifier<String?> {
   FutureOr<String?> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<String?>, String?>;
     final element =
         ref.element
@@ -112,7 +111,7 @@ abstract class _$DiscordConnectController extends $AsyncNotifier<String?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }
 
@@ -121,7 +120,7 @@ abstract class _$DiscordConnectController extends $AsyncNotifier<String?> {
 /// completed the link). Ordinary resumes do nothing — no polling.
 
 @ProviderFor(DiscordConnectFlow)
-const discordConnectFlowProvider = DiscordConnectFlowProvider._();
+final discordConnectFlowProvider = DiscordConnectFlowProvider._();
 
 /// Starting the OAuth flow, and the one check after it: the first app
 /// resume after the browser opened re-reads the user (the web page may have
@@ -131,7 +130,7 @@ final class DiscordConnectFlowProvider
   /// Starting the OAuth flow, and the one check after it: the first app
   /// resume after the browser opened re-reads the user (the web page may have
   /// completed the link). Ordinary resumes do nothing — no polling.
-  const DiscordConnectFlowProvider._()
+  DiscordConnectFlowProvider._()
     : super(
         from: null,
         argument: null,
@@ -159,7 +158,7 @@ final class DiscordConnectFlowProvider
 }
 
 String _$discordConnectFlowHash() =>
-    r'234a4b05601a09c1853d177fc0081a686d4b7a82';
+    r'abcc98401aec93cd39200124752fa5e0efaa9454';
 
 /// Starting the OAuth flow, and the one check after it: the first app
 /// resume after the browser opened re-reads the user (the web page may have
@@ -169,8 +168,7 @@ abstract class _$DiscordConnectFlow extends $Notifier<bool> {
   bool build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<bool, bool>;
     final element =
         ref.element
@@ -180,6 +178,6 @@ abstract class _$DiscordConnectFlow extends $Notifier<bool> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }

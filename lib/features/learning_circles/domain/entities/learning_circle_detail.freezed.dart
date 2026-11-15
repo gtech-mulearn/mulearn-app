@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'learning_circle_detail.dart';
@@ -9,6 +9,7 @@ part of 'learning_circle_detail.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $LearningCircleDetailCopyWith<LearningCircleDetail> get copyWith => _$LearningCi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LearningCircleDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.ig, ig) || other.ig == ig)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.createdBy, createdBy) || other.createdBy == createdBy)&&(identical(other.org, org) || other.org == org)&&(identical(other.isRecurring, isRecurring) || other.isRecurring == isRecurring)&&(identical(other.rank, rank) || other.rank == rank)&&(identical(other.totalKarma, totalKarma) || other.totalKarma == totalKarma)&&(identical(other.totalMembers, totalMembers) || other.totalMembers == totalMembers)&&(identical(other.nextMeetupScheduled, nextMeetupScheduled) || other.nextMeetupScheduled == nextMeetupScheduled)&&(identical(other.nextMeetupTime, nextMeetupTime) || other.nextMeetupTime == nextMeetupTime));
+  final _this = this as LearningCircleDetail;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LearningCircleDetail&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.ig, _this.ig) || other.ig == _this.ig)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.description, _this.description) || other.description == _this.description)&&(identical(other.createdBy, _this.createdBy) || other.createdBy == _this.createdBy)&&(identical(other.org, _this.org) || other.org == _this.org)&&(identical(other.isRecurring, _this.isRecurring) || other.isRecurring == _this.isRecurring)&&(identical(other.rank, _this.rank) || other.rank == _this.rank)&&(identical(other.totalKarma, _this.totalKarma) || other.totalKarma == _this.totalKarma)&&(identical(other.totalMembers, _this.totalMembers) || other.totalMembers == _this.totalMembers)&&(identical(other.nextMeetupScheduled, _this.nextMeetupScheduled) || other.nextMeetupScheduled == _this.nextMeetupScheduled)&&(identical(other.nextMeetupTime, _this.nextMeetupTime) || other.nextMeetupTime == _this.nextMeetupTime));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,ig,title,description,createdBy,org,isRecurring,rank,totalKarma,totalMembers,nextMeetupScheduled,nextMeetupTime);
+int get hashCode {
+  final _this = this as LearningCircleDetail;
+  return Object.hash(runtimeType,_this.id,_this.ig,_this.title,_this.description,_this.createdBy,_this.org,_this.isRecurring,_this.rank,_this.totalKarma,_this.totalMembers,_this.nextMeetupScheduled,_this.nextMeetupTime);
+}
 
 @override
 String toString() {
-  return 'LearningCircleDetail(id: $id, ig: $ig, title: $title, description: $description, createdBy: $createdBy, org: $org, isRecurring: $isRecurring, rank: $rank, totalKarma: $totalKarma, totalMembers: $totalMembers, nextMeetupScheduled: $nextMeetupScheduled, nextMeetupTime: $nextMeetupTime)';
+  final _this = this as LearningCircleDetail;
+  return 'LearningCircleDetail(id: ${_this.id}, ig: ${_this.ig}, title: ${_this.title}, description: ${_this.description}, createdBy: ${_this.createdBy}, org: ${_this.org}, isRecurring: ${_this.isRecurring}, rank: ${_this.rank}, totalKarma: ${_this.totalKarma}, totalMembers: ${_this.totalMembers}, nextMeetupScheduled: ${_this.nextMeetupScheduled}, nextMeetupTime: ${_this.nextMeetupTime})';
 }
 
 
@@ -63,7 +69,7 @@ class _$LearningCircleDetailCopyWithImpl<$Res>
 /// Create a copy of LearningCircleDetail
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? ig = null,Object? title = null,Object? description = null,Object? createdBy = null,Object? org = freezed,Object? isRecurring = freezed,Object? rank = freezed,Object? totalKarma = freezed,Object? totalMembers = freezed,Object? nextMeetupScheduled = freezed,Object? nextMeetupTime = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(LearningCircleDetail(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,ig: null == ig ? _self.ig : ig // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -252,16 +258,18 @@ _$LearningCircleDetailCopyWith<_LearningCircleDetail> get copyWith => __$Learnin
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LearningCircleDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.ig, ig) || other.ig == ig)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.createdBy, createdBy) || other.createdBy == createdBy)&&(identical(other.org, org) || other.org == org)&&(identical(other.isRecurring, isRecurring) || other.isRecurring == isRecurring)&&(identical(other.rank, rank) || other.rank == rank)&&(identical(other.totalKarma, totalKarma) || other.totalKarma == totalKarma)&&(identical(other.totalMembers, totalMembers) || other.totalMembers == totalMembers)&&(identical(other.nextMeetupScheduled, nextMeetupScheduled) || other.nextMeetupScheduled == nextMeetupScheduled)&&(identical(other.nextMeetupTime, nextMeetupTime) || other.nextMeetupTime == nextMeetupTime));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _LearningCircleDetail&&(identical(other.id, id) || other.id == id)&&(identical(other.ig, ig) || other.ig == ig)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.createdBy, createdBy) || other.createdBy == createdBy)&&(identical(other.org, org) || other.org == org)&&(identical(other.isRecurring, isRecurring) || other.isRecurring == isRecurring)&&(identical(other.rank, rank) || other.rank == rank)&&(identical(other.totalKarma, totalKarma) || other.totalKarma == totalKarma)&&(identical(other.totalMembers, totalMembers) || other.totalMembers == totalMembers)&&(identical(other.nextMeetupScheduled, nextMeetupScheduled) || other.nextMeetupScheduled == nextMeetupScheduled)&&(identical(other.nextMeetupTime, nextMeetupTime) || other.nextMeetupTime == nextMeetupTime));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,ig,title,description,createdBy,org,isRecurring,rank,totalKarma,totalMembers,nextMeetupScheduled,nextMeetupTime);
+int get hashCode {
+    return Object.hash(runtimeType,id,ig,title,description,createdBy,org,isRecurring,rank,totalKarma,totalMembers,nextMeetupScheduled,nextMeetupTime);
+}
 
 @override
 String toString() {
-  return 'LearningCircleDetail(id: $id, ig: $ig, title: $title, description: $description, createdBy: $createdBy, org: $org, isRecurring: $isRecurring, rank: $rank, totalKarma: $totalKarma, totalMembers: $totalMembers, nextMeetupScheduled: $nextMeetupScheduled, nextMeetupTime: $nextMeetupTime)';
+    return 'LearningCircleDetail(id: $id, ig: $ig, title: $title, description: $description, createdBy: $createdBy, org: $org, isRecurring: $isRecurring, rank: $rank, totalKarma: $totalKarma, totalMembers: $totalMembers, nextMeetupScheduled: $nextMeetupScheduled, nextMeetupTime: $nextMeetupTime)';
 }
 
 

@@ -101,13 +101,9 @@ class AuthRemoteDataSource {
   }) async {
     final response = await _dio.post<dynamic>(
       ApiPaths.appleMobileLogin,
-      data: {
-        'identity_token': identityToken,
-        'identityToken': identityToken,
-      },
+      data: {'identity_token': identityToken, 'identityToken': identityToken},
       options: Options(headers: {RequestFlags.skipAuth: true}),
     );
     return ApiEnvelope.unwrapObject(response);
   }
-
 }

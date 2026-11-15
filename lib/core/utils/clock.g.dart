@@ -12,7 +12,7 @@ part of 'clock.dart';
 /// cut-offs) without waiting.
 
 @ProviderFor(clock)
-const clockProvider = ClockProvider._();
+final clockProvider = ClockProvider._();
 
 /// The current time, as a provider so tests can drive it (staleness windows,
 /// cut-offs) without waiting.
@@ -27,7 +27,7 @@ final class ClockProvider
     with $Provider<DateTime Function()> {
   /// The current time, as a provider so tests can drive it (staleness windows,
   /// cut-offs) without waiting.
-  const ClockProvider._()
+  ClockProvider._()
     : super(
         from: null,
         argument: null,

@@ -14,7 +14,10 @@ part 'leaderboard_providers.g.dart';
 LeaderboardRemoteDataSource leaderboardRemoteDataSource(Ref ref) =>
     LeaderboardRemoteDataSource(
       ref.watch(dioProvider),
-      CacheConfig.leaderboard(ref.watch(cacheStoreProvider)),
+      CacheConfig.leaderboard(
+        ref.watch(cacheStoreProvider),
+        ref.watch(cacheScopeProvider),
+      ),
     );
 
 /// Shared read model (rules.md §2): Home's "Top performers" and the
@@ -28,16 +31,14 @@ LeaderboardRepository leaderboardRepository(Ref ref) =>
 Future<List<StudentLeaderboardEntry>> studentLeaderboard(
   Ref ref, {
   required bool monthly,
-}) =>
-    ref
-        .watch(leaderboardRepositoryProvider)
-        .getStudentLeaderboard(monthly: monthly);
+}) => ref
+    .watch(leaderboardRepositoryProvider)
+    .getStudentLeaderboard(monthly: monthly);
 
 @riverpod
 Future<List<CollegeLeaderboardEntry>> collegeLeaderboard(
   Ref ref, {
   required bool monthly,
-}) =>
-    ref
-        .watch(leaderboardRepositoryProvider)
-        .getCollegeLeaderboard(monthly: monthly);
+}) => ref
+    .watch(leaderboardRepositoryProvider)
+    .getCollegeLeaderboard(monthly: monthly);

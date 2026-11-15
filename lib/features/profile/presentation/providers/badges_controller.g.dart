@@ -10,7 +10,7 @@ part of 'badges_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(badges)
-const badgesProvider = BadgesFamily._();
+final badgesProvider = BadgesFamily._();
 
 final class BadgesProvider
     extends
@@ -20,7 +20,7 @@ final class BadgesProvider
           FutureOr<BadgesData>
         >
     with $FutureModifier<BadgesData>, $FutureProvider<BadgesData> {
-  const BadgesProvider._({
+  BadgesProvider._({
     required BadgesFamily super.from,
     required String super.argument,
   }) : super(
@@ -67,7 +67,7 @@ String _$badgesHash() => r'8d83f086cd30eb9f6a9611a076e943dbfb82209b';
 
 final class BadgesFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<BadgesData>, String> {
-  const BadgesFamily._()
+  BadgesFamily._()
     : super(
         retry: null,
         name: r'badgesProvider',

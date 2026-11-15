@@ -10,7 +10,7 @@ part of 'user_log_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(userLog)
-const userLogProvider = UserLogProvider._();
+final userLogProvider = UserLogProvider._();
 
 final class UserLogProvider
     extends
@@ -22,7 +22,7 @@ final class UserLogProvider
     with
         $FutureModifier<List<UserLogEntry>>,
         $FutureProvider<List<UserLogEntry>> {
-  const UserLogProvider._()
+  UserLogProvider._()
     : super(
         from: null,
         argument: null,

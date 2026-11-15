@@ -54,7 +54,6 @@ abstract interface class RegisterRepository {
     String? referralMuid,
   });
 
-
   /// Links the newly-registered user to an existing college/company.
   /// Authenticated — must be called after [registerUser].
   ///

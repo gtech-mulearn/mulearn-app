@@ -22,9 +22,9 @@ AuthRemoteDataSource authRemoteDataSource(Ref ref) =>
 /// impl here via DI (rules.md §2/§5) so tests can override it.
 @riverpod
 AuthRepository authRepository(Ref ref) => AuthRepositoryImpl(
-      remote: ref.watch(authRemoteDataSourceProvider),
-      tokenStorage: ref.watch(tokenStorageProvider),
-    );
+  remote: ref.watch(authRemoteDataSourceProvider),
+  tokenStorage: ref.watch(tokenStorageProvider),
+);
 
 @Riverpod(keepAlive: true)
 GoogleNativeSignInDataSource googleNativeSignInDataSource(Ref ref) =>
@@ -51,38 +51,32 @@ class AuthController extends _$AuthController {
   Future<void> signInWithPassword({
     required String emailOrMuid,
     required String password,
-  }) =>
-      _guard(() async {
-        await ref.read(authRepositoryProvider).signInWithPassword(
-              emailOrMuid: emailOrMuid,
-              password: password,
-            );
-        ref.read(appAuthControllerProvider.notifier).setSignedIn();
-      });
+  }) => _guard(() async {
+    await ref
+        .read(authRepositoryProvider)
+        .signInWithPassword(emailOrMuid: emailOrMuid, password: password);
+    ref.read(appAuthControllerProvider.notifier).setSignedIn();
+  });
 
   Future<void> signInWithOtp({
     required String emailOrMuid,
     required String otp,
-  }) =>
-      _guard(() async {
-        await ref.read(authRepositoryProvider).signInWithOtp(
-              emailOrMuid: emailOrMuid,
-              otp: otp,
-            );
-        ref.read(appAuthControllerProvider.notifier).setSignedIn();
-      });
+  }) => _guard(() async {
+    await ref
+        .read(authRepositoryProvider)
+        .signInWithOtp(emailOrMuid: emailOrMuid, otp: otp);
+    ref.read(appAuthControllerProvider.notifier).setSignedIn();
+  });
 
   Future<void> requestOtp({required String emailOrMuid}) => _guard(
-        () => ref.read(authRepositoryProvider).requestOtp(
-              emailOrMuid: emailOrMuid,
-            ),
-      );
+    () => ref.read(authRepositoryProvider).requestOtp(emailOrMuid: emailOrMuid),
+  );
 
   Future<void> requestPasswordReset({required String emailOrMuid}) => _guard(
-        () => ref.read(authRepositoryProvider).requestPasswordReset(
-              emailOrMuid: emailOrMuid,
-            ),
-      );
+    () => ref
+        .read(authRepositoryProvider)
+        .requestPasswordReset(emailOrMuid: emailOrMuid),
+  );
 
   Future<void> verifyResetToken(String token) =>
       _guard(() => ref.read(authRepositoryProvider).verifyResetToken(token));
@@ -90,13 +84,11 @@ class AuthController extends _$AuthController {
   Future<void> resetPassword({
     required String token,
     required String password,
-  }) =>
-      _guard(
-        () => ref.read(authRepositoryProvider).resetPassword(
-              token: token,
-              password: password,
-            ),
-      );
+  }) => _guard(
+    () => ref
+        .read(authRepositoryProvider)
+        .resetPassword(token: token, password: password),
+  );
 
   /// Triggers the native Google account picker, then exchanges the resulting
   /// ID token. Signs in for a known account; for an unknown email returns
@@ -104,8 +96,12 @@ class AuthController extends _$AuthController {
   Future<SocialSignInOutcome> signInWithGoogle() async {
     late SocialSignInOutcome outcome;
     await _guard(() async {
-      final idToken = await ref.read(googleNativeSignInDataSourceProvider).signIn();
-      outcome = await ref.read(authRepositoryProvider).signInWithGoogle(idToken: idToken);
+      final idToken = await ref
+          .read(googleNativeSignInDataSourceProvider)
+          .signIn();
+      outcome = await ref
+          .read(authRepositoryProvider)
+          .signInWithGoogle(idToken: idToken);
       if (outcome is SocialSignedIn) {
         ref.read(appAuthControllerProvider.notifier).setSignedIn();
       }
@@ -117,17 +113,21 @@ class AuthController extends _$AuthController {
   /// resulting identity token for an app session. Throws
   /// [AppleAccountNotFound] when no account uses the Apple ID's email.
   Future<void> signInWithApple() => _guard(() async {
-        final credential = await ref.read(appleNativeSignInDataSourceProvider).signIn();
-        try {
-          await ref.read(authRepositoryProvider).signInWithApple(
-                identityToken: credential.identityToken,
-              );
-        } on ApiException catch (e) {
-          if (e.message == _appleNoAccountMessage) throw const AppleAccountNotFound();
-          rethrow;
-        }
-        ref.read(appAuthControllerProvider.notifier).setSignedIn();
-      });
+    final credential = await ref
+        .read(appleNativeSignInDataSourceProvider)
+        .signIn();
+    try {
+      await ref
+          .read(authRepositoryProvider)
+          .signInWithApple(identityToken: credential.identityToken);
+    } on ApiException catch (e) {
+      if (e.message == _appleNoAccountMessage) {
+        throw const AppleAccountNotFound();
+      }
+      rethrow;
+    }
+    ref.read(appAuthControllerProvider.notifier).setSignedIn();
+  });
 
   /// The authserver's exact reply when no account uses the Apple email.
   static const _appleNoAccountMessage = 'No account found with this email';
@@ -145,7 +145,11 @@ class AuthController extends _$AuthController {
       // Logged regardless of type so a non-ApiException (parsing bug,
       // platform-channel failure, etc.) is never silently reduced to the
       // screen's generic "Something went wrong." with no trace of why.
-      appLogger.e('Auth action failed', error: error, stackTrace: result.stackTrace);
+      appLogger.e(
+        'Auth action failed',
+        error: error,
+        stackTrace: result.stackTrace,
+      );
       Error.throwWithStackTrace(error, result.stackTrace ?? StackTrace.current);
     }
   }

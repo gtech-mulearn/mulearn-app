@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'meeting_page.dart';
@@ -9,6 +9,7 @@ part of 'meeting_page.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $MeetingPageCopyWith<MeetingPage> get copyWith => _$MeetingPageCopyWithImpl<Meet
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MeetingPage&&const DeepCollectionEquality().equals(other.meetings, meetings)&&(identical(other.hasNext, hasNext) || other.hasNext == hasNext));
+  final _this = this as MeetingPage;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MeetingPage&&const DeepCollectionEquality().equals(other.meetings, _this.meetings)&&(identical(other.hasNext, _this.hasNext) || other.hasNext == _this.hasNext));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(meetings),hasNext);
+int get hashCode {
+  final _this = this as MeetingPage;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.meetings),_this.hasNext);
+}
 
 @override
 String toString() {
-  return 'MeetingPage(meetings: $meetings, hasNext: $hasNext)';
+  final _this = this as MeetingPage;
+  return 'MeetingPage(meetings: ${_this.meetings}, hasNext: ${_this.hasNext})';
 }
 
 
@@ -63,7 +69,7 @@ class _$MeetingPageCopyWithImpl<$Res>
 /// Create a copy of MeetingPage
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? meetings = null,Object? hasNext = null,}) {
-  return _then(_self.copyWith(
+  return _then(MeetingPage(
 meetings: null == meetings ? _self.meetings : meetings // ignore: cast_nullable_to_non_nullable
 as List<Meeting>,hasNext: null == hasNext ? _self.hasNext : hasNext // ignore: cast_nullable_to_non_nullable
 as bool,
@@ -207,7 +213,7 @@ return $default(_that.meetings,_that.hasNext);case _:
 
 
 class _MeetingPage implements MeetingPage {
-  const _MeetingPage({required final  List<Meeting> meetings, required this.hasNext}): _meetings = meetings;
+  const _MeetingPage({required  List<Meeting> meetings, required this.hasNext}): _meetings = meetings;
   
 
  final  List<Meeting> _meetings;
@@ -229,16 +235,18 @@ _$MeetingPageCopyWith<_MeetingPage> get copyWith => __$MeetingPageCopyWithImpl<_
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MeetingPage&&const DeepCollectionEquality().equals(other._meetings, _meetings)&&(identical(other.hasNext, hasNext) || other.hasNext == hasNext));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MeetingPage&&const DeepCollectionEquality().equals(other.meetings, _meetings)&&(identical(other.hasNext, hasNext) || other.hasNext == hasNext));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_meetings),hasNext);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_meetings),hasNext);
+}
 
 @override
 String toString() {
-  return 'MeetingPage(meetings: $meetings, hasNext: $hasNext)';
+    return 'MeetingPage(meetings: $meetings, hasNext: $hasNext)';
 }
 
 

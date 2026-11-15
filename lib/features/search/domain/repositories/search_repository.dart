@@ -1,3 +1,4 @@
+import 'package:mulearn_app/features/search/domain/entities/campus_search_result.dart';
 import 'package:mulearn_app/features/search/domain/entities/user_search_page.dart';
 
 /// Search repository contract (rules.md §2/§5). Throws [ApiException] on
@@ -11,5 +12,14 @@ abstract interface class SearchRepository {
     String? role,
     int pageIndex = 1,
     int perPage = 30,
+  });
+
+  /// Colleges and schools matching [query], colleges first, like the
+  /// dashboard's campus search (both queried; one failing still shows the
+  /// other's results).
+  Future<CampusSearchPage> searchCampuses({
+    required String query,
+    int pageIndex = 1,
+    int perPage = 20,
   });
 }

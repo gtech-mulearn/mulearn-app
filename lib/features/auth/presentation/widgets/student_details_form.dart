@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mulearn_app/core/theme/mu_space.dart';
-import 'package:mulearn_app/core/widgets/mu_buttons.dart';
-import 'package:mulearn_app/core/widgets/mu_chip.dart';
-import 'package:mulearn_app/core/widgets/searchable_select_field.dart';
+import 'package:mulearn_app/core/design_system/design_system.dart';
+import 'package:mulearn_app/core/models/reference_option.dart';
 import 'package:mulearn_app/features/auth/domain/entities/registration_role.dart';
 import 'package:mulearn_app/features/auth/presentation/providers/register_providers.dart';
 import 'package:mulearn_app/features/auth/presentation/providers/register_submit_controller.dart';
 
-/// Learner ("student") role details — college OR company-employed-student
-/// branch, matching the reference's `studentDetailsSchema` exactly:
-/// `organizationType` defaults to `"College"`, college/department/graduation
-/// year required in that branch, organization required in the Company
-/// branch, with an "others" custom-entry escape hatch on both.
+/// Learner details: a college (department, year of passing) or, for
+/// company-employed learners, the company. Matches the dashboard's
+/// `studentDetailsSchema`: college/department/year required on the College
+/// side, organisation on the Company side, each with a "not listed" entry.
 class StudentDetailsForm extends ConsumerStatefulWidget {
   const StudentDetailsForm({required this.onSubmitted, super.key});
 
@@ -50,25 +47,26 @@ class _StudentDetailsFormState extends ConsumerState<StudentDetailsForm> {
     final graduationYear = int.tryParse(_graduationYearController.text.trim());
 
     try {
-      await ref.read(registerSubmitControllerProvider.notifier).submitGeneric(
+      await ref
+          .read(registerSubmitControllerProvider.notifier)
+          .submitGeneric(
             role: RegistrationRole.student,
             college: isCollege ? _college : null,
-            customCollege:
-                isCollege && _college == kSearchableSelectOthersValue
-                    ? _customCollegeController.text.trim()
-                    : null,
+            customCollege: isCollege && _college == muOtherOptionValue
+                ? _customCollegeController.text.trim()
+                : null,
             department: isCollege ? _department : null,
             graduationYear: isCollege ? graduationYear : null,
             organization: isCollege ? null : _organization,
-            customOrganization: !isCollege &&
-                    _organization == kSearchableSelectOthersValue
+            customOrganization:
+                !isCollege && _organization == muOtherOptionValue
                 ? _customOrganizationController.text.trim()
                 : null,
             organizationType: _organizationType,
           );
       widget.onSubmitted();
     } on Object catch (_) {
-      // Surfaced via the ref.listen snackbar in the parent screen.
+      // Surfaced via the ref.listen toast in the parent screen.
     }
   }
 
@@ -77,159 +75,130 @@ class _StudentDetailsFormState extends ConsumerState<StudentDetailsForm> {
     final colleges = ref.watch(registerCollegesProvider);
     final departments = ref.watch(registerDepartmentsProvider);
     final companies = ref.watch(registerCompaniesProvider);
-    final isLoading = ref.watch(registerSubmitControllerProvider).isLoading;
+    final loading = ref.watch(registerSubmitControllerProvider).isLoading;
     final isCollege = _organizationType == OrganizationType.college;
+
+    List<MuOption> opts(List<ReferenceOption> list) => [
+      for (final o in list) MuOption(o.id, o.title),
+    ];
 
     return Form(
       key: _formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Row(
-            children: [
-              MuFilterChip(
-                label: 'College',
-                selected: _organizationType == OrganizationType.college,
-                onTap: isLoading
-                    ? () {}
-                    : () => setState(() => _organizationType = OrganizationType.college),
-              ),
-              const SizedBox(width: MuSpace.s),
-              MuFilterChip(
-                label: 'Company',
-                selected: _organizationType == OrganizationType.company,
-                onTap: isLoading
-                    ? () {}
-                    : () => setState(() => _organizationType = OrganizationType.company),
-              ),
-            ],
+          MuSegmented<OrganizationType>(
+            values: const [OrganizationType.college, OrganizationType.company],
+            selected: _organizationType,
+            label: (t) =>
+                t == OrganizationType.college ? 'At a college' : 'At a company',
+            onChanged: (t) {
+              if (!loading) setState(() => _organizationType = t);
+            },
           ),
-          const SizedBox(height: MuSpace.l),
+          const SizedBox(height: MuSpacing.space5),
           if (isCollege) ...[
-            colleges.when(
-              data: (options) => SearchableSelectField(
-                label: 'College',
-                options:
-                    options.map((o) => SelectOption(id: o.id, label: o.title)).toList(),
-                allowOthers: true,
-                enabled: !isLoading,
-                initialValue: _college,
-                onSelected: (value) => setState(() => _college = value),
-                validator: (_) =>
-                    _college == null || _college!.isEmpty ? 'Please select your college.' : null,
-              ),
-              loading: () => const SearchableSelectField(
-                label: 'College',
-                options: [],
-                isLoading: true,
-                onSelected: _noop,
-              ),
-              error: (_, _) => const SearchableSelectField(
-                label: 'College',
-                options: [],
-                hintText: 'Failed to load — pull to retry',
-                onSelected: _noop,
-              ),
+            MuSelectField(
+              label: 'College',
+              hint: 'Search your college',
+              options: opts(colleges.value ?? const []),
+              loading: colleges.isLoading,
+              error: colleges.hasError
+                  ? "Couldn't load colleges. Go back and try again."
+                  : null,
+              enabled: !loading,
+              allowOther: true,
+              otherLabel: 'My college is not listed',
+              value: _college,
+              onChanged: (v) => setState(() => _college = v),
+              validator: (_) => (_college ?? '').isEmpty
+                  ? 'Pick your college to continue.'
+                  : null,
             ),
-            if (_college == kSearchableSelectOthersValue) ...[
-              const SizedBox(height: MuSpace.l),
-              TextFormField(
+            if (_college == muOtherOptionValue) ...[
+              const SizedBox(height: MuSpacing.space4),
+              MuTextField(
+                label: 'College name',
                 controller: _customCollegeController,
-                enabled: !isLoading,
-                decoration: const InputDecoration(labelText: 'College Name'),
-                validator: (value) => (value?.trim().length ?? 0) < 3
-                    ? 'College name must be at least 3 characters.'
+                enabled: !loading,
+                textCapitalization: TextCapitalization.words,
+                validator: (v) => (v?.trim().length ?? 0) < 3
+                    ? 'Use at least 3 characters.'
                     : null,
               ),
             ],
-            const SizedBox(height: MuSpace.l),
-            departments.when(
-              data: (options) => SearchableSelectField(
-                label: 'Department',
-                options:
-                    options.map((o) => SelectOption(id: o.id, label: o.title)).toList(),
-                enabled: !isLoading,
-                initialValue: _department,
-                onSelected: (value) => setState(() => _department = value),
-                validator: (_) => _department == null || _department!.isEmpty
-                    ? 'Please select your department.'
-                    : null,
-              ),
-              loading: () => const SearchableSelectField(
-                label: 'Department',
-                options: [],
-                isLoading: true,
-                onSelected: _noop,
-              ),
-              error: (_, _) => const SearchableSelectField(
-                label: 'Department',
-                options: [],
-                hintText: 'Failed to load — pull to retry',
-                onSelected: _noop,
-              ),
+            const SizedBox(height: MuSpacing.space4),
+            MuSelectField(
+              label: 'Department',
+              options: opts(departments.value ?? const []),
+              loading: departments.isLoading,
+              error: departments.hasError
+                  ? "Couldn't load departments. Go back and try again."
+                  : null,
+              enabled: !loading,
+              value: _department,
+              onChanged: (v) => setState(() => _department = v),
+              validator: (_) => (_department ?? '').isEmpty
+                  ? 'Pick your department to continue.'
+                  : null,
             ),
-            const SizedBox(height: MuSpace.l),
-            TextFormField(
+            const SizedBox(height: MuSpacing.space4),
+            MuTextField(
+              label: 'Year of passing',
+              hint: 'e.g. 2027',
               controller: _graduationYearController,
-              enabled: !isLoading,
+              enabled: !loading,
               keyboardType: TextInputType.number,
-              decoration: const InputDecoration(labelText: 'Year of Passing'),
+              maxLength: 4,
               validator: (value) {
                 final year = int.tryParse(value?.trim() ?? '');
-                if (year == null || year < 2020 || year > 2040) {
-                  return 'Year of pass must be between 2020 and 2040.';
-                }
-                return null;
+                return (year == null || year < 2020 || year > 2040)
+                    ? 'Enter a year from 2020 to 2040.'
+                    : null;
               },
             ),
           ] else ...[
-            companies.when(
-              data: (options) => SearchableSelectField(
-                label: 'Organization',
-                options:
-                    options.map((o) => SelectOption(id: o.id, label: o.title)).toList(),
-                allowOthers: true,
-                enabled: !isLoading,
-                initialValue: _organization,
-                onSelected: (value) => setState(() => _organization = value),
-                validator: (_) => _organization == null || _organization!.isEmpty
-                    ? 'Please select your organization.'
-                    : null,
-              ),
-              loading: () => const SearchableSelectField(
-                label: 'Organization',
-                options: [],
-                isLoading: true,
-                onSelected: _noop,
-              ),
-              error: (_, _) => const SearchableSelectField(
-                label: 'Organization',
-                options: [],
-                hintText: 'Failed to load — pull to retry',
-                onSelected: _noop,
-              ),
+            MuSelectField(
+              label: 'Company',
+              hint: 'Search your company',
+              options: opts(companies.value ?? const []),
+              loading: companies.isLoading,
+              error: companies.hasError
+                  ? "Couldn't load companies. Go back and try again."
+                  : null,
+              enabled: !loading,
+              allowOther: true,
+              otherLabel: 'My company is not listed',
+              value: _organization,
+              onChanged: (v) => setState(() => _organization = v),
+              validator: (_) => (_organization ?? '').isEmpty
+                  ? 'Pick your company to continue.'
+                  : null,
             ),
-            if (_organization == kSearchableSelectOthersValue) ...[
-              const SizedBox(height: MuSpace.l),
-              TextFormField(
+            if (_organization == muOtherOptionValue) ...[
+              const SizedBox(height: MuSpacing.space4),
+              MuTextField(
+                label: 'Company name',
                 controller: _customOrganizationController,
-                enabled: !isLoading,
-                decoration: const InputDecoration(labelText: 'Organization Name'),
-                validator: (value) => (value?.trim().length ?? 0) < 3
-                    ? 'Organization name must be at least 3 characters.'
+                enabled: !loading,
+                textCapitalization: TextCapitalization.words,
+                validator: (v) => (v?.trim().length ?? 0) < 3
+                    ? 'Use at least 3 characters.'
                     : null,
               ),
             ],
           ],
-          const SizedBox(height: MuSpace.xl),
-          MuPrimaryButton(
-            label: isLoading ? 'Submitting…' : 'Complete Registration',
-            onPressed: isLoading ? null : _submit,
+          const SizedBox(height: MuSpacing.space6),
+          MuButton(
+            label: 'Finish sign-up',
+            block: true,
+            knob: true,
+            loading: loading,
+            loadingLabel: 'Creating your account…',
+            onPressed: _submit,
           ),
         ],
       ),
     );
   }
 }
-
-void _noop(String? _) {}

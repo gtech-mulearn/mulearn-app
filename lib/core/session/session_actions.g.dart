@@ -11,13 +11,13 @@ part of 'session_actions.dart';
 /// Session-wide actions any screen may trigger.
 
 @ProviderFor(SessionActions)
-const sessionActionsProvider = SessionActionsProvider._();
+final sessionActionsProvider = SessionActionsProvider._();
 
 /// Session-wide actions any screen may trigger.
 final class SessionActionsProvider
     extends $NotifierProvider<SessionActions, void> {
   /// Session-wide actions any screen may trigger.
-  const SessionActionsProvider._()
+  SessionActionsProvider._()
     : super(
         from: null,
         argument: null,
@@ -52,8 +52,7 @@ abstract class _$SessionActions extends $Notifier<void> {
   void build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<void, void>;
     final element =
         ref.element
@@ -63,6 +62,6 @@ abstract class _$SessionActions extends $Notifier<void> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, null);
+    return element.handleCreate(ref, build);
   }
 }

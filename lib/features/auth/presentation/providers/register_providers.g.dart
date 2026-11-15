@@ -10,7 +10,7 @@ part of 'register_providers.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(registerRemoteDataSource)
-const registerRemoteDataSourceProvider = RegisterRemoteDataSourceProvider._();
+final registerRemoteDataSourceProvider = RegisterRemoteDataSourceProvider._();
 
 final class RegisterRemoteDataSourceProvider
     extends
@@ -20,7 +20,7 @@ final class RegisterRemoteDataSourceProvider
           RegisterRemoteDataSource
         >
     with $Provider<RegisterRemoteDataSource> {
-  const RegisterRemoteDataSourceProvider._()
+  RegisterRemoteDataSourceProvider._()
     : super(
         from: null,
         argument: null,
@@ -60,7 +60,7 @@ String _$registerRemoteDataSourceHash() =>
 /// Presentation depends on the [RegisterRepository] contract (rules.md §2/§5).
 
 @ProviderFor(registerRepository)
-const registerRepositoryProvider = RegisterRepositoryProvider._();
+final registerRepositoryProvider = RegisterRepositoryProvider._();
 
 /// Presentation depends on the [RegisterRepository] contract (rules.md §2/§5).
 
@@ -73,7 +73,7 @@ final class RegisterRepositoryProvider
         >
     with $Provider<RegisterRepository> {
   /// Presentation depends on the [RegisterRepository] contract (rules.md §2/§5).
-  const RegisterRepositoryProvider._()
+  RegisterRepositoryProvider._()
     : super(
         from: null,
         argument: null,
@@ -111,7 +111,7 @@ String _$registerRepositoryHash() =>
     r'89e5898755955fdc9f058a3a1f8f20deeb3218b4';
 
 @ProviderFor(registerRoles)
-const registerRolesProvider = RegisterRolesProvider._();
+final registerRolesProvider = RegisterRolesProvider._();
 
 final class RegisterRolesProvider
     extends
@@ -123,7 +123,7 @@ final class RegisterRolesProvider
     with
         $FutureModifier<List<ReferenceOption>>,
         $FutureProvider<List<ReferenceOption>> {
-  const RegisterRolesProvider._()
+  RegisterRolesProvider._()
     : super(
         from: null,
         argument: null,
@@ -152,7 +152,7 @@ final class RegisterRolesProvider
 String _$registerRolesHash() => r'86ce19920b449b9150bb1198611d128b53093339';
 
 @ProviderFor(registerColleges)
-const registerCollegesProvider = RegisterCollegesProvider._();
+final registerCollegesProvider = RegisterCollegesProvider._();
 
 final class RegisterCollegesProvider
     extends
@@ -164,7 +164,7 @@ final class RegisterCollegesProvider
     with
         $FutureModifier<List<ReferenceOption>>,
         $FutureProvider<List<ReferenceOption>> {
-  const RegisterCollegesProvider._()
+  RegisterCollegesProvider._()
     : super(
         from: null,
         argument: null,
@@ -193,7 +193,7 @@ final class RegisterCollegesProvider
 String _$registerCollegesHash() => r'b3f38c5173c2f5b911beb422a7fdee3e5c13b69d';
 
 @ProviderFor(registerDepartments)
-const registerDepartmentsProvider = RegisterDepartmentsProvider._();
+final registerDepartmentsProvider = RegisterDepartmentsProvider._();
 
 final class RegisterDepartmentsProvider
     extends
@@ -205,7 +205,7 @@ final class RegisterDepartmentsProvider
     with
         $FutureModifier<List<ReferenceOption>>,
         $FutureProvider<List<ReferenceOption>> {
-  const RegisterDepartmentsProvider._()
+  RegisterDepartmentsProvider._()
     : super(
         from: null,
         argument: null,
@@ -235,7 +235,7 @@ String _$registerDepartmentsHash() =>
     r'd89849226a1632446a33bcdd5b4001e4a39cdc30';
 
 @ProviderFor(registerCompanies)
-const registerCompaniesProvider = RegisterCompaniesProvider._();
+final registerCompaniesProvider = RegisterCompaniesProvider._();
 
 final class RegisterCompaniesProvider
     extends
@@ -247,7 +247,7 @@ final class RegisterCompaniesProvider
     with
         $FutureModifier<List<ReferenceOption>>,
         $FutureProvider<List<ReferenceOption>> {
-  const RegisterCompaniesProvider._()
+  RegisterCompaniesProvider._()
     : super(
         from: null,
         argument: null,
@@ -276,7 +276,7 @@ final class RegisterCompaniesProvider
 String _$registerCompaniesHash() => r'0612c6e5992eb5681abe3fceb2fd68e03bbd265f';
 
 @ProviderFor(registerCountries)
-const registerCountriesProvider = RegisterCountriesProvider._();
+final registerCountriesProvider = RegisterCountriesProvider._();
 
 final class RegisterCountriesProvider
     extends
@@ -288,7 +288,7 @@ final class RegisterCountriesProvider
     with
         $FutureModifier<List<LocationOption>>,
         $FutureProvider<List<LocationOption>> {
-  const RegisterCountriesProvider._()
+  RegisterCountriesProvider._()
     : super(
         from: null,
         argument: null,
@@ -317,7 +317,7 @@ final class RegisterCountriesProvider
 String _$registerCountriesHash() => r'3f7a7d3f9cd8e70cceac3a369064d75d1432bcc3';
 
 @ProviderFor(registerStates)
-const registerStatesProvider = RegisterStatesFamily._();
+final registerStatesProvider = RegisterStatesFamily._();
 
 final class RegisterStatesProvider
     extends
@@ -329,7 +329,7 @@ final class RegisterStatesProvider
     with
         $FutureModifier<List<LocationOption>>,
         $FutureProvider<List<LocationOption>> {
-  const RegisterStatesProvider._({
+  RegisterStatesProvider._({
     required RegisterStatesFamily super.from,
     required String super.argument,
   }) : super(
@@ -377,7 +377,7 @@ String _$registerStatesHash() => r'8018a3dc071dbf581d41239766094994fb6a4a87';
 
 final class RegisterStatesFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<List<LocationOption>>, String> {
-  const RegisterStatesFamily._()
+  RegisterStatesFamily._()
     : super(
         retry: null,
         name: r'registerStatesProvider',
@@ -394,7 +394,7 @@ final class RegisterStatesFamily extends $Family
 }
 
 @ProviderFor(registerDistricts)
-const registerDistrictsProvider = RegisterDistrictsFamily._();
+final registerDistrictsProvider = RegisterDistrictsFamily._();
 
 final class RegisterDistrictsProvider
     extends
@@ -406,7 +406,7 @@ final class RegisterDistrictsProvider
     with
         $FutureModifier<List<LocationOption>>,
         $FutureProvider<List<LocationOption>> {
-  const RegisterDistrictsProvider._({
+  RegisterDistrictsProvider._({
     required RegisterDistrictsFamily super.from,
     required String super.argument,
   }) : super(
@@ -454,7 +454,7 @@ String _$registerDistrictsHash() => r'c86ed1a116108e672b81601f8571aeaddca5b06f';
 
 final class RegisterDistrictsFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<List<LocationOption>>, String> {
-  const RegisterDistrictsFamily._()
+  RegisterDistrictsFamily._()
     : super(
         retry: null,
         name: r'registerDistrictsProvider',

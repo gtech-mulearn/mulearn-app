@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'circle_members_dto.dart';
@@ -9,6 +9,7 @@ part of 'circle_members_dto.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $CircleMembersDtoCopyWith<CircleMembersDto> get copyWith => _$CircleMembersDtoCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CircleMembersDto&&const DeepCollectionEquality().equals(other.members, members)&&(identical(other.owner, owner) || other.owner == owner));
+  final _this = this as CircleMembersDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CircleMembersDto&&const DeepCollectionEquality().equals(other.members, _this.members)&&(identical(other.owner, _this.owner) || other.owner == _this.owner));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(members),owner);
+int get hashCode {
+  final _this = this as CircleMembersDto;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.members),_this.owner);
+}
 
 @override
 String toString() {
-  return 'CircleMembersDto(members: $members, owner: $owner)';
+  final _this = this as CircleMembersDto;
+  return 'CircleMembersDto(members: ${_this.members}, owner: ${_this.owner})';
 }
 
 
@@ -66,7 +72,7 @@ class _$CircleMembersDtoCopyWithImpl<$Res>
 /// Create a copy of CircleMembersDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? members = freezed,Object? owner = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(CircleMembersDto(
 members: freezed == members ? _self.members : members // ignore: cast_nullable_to_non_nullable
 as List<CircleMemberDto>?,owner: freezed == owner ? _self.owner : owner // ignore: cast_nullable_to_non_nullable
 as CircleUserRefDto?,
@@ -222,7 +228,7 @@ return $default(_that.members,_that.owner);case _:
 @JsonSerializable()
 
 class _CircleMembersDto extends CircleMembersDto {
-  const _CircleMembersDto({final  List<CircleMemberDto>? members, this.owner}): _members = members,super._();
+  const _CircleMembersDto({ List<CircleMemberDto>? members, this.owner}): _members = members,super._();
   factory _CircleMembersDto.fromJson(Map<String, dynamic> json) => _$CircleMembersDtoFromJson(json);
 
  final  List<CircleMemberDto>? _members;
@@ -249,16 +255,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CircleMembersDto&&const DeepCollectionEquality().equals(other._members, _members)&&(identical(other.owner, owner) || other.owner == owner));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CircleMembersDto&&const DeepCollectionEquality().equals(other.members, _members)&&(identical(other.owner, owner) || other.owner == owner));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_members),owner);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_members),owner);
+}
 
 @override
 String toString() {
-  return 'CircleMembersDto(members: $members, owner: $owner)';
+    return 'CircleMembersDto(members: $members, owner: $owner)';
 }
 
 

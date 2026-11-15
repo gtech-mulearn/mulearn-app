@@ -15,16 +15,3 @@ abstract class CampusCircle with _$CampusCircle {
     DateTime? lastMeetingTime,
   }) = _CampusCircle;
 }
-
-/// An interest group with how many of the campus's learners are in it
-/// (`campus/igs/`).
-@freezed
-abstract class CampusIg with _$CampusIg {
-  const factory CampusIg({
-    required String id,
-    required String name,
-    required String code,
-    required int campusMemberCount,
-    String? iconImage,
-  }) = _CampusIg;
-}
