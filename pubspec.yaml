@@ -99,15 +99,21 @@ dev_dependencies:
   mocktail: ^1.0.4
   flutter_launcher_icons: ^0.14.3
 
-# `dart run flutter_launcher_icons` regenerates the iOS/Android icon sets from
-# assets/icon/app_icon.png (flattened white bg — iOS icons can't have alpha)
-# and app_icon_foreground.png (transparent, for Android's adaptive icon).
+# `dart run flutter_launcher_icons` regenerates the iOS/Android icon sets.
+# Every image is rendered by design/logo/build_logo.py (never edit them by hand):
+# - app_icon.png: full-bleed square, no alpha (iOS masks the corners itself);
+# - app_icon_android.png: the rounded tile, for pre-Oreo launchers;
+# - background/foreground/monochrome: Android adaptive layers on the full
+#   108dp canvas (the tile is the 72dp viewport), hence a 0% inset.
 flutter_launcher_icons:
   image_path: assets/icon/app_icon.png
+  image_path_android: assets/icon/app_icon_android.png
   ios: true
   android: true
-  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_background: assets/icon/app_icon_background.png
   adaptive_icon_foreground: assets/icon/app_icon_foreground.png
+  adaptive_icon_foreground_inset: 0
+  adaptive_icon_monochrome: assets/icon/app_icon_monochrome.png
   remove_alpha_ios: true
 
 # Upstream lucide_icons 0.257.0 subclasses Flutter's IconData, which this
