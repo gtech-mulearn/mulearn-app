@@ -528,7 +528,6 @@ abstract final class CampusPaths {
   static String studentActivity(String muid) =>
       '$_base/students/${Uri.encodeComponent(muid)}/activity/';
   static const String circles = '$_base/learning-circles/';
-  static const String igs = '$_base/igs/';
 
   /// `GET ?status=pending_campus_approval`.
   static const String events = '$_base/events/';

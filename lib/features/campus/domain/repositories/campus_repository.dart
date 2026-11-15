@@ -24,10 +24,10 @@ abstract interface class CampusRepository {
   });
 
   /// The campus's circles, most members first.
-  Future<({List<CampusCircle> items, bool hasNext})> getCircles({required int pageIndex, String search = ''});
-
-  /// Interest groups with the campus's member count, most members first.
-  Future<({List<CampusIg> items, bool hasNext})> getIgs({required int pageIndex, String search = ''});
+  Future<({List<CampusCircle> items, bool hasNext})> getCircles({
+    required int pageIndex,
+    String search = '',
+  });
 
   /// Unverified college links at the campus (Campus Lead only).
   Future<List<OrgLinkRequest>> getOrgLinks();
@@ -51,5 +51,8 @@ abstract interface class CampusRepository {
   Future<String> rejectInvite(String eventId, String id, String reason);
 
   /// A student's karma entries, newest first.
-  Future<({List<StudentActivity> items, bool hasNext})> getStudentActivity(String muid, {required int pageIndex});
+  Future<({List<StudentActivity> items, bool hasNext})> getStudentActivity(
+    String muid, {
+    required int pageIndex,
+  });
 }

@@ -59,7 +59,7 @@ final class CampusCirclesControllerProvider
 }
 
 String _$campusCirclesControllerHash() =>
-    r'bf936d212a2b54273be84af698b12aa8e3224362';
+    r'8f4aa4ca0eb2e9a11a7e3e7f705717c1b2140aca';
 
 /// The campus's circles for a search, page by page.
 
@@ -115,112 +115,6 @@ abstract class _$CampusCirclesController
                 PagedState<CampusCircle>
               >,
               AsyncValue<PagedState<CampusCircle>>,
-              Object?,
-              Object?
-            >;
-    return element.handleCreate(ref, () => build(_$args));
-  }
-}
-
-/// Interest groups for a search, page by page.
-
-@ProviderFor(CampusIgsController)
-final campusIgsControllerProvider = CampusIgsControllerFamily._();
-
-/// Interest groups for a search, page by page.
-final class CampusIgsControllerProvider
-    extends $AsyncNotifierProvider<CampusIgsController, PagedState<CampusIg>> {
-  /// Interest groups for a search, page by page.
-  CampusIgsControllerProvider._({
-    required CampusIgsControllerFamily super.from,
-    required String super.argument,
-  }) : super(
-         retry: noRetry,
-         name: r'campusIgsControllerProvider',
-         isAutoDispose: true,
-         dependencies: null,
-         $allTransitiveDependencies: null,
-       );
-
-  @override
-  String debugGetCreateSourceHash() => _$campusIgsControllerHash();
-
-  @override
-  String toString() {
-    return r'campusIgsControllerProvider'
-        ''
-        '($argument)';
-  }
-
-  @$internal
-  @override
-  CampusIgsController create() => CampusIgsController();
-
-  @override
-  bool operator ==(Object other) {
-    return other is CampusIgsControllerProvider && other.argument == argument;
-  }
-
-  @override
-  int get hashCode {
-    return argument.hashCode;
-  }
-}
-
-String _$campusIgsControllerHash() =>
-    r'd41bbf64a63bfcb0401cdf75afc2ec26a4c6df67';
-
-/// Interest groups for a search, page by page.
-
-final class CampusIgsControllerFamily extends $Family
-    with
-        $ClassFamilyOverride<
-          CampusIgsController,
-          AsyncValue<PagedState<CampusIg>>,
-          PagedState<CampusIg>,
-          FutureOr<PagedState<CampusIg>>,
-          String
-        > {
-  CampusIgsControllerFamily._()
-    : super(
-        retry: noRetry,
-        name: r'campusIgsControllerProvider',
-        dependencies: null,
-        $allTransitiveDependencies: null,
-        isAutoDispose: true,
-      );
-
-  /// Interest groups for a search, page by page.
-
-  CampusIgsControllerProvider call(String search) =>
-      CampusIgsControllerProvider._(argument: search, from: this);
-
-  @override
-  String toString() => r'campusIgsControllerProvider';
-}
-
-/// Interest groups for a search, page by page.
-
-abstract class _$CampusIgsController
-    extends $AsyncNotifier<PagedState<CampusIg>> {
-  late final _$args = ref.$arg as String;
-  String get search => _$args;
-
-  FutureOr<PagedState<CampusIg>> build(String search);
-  @$mustCallSuper
-  @override
-  WhenComplete runBuild() {
-    final ref =
-        this.ref
-            as $Ref<AsyncValue<PagedState<CampusIg>>, PagedState<CampusIg>>;
-    final element =
-        ref.element
-            as $ClassProviderElement<
-              AnyNotifier<
-                AsyncValue<PagedState<CampusIg>>,
-                PagedState<CampusIg>
-              >,
-              AsyncValue<PagedState<CampusIg>>,
               Object?,
               Object?
             >;

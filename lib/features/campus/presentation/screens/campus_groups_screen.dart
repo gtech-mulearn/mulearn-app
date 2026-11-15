@@ -7,6 +7,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/network/paging.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
+import 'package:mulearn_app/core/session/workspace_access.dart';
 import 'package:mulearn_app/core/utils/clock.dart';
 import 'package:mulearn_app/core/utils/date_format.dart';
 import 'package:mulearn_app/core/utils/search_debouncer.dart';
@@ -15,14 +16,17 @@ import 'package:mulearn_app/core/widgets/mu_load_more_footer.dart';
 import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/core/widgets/mu_state_display.dart';
 import 'package:mulearn_app/features/campus/domain/entities/campus_groups.dart';
+import 'package:mulearn_app/features/campus/presentation/providers/campus_chapters_providers.dart';
 import 'package:mulearn_app/features/campus/presentation/providers/campus_groups_controllers.dart';
+import 'package:mulearn_app/features/campus/presentation/widgets/campus_chapter_widgets.dart';
 
-enum _Tab { circles, groups }
+enum _Tab { circles, chapters }
 
-/// The campus's circles and interest groups (K3), most members first.
-/// Circles as their rings with when they meet; groups with how many of the
-/// campus's learners are in each, as a bar. Rows open the circle and group
-/// pages (the per-group member lists, `<id>/members/`, 500 on dev).
+/// The campus's circles and IG chapters (K3), most members first.
+/// Circles as their rings with when they meet; chapters (the campus's own
+/// chapters of μLearn interest groups, `ig-chapters/`, as on the dashboard's
+/// Campus Manage IG tab) with their lead and how many learners each has.
+/// The Campus Lead and Lead Enabler start, edit and remove chapters.
 class CampusGroupsScreen extends ConsumerStatefulWidget {
   const CampusGroupsScreen({super.key});
 
@@ -75,8 +79,7 @@ class _CampusGroupsScreenState extends ConsumerState<CampusGroupsScreen> {
                 MuSegmented<_Tab>(
                   values: _Tab.values,
                   selected: _tab,
-                  label: (t) =>
-                      t == _Tab.circles ? 'Circles' : 'Interest groups',
+                  label: (t) => t == _Tab.circles ? 'Circles' : 'IG chapters',
                   onChanged: (t) => setState(() => _tab = t),
                 ),
                 const SizedBox(height: MuSpacing.space3),
@@ -110,33 +113,7 @@ class _CampusGroupsScreenState extends ConsumerState<CampusGroupsScreen> {
                       ],
                     ),
                   )
-                : _PagedList<CampusIg>(
-                    state: ref.watch(campusIgsControllerProvider(_query)),
-                    onRefresh: () =>
-                        ref.refresh(campusIgsControllerProvider(_query).future),
-                    onRetry: () =>
-                        ref.invalidate(campusIgsControllerProvider(_query)),
-                    onLoadMore: () => ref
-                        .read(campusIgsControllerProvider(_query).notifier)
-                        .loadMore(),
-                    builder: (items) {
-                      final peak = items.fold<int>(
-                        0,
-                        (m, g) =>
-                            g.campusMemberCount > m ? g.campusMemberCount : m,
-                      );
-                      return MuFeedGroup(
-                        children: [
-                          for (var i = 0; i < items.length; i++)
-                            _IgRow(
-                              group: items[i],
-                              peak: peak,
-                              last: i == items.length - 1,
-                            ),
-                        ],
-                      );
-                    },
-                  ),
+                : _Chapters(query: _query),
           ),
         ],
       ),
@@ -251,47 +228,95 @@ class _CircleCard extends ConsumerWidget {
   }
 }
 
-class _IgRow extends StatelessWidget {
-  const _IgRow({required this.group, required this.peak, required this.last});
+/// The campus's IG chapters, filtered by the search on this device (the
+/// list isn't paginated). Campus Leads and Lead Enablers can start one.
+class _Chapters extends ConsumerWidget {
+  const _Chapters({required this.query});
 
-  final CampusIg group;
-
-  /// The most campus members in any group shown, for the bar.
-  final int peak;
-  final bool last;
+  final String query;
 
   @override
-  Widget build(BuildContext context) {
-    final mu = context.mu;
-    final c = mu.colors;
-    final g = group;
-    return MuFeedRow(
-      leading: Container(
-        width: MuSizes.avatarMd,
-        height: MuSizes.avatarMd,
-        decoration: BoxDecoration(
-          color: c.surfaceSunk,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        alignment: Alignment.center,
-        padding: const EdgeInsets.all(4),
-        child: FittedBox(
-          child: Text(
-            g.code.isEmpty ? g.name.characters.first : g.code,
-            style: mu.text.codeSm.copyWith(color: c.ink),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final canManage =
+        ref.watch(workspaceAccessProvider).value?.campusChapters ?? false;
+    final state = ref.watch(campusChaptersProvider);
+    return state.when(
+      skipLoadingOnReload: true,
+      loading: () => const Center(child: MuDotsLoader()),
+      error: (e, _) => ErrorRetryView(
+        error: e,
+        onRetry: () => ref.invalidate(campusChaptersProvider),
+      ),
+      data: (all) {
+        final q = query.toLowerCase();
+        final items = q.isEmpty
+            ? all
+            : [
+                for (final c in all)
+                  if ('${c.igName} ${c.igCode} ${c.leadName ?? ''} ${c.coLeadName ?? ''}'
+                      .toLowerCase()
+                      .contains(q))
+                    c,
+              ];
+        final peak = items.fold<int>(
+          0,
+          (m, c) => c.members > m ? c.members : m,
+        );
+        final taken = {
+          for (final c in all)
+            if (c.isActive) c.igId,
+        };
+        return MuRefresh(
+          onRefresh: () => ref.refresh(campusChaptersProvider.future),
+          child: ListView(
+            physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics(),
+            ),
+            padding: const EdgeInsets.fromLTRB(
+              MuSpacing.space5,
+              0,
+              MuSpacing.space5,
+              MuSpacing.space8,
+            ),
+            children: [
+              if (canManage) ...[
+                Align(
+                  alignment: AlignmentDirectional.centerStart,
+                  child: MuButton(
+                    label: 'Start a chapter',
+                    icon: LucideIcons.plus,
+                    size: MuButtonSize.small,
+                    variant: MuButtonVariant.outline,
+                    onPressed: () =>
+                        CampusChapterForm.show(context, taken: taken),
+                  ),
+                ),
+                const SizedBox(height: MuSpacing.space3),
+              ],
+              if (items.isEmpty)
+                MuEmptyLine(
+                  all.isEmpty
+                      ? (canManage
+                            ? 'No IG chapters yet. Start one for an interest group your campus is active in.'
+                            : 'No IG chapters at your campus yet.')
+                      : 'No chapter matches "$query".',
+                )
+              else
+                MuFeedGroup(
+                  children: [
+                    for (var i = 0; i < items.length; i++)
+                      CampusChapterRow(
+                        chapter: items[i],
+                        peak: peak,
+                        canManage: canManage,
+                        last: i == items.length - 1,
+                      ),
+                  ],
+                ),
+            ],
           ),
-        ),
-      ),
-      subject: g.name,
-      time: g.campusMemberCount == 1
-          ? '1 member from your campus'
-          : '${g.campusMemberCount} members from your campus',
-      trailing: SizedBox(
-        width: 56,
-        child: MuBar(value: peak <= 0 ? 0 : g.campusMemberCount / peak),
-      ),
-      divider: !last,
-      onTap: () => context.push(RoutePaths.interestGroupDetailPath(g.id)),
+        );
+      },
     );
   }
 }

@@ -18,10 +18,12 @@ class CampusRepositoryImpl implements CampusRepository {
   final CampusRemoteDataSource _remote;
 
   @override
-  Future<CampusSummary> getSummary() => _guard(() async => parseCampusSummary(await _remote.fetchSummary()));
+  Future<CampusSummary> getSummary() =>
+      _guard(() async => parseCampusSummary(await _remote.fetchSummary()));
 
   @override
-  Future<List<KarmaDay>> getWeeklyKarma() => _guard(() async => parseWeeklyKarma(await _remote.fetchWeeklyKarma()));
+  Future<List<KarmaDay>> getWeeklyKarma() =>
+      _guard(() async => parseWeeklyKarma(await _remote.fetchWeeklyKarma()));
 
   @override
   Future<StudentPage> getStudents({
@@ -30,93 +32,118 @@ class CampusRepositoryImpl implements CampusRepository {
     String sortBy = '-karma',
     bool? alumni,
     int perPage = 20,
-  }) =>
-      _guard(() async {
-        final body = await _remote.fetchStudents({
-          ...PageIndexPaging.query(pageIndex, perPage: perPage),
-          'sortBy': sortBy,
-          if (search.trim().isNotEmpty) 'search': search.trim(),
-          if (alumni != null) 'is_alumni': alumni ? 'true' : 'false',
-        });
-        final page = PageIndexPaging.parse(body['pagination'] as Map<String, dynamic>?);
-        final items = parseEachOrReport(
-          body['data'] as List<dynamic>? ?? const [],
-          (json) => CampusStudentDto.fromJson(json).toDomain(),
-          what: 'CampusStudentDto',
-        );
-        return (items: items, hasNext: page.hasNext, count: page.count);
-      });
+  }) => _guard(() async {
+    final body = await _remote.fetchStudents({
+      ...PageIndexPaging.query(pageIndex, perPage: perPage),
+      'sortBy': sortBy,
+      if (search.trim().isNotEmpty) 'search': search.trim(),
+      if (alumni != null) 'is_alumni': alumni ? 'true' : 'false',
+    });
+    final page = PageIndexPaging.parse(
+      body['pagination'] as Map<String, dynamic>?,
+    );
+    final items = parseEachOrReport(
+      body['data'] as List<dynamic>? ?? const [],
+      (json) => CampusStudentDto.fromJson(json).toDomain(),
+      what: 'CampusStudentDto',
+    );
+    return (items: items, hasNext: page.hasNext, count: page.count);
+  });
 
   Map<String, Object> _listQuery(int pageIndex, String search) => {
-        ...PageIndexPaging.query(pageIndex),
-        'sortBy': '-member_count',
-        if (search.trim().isNotEmpty) 'search': search.trim(),
-      };
+    ...PageIndexPaging.query(pageIndex),
+    'sortBy': '-member_count',
+    if (search.trim().isNotEmpty) 'search': search.trim(),
+  };
 
   @override
-  Future<({List<CampusCircle> items, bool hasNext})> getCircles({required int pageIndex, String search = ''}) =>
-      _guard(() async {
-        final body = await _remote.fetchCircles(_listQuery(pageIndex, search));
-        final items = parseEachOrReport(
-          body['data'] as List<dynamic>? ?? const [],
-          (json) => CampusCircleDto.fromJson(json).toDomain(),
-          what: 'CampusCircleDto',
-        );
-        return (items: items, hasNext: PageIndexPaging.parse(body['pagination'] as Map<String, dynamic>?).hasNext);
-      });
+  Future<({List<CampusCircle> items, bool hasNext})> getCircles({
+    required int pageIndex,
+    String search = '',
+  }) => _guard(() async {
+    final body = await _remote.fetchCircles(_listQuery(pageIndex, search));
+    final items = parseEachOrReport(
+      body['data'] as List<dynamic>? ?? const [],
+      (json) => CampusCircleDto.fromJson(json).toDomain(),
+      what: 'CampusCircleDto',
+    );
+    return (
+      items: items,
+      hasNext: PageIndexPaging.parse(
+        body['pagination'] as Map<String, dynamic>?,
+      ).hasNext,
+    );
+  });
 
   @override
-  Future<({List<CampusIg> items, bool hasNext})> getIgs({required int pageIndex, String search = ''}) =>
-      _guard(() async {
-        final body = await _remote.fetchIgs(_listQuery(pageIndex, search));
-        final items = parseEachOrReport(
-          body['data'] as List<dynamic>? ?? const [],
-          (json) => CampusIgDto.fromJson(json).toDomain(),
-          what: 'CampusIgDto',
-        );
-        return (items: items, hasNext: PageIndexPaging.parse(body['pagination'] as Map<String, dynamic>?).hasNext);
-      });
+  Future<({List<StudentActivity> items, bool hasNext})> getStudentActivity(
+    String muid, {
+    required int pageIndex,
+  }) => _guard(() async {
+    final body = await _remote.fetchStudentActivity(
+      muid,
+      PageIndexPaging.query(pageIndex),
+    );
+    final items = parseEachOrReport(
+      body['data'] as List<dynamic>? ?? const [],
+      (json) => StudentActivityDto.fromJson(json).toDomain(),
+      what: 'StudentActivityDto',
+    );
+    return (
+      items: items,
+      hasNext: PageIndexPaging.parse(
+        body['pagination'] as Map<String, dynamic>?,
+      ).hasNext,
+    );
+  });
+
+  List<T> _rows<T>(
+    Object? data,
+    T Function(Map<String, dynamic>) parse,
+    String what,
+  ) => parseEachOrReport(data is List ? data : const [], parse, what: what);
+
+  String _message(Response<dynamic> response) =>
+      ApiEnvelope.unwrapMessage(response) ?? '';
 
   @override
-  Future<({List<StudentActivity> items, bool hasNext})> getStudentActivity(String muid, {required int pageIndex}) =>
-      _guard(() async {
-        final body = await _remote.fetchStudentActivity(muid, PageIndexPaging.query(pageIndex));
-        final items = parseEachOrReport(
-          body['data'] as List<dynamic>? ?? const [],
-          (json) => StudentActivityDto.fromJson(json).toDomain(),
-          what: 'StudentActivityDto',
-        );
-        return (items: items, hasNext: PageIndexPaging.parse(body['pagination'] as Map<String, dynamic>?).hasNext);
-      });
-
-  List<T> _rows<T>(Object? data, T Function(Map<String, dynamic>) parse, String what) =>
-      parseEachOrReport(data is List ? data : const [], parse, what: what);
-
-  String _message(Response<dynamic> response) => ApiEnvelope.unwrapMessage(response) ?? '';
+  Future<List<OrgLinkRequest>> getOrgLinks() => _guard(
+    () async => _rows(
+      (await _remote.fetchOrgLinks())['data'],
+      (j) => OrgLinkRequestDto.fromJson(j).toDomain(),
+      'OrgLinkRequestDto',
+    ),
+  );
 
   @override
-  Future<List<OrgLinkRequest>> getOrgLinks() => _guard(() async =>
-      _rows((await _remote.fetchOrgLinks())['data'], (j) => OrgLinkRequestDto.fromJson(j).toDomain(), 'OrgLinkRequestDto'));
+  Future<String> verifyOrgLink(String id) =>
+      _guard(() async => _message(await _remote.verifyOrgLink(id)));
 
   @override
-  Future<String> verifyOrgLink(String id) => _guard(() async => _message(await _remote.verifyOrgLink(id)));
+  Future<List<PendingCampusEvent>> getPendingEvents() => _guard(
+    () async => _rows(
+      (await _remote.fetchPendingEvents())['data'],
+      (j) => PendingCampusEventDto.fromJson(j).toDomain(),
+      'PendingCampusEventDto',
+    ),
+  );
 
   @override
-  Future<List<PendingCampusEvent>> getPendingEvents() => _guard(() async => _rows(
-        (await _remote.fetchPendingEvents())['data'],
-        (j) => PendingCampusEventDto.fromJson(j).toDomain(),
-        'PendingCampusEventDto',
-      ));
+  Future<String> approveEvent(String id) =>
+      _guard(() async => _message(await _remote.approveEvent(id)));
 
   @override
-  Future<String> approveEvent(String id) => _guard(() async => _message(await _remote.approveEvent(id)));
+  Future<String> rejectEvent(String id, String reason) =>
+      _guard(() async => _message(await _remote.rejectEvent(id, reason)));
 
   @override
-  Future<String> rejectEvent(String id, String reason) => _guard(() async => _message(await _remote.rejectEvent(id, reason)));
-
-  @override
-  Future<List<CollabInvite>> getInvites() => _guard(() async =>
-      _rows(await _remote.fetchInvites(), (j) => CollabInviteDto.fromJson(j).toDomain(), 'CollabInviteDto'));
+  Future<List<CollabInvite>> getInvites() => _guard(
+    () async => _rows(
+      await _remote.fetchInvites(),
+      (j) => CollabInviteDto.fromJson(j).toDomain(),
+      'CollabInviteDto',
+    ),
+  );
 
   @override
   Future<String> acceptInvite(String eventId, String id) =>
@@ -124,7 +151,9 @@ class CampusRepositoryImpl implements CampusRepository {
 
   @override
   Future<String> rejectInvite(String eventId, String id, String reason) =>
-      _guard(() async => _message(await _remote.rejectInvite(eventId, id, reason)));
+      _guard(
+        () async => _message(await _remote.rejectInvite(eventId, id, reason)),
+      );
 
   Future<T> _guard<T>(Future<T> Function() action) async {
     try {

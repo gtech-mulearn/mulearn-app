@@ -1,0 +1,17 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/campus/ig-chapters/",
+    "account": "qa-campuslead",
+    "status": 200,
+    "recorded_at": "2026-11-15T19:36:13.655Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": []
+  }
+}
