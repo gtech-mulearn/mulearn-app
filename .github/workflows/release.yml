@@ -1,6 +1,6 @@
 # Production release — triggered only by pushing a vMAJOR.MINOR.PATCH tag.
 #
-#   check-tag  tag format, tag == pubspec version, commit is on main,
+#   check-tag  tag format, tag == pubspec version, commit is on master,
 #              version and build number above the previous release
 #   build      validate (format report, analyze, test) → signed prod APK + AAB
 #   publish    release notes from commits since the previous tag → GitHub
