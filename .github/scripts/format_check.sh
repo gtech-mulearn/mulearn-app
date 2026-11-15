@@ -41,10 +41,10 @@ if [ ${#files[@]} -eq 0 ]; then
 fi
 
 echo "Checking formatting of ${#files[@]} Dart file(s)…"
-# Batches keep the command line short; xargs exits non-zero if any batch
+# Batches of 50 keep the command line short (Windows rejects 200 paths); xargs exits non-zero if any batch
 # has changes, which we read from the "Changed" lines instead.
 output=$(printf '%s\0' "${files[@]}" |
-  xargs -0 -n 200 dart format --output=none --set-exit-if-changed 2>&1 || true)
+  xargs -0 -n 50 dart format --output=none --set-exit-if-changed 2>&1 || true)
 mapfile -t changed < <(printf '%s\n' "$output" | sed -n 's/^Changed //p')
 
 if printf '%s\n' "$output" | grep -qiE '^(error|Could not format)'; then
