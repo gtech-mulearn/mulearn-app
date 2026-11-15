@@ -73,6 +73,9 @@ void main() {
     final c = await eventsContainer(adapter);
     await tester.pumpWidget(UncontrolledProviderScope(container: c, child: const MaterialApp(home: EventsScreen())));
     await settle(tester);
+    // Every event, not just upcoming ones: the fixture's dates are fixed.
+    await tester.tap(find.text('All events'));
+    await settle(tester);
     final first = c.read(eventsListControllerProvider(const EventFilter())).value!.items.first.title;
     expect(find.text(first), findsOneWidget);
 

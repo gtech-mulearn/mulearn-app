@@ -101,7 +101,12 @@ void main() {
 
     await tester.tap(find.text('Filters'));
     await tester.pumpAndSettle();
-    await tester.tap(find.widgetWithText(SwitchListTile, 'Only events I can join'));
+    // The sheet scrolls: bring each control into view first.
+    await tester.ensureVisible(find.text('Only events I can join'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Only events I can join'));
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('Apply'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Apply'));
     await tester.pumpAndSettle();
