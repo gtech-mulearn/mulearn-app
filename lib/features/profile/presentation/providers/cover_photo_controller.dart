@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/session/my_profile_payload.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/profile_controller.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -15,6 +16,13 @@ class CoverPhotoController extends _$CoverPhotoController {
   Future<void> build() async {}
 
   Future<void> upload(List<int> bytes, String filename) async {
+    if (bytes.length > coverPicMaxBytes) {
+      state = AsyncError(
+        const ApiException(message: 'Cover photo must be under 5 MB.'),
+        StackTrace.current,
+      );
+      return;
+    }
     // The cover-photo-not-updating bug report pointed here: if the backend
     // overwrites the cover photo at the same storage URL on every upload
     // rather than versioning the filename, `cached_network_image`'s
