@@ -252,6 +252,12 @@ class _UpNext extends ConsumerWidget {
         meta: 'Learn with a group',
         onTap: () => context.push(RoutePaths.learningCircles),
       ),
+      MuTile(
+        title: 'Put your karma to work',
+        category: IgCategory.coder,
+        meta: 'Internships and gigs from verified companies',
+        onTap: () => context.push(RoutePaths.opportunities),
+      ),
     ];
     final setup = <MuTile>[
       if (needsDiscord)
@@ -259,7 +265,7 @@ class _UpNext extends ConsumerWidget {
           title: 'Connect Discord',
           category: IgCategory.creative,
           size: MuTileSize.short,
-          meta: 'Task karma is counted in the μLearn server',
+          meta: 'Post your task proof there to earn karma',
           onTap: () => unawaited(ref.read(discordConnectFlowProvider.notifier).start()),
         ),
       if (needsGroups)
