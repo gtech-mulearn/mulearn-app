@@ -25,7 +25,7 @@ class MuOption {
 
 /// The value a [MuSelectField] reports when the person picks "not listed":
 /// the caller then shows a field for the name they type.
-const String muOtherOptionValue = '__other__';
+const String muOtherOptionValue = 'others';
 
 /// A select (artifact TextField → Select): looks like a field, opens a
 /// sheet with search instead of a dropdown, because the lists people pick
