@@ -8,7 +8,6 @@ import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/widgets/workspace_gate.dart';
 import 'package:mulearn_app/features/auth/presentation/providers/welcome_providers.dart';
 import 'package:mulearn_app/features/auth/presentation/screens/arrival_screen.dart';
-import 'package:mulearn_app/features/auth/presentation/screens/commons_screen.dart';
 import 'package:mulearn_app/features/auth/presentation/screens/forgot_password_screen.dart';
 import 'package:mulearn_app/features/auth/presentation/screens/onboarding_interests_screen.dart';
 import 'package:mulearn_app/features/auth/presentation/screens/register_basic_info_screen.dart';
@@ -94,7 +93,6 @@ GoRouter goRouter(Ref ref) {
     routes: [
       GoRoute(path: RoutePaths.splash, builder: (_, __) => const SplashScreen()),
       GoRoute(path: RoutePaths.welcome, builder: (_, __) => const ArrivalScreen()),
-      GoRoute(path: RoutePaths.commons, builder: (_, __) => const CommonsScreen()),
       GoRoute(path: RoutePaths.signIn, builder: (_, __) => const SignInScreen()),
       GoRoute(path: RoutePaths.forgotPassword, builder: (_, __) => const ForgotPasswordScreen()),
       GoRoute(path: RoutePaths.resetPassword, builder: (_, __) => const ResetPasswordScreen()),

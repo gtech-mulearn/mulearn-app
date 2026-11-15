@@ -48,7 +48,7 @@ void main() {
     );
   });
 
-  testWidgets('ink variant fills with night; knob shows the volt disc', (tester) async {
+  testWidgets('ink variant fills with night; the knob is μLearn blue, never volt', (tester) async {
     await tester.pumpWidget(
       _host(MuButton(label: 'Get started', variant: MuButtonVariant.ink, knob: true, block: true, onPressed: () {})),
     );
@@ -56,7 +56,17 @@ void main() {
         .widgetList<Container>(find.descendant(of: find.byType(MuButton), matching: find.byType(Container)))
         .map((c) => (c.decoration as BoxDecoration?)?.color)
         .toList();
-    expect(fills, containsAll([MuPalette.light.night, MuPalette.light.volt]));
+    expect(fills, containsAll([MuPalette.light.night, MuPalette.light.cobalt]));
+    expect(fills, isNot(contains(MuPalette.light.volt)));
+  });
+
+  testWidgets('a blue button with a knob gets a white knob', (tester) async {
+    await tester.pumpWidget(_host(MuButton(label: 'Next', knob: true, onPressed: () {})));
+    final fills = tester
+        .widgetList<Container>(find.descendant(of: find.byType(MuButton), matching: find.byType(Container)))
+        .map((c) => (c.decoration as BoxDecoration?)?.color)
+        .toList();
+    expect(fills, containsAll([MuPalette.light.cobalt, MuPalette.light.onCobalt]));
   });
 
   testWidgets('small buttons keep a 48dp hit area', (tester) async {

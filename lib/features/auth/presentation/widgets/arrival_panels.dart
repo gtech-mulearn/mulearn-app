@@ -538,7 +538,7 @@ class TicketsPanel extends StatelessWidget {
                     eyebrow: e == null ? 'FEATURED EVENT' : _when(e),
                     title: e?.title ?? 'Learning Fest',
                     pill: MuPill(
-                      e == null ? 'Open to everyone' : '${muGrouped(e.interested)} interested',
+                      e == null || e.interested <= 0 ? 'Open to everyone' : '${muGrouped(e.interested)} interested',
                       tone: MuPillTone.volt,
                       icon: LucideIcons.zap,
                     ),

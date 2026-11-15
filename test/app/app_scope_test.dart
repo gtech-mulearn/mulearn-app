@@ -18,26 +18,27 @@ void main() {
   testWidgets('the app scope never auto-retries a failed request', (tester) async {
     final adapter = FakeHttpAdapter({
       'GET /api/v1/dashboard/events/x/': (_) => const FakeResponse(500, {
-            'hasError': true,
-            'statusCode': 500,
-            'message': {'general': ['Server error']},
-            'response': <String, dynamic>{},
-          }),
+        'hasError': true,
+        'statusCode': 500,
+        'message': {
+          'general': ['Server error'],
+        },
+        'response': <String, dynamic>{},
+      }),
     });
     final tokens = TokenStorage(FakeSecureStorage());
     await tokens.saveTokens(accessToken: 'a', refreshToken: 'r');
 
-    await tester.pumpWidget(appProviderScope(
-      overrides: [
-        dioProvider.overrideWithValue(fakeDio(adapter)),
-        tokenStorageProvider.overrideWithValue(tokens),
-      ],
-      child: MaterialApp(
-        home: Consumer(
-          builder: (_, ref, __) => Text(ref.watch(eventDetailProvider('x')).hasError ? 'error' : 'loading'),
+    await tester.pumpWidget(
+      appProviderScope(
+        overrides: [dioProvider.overrideWithValue(fakeDio(adapter)), tokenStorageProvider.overrideWithValue(tokens)],
+        child: MaterialApp(
+          home: Consumer(
+            builder: (_, ref, __) => Text(ref.watch(eventDetailProvider('x')).hasError ? 'error' : 'loading'),
+          ),
         ),
       ),
-    ));
+    );
     // A minute of fake time: Riverpod's default policy retries 10 times
     // within it (200 ms doubling to 6.4 s).
     for (var i = 0; i < 60; i++) {

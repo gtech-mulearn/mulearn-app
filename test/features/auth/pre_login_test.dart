@@ -8,7 +8,6 @@ import 'package:mulearn_app/core/storage/cache_store_provider.dart';
 import 'package:mulearn_app/core/storage/secure_storage_provider.dart';
 import 'package:mulearn_app/features/auth/presentation/providers/welcome_providers.dart';
 import 'package:mulearn_app/features/auth/presentation/screens/arrival_screen.dart';
-import 'package:mulearn_app/features/auth/presentation/screens/commons_screen.dart';
 
 import '../../support/fake_http_adapter.dart';
 import '../../support/fake_secure_storage.dart';
@@ -66,7 +65,6 @@ void main() {
           ],
         }),
       ),
-      'GET /api/v1/leaderboard/students-monthly/': (_) => FakeResponse(200, _ok(<Object>[])),
     });
   });
 
@@ -84,7 +82,6 @@ void main() {
       initialLocation: start,
       routes: [
         GoRoute(path: '/welcome', builder: (_, __) => const ArrivalScreen()),
-        GoRoute(path: '/commons', builder: (_, __) => const CommonsScreen()),
         GoRoute(path: '/sign-in', builder: (_, __) => const Text('sign in screen')),
       ],
     );
@@ -92,7 +89,10 @@ void main() {
     tester.view.physicalSize = const Size(1080, 2400);
     addTearDown(tester.view.resetPhysicalSize);
     await tester.pumpWidget(
-      UncontrolledProviderScope(container: container, child: MaterialApp.router(routerConfig: router)),
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp.router(routerConfig: router),
+      ),
     );
     for (var i = 0; i < 6; i++) {
       await tester.pump(const Duration(milliseconds: 50));
@@ -115,40 +115,35 @@ void main() {
     expect(find.text('Comics'), findsOneWidget);
   });
 
-  testWidgets('Explore remembers the arrival was seen and opens the Commons', (tester) async {
-    final router = await pump(tester, '/welcome');
-    await tester.tap(find.text('Explore'));
-    for (var i = 0; i < 6; i++) {
+  Future<void> frames(WidgetTester tester) async {
+    for (var i = 0; i < 12; i++) {
       await tester.pump(const Duration(milliseconds: 50));
     }
-    expect(router.state.uri.path, '/commons');
+  }
+
+  testWidgets('Next walks the four steps; Get started on the last opens sign-in', (tester) async {
+    final router = await pump(tester, '/welcome');
+    for (final step in ['peer-led growth', 'Prove it.', 'Mentor those behind.']) {
+      expect(find.textContaining(step, findRichText: true), findsOneWidget);
+      expect(find.text('Get started'), findsNothing);
+      await tester.tap(find.text('Next'));
+      await frames(tester);
+    }
+    expect(find.textContaining('to capable', findRichText: true), findsOneWidget);
+    expect(router.state.uri.path, '/welcome', reason: 'Next never skips to sign-in');
+
+    await tester.tap(find.text('Get started'));
+    await frames(tester);
+    expect(router.state.uri.path, '/sign-in');
     expect(await storage.read(key: 'arrival_seen'), '1');
   });
 
-  testWidgets('the Commons greets with the live count and asks to sign in in context', (tester) async {
-    await pump(tester, '/commons');
-    expect(find.textContaining('73,953 peers', findRichText: true), findsOneWidget);
-    expect(find.text('Stay curious.'), findsOneWidget);
-    expect(find.text('Free for students'), findsNothing);
-
-    // The live pulse strip never stops moving, so pump fixed frames.
-    Future<void> frames() async {
-      for (var i = 0; i < 12; i++) {
-        await tester.pump(const Duration(milliseconds: 60));
-      }
-    }
-
-    // Scroll the slab clear of the Join dock, then act on it.
-    await tester.drag(find.byType(CustomScrollView), const Offset(0, -300));
-    await frames();
-    await tester.tap(find.text('Count me in'));
-    await frames();
-    expect(find.text('Sign in to join Learning Fest 2026'), findsOneWidget);
-    expect(find.text("We'll bring you right back here and finish what you started."), findsOneWidget);
-
-    await tester.tap(find.text('Not now'));
-    await frames();
-    expect(find.text('Sign in to join Learning Fest 2026'), findsNothing);
+  testWidgets('Skip goes to sign-in from any step', (tester) async {
+    final router = await pump(tester, '/welcome');
+    await tester.tap(find.bySemanticsLabel('Skip to sign in'));
+    await frames(tester);
+    expect(router.state.uri.path, '/sign-in');
+    expect(await storage.read(key: 'arrival_seen'), '1');
   });
 
   test('arrival-seen reads and writes the device flag', () async {

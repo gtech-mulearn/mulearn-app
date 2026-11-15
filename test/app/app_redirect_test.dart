@@ -45,7 +45,11 @@ void main() {
         '/enabler/campuses',
         '/enabler/campuses/c1',
       ]) {
-        expect(appRedirect(auth: signedIn, uri: u(path)), isNull, reason: path);
+        expect(
+          appRedirect(auth: signedIn, uri: u(path)),
+          isNull,
+          reason: path,
+        );
       }
     });
 
@@ -76,11 +80,17 @@ void main() {
   test('a link that arrives while the session loads keeps its target', () {
     final toSplash = appRedirect(auth: loading, uri: u('/dashboard/connect-discord?code=abc'));
     expect(toSplash, '/splash?from=${fromOf('/dashboard/connect-discord?code=abc')}');
-    expect(appRedirect(auth: loading, uri: u(toSplash!)), isNull, reason: 'stays on splash while loading');
+    expect(
+      appRedirect(auth: loading, uri: u(toSplash!)),
+      isNull,
+      reason: 'stays on splash while loading',
+    );
 
     expect(appRedirect(auth: signedIn, uri: u(toSplash)), '/dashboard/connect-discord?code=abc');
-    expect(appRedirect(auth: signedOut, uri: u(toSplash)),
-        '/sign-in?from=${fromOf('/dashboard/connect-discord?code=abc')}');
+    expect(
+      appRedirect(auth: signedOut, uri: u(toSplash)),
+      '/sign-in?from=${fromOf('/dashboard/connect-discord?code=abc')}',
+    );
   });
 
   test('without a target, sign-in and splash still lead home', () {
@@ -105,9 +115,9 @@ void main() {
   group('pre-login', () {
     const firstLaunch = AsyncData(false);
 
-    test('the first signed-out launch shows the arrival; later ones open the Commons', () {
+    test('the first signed-out launch shows the arrival; later ones open sign-in', () {
       expect(appRedirect(auth: signedOut, arrivalSeen: firstLaunch, uri: u('/splash')), '/welcome');
-      expect(appRedirect(auth: signedOut, uri: u('/splash')), '/commons');
+      expect(appRedirect(auth: signedOut, uri: u('/splash')), '/sign-in');
     });
 
     test('waits on the splash until the first-launch flag is read', () {
@@ -119,10 +129,8 @@ void main() {
       expect(r, '/sign-in?from=${fromOf('/events/e1')}');
     });
 
-    test('guests can stay on the arrival and the Commons; signing in leaves them', () {
+    test('the arrival is reachable signed out; signing in leaves it', () {
       expect(appRedirect(auth: signedOut, uri: u('/welcome')), isNull);
-      expect(appRedirect(auth: signedOut, uri: u('/commons')), isNull);
-      expect(appRedirect(auth: signedIn, uri: u('/commons')), '/home');
       expect(appRedirect(auth: signedIn, uri: u('/welcome')), '/home');
     });
   });

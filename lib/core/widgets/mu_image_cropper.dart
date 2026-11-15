@@ -217,7 +217,6 @@ class _CropScreenState extends State<_CropScreen> {
                 ),
                 child: MuButton(
                   label: 'Use photo',
-                  variant: MuButtonVariant.volt,
                   block: true,
                   loading: _saving,
                   loadingLabel: 'Saving…',

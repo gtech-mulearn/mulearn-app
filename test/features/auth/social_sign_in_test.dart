@@ -21,54 +21,57 @@ class FakeAppleSignIn implements AppleNativeSignInDataSource {
 }
 
 Map<String, dynamic> envelope(Map<String, dynamic> response, {int status = 200, List<String>? general}) => {
-      'hasError': status >= 400,
-      'statusCode': status,
-      'message': {'general': general ?? <String>[]},
-      'response': response,
-    };
+  'hasError': status >= 400,
+  'statusCode': status,
+  'message': {'general': general ?? <String>[]},
+  'response': response,
+};
 
 void main() {
   late MockTokenStorage tokens;
 
   setUp(() {
     tokens = MockTokenStorage();
-    when(() => tokens.saveTokens(accessToken: any(named: 'accessToken'), refreshToken: any(named: 'refreshToken')))
-        .thenAnswer((_) async {});
+    when(
+      () => tokens.saveTokens(
+        accessToken: any(named: 'accessToken'),
+        refreshToken: any(named: 'refreshToken'),
+      ),
+    ).thenAnswer((_) async {});
   });
 
   AuthRepositoryImpl repoServing(FakeHttpAdapter adapter) =>
-      AuthRepositoryImpl(
-        remote: AuthRemoteDataSource(fakeDio(adapter)),
-        tokenStorage: tokens,
-      );
+      AuthRepositoryImpl(remote: AuthRemoteDataSource(fakeDio(adapter)), tokenStorage: tokens);
 
   group('Google (authserver GoogleMobileAuthAPIView)', () {
     test('an unknown Google email asks to register and stores no tokens', () async {
-      final repo = repoServing(FakeHttpAdapter({
-        'POST /api/v1/auth/google-mobile/': (_) => FakeResponse(200, envelope({
-              'isNewUser': true,
-              'tempToken': 't',
-              'email': 'e@x.org',
-              'fullName': 'N',
-            })),
-      }));
+      final repo = repoServing(
+        FakeHttpAdapter({
+          'POST /api/v1/auth/google-mobile/': (_) =>
+              FakeResponse(200, envelope({'isNewUser': true, 'tempToken': 't', 'email': 'e@x.org', 'fullName': 'N'})),
+        }),
+      );
 
       final outcome = await repo.signInWithGoogle(idToken: 'id');
 
       expect(outcome, isA<SocialNeedsRegistration>());
       final needs = outcome as SocialNeedsRegistration;
       expect((needs.tempToken, needs.email, needs.fullName), ('t', 'e@x.org', 'N'));
-      verifyNever(() => tokens.saveTokens(accessToken: any(named: 'accessToken'), refreshToken: any(named: 'refreshToken')));
+      verifyNever(
+        () => tokens.saveTokens(
+          accessToken: any(named: 'accessToken'),
+          refreshToken: any(named: 'refreshToken'),
+        ),
+      );
     });
 
     test('a known Google account signs in and stores the token pair', () async {
-      final repo = repoServing(FakeHttpAdapter({
-        'POST /api/v1/auth/google-mobile/': (_) => FakeResponse(200, envelope({
-              'accessToken': 'a',
-              'refreshToken': 'r',
-              'isNewUser': false,
-            })),
-      }));
+      final repo = repoServing(
+        FakeHttpAdapter({
+          'POST /api/v1/auth/google-mobile/': (_) =>
+              FakeResponse(200, envelope({'accessToken': 'a', 'refreshToken': 'r', 'isNewUser': false})),
+        }),
+      );
 
       final outcome = await repo.signInWithGoogle(idToken: 'id');
 
@@ -91,8 +94,9 @@ void main() {
         'POST /api/v1/register/': (_) => FakeResponse(200, envelope({'accessToken': 'a', 'refreshToken': 'r'})),
       });
 
-      await RegisterRemoteDataSource(fakeDio(adapter))
-          .registerWithGoogle(tempToken: 't', fullName: 'N', roleId: 'role-1');
+      await RegisterRemoteDataSource(
+        fakeDio(adapter),
+      ).registerWithGoogle(tempToken: 't', fullName: 'N', roleId: 'role-1');
 
       expect(adapter.requests.single.data, {
         'tempToken': 't',
@@ -104,7 +108,8 @@ void main() {
   group('Apple (authserver AppleMobileAuthAPIView)', () {
     test('only the identity token is sent - never a client-supplied email', () async {
       final adapter = FakeHttpAdapter({
-        'POST /api/v1/auth/apple-mobile/': (_) => FakeResponse(200, envelope({'accessToken': 'a', 'refreshToken': 'r'})),
+        'POST /api/v1/auth/apple-mobile/': (_) =>
+            FakeResponse(200, envelope({'accessToken': 'a', 'refreshToken': 'r'})),
       });
 
       await AuthRemoteDataSource(fakeDio(adapter)).authenticateWithApple(identityToken: 'x');
@@ -117,10 +122,12 @@ void main() {
         'POST /api/v1/auth/apple-mobile/': (_) =>
             FakeResponse(400, envelope({}, status: 400, general: ['No account found with this email'])),
       });
-      final container = ProviderContainer(overrides: [
-        authRepositoryProvider.overrideWithValue(repoServing(adapter)),
-        appleNativeSignInDataSourceProvider.overrideWithValue(FakeAppleSignIn()),
-      ]);
+      final container = ProviderContainer(
+        overrides: [
+          authRepositoryProvider.overrideWithValue(repoServing(adapter)),
+          appleNativeSignInDataSourceProvider.overrideWithValue(FakeAppleSignIn()),
+        ],
+      );
       addTearDown(container.dispose);
       container.listen(authControllerProvider, (_, __) {});
 

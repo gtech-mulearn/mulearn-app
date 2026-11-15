@@ -113,11 +113,20 @@ class MuButton extends StatelessWidget {
         ),
         if (showKnob) ...[
           const SizedBox(width: MuSpacing.space3),
+          // The knob is μLearn blue (white on a blue button): main actions
+          // are blue; volt stays for karma and "now".
           Container(
             width: height - 12,
             height: height - 12,
-            decoration: BoxDecoration(color: c.volt, shape: BoxShape.circle),
-            child: Icon(LucideIcons.arrowRight, size: MuSizes.iconMd, color: c.onVolt),
+            decoration: BoxDecoration(
+              color: variant == MuButtonVariant.cobalt ? c.onCobalt : c.cobalt,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              LucideIcons.arrowRight,
+              size: MuSizes.iconMd,
+              color: variant == MuButtonVariant.cobalt ? c.cobalt : c.onCobalt,
+            ),
           ),
         ],
       ],

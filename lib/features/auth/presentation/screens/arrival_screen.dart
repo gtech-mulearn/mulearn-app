@@ -15,8 +15,9 @@ String? _n(int? v) => v == null || v <= 0 ? null : muGrouped(v);
 
 /// The first-launch arrival (artifact Pre-login → The four beats): what
 /// μLearn is, how learning works, who you learn with, and where it leads,
-/// each on a live object you can touch. Swipe up through the beats;
-/// Explore opens the app as a guest. Shown once per device.
+/// each on a live object you can touch. Next (or a swipe) moves through
+/// the four steps; Get started on the last opens sign-in, and Skip jumps
+/// there from any step. Shown once per device.
 class ArrivalScreen extends ConsumerStatefulWidget {
   const ArrivalScreen({super.key});
 
@@ -34,10 +35,25 @@ class _ArrivalScreenState extends ConsumerState<ArrivalScreen> {
     super.dispose();
   }
 
-  Future<void> _explore() async {
+  /// Next step, or sign-in after the last one.
+  void _next(int count) {
+    if (_page < count - 1) {
+      unawaited(HapticFeedback.selectionClick());
+      final reduce = MediaQuery.maybeDisableAnimationsOf(context) ?? false;
+      if (reduce) {
+        _pages.jumpToPage(_page + 1);
+      } else {
+        unawaited(_pages.nextPage(duration: const Duration(milliseconds: 420), curve: Curves.easeOutCubic));
+      }
+      return;
+    }
+    unawaited(_start());
+  }
+
+  Future<void> _start() async {
     unawaited(HapticFeedback.selectionClick());
     await ref.read(arrivalSeenProvider.notifier).markSeen();
-    if (mounted) context.go(RoutePaths.commons);
+    if (mounted) context.go(RoutePaths.signIn);
   }
 
   @override
@@ -109,7 +125,6 @@ class _ArrivalScreenState extends ConsumerState<ArrivalScreen> {
           children: [
             PageView.builder(
               controller: _pages,
-              scrollDirection: Axis.vertical,
               itemCount: beats.length,
               onPageChanged: (i) {
                 HapticFeedback.selectionClick();
@@ -121,6 +136,12 @@ class _ArrivalScreenState extends ConsumerState<ArrivalScreen> {
                 child: _BeatView(beat: beats[i]),
               ),
             ),
+            if (_page < beats.length - 1)
+              Positioned(
+                top: MediaQuery.paddingOf(context).top + MuSpacing.space2,
+                right: MuSpacing.space3,
+                child: _SkipPill(onTap: _start),
+              ),
             Positioned(
               left: 0,
               right: 0,
@@ -167,7 +188,11 @@ class _ArrivalScreenState extends ConsumerState<ArrivalScreen> {
                           ),
                         ),
                         const SizedBox(width: 14),
-                        MuButton(label: 'Explore', variant: MuButtonVariant.ink, knob: true, onPressed: _explore),
+                        MuButton(
+                          label: _page == beats.length - 1 ? 'Get started' : 'Next',
+                          knob: true,
+                          onPressed: () => _next(beats.length),
+                        ),
                       ],
                     ),
                   ),
@@ -258,6 +283,40 @@ class _BeatView extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+/// Skip, as a paper capsule that reads on every panel colour.
+class _SkipPill extends StatelessWidget {
+  const _SkipPill({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final mu = context.mu;
+    final c = mu.colors;
+    return Semantics(
+      button: true,
+      label: 'Skip to sign in',
+      excludeSemantics: true,
+      child: MuPressable(
+        onTap: onTap,
+        child: SizedBox(
+          height: MuSizes.touchMin,
+          child: Center(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+              decoration: BoxDecoration(
+                color: c.onCobalt.withValues(alpha: 0.88),
+                borderRadius: BorderRadius.circular(MuRadii.round),
+              ),
+              child: Text('Skip', style: mu.text.label.copyWith(color: c.inkPrint)),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

@@ -15,9 +15,7 @@ void main() {
   });
 
   ProviderContainer makeContainer() {
-    final container = ProviderContainer(
-      overrides: [registerRepositoryProvider.overrideWithValue(repository)],
-    );
+    final container = ProviderContainer(overrides: [registerRepositoryProvider.overrideWithValue(repository)]);
     addTearDown(container.dispose);
     return container;
   }
@@ -26,9 +24,7 @@ void main() {
     when(() => repository.selectDomains(any())).thenAnswer((_) async {});
 
     final container = makeContainer();
-    await container
-        .read(interestsControllerProvider.notifier)
-        .submitPathwaysOnly(['coder', 'maker']);
+    await container.read(interestsControllerProvider.notifier).submitPathwaysOnly(['coder', 'maker']);
 
     verify(() => repository.selectDomains(['coder', 'maker'])).called(1);
     verifyNever(() => repository.selectEndgoals(any()));
@@ -45,9 +41,7 @@ void main() {
     });
 
     final container = makeContainer();
-    await container
-        .read(interestsControllerProvider.notifier)
-        .submitPathwaysAndEndgoals(['coder'], ['job', 'r&d']);
+    await container.read(interestsControllerProvider.notifier).submitPathwaysAndEndgoals(['coder'], ['job', 'r&d']);
 
     verify(() => repository.selectDomains(['coder'])).called(1);
     verify(() => repository.selectEndgoals(['job', 'r&d'])).called(1);
@@ -59,9 +53,7 @@ void main() {
 
     final container = makeContainer();
     await expectLater(
-      container
-          .read(interestsControllerProvider.notifier)
-          .submitPathwaysOnly(['coder']),
+      container.read(interestsControllerProvider.notifier).submitPathwaysOnly(['coder']),
       throwsException,
     );
 

@@ -57,11 +57,9 @@ void main() {
 
   ProviderContainer containerWithBasicInfo() {
     final container = makeContainer();
-    container.read(registerWizardControllerProvider.notifier).setBasicInfo(
-          fullName: 'Ada Lovelace',
-          email: 'ada@mulearn.org',
-          password: 'supersecret',
-        );
+    container
+        .read(registerWizardControllerProvider.notifier)
+        .setBasicInfo(fullName: 'Ada Lovelace', email: 'ada@mulearn.org', password: 'supersecret');
     return container;
   }
 
@@ -89,10 +87,9 @@ void main() {
         ..setBasicInfo(fullName: 'Ada Lovelace', email: 'ada@gmail.com');
       await container.read(appAuthControllerProvider.future);
 
-      await container.read(registerSubmitControllerProvider.notifier).submitGeneric(
-            role: RegistrationRole.student,
-            college: 'college-1',
-          );
+      await container
+          .read(registerSubmitControllerProvider.notifier)
+          .submitGeneric(role: RegistrationRole.student, college: 'college-1');
 
       expect(container.read(registerSubmitControllerProvider).hasError, isFalse);
       verify(
@@ -124,7 +121,9 @@ void main() {
       final container = containerWithBasicInfo();
       await container.read(appAuthControllerProvider.future);
 
-      await container.read(registerSubmitControllerProvider.notifier).submitGeneric(
+      await container
+          .read(registerSubmitControllerProvider.notifier)
+          .submitGeneric(
             role: RegistrationRole.student,
             college: 'college-1',
             department: 'dept-1',
@@ -164,7 +163,9 @@ void main() {
       final container = containerWithBasicInfo();
       await container.read(appAuthControllerProvider.future);
 
-      await container.read(registerSubmitControllerProvider.notifier).submitGeneric(
+      await container
+          .read(registerSubmitControllerProvider.notifier)
+          .submitGeneric(
             role: RegistrationRole.student,
             college: 'others',
             customCollege: 'My New College',
@@ -195,18 +196,15 @@ void main() {
       final container = containerWithBasicInfo();
       await container.read(appAuthControllerProvider.future);
 
-      await container.read(registerSubmitControllerProvider.notifier).submitGeneric(
+      await container
+          .read(registerSubmitControllerProvider.notifier)
+          .submitGeneric(
             role: RegistrationRole.student,
             organization: 'company-1',
             organizationType: OrganizationType.company,
           );
 
-      verify(
-        () => repository.selectOrganization(
-          organization: 'company-1',
-          isStudent: true,
-        ),
-      ).called(1);
+      verify(() => repository.selectOrganization(organization: 'company-1', isStudent: true)).called(1);
     });
   });
 
@@ -223,10 +221,9 @@ void main() {
     final container = containerWithBasicInfo();
     await container.read(appAuthControllerProvider.future);
 
-    await container.read(registerSubmitControllerProvider.notifier).submitGeneric(
-          role: RegistrationRole.enabler,
-          college: 'college-1',
-        );
+    await container
+        .read(registerSubmitControllerProvider.notifier)
+        .submitGeneric(role: RegistrationRole.enabler, college: 'college-1');
 
     verify(
       () => repository.registerUser(
@@ -236,9 +233,7 @@ void main() {
         roleId: 'role-enabler',
       ),
     ).called(1);
-    verify(
-      () => repository.selectOrganization(organization: 'college-1', isStudent: false),
-    ).called(1);
+    verify(() => repository.selectOrganization(organization: 'college-1', isStudent: false)).called(1);
   });
 
   group('submitGeneric — mentor', () {
@@ -255,7 +250,9 @@ void main() {
       final container = containerWithBasicInfo();
       await container.read(appAuthControllerProvider.future);
 
-      await container.read(registerSubmitControllerProvider.notifier).submitGeneric(
+      await container
+          .read(registerSubmitControllerProvider.notifier)
+          .submitGeneric(
             role: RegistrationRole.mentor,
             organization: 'college-1',
             department: 'dept-1',
@@ -286,18 +283,15 @@ void main() {
       final container = containerWithBasicInfo();
       await container.read(appAuthControllerProvider.future);
 
-      await container.read(registerSubmitControllerProvider.notifier).submitGeneric(
+      await container
+          .read(registerSubmitControllerProvider.notifier)
+          .submitGeneric(
             role: RegistrationRole.mentor,
             organization: 'company-1',
             organizationType: OrganizationType.company,
           );
 
-      verify(
-        () => repository.selectOrganization(
-          organization: 'company-1',
-          isStudent: false,
-        ),
-      ).called(1);
+      verify(() => repository.selectOrganization(organization: 'company-1', isStudent: false)).called(1);
     });
   });
 
@@ -308,10 +302,9 @@ void main() {
     await container.read(appAuthControllerProvider.future);
 
     await expectLater(
-      container.read(registerSubmitControllerProvider.notifier).submitGeneric(
-            role: RegistrationRole.student,
-            college: 'college-1',
-          ),
+      container
+          .read(registerSubmitControllerProvider.notifier)
+          .submitGeneric(role: RegistrationRole.student, college: 'college-1'),
       throwsA(anything),
     );
 
@@ -326,5 +319,4 @@ void main() {
     );
     expect(container.read(appAuthControllerProvider).value, isFalse);
   });
-
 }

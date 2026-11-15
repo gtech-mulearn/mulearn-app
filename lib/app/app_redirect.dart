@@ -5,7 +5,6 @@ import 'package:mulearn_app/core/router/route_paths.dart';
 // through, so `/register/details` must tolerate both states.
 const _allowedSignedOut = {
   RoutePaths.welcome,
-  RoutePaths.commons,
   RoutePaths.signIn,
   RoutePaths.forgotPassword,
   RoutePaths.resetPassword,
@@ -76,7 +75,7 @@ String _with(String path, String? from) => from == null ? path : '$path?from=${U
 /// (`/splash?from=`), and through sign-in when signed out
 /// (`/sign-in?from=`); it is resumed once signed in. Signed out with no
 /// target, the first launch shows the arrival beats ([arrivalSeen] false)
-/// and later launches open the Commons, the guest home.
+/// and later launches open sign-in.
 String? appRedirect({
   required AsyncValue<bool> auth,
   required Uri uri,
@@ -97,8 +96,8 @@ String? appRedirect({
   if (!loggedIn) {
     if (_allowedSignedOut.contains(path)) return null;
     final target = path == RoutePaths.splash ? from : here;
-    if (target != null) return _with(RoutePaths.signIn, target);
-    return (arrivalSeen.value ?? true) ? RoutePaths.commons : RoutePaths.welcome;
+    if (target == null && arrivalSeen.value == false) return RoutePaths.welcome;
+    return _with(RoutePaths.signIn, target);
   }
   if ((path == RoutePaths.splash || path == RoutePaths.signIn) && from != null) return from;
   if (_isSignedInScreen(path)) return null;

@@ -8,9 +8,6 @@ abstract final class RoutePaths {
 
   /// First-launch arrival beats (signed out, once per device).
   static const String welcome = '/welcome';
-
-  /// The guest home: μLearn before signing in.
-  static const String commons = '/commons';
   static const String forgotPassword = '/forgot-password';
   static const String resetPassword = '/reset-password';
   static const String registerBasicInfo = '/register';
