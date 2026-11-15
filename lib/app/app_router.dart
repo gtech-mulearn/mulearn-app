@@ -43,6 +43,7 @@ import 'package:mulearn_app/features/mentor/presentation/screens/mentor_sessions
 import 'package:mulearn_app/features/mentor/presentation/screens/session_form_screen.dart';
 import 'package:mulearn_app/features/mentor/presentation/screens/student_requests_screen.dart';
 import 'package:mulearn_app/features/notifications/presentation/screens/notifications_screen.dart';
+import 'package:mulearn_app/features/opportunities/presentation/screens/opportunities_screen.dart';
 import 'package:mulearn_app/features/profile/presentation/screens/change_password_screen.dart';
 import 'package:mulearn_app/features/profile/presentation/screens/connect_discord_screen.dart';
 import 'package:mulearn_app/features/profile/presentation/screens/journey_screen.dart';
@@ -116,6 +117,7 @@ GoRouter goRouter(Ref ref) {
         builder: (_, state) => EventDetailScreen(eventId: state.pathParameters['id']!),
       ),
       GoRoute(path: RoutePaths.calendar, builder: (_, __) => const CalendarScreen()),
+      GoRoute(path: RoutePaths.opportunities, builder: (_, __) => const OpportunitiesScreen()),
       GoRoute(path: RoutePaths.learningCircles, builder: (_, __) => const LearningCirclesScreen()),
       GoRoute(path: RoutePaths.createLearningCircle, builder: (_, __) => const CreateLearningCircleScreen()),
       GoRoute(path: RoutePaths.notifications, builder: (_, __) => const NotificationsScreen()),

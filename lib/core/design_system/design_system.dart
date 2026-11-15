@@ -7,6 +7,7 @@ library;
 export 'content/mu_bento.dart';
 export 'content/mu_feed_row.dart';
 export 'content/mu_ig_sticker.dart';
+export 'content/mu_opportunity_row.dart';
 export 'content/mu_slab.dart';
 export 'content/mu_task_card.dart';
 export 'events/mu_event_ticket.dart';

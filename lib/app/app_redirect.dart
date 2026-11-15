@@ -33,6 +33,7 @@ const _allowedSignedInExtra = {
   RoutePaths.interestGroups,
   RoutePaths.events,
   RoutePaths.calendar,
+  RoutePaths.opportunities,
   RoutePaths.createLearningCircle,
   RoutePaths.learningCircles,
   RoutePaths.notifications,

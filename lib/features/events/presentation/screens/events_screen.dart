@@ -137,6 +137,12 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
                     child: Semantics(header: true, child: Text('Events', style: mu.text.title1)),
                   ),
                   MuIconButton(
+                    icon: LucideIcons.briefcase,
+                    tooltip: 'Opportunities',
+                    onPressed: () => context.push(RoutePaths.opportunities),
+                  ),
+                  const SizedBox(width: MuSpacing.space2),
+                  MuIconButton(
                     icon: LucideIcons.calendarDays,
                     tooltip: 'Calendar',
                     variant: MuIconButtonVariant.night,
@@ -179,10 +185,8 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
               child: eventsState.when(
                 skipError: true,
                 loading: () => const Center(child: CircularProgressIndicator()),
-                error: (error, _) => ErrorRetryView(
-                  error: error,
-                  onRetry: () => ref.invalidate(eventsListControllerProvider(query)),
-                ),
+                error: (error, _) =>
+                    ErrorRetryView(error: error, onRetry: () => ref.invalidate(eventsListControllerProvider(query))),
                 data: (paged) {
                   final events = paged.items;
                   if (events.isEmpty) {
@@ -327,9 +331,8 @@ class _EventFiltersSheetState extends ConsumerState<_EventFiltersSheet> {
                     MuFilterChip(
                       label: e.value,
                       selected: _draft.eventType == e.key,
-                      onTap: () => setState(
-                        () => _draft = _draft.copyWith(eventType: _draft.eventType == e.key ? null : e.key),
-                      ),
+                      onTap: () =>
+                          setState(() => _draft = _draft.copyWith(eventType: _draft.eventType == e.key ? null : e.key)),
                     ),
                 ],
               ),
@@ -397,10 +400,7 @@ class _EventFiltersSheetState extends ConsumerState<_EventFiltersSheet> {
                   ),
                   const SizedBox(width: MuSpacing.space3),
                   Expanded(
-                    child: MuButton(
-                      label: 'Apply',
-                      onPressed: () => Navigator.of(context).pop(_draft),
-                    ),
+                    child: MuButton(label: 'Apply', onPressed: () => Navigator.of(context).pop(_draft)),
                   ),
                 ],
               ),

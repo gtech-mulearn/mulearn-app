@@ -69,6 +69,9 @@ abstract final class RoutePaths {
 
   static const String calendar = '/calendar';
 
+  /// Jobs, internships and gigs from verified companies, and your applications.
+  static const String opportunities = '/opportunities';
+
   static const String learningCircles = '/circles';
   static const String createLearningCircle = '/circles/create';
   static const String learningCircleDetail = '/circles/:id';
