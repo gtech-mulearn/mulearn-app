@@ -1,20 +1,20 @@
-# Stable channel — every push/merge to main builds a production-signed APK of
+# Stable channel — every push/merge to master builds a production-signed APK of
 # the prod flavor (Mulearn, org.mulearn.muapp, prod API host) and uploads it
 # as a workflow artifact. It does NOT create a GitHub Release: releases come
 # only from vX.Y.Z tags (release.yml).
 #
 # The build job uses the Production environment, which holds the signing key,
-# admits only main and v* tags, and may require an approval.
+# admits only master and v* tags, and may require an approval.
 # Docs: docs/CI-CD.md
 name: Stable build
 
 on:
   push:
     branches:
-      - main
+      - master
   workflow_dispatch:
 
-# Every merge to main is a release candidate: queue, don't cancel.
+# Every merge to master is a release candidate: queue, don't cancel.
 concurrency:
   group: stable-build-${{ github.ref }}
   cancel-in-progress: false
@@ -26,6 +26,9 @@ jobs:
   build:
     name: Android
     uses: ./.github/workflows/android-build.yml
+    # Required for the called workflow to read the Production/Development
+    # environment secrets, even though its build job names the environment.
+    secrets: inherit
     with:
       channel: stable
       signing: required

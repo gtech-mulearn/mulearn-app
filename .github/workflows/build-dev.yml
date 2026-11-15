@@ -1,12 +1,13 @@
 # Development channel — internal QA builds of the dev flavor
 # ("Mulearn Dev", org.mulearn.muapp.dev, dev API host).
 #
-#   push to dev        validate → build → upload artifact
+#   push to staging    validate → build → upload artifact
 #                      → refresh the rolling `dev-latest` GitHub pre-release
 #   manual (Run workflow, any branch)
 #                      validate → build → upload artifact only
 #
-# Signed with the Development environment's test key so each build installs
+# The dev branch builds nothing; staging is where dev-channel builds come
+# from. Signed with the Development environment's test key so each build installs
 # over the previous one. Never the production key, never a production release.
 # Docs: docs/CI-CD.md
 name: Dev build
@@ -14,7 +15,7 @@ name: Dev build
 on:
   push:
     branches:
-      - dev
+      - staging
   workflow_dispatch:
 
 # A newer push supersedes an in-flight build (and its dev-latest refresh).
@@ -29,6 +30,9 @@ jobs:
   build:
     name: Android
     uses: ./.github/workflows/android-build.yml
+    # Required for the called workflow to read the Production/Development
+    # environment secrets, even though its build job names the environment.
+    secrets: inherit
     with:
       channel: dev
       signing: optional
@@ -37,11 +41,11 @@ jobs:
       retention-days: 14
 
   # Testers' stable download URL: .../releases/tag/dev-latest. One rolling
-  # pre-release, recreated on each push to dev — not a versioned release.
+  # pre-release, recreated on each push to staging — not a versioned release.
   publish:
     name: Refresh dev-latest pre-release
     needs: build
-    if: github.event_name == 'push' && github.ref == 'refs/heads/dev'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/staging'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -72,14 +76,14 @@ jobs:
           |---|---|
           | versionName | \`${BUILD_NAME}\` |
           | versionCode | \`${BUILD_NUMBER}\` |
-          | Branch | \`dev\` |
+          | Branch | \`staging\` |
           | Commit | ${SHA} |
           | Built (UTC) | ${BUILT_AT} |
           | Flavor | \`dev\` (Mulearn Dev, \`org.mulearn.muapp.dev\`, dev API host) |
           | APK SHA-256 | \`${APK_SHA256}\` |
           | Workflow run | ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} |
 
-          Refreshed on every push to \`dev\`; this URL always serves the latest dev APK.
+          Refreshed on every push to \`staging\`; this URL always serves the latest dev APK.
           EOF
           gh release delete dev-latest -R "$GITHUB_REPOSITORY" --yes --cleanup-tag || true
           gh release create dev-latest -R "$GITHUB_REPOSITORY" \

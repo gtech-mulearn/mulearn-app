@@ -107,7 +107,7 @@ Format with `dart format <files>` at the default width, naming files rather than
 
 ### Builds and releases
 
-CI checks every PR (format of changed files, analyze, tests, an Android build); `dev` and `main` produce downloadable APKs, a nightly build runs from `dev`, and pushing a `vX.Y.Z` tag on `main` publishes a release. See [`docs/CI-CD.md`](docs/CI-CD.md).
+Branches flow `dev` → `staging` → `master`. CI checks every PR (format of changed files, analyze, tests; PRs into `staging` and `master` also build the app). `dev` builds nothing; `staging` produces the dev-flavor QA build (`dev-latest`) and the nightly; `master` produces a signed stable APK; pushing a `vX.Y.Z` tag on `master` publishes a release. See [`docs/CI-CD.md`](docs/CI-CD.md).
 
 ### Versioning
 

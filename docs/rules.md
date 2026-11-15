@@ -92,6 +92,7 @@ lib/
 
 - Conventional commit style: `feat(auth): add sign-in screen`, `fix(profile): handle null profile_pic`, `refactor(network): extract cache key builder`.
 - Generated files (`.g.dart`, `.freezed.dart`): commit them. This project prioritizes low-friction onboarding for a mostly-volunteer contributor base over strict "generated files are build artifacts" purity — don't fight this convention without discussing it first.
+- Branch flow: feature branches open PRs into `dev` (the default branch); `dev` → `staging` → `master` are promotion PRs; releases are `vX.Y.Z` tags on `master`. Never push directly to `dev`, `staging` or `master` — see [CI-CD.md](CI-CD.md).
 - `flutter analyze` and `flutter test` must pass locally before opening a PR. Don't rely on CI to catch what a 30-second local check would have caught.
 - No commented-out code blocks left in a PR. Delete it — git history has it if it's needed again.
 - No `print()` statements in committed code. Use a proper logger (decide on one — e.g. `logger` package — and use it consistently once chosen).

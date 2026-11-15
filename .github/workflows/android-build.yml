@@ -3,9 +3,9 @@
 # Every channel calls this one workflow, so the toolchain, checks and build
 # steps live in exactly one place:
 #   ci.yml            channel ci       PR validation + unsigned build check
-#   build-dev.yml     channel dev      dev APK artifact + rolling dev-latest
-#   nightly.yml       channel nightly  nightly dev APK artifact
-#   build-stable.yml  channel stable   signed prod APK artifact from main
+#   build-dev.yml     channel dev      staging pushes: dev APK + rolling dev-latest
+#   nightly.yml       channel nightly  nightly dev APK artifact from staging
+#   build-stable.yml  channel stable   signed prod APK artifact from master
 #   release.yml       channel release  signed prod APK + AAB for a vX.Y.Z tag
 #
 # The build job only runs once validation passed, so a failing check never
@@ -121,7 +121,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 40
     # Signing secrets are environment-scoped: Production (stable, release)
-    # only admits main and v* tags; Development holds the test key.
+    # only admits master and v* tags; Development holds the test key.
     environment: ${{ inputs.environment }}
     outputs:
       artifact: ${{ steps.version.outputs.artifact }}
@@ -165,7 +165,11 @@ jobs:
         env:
           ANDROID_KEYSTORE: ${{ secrets.ANDROID_KEYSTORE }}
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
-          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          # The alias is an environment *variable*, not a secret: GitHub masks
+          # secret values everywhere, and an alias like "mulearn-dev" or
+          # "upload" occurs in artifact names and logs — a masked job output
+          # is dropped, which broke the dev-latest publish.
+          ANDROID_KEY_ALIAS: ${{ vars.ANDROID_KEY_ALIAS }}
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: bash .github/scripts/setup_signing.sh "${{ inputs.signing }}"
 
