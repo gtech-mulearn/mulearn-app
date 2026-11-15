@@ -77,15 +77,17 @@ class MuTaskCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final mu = context.mu;
     final c = mu.colors;
+    // Artifact `.mu-task`: the tab's background carries the state; its text
+    // stays `on-night` except on the locked (sunk) tab.
     final (tabBg, tabFg) = switch (state) {
       MuTaskState.open => (c.night, c.onNight),
-      MuTaskState.review => (c.warning, c.surface),
-      MuTaskState.done => (c.success, c.surface),
-      MuTaskState.rejected => (c.danger, c.surface),
+      MuTaskState.review => (c.warning, c.onNight),
+      MuTaskState.done => (c.success, c.onNight),
+      MuTaskState.rejected => (c.danger, c.onNight),
       MuTaskState.locked => (c.surfaceSunk, c.ink3),
     };
     final status = switch (state) {
-      MuTaskState.open => MuPill('+${muGrouped(karma)}', tone: MuPillTone.volt, mono: true),
+      MuTaskState.open => _KarmaBadge(karma: karma),
       MuTaskState.review => const MuPill('In review', tone: MuPillTone.warning, icon: LucideIcons.clock),
       MuTaskState.done => MuPill('+${muGrouped(karma)} earned', tone: MuPillTone.success, icon: LucideIcons.check),
       MuTaskState.rejected => const MuPill('Needs changes', tone: MuPillTone.danger, icon: LucideIcons.x),
@@ -93,6 +95,7 @@ class MuTaskCard extends StatelessWidget {
     };
     final tag = (hashtag == null || hashtag!.trim().isEmpty) ? 'task' : hashtag!.trim();
     final locked = state == MuTaskState.locked;
+    const gap = SizedBox(height: 10);
 
     final body = Container(
       width: double.infinity,
@@ -119,7 +122,7 @@ class MuTaskCard extends StatelessWidget {
                     if (eyebrow != null && eyebrow!.isNotEmpty) ...[
                       Text(
                         eyebrow!.toUpperCase(),
-                        style: mu.text.eyebrow,
+                        style: mu.text.eyebrow.copyWith(color: c.ink3),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -127,7 +130,7 @@ class MuTaskCard extends StatelessWidget {
                     ],
                     Text(
                       title,
-                      style: mu.text.title3.copyWith(fontSize: 18, color: locked ? c.ink2 : c.ink),
+                      style: mu.text.title3.copyWith(fontSize: 19, color: locked ? c.ink2 : c.ink),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -139,44 +142,44 @@ class MuTaskCard extends StatelessWidget {
             ],
           ),
           if (description != null && description!.trim().isNotEmpty) ...[
-            const SizedBox(height: MuSpacing.space2),
+            gap,
             Text(
               description!.trim(),
-              style: mu.text.body.copyWith(color: c.ink2, fontSize: 14, height: 20 / 14),
+              style: mu.text.body.copyWith(color: c.ink2),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
           ],
-          if (pills.isNotEmpty) ...[
-            const SizedBox(height: MuSpacing.space3),
-            Wrap(spacing: 6, runSpacing: 6, children: pills),
-          ],
-          if (footer != null) ...[const SizedBox(height: MuSpacing.space3), footer!],
+          if (pills.isNotEmpty) ...[gap, Wrap(spacing: 6, runSpacing: 6, children: pills)],
+          if (footer != null) ...[gap, footer!],
         ],
       ),
     );
 
-    final card = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    // The tab is stamped onto the card: 28 tall, its lower half over the
+    // body's flattened top-left corner, 20 in from the left edge.
+    final card = Stack(
+      clipBehavior: Clip.none,
       children: [
-        Padding(
-          padding: const EdgeInsetsDirectional.only(start: MuSpacing.space5),
+        Padding(padding: const EdgeInsets.only(top: 14), child: body),
+        PositionedDirectional(
+          start: MuSpacing.space5,
+          top: 0,
           child: Container(
             height: 28,
             padding: const EdgeInsets.symmetric(horizontal: 10),
-            alignment: Alignment.center,
+            alignment: AlignmentDirectional.centerStart,
             decoration: BoxDecoration(
               color: tabBg,
               borderRadius: const BorderRadius.vertical(top: Radius.circular(MuRadii.tag)),
             ),
             child: Text(
               tag,
-              style: mu.text.code.copyWith(color: tabFg, fontWeight: FontWeight.w600, height: 1),
+              style: mu.text.code.copyWith(color: tabFg, fontSize: 12, fontWeight: FontWeight.w600, height: 1),
+              maxLines: 1,
             ),
           ),
         ),
-        // The tab sits on the card's flattened top-left corner.
-        Transform.translate(offset: const Offset(0, -0.5), child: body),
       ],
     );
 
@@ -193,6 +196,27 @@ class MuTaskCard extends StatelessWidget {
       label: '$title, $tag, $stateWord',
       excludeSemantics: footer == null,
       child: onTap == null ? card : MuPressable(onTap: onTap, pressedScale: 0.98, child: card),
+    );
+  }
+}
+
+/// The open task's reward: mono 13 bold on volt, a little larger than a
+/// status pill (artifact `.mu-task .karma`).
+class _KarmaBadge extends StatelessWidget {
+  const _KarmaBadge({required this.karma});
+
+  final int karma;
+
+  @override
+  Widget build(BuildContext context) {
+    final mu = context.mu;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 7),
+      decoration: BoxDecoration(color: mu.colors.volt, borderRadius: BorderRadius.circular(MuRadii.round)),
+      child: Text(
+        '+${muGrouped(karma)}',
+        style: mu.text.code.copyWith(color: mu.colors.onVolt, fontSize: 13, fontWeight: FontWeight.w700, height: 1),
+      ),
     );
   }
 }

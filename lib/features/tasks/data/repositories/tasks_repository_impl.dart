@@ -32,6 +32,9 @@ class TasksRepositoryImpl implements TasksRepository {
         return result;
       });
 
+  @override
+  Future<String?> getMyLevel() => _guard(_remote.fetchMyLevel);
+
   Future<T> _guard<T>(Future<T> Function() action) async {
     try {
       return await action();

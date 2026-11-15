@@ -1,31 +1,27 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:mulearn_app/core/design_system/feedback/mu_toast.dart';
-import 'package:mulearn_app/core/theme/mu_radius.dart';
-import 'package:mulearn_app/core/theme/mu_space.dart';
-import 'package:mulearn_app/core/theme/mulearn_colors.dart';
-import 'package:mulearn_app/core/theme/mulearn_typography.dart';
+import 'package:mulearn_app/core/design_system/design_system.dart';
+import 'package:mulearn_app/core/session/discord_connect.dart';
+import 'package:mulearn_app/core/session/session_providers.dart';
+import 'package:mulearn_app/core/utils/external_links.dart';
+import 'package:mulearn_app/core/utils/level_label.dart';
 import 'package:mulearn_app/core/utils/unescape_literal_unicode.dart';
-import 'package:mulearn_app/core/widgets/connect_discord_prompt.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
-import 'package:mulearn_app/core/widgets/mu_buttons.dart';
-import 'package:mulearn_app/core/widgets/mu_chip.dart';
 import 'package:mulearn_app/core/widgets/mu_state_display.dart';
 import 'package:mulearn_app/features/tasks/domain/entities/task_catalog_item.dart';
+import 'package:mulearn_app/features/tasks/domain/task_submission.dart';
 import 'package:mulearn_app/features/tasks/presentation/providers/tasks_controller.dart';
 
-/// Full task brief, from the real, dedicated task catalog (`GET
-/// /api/v1/dashboard/task/list/`, confirmed live). Submission happens on
-/// Discord — this endpoint gives a channel name + hashtag + a raw Discord
-/// channel id, but no guild id, so no valid
-/// `discord.com/channels/{guild}/{channel}` link can be built from it alone
-/// (unlike the old `get-user-levels`-derived flow, which had a ready-made
-/// URL). Rather than fabricate a link that would 404, this offers a "copy
-/// submission info" action instead.
+/// A task's brief (artifact: TaskCard → Detail screen): back + copy, a
+/// huge title, hashtag / level / karma pills, the brief, links from it as a resources slab, and "Copy
+/// hashtag & open Discord" pinned at the bottom as a slide to confirm. The
+/// Discord link is the dashboard's: the task's channel in the μLearn
+/// server, or the default task channel.
 class TaskDetailScreen extends ConsumerWidget {
   const TaskDetailScreen({required this.taskId, super.key});
 
@@ -34,213 +30,277 @@ class TaskDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final tasksState = ref.watch(tasksControllerProvider);
+    final task = tasksState.value?.where((t) => t.id == taskId).firstOrNull;
 
     return Scaffold(
-      backgroundColor: MuColors.canvas,
-      appBar: AppBar(
-        backgroundColor: MuColors.canvas,
-        elevation: 0,
-        leading: IconButton(
-          tooltip: 'Back',
-          icon: const Icon(LucideIcons.arrowLeft, color: MuColors.ink),
-          onPressed: () => context.pop(),
-        ),
-      ),
+      backgroundColor: context.mu.colors.chalk,
       body: SafeArea(
-        top: false,
-        child: tasksState.when(
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, _) => ErrorRetryView(
-            error: error,
-            onRetry: () => ref.invalidate(tasksControllerProvider),
-          ),
-          data: (tasks) {
-            TaskCatalogItem? task;
-            for (final t in tasks) {
-              if (t.id == taskId) {
-                task = t;
-                break;
-              }
-            }
-            if (task == null) {
-              return const Center(
-                child: SingleChildScrollView(
-                  child: MuStateDisplay(
-                    variant: MuStateVariant.notFound,
-                    title: 'Task not found',
-                    description: "This task isn't available anymore.",
-                  ),
-                ),
-              );
-            }
-            return _TaskDetailBody(task: task);
-          },
+        child: Column(
+          children: [
+            MuTopBar.detail(
+              action: task?.hashtag == null || task!.hashtag!.isEmpty
+                  ? null
+                  : MuIconButton(
+                      icon: LucideIcons.copy,
+                      tooltip: 'Copy hashtag',
+                      variant: MuIconButtonVariant.cobalt,
+                      onPressed: () => _copyHashtag(context, task),
+                    ),
+            ),
+            Expanded(
+              child: tasksState.when(
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (error, _) =>
+                    ErrorRetryView(error: error, onRetry: () => ref.invalidate(tasksControllerProvider)),
+                data: (_) => task == null
+                    ? const Center(
+                        child: SingleChildScrollView(
+                          child: MuStateDisplay(
+                            variant: MuStateVariant.notFound,
+                            title: 'Task not found',
+                            description: "This task isn't available anymore.",
+                          ),
+                        ),
+                      )
+                    : _Body(task: task),
+              ),
+            ),
+            if (task != null) _SubmitBar(task: task),
+          ],
         ),
       ),
     );
   }
 }
 
-class _TaskDetailBody extends StatelessWidget {
-  const _TaskDetailBody({required this.task});
+Future<void> _copyHashtag(BuildContext context, TaskCatalogItem task) async {
+  await Clipboard.setData(ClipboardData(text: task.hashtag!));
+  if (context.mounted) MuToast.show(context, message: 'Copied ${task.hashtag}', type: MuToastType.success);
+}
+
+final _urlPattern = RegExp(r'https?://[^\s)\]>"]+');
+
+class _Body extends StatelessWidget {
+  const _Body({required this.task});
 
   final TaskCatalogItem task;
 
-  Future<void> _copySubmissionInfo(BuildContext context) async {
-    final channel = task.channel;
-    if (channel == null) return;
-    final text = task.hashtag != null && task.hashtag!.isNotEmpty
-        ? '#$channel — tag your submission with ${task.hashtag}'
-        : '#$channel';
-    await Clipboard.setData(ClipboardData(text: text));
-    if (context.mounted) {
-      MuToast.show(context, message: 'Copied', type: MuToastType.success);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    final hasChannel = task.channel != null && task.channel!.isNotEmpty;
+    final mu = context.mu;
+    final c = mu.colors;
+    final description = task.description == null ? '' : unescapeLiteralUnicode(task.description!).trim();
+    final links = {for (final m in _urlPattern.allMatches(description)) m.group(0)!}.toList();
+    final level = task.level == null || task.level!.isEmpty ? null : levelLabel(task.level);
+    final hashtag = task.hashtag == null || task.hashtag!.isEmpty ? null : task.hashtag!;
 
     return ListView(
-      padding: const EdgeInsets.fromLTRB(MuSpace.screenH, 0, MuSpace.screenH, MuSpace.xxl),
+      physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+      padding: const EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space2, MuSpacing.space5, MuSpacing.space8),
       children: [
-        Row(
+        Semantics(
+          header: true,
+          child: Text(task.title, style: mu.text.display.copyWith(fontSize: 38)),
+        ),
+        const SizedBox(height: MuSpacing.space4),
+        Wrap(
+          spacing: 6,
+          runSpacing: 6,
           children: [
-            if (task.interestGroupName != null) ...[
-              MuTagChip(label: task.interestGroupName!.toUpperCase()),
-              const SizedBox(width: MuSpace.s),
-            ],
-            if (task.type != null)
-              MuTagChip(label: task.type!.toUpperCase()),
+            if (hashtag != null) MuPill(hashtag, tone: MuPillTone.night, mono: true),
+            if (level != null) MuPill(level, tone: MuPillTone.cobalt),
+            if (task.completed)
+              MuPill('+${muGrouped(task.karma.toInt())} earned', tone: MuPillTone.success, icon: LucideIcons.check)
+            else
+              MuPill('+${muGrouped(task.karma.toInt())} karma', tone: MuPillTone.volt),
+            if (task.interestGroupName != null && task.interestGroupName!.isNotEmpty) MuPill(task.interestGroupName!),
           ],
         ),
-        const SizedBox(height: MuSpace.m),
-        Text(task.title, style: MuType.display.copyWith(fontSize: 26)),
-        if (task.level != null) ...[
-          const SizedBox(height: MuSpace.xs),
-          Text(
-            task.level!.toUpperCase(),
-            style: MuType.body.copyWith(color: MuColors.inkSecondary),
-          ),
+        const SizedBox(height: MuSpacing.space6),
+        if (description.isNotEmpty) ...[
+          _Card(title: 'The brief', child: _Markdown(description)),
         ],
-        const SizedBox(height: MuSpace.xl),
-        _RewardTile(karma: task.karma, completed: task.completed),
-        if (task.description != null && task.description!.isNotEmpty) ...[
-          const SizedBox(height: MuSpace.xxl),
-          Text("WHAT YOU'LL DO", style: MuType.eyebrow),
-          const SizedBox(height: MuSpace.m),
-          MarkdownBody(
-            data: unescapeLiteralUnicode(task.description!),
-            styleSheet: MarkdownStyleSheet(
-              p: MuType.body.copyWith(color: MuColors.inkBody),
-              h1: MuType.headline,
-              h2: MuType.title,
-              h3: MuType.bodyMed,
-              strong: MuType.bodyMed.copyWith(color: MuColors.inkBody),
-              em: MuType.body.copyWith(
-                color: MuColors.inkBody,
-                fontStyle: FontStyle.italic,
-              ),
-              a: MuType.body.copyWith(
-                color: MuColors.primary,
-                decoration: TextDecoration.underline,
-              ),
-              listBullet: MuType.body.copyWith(color: MuColors.inkBody),
-              blockquote: MuType.body.copyWith(color: MuColors.inkSecondary),
-              blockquoteDecoration: BoxDecoration(
-                color: MuColors.canvas,
-                border: const Border(
-                  left: BorderSide(color: MuColors.primary, width: 3),
-                ),
-                borderRadius: BorderRadius.circular(4),
-              ),
-              blockquotePadding: const EdgeInsets.all(MuSpace.m),
-              code: MuType.body.copyWith(
-                color: MuColors.inkBody,
-                backgroundColor: MuColors.canvas,
-                fontFamily: 'monospace',
-              ),
-              codeblockDecoration: BoxDecoration(
-                color: MuColors.canvas,
-                borderRadius: BorderRadius.circular(MuRadius.inner),
-              ),
-            ),
-          ),
+        if (links.isNotEmpty) ...[
+          const SizedBox(height: MuSpacing.space3),
+          _Resources(links: links),
         ],
-        const SizedBox(height: MuSpace.xxl),
-        Text('SUBMIT YOUR PROOF', style: MuType.eyebrow),
-        const SizedBox(height: MuSpace.m),
-        if (hasChannel) ...[
-          ConnectDiscordPrompt(
-            orElse: MuPrimaryButton(
-              label: 'Copy submission info',
-              icon: LucideIcons.copy,
-              onPressed: () => _copySubmissionInfo(context),
-            ),
-          ),
-          const SizedBox(height: MuSpace.m),
-          Text(
-            task.hashtag != null && task.hashtag!.isNotEmpty
-                ? "Post your proof in Discord's #${task.channel} channel, tagged ${task.hashtag}"
-                : "Post your proof in Discord's #${task.channel} channel.",
-            style: MuType.caption,
-          ),
-        ] else
-          Text(
-            'No Discord channel is listed for this task yet.',
-            style: MuType.caption,
-          ),
+        const SizedBox(height: MuSpacing.space4),
+        Text(
+          'Published by μLearn Foundation',
+          style: mu.text.caption.copyWith(color: c.ink3),
+          textAlign: TextAlign.center,
+        ),
       ],
     );
   }
 }
 
-class _RewardTile extends StatelessWidget {
-  const _RewardTile({required this.karma, required this.completed});
+class _Card extends StatelessWidget {
+  const _Card({required this.title, required this.child});
 
-  final num karma;
-  final bool completed;
+  final String title;
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
+    final mu = context.mu;
     return Container(
-      padding: const EdgeInsets.all(MuSpace.l),
-      decoration: BoxDecoration(
-        color: MuColors.ink,
-        borderRadius: BorderRadius.circular(MuRadius.inner),
-      ),
-      child: Row(
+      padding: const EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space4, MuSpacing.space5, MuSpacing.space4),
+      decoration: BoxDecoration(color: mu.colors.surface, borderRadius: BorderRadius.circular(MuRadii.card)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(LucideIcons.zap, color: MuColors.karmaAccent, size: 22),
-          const SizedBox(width: MuSpace.s),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'REWARD',
-                style: MuType.eyebrow.copyWith(color: MuColors.onBrand.withValues(alpha: 0.6)),
-              ),
-              Text(
-                '$karma',
-                style: MuType.stat.copyWith(color: MuColors.surface, fontSize: 24),
-              ),
-            ],
-          ),
-          const Spacer(),
-          if (completed)
-            Row(
-              children: [
-                const Icon(LucideIcons.checkCircle2, size: 16, color: MuColors.success),
-                const SizedBox(width: 4),
-                Text(
-                  'Done',
-                  style: MuType.chip.copyWith(color: MuColors.success),
-                ),
-              ],
-            ),
+          Text(title, style: mu.text.title3),
+          const SizedBox(height: MuSpacing.space2),
+          child,
         ],
       ),
+    );
+  }
+}
+
+class _Markdown extends StatelessWidget {
+  const _Markdown(this.data);
+
+  final String data;
+
+  @override
+  Widget build(BuildContext context) {
+    final mu = context.mu;
+    final c = mu.colors;
+    final body = mu.text.body.copyWith(color: c.ink2);
+    return Consumer(
+      builder: (context, ref, _) => MarkdownBody(
+        data: data,
+        onTapLink: (_, href, _) {
+          final uri = href == null ? null : Uri.tryParse(href);
+          if (uri != null) unawaited(ref.read(openExternalProvider)(uri));
+        },
+        styleSheet: MarkdownStyleSheet(
+          p: body,
+          h1: mu.text.title2,
+          h2: mu.text.title3,
+          h3: mu.text.bodyStrong,
+          strong: body.copyWith(color: c.ink, fontWeight: FontWeight.w700),
+          em: body.copyWith(fontStyle: FontStyle.italic),
+          a: body.copyWith(color: c.cobaltText, decoration: TextDecoration.underline),
+          listBullet: body,
+          code: mu.text.codeSm.copyWith(color: c.ink, backgroundColor: c.surfaceSunk),
+          codeblockDecoration: BoxDecoration(color: c.surfaceSunk, borderRadius: BorderRadius.circular(MuRadii.tag)),
+          blockquote: body,
+          blockquoteDecoration: BoxDecoration(color: c.surfaceSunk, borderRadius: BorderRadius.circular(MuRadii.tag)),
+          blockquotePadding: const EdgeInsets.all(MuSpacing.space3),
+        ),
+      ),
+    );
+  }
+}
+
+class _Resources extends ConsumerWidget {
+  const _Resources({required this.links});
+
+  final List<String> links;
+
+  static String _label(String url) {
+    final uri = Uri.tryParse(url);
+    if (uri == null || uri.host.isEmpty) return url;
+    return uri.host.replaceFirst(RegExp(r'^www\.'), '');
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final mu = context.mu;
+    final c = mu.colors;
+    return Container(
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(color: c.cobalt, borderRadius: BorderRadius.circular(MuRadii.card)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Resources', style: mu.text.title3.copyWith(color: c.onCobalt)),
+          const SizedBox(height: MuSpacing.space3),
+          Wrap(
+            spacing: 6,
+            runSpacing: 6,
+            children: [
+              for (final url in links)
+                MuPressable(
+                  onTap: () => unawaited(ref.read(openExternalProvider)(Uri.parse(url))),
+                  child: Semantics(
+                    link: true,
+                    label: 'Open ${_label(url)}',
+                    excludeSemantics: true,
+                    child: MuPill(_label(url), tone: MuPillTone.paper, icon: LucideIcons.arrowUpRight),
+                  ),
+                ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// The pinned action: done tasks say so; otherwise connect Discord first
+/// (proof is posted there), then slide to copy the hashtag and open the
+/// task's channel.
+class _SubmitBar extends ConsumerWidget {
+  const _SubmitBar({required this.task});
+
+  final TaskCatalogItem task;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final mu = context.mu;
+    final c = mu.colors;
+    final needsDiscord = ref.watch(capabilitiesProvider).value?.needsDiscord ?? false;
+    final canConnect = ref.watch(discordAuthUriProvider) != null;
+
+    final Widget child;
+    if (task.completed) {
+      child = Container(
+        height: 56,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(color: c.successTint, borderRadius: BorderRadius.circular(MuRadii.round)),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(LucideIcons.checkCircle2, color: c.success, size: MuSizes.iconMd),
+            const SizedBox(width: MuSpacing.space2),
+            Text(
+              'Completed · ${muGrouped(task.karma.toInt())} karma earned',
+              style: mu.text.bodyStrong.copyWith(color: c.success),
+            ),
+          ],
+        ),
+      );
+    } else if (needsDiscord && canConnect) {
+      child = MuButton(
+        label: 'Connect Discord to submit',
+        icon: LucideIcons.messageCircle,
+        variant: MuButtonVariant.ink,
+        block: true,
+        onPressed: () => unawaited(ref.read(discordConnectFlowProvider.notifier).start()),
+      );
+    } else {
+      child = Center(
+        child: MuSlideToConfirm(
+          label: task.hashtag == null || task.hashtag!.isEmpty ? 'Open Discord to submit' : 'Copy hashtag & open Discord',
+          confirmedLabel: 'Opened Discord',
+          icon: LucideIcons.send,
+          onConfirmed: () async {
+            if (task.hashtag != null && task.hashtag!.isNotEmpty) {
+              await Clipboard.setData(ClipboardData(text: task.hashtag!));
+            }
+            await ref.read(openExternalProvider)(taskDiscordUri(task));
+          },
+        ),
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space2, MuSpacing.space5, MuSpacing.space3),
+      child: child,
     );
   }
 }

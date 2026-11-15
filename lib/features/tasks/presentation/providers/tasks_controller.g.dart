@@ -144,3 +144,44 @@ final class TasksControllerProvider
 }
 
 String _$tasksControllerHash() => r'5f2318301cc0b2adad25f679603444ec00158d01';
+
+/// The signed-in user's level name (`"lvl4"`) for the Tasks title and the
+/// "you're here" marker; null when the profile has none.
+
+@ProviderFor(myTaskLevel)
+const myTaskLevelProvider = MyTaskLevelProvider._();
+
+/// The signed-in user's level name (`"lvl4"`) for the Tasks title and the
+/// "you're here" marker; null when the profile has none.
+
+final class MyTaskLevelProvider
+    extends $FunctionalProvider<AsyncValue<String?>, String?, FutureOr<String?>>
+    with $FutureModifier<String?>, $FutureProvider<String?> {
+  /// The signed-in user's level name (`"lvl4"`) for the Tasks title and the
+  /// "you're here" marker; null when the profile has none.
+  const MyTaskLevelProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'myTaskLevelProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$myTaskLevelHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<String?> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<String?> create(Ref ref) {
+    return myTaskLevel(ref);
+  }
+}
+
+String _$myTaskLevelHash() => r'8697d96649842eec4a9fbc36b1f454fa53874dcb';

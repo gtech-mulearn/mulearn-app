@@ -78,7 +78,7 @@ void main() {
 
     testWidgets('a filter with no tasks shows the no-results state', (tester) async {
       await pump(tester, const TasksScreen());
-      await tester.tap(find.text('Start your journey'));
+      await tester.tap(find.text('Completed'));
       await tester.pump(const Duration(milliseconds: 100));
 
       expect(variantShown(tester), MuStateVariant.noResults);
