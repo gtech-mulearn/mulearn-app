@@ -12,7 +12,10 @@ enum MuStopState {
   /// The member's current level.
   now,
 
-  /// Not reached yet.
+  /// Not reached yet but open: its tasks can be done now.
+  ahead,
+
+  /// Not reached yet and closed.
   locked,
 }
 
@@ -27,7 +30,7 @@ class MuLevelStop {
   /// "Level 4" or "Level 4 · you're here".
   final String title;
 
-  /// Done / now / locked.
+  /// Done / now / ahead / locked.
   final MuStopState state;
 
   /// "264 tasks · 1,520 karma to go".
@@ -39,7 +42,7 @@ class MuLevelStop {
 
 /// The learning journey as a route: seven stations on one line. Travelled
 /// line and stations in cobalt, the current station a volt node with a halo,
-/// locked stations hatched.
+/// stations ahead outlined, locked stations hatched.
 class MuLevelPath extends StatelessWidget {
   /// A route of [stops]; [onOpen] opens a level's tasks.
   const MuLevelPath({required this.stops, this.onOpen, super.key});
@@ -112,6 +115,17 @@ class _Stop extends StatelessWidget {
         ),
         child: Text('${stop.number}', style: mu.text.title3.copyWith(color: c.onVolt)),
       ),
+      MuStopState.ahead => Container(
+        width: 44,
+        height: 44,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: c.surface,
+          shape: BoxShape.circle,
+          border: Border.all(color: c.lineStrong, width: 2),
+        ),
+        child: Text('${stop.number}', style: mu.text.title3.copyWith(color: c.ink)),
+      ),
       MuStopState.locked => SizedBox.square(
         dimension: 44,
         child: CustomPaint(
@@ -129,6 +143,7 @@ class _Stop extends StatelessWidget {
         stop.progress == null ? "You're here" : "You're here · ${(stop.progress! * 100).round()}%",
         tone: MuPillTone.volt,
       ),
+      MuStopState.ahead => Icon(LucideIcons.chevronRight, size: MuSizes.iconSm, color: c.ink3),
       MuStopState.locked => Icon(LucideIcons.lock, size: MuSizes.iconSm, color: c.ink3),
     };
 
@@ -178,6 +193,7 @@ class _Stop extends StatelessWidget {
     final stateWord = switch (stop.state) {
       MuStopState.done => 'done',
       MuStopState.now => "you're here",
+      MuStopState.ahead => 'ahead',
       MuStopState.locked => 'locked',
     };
     return Semantics(

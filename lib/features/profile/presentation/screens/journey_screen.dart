@@ -11,7 +11,7 @@ import 'package:mulearn_app/features/profile/presentation/providers/user_levels_
 
 /// The seven levels as a route (artifact: LevelPath, Screen patterns →
 /// Learning journey). The karma card on top shows the current level and how
-/// much of it is done; the route below marks cleared, current and locked
+/// much of it is done; the route below marks cleared, current and ahead
 /// levels, and each opens its tasks. Status comes from the user's real level
 /// and task completion (`levelStatuses`), never a hardcoded "level 6 of 7".
 class JourneyScreen extends ConsumerWidget {
@@ -99,7 +99,7 @@ class _JourneyBody extends StatelessWidget {
           ),
         ),
         const SizedBox(height: MuSpacing.space2),
-        Text('Seven levels. Every level unlocks harder work.', style: mu.text.body.copyWith(color: mu.colors.ink2)),
+        Text('Seven levels, all open. Pick any task and start.', style: mu.text.body.copyWith(color: mu.colors.ink2)),
         const SizedBox(height: MuSpacing.space5),
         MuKarmaMeter(
           total: karma,
@@ -120,7 +120,7 @@ class _JourneyBody extends StatelessWidget {
                   state: switch (statuses[i]) {
                     LevelStatus.cleared => MuStopState.done,
                     LevelStatus.current => MuStopState.now,
-                    LevelStatus.locked => MuStopState.locked,
+                    LevelStatus.ahead => MuStopState.ahead,
                   },
                   meta: _meta(levels[i]),
                 ),
