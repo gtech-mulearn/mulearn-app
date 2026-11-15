@@ -31,10 +31,10 @@ void main() {
   Future<ProviderContainer> container() async {
     final tokens = TokenStorage(FakeSecureStorage());
     await tokens.saveTokens(accessToken: 'a', refreshToken: 'r');
-    final c = ProviderContainer(retry: (_, __) => null, overrides: [
-      dioProvider.overrideWithValue(fakeDio(adapter)),
-      tokenStorageProvider.overrideWithValue(tokens),
-    ]);
+    final c = ProviderContainer(
+      retry: (_, __) => null,
+      overrides: [dioProvider.overrideWithValue(fakeDio(adapter)), tokenStorageProvider.overrideWithValue(tokens)],
+    );
     addTearDown(c.dispose);
     c.listen(myProfilePayloadProvider, (_, __) {});
     await c.read(myProfilePayloadProvider.future);
@@ -54,6 +54,41 @@ void main() {
     expect(calls, containsAllInOrder(['POST /api/v1/dashboard/ig/g1/join/', 'DELETE /api/v1/dashboard/ig/g1/leave/']));
     expect(calls.where((c) => c.contains('ig-edit')), isEmpty);
     expect(profileFetches(), greaterThan(1), reason: 'the shared profile refreshes after a change');
+  });
+
+  test('joining stays busy until the refreshed profile lists the group', () async {
+    var joined = false;
+    adapter = FakeHttpAdapter({
+      'GET $_profile': (_) {
+        final body = loadFixture('dev/user_profile');
+        final response = Map<String, dynamic>.of(body['response'] as Map<String, dynamic>);
+        response['interest_groups'] = [
+          if (joined)
+            {
+              'id': 'g1',
+              'name': 'Web Development',
+              'karma': 0,
+              'selected': true,
+              'level': {'count': 1, 'unit': 'level'},
+            },
+        ];
+        return FakeResponse(200, {...body, 'response': response});
+      },
+      'POST /api/v1/dashboard/ig/g1/join/': (_) {
+        joined = true;
+        return FakeResponse(200, loadFixture('dev/ig_join_ok'));
+      },
+    });
+    final c = await container();
+    c.listen(myInterestGroupIdsProvider, (_, __) {});
+    expect(await c.read(myInterestGroupIdsProvider.future), isEmpty);
+
+    await c.read(interestGroupMembershipControllerProvider.notifier).toggle('g1', join: true);
+
+    // When the action settles, the button reads Joined straight away: the
+    // ids already include the group (no window where Join shows again).
+    expect(c.read(interestGroupMembershipControllerProvider).isLoading, isFalse);
+    expect(c.read(myInterestGroupIdsProvider).value, ['g1']);
   });
 
   test('a raced fourth group shows the backend message', () async {
