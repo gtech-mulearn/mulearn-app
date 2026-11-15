@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/widgets/mu_buttons.dart';
 import 'package:mulearn_app/features/mentor/presentation/screens/mentor_session_detail_screen.dart';
 
@@ -184,6 +185,6 @@ void main() {
     adapter.routes['GET $mentorBase/overview/'] = (_) => FakeResponse(200, okEnvelope({'scopes': <Object>[]}));
     await pumpMentor(tester, adapter, '/mentor');
 
-    expect(tester.widget<MuPrimaryButton>(find.widgetWithText(MuPrimaryButton, 'New session')).onPressed, isNull);
+    expect(tester.widget<MuButton>(find.widgetWithText(MuButton, 'New session')).onPressed, isNull);
   });
 }

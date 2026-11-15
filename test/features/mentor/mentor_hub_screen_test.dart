@@ -66,13 +66,16 @@ void main() {
     expect(find.text('Office hours: debugging your first Flutter app'), findsWidgets);
     expect(find.text('Session requests'), findsOneWidget);
     expect(find.text('None waiting'), findsOneWidget);
-    expect(find.text('Profile 75% complete'), findsOneWidget);
+    expect(find.text('75%'), findsOneWidget);
     expect(find.text('Missing: LinkedIn'), findsOneWidget);
-    expect(find.text('SESSIONS COMPLETED'), findsOneWidget);
+    expect(find.text('SESSIONS DONE'), findsOneWidget);
     expect(find.text('NO RATINGS YET'), findsOneWidget);
+    await tester.scrollUntilVisible(find.text('IG mentor'), 300);
     expect(find.text('Web Development'), findsWidgets);
     expect(find.text('IG mentor'), findsOneWidget);
-    expect(find.text('6 learners · 6 active · 2 upcoming sessions · 3 circles'), findsOneWidget);
+    expect(find.text('6 of 6 learners active'), findsOneWidget);
+    expect(find.text('2 upcoming sessions'), findsOneWidget);
+    expect(find.text('3 circles'), findsOneWidget);
   });
 
   testWidgets('the next sessions are read latest first, so stale ones never crowd them out', (tester) async {
@@ -164,6 +167,7 @@ void main() {
         });
     await pumpHub(tester);
 
+    await tester.scrollUntilVisible(find.text('No mentoring scope yet'), 300);
     expect(find.text('No mentoring scope yet'), findsOneWidget);
   });
 }
