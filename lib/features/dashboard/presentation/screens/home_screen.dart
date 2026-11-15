@@ -70,9 +70,7 @@ class HomeScreen extends ConsumerWidget {
                   children: [
                     // A role awaiting verification (ROLE-02).
                     const PendingRoleBanners(),
-                    // Role workspaces open from Home (spec §8.2 item 5).
-                    const WorkspaceCards(),
-                    const SizedBox(height: MuSpacing.space4),
+                    const SizedBox(height: MuSpacing.space2),
                     summaryState.when(
                       skipError: true,
                       skipLoadingOnReload: true,
@@ -97,6 +95,9 @@ class HomeScreen extends ConsumerWidget {
                     const _TopPerformers(),
                     const SizedBox(height: MuSpacing.space10),
                     const _HappeningSoon(),
+                    // Role workspaces open from Home (spec §8.2 item 5); the
+                    // artifact closes Home with these doors.
+                    const WorkspaceCards(),
                   ],
                 ),
               ),

@@ -2,16 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/session/workspace_access.dart';
-import 'package:mulearn_app/core/theme/mu_space.dart';
-import 'package:mulearn_app/core/theme/mulearn_colors.dart';
-import 'package:mulearn_app/core/theme/mulearn_typography.dart';
-import 'package:mulearn_app/core/widgets/mu_card.dart';
 import 'package:mulearn_app/features/dashboard/presentation/providers/workspace_cards_providers.dart';
 
-/// Home's entry to the role workspaces (spec §8.2 item 5: inside Home, not
-/// new tabs). Shows a card per open workspace; nothing otherwise.
+/// Home's doors into the role workspaces (spec §8.2 item 5: inside Home,
+/// not new tabs; artifact Home: workspace doors close the page). One door
+/// per open workspace, decided per role; nothing when none is open.
 class WorkspaceCards extends ConsumerWidget {
   const WorkspaceCards({super.key});
 
@@ -23,9 +21,13 @@ class WorkspaceCards extends ConsumerWidget {
     final campus = access.campus == WorkspaceState.open;
     if (!mentor && !campus) return const SizedBox.shrink();
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (mentor) ...[const SizedBox(height: MuSpace.l), const _MentorCard()],
-        if (campus) ...[const SizedBox(height: MuSpace.l), const _CampusCard()],
+        const SizedBox(height: MuSpacing.space10),
+        const MuSectionTitle('Your workspaces'),
+        if (mentor) const _MentorCard(),
+        if (mentor && campus) const SizedBox(height: MuSpacing.space3),
+        if (campus) const _CampusCard(),
       ],
     );
   }
@@ -44,6 +46,7 @@ class _MentorCard extends ConsumerWidget {
     };
     return WorkspaceCard(
       icon: LucideIcons.graduationCap,
+      tone: IgCategory.creative,
       title: 'Mentor workspace',
       subtitle: subtitle,
       onTap: () => context.push(RoutePaths.mentor),
@@ -72,41 +75,61 @@ class _CampusCard extends ConsumerWidget {
   }
 }
 
-/// One workspace entry: icon, title, a one-line summary and a chevron.
+/// One workspace door: a printed-colour icon well, the workspace and a
+/// one-line summary, and a chevron, on a `surface` card.
 class WorkspaceCard extends StatelessWidget {
   const WorkspaceCard({
     required this.icon,
     required this.title,
     required this.subtitle,
     required this.onTap,
+    this.tone = IgCategory.coder,
     super.key,
   });
 
   final IconData icon;
+  final IgCategory tone;
   final String title;
   final String subtitle;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return MuCard(
-      onTap: onTap,
-      padding: const EdgeInsets.all(MuSpace.l),
-      child: Row(
-        children: [
-          Icon(icon, size: 22, color: MuColors.primary),
-          const SizedBox(width: MuSpace.m),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(title, style: MuType.bodyMed),
-                Text(subtitle, style: MuType.caption, maxLines: 1, overflow: TextOverflow.ellipsis),
-              ],
-            ),
+    final mu = context.mu;
+    final c = mu.colors;
+    return Semantics(
+      button: true,
+      label: '$title, $subtitle',
+      excludeSemantics: true,
+      child: MuPressable(
+        onTap: onTap,
+        pressedScale: 0.98,
+        child: Container(
+          padding: const EdgeInsets.all(MuSpacing.space4),
+          decoration: BoxDecoration(color: c.surface, borderRadius: BorderRadius.circular(MuRadii.card)),
+          child: Row(
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(color: MuTones.forIgCategory(c, tone), shape: BoxShape.circle),
+                child: Icon(icon, size: MuSizes.iconMd, color: c.inkPrint),
+              ),
+              const SizedBox(width: MuSpacing.space3),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(title, style: mu.text.title3),
+                    const SizedBox(height: 2),
+                    Text(subtitle, style: mu.text.caption, maxLines: 1, overflow: TextOverflow.ellipsis),
+                  ],
+                ),
+              ),
+              Icon(LucideIcons.chevronRight, size: MuSizes.iconSm, color: c.ink3),
+            ],
           ),
-          const Icon(LucideIcons.chevronRight, size: 18, color: MuColors.inkSecondary),
-        ],
+        ),
       ),
     );
   }

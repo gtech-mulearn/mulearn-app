@@ -53,7 +53,8 @@ void main() {
       GoRoute(path: '/campus', builder: (_, __) => const Text('campus overview')),
     ]);
     addTearDown(router.dispose);
-    tester.view.physicalSize = const Size(1080, 4000);
+    // Tall enough for all of Home: the workspace doors close the page.
+    tester.view.physicalSize = const Size(1080, 12000);
     addTearDown(tester.view.resetPhysicalSize);
     await tester.pumpWidget(UncontrolledProviderScope(container: container, child: MaterialApp.router(routerConfig: router)));
     for (var i = 0; i < 8; i++) {
