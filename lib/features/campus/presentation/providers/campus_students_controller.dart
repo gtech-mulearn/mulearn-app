@@ -1,6 +1,7 @@
 import 'package:mulearn_app/core/network/paging.dart';
 import 'package:mulearn_app/core/utils/app_logger.dart';
 import 'package:mulearn_app/core/utils/no_retry.dart';
+import 'package:mulearn_app/core/utils/recent_results.dart';
 import 'package:mulearn_app/features/campus/data/campus_repository_provider.dart';
 import 'package:mulearn_app/features/campus/domain/entities/campus_student.dart';
 import 'package:mulearn_app/features/campus/domain/entities/student_activity.dart';
@@ -20,6 +21,7 @@ class CampusStudentsController extends _$CampusStudentsController {
 
   @override
   Future<StudentsView> build(StudentFilter filter) async {
+    ref.keepRecent();
     _pageIndex = 1;
     _inFlight = null;
     final page = await ref
@@ -78,7 +80,9 @@ class StudentActivityController extends _$StudentActivityController {
       final page = await ref.read(campusRepositoryProvider).getStudentActivity(muid, pageIndex: next);
       if (!ref.mounted) return;
       _pageIndex = next;
-      state = AsyncData(PagedState(items: mergeUniqueBy(current.items, page.items, (a) => a.id), hasMore: page.hasNext));
+      state = AsyncData(
+        PagedState(items: mergeUniqueBy(current.items, page.items, (a) => a.id), hasMore: page.hasNext),
+      );
     } on Object catch (e, st) {
       appLogger.w('Loading more activity failed', error: e, stackTrace: st);
       if (!ref.mounted) return;

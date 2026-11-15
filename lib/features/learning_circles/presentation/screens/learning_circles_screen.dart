@@ -8,6 +8,7 @@ import 'package:mulearn_app/core/auth/current_user_claims.dart';
 import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
+import 'package:mulearn_app/core/utils/search_debouncer.dart';
 import 'package:mulearn_app/core/widgets/mu_load_more_footer.dart';
 import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/core/widgets/mu_state_display.dart';
@@ -33,7 +34,9 @@ const _statuses = [('not_joined', 'Not joined'), (null, 'All'), ('joined', 'Join
 class _LearningCirclesScreenState extends ConsumerState<LearningCirclesScreen> {
   final _scrollController = ScrollController();
   final _searchController = TextEditingController();
-  Timer? _searchDebounce;
+  late final _debouncer = SearchDebouncer((q) {
+    if (mounted) _setFilter(_filter.copyWith(search: q));
+  });
   CircleFilter _filter = CircleFilter.discover;
 
   /// The circle whose join request is in flight, and those asked this visit.
@@ -42,16 +45,11 @@ class _LearningCirclesScreenState extends ConsumerState<LearningCirclesScreen> {
 
   void _setFilter(CircleFilter filter) => setState(() => _filter = filter);
 
-  /// Typing searches once, 300 ms after the last keystroke.
-  void _onSearchChanged(String text) {
-    _searchDebounce?.cancel();
-    _searchDebounce = Timer(const Duration(milliseconds: 300), () {
-      if (mounted) _setFilter(_filter.copyWith(search: text));
-    });
-  }
+  /// Typing searches once it pauses (see [SearchDebouncer]).
+  void _onSearchChanged(String text) => _debouncer.onChanged(text);
 
   void _clearFilters() {
-    _searchDebounce?.cancel();
+    _debouncer.reset();
     _searchController.clear();
     _setFilter(CircleFilter.discover);
   }
@@ -81,7 +79,7 @@ class _LearningCirclesScreenState extends ConsumerState<LearningCirclesScreen> {
 
   @override
   void dispose() {
-    _searchDebounce?.cancel();
+    _debouncer.dispose();
     _searchController.dispose();
     _scrollController.dispose();
     super.dispose();

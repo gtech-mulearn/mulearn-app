@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/utils/level_label.dart';
+import 'package:mulearn_app/core/utils/search_debouncer.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/core/widgets/mu_load_more_footer.dart';
 import 'package:mulearn_app/core/widgets/mu_refresh.dart';
@@ -24,22 +25,19 @@ class CampusStudentsScreen extends ConsumerStatefulWidget {
 
 class _CampusStudentsScreenState extends ConsumerState<CampusStudentsScreen> {
   final _search = TextEditingController();
-  Timer? _debounce;
+  late final _debouncer = SearchDebouncer((q) {
+    if (mounted) setState(() => _filter = _filter.copyWith(search: q));
+  });
   StudentFilter _filter = const StudentFilter();
 
   @override
   void dispose() {
-    _debounce?.cancel();
+    _debouncer.dispose();
     _search.dispose();
     super.dispose();
   }
 
-  void _onSearch(String value) {
-    _debounce?.cancel();
-    _debounce = Timer(const Duration(milliseconds: 300), () {
-      if (mounted) setState(() => _filter = _filter.copyWith(search: value.trim()));
-    });
-  }
+  void _onSearch(String value) => _debouncer.onChanged(value);
 
   @override
   Widget build(BuildContext context) {

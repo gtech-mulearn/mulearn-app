@@ -229,7 +229,7 @@ final class EventsListControllerProvider
 }
 
 String _$eventsListControllerHash() =>
-    r'4a497f5742a9ebcac8069adefd874ceb156d62e0';
+    r'85567c6832cd62237309a3a3bec413e6fd69357d';
 
 /// Accumulates event pages across "load more", one list per [EventFilter]
 /// (a new filter starts again at page 1). A failed page keeps the events

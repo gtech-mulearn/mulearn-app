@@ -7,6 +7,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
+import 'package:mulearn_app/core/utils/search_debouncer.dart';
 import 'package:mulearn_app/core/widgets/mu_state_display.dart';
 import 'package:mulearn_app/features/search/domain/entities/campus_search_result.dart';
 import 'package:mulearn_app/features/search/domain/entities/user_search_result.dart';
@@ -31,6 +32,12 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   final _scrollController = ScrollController();
   _Who _who = _Who.people;
 
+  /// The query last sent (typing settles through [_debouncer]).
+  String _searched = '';
+  late final _debouncer = SearchDebouncer((q) {
+    if (mounted) _runSearch(q);
+  });
+
   @override
   void initState() {
     super.initState();
@@ -47,20 +54,18 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     }
   }
 
-  void _runSearch() {
+  void _runSearch(String query) {
+    setState(() => _searched = query);
     if (_who == _Who.campuses) {
-      unawaited(ref.read(campusSearchControllerProvider.notifier).search(_queryController.text));
+      unawaited(ref.read(campusSearchControllerProvider.notifier).search(query));
       return;
     }
-    unawaited(
-      ref
-          .read(searchControllerProvider.notifier)
-          .search(_queryController.text, role: _who == _Who.mentors ? 'mentor' : null),
-    );
+    unawaited(ref.read(searchControllerProvider.notifier).search(query, role: _who == _Who.mentors ? 'mentor' : null));
   }
 
   @override
   void dispose() {
+    _debouncer.dispose();
     _queryController.dispose();
     _scrollController.dispose();
     super.dispose();
@@ -71,7 +76,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     final mu = context.mu;
     final c = mu.colors;
     final resultsState = ref.watch(searchControllerProvider);
-    final query = _queryController.text.trim();
+    final query = _searched;
 
     return Scaffold(
       backgroundColor: c.chalk,
@@ -95,8 +100,8 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                       controller: _queryController,
                       hint: _who == _Who.campuses ? 'Campus name or code' : 'Name or muid',
                       autofocus: true,
-                      onChanged: (_) => setState(() {}),
-                      onSubmitted: (_) => _runSearch(),
+                      onChanged: _debouncer.onChanged,
+                      onSubmitted: _debouncer.submit,
                     ),
                   ),
                 ],
@@ -114,7 +119,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                 },
                 onChanged: (w) {
                   setState(() => _who = w);
-                  if (query.isNotEmpty) _runSearch();
+                  if (query.isNotEmpty) _runSearch(query);
                 },
               ),
             ),

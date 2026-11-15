@@ -7,6 +7,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/utils/date_format.dart';
+import 'package:mulearn_app/core/utils/search_debouncer.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/core/widgets/mu_load_more_footer.dart';
 import 'package:mulearn_app/core/widgets/mu_refresh.dart';
@@ -56,7 +57,9 @@ class OpportunitiesScreen extends ConsumerStatefulWidget {
 class _OpportunitiesScreenState extends ConsumerState<OpportunitiesScreen> {
   final _search = TextEditingController();
   final _scroll = ScrollController();
-  Timer? _debounce;
+  late final _debouncer = SearchDebouncer((q) {
+    if (mounted) setState(() => _query = q);
+  });
   String _query = '';
   _Tab _tab = _Tab.browse;
 
@@ -75,18 +78,13 @@ class _OpportunitiesScreenState extends ConsumerState<OpportunitiesScreen> {
 
   @override
   void dispose() {
-    _debounce?.cancel();
+    _debouncer.dispose();
     _search.dispose();
     _scroll.dispose();
     super.dispose();
   }
 
-  void _onSearch(String text) {
-    _debounce?.cancel();
-    _debounce = Timer(const Duration(milliseconds: 300), () {
-      if (mounted) setState(() => _query = text.trim());
-    });
-  }
+  void _onSearch(String text) => _debouncer.onChanged(text);
 
   @override
   Widget build(BuildContext context) {

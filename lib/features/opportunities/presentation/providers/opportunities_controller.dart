@@ -1,6 +1,7 @@
 import 'package:mulearn_app/core/network/dio_provider.dart';
 import 'package:mulearn_app/core/network/paging.dart';
 import 'package:mulearn_app/core/utils/app_logger.dart';
+import 'package:mulearn_app/core/utils/recent_results.dart';
 import 'package:mulearn_app/features/opportunities/data/datasources/opportunities_remote_datasource.dart';
 import 'package:mulearn_app/features/opportunities/data/repositories/opportunities_repository_impl.dart';
 import 'package:mulearn_app/features/opportunities/domain/entities/job.dart';
@@ -27,6 +28,7 @@ class JobsController extends _$JobsController {
 
   @override
   Future<PagedState<Job>> build(String search) async {
+    ref.keepRecent();
     _pageIndex = 1;
     _inFlight = null;
     final page = await ref.watch(opportunitiesRepositoryProvider).jobs(pageIndex: 1, search: search);

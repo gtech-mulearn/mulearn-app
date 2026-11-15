@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -152,14 +151,17 @@ void main() {
     // The dashboard's circle-list: a search miss shows StateDisplay's default copy.
     expect(find.text('Nothing here. Yet.'), findsOneWidget);
 
+    final sent = listQueries().length;
     await tester.ensureVisible(find.text('Clear filters'));
     await tester.pump();
     await tester.tap(find.text('Clear filters'));
     for (var i = 0; i < 6; i++) {
       await tester.pump(const Duration(milliseconds: 50));
     }
-    expect(listQueries().last['status'], 'not_joined');
-    expect(listQueries().last.containsKey('search'), isFalse);
-    expect(adapter.requests.where((RequestOptions r) => r.uri.path == _list).isNotEmpty, isTrue);
+    // Back to the unfiltered list, which is still in memory: no new request.
+    expect(find.text('Nothing here. Yet.'), findsNothing);
+    expect(listQueries(), hasLength(sent));
+    expect(listQueries().first['status'], 'not_joined');
+    expect(listQueries().first.containsKey('search'), isFalse);
   });
 }

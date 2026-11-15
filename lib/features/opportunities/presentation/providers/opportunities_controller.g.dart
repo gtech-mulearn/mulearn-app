@@ -161,7 +161,7 @@ final class JobsControllerProvider
   }
 }
 
-String _$jobsControllerHash() => r'a0c70b2e6501b4284511269e09dc4e8dc1da19ee';
+String _$jobsControllerHash() => r'6c78b7601ead9da71028a9693d8956aba5416d12';
 
 /// Jobs matching [search], page by page. A failed page keeps the jobs
 /// already shown and records the error for an inline retry.

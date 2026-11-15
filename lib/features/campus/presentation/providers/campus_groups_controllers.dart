@@ -1,6 +1,7 @@
 import 'package:mulearn_app/core/network/paging.dart';
 import 'package:mulearn_app/core/utils/app_logger.dart';
 import 'package:mulearn_app/core/utils/no_retry.dart';
+import 'package:mulearn_app/core/utils/recent_results.dart';
 import 'package:mulearn_app/features/campus/data/campus_repository_provider.dart';
 import 'package:mulearn_app/features/campus/domain/entities/campus_groups.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -15,6 +16,7 @@ class CampusCirclesController extends _$CampusCirclesController {
 
   @override
   Future<PagedState<CampusCircle>> build(String search) async {
+    ref.keepRecent();
     _pageIndex = 1;
     _inFlight = null;
     final page = await ref.watch(campusRepositoryProvider).getCircles(pageIndex: 1, search: search);
@@ -31,7 +33,9 @@ class CampusCirclesController extends _$CampusCirclesController {
       final page = await ref.read(campusRepositoryProvider).getCircles(pageIndex: _pageIndex + 1, search: search);
       if (!ref.mounted) return;
       _pageIndex++;
-      state = AsyncData(PagedState(items: mergeUniqueBy(current.items, page.items, (c) => c.id), hasMore: page.hasNext));
+      state = AsyncData(
+        PagedState(items: mergeUniqueBy(current.items, page.items, (c) => c.id), hasMore: page.hasNext),
+      );
     } on Object catch (e, st) {
       appLogger.w('Loading more circles failed', error: e, stackTrace: st);
       if (ref.mounted) state = AsyncData(current.copyWith(isLoadingMore: false, loadMoreError: e));
@@ -47,6 +51,7 @@ class CampusIgsController extends _$CampusIgsController {
 
   @override
   Future<PagedState<CampusIg>> build(String search) async {
+    ref.keepRecent();
     _pageIndex = 1;
     _inFlight = null;
     final page = await ref.watch(campusRepositoryProvider).getIgs(pageIndex: 1, search: search);
@@ -63,7 +68,9 @@ class CampusIgsController extends _$CampusIgsController {
       final page = await ref.read(campusRepositoryProvider).getIgs(pageIndex: _pageIndex + 1, search: search);
       if (!ref.mounted) return;
       _pageIndex++;
-      state = AsyncData(PagedState(items: mergeUniqueBy(current.items, page.items, (g) => g.id), hasMore: page.hasNext));
+      state = AsyncData(
+        PagedState(items: mergeUniqueBy(current.items, page.items, (g) => g.id), hasMore: page.hasNext),
+      );
     } on Object catch (e, st) {
       appLogger.w('Loading more groups failed', error: e, stackTrace: st);
       if (ref.mounted) state = AsyncData(current.copyWith(isLoadingMore: false, loadMoreError: e));

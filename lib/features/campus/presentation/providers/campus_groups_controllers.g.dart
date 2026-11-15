@@ -59,7 +59,7 @@ final class CampusCirclesControllerProvider
 }
 
 String _$campusCirclesControllerHash() =>
-    r'85bdb23773c9bc10a3e5919e60a7773850a948d8';
+    r'bf936d212a2b54273be84af698b12aa8e3224362';
 
 /// The campus's circles for a search, page by page.
 
@@ -169,7 +169,7 @@ final class CampusIgsControllerProvider
 }
 
 String _$campusIgsControllerHash() =>
-    r'2b66f7d1c0651333a469d62529956bb1270e96bb';
+    r'd41bbf64a63bfcb0401cdf75afc2ec26a4c6df67';
 
 /// Interest groups for a search, page by page.
 

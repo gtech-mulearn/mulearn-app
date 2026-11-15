@@ -109,20 +109,23 @@ final class SearchRepositoryProvider
 String _$searchRepositoryHash() => r'f14ca810804bec88f67d6b2cffb39fb21c05544e';
 
 /// Accumulates search results across pages ("load more") for a given query
-/// + role filter — matches the reference dashboard's infinite-scroll search
-/// UX, adapted to Riverpod's `AsyncNotifier` pattern.
+/// + role filter, like the dashboard's infinite-scroll search. Each search
+/// supersedes the one before: a slower, older answer never replaces a newer
+/// one, and concurrent "load more" calls share one request.
 
 @ProviderFor(SearchController)
 const searchControllerProvider = SearchControllerProvider._();
 
 /// Accumulates search results across pages ("load more") for a given query
-/// + role filter — matches the reference dashboard's infinite-scroll search
-/// UX, adapted to Riverpod's `AsyncNotifier` pattern.
+/// + role filter, like the dashboard's infinite-scroll search. Each search
+/// supersedes the one before: a slower, older answer never replaces a newer
+/// one, and concurrent "load more" calls share one request.
 final class SearchControllerProvider
     extends $AsyncNotifierProvider<SearchController, List<UserSearchResult>> {
   /// Accumulates search results across pages ("load more") for a given query
-  /// + role filter — matches the reference dashboard's infinite-scroll search
-  /// UX, adapted to Riverpod's `AsyncNotifier` pattern.
+  /// + role filter, like the dashboard's infinite-scroll search. Each search
+  /// supersedes the one before: a slower, older answer never replaces a newer
+  /// one, and concurrent "load more" calls share one request.
   const SearchControllerProvider._()
     : super(
         from: null,
@@ -142,11 +145,12 @@ final class SearchControllerProvider
   SearchController create() => SearchController();
 }
 
-String _$searchControllerHash() => r'f8ccb3c6a0b64cb0ebb963b90cabd916f2f780ff';
+String _$searchControllerHash() => r'b65583813a9f1a2949ef25b0933a3b8e9d90bceb';
 
 /// Accumulates search results across pages ("load more") for a given query
-/// + role filter — matches the reference dashboard's infinite-scroll search
-/// UX, adapted to Riverpod's `AsyncNotifier` pattern.
+/// + role filter, like the dashboard's infinite-scroll search. Each search
+/// supersedes the one before: a slower, older answer never replaces a newer
+/// one, and concurrent "load more" calls share one request.
 
 abstract class _$SearchController
     extends $AsyncNotifier<List<UserSearchResult>> {
@@ -173,19 +177,22 @@ abstract class _$SearchController
   }
 }
 
-/// Campus search (colleges and schools), page by page ("load more").
+/// Campus search (colleges and schools), page by page ("load more"), with
+/// the same superseding and recent-results rules as [SearchController].
 
 @ProviderFor(CampusSearchController)
 const campusSearchControllerProvider = CampusSearchControllerProvider._();
 
-/// Campus search (colleges and schools), page by page ("load more").
+/// Campus search (colleges and schools), page by page ("load more"), with
+/// the same superseding and recent-results rules as [SearchController].
 final class CampusSearchControllerProvider
     extends
         $AsyncNotifierProvider<
           CampusSearchController,
           List<CampusSearchResult>
         > {
-  /// Campus search (colleges and schools), page by page ("load more").
+  /// Campus search (colleges and schools), page by page ("load more"), with
+  /// the same superseding and recent-results rules as [SearchController].
   const CampusSearchControllerProvider._()
     : super(
         from: null,
@@ -206,9 +213,10 @@ final class CampusSearchControllerProvider
 }
 
 String _$campusSearchControllerHash() =>
-    r'7639868ec1858bc1f99f2cfe54419202db1c2777';
+    r'5ffdd43502d9b304cc9dc2f1c03308fef2182e54';
 
-/// Campus search (colleges and schools), page by page ("load more").
+/// Campus search (colleges and schools), page by page ("load more"), with
+/// the same superseding and recent-results rules as [SearchController].
 
 abstract class _$CampusSearchController
     extends $AsyncNotifier<List<CampusSearchResult>> {

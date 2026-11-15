@@ -52,7 +52,7 @@ final class CampusStudentsControllerProvider
 }
 
 String _$campusStudentsControllerHash() =>
-    r'efb0fa8261f841edc5b9b1354b8326f33ad50fd0';
+    r'be8377c1329617cd8054b00414685cec1ac88e22';
 
 final class CampusStudentsControllerFamily extends $Family
     with

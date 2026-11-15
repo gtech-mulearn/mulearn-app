@@ -7,6 +7,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/session/my_profile_payload.dart';
+import 'package:mulearn_app/core/utils/search_debouncer.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/core/widgets/mu_load_more_footer.dart';
 import 'package:mulearn_app/core/widgets/mu_refresh.dart';
@@ -52,7 +53,9 @@ class EventsScreen extends ConsumerStatefulWidget {
 class _EventsScreenState extends ConsumerState<EventsScreen> {
   final _scrollController = ScrollController();
   final _searchController = TextEditingController();
-  Timer? _searchDebounce;
+  late final _debouncer = SearchDebouncer((q) {
+    if (mounted) setState(() => _filter = _filter.copyWith(search: q));
+  });
   EventFilter _filter = const EventFilter();
   _When _when = _When.upcoming;
 
@@ -79,16 +82,11 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
     }
   }
 
-  /// Typing searches once, 300 ms after the last keystroke.
-  void _onSearchChanged(String text) {
-    _searchDebounce?.cancel();
-    _searchDebounce = Timer(const Duration(milliseconds: 300), () {
-      if (mounted) setState(() => _filter = _filter.copyWith(search: text));
-    });
-  }
+  /// Typing searches once it pauses (see [SearchDebouncer]).
+  void _onSearchChanged(String text) => _debouncer.onChanged(text);
 
   void _clearFilters() {
-    _searchDebounce?.cancel();
+    _debouncer.reset();
     _searchController.clear();
     setState(() => _filter = const EventFilter());
   }
@@ -100,7 +98,7 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
 
   @override
   void dispose() {
-    _searchDebounce?.cancel();
+    _debouncer.dispose();
     _searchController.dispose();
     _scrollController.dispose();
     super.dispose();
