@@ -84,6 +84,10 @@ flutter analyze
 flutter test
 ```
 
+### Builds and releases
+
+CI checks every PR (format of changed files, analyze, tests, an Android build); `dev` and `main` produce downloadable APKs, a nightly build runs from `dev`, and pushing a `vX.Y.Z` tag on `main` publishes a release. See [`docs/CI-CD.md`](docs/CI-CD.md).
+
 ## Contributing
 
 Read [`docs/rules.md`](docs/rules.md) first — it's the binding reference for stack choices, architecture, naming conventions, and testing expectations for this codebase. `flutter analyze` must pass with zero issues and `flutter test` must pass before opening a PR.
