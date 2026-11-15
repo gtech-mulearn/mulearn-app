@@ -8,12 +8,7 @@ import 'package:mulearn_app/core/design_system/tokens/mu_tokens.g.dart';
 /// ring while focused.
 class MuSearchField extends StatefulWidget {
   /// A search field; [onChanged] gets every edit, clearing included.
-  const MuSearchField({
-    required this.hint,
-    required this.onChanged,
-    this.controller,
-    super.key,
-  });
+  const MuSearchField({required this.hint, required this.onChanged, this.controller, super.key});
 
   /// Placeholder, e.g. "Search title, hashtag, IG…".
   final String hint;
@@ -29,8 +24,7 @@ class MuSearchField extends StatefulWidget {
 }
 
 class _MuSearchFieldState extends State<MuSearchField> {
-  late final TextEditingController _controller =
-      widget.controller ?? TextEditingController();
+  late final TextEditingController _controller = widget.controller ?? TextEditingController();
   final FocusNode _focus = FocusNode();
 
   @override
@@ -136,10 +130,7 @@ class _MuSearchFieldState extends State<MuSearchField> {
                     child: Container(
                       width: 22,
                       height: 22,
-                      decoration: BoxDecoration(
-                        color: c.ink3,
-                        shape: BoxShape.circle,
-                      ),
+                      decoration: BoxDecoration(color: c.ink3, shape: BoxShape.circle),
                       child: Icon(LucideIcons.x, size: 14, color: c.surface),
                     ),
                   ),
