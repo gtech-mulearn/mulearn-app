@@ -4,24 +4,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/network/paging.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
-import 'package:mulearn_app/core/theme/mu_space.dart';
-import 'package:mulearn_app/core/theme/mulearn_colors.dart';
-import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 import 'package:mulearn_app/core/utils/clock.dart';
 import 'package:mulearn_app/core/utils/date_format.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
-import 'package:mulearn_app/core/widgets/mu_card.dart';
 import 'package:mulearn_app/core/widgets/mu_load_more_footer.dart';
 import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/core/widgets/mu_state_display.dart';
 import 'package:mulearn_app/features/campus/domain/entities/campus_groups.dart';
 import 'package:mulearn_app/features/campus/presentation/providers/campus_groups_controllers.dart';
+import 'package:mulearn_app/features/campus/presentation/widgets/campus_kit.dart';
 
-/// The campus's circles and interest groups (K3), most members first. Rows
-/// open the existing circle and group pages; the per-group member lists
-/// (`<id>/members/`) return 500 on dev and aren't used.
+enum _Tab { circles, groups }
+
+/// The campus's circles and interest groups (K3), most members first.
+/// Circles as their rings with when they meet; groups with how many of the
+/// campus's learners are in each, as a bar. Rows open the circle and group
+/// pages (the per-group member lists, `<id>/members/`, 500 on dev).
 class CampusGroupsScreen extends ConsumerStatefulWidget {
   const CampusGroupsScreen({super.key});
 
@@ -33,6 +34,7 @@ class _CampusGroupsScreenState extends ConsumerState<CampusGroupsScreen> {
   final _search = TextEditingController();
   Timer? _debounce;
   String _query = '';
+  _Tab _tab = _Tab.circles;
 
   @override
   void dispose() {
@@ -50,49 +52,66 @@ class _CampusGroupsScreenState extends ConsumerState<CampusGroupsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        backgroundColor: MuColors.canvas,
-        appBar: AppBar(
-          backgroundColor: MuColors.canvas,
-          elevation: 0,
-          title: const Text('Circles and groups'),
-          bottom: const TabBar(tabs: [Tab(text: 'Circles'), Tab(text: 'Interest groups')]),
-        ),
-        body: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(MuSpace.screenH, MuSpace.m, MuSpace.screenH, MuSpace.s),
-              child: TextField(
-                controller: _search,
-                onChanged: _onSearch,
-                textInputAction: TextInputAction.search,
-                decoration: const InputDecoration(hintText: 'Search', prefixIcon: Icon(LucideIcons.search, size: 18)),
-              ),
+    final mu = context.mu;
+    return CampusPage(
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(MuSpacing.space5, MuSpacing.space2, MuSpacing.space5, MuSpacing.space3),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Semantics(
+                  header: true,
+                  child: Text('Circles and groups', style: mu.text.display.copyWith(fontSize: 32)),
+                ),
+                const SizedBox(height: MuSpacing.space4),
+                MuSegmented<_Tab>(
+                  values: _Tab.values,
+                  selected: _tab,
+                  label: (t) => t == _Tab.circles ? 'Circles' : 'Interest groups',
+                  onChanged: (t) => setState(() => _tab = t),
+                ),
+                const SizedBox(height: MuSpacing.space3),
+                MuSearchField(controller: _search, hint: 'Search', onChanged: _onSearch),
+              ],
             ),
-            Expanded(
-              child: TabBarView(
-                children: [
-                  _PagedList<CampusCircle>(
+          ),
+          Expanded(
+            child: _tab == _Tab.circles
+                ? _PagedList<CampusCircle>(
                     state: ref.watch(campusCirclesControllerProvider(_query)),
                     onRefresh: () => ref.refresh(campusCirclesControllerProvider(_query).future),
                     onRetry: () => ref.invalidate(campusCirclesControllerProvider(_query)),
                     onLoadMore: () => ref.read(campusCirclesControllerProvider(_query).notifier).loadMore(),
-                    itemBuilder: (c) => _CircleTile(circle: c),
-                  ),
-                  _PagedList<CampusIg>(
+                    builder: (items) => Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        for (var i = 0; i < items.length; i++) ...[
+                          if (i > 0) const SizedBox(height: MuSpacing.space3),
+                          _CircleCard(circle: items[i]),
+                        ],
+                      ],
+                    ),
+                  )
+                : _PagedList<CampusIg>(
                     state: ref.watch(campusIgsControllerProvider(_query)),
                     onRefresh: () => ref.refresh(campusIgsControllerProvider(_query).future),
                     onRetry: () => ref.invalidate(campusIgsControllerProvider(_query)),
                     onLoadMore: () => ref.read(campusIgsControllerProvider(_query).notifier).loadMore(),
-                    itemBuilder: (g) => _IgTile(group: g),
+                    builder: (items) {
+                      final peak = items.fold<int>(0, (m, g) => g.campusMemberCount > m ? g.campusMemberCount : m);
+                      return MuFeedGroup(
+                        children: [
+                          for (var i = 0; i < items.length; i++)
+                            _IgRow(group: items[i], peak: peak, last: i == items.length - 1),
+                        ],
+                      );
+                    },
                   ),
-                ],
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -104,21 +123,21 @@ class _PagedList<T> extends StatelessWidget {
     required this.onRefresh,
     required this.onRetry,
     required this.onLoadMore,
-    required this.itemBuilder,
+    required this.builder,
   });
 
   final AsyncValue<PagedState<T>> state;
   final Future<void> Function() onRefresh;
   final VoidCallback onRetry;
   final Future<void> Function() onLoadMore;
-  final Widget Function(T item) itemBuilder;
+  final Widget Function(List<T> items) builder;
 
   @override
   Widget build(BuildContext context) {
     return state.when(
       skipError: true,
       skipLoadingOnReload: true,
-      loading: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const Center(child: MuDotsLoader()),
       error: (e, _) => ErrorRetryView(error: e, onRetry: onRetry),
       data: (paged) => MuRefresh(
         onRefresh: onRefresh,
@@ -129,14 +148,16 @@ class _PagedList<T> extends StatelessWidget {
               )
             : NotificationListener<ScrollNotification>(
                 onNotification: (n) {
-                  if (n.metrics.extentAfter < 400 && paged.hasMore && paged.loadMoreError == null) unawaited(onLoadMore());
+                  if (n.metrics.extentAfter < 400 && paged.hasMore && paged.loadMoreError == null) {
+                    unawaited(onLoadMore());
+                  }
                   return false;
                 },
                 child: ListView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  padding: const EdgeInsets.fromLTRB(MuSpace.screenH, MuSpace.s, MuSpace.screenH, MuSpace.xxl),
+                  physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+                  padding: const EdgeInsets.fromLTRB(MuSpacing.space5, 0, MuSpacing.space5, MuSpacing.space8),
                   children: [
-                    for (final item in paged.items) itemBuilder(item),
+                    builder(paged.items),
                     if (paged.hasMore || paged.loadMoreError != null)
                       MuLoadMoreFooter(isLoading: paged.isLoadingMore, error: paged.loadMoreError, onRetry: onLoadMore),
                   ],
@@ -147,8 +168,8 @@ class _PagedList<T> extends StatelessWidget {
   }
 }
 
-class _CircleTile extends ConsumerWidget {
-  const _CircleTile({required this.circle});
+class _CircleCard extends ConsumerWidget {
+  const _CircleCard({required this.circle});
 
   final CampusCircle circle;
 
@@ -157,82 +178,60 @@ class _CircleTile extends ConsumerWidget {
     final c = circle;
     final now = ref.watch(clockProvider)();
     final last = c.lastMeetingTime;
+    final upcoming = last != null && last.isAfter(now);
     final when = last == null
         ? 'No meetings yet'
-        : last.isAfter(now)
-            ? 'Next meets ${formatDayHeading(last.toLocal(), now.toLocal())}'
-            : 'Last met ${formatAgo(last.toLocal(), now.toLocal())}';
-    return Padding(
-      padding: const EdgeInsets.only(bottom: MuSpace.s),
-      child: MuCard(
-        onTap: () => context.push(RoutePaths.learningCircleDetailPath(c.id)),
-        padding: const EdgeInsets.fromLTRB(MuSpace.l, MuSpace.m, MuSpace.s, MuSpace.m),
-        child: Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(c.name, style: MuType.bodyMed, maxLines: 1, overflow: TextOverflow.ellipsis),
-                  Text(
-                    [
-                      if (c.igName.isNotEmpty) c.igName,
-                      '${c.memberCount} ${c.memberCount == 1 ? 'member' : 'members'}',
-                      '${c.meetingCount} ${c.meetingCount == 1 ? 'meeting' : 'meetings'}',
-                    ].join(' · '),
-                    style: MuType.caption,
-                  ),
-                  Text(when, style: MuType.caption),
-                ],
-              ),
-            ),
-            const Icon(LucideIcons.chevronRight, size: 18, color: MuColors.inkSecondary),
-          ],
-        ),
+        : upcoming
+        ? 'Next meets ${formatDayHeading(last.toLocal(), now.toLocal())}'
+        : 'Last met ${formatAgo(last.toLocal(), now.toLocal())}';
+    return MuCircleCard(
+      title: c.name,
+      total: c.memberCount,
+      caption: [
+        if (c.igName.isNotEmpty) c.igName,
+        '${c.memberCount} ${c.memberCount == 1 ? 'member' : 'members'}',
+        '${c.meetingCount} ${c.meetingCount == 1 ? 'meeting' : 'meetings'}',
+      ].join(' · '),
+      action: MuPill(
+        when,
+        tone: upcoming ? MuPillTone.cobalt : (last == null ? MuPillTone.warning : MuPillTone.neutral),
+        icon: upcoming ? LucideIcons.calendar : (last == null ? LucideIcons.alertCircle : LucideIcons.history),
       ),
+      onTap: () => context.push(RoutePaths.learningCircleDetailPath(c.id)),
     );
   }
 }
 
-class _IgTile extends StatelessWidget {
-  const _IgTile({required this.group});
+class _IgRow extends StatelessWidget {
+  const _IgRow({required this.group, required this.peak, required this.last});
 
   final CampusIg group;
 
+  /// The most campus members in any group shown, for the bar.
+  final int peak;
+  final bool last;
+
   @override
   Widget build(BuildContext context) {
+    final mu = context.mu;
+    final c = mu.colors;
     final g = group;
-    return Padding(
-      padding: const EdgeInsets.only(bottom: MuSpace.s),
-      child: MuCard(
-        onTap: () => context.push(RoutePaths.interestGroupDetailPath(g.id)),
-        padding: const EdgeInsets.fromLTRB(MuSpace.l, MuSpace.m, MuSpace.s, MuSpace.m),
-        child: Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Flexible(child: Text(g.name, style: MuType.bodyMed, overflow: TextOverflow.ellipsis)),
-                      if (g.code.isNotEmpty) ...[
-                        const SizedBox(width: MuSpace.s),
-                        Text(g.code, style: MuType.caption),
-                      ],
-                    ],
-                  ),
-                  Text(
-                    g.campusMemberCount == 1 ? '1 member from your campus' : '${g.campusMemberCount} members from your campus',
-                    style: MuType.caption,
-                  ),
-                ],
-              ),
-            ),
-            const Icon(LucideIcons.chevronRight, size: 18, color: MuColors.inkSecondary),
-          ],
+    return MuFeedRow(
+      leading: Container(
+        width: MuSizes.avatarMd,
+        height: MuSizes.avatarMd,
+        decoration: BoxDecoration(color: c.surfaceSunk, borderRadius: BorderRadius.circular(12)),
+        alignment: Alignment.center,
+        padding: const EdgeInsets.all(4),
+        child: FittedBox(
+          child: Text(g.code.isEmpty ? g.name.characters.first : g.code, style: mu.text.codeSm.copyWith(color: c.ink)),
         ),
       ),
+      subject: g.name,
+      time: g.campusMemberCount == 1 ? '1 member from your campus' : '${g.campusMemberCount} members from your campus',
+      trailing: SizedBox(width: 56, child: CampusBar(value: peak <= 0 ? 0 : g.campusMemberCount / peak)),
+      divider: !last,
+      onTap: () => context.push(RoutePaths.interestGroupDetailPath(g.id)),
     );
   }
 }
