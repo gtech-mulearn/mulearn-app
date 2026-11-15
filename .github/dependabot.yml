@@ -1,0 +1,14 @@
+# Keeps the SHA-pinned GitHub Actions current: Dependabot opens a PR that
+# bumps the SHA and its version comment together. Flutter/pub dependencies are
+# deliberately not auto-bumped (upgrade them by hand, with testing).
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    target-branch: dev
+    schedule:
+      interval: monthly
+    groups:
+      github-actions:
+        patterns:
+          - '*'

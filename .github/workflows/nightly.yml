@@ -1,0 +1,57 @@
+# Nightly build of the latest dev commit (dev flavor, Development test key).
+#
+# Runs at 20:30 UTC (02:00 IST). Artifact only — no GitHub Release — kept 14
+# days, named mulearn-nightly-<version>-<yyyymmdd>-<sha>.apk so it can't be
+# confused with a push or manual dev build (versionName …-nightly.<yyyymmdd>).
+#
+# Scheduled workflows run from the default branch (main), so this file must
+# be on main; it builds dev's code. GitHub pauses schedules in public repos
+# after 60 days without repository activity — re-enable under Actions.
+# Docs: docs/CI-CD.md
+name: Nightly build
+
+on:
+  schedule:
+    - cron: '30 20 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: nightly
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  # Pin one commit up front, so validation and the build see the same code
+  # even if dev moves meanwhile — and fail loudly if dev is gone.
+  resolve:
+    name: Resolve dev
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      sha: ${{ steps.dev.outputs.sha }}
+    steps:
+      - name: Find dev head
+        id: dev
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if ! sha=$(gh api "repos/${GITHUB_REPOSITORY}/branches/dev" --jq .commit.sha 2>err.txt); then
+            echo "::error::Branch 'dev' was not found in ${GITHUB_REPOSITORY} — nothing to build. ($(cat err.txt))"
+            exit 1
+          fi
+          echo "Building dev @ ${sha}"
+          echo "sha=${sha}" >> "$GITHUB_OUTPUT"
+
+  build:
+    name: Android
+    needs: resolve
+    uses: ./.github/workflows/android-build.yml
+    with:
+      channel: nightly
+      ref: ${{ needs.resolve.outputs.sha }}
+      signing: optional
+      environment: Development
+      upload: true
+      retention-days: 14

@@ -22,7 +22,7 @@ jobs:
     timeout-minutes: 5
     steps:
       - name: Add to µLearn Delivery
-        uses: actions/add-to-project@v1.0.2
+        uses: actions/add-to-project@244f685bbc3b7adfa8466e08b698b5577571133e # v1.0.2
         with:
           project-url: https://github.com/orgs/gtech-mulearn/projects/16
           github-token: ${{ secrets.ADD_TO_PROJECT_TOKEN }}
