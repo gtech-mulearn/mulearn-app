@@ -20,7 +20,7 @@ The official μLearn mobile app, built with Flutter. It's the mobile companion t
 - **Problem statements** — real problems from companies and μLearn: say you're trying one, submit a solution link
 - **Projects** — explore, upvote and comment; publish your own with links, skills, screenshots and a team
 - **Mentor sessions** — join open sessions, ask a mentor for one, rate the ones you attended
-- **Internships & gigs** — jobs from verified companies; apply, track and withdraw applications
+- **Jobs & internships** — jobs, internships and gigs from verified companies; apply, track and withdraw applications
 - **Notifications** — the in-app feed; tapping one opens the screen it's about
 
 **Role workspaces** (for members who hold the role)

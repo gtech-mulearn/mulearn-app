@@ -123,7 +123,7 @@ void main() {
               onTap: () {},
             ),
             MuTile(
-              title: 'Internships & gigs',
+              title: 'Jobs & internships',
               category: IgCategory.creative,
               onTap: () {},
             ),
@@ -133,7 +133,7 @@ void main() {
     );
     final a = tester.getRect(find.widgetWithText(MuTile, 'Find a task'));
     final b = tester.getRect(find.widgetWithText(MuTile, 'Learning circles'));
-    final c = tester.getRect(find.widgetWithText(MuTile, 'Internships & gigs'));
+    final c = tester.getRect(find.widgetWithText(MuTile, 'Jobs & internships'));
     expect(a.height, b.height);
     expect(a.top, b.top);
     expect(c.width, 320, reason: 'the odd one out takes the whole row');
