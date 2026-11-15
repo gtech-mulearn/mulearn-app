@@ -80,6 +80,13 @@ abstract final class RoutePaths {
   /// A learner's mentor sessions: join one, ask for one, rate one.
   static const String learnerSessions = '/sessions';
 
+  static const String projects = '/projects';
+  static const String projectNew = '/projects/new';
+  static const String project = '/projects/:id';
+  static String projectPath(String id) => '/projects/$id';
+  static const String projectEdit = '/projects/:id/edit';
+  static String projectEditPath(String id) => '/projects/$id/edit';
+
   static const String problemStatements = '/problem-statements';
   static const String problemStatement = '/problem-statements/:id';
   static String problemStatementPath(String id) => '/problem-statements/$id';

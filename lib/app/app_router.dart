@@ -54,6 +54,9 @@ import 'package:mulearn_app/features/profile/presentation/screens/journey_screen
 import 'package:mulearn_app/features/profile/presentation/screens/profile_screen.dart';
 import 'package:mulearn_app/features/profile/presentation/screens/public_profile_screen.dart';
 import 'package:mulearn_app/features/profile/presentation/screens/settings_screen.dart';
+import 'package:mulearn_app/features/projects/presentation/screens/project_detail_screen.dart';
+import 'package:mulearn_app/features/projects/presentation/screens/project_form_screen.dart';
+import 'package:mulearn_app/features/projects/presentation/screens/projects_screen.dart';
 import 'package:mulearn_app/features/search/presentation/screens/search_screen.dart';
 import 'package:mulearn_app/features/splash/presentation/screens/splash_screen.dart';
 import 'package:mulearn_app/features/tasks/presentation/screens/task_detail_screen.dart';
@@ -131,6 +134,17 @@ GoRouter goRouter(Ref ref) {
       GoRoute(path: RoutePaths.opportunities, builder: (_, __) => const OpportunitiesScreen()),
       GoRoute(path: RoutePaths.problemStatements, builder: (_, __) => const ProblemStatementsScreen()),
       GoRoute(path: RoutePaths.learnerSessions, builder: (_, __) => const LearnerSessionsScreen()),
+      GoRoute(path: RoutePaths.projects, builder: (_, __) => const ProjectsScreen()),
+      // Before /projects/:id, so "new" isn't read as an id.
+      GoRoute(path: RoutePaths.projectNew, builder: (_, __) => const ProjectFormScreen()),
+      GoRoute(
+        path: RoutePaths.project,
+        builder: (_, state) => ProjectDetailScreen(id: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: RoutePaths.projectEdit,
+        builder: (_, state) => ProjectFormScreen(projectId: state.pathParameters['id']),
+      ),
       GoRoute(
         path: RoutePaths.problemStatement,
         builder: (_, state) => ProblemStatementDetailScreen(id: state.pathParameters['id']!),
