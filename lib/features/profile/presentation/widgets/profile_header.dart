@@ -25,7 +25,7 @@ const _levelNames = [
 
 /// The profile hero (artifact: ProfilePoster → Hero): full-bleed cobalt (or
 /// the member's cover photo), the name huge and heavy, level and campus, the
-/// level and muid as pills, and the photo in a capsule window at the
+/// level and muid as pills, and the photo in a ringed circle at the
 /// bottom-right. The night sheet below overlaps it.
 ///
 /// Own profile ([isOwn]): tap the photo to change it, cover/edit/share/
@@ -41,6 +41,8 @@ class ProfileHeader extends ConsumerWidget {
 
   /// How far the sheet below overlaps the hero.
   static const double sheetOverlap = 28;
+
+  static const double _photoSize = 116;
 
   Future<void> _pickAndUploadCover(BuildContext context, WidgetRef ref) async {
     final picked = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -113,8 +115,6 @@ class ProfileHeader extends ConsumerWidget {
         : 1;
     final levelName = (levelN >= 1 && levelN <= _levelNames.length) ? _levelNames[levelN - 1] : null;
     final name = profile.fullName.trim().isEmpty ? profile.muid : profile.fullName.trim();
-    // Never truncate the name: step down 48 → 40 → 32 to fit two lines.
-    final nameSize = name.length > 22 ? 32.0 : (name.length > 14 ? 40.0 : 48.0);
     // Artifact ProfilePoster: "Web Development · CET" (top interest, campus);
     // the level has its own pill below. With no interest yet, the level's
     // name stands in.
@@ -134,12 +134,13 @@ class ProfileHeader extends ConsumerWidget {
         MuIconButton(icon: icon, tooltip: tooltip, variant: MuIconButtonVariant.glass, onPressed: onTap);
 
     final photo = Container(
-      width: 132,
-      height: 168,
+      width: _photoSize,
+      height: _photoSize,
       clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: c.volt,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(66)),
+        shape: BoxShape.circle,
+        border: Border.all(color: c.onCobalt.withValues(alpha: 0.85), width: 3),
       ),
       child: (profile.profilePicUrl ?? '').isEmpty
           ? _Initials(name: name)
@@ -215,8 +216,8 @@ class ProfileHeader extends ConsumerWidget {
             ),
           ],
           PositionedDirectional(
-            end: MuSpacing.space2,
-            bottom: sheetOverlap,
+            end: MuSpacing.space4,
+            bottom: sheetOverlap + MuSpacing.space4,
             child: isOwn
                 ? Semantics(
                     button: true,
@@ -281,17 +282,16 @@ class ProfileHeader extends ConsumerWidget {
                 SizedBox(height: nameGap),
                 // Clear of the photo window.
                 Padding(
-                  padding: const EdgeInsetsDirectional.only(start: MuSpacing.space2, end: 132),
+                  padding: const EdgeInsetsDirectional.only(
+                    start: MuSpacing.space2,
+                    end: _photoSize + MuSpacing.space4,
+                  ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Semantics(
                         header: true,
-                        child: Text(
-                          name.toUpperCase(),
-                          maxLines: 2,
-                          style: mu.text.poster.copyWith(fontSize: nameSize, color: c.onCobalt),
-                        ),
+                        child: PosterName(name, style: mu.text.poster.copyWith(color: c.onCobalt)),
                       ),
                       const SizedBox(height: MuSpacing.space2),
                       if (role.isNotEmpty)
@@ -340,6 +340,63 @@ class ProfileHeader extends ConsumerWidget {
   }
 }
 
+/// The member's name, upper-cased and as big as it can be: the largest of
+/// 48 / 40 / 34 / 28 / 24 at which every word fits on a line and the whole
+/// name fits in two. A name too long even at 24 gets a third line, then an
+/// ellipsis. Never breaks a word.
+class PosterName extends StatelessWidget {
+  const PosterName(this.name, {required this.style, super.key});
+
+  final String name;
+  final TextStyle style;
+
+  static const _sizes = [48.0, 40.0, 34.0, 28.0, 24.0];
+
+  static bool _fits(String text, TextStyle style, double width, int lines) {
+    const scaler = TextScaler.noScaling;
+    for (final word in text.split(RegExp(r'\s+'))) {
+      final w = TextPainter(
+        text: TextSpan(text: word, style: style),
+        textDirection: TextDirection.ltr,
+        maxLines: 1,
+        textScaler: scaler,
+      )..layout();
+      final tooWide = w.width > width;
+      w.dispose();
+      if (tooWide) return false;
+    }
+    final all = TextPainter(
+      text: TextSpan(text: text, style: style),
+      textDirection: TextDirection.ltr,
+      maxLines: lines,
+      textScaler: scaler,
+    )..layout(maxWidth: width);
+    final fits = !all.didExceedMaxLines;
+    all.dispose();
+    return fits;
+  }
+
+  @override
+  Widget build(BuildContext context) => LayoutBuilder(
+    builder: (context, box) {
+      final text = name.toUpperCase();
+      final scale = MediaQuery.textScalerOf(context).scale(1);
+      for (final size in _sizes) {
+        final sized = style.copyWith(fontSize: size * scale);
+        if (_fits(text, sized, box.maxWidth, 2)) {
+          return Text(text, maxLines: 2, style: style.copyWith(fontSize: size));
+        }
+      }
+      return Text(
+        text,
+        maxLines: 3,
+        overflow: TextOverflow.ellipsis,
+        style: style.copyWith(fontSize: _sizes.last),
+      );
+    },
+  );
+}
+
 class _Initials extends StatelessWidget {
   const _Initials({required this.name});
 
@@ -349,7 +406,7 @@ class _Initials extends StatelessWidget {
   Widget build(BuildContext context) => Center(
     child: Text(
       MuAvatar.initialsOf(name),
-      style: context.mu.text.poster.copyWith(fontSize: 52, color: context.mu.colors.onVolt),
+      style: context.mu.text.poster.copyWith(fontSize: 44, color: context.mu.colors.onVolt),
     ),
   );
 }
