@@ -165,7 +165,7 @@ final class UserSearchProvider
   }
 }
 
-String _$userSearchHash() => r'832490d02790eed05bde52668d451c154eeb4264';
+String _$userSearchHash() => r'6bfc6f34c16feae54ec97354eae265a800253ba2';
 
 /// People (or, with `role: 'mentor'`, mentors) matching [query], page by
 /// page; an empty query lists everyone, like the dashboard's search pages.
