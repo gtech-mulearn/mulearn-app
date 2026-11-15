@@ -9,7 +9,7 @@ import 'package:mulearn_app/features/profile/domain/achievement_sections.dart';
 import 'package:mulearn_app/features/profile/domain/entities/achievement_progress.dart';
 import 'package:mulearn_app/features/profile/domain/entities/user_achievement.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/achievements_controller.dart';
-import 'package:mulearn_app/features/profile/presentation/widgets/issue_vc_dialog.dart';
+import 'package:mulearn_app/features/profile/presentation/widgets/issue_vc_sheet.dart';
 
 /// Achievements (FEAT-06), like the dashboard's tab: on your own profile
 /// "Earned", "Eligible" (claim) and "In Progress"; on someone else's, only
@@ -370,10 +370,12 @@ class _AchievementCard extends StatelessWidget {
               label: canView ? 'View' : 'Issue',
               variant: MuButtonVariant.ghost,
               size: MuButtonSize.small,
-              onPressed: () => showDialog<void>(
-                context: context,
-                builder: (_) =>
-                    IssueVcDialog(achievement: achievement, muid: muid, userName: userName, userEmail: userEmail),
+              onPressed: () => IssueVcSheet.show(
+                context,
+                achievement: achievement,
+                muid: muid,
+                userName: userName,
+                userEmail: userEmail,
               ),
             ),
           ],

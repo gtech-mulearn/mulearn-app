@@ -17,7 +17,7 @@ import 'package:mulearn_app/features/profile/presentation/providers/interest_gro
 import 'package:mulearn_app/features/profile/presentation/providers/public_profile_controller.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/socials_controller.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/user_levels_controller.dart';
-import 'package:mulearn_app/features/profile/presentation/widgets/edit_socials_dialog.dart';
+import 'package:mulearn_app/features/profile/presentation/widgets/edit_socials_sheet.dart';
 
 /// The night sheet over the profile hero (artifact: ProfilePoster → Sheet):
 /// the stat trio, top interests, campus, roles, workspaces and socials —
@@ -131,10 +131,7 @@ class ProfileSheet extends ConsumerWidget {
           _Heading(
             'Socials',
             action: isOwn && socials.value != null ? 'Edit' : null,
-            onAction: () => showDialog<void>(
-              context: context,
-              builder: (_) => EditSocialsDialog(initial: socials.value!),
-            ),
+            onAction: () => EditSocialsSheet.show(context, socials.value!),
           ),
           const SizedBox(height: MuSpacing.space3),
           socials.when(

@@ -9,7 +9,7 @@ import 'package:mulearn_app/features/profile/presentation/providers/public_profi
 import 'package:mulearn_app/features/profile/presentation/widgets/profile_view.dart';
 
 /// A profile set to private (`is_public: false`, toggled from
-/// [ShareProfileDialog]) rejects `GET user-profile/{muid}/` for anyone but
+/// [ShareProfileSheet]) rejects `GET user-profile/{muid}/` for anyone but
 /// the owner — surfaced as a permission-denied response (403, or a message
 /// naming "private"/"permission"). Distinguishing that from a genuine
 /// failure means "Retry" isn't offered for a state retrying can't fix, and

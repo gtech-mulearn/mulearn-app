@@ -5,11 +5,11 @@ import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/features/profile/domain/entities/user_profile.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/editable_profile_controller.dart';
 import 'package:mulearn_app/features/profile/presentation/widgets/achievements_tab.dart';
-import 'package:mulearn_app/features/profile/presentation/widgets/edit_profile_dialog.dart';
+import 'package:mulearn_app/features/profile/presentation/widgets/edit_profile_sheet.dart';
 import 'package:mulearn_app/features/profile/presentation/widgets/profile_header.dart';
 import 'package:mulearn_app/features/profile/presentation/widgets/profile_karma_tab.dart';
 import 'package:mulearn_app/features/profile/presentation/widgets/profile_sheet.dart';
-import 'package:mulearn_app/features/profile/presentation/widgets/share_profile_dialog.dart';
+import 'package:mulearn_app/features/profile/presentation/widgets/share_profile_sheet.dart';
 
 enum _Section { karma, achievements }
 
@@ -87,18 +87,8 @@ class _ProfileViewState extends ConsumerState<ProfileView> {
                         key: _heroKey,
                         profile: profile,
                         isOwn: isOwn,
-                        onEdit: isOwn
-                            ? () => showDialog<void>(
-                                context: context,
-                                builder: (_) => EditProfileDialog(profile: profile),
-                              )
-                            : null,
-                        onShare: isOwn
-                            ? () => showDialog<void>(
-                                context: context,
-                                builder: (_) => ShareProfileDialog(profile: profile),
-                              )
-                            : null,
+                        onEdit: isOwn ? () => EditProfileSheet.show(context, profile) : null,
+                        onShare: isOwn ? () => ShareProfileSheet.show(context, profile) : null,
                       ),
                       // The sheet overlaps the hero: its rounded top is drawn up into
                       // the hero's bottom padding, so nothing leaves a gap below.

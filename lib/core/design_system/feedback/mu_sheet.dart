@@ -108,6 +108,111 @@ class MuSheetBody extends StatelessWidget {
   }
 }
 
+/// A sheet that edits something (Edit profile, Social links): the title
+/// and an optional lead, the [children] fields scrolling under it, and the
+/// [action] pinned at the bottom so Save stays in reach above the keyboard.
+/// Grows with its content up to most of the screen.
+class MuFormSheet extends StatelessWidget {
+  /// A form sheet.
+  const MuFormSheet({required this.title, required this.children, required this.action, this.lead, super.key});
+
+  final String title;
+
+  /// One line on what changes and who sees it.
+  final String? lead;
+
+  /// The fields, spaced by the sheet.
+  final List<Widget> children;
+
+  /// The primary button (block width).
+  final Widget action;
+
+  @override
+  Widget build(BuildContext context) {
+    final mu = context.mu;
+    final c = mu.colors;
+    final maxHeight = MediaQuery.sizeOf(context).height * 0.86;
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxHeight: maxHeight),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(MuSpacing.space5, 0, MuSpacing.space5, MuSpacing.space4),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Semantics(header: true, child: Text(title, style: mu.text.title2)),
+                if (lead != null) ...[
+                  const SizedBox(height: MuSpacing.space1),
+                  Text(lead!, style: mu.text.body.copyWith(color: c.ink2)),
+                ],
+              ],
+            ),
+          ),
+          Flexible(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(MuSpacing.space5, 0, MuSpacing.space5, MuSpacing.space4),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  for (var i = 0; i < children.length; i++) ...[
+                    if (i > 0) const SizedBox(height: MuSpacing.space4),
+                    children[i],
+                  ],
+                ],
+              ),
+            ),
+          ),
+          DecoratedBox(
+            decoration: BoxDecoration(
+              color: c.surface,
+              border: Border(top: BorderSide(color: c.line)),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(
+                MuSpacing.space5,
+                MuSpacing.space3,
+                MuSpacing.space5,
+                MuSpacing.space4,
+              ),
+              child: action,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// A small heading inside a form sheet ("College").
+class MuFormSection extends StatelessWidget {
+  /// A section heading with an optional line under it.
+  const MuFormSection(this.title, {this.note, super.key});
+
+  final String title;
+  final String? note;
+
+  @override
+  Widget build(BuildContext context) {
+    final mu = context.mu;
+    return Padding(
+      padding: const EdgeInsets.only(top: MuSpacing.space3),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Semantics(header: true, child: Text(title.toUpperCase(), style: mu.text.eyebrow)),
+          if (note != null) ...[
+            const SizedBox(height: 4),
+            Text(note!, style: mu.text.caption.copyWith(color: mu.colors.ink3)),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
 /// Confirms an odd or irreversible action with context. Sits low (thumb
 /// reach), safe choice on the left. Destructive confirms don't close on a
 /// scrim tap. Resolves to `true` only when confirmed.
