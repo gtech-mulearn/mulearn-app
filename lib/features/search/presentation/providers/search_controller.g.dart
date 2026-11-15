@@ -108,68 +108,133 @@ final class SearchRepositoryProvider
 
 String _$searchRepositoryHash() => r'f14ca810804bec88f67d6b2cffb39fb21c05544e';
 
-/// Accumulates search results across pages ("load more") for a given query
-/// + role filter, like the dashboard's infinite-scroll search. Each search
-/// supersedes the one before: a slower, older answer never replaces a newer
-/// one, and concurrent "load more" calls share one request.
+/// People (or, with `role: 'mentor'`, mentors) matching [query], page by
+/// page; an empty query lists everyone, like the dashboard's search pages.
+/// Each query is its own list, kept for a while once seen
+/// ([KeepRecentResults]), so going back to a query or tab costs no request;
+/// concurrent "load more" calls share one request.
 
-@ProviderFor(SearchController)
-const searchControllerProvider = SearchControllerProvider._();
+@ProviderFor(UserSearch)
+const userSearchProvider = UserSearchFamily._();
 
-/// Accumulates search results across pages ("load more") for a given query
-/// + role filter, like the dashboard's infinite-scroll search. Each search
-/// supersedes the one before: a slower, older answer never replaces a newer
-/// one, and concurrent "load more" calls share one request.
-final class SearchControllerProvider
-    extends $AsyncNotifierProvider<SearchController, List<UserSearchResult>> {
-  /// Accumulates search results across pages ("load more") for a given query
-  /// + role filter, like the dashboard's infinite-scroll search. Each search
-  /// supersedes the one before: a slower, older answer never replaces a newer
-  /// one, and concurrent "load more" calls share one request.
-  const SearchControllerProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'searchControllerProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
+/// People (or, with `role: 'mentor'`, mentors) matching [query], page by
+/// page; an empty query lists everyone, like the dashboard's search pages.
+/// Each query is its own list, kept for a while once seen
+/// ([KeepRecentResults]), so going back to a query or tab costs no request;
+/// concurrent "load more" calls share one request.
+final class UserSearchProvider
+    extends $AsyncNotifierProvider<UserSearch, PagedState<UserSearchResult>> {
+  /// People (or, with `role: 'mentor'`, mentors) matching [query], page by
+  /// page; an empty query lists everyone, like the dashboard's search pages.
+  /// Each query is its own list, kept for a while once seen
+  /// ([KeepRecentResults]), so going back to a query or tab costs no request;
+  /// concurrent "load more" calls share one request.
+  const UserSearchProvider._({
+    required UserSearchFamily super.from,
+    required (String, String?) super.argument,
+  }) : super(
+         retry: noRetry,
+         name: r'userSearchProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
   @override
-  String debugGetCreateSourceHash() => _$searchControllerHash();
+  String debugGetCreateSourceHash() => _$userSearchHash();
+
+  @override
+  String toString() {
+    return r'userSearchProvider'
+        ''
+        '$argument';
+  }
 
   @$internal
   @override
-  SearchController create() => SearchController();
+  UserSearch create() => UserSearch();
+
+  @override
+  bool operator ==(Object other) {
+    return other is UserSearchProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
 }
 
-String _$searchControllerHash() => r'b65583813a9f1a2949ef25b0933a3b8e9d90bceb';
+String _$userSearchHash() => r'832490d02790eed05bde52668d451c154eeb4264';
 
-/// Accumulates search results across pages ("load more") for a given query
-/// + role filter, like the dashboard's infinite-scroll search. Each search
-/// supersedes the one before: a slower, older answer never replaces a newer
-/// one, and concurrent "load more" calls share one request.
+/// People (or, with `role: 'mentor'`, mentors) matching [query], page by
+/// page; an empty query lists everyone, like the dashboard's search pages.
+/// Each query is its own list, kept for a while once seen
+/// ([KeepRecentResults]), so going back to a query or tab costs no request;
+/// concurrent "load more" calls share one request.
 
-abstract class _$SearchController
-    extends $AsyncNotifier<List<UserSearchResult>> {
-  FutureOr<List<UserSearchResult>> build();
+final class UserSearchFamily extends $Family
+    with
+        $ClassFamilyOverride<
+          UserSearch,
+          AsyncValue<PagedState<UserSearchResult>>,
+          PagedState<UserSearchResult>,
+          FutureOr<PagedState<UserSearchResult>>,
+          (String, String?)
+        > {
+  const UserSearchFamily._()
+    : super(
+        retry: noRetry,
+        name: r'userSearchProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// People (or, with `role: 'mentor'`, mentors) matching [query], page by
+  /// page; an empty query lists everyone, like the dashboard's search pages.
+  /// Each query is its own list, kept for a while once seen
+  /// ([KeepRecentResults]), so going back to a query or tab costs no request;
+  /// concurrent "load more" calls share one request.
+
+  UserSearchProvider call(String query, String? role) =>
+      UserSearchProvider._(argument: (query, role), from: this);
+
+  @override
+  String toString() => r'userSearchProvider';
+}
+
+/// People (or, with `role: 'mentor'`, mentors) matching [query], page by
+/// page; an empty query lists everyone, like the dashboard's search pages.
+/// Each query is its own list, kept for a while once seen
+/// ([KeepRecentResults]), so going back to a query or tab costs no request;
+/// concurrent "load more" calls share one request.
+
+abstract class _$UserSearch
+    extends $AsyncNotifier<PagedState<UserSearchResult>> {
+  late final _$args = ref.$arg as (String, String?);
+  String get query => _$args.$1;
+  String? get role => _$args.$2;
+
+  FutureOr<PagedState<UserSearchResult>> build(String query, String? role);
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
+    final created = build(_$args.$1, _$args.$2);
     final ref =
         this.ref
-            as $Ref<AsyncValue<List<UserSearchResult>>, List<UserSearchResult>>;
+            as $Ref<
+              AsyncValue<PagedState<UserSearchResult>>,
+              PagedState<UserSearchResult>
+            >;
     final element =
         ref.element
             as $ClassProviderElement<
               AnyNotifier<
-                AsyncValue<List<UserSearchResult>>,
-                List<UserSearchResult>
+                AsyncValue<PagedState<UserSearchResult>>,
+                PagedState<UserSearchResult>
               >,
-              AsyncValue<List<UserSearchResult>>,
+              AsyncValue<PagedState<UserSearchResult>>,
               Object?,
               Object?
             >;
@@ -177,68 +242,115 @@ abstract class _$SearchController
   }
 }
 
-/// Campus search (colleges and schools), page by page ("load more"), with
-/// the same superseding and recent-results rules as [SearchController].
+/// Colleges and schools matching [query] (all of them when empty), page by
+/// page, with the same caching as [UserSearch].
 
-@ProviderFor(CampusSearchController)
-const campusSearchControllerProvider = CampusSearchControllerProvider._();
+@ProviderFor(CampusSearch)
+const campusSearchProvider = CampusSearchFamily._();
 
-/// Campus search (colleges and schools), page by page ("load more"), with
-/// the same superseding and recent-results rules as [SearchController].
-final class CampusSearchControllerProvider
+/// Colleges and schools matching [query] (all of them when empty), page by
+/// page, with the same caching as [UserSearch].
+final class CampusSearchProvider
     extends
-        $AsyncNotifierProvider<
-          CampusSearchController,
-          List<CampusSearchResult>
-        > {
-  /// Campus search (colleges and schools), page by page ("load more"), with
-  /// the same superseding and recent-results rules as [SearchController].
-  const CampusSearchControllerProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'campusSearchControllerProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
+        $AsyncNotifierProvider<CampusSearch, PagedState<CampusSearchResult>> {
+  /// Colleges and schools matching [query] (all of them when empty), page by
+  /// page, with the same caching as [UserSearch].
+  const CampusSearchProvider._({
+    required CampusSearchFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: noRetry,
+         name: r'campusSearchProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
 
   @override
-  String debugGetCreateSourceHash() => _$campusSearchControllerHash();
+  String debugGetCreateSourceHash() => _$campusSearchHash();
+
+  @override
+  String toString() {
+    return r'campusSearchProvider'
+        ''
+        '($argument)';
+  }
 
   @$internal
   @override
-  CampusSearchController create() => CampusSearchController();
+  CampusSearch create() => CampusSearch();
+
+  @override
+  bool operator ==(Object other) {
+    return other is CampusSearchProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
 }
 
-String _$campusSearchControllerHash() =>
-    r'5ffdd43502d9b304cc9dc2f1c03308fef2182e54';
+String _$campusSearchHash() => r'075c8f95eda9360012f506d7cc0cd618d1d054d0';
 
-/// Campus search (colleges and schools), page by page ("load more"), with
-/// the same superseding and recent-results rules as [SearchController].
+/// Colleges and schools matching [query] (all of them when empty), page by
+/// page, with the same caching as [UserSearch].
 
-abstract class _$CampusSearchController
-    extends $AsyncNotifier<List<CampusSearchResult>> {
-  FutureOr<List<CampusSearchResult>> build();
+final class CampusSearchFamily extends $Family
+    with
+        $ClassFamilyOverride<
+          CampusSearch,
+          AsyncValue<PagedState<CampusSearchResult>>,
+          PagedState<CampusSearchResult>,
+          FutureOr<PagedState<CampusSearchResult>>,
+          String
+        > {
+  const CampusSearchFamily._()
+    : super(
+        retry: noRetry,
+        name: r'campusSearchProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// Colleges and schools matching [query] (all of them when empty), page by
+  /// page, with the same caching as [UserSearch].
+
+  CampusSearchProvider call(String query) =>
+      CampusSearchProvider._(argument: query, from: this);
+
+  @override
+  String toString() => r'campusSearchProvider';
+}
+
+/// Colleges and schools matching [query] (all of them when empty), page by
+/// page, with the same caching as [UserSearch].
+
+abstract class _$CampusSearch
+    extends $AsyncNotifier<PagedState<CampusSearchResult>> {
+  late final _$args = ref.$arg as String;
+  String get query => _$args;
+
+  FutureOr<PagedState<CampusSearchResult>> build(String query);
   @$mustCallSuper
   @override
   void runBuild() {
-    final created = build();
+    final created = build(_$args);
     final ref =
         this.ref
             as $Ref<
-              AsyncValue<List<CampusSearchResult>>,
-              List<CampusSearchResult>
+              AsyncValue<PagedState<CampusSearchResult>>,
+              PagedState<CampusSearchResult>
             >;
     final element =
         ref.element
             as $ClassProviderElement<
               AnyNotifier<
-                AsyncValue<List<CampusSearchResult>>,
-                List<CampusSearchResult>
+                AsyncValue<PagedState<CampusSearchResult>>,
+                PagedState<CampusSearchResult>
               >,
-              AsyncValue<List<CampusSearchResult>>,
+              AsyncValue<PagedState<CampusSearchResult>>,
               Object?,
               Object?
             >;

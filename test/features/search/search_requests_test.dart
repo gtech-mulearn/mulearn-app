@@ -7,6 +7,7 @@ import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/network/dio_provider.dart';
 import 'package:mulearn_app/core/storage/secure_storage_provider.dart';
 import 'package:mulearn_app/core/utils/search_debouncer.dart';
+import 'package:mulearn_app/core/widgets/mu_load_more_footer.dart';
 import 'package:mulearn_app/features/search/presentation/screens/search_screen.dart';
 
 import '../../support/fake_http_adapter.dart';
@@ -14,6 +15,7 @@ import '../../support/fake_secure_storage.dart';
 import '../../support/fixtures.dart';
 
 const _college = '/api/v1/dashboard/organisation/institutes/college/';
+const _users = '/api/v1/dashboard/user/search/';
 
 /// Search fields must not flood the server: one request per pause in
 /// typing, none for one letter or an unchanged query, and none for a query
@@ -54,6 +56,10 @@ void main() {
     adapter = FakeHttpAdapter({
       'GET $_college': (_) => FakeResponse(200, loadFixture('dev/campus_search_college')),
       'GET /api/v1/dashboard/organisation/institutes/school/': (_) => const FakeResponse(500, {'detail': 'boom'}),
+      'GET $_users': (RequestOptions r) => FakeResponse(
+        200,
+        loadFixture(r.queryParameters['pageIndex'] == 2 ? 'dev/user_search_default_p2' : 'dev/user_search_default_p1'),
+      ),
     });
   });
 
@@ -99,17 +105,63 @@ void main() {
     await tester.pump(const Duration(milliseconds: 100));
     await tester.enterText(field, 'Joseph');
     await settle(tester);
-    expect(sent(), ['Joseph'], reason: 'one request once typing pauses');
+    expect(sent(), ['', 'Joseph'], reason: 'the default list, then one request once typing pauses');
     expect(find.text('St. Josephs Colege of Engineering and Technology'), findsOneWidget);
 
     await tester.enterText(field, 'Josephs');
     await settle(tester);
     await tester.enterText(field, 'Joseph');
     await settle(tester);
-    expect(sent(), ['Joseph', 'Josephs'], reason: 'going back to "Joseph" is served from memory');
+    expect(sent(), ['', 'Joseph', 'Josephs'], reason: 'going back to "Joseph" is served from memory');
 
     await tester.enterText(field, 'J');
     await settle(tester);
-    expect(sent(), hasLength(2), reason: 'one letter sends nothing');
+    expect(sent(), hasLength(3), reason: 'one letter sends nothing');
+
+    await tester.enterText(field, '');
+    await settle(tester);
+    expect(sent(), hasLength(3), reason: 'clearing shows the default list from memory');
+  });
+
+  testWidgets('People lists everyone before you type, a page at a time, without refetching', (tester) async {
+    final tokens = TokenStorage(FakeSecureStorage());
+    await tokens.saveTokens(accessToken: 'a', refreshToken: 'r');
+    final container = ProviderContainer(
+      retry: (_, _) => null,
+      overrides: [dioProvider.overrideWithValue(fakeDio(adapter)), tokenStorageProvider.overrideWithValue(tokens)],
+    );
+    addTearDown(container.dispose);
+    final router = GoRouter(
+      initialLocation: '/search',
+      routes: [GoRoute(path: '/search', builder: (_, _) => const SearchScreen())],
+    );
+    addTearDown(router.dispose);
+    await tester.pumpWidget(
+      UncontrolledProviderScope(
+        container: container,
+        child: MaterialApp.router(theme: MuThemeData.light(), routerConfig: router),
+      ),
+    );
+    await settle(tester);
+
+    List<Object?> pages() => [
+      for (final RequestOptions r in adapter.requests)
+        if (r.uri.path == _users && r.queryParameters['role'] == null) r.queryParameters['pageIndex'],
+    ];
+    expect(find.text('onthmurali'), findsOneWidget, reason: 'the first of the default list');
+    expect(pages(), [1]);
+
+    for (var i = 0; i < 6; i++) {
+      await tester.fling(find.byType(ListView), const Offset(0, -3000), 3000);
+      await settle(tester);
+    }
+    expect(pages(), [1, 2], reason: 'each page once, however much it scrolls');
+    expect(find.byType(MuLoadMoreFooter), findsNothing, reason: 'no more pages after the last');
+
+    await tester.tap(find.text('Mentors'));
+    await settle(tester);
+    await tester.tap(find.text('People'));
+    await settle(tester);
+    expect(pages(), [1, 2], reason: 'back on People, the list comes from memory');
   });
 }
