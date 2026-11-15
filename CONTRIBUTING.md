@@ -35,18 +35,21 @@ any account credentials.
 ## How work flows
 
 ```
-feature/*  ──PR──►  dev  ──PR──►  main  ──tag vX.Y.Z──►  release
+feature/*  ──PR──►  dev  ──PR──►  staging  ──PR──►  master  ──tag vX.Y.Z──►  release
 ```
 
 1. Branch from `dev`: `feature/<short-name>` or `fix/<short-name>`.
 2. Commit in small steps with [Conventional Commits](https://www.conventionalcommits.org/):
    `feat(events): show the venue map`, `fix(profile): handle a missing photo`.
    Release notes are built from these subjects, so write them for a reader.
-3. Open a pull request into `dev`. CI runs on it; `dev` needs CI to pass.
-4. `dev` is promoted to `main` by PR; releases are tagged from `main`
+3. Open a pull request into `dev` (the default branch). CI validates it
+   (format, analyze, test); `dev` needs that to pass and builds nothing.
+4. `dev` is promoted to `staging` by PR for QA: PRs into `staging` also build
+   the app, and every merge there produces the dev-flavor QA build.
+5. `staging` is promoted to `master`; releases are tags on `master`
    (see [Creating a release](docs/CI-CD.md#creating-a-release)).
 
-Don't force-push `dev` or `main`.
+Don't push directly to, or force-push, `dev`, `staging` or `master`.
 
 ## What CI checks on every pull request
 
@@ -81,7 +84,8 @@ yourself first; each takes under a few minutes.
    flutter test
    ```
 
-4. **An Android build** of the dev flavor (release mode, unsigned). Locally:
+4. **An Android build** of the dev flavor (release mode, unsigned), on PRs
+   into `staging` and `master`. Locally:
 
    ```bash
    flutter build apk --release --flavor dev -t lib/main_dev.dart
