@@ -21,8 +21,12 @@ class MuIgSticker extends StatelessWidget {
     this.index = 0,
     this.onTap,
     this.onJoin,
+    this.width = 156,
     super.key,
   });
+
+  /// 156 in a 2-up row on a 360 screen; null fills the cell it is given.
+  final double? width;
 
   /// IG name ("Web Development").
   final String name;
@@ -65,7 +69,7 @@ class MuIgSticker extends StatelessWidget {
     final label = [if (code != null) code!.toUpperCase(), category.name.toUpperCase()].join(' · ');
 
     final body = Container(
-      width: 156,
+      width: width,
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
         color: MuTones.forIgCategory(c, category),
