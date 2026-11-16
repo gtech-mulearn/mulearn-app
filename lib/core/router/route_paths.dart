@@ -69,6 +69,10 @@ abstract final class RoutePaths {
   static String mentorApplyAgainPath(String id) =>
       '/mentor/apply?from=${Uri.encodeQueryComponent(id)}';
 
+  /// The form with a tier already chosen (its backend value).
+  static String mentorApplyTierPath(String tier) =>
+      '/mentor/apply?tier=${Uri.encodeQueryComponent(tier)}';
+
   /// Read-only view of another user's profile by muid.
   static const String publicProfile = '/u/:muid';
   static String publicProfilePath(String muid) => '/u/$muid';

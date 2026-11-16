@@ -18,10 +18,19 @@ import 'package:mulearn_app/features/mentor/presentation/providers/mentor_applic
 /// What the mentor already told us (about, expertise, hours, LinkedIn, and
 /// the earlier application's answers) is filled in.
 class MentorApplicationFormScreen extends ConsumerWidget {
-  const MentorApplicationFormScreen({this.editId, this.fromId, super.key});
+  const MentorApplicationFormScreen({
+    this.editId,
+    this.fromId,
+    this.tier,
+    super.key,
+  });
 
   final String? editId;
   final String? fromId;
+
+  /// A tier chosen before the form (its backend value), from the tier
+  /// cards.
+  final String? tier;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -40,6 +49,7 @@ class MentorApplicationFormScreen extends ConsumerWidget {
         applications: apps.value ?? const [],
         editId: editId,
         fromId: fromId,
+        tier: MentorTier.parse(tier),
       ),
     );
   }
@@ -51,12 +61,14 @@ class _Form extends ConsumerStatefulWidget {
     required this.applications,
     this.editId,
     this.fromId,
+    this.tier,
   });
 
   final MentorProfileSnapshot snapshot;
   final List<MentorApplication> applications;
   final String? editId;
   final String? fromId;
+  final MentorTier? tier;
 
   @override
   ConsumerState<_Form> createState() => _FormState();
@@ -76,7 +88,12 @@ class _FormState extends ConsumerState<_Form> {
   );
 
   late MentorTier _tier =
-      _earlier?.tier ?? (_igTaken ? MentorTier.campus : MentorTier.ig);
+      _earlier?.tier ??
+      switch (widget.tier) {
+        MentorTier.ig when _igTaken => MentorTier.campus,
+        final MentorTier t => t,
+        null => _igTaken ? MentorTier.campus : MentorTier.ig,
+      };
   late MentorChoice? _org = _earlier?.organization;
   late final _about = TextEditingController(text: widget.snapshot.about);
   late final _reason = TextEditingController(text: _earlier?.reason ?? '');

@@ -374,6 +374,7 @@ GoRouter goRouter(Ref ref) {
         builder: (_, state) => MentorApplicationFormScreen(
           editId: state.uri.queryParameters['edit'],
           fromId: state.uri.queryParameters['from'],
+          tier: state.uri.queryParameters['tier'],
         ),
       ),
       GoRoute(
