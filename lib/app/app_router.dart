@@ -168,7 +168,8 @@ GoRouter goRouter(Ref ref) {
       ),
       GoRoute(
         path: RoutePaths.events,
-        builder: (_, __) => const EventsScreen(),
+        builder: (_, state) =>
+            EventsScreen(igId: state.uri.queryParameters['ig']),
       ),
       GoRoute(
         path: RoutePaths.eventDetail,
@@ -234,7 +235,8 @@ GoRouter goRouter(Ref ref) {
       ),
       GoRoute(
         path: RoutePaths.learningCircles,
-        builder: (_, __) => const LearningCirclesScreen(),
+        builder: (_, state) =>
+            LearningCirclesScreen(igId: state.uri.queryParameters['ig']),
       ),
       GoRoute(
         path: RoutePaths.createLearningCircle,
@@ -374,6 +376,7 @@ GoRouter goRouter(Ref ref) {
         builder: (_, state) => MentorApplicationFormScreen(
           editId: state.uri.queryParameters['edit'],
           fromId: state.uri.queryParameters['from'],
+          tier: state.uri.queryParameters['tier'],
         ),
       ),
       GoRoute(

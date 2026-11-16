@@ -16,7 +16,7 @@ abstract interface class RegisterRepository {
   Future<List<ReferenceOption>> fetchRoles();
 
   /// `GET /api/v1/register/colleges/`.
-  Future<List<ReferenceOption>> fetchColleges();
+  Future<List<ReferenceOption>> searchColleges(String query);
 
   /// `GET /api/v1/register/department/list/`.
   Future<List<ReferenceOption>> fetchDepartments();

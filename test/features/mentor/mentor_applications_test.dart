@@ -255,13 +255,15 @@ void main() {
       expect(a.preferredIgIds, ['ig1', 'ig2']);
     });
 
-    test('no profile yet (404) starts the form blank', () async {
+    // What dev sends a mentor before their first application: HTTP 400, the
+    // 404 only in the envelope (seen on the phone 2026-11-16).
+    test('no profile yet starts the form blank', () async {
       final adapter = FakeHttpAdapter({
-        'GET $_profile': (_) => const FakeResponse(404, {
+        'GET $_profile': (_) => const FakeResponse(400, {
           'hasError': true,
           'statusCode': 404,
           'message': {
-            'general': ['Mentor profile not found.'],
+            'general': ['No approved mentor profiles found.'],
           },
           'response': <String, Object>{},
         }),

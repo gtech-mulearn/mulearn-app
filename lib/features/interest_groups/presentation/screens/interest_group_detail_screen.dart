@@ -14,6 +14,7 @@ import 'package:mulearn_app/core/utils/unescape_literal_unicode.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/features/interest_groups/domain/entities/ig_impact_project.dart';
 import 'package:mulearn_app/features/interest_groups/domain/entities/ig_person_ref.dart';
+import 'package:mulearn_app/features/interest_groups/domain/entities/ig_related.dart';
 import 'package:mulearn_app/features/interest_groups/domain/entities/interest_group_summary.dart';
 import 'package:mulearn_app/features/interest_groups/presentation/providers/interest_groups_controller.dart';
 import 'package:mulearn_app/features/interest_groups/presentation/widgets/ig_membership_action.dart';
@@ -316,7 +317,13 @@ class _About extends ConsumerWidget {
   }
 }
 
-/// The group's first circles; hidden when it has none.
+/// "See all 1,240" when the preview shows only some (production groups
+/// have thousands of circles); null when it shows them all.
+String? _seeAll(int shown, int total) =>
+    total > shown ? 'See all ${muGrouped(total)}' : null;
+
+/// The group's first circles, and the way to all of them; hidden when it
+/// has none.
 class _GroupCircles extends ConsumerWidget {
   const _GroupCircles({required this.groupId});
 
@@ -324,13 +331,18 @@ class _GroupCircles extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final circles =
-        ref.watch(circlesInGroupProvider(groupId)).value ?? const [];
+    final preview = ref.watch(circlesInGroupProvider(groupId)).value;
+    final circles = preview?.items ?? const <IgCircleRef>[];
     if (circles.isEmpty) return const SizedBox.shrink();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const _Eyebrow('CIRCLES IN THIS GROUP'),
+        MuSectionEyebrow(
+          'Circles in this group',
+          action: _seeAll(circles.length, preview!.total),
+          onAction: () =>
+              context.push(RoutePaths.learningCirclesInGroup(groupId)),
+        ),
         MuFeedGroup(
           children: [
             for (var i = 0; i < circles.length; i++)
@@ -358,7 +370,8 @@ class _GroupCircles extends ConsumerWidget {
   }
 }
 
-/// Events scoped to the group; hidden when there are none.
+/// Events scoped to the group, and the way to all of them; hidden when
+/// there are none.
 class _GroupEvents extends ConsumerWidget {
   const _GroupEvents({required this.groupId});
 
@@ -366,12 +379,17 @@ class _GroupEvents extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final events = ref.watch(eventsInGroupProvider(groupId)).value ?? const [];
+    final preview = ref.watch(eventsInGroupProvider(groupId)).value;
+    final events = preview?.items ?? const <IgEventRef>[];
     if (events.isEmpty) return const SizedBox.shrink();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const _Eyebrow('EVENTS IN THIS GROUP'),
+        MuSectionEyebrow(
+          'Events in this group',
+          action: _seeAll(events.length, preview!.total),
+          onAction: () => context.push(RoutePaths.eventsInGroup(groupId)),
+        ),
         MuFeedGroup(
           children: [
             for (var i = 0; i < events.length; i++)

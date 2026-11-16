@@ -12,7 +12,7 @@ import 'package:mulearn_app/core/utils/clock.dart';
 import 'package:mulearn_app/core/utils/date_format.dart';
 import 'package:mulearn_app/core/utils/search_debouncer.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
-import 'package:mulearn_app/core/widgets/mu_load_more_footer.dart';
+import 'package:mulearn_app/core/widgets/mu_paged_list.dart';
 import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/core/widgets/mu_state_display.dart';
 import 'package:mulearn_app/features/campus/domain/entities/campus_groups.dart';
@@ -103,15 +103,7 @@ class _CampusGroupsScreenState extends ConsumerState<CampusGroupsScreen> {
                     onLoadMore: () => ref
                         .read(campusCirclesControllerProvider(_query).notifier)
                         .loadMore(),
-                    builder: (items) => Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        for (var i = 0; i < items.length; i++) ...[
-                          if (i > 0) const SizedBox(height: MuSpacing.space3),
-                          _CircleCard(circle: items[i]),
-                        ],
-                      ],
-                    ),
+                    itemBuilder: (_, circle, _) => _CircleCard(circle: circle),
                   )
                 : _Chapters(query: _query),
           ),
@@ -121,20 +113,21 @@ class _CampusGroupsScreenState extends ConsumerState<CampusGroupsScreen> {
   }
 }
 
+/// A paged list built row by row (a campus has hundreds of circles).
 class _PagedList<T> extends StatelessWidget {
   const _PagedList({
     required this.state,
     required this.onRefresh,
     required this.onRetry,
     required this.onLoadMore,
-    required this.builder,
+    required this.itemBuilder,
   });
 
   final AsyncValue<PagedState<T>> state;
   final Future<void> Function() onRefresh;
   final VoidCallback onRetry;
   final Future<void> Function() onLoadMore;
-  final Widget Function(List<T> items) builder;
+  final Widget Function(BuildContext context, T item, int index) itemBuilder;
 
   @override
   Widget build(BuildContext context) {
@@ -143,48 +136,21 @@ class _PagedList<T> extends StatelessWidget {
       skipLoadingOnReload: true,
       loading: () => const Center(child: MuDotsLoader()),
       error: (e, _) => ErrorRetryView(error: e, onRetry: onRetry),
-      data: (paged) => MuRefresh(
+      data: (paged) => MuPagedListView<T>(
+        state: paged,
         onRefresh: onRefresh,
-        child: paged.items.isEmpty
-            ? ListView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                children: const [
-                  MuStateDisplay(
-                    variant: MuStateVariant.noResults,
-                    size: MuStateSize.sm,
-                  ),
-                ],
-              )
-            : NotificationListener<ScrollNotification>(
-                onNotification: (n) {
-                  if (n.metrics.extentAfter < 400 &&
-                      paged.hasMore &&
-                      paged.loadMoreError == null) {
-                    unawaited(onLoadMore());
-                  }
-                  return false;
-                },
-                child: ListView(
-                  physics: const BouncingScrollPhysics(
-                    parent: AlwaysScrollableScrollPhysics(),
-                  ),
-                  padding: const EdgeInsets.fromLTRB(
-                    MuSpacing.space5,
-                    0,
-                    MuSpacing.space5,
-                    MuSpacing.space8,
-                  ),
-                  children: [
-                    builder(paged.items),
-                    if (paged.hasMore || paged.loadMoreError != null)
-                      MuLoadMoreFooter(
-                        isLoading: paged.isLoadingMore,
-                        error: paged.loadMoreError,
-                        onRetry: onLoadMore,
-                      ),
-                  ],
-                ),
-              ),
+        onLoadMore: onLoadMore,
+        padding: const EdgeInsets.fromLTRB(
+          MuSpacing.space5,
+          0,
+          MuSpacing.space5,
+          MuSpacing.space8,
+        ),
+        empty: const MuStateDisplay(
+          variant: MuStateVariant.noResults,
+          size: MuStateSize.sm,
+        ),
+        itemBuilder: itemBuilder,
       ),
     );
   }

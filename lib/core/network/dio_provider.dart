@@ -4,6 +4,7 @@ import 'package:mulearn_app/core/config/flavor_config.dart';
 import 'package:mulearn_app/core/network/auth_interceptor.dart';
 import 'package:mulearn_app/core/network/cache_config.dart';
 import 'package:mulearn_app/core/network/cache_scope_interceptor.dart';
+import 'package:mulearn_app/core/network/large_list_interceptor.dart';
 import 'package:mulearn_app/core/network/session_event_bus.dart';
 import 'package:mulearn_app/core/storage/cache_store_provider.dart';
 import 'package:mulearn_app/core/storage/secure_storage_provider.dart';
@@ -63,7 +64,12 @@ Dio dio(Ref ref) {
       cacheStore: store,
     ),
   );
-  if (FlavorConfig.instance.isDev) dio.interceptors.add(_logInterceptor());
+  if (FlavorConfig.instance.isDev) {
+    dio.interceptors
+      ..add(_logInterceptor())
+      // Flags a response that carries a long list (rules.md §3).
+      ..add(LargeListInterceptor());
+  }
 
   return dio;
 }

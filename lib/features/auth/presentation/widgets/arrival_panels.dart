@@ -118,7 +118,6 @@ class _RingPanelState extends State<RingPanel> with TickerProviderStateMixin {
     final names = widget.groups.isEmpty
         ? _fallback
         : [for (final g in widget.groups.take(12)) g.name];
-    final count = widget.groupCount ?? widget.groups.length;
 
     return ColoredBox(
       color: c.cobalt,
@@ -171,7 +170,7 @@ class _RingPanelState extends State<RingPanel> with TickerProviderStateMixin {
                                   child: CustomPaint(
                                     size: const Size.square(250),
                                     painter: _RingTextPainter(
-                                      text: 'WEB DEV · ',
+                                      text: 'INTEREST GROUPS · ',
                                       style: mu.text.label.copyWith(
                                         color: c.volt,
                                         fontSize: 17,
@@ -242,22 +241,20 @@ class _RingPanelState extends State<RingPanel> with TickerProviderStateMixin {
                       category: _tones[i % _tones.length],
                     ),
                   ),
-              Positioned(
-                left: 0,
-                right: 0,
-                bottom: MuSpacing.space5,
-                child: Text(
-                  _broken
-                      ? (count > 0
-                            ? '$count Interest Groups. Pick any.'
-                            : 'Pick any group.')
-                      : 'Tap the ring',
-                  textAlign: TextAlign.center,
-                  style: mu.text.bodyStrong.copyWith(
-                    color: c.onCobalt.withValues(alpha: 0.86),
+              // The hint goes once the ring breaks: the stickers say it.
+              if (!_broken)
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: MuSpacing.space5,
+                  child: Text(
+                    'Tap the ring',
+                    textAlign: TextAlign.center,
+                    style: mu.text.bodyStrong.copyWith(
+                      color: c.onCobalt.withValues(alpha: 0.86),
+                    ),
                   ),
                 ),
-              ),
             ],
           );
         },
