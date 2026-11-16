@@ -23,8 +23,6 @@ void main() {
           karma: 10,
           createdDate: DateTime.utc(
             2026,
-            1,
-            1,
           ).add(Duration(days: i)).toIso8601String(),
         ),
     ];
