@@ -28,8 +28,8 @@ class RegisterRepositoryImpl implements RegisterRepository {
       _fetchReferenceOptions(_remote.fetchRoles);
 
   @override
-  Future<List<ReferenceOption>> fetchColleges() =>
-      _fetchReferenceOptions(_remote.fetchColleges);
+  Future<List<ReferenceOption>> searchColleges(String query) =>
+      _fetchReferenceOptions(() => _remote.searchColleges(query));
 
   @override
   Future<List<ReferenceOption>> fetchDepartments() =>

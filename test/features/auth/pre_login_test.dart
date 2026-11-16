@@ -125,8 +125,10 @@ void main() {
       ),
     );
     await tester.pump(const Duration(seconds: 1));
-    expect(find.text('23 Interest Groups. Pick any.'), findsOneWidget);
     expect(find.text('Comics'), findsOneWidget);
+    // The hint goes with the ring; no "Pick any" line replaces it.
+    expect(find.text('Tap the ring'), findsNothing);
+    expect(find.textContaining('Pick any'), findsNothing);
   });
 
   Future<void> frames(WidgetTester tester) async {

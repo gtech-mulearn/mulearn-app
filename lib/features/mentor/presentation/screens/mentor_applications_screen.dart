@@ -121,16 +121,39 @@ class _Tiers extends StatelessWidget {
       children: [
         for (final (i, t) in MentorTier.values.indexed) ...[
           if (i > 0) const SizedBox(height: MuSpacing.space3),
-          MuSurfaceCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(t.label, style: mu.text.title3),
-                const SizedBox(height: MuSpacing.space1),
-                Text(_what[t]!, style: mu.text.body),
-                const SizedBox(height: MuSpacing.space1),
-                Text(t.reviewer, style: mu.text.caption),
-              ],
+          // Each tier opens the form with it chosen.
+          Semantics(
+            button: true,
+            label: 'Apply as ${t.label}. ${_what[t]} ${t.reviewer}',
+            excludeSemantics: true,
+            child: MuPressable(
+              onTap: () =>
+                  context.push(RoutePaths.mentorApplyTierPath(t.value)),
+              pressedScale: 0.98,
+              child: MuSurfaceCard(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(t.label, style: mu.text.title3),
+                          const SizedBox(height: MuSpacing.space1),
+                          Text(_what[t]!, style: mu.text.body),
+                          const SizedBox(height: MuSpacing.space1),
+                          Text(t.reviewer, style: mu.text.caption),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: MuSpacing.space3),
+                    Icon(
+                      LucideIcons.chevronRight,
+                      size: MuSizes.iconSm,
+                      color: mu.colors.ink3,
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ],

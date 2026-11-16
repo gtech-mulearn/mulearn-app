@@ -12,11 +12,11 @@ import 'package:mulearn_app/core/widgets/role_pending_banner.dart';
 import 'package:mulearn_app/core/widgets/workspace_links.dart';
 import 'package:mulearn_app/features/profile/domain/entities/socials.dart';
 import 'package:mulearn_app/features/profile/domain/entities/user_profile.dart';
+import 'package:mulearn_app/features/profile/presentation/providers/badges_controller.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/editable_profile_controller.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/interest_groups_controller.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/public_profile_controller.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/socials_controller.dart';
-import 'package:mulearn_app/features/profile/presentation/providers/user_levels_controller.dart';
 import 'package:mulearn_app/features/profile/presentation/widgets/edit_profile_sheet.dart';
 import 'package:mulearn_app/features/profile/presentation/widgets/edit_socials_sheet.dart';
 
@@ -46,13 +46,15 @@ class ProfileSheet extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final mu = context.mu;
     final c = mu.colors;
-    final levels = isOwn
-        ? ref.watch(userLevelsProvider)
-        : ref.watch(publicUserLevelsProvider(profile.muid));
-    final tasksDone = levels.value?.fold<int>(
-      0,
-      (sum, l) => sum + l.tasks.where((t) => t.completed).length,
-    );
+    // Tasks done = the completed tasks the Karma section's "Tasks completed"
+    // card shows (`profile/badges/`, loaded with it anyway), so the two
+    // agree. It used to sum the levels tree (~1 MB in production) just for
+    // this number, on every profile opened.
+    final tasksDone = ref
+        .watch(badgesProvider(profile.muid))
+        .value
+        ?.completedTasks
+        .length;
     final department = isOwn
         ? ref.watch(editableProfileControllerProvider).value?.department?.title
         : null;

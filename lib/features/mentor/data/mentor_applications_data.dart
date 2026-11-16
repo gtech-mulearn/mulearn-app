@@ -143,10 +143,16 @@ class MentorApplicationsRepositoryImpl implements MentorApplicationsRepository {
     try {
       return parseSnapshot(await _remote.fetchProfile());
     } on DioException catch (e) {
-      // No profile before the first application (404), or not a Mentor
-      // (403): start blank.
-      final code = e.response?.statusCode;
-      if (code == 404 || code == 403) return null;
+      // No profile before the first application, or not a Mentor: start
+      // blank. The backend says 404/403 in the envelope's `statusCode` and
+      // sends HTTP 400 ("No approved mentor profiles found." — confirmed on
+      // the phone 2026-11-16), so read both.
+      final body = e.response?.data;
+      final codes = {
+        e.response?.statusCode,
+        if (body is Map) body['statusCode'],
+      };
+      if (codes.contains(404) || codes.contains(403)) return null;
       throw ApiException.fromDioException(e);
     } on ApiException catch (e) {
       if (e.statusCode == 404 || e.statusCode == 403) return null;

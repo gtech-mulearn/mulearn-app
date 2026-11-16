@@ -49,16 +49,10 @@ class LocationRemoteDataSource {
   Future<List<ReferenceOption>> fetchCommunities() =>
       _fetchReferenceOptions(ApiPaths.registerCommunities, key: 'communities');
 
-  /// `GET /api/v1/register/colleges/` — every college, unfiltered. Used by
-  /// the college-picker (registration) and by learning-circle creation's
-  /// `org` dropdown, which validates against this same id space.
-  Future<List<ReferenceOption>> fetchAllColleges() =>
-      _fetchReferenceOptions(ApiPaths.registerColleges, key: 'colleges');
-
   /// `POST /api/v1/register/college/list/` `{"district": districtId}` —
   /// colleges and departments in a district, for the college-change picker.
   Future<({List<ReferenceOption> colleges, List<ReferenceOption> departments})>
-      fetchCollegesByDistrict(String districtId) async {
+  fetchCollegesByDistrict(String districtId) async {
     final response = await _dio.post<dynamic>(
       ApiPaths.collegesByDistrict,
       data: {'district': districtId},
@@ -66,15 +60,14 @@ class LocationRemoteDataSource {
     final payload = ApiEnvelope.unwrapObject(response);
     return (
       colleges: _mapReferenceOptions(payload['colleges'] as List<dynamic>),
-      departments:
-          _mapReferenceOptions(payload['departments'] as List<dynamic>),
+      departments: _mapReferenceOptions(
+        payload['departments'] as List<dynamic>,
+      ),
     );
   }
 
   /// `POST /api/v1/register/schools/list/` `{"district": districtId}`.
-  Future<List<ReferenceOption>> fetchSchoolsByDistrict(
-    String districtId,
-  ) =>
+  Future<List<ReferenceOption>> fetchSchoolsByDistrict(String districtId) =>
       _postReferenceOptions(
         ApiPaths.schoolsByDistrict,
         body: {'district': districtId},

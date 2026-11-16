@@ -151,47 +151,6 @@ final class RegisterRolesProvider
 
 String _$registerRolesHash() => r'86ce19920b449b9150bb1198611d128b53093339';
 
-@ProviderFor(registerColleges)
-final registerCollegesProvider = RegisterCollegesProvider._();
-
-final class RegisterCollegesProvider
-    extends
-        $FunctionalProvider<
-          AsyncValue<List<ReferenceOption>>,
-          List<ReferenceOption>,
-          FutureOr<List<ReferenceOption>>
-        >
-    with
-        $FutureModifier<List<ReferenceOption>>,
-        $FutureProvider<List<ReferenceOption>> {
-  RegisterCollegesProvider._()
-    : super(
-        from: null,
-        argument: null,
-        retry: null,
-        name: r'registerCollegesProvider',
-        isAutoDispose: true,
-        dependencies: null,
-        $allTransitiveDependencies: null,
-      );
-
-  @override
-  String debugGetCreateSourceHash() => _$registerCollegesHash();
-
-  @$internal
-  @override
-  $FutureProviderElement<List<ReferenceOption>> $createElement(
-    $ProviderPointer pointer,
-  ) => $FutureProviderElement(pointer);
-
-  @override
-  FutureOr<List<ReferenceOption>> create(Ref ref) {
-    return registerColleges(ref);
-  }
-}
-
-String _$registerCollegesHash() => r'b3f38c5173c2f5b911beb422a7fdee3e5c13b69d';
-
 @ProviderFor(registerDepartments)
 final registerDepartmentsProvider = RegisterDepartmentsProvider._();
 

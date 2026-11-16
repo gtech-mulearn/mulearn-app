@@ -9,7 +9,7 @@ import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/utils/date_format.dart';
 import 'package:mulearn_app/core/utils/search_debouncer.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
-import 'package:mulearn_app/core/widgets/mu_load_more_footer.dart';
+import 'package:mulearn_app/core/widgets/mu_paged_list.dart';
 import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/core/widgets/mu_state_display.dart';
 import 'package:mulearn_app/features/opportunities/domain/entities/job.dart';
@@ -81,7 +81,6 @@ class OpportunitiesScreen extends ConsumerStatefulWidget {
 
 class _OpportunitiesScreenState extends ConsumerState<OpportunitiesScreen> {
   final _search = TextEditingController();
-  final _scroll = ScrollController();
   late final _debouncer = SearchDebouncer((q) {
     if (mounted) setState(() => _query = q);
   });
@@ -89,23 +88,9 @@ class _OpportunitiesScreenState extends ConsumerState<OpportunitiesScreen> {
   _Tab _tab = _Tab.browse;
 
   @override
-  void initState() {
-    super.initState();
-    _scroll.addListener(() {
-      if (_tab != _Tab.browse) return;
-      final paged = ref.read(jobsControllerProvider(_query)).value;
-      if (paged == null || paged.loadMoreError != null) return;
-      if (_scroll.position.pixels >= _scroll.position.maxScrollExtent - 200) {
-        unawaited(ref.read(jobsControllerProvider(_query).notifier).loadMore());
-      }
-    });
-  }
-
-  @override
   void dispose() {
     _debouncer.dispose();
     _search.dispose();
-    _scroll.dispose();
     super.dispose();
   }
 
@@ -128,74 +113,90 @@ class _OpportunitiesScreenState extends ConsumerState<OpportunitiesScreen> {
             ref.refresh(jobsControllerProvider(_query).future),
             ref.refresh(myJobApplicationsProvider.future),
           ]),
-          child: ListView(
-            controller: _scroll,
+          child: CustomScrollView(
             physics: const BouncingScrollPhysics(
               parent: AlwaysScrollableScrollPhysics(),
             ),
-            padding: const EdgeInsets.fromLTRB(
-              MuSpacing.space5,
-              MuSpacing.space2,
-              MuSpacing.space5,
-              0,
-            ),
-            children: [
-              if (Navigator.of(context).canPop()) ...[
-                Align(
-                  alignment: AlignmentDirectional.centerStart,
-                  child: MuIconButton(
-                    icon: LucideIcons.arrowLeft,
-                    tooltip: 'Back',
-                    onPressed: () => context.pop(),
-                  ),
+            slivers: [
+              SliverPadding(
+                padding: const EdgeInsets.fromLTRB(
+                  MuSpacing.space5,
+                  MuSpacing.space2,
+                  MuSpacing.space5,
+                  0,
                 ),
-                const SizedBox(height: MuSpacing.space3),
-              ],
-              Semantics(
-                header: true,
-                child: Text.rich(
-                  TextSpan(
-                    children: [
-                      TextSpan(
-                        text: 'Put your karma\n',
-                        style: mu.text.displayLight.copyWith(fontSize: 36),
-                      ),
-                      TextSpan(
-                        text: 'to work',
-                        style: mu.text.display.copyWith(fontSize: 36),
-                      ),
-                    ],
-                  ),
+                sliver: SliverMainAxisGroup(
+                  slivers: [
+                    SliverList.list(
+                      children: [
+                        if (Navigator.of(context).canPop()) ...[
+                          Align(
+                            alignment: AlignmentDirectional.centerStart,
+                            child: MuIconButton(
+                              icon: LucideIcons.arrowLeft,
+                              tooltip: 'Back',
+                              onPressed: () => context.pop(),
+                            ),
+                          ),
+                          const SizedBox(height: MuSpacing.space3),
+                        ],
+                        Semantics(
+                          header: true,
+                          child: Text.rich(
+                            TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: 'Put your karma\n',
+                                  style: mu.text.displayLight.copyWith(
+                                    fontSize: 36,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: 'to work',
+                                  style: mu.text.display.copyWith(fontSize: 36),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: MuSpacing.space2),
+                        Text(
+                          'Internships, jobs and gigs from verified companies. Some ask for a level or karma first.',
+                          style: mu.text.body.copyWith(color: c.ink2),
+                        ),
+                        const SizedBox(height: MuSpacing.space5),
+                        MuSegmented<_Tab>(
+                          values: _Tab.values,
+                          selected: _tab,
+                          label: (t) => t == _Tab.browse
+                              ? 'Browse'
+                              : (mine.isEmpty
+                                    ? 'Applied'
+                                    : 'Applied · ${mine.length}'),
+                          onChanged: (t) => setState(() => _tab = t),
+                        ),
+                        const SizedBox(height: MuSpacing.space4),
+                        if (_tab == _Tab.browse) ...[
+                          MuSearchField(
+                            controller: _search,
+                            hint: 'Search roles, companies, places',
+                            onChanged: _onSearch,
+                          ),
+                          const SizedBox(height: MuSpacing.space4),
+                        ] else
+                          _MyApplications(
+                            onBrowse: () => setState(() => _tab = _Tab.browse),
+                          ),
+                      ],
+                    ),
+                    if (_tab == _Tab.browse)
+                      _JobsList(query: _query, byJob: byJob),
+                    const SliverToBoxAdapter(
+                      child: SizedBox(height: MuSpacing.navClearance),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: MuSpacing.space2),
-              Text(
-                'Internships, jobs and gigs from verified companies. Some ask for a level or karma first.',
-                style: mu.text.body.copyWith(color: c.ink2),
-              ),
-              const SizedBox(height: MuSpacing.space5),
-              MuSegmented<_Tab>(
-                values: _Tab.values,
-                selected: _tab,
-                label: (t) => t == _Tab.browse
-                    ? 'Browse'
-                    : (mine.isEmpty ? 'Applied' : 'Applied · ${mine.length}'),
-                onChanged: (t) => setState(() => _tab = t),
-              ),
-              const SizedBox(height: MuSpacing.space4),
-              if (_tab == _Tab.browse) ...[
-                MuSearchField(
-                  controller: _search,
-                  hint: 'Search roles, companies, places',
-                  onChanged: _onSearch,
-                ),
-                const SizedBox(height: MuSpacing.space4),
-                _JobsList(query: _query, byJob: byJob),
-              ] else
-                _MyApplications(
-                  onBrowse: () => setState(() => _tab = _Tab.browse),
-                ),
-              const SizedBox(height: MuSpacing.navClearance),
             ],
           ),
         ),
@@ -204,6 +205,7 @@ class _OpportunitiesScreenState extends ConsumerState<OpportunitiesScreen> {
   }
 }
 
+/// The openings, as a sliver built row by row.
 class _JobsList extends ConsumerWidget {
   const _JobsList({required this.query, required this.byJob});
 
@@ -217,66 +219,57 @@ class _JobsList extends ConsumerWidget {
 
     if (paged == null) {
       if (state.hasError) {
-        return ErrorRetryView(
-          error: state.error!,
-          onRetry: () => ref.invalidate(jobsControllerProvider(query)),
+        return SliverToBoxAdapter(
+          child: ErrorRetryView(
+            error: state.error!,
+            onRetry: () => ref.invalidate(jobsControllerProvider(query)),
+          ),
         );
       }
-      return const Padding(
-        padding: EdgeInsets.all(MuSpacing.space8),
-        child: Center(child: MuDotsLoader(label: 'Finding openings…')),
+      return const SliverToBoxAdapter(
+        child: Padding(
+          padding: EdgeInsets.all(MuSpacing.space8),
+          child: Center(child: MuDotsLoader(label: 'Finding openings…')),
+        ),
       );
     }
     if (paged.items.isEmpty) {
-      return MuStateDisplay(
-        variant: MuStateVariant.noResults,
-        size: MuStateSize.sm,
-        title: query.isEmpty ? 'No openings right now' : null,
-        description: query.isEmpty
-            ? 'New ones post here first. Check back soon.'
-            : null,
+      return SliverToBoxAdapter(
+        child: MuStateDisplay(
+          variant: MuStateVariant.noResults,
+          size: MuStateSize.sm,
+          title: query.isEmpty ? 'No openings right now' : null,
+          description: query.isEmpty
+              ? 'New ones post here first. Check back soon.'
+              : null,
+        ),
       );
     }
     final jobs = paged.items;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        MuOpportunityGroup(
-          children: [
-            for (var i = 0; i < jobs.length; i++)
-              MuOpportunityRow(
-                org: jobs[i].companyName ?? 'Partner company',
-                role: jobs[i].title,
-                terms: _terms(jobs[i]),
-                logoUrl: jobs[i].companyLogo,
-                status: byJob[jobs[i].id] != null
-                    ? statusPill(
-                        byJob[jobs[i].id]!.status,
-                        byJob[jobs[i].id]!.rawStatus,
-                      )
-                    : (jobs[i].eligible == false
-                          ? const MuPill(
-                              'Not eligible yet',
-                              tone: MuPillTone.warning,
-                              icon: LucideIcons.lock,
-                            )
-                          : null),
-                divider: i < jobs.length - 1,
-                onTap: () => showMuSheet<void>(
-                  context,
-                  builder: (_) => JobSheet(job: jobs[i]),
-                ),
-              ),
-          ],
-        ),
-        if (paged.hasMore)
-          MuLoadMoreFooter(
-            isLoading: paged.isLoadingMore,
-            error: paged.loadMoreError,
-            onRetry: () =>
-                ref.read(jobsControllerProvider(query).notifier).loadMore(),
-          ),
-      ],
+    return MuPagedSliverList<Job>(
+      state: paged,
+      grouped: true,
+      groupInset: MuSpacing.space5,
+      onLoadMore: () =>
+          ref.read(jobsControllerProvider(query).notifier).loadMore(),
+      itemBuilder: (context, job, i) => MuOpportunityRow(
+        org: job.companyName ?? 'Partner company',
+        role: job.title,
+        terms: _terms(job),
+        logoUrl: job.companyLogo,
+        status: byJob[job.id] != null
+            ? statusPill(byJob[job.id]!.status, byJob[job.id]!.rawStatus)
+            : (job.eligible == false
+                  ? const MuPill(
+                      'Not eligible yet',
+                      tone: MuPillTone.warning,
+                      icon: LucideIcons.lock,
+                    )
+                  : null),
+        divider: i < jobs.length - 1,
+        onTap: () =>
+            showMuSheet<void>(context, builder: (_) => JobSheet(job: job)),
+      ),
     );
   }
 }
