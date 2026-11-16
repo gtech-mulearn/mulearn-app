@@ -24,6 +24,7 @@ class _MentorDetailsFormState extends ConsumerState<MentorDetailsForm> {
   OrganizationType _organizationType = OrganizationType.company;
 
   String? _organization;
+  String? _organizationName;
   final _customOrganizationController = TextEditingController();
   String? _department;
   final _graduationYearController = TextEditingController();
@@ -63,12 +64,19 @@ class _MentorDetailsFormState extends ConsumerState<MentorDetailsForm> {
     }
   }
 
+  /// Colleges matching [query] from the server (up to 20). There are
+  /// thousands, so none is downloaded in full.
+  Future<List<MuOption>> _searchColleges(String query) async => [
+    for (final o
+        in await ref.read(registerRepositoryProvider).searchColleges(query))
+      MuOption(o.id, o.title),
+  ];
+
   @override
   Widget build(BuildContext context) {
     final isCollege = _organizationType == OrganizationType.college;
-    final options = isCollege
-        ? ref.watch(registerCollegesProvider)
-        : ref.watch(registerCompaniesProvider);
+    // Colleges by search; companies are few enough to list.
+    final companies = isCollege ? null : ref.watch(registerCompaniesProvider);
     final departments = ref.watch(registerDepartmentsProvider);
     final loading = ref.watch(registerSubmitControllerProvider).isLoading;
     final orgLabel = isCollege ? 'College' : 'Company';
@@ -92,6 +100,7 @@ class _MentorDetailsFormState extends ConsumerState<MentorDetailsForm> {
               setState(() {
                 _organizationType = t;
                 _organization = null;
+                _organizationName = null;
               });
             },
           ),
@@ -99,9 +108,12 @@ class _MentorDetailsFormState extends ConsumerState<MentorDetailsForm> {
           MuSelectField(
             label: orgLabel,
             hint: 'Search your ${orgLabel.toLowerCase()}',
-            options: opts(options.value ?? const []),
-            loading: options.isLoading,
-            error: options.hasError
+            options: opts(companies?.value ?? const []),
+            search: isCollege ? _searchColleges : null,
+            selectedLabel: _organizationName,
+            onPicked: (o) => setState(() => _organizationName = o.label),
+            loading: companies?.isLoading ?? false,
+            error: companies?.hasError ?? false
                 ? "Couldn't load the list. Go back and try again."
                 : null,
             enabled: !loading,

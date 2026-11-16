@@ -24,6 +24,7 @@ class _StudentDetailsFormState extends ConsumerState<StudentDetailsForm> {
   OrganizationType _organizationType = OrganizationType.college;
 
   String? _college;
+  String? _collegeName;
   final _customCollegeController = TextEditingController();
   String? _department;
   final _graduationYearController = TextEditingController();
@@ -70,9 +71,16 @@ class _StudentDetailsFormState extends ConsumerState<StudentDetailsForm> {
     }
   }
 
+  /// Colleges matching [query] from the server (up to 20). There are
+  /// thousands, so none is downloaded in full.
+  Future<List<MuOption>> _searchColleges(String query) async => [
+    for (final o
+        in await ref.read(registerRepositoryProvider).searchColleges(query))
+      MuOption(o.id, o.title),
+  ];
+
   @override
   Widget build(BuildContext context) {
-    final colleges = ref.watch(registerCollegesProvider);
     final departments = ref.watch(registerDepartmentsProvider);
     final companies = ref.watch(registerCompaniesProvider);
     final loading = ref.watch(registerSubmitControllerProvider).isLoading;
@@ -101,11 +109,10 @@ class _StudentDetailsFormState extends ConsumerState<StudentDetailsForm> {
             MuSelectField(
               label: 'College',
               hint: 'Search your college',
-              options: opts(colleges.value ?? const []),
-              loading: colleges.isLoading,
-              error: colleges.hasError
-                  ? "Couldn't load colleges. Go back and try again."
-                  : null,
+              options: const [],
+              search: _searchColleges,
+              selectedLabel: _collegeName,
+              onPicked: (o) => setState(() => _collegeName = o.label),
               enabled: !loading,
               allowOther: true,
               otherLabel: 'My college is not listed',

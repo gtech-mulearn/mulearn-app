@@ -13,8 +13,17 @@ class RegisterRemoteDataSource {
   Future<List<dynamic>> fetchRoles() =>
       _fetchList(ApiPaths.registerRoles, key: 'roles');
 
-  Future<List<dynamic>> fetchColleges() =>
-      _fetchList(ApiPaths.registerColleges, key: 'colleges');
+  /// `POST /api/v1/register/college/list/ {"search"}` — up to 20 colleges
+  /// whose name matches (`CollegeAPI.MAX_RESULTS`). Unauthenticated.
+  Future<List<dynamic>> searchColleges(String query) async {
+    final response = await _dio.post<dynamic>(
+      ApiPaths.collegesByDistrict,
+      data: {'search': query},
+      options: Options(headers: {RequestFlags.skipAuth: true}),
+    );
+    return ApiEnvelope.unwrapObject(response)['colleges'] as List<dynamic>? ??
+        const [];
+  }
 
   Future<List<dynamic>> fetchDepartments() =>
       _fetchList(ApiPaths.registerDepartments, key: 'departments');

@@ -32,10 +32,6 @@ Future<List<ReferenceOption>> registerRoles(Ref ref) =>
     ref.watch(registerRepositoryProvider).fetchRoles();
 
 @riverpod
-Future<List<ReferenceOption>> registerColleges(Ref ref) =>
-    ref.watch(registerRepositoryProvider).fetchColleges();
-
-@riverpod
 Future<List<ReferenceOption>> registerDepartments(Ref ref) =>
     ref.watch(registerRepositoryProvider).fetchDepartments();
 
