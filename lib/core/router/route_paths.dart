@@ -60,6 +60,15 @@ abstract final class RoutePaths {
   static const String mentorSessionDetail = '/mentor/sessions/:id';
   static String mentorSessionDetailPath(String id) => '/mentor/sessions/$id';
 
+  /// A mentor's applications, and the form (open to anyone with the Mentor
+  /// role, approved or not: it's how they get approved).
+  static const String mentorApplications = '/mentor/applications';
+  static const String mentorApply = '/mentor/apply';
+  static String mentorApplyEditPath(String id) =>
+      '/mentor/apply?edit=${Uri.encodeQueryComponent(id)}';
+  static String mentorApplyAgainPath(String id) =>
+      '/mentor/apply?from=${Uri.encodeQueryComponent(id)}';
+
   /// Read-only view of another user's profile by muid.
   static const String publicProfile = '/u/:muid';
   static String publicProfilePath(String muid) => '/u/$muid';

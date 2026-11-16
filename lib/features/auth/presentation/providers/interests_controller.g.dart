@@ -43,7 +43,7 @@ final class InterestsControllerProvider
 }
 
 String _$interestsControllerHash() =>
-    r'ba7c392105a0a56830ef40b64142e79a8707f8c9';
+    r'3ea527fde8fa70bbde7c7e02e896d01ab7fb0528';
 
 /// Submits the pathway/endgoal selections from the post-registration
 /// interests onboarding step. Exposes `AsyncValue<void>` for automatic

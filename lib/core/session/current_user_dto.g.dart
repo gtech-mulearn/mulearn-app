@@ -16,6 +16,11 @@ _CurrentUserDto _$CurrentUserDtoFromJson(Map<String, dynamic> json) =>
       existInGuild: json['exist_in_guild'] as bool? ?? false,
       profilePic: json['profile_pic'] as String?,
       company: json['company'] as String?,
+      userDomains:
+          (json['user_domains'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
     );
 
 Map<String, dynamic> _$CurrentUserDtoToJson(_CurrentUserDto instance) =>
@@ -26,4 +31,5 @@ Map<String, dynamic> _$CurrentUserDtoToJson(_CurrentUserDto instance) =>
       'exist_in_guild': instance.existInGuild,
       'profile_pic': instance.profilePic,
       'company': instance.company,
+      'user_domains': instance.userDomains,
     };
