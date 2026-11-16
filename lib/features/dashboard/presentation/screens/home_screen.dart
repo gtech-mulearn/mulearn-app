@@ -10,6 +10,7 @@ import 'package:mulearn_app/core/notifications/unread_notifications.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/router/tab_navigation.dart';
 import 'package:mulearn_app/core/session/discord_connect.dart';
+import 'package:mulearn_app/core/session/mentor_application.dart';
 import 'package:mulearn_app/core/session/session_providers.dart';
 import 'package:mulearn_app/core/utils/date_format.dart';
 import 'package:mulearn_app/core/utils/level_label.dart';
@@ -266,6 +267,33 @@ class _UpNext extends ConsumerWidget {
     final canBrowseJobs = caps?.canBrowseJobs ?? false;
     final summary = ref.watch(myProgressSummaryControllerProvider).value;
     final needsGroups = summary != null && summary.interestGroupCount == 0;
+    // A Mentor without an approved application: where they stand, and the
+    // way to their applications (like Connect Discord, until it's done).
+    final mentorStanding = (caps?.isMentor ?? false)
+        ? ref
+              .watch(mentorApplicationsProvider)
+              .whenData(MentorStanding.of)
+              .value
+        : null;
+    final mentorTile = switch (mentorStanding) {
+      MentorStanding.none => (
+        'Apply to mentor',
+        'Tell us how you’ll guide learners',
+      ),
+      MentorStanding.pending => (
+        'Mentor application in review',
+        'See where it stands or edit it',
+      ),
+      MentorStanding.rejected => (
+        'Mentor application not approved',
+        'See why, then apply again',
+      ),
+      MentorStanding.revoked => (
+        'Mentor access revoked',
+        'See your applications',
+      ),
+      MentorStanding.approved || null => null,
+    };
 
     final tiles = <MuTile>[
       if (meeting != null)
@@ -334,6 +362,14 @@ class _UpNext extends ConsumerWidget {
         ),
     ];
     final setup = <MuTile>[
+      if (mentorTile != null)
+        MuTile(
+          title: mentorTile.$1,
+          category: IgCategory.coder,
+          size: MuTileSize.short,
+          meta: mentorTile.$2,
+          onTap: () => context.push(RoutePaths.mentorApplications),
+        ),
       if (needsDiscord)
         MuTile(
           title: 'Connect Discord',

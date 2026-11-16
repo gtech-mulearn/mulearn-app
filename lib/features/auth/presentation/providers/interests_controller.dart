@@ -1,3 +1,4 @@
+import 'package:mulearn_app/core/session/session_providers.dart';
 import 'package:mulearn_app/features/auth/presentation/providers/register_providers.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -15,9 +16,10 @@ class InterestsController extends _$InterestsController {
   /// endgoal step in quiz mode).
   Future<void> submitPathwaysOnly(List<String> pathways) async {
     state = const AsyncLoading();
-    final result = await AsyncValue.guard(
-      () => ref.read(registerRepositoryProvider).selectDomains(pathways),
-    );
+    final result = await AsyncValue.guard(() async {
+      await ref.read(registerRepositoryProvider).selectDomains(pathways);
+      await _reloadUser();
+    });
     if (ref.mounted) state = result;
     if (result.hasError) {
       Error.throwWithStackTrace(
@@ -37,6 +39,7 @@ class InterestsController extends _$InterestsController {
       final repo = ref.read(registerRepositoryProvider);
       await repo.selectDomains(pathways);
       await repo.selectEndgoals(endgoals);
+      await _reloadUser();
     });
     if (ref.mounted) state = result;
     if (result.hasError) {
@@ -45,5 +48,12 @@ class InterestsController extends _$InterestsController {
         result.stackTrace ?? StackTrace.current,
       );
     }
+  }
+
+  /// The router sends a user without pathways back to this step, so the
+  /// saved ones must be in the session before the screen moves on.
+  Future<void> _reloadUser() async {
+    ref.invalidate(currentUserProvider);
+    await ref.read(currentUserProvider.future);
   }
 }

@@ -208,4 +208,38 @@ void main() {
       expect(appRedirect(auth: signedIn, uri: u('/welcome')), '/home');
     });
   });
+
+  group("a signed-in user without a pathway (the dashboard's guard)", () {
+    test('every screen leads to the interests step', () {
+      for (final path in ['/home', '/profile', '/tasks', '/settings']) {
+        expect(
+          appRedirect(auth: signedIn, uri: u(path), needsInterests: true),
+          '/onboarding/interests',
+        );
+      }
+    });
+
+    test('the interests step itself, and signup mid-submit, stay put', () {
+      expect(
+        appRedirect(
+          auth: signedIn,
+          uri: u('/onboarding/interests'),
+          needsInterests: true,
+        ),
+        isNull,
+      );
+      expect(
+        appRedirect(
+          auth: signedIn,
+          uri: u('/register/details'),
+          needsInterests: true,
+        ),
+        isNull,
+      );
+    });
+
+    test('with a pathway, nothing changes', () {
+      expect(appRedirect(auth: signedIn, uri: u('/home')), isNull);
+    });
+  });
 }

@@ -17,6 +17,7 @@ import 'package:mulearn_app/features/profile/presentation/providers/interest_gro
 import 'package:mulearn_app/features/profile/presentation/providers/public_profile_controller.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/socials_controller.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/user_levels_controller.dart';
+import 'package:mulearn_app/features/profile/presentation/widgets/edit_profile_sheet.dart';
 import 'package:mulearn_app/features/profile/presentation/widgets/edit_socials_sheet.dart';
 
 /// The night sheet over the profile hero (artifact: ProfilePoster → Sheet):
@@ -137,9 +138,9 @@ class ProfileSheet extends ConsumerWidget {
               ],
             ),
           const SizedBox(height: MuSpacing.space6),
-          _Campus(
-            code: profile.collegeCode,
-            collegeId: profile.collegeId,
+          ProfileCampusCard(
+            profile: profile,
+            isOwn: isOwn,
             department: department,
             joinedYear: profile.joined.length >= 4
                 ? profile.joined.substring(0, 4)
@@ -306,45 +307,64 @@ class _Stat extends StatelessWidget {
   }
 }
 
-/// The campus as a stamped seal (artifact: CampusCrest).
-class _Campus extends StatelessWidget {
-  const _Campus({
-    required this.code,
-    required this.collegeId,
+/// The campus as a stamped seal (artifact: CampusCrest). Every state says
+/// what it is and, when there's something to do, does it:
+///  * a college → opens the campus page;
+///  * no college but a company (a mentor) → the company, nothing to open;
+///  * nothing, on your own profile → "Add your campus", opens the editor;
+///  * nothing, on someone else's → "No campus yet".
+class ProfileCampusCard extends StatelessWidget {
+  const ProfileCampusCard({
+    required this.profile,
+    required this.isOwn,
     required this.department,
     required this.joinedYear,
+    super.key,
   });
 
-  final String? code;
-
-  /// Opens the campus's public page when set.
-  final String? collegeId;
+  final UserProfile profile;
+  final bool isOwn;
   final String? department;
   final String? joinedYear;
 
   @override
   Widget build(BuildContext context) {
-    final hasCode = (code ?? '').isNotEmpty;
-    final lines = [
-      ?department,
-      if (joinedYear != null) 'Member since $joinedYear',
-    ];
-    final id = collegeId;
-    return MuCampusCrest(
-      code: code,
-      name: hasCode ? code! : 'No campus yet',
-      caption: lines.join(' · '),
-      trailing: id == null || id.isEmpty
-          ? null
-          : Icon(
-              LucideIcons.chevronRight,
-              size: MuSizes.iconSm + 2,
-              color: context.mu.colors.ink3,
-            ),
-      onTap: id == null || id.isEmpty
-          ? null
-          : () => context.push(RoutePaths.publicCampusPath(id)),
-    );
+    final c = context.mu.colors;
+    final code = profile.collegeCode ?? '';
+    final collegeId = profile.collegeId ?? '';
+    final company = profile.companyName?.trim() ?? '';
+    final since = joinedYear == null ? null : 'Member since $joinedYear';
+    Icon trailing(IconData icon) =>
+        Icon(icon, size: MuSizes.iconSm + 2, color: c.ink3);
+
+    if (code.isNotEmpty && collegeId.isNotEmpty) {
+      return MuCampusCrest(
+        code: code,
+        name: code,
+        caption: [?department, ?since].join(' · '),
+        trailing: trailing(LucideIcons.chevronRight),
+        onTap: () => context.push(RoutePaths.publicCampusPath(collegeId)),
+      );
+    }
+    if (company.isNotEmpty) {
+      return MuCampusCrest(
+        code: null,
+        icon: LucideIcons.briefcase,
+        name: company,
+        caption: [if (isOwn) 'Your company' else 'Company', ?since].join(' · '),
+      );
+    }
+    if (isOwn) {
+      return MuCampusCrest(
+        code: null,
+        icon: LucideIcons.plus,
+        name: 'Add your campus',
+        caption: 'Link your college to join its leaderboard.',
+        trailing: trailing(LucideIcons.chevronRight),
+        onTap: () => EditProfileSheet.show(context, profile),
+      );
+    }
+    return MuCampusCrest(code: null, name: 'No campus yet', caption: since);
   }
 }
 
