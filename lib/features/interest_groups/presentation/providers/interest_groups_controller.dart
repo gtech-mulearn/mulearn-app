@@ -40,14 +40,14 @@ Future<List<String>> myInterestGroupIds(Ref ref) async {
 /// The most interest groups a learner can be in (dash_ig_view.py:1275).
 const int maxLearnerGroups = 3;
 
-/// The first circles in a group, for its page.
+/// The first circles in a group, and how many it has, for its page.
 @Riverpod(retry: noRetry)
-Future<List<IgCircleRef>> circlesInGroup(Ref ref, String igId) =>
+Future<IgPreview<IgCircleRef>> circlesInGroup(Ref ref, String igId) =>
     ref.watch(interestGroupsRepositoryProvider).getCirclesInGroup(igId);
 
-/// The first events scoped to a group, for its page.
+/// The first events scoped to a group, and how many, for its page.
 @Riverpod(retry: noRetry)
-Future<List<IgEventRef>> eventsInGroup(Ref ref, String igId) =>
+Future<IgPreview<IgEventRef>> eventsInGroup(Ref ref, String igId) =>
     ref.watch(interestGroupsRepositoryProvider).getEventsInGroup(igId);
 
 /// Joins or leaves one group through its own endpoints (FEAT-08) — no

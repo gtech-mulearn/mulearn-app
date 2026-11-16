@@ -11,9 +11,9 @@ abstract interface class InterestGroupsRepository {
   /// Leaves [id] (`DELETE ig/<id>/leave/`).
   Future<void> leave(String id);
 
-  Future<List<IgCircleRef>> getCirclesInGroup(String igId);
+  Future<IgPreview<IgCircleRef>> getCirclesInGroup(String igId);
 
-  Future<List<IgEventRef>> getEventsInGroup(String igId);
+  Future<IgPreview<IgEventRef>> getEventsInGroup(String igId);
 
   Future<List<InterestGroupSummary>> getCatalog();
 
@@ -22,5 +22,4 @@ abstract interface class InterestGroupsRepository {
   /// The joined group ids in the shared `user-profile` payload
   /// (`interest_groups`, already filtered to joined groups).
   List<String> groupIdsFromPayload(Map<String, dynamic> payload);
-
 }

@@ -25,29 +25,39 @@ class InterestGroupsRemoteDataSource {
     return payload['interestGroup'] as Map<String, dynamic>;
   }
 
-
   /// `PATCH /api/v1/dashboard/profile/ig-edit/` `{"interest_group": ids}`.
-  Future<void> join(String id) async =>
-      ApiEnvelope.unwrapObject(await _dio.post<dynamic>(ApiPaths.igJoin(id), data: <String, dynamic>{}));
+  Future<void> join(String id) async => ApiEnvelope.unwrapObject(
+    await _dio.post<dynamic>(ApiPaths.igJoin(id), data: <String, dynamic>{}),
+  );
 
-  Future<void> leave(String id) async => ApiEnvelope.unwrapObject(await _dio.delete<dynamic>(ApiPaths.igLeave(id)));
+  Future<void> leave(String id) async => ApiEnvelope.unwrapObject(
+    await _dio.delete<dynamic>(ApiPaths.igLeave(id)),
+  );
 
-  /// The first circles in the group (`learningcircle/list/?ig=`).
-  Future<List<dynamic>> fetchCirclesInGroup(String igId) async {
-    final body = ApiEnvelope.unwrapObject(await _dio.get<dynamic>(
-      ApiPaths.circlesList,
-      queryParameters: {...PageIndexPaging.query(1, perPage: 5), 'ig': igId},
-    ));
-    return body['data'] as List<dynamic>? ?? const [];
+  /// The first circles in the group (`learningcircle/list/?ig=`), with the
+  /// pagination that counts them all.
+  Future<Map<String, dynamic>> fetchCirclesInGroup(String igId) async {
+    final body = ApiEnvelope.unwrapObject(
+      await _dio.get<dynamic>(
+        ApiPaths.circlesList,
+        queryParameters: {...PageIndexPaging.query(1, perPage: 5), 'ig': igId},
+      ),
+    );
+    return body;
   }
 
-  /// The first events scoped to the group (`events/?ig_id=`).
-  Future<List<dynamic>> fetchEventsInGroup(String igId) async {
-    final body = ApiEnvelope.unwrapObject(await _dio.get<dynamic>(
-      ApiPaths.events,
-      queryParameters: {...PageIndexPaging.query(1, perPage: 5), 'ig_id': igId},
-    ));
-    return body['data'] as List<dynamic>? ?? const [];
+  /// The first events scoped to the group (`events/?ig_id=`), with the
+  /// pagination that counts them all.
+  Future<Map<String, dynamic>> fetchEventsInGroup(String igId) async {
+    final body = ApiEnvelope.unwrapObject(
+      await _dio.get<dynamic>(
+        ApiPaths.events,
+        queryParameters: {
+          ...PageIndexPaging.query(1, perPage: 5),
+          'ig_id': igId,
+        },
+      ),
+    );
+    return body;
   }
-
 }

@@ -88,6 +88,10 @@ abstract final class RoutePaths {
   static String interestGroupDetailPath(String id) => '/interest-groups/$id';
 
   static const String events = '/events';
+
+  /// Events filtered to one interest group.
+  static String eventsInGroup(String igId) =>
+      '/events?ig=${Uri.encodeQueryComponent(igId)}';
   static const String eventDetail = '/events/:id';
   static String eventDetailPath(String id) => '/events/$id';
 
@@ -119,6 +123,10 @@ abstract final class RoutePaths {
       '/weekly-twitches/$show/$id';
 
   static const String learningCircles = '/circles';
+
+  /// The circles catalogue filtered to one interest group.
+  static String learningCirclesInGroup(String igId) =>
+      '/circles?ig=${Uri.encodeQueryComponent(igId)}';
   static const String createLearningCircle = '/circles/create';
   static const String learningCircleDetail = '/circles/:id';
   static String learningCircleDetailPath(String id) => '/circles/$id';

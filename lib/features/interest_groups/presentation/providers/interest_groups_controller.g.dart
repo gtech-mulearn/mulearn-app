@@ -276,24 +276,24 @@ final class MyInterestGroupIdsProvider
 String _$myInterestGroupIdsHash() =>
     r'3864b731ebe0559b1be8520023d12cc2592a43e5';
 
-/// The first circles in a group, for its page.
+/// The first circles in a group, and how many it has, for its page.
 
 @ProviderFor(circlesInGroup)
 final circlesInGroupProvider = CirclesInGroupFamily._();
 
-/// The first circles in a group, for its page.
+/// The first circles in a group, and how many it has, for its page.
 
 final class CirclesInGroupProvider
     extends
         $FunctionalProvider<
-          AsyncValue<List<IgCircleRef>>,
-          List<IgCircleRef>,
-          FutureOr<List<IgCircleRef>>
+          AsyncValue<IgPreview<IgCircleRef>>,
+          IgPreview<IgCircleRef>,
+          FutureOr<IgPreview<IgCircleRef>>
         >
     with
-        $FutureModifier<List<IgCircleRef>>,
-        $FutureProvider<List<IgCircleRef>> {
-  /// The first circles in a group, for its page.
+        $FutureModifier<IgPreview<IgCircleRef>>,
+        $FutureProvider<IgPreview<IgCircleRef>> {
+  /// The first circles in a group, and how many it has, for its page.
   CirclesInGroupProvider._({
     required CirclesInGroupFamily super.from,
     required String super.argument,
@@ -317,12 +317,12 @@ final class CirclesInGroupProvider
 
   @$internal
   @override
-  $FutureProviderElement<List<IgCircleRef>> $createElement(
+  $FutureProviderElement<IgPreview<IgCircleRef>> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<List<IgCircleRef>> create(Ref ref) {
+  FutureOr<IgPreview<IgCircleRef>> create(Ref ref) {
     final argument = this.argument as String;
     return circlesInGroup(ref, argument);
   }
@@ -338,12 +338,12 @@ final class CirclesInGroupProvider
   }
 }
 
-String _$circlesInGroupHash() => r'cce060fd5807d54f381a51c10a2f76b058ff3c77';
+String _$circlesInGroupHash() => r'ddd5e657f107a9f65b8b89fe0fd6a0d23a859334';
 
-/// The first circles in a group, for its page.
+/// The first circles in a group, and how many it has, for its page.
 
 final class CirclesInGroupFamily extends $Family
-    with $FunctionalFamilyOverride<FutureOr<List<IgCircleRef>>, String> {
+    with $FunctionalFamilyOverride<FutureOr<IgPreview<IgCircleRef>>, String> {
   CirclesInGroupFamily._()
     : super(
         retry: noRetry,
@@ -353,7 +353,7 @@ final class CirclesInGroupFamily extends $Family
         isAutoDispose: true,
       );
 
-  /// The first circles in a group, for its page.
+  /// The first circles in a group, and how many it has, for its page.
 
   CirclesInGroupProvider call(String igId) =>
       CirclesInGroupProvider._(argument: igId, from: this);
@@ -362,22 +362,24 @@ final class CirclesInGroupFamily extends $Family
   String toString() => r'circlesInGroupProvider';
 }
 
-/// The first events scoped to a group, for its page.
+/// The first events scoped to a group, and how many, for its page.
 
 @ProviderFor(eventsInGroup)
 final eventsInGroupProvider = EventsInGroupFamily._();
 
-/// The first events scoped to a group, for its page.
+/// The first events scoped to a group, and how many, for its page.
 
 final class EventsInGroupProvider
     extends
         $FunctionalProvider<
-          AsyncValue<List<IgEventRef>>,
-          List<IgEventRef>,
-          FutureOr<List<IgEventRef>>
+          AsyncValue<IgPreview<IgEventRef>>,
+          IgPreview<IgEventRef>,
+          FutureOr<IgPreview<IgEventRef>>
         >
-    with $FutureModifier<List<IgEventRef>>, $FutureProvider<List<IgEventRef>> {
-  /// The first events scoped to a group, for its page.
+    with
+        $FutureModifier<IgPreview<IgEventRef>>,
+        $FutureProvider<IgPreview<IgEventRef>> {
+  /// The first events scoped to a group, and how many, for its page.
   EventsInGroupProvider._({
     required EventsInGroupFamily super.from,
     required String super.argument,
@@ -401,12 +403,12 @@ final class EventsInGroupProvider
 
   @$internal
   @override
-  $FutureProviderElement<List<IgEventRef>> $createElement(
+  $FutureProviderElement<IgPreview<IgEventRef>> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<List<IgEventRef>> create(Ref ref) {
+  FutureOr<IgPreview<IgEventRef>> create(Ref ref) {
     final argument = this.argument as String;
     return eventsInGroup(ref, argument);
   }
@@ -422,12 +424,12 @@ final class EventsInGroupProvider
   }
 }
 
-String _$eventsInGroupHash() => r'2df1c74a9b9149035d957ff012a6d4d1ed6b775d';
+String _$eventsInGroupHash() => r'7c36224df46bc780c4097f38fd1bd7d59e03a5a9';
 
-/// The first events scoped to a group, for its page.
+/// The first events scoped to a group, and how many, for its page.
 
 final class EventsInGroupFamily extends $Family
-    with $FunctionalFamilyOverride<FutureOr<List<IgEventRef>>, String> {
+    with $FunctionalFamilyOverride<FutureOr<IgPreview<IgEventRef>>, String> {
   EventsInGroupFamily._()
     : super(
         retry: noRetry,
@@ -437,7 +439,7 @@ final class EventsInGroupFamily extends $Family
         isAutoDispose: true,
       );
 
-  /// The first events scoped to a group, for its page.
+  /// The first events scoped to a group, and how many, for its page.
 
   EventsInGroupProvider call(String igId) =>
       EventsInGroupProvider._(argument: igId, from: this);

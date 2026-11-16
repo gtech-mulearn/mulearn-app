@@ -23,7 +23,10 @@ import 'package:mulearn_app/features/learning_circles/presentation/providers/lea
 /// discover with search, status chips and an IG picker. Create sits in the
 /// header.
 class LearningCirclesScreen extends ConsumerStatefulWidget {
-  const LearningCirclesScreen({super.key});
+  const LearningCirclesScreen({this.igId, super.key});
+
+  /// Opens filtered to this interest group (its page's "See all").
+  final String? igId;
 
   @override
   ConsumerState<LearningCirclesScreen> createState() =>
@@ -42,7 +45,9 @@ class _LearningCirclesScreenState extends ConsumerState<LearningCirclesScreen> {
   late final _debouncer = SearchDebouncer((q) {
     if (mounted) _setFilter(_filter.copyWith(search: q));
   });
-  CircleFilter _filter = CircleFilter.discover;
+  late CircleFilter _filter = widget.igId == null
+      ? CircleFilter.discover
+      : CircleFilter.discover.copyWith(igId: widget.igId);
 
   /// The circle whose join request is in flight, and those asked this visit.
   String? _requesting;

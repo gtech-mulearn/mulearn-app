@@ -61,7 +61,10 @@ String _whenLine(Event e) {
 /// search and filters as on the dashboard, Upcoming / All segments, and
 /// each event as a ticket whose stub holds the one action, interest.
 class EventsScreen extends ConsumerStatefulWidget {
-  const EventsScreen({super.key});
+  const EventsScreen({this.igId, super.key});
+
+  /// Opens filtered to this interest group (its page's "See all").
+  final String? igId;
 
   @override
   ConsumerState<EventsScreen> createState() => _EventsScreenState();
@@ -73,7 +76,7 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
   late final _debouncer = SearchDebouncer((q) {
     if (mounted) setState(() => _filter = _filter.copyWith(search: q));
   });
-  EventFilter _filter = const EventFilter();
+  late EventFilter _filter = EventFilter(igId: widget.igId);
   _When _when = _When.upcoming;
 
   /// What is asked of the server: Upcoming starts today unless the sheet
