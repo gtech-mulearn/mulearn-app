@@ -5,11 +5,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/design_system/design_system.dart';
+import 'package:mulearn_app/core/network/paging.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/utils/clock.dart';
 import 'package:mulearn_app/core/utils/date_format.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
-import 'package:mulearn_app/core/widgets/mu_load_more_footer.dart';
+import 'package:mulearn_app/core/widgets/mu_paged_list.dart';
 import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/core/widgets/mu_state_display.dart';
 import 'package:mulearn_app/features/mentor/domain/entities/mentor_session.dart';
@@ -115,69 +116,56 @@ class _MentorSessionsScreenState extends ConsumerState<MentorSessionsScreen> {
                     ),
                   );
                 }
-                final groups = groupByLocalDay(paged.items);
                 final today = ref.watch(clockProvider)().toLocal();
-                return MuRefresh(
-                  onRefresh: refresh,
-                  child: NotificationListener<ScrollNotification>(
-                    onNotification: (n) {
-                      if (n.metrics.extentAfter < 400 &&
-                          paged.hasMore &&
-                          paged.loadMoreError == null) {
-                        unawaited(
-                          ref
-                              .read(
-                                mentorSessionsControllerProvider(
-                                  _filter,
-                                ).notifier,
-                              )
-                              .loadMore(),
-                        );
-                      }
-                      return false;
-                    },
-                    child: ListView(
-                      physics: const BouncingScrollPhysics(
-                        parent: AlwaysScrollableScrollPhysics(),
+                // Day headings and rows as one flat list, so it's built row
+                // by row; each row is its slice of the day's card.
+                final entries = <_Entry>[
+                  for (final g in groupByLocalDay(paged.items)) ...[
+                    _Entry.heading(g.day),
+                    for (var i = 0; i < g.sessions.length; i++)
+                      _Entry.row(
+                        g.sessions[i],
+                        first: i == 0,
+                        last: i == g.sessions.length - 1,
                       ),
-                      padding: const EdgeInsets.fromLTRB(
-                        MuSpacing.space5,
-                        0,
-                        MuSpacing.space5,
-                        MuSpacing.space8,
-                      ),
-                      children: [
-                        for (final g in groups) ...[
-                          MuSectionEyebrow(
-                            formatDayHeading(g.day, today),
-                            top: MuSpacing.space4,
-                          ),
-                          MuFeedGroup(
-                            children: [
-                              for (var i = 0; i < g.sessions.length; i++)
-                                _SessionRow(
-                                  session: g.sessions[i],
-                                  showStatus: _filter == SessionFilter.all,
-                                  last: i == g.sessions.length - 1,
-                                ),
-                            ],
-                          ),
-                        ],
-                        if (paged.hasMore || paged.loadMoreError != null)
-                          MuLoadMoreFooter(
-                            isLoading: paged.isLoadingMore,
-                            error: paged.loadMoreError,
-                            onRetry: () => ref
-                                .read(
-                                  mentorSessionsControllerProvider(
-                                    _filter,
-                                  ).notifier,
-                                )
-                                .loadMore(),
-                          ),
-                      ],
-                    ),
+                  ],
+                ];
+                return MuPagedListView<_Entry>(
+                  state: PagedState(
+                    items: entries,
+                    hasMore: paged.hasMore,
+                    isLoadingMore: paged.isLoadingMore,
+                    loadMoreError: paged.loadMoreError,
                   ),
+                  onRefresh: refresh,
+                  gap: 0,
+                  padding: const EdgeInsets.fromLTRB(
+                    MuSpacing.space5,
+                    0,
+                    MuSpacing.space5,
+                    MuSpacing.space8,
+                  ),
+                  onLoadMore: () => ref
+                      .read(mentorSessionsControllerProvider(_filter).notifier)
+                      .loadMore(),
+                  itemBuilder: (_, e, _) {
+                    final session = e.session;
+                    if (session == null) {
+                      return MuSectionEyebrow(
+                        formatDayHeading(e.day!, today),
+                        top: MuSpacing.space4,
+                      );
+                    }
+                    return MuFeedGroupSlice(
+                      first: e.first,
+                      last: e.last,
+                      child: _SessionRow(
+                        session: session,
+                        showStatus: _filter == SessionFilter.all,
+                        last: e.last,
+                      ),
+                    );
+                  },
                 );
               },
             ),
@@ -186,6 +174,24 @@ class _MentorSessionsScreenState extends ConsumerState<MentorSessionsScreen> {
       ),
     );
   }
+}
+
+/// A day heading or a session row in the flattened list.
+class _Entry {
+  const _Entry.heading(DateTime this.day)
+    : session = null,
+      first = false,
+      last = false;
+  const _Entry.row(
+    MentorSession this.session, {
+    required this.first,
+    required this.last,
+  }) : day = null;
+
+  final DateTime? day;
+  final MentorSession? session;
+  final bool first;
+  final bool last;
 }
 
 String statusLabel(SessionStatus s) => switch (s) {

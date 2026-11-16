@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -10,7 +8,7 @@ import 'package:mulearn_app/core/utils/clock.dart';
 import 'package:mulearn_app/core/utils/date_format.dart';
 import 'package:mulearn_app/core/utils/level_label.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
-import 'package:mulearn_app/core/widgets/mu_load_more_footer.dart';
+import 'package:mulearn_app/core/widgets/mu_paged_list.dart';
 import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/features/campus/domain/entities/campus_student.dart';
 import 'package:mulearn_app/features/campus/domain/entities/student_activity.dart';
@@ -41,92 +39,85 @@ class CampusStudentScreen extends ConsumerWidget {
       body: MuRefresh(
         onRefresh: () =>
             ref.refresh(studentActivityControllerProvider(muid).future),
-        child: NotificationListener<ScrollNotification>(
-          onNotification: (n) {
-            final paged = activity.value;
-            if (n.metrics.extentAfter < 400 &&
-                paged != null &&
-                paged.hasMore &&
-                paged.loadMoreError == null) {
-              unawaited(
-                ref
-                    .read(studentActivityControllerProvider(muid).notifier)
-                    .loadMore(),
-              );
-            }
-            return false;
-          },
-          child: ListView(
-            physics: const BouncingScrollPhysics(
-              parent: AlwaysScrollableScrollPhysics(),
-            ),
-            padding: muListPadding,
-            children: [
-              if (student case final s?)
-                _Header(student: s)
-              else
-                _MuidHeader(muid: muid),
-              const SizedBox(height: MuSpacing.space4),
-              Align(
-                alignment: AlignmentDirectional.centerStart,
-                child: MuButton(
-                  label: 'View public profile',
-                  icon: LucideIcons.user,
-                  variant: MuButtonVariant.outline,
-                  size: MuButtonSize.small,
-                  onPressed: () =>
-                      context.push(RoutePaths.publicProfilePath(muid)),
-                ),
-              ),
-              const MuSectionEyebrow('Activity'),
-              activity.when(
-                skipError: true,
-                skipLoadingOnReload: true,
-                loading: () => const Padding(
-                  padding: EdgeInsets.all(MuSpacing.space5),
-                  child: Center(
-                    child: MuDotsLoader(label: 'Loading activity…'),
-                  ),
-                ),
-                error: (e, _) => ErrorRetryView(
-                  error: e,
-                  onRetry: () =>
-                      ref.invalidate(studentActivityControllerProvider(muid)),
-                ),
-                data: (paged) => paged.items.isEmpty
-                    ? Text(
-                        'No activity yet.',
-                        style: mu.text.body.copyWith(color: mu.colors.ink3),
-                      )
-                    : Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          MuFeedGroup(
-                            children: [
-                              for (var i = 0; i < paged.items.length; i++)
-                                _ActivityRow(
-                                  activity: paged.items[i],
-                                  last: i == paged.items.length - 1,
-                                ),
-                            ],
-                          ),
-                          if (paged.hasMore || paged.loadMoreError != null)
-                            MuLoadMoreFooter(
-                              isLoading: paged.isLoadingMore,
-                              error: paged.loadMoreError,
-                              onRetry: () => ref
-                                  .read(
-                                    studentActivityControllerProvider(
-                                      muid,
-                                    ).notifier,
-                                  )
-                                  .loadMore(),
-                            ),
-                        ],
-                      ),
-              ),
-            ],
+        child: CustomScrollView(
+          physics: const BouncingScrollPhysics(
+            parent: AlwaysScrollableScrollPhysics(),
           ),
+          slivers: [
+            SliverPadding(
+              padding: muListPadding,
+              sliver: SliverMainAxisGroup(
+                slivers: [
+                  SliverList.list(
+                    children: [
+                      if (student case final s?)
+                        _Header(student: s)
+                      else
+                        _MuidHeader(muid: muid),
+                      const SizedBox(height: MuSpacing.space4),
+                      Align(
+                        alignment: AlignmentDirectional.centerStart,
+                        child: MuButton(
+                          label: 'View public profile',
+                          icon: LucideIcons.user,
+                          variant: MuButtonVariant.outline,
+                          size: MuButtonSize.small,
+                          onPressed: () =>
+                              context.push(RoutePaths.publicProfilePath(muid)),
+                        ),
+                      ),
+                      const MuSectionEyebrow('Activity'),
+                    ],
+                  ),
+                  // A long-time learner's activity runs long: row by row.
+                  activity.when(
+                    skipError: true,
+                    skipLoadingOnReload: true,
+                    loading: () => const SliverToBoxAdapter(
+                      child: Padding(
+                        padding: EdgeInsets.all(MuSpacing.space5),
+                        child: Center(
+                          child: MuDotsLoader(label: 'Loading activity…'),
+                        ),
+                      ),
+                    ),
+                    error: (e, _) => SliverToBoxAdapter(
+                      child: ErrorRetryView(
+                        error: e,
+                        onRetry: () => ref.invalidate(
+                          studentActivityControllerProvider(muid),
+                        ),
+                      ),
+                    ),
+                    data: (paged) => paged.items.isEmpty && !paged.hasMore
+                        ? SliverToBoxAdapter(
+                            child: Text(
+                              'No activity yet.',
+                              style: mu.text.body.copyWith(
+                                color: mu.colors.ink3,
+                              ),
+                            ),
+                          )
+                        : MuPagedSliverList(
+                            state: paged,
+                            grouped: true,
+                            onLoadMore: () => ref
+                                .read(
+                                  studentActivityControllerProvider(
+                                    muid,
+                                  ).notifier,
+                                )
+                                .loadMore(),
+                            itemBuilder: (_, a, i) => _ActivityRow(
+                              activity: a,
+                              last: i == paged.items.length - 1,
+                            ),
+                          ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );

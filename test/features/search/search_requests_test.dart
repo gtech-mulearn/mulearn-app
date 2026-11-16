@@ -201,7 +201,11 @@ void main() {
       expect(pages(), [1]);
 
       for (var i = 0; i < 6; i++) {
-        await tester.fling(find.byType(ListView), const Offset(0, -3000), 3000);
+        await tester.fling(
+          find.byType(CustomScrollView),
+          const Offset(0, -3000),
+          3000,
+        );
         await settle(tester);
       }
       expect(pages(), [

@@ -264,29 +264,34 @@ class _SelectSheetState extends State<_SelectSheet> {
                 onChanged: (v) => setState(() => _query = v),
               ),
             ),
+          // Built as it scrolls: an option list can run to thousands.
           Expanded(
-            child: ListView(
+            child: ListView.builder(
               padding: EdgeInsets.only(
                 bottom:
                     MuSpacing.space5 + MediaQuery.viewInsetsOf(context).bottom,
               ),
-              children: [
-                if (shown.isEmpty)
-                  Padding(
+              itemCount:
+                  (shown.isEmpty ? 1 : shown.length) +
+                  (widget.allowOther ? 1 : 0),
+              itemBuilder: (context, i) {
+                if (shown.isEmpty && i == 0) {
+                  return Padding(
                     padding: const EdgeInsets.all(MuSpacing.space5),
                     child: Text(
                       'Nothing matches "${_query.trim()}".',
                       style: mu.text.body.copyWith(color: c.ink3),
                     ),
-                  ),
-                for (final o in shown) row(o.id, o.label),
-                if (widget.allowOther)
-                  row(
-                    muOtherOptionValue,
-                    widget.otherLabel,
-                    icon: LucideIcons.plus,
-                  ),
-              ],
+                  );
+                }
+                final o = shown.isEmpty ? null : shown.elementAtOrNull(i);
+                if (o != null) return row(o.id, o.label);
+                return row(
+                  muOtherOptionValue,
+                  widget.otherLabel,
+                  icon: LucideIcons.plus,
+                );
+              },
             ),
           ),
         ],

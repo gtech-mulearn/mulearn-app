@@ -7,12 +7,13 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/config/flavor_config.dart';
 import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
+import 'package:mulearn_app/core/network/paging.dart';
 import 'package:mulearn_app/core/notifications/unread_notifications.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/router/tab_navigation.dart';
 import 'package:mulearn_app/core/utils/date_format.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
-import 'package:mulearn_app/core/widgets/mu_load_more_footer.dart';
+import 'package:mulearn_app/core/widgets/mu_paged_list.dart';
 import 'package:mulearn_app/core/widgets/mu_state_display.dart';
 import 'package:mulearn_app/features/notifications/domain/entities/app_notification.dart';
 import 'package:mulearn_app/features/notifications/domain/notification_target.dart';
@@ -216,40 +217,13 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                                 ),
                             ],
                           )
-                        : NotificationListener<ScrollNotification>(
-                            onNotification: (n) {
-                              if (n.metrics.extentAfter < 400 &&
-                                  paged.hasMore &&
-                                  paged.loadMoreError == null) {
-                                unawaited(
-                                  ref
-                                      .read(
-                                        notificationsControllerProvider
-                                            .notifier,
-                                      )
-                                      .loadMore(),
-                                );
-                              }
-                              return false;
-                            },
-                            child: _InboxList(
-                              items: items,
-                              footer:
-                                  paged.hasMore || paged.loadMoreError != null
-                                  ? MuLoadMoreFooter(
-                                      isLoading: paged.isLoadingMore,
-                                      error: paged.loadMoreError,
-                                      onRetry: () => ref
-                                          .read(
-                                            notificationsControllerProvider
-                                                .notifier,
-                                          )
-                                          .loadMore(),
-                                    )
-                                  : null,
-                              onOpen: _open,
-                              onArchive: _archive,
-                            ),
+                        : _InboxList(
+                            paged: paged.copyWith(items: items),
+                            onLoadMore: () => ref
+                                .read(notificationsControllerProvider.notifier)
+                                .loadMore(),
+                            onOpen: _open,
+                            onArchive: _archive,
                           ),
                   );
                 },
@@ -263,17 +237,18 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
 }
 
 /// The feed as "Today" and "Earlier" groups (local dates), newest first,
-/// each a card of FeedRows.
+/// each a card of FeedRows, built row by row: "Earlier" runs to thousands
+/// and carries the paging.
 class _InboxList extends StatelessWidget {
   const _InboxList({
-    required this.items,
+    required this.paged,
+    required this.onLoadMore,
     required this.onOpen,
     required this.onArchive,
-    this.footer,
   });
 
-  final List<AppNotification> items;
-  final Widget? footer;
+  final PagedState<AppNotification> paged;
+  final Future<void> Function() onLoadMore;
   final ValueChanged<AppNotification> onOpen;
   final ValueChanged<AppNotification> onArchive;
 
@@ -287,34 +262,49 @@ class _InboxList extends StatelessWidget {
           local.day == now.day;
     }
 
-    final today = items.where(isToday).toList();
-    final earlier = items.where((n) => !isToday(n)).toList();
+    final today = paged.items.where(isToday).toList();
+    final earlier = paged.items.where((n) => !isToday(n)).toList();
 
-    Widget group(String title, List<AppNotification> list) => Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        _SectionLabel(title),
-        MuFeedGroup(
-          children: [
-            for (var i = 0; i < list.length; i++)
-              _row(context, list[i], now, last: i == list.length - 1),
-          ],
-        ),
-      ],
-    );
-
-    return ListView(
+    return CustomScrollView(
       physics: const AlwaysScrollableScrollPhysics(),
-      padding: const EdgeInsets.fromLTRB(
-        MuSpacing.space5,
-        MuSpacing.space2,
-        MuSpacing.space5,
-        MuSpacing.space8,
-      ),
-      children: [
-        if (today.isNotEmpty) group('Today', today),
-        if (earlier.isNotEmpty) group('Earlier', earlier),
-        ?footer,
+      slivers: [
+        SliverPadding(
+          padding: const EdgeInsets.fromLTRB(
+            MuSpacing.space5,
+            MuSpacing.space2,
+            MuSpacing.space5,
+            MuSpacing.space8,
+          ),
+          sliver: SliverMainAxisGroup(
+            slivers: [
+              if (today.isNotEmpty) ...[
+                const SliverToBoxAdapter(child: _SectionLabel('Today')),
+                SliverList.builder(
+                  itemCount: today.length,
+                  itemBuilder: (context, i) => MuFeedGroupSlice(
+                    first: i == 0,
+                    last: i == today.length - 1,
+                    child: _row(
+                      context,
+                      today[i],
+                      now,
+                      last: i == today.length - 1,
+                    ),
+                  ),
+                ),
+              ],
+              if (earlier.isNotEmpty)
+                const SliverToBoxAdapter(child: _SectionLabel('Earlier')),
+              MuPagedSliverList<AppNotification>(
+                state: paged.copyWith(items: earlier),
+                grouped: true,
+                onLoadMore: onLoadMore,
+                itemBuilder: (context, n, i) =>
+                    _row(context, n, now, last: i == earlier.length - 1),
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }

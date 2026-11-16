@@ -8,7 +8,7 @@ import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/utils/level_label.dart';
 import 'package:mulearn_app/core/utils/search_debouncer.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
-import 'package:mulearn_app/core/widgets/mu_load_more_footer.dart';
+import 'package:mulearn_app/core/widgets/mu_paged_list.dart';
 import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/core/widgets/mu_state_display.dart';
 import 'package:mulearn_app/features/campus/domain/entities/campus_student.dart';
@@ -137,72 +137,35 @@ class _CampusStudentsScreenState extends ConsumerState<CampusStudentsScreen> {
                   0,
                   (m, s) => s.karma > m ? s.karma : m,
                 );
-                return MuRefresh(
+                // A campus has thousands of students: built row by row.
+                return MuPagedListView(
+                  state: view.paged,
                   onRefresh: refresh,
-                  child: NotificationListener<ScrollNotification>(
-                    onNotification: (n) {
-                      if (n.metrics.extentAfter < 400 &&
-                          view.paged.hasMore &&
-                          view.paged.loadMoreError == null) {
-                        unawaited(
-                          ref
-                              .read(
-                                campusStudentsControllerProvider(
-                                  _filter,
-                                ).notifier,
-                              )
-                              .loadMore(),
-                        );
-                      }
-                      return false;
-                    },
-                    child: ListView(
-                      physics: const BouncingScrollPhysics(
-                        parent: AlwaysScrollableScrollPhysics(),
+                  grouped: true,
+                  padding: const EdgeInsets.fromLTRB(
+                    MuSpacing.space5,
+                    0,
+                    MuSpacing.space5,
+                    MuSpacing.space8,
+                  ),
+                  header: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: MuSpacing.space2),
+                      child: Text(
+                        view.count == 1
+                            ? '1 student'
+                            : '${view.count} students',
+                        style: mu.text.caption,
                       ),
-                      padding: const EdgeInsets.fromLTRB(
-                        MuSpacing.space5,
-                        0,
-                        MuSpacing.space5,
-                        MuSpacing.space8,
-                      ),
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            bottom: MuSpacing.space2,
-                          ),
-                          child: Text(
-                            view.count == 1
-                                ? '1 student'
-                                : '${view.count} students',
-                            style: mu.text.caption,
-                          ),
-                        ),
-                        MuFeedGroup(
-                          children: [
-                            for (var i = 0; i < items.length; i++)
-                              _StudentRow(
-                                student: items[i],
-                                leader: leader,
-                                last: i == items.length - 1,
-                              ),
-                          ],
-                        ),
-                        if (view.paged.hasMore ||
-                            view.paged.loadMoreError != null)
-                          MuLoadMoreFooter(
-                            isLoading: view.paged.isLoadingMore,
-                            error: view.paged.loadMoreError,
-                            onRetry: () => ref
-                                .read(
-                                  campusStudentsControllerProvider(
-                                    _filter,
-                                  ).notifier,
-                                )
-                                .loadMore(),
-                          ),
-                      ],
                     ),
+                  ],
+                  onLoadMore: () => ref
+                      .read(campusStudentsControllerProvider(_filter).notifier)
+                      .loadMore(),
+                  itemBuilder: (_, student, i) => _StudentRow(
+                    student: student,
+                    leader: leader,
+                    last: i == items.length - 1,
                   ),
                 );
               },

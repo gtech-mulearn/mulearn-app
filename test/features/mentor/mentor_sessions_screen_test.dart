@@ -54,7 +54,7 @@ void main() {
         : FakeResponse(200, pagedEnvelope([row], isNext: true));
     await pumpMentor(tester, adapter, '/mentor/sessions');
 
-    await tester.fling(find.byType(ListView).last, const Offset(0, -2000), 3000);
+    await tester.fling(find.byType(CustomScrollView).last, const Offset(0, -2000), 3000);
     await settleMentor(tester);
 
     expect(find.text('Second page session'), findsOneWidget);
