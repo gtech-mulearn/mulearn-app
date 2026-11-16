@@ -17,13 +17,18 @@ import 'package:mulearn_app/features/auth/presentation/widgets/auth_page.dart';
 
 enum _Mode { choice, quiz, direct }
 
-/// Sign-up step 4 of 4, the dashboard's `/onboarding/interests`: take the
-/// PathFinder quiz (5 questions, the top two pathways are saved, no end
-/// goals) or pick directly (pathways, then end goals; both required). The
-/// submissions are [InterestsController.submitPathwaysOnly] and
-/// [InterestsController.submitPathwaysAndEndgoals]; every path lands on
-/// Home. What μLearn is was already told by the first-launch intro, so this
-/// goes straight to the choice.
+/// The dashboard's `/onboarding/interests` (`interests-client.tsx`), step by
+/// step:
+///  * "How would you like to discover your path?" — the PathFinder quiz or
+///    "I know what I want".
+///  * Quiz (`PathwayQuiz`): five questions in a shuffled order; pick an
+///    answer, then Next; back takes the last answer back. Then the results —
+///    "Welcome to the community!" with the two recommended paths — and only
+///    "Begin your journey" saves them (pathways only, no end goals).
+///  * Direct (`InterestSelector`): "Which one feels like you?" (one or more
+///    pathways), then "What's your long-term tech goal?" (one or more end
+///    goals); both are saved.
+/// Every path lands on Home.
 class OnboardingInterestsScreen extends ConsumerStatefulWidget {
   const OnboardingInterestsScreen({super.key});
 
@@ -31,6 +36,9 @@ class OnboardingInterestsScreen extends ConsumerStatefulWidget {
   ConsumerState<OnboardingInterestsScreen> createState() =>
       _OnboardingInterestsScreenState();
 }
+
+/// The dashboard's eyebrow on every step.
+const _eyebrow = 'Let’s bring out the true you';
 
 class _OnboardingInterestsScreenState
     extends ConsumerState<OnboardingInterestsScreen> {
@@ -97,13 +105,9 @@ class _ChoiceView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AuthPage(
-      step: 4,
-      steps: 4,
-      eyebrow: 'One last thing',
-      light: 'Where do you ',
-      bold: 'want to start?',
-      lead:
-          'We shape your first tasks around this. Your interest groups can change any time.',
+      eyebrow: _eyebrow,
+      light: 'How would you like to ',
+      bold: 'discover your path?',
       children: [
         _OptionCard(
           icon: LucideIcons.sparkles,
@@ -132,37 +136,45 @@ class _ChoiceView extends StatelessWidget {
   }
 }
 
-/// A large tappable choice: icon well, title, line, chevron.
+/// A large tappable card: icon well, title, line. A choice that moves on
+/// ([selected] null) ends in a chevron; a pick ([selected] set) shows a
+/// cobalt ring and a check when chosen.
 class _OptionCard extends StatelessWidget {
   const _OptionCard({
     required this.title,
     required this.onTap,
     this.subtitle,
     this.icon,
+    this.selected,
   });
 
   final IconData? icon;
   final String title;
   final String? subtitle;
   final VoidCallback? onTap;
+  final bool? selected;
 
   @override
   Widget build(BuildContext context) {
     final mu = context.mu;
     final c = mu.colors;
+    final on = selected ?? false;
     return Semantics(
       button: true,
+      checked: selected,
       label: [title, ?subtitle].join(', '),
       excludeSemantics: true,
       child: MuPressable(
         onTap: onTap,
         pressedScale: 0.98,
-        child: Container(
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 160),
           constraints: const BoxConstraints(minHeight: 64),
           padding: const EdgeInsets.all(MuSpacing.space4),
           decoration: BoxDecoration(
-            color: c.surface,
+            color: on ? c.cobaltTint : c.surface,
             borderRadius: BorderRadius.circular(MuRadii.card),
+            border: Border.all(color: on ? c.cobalt : c.surface, width: 2),
           ),
           child: Row(
             children: [
@@ -171,7 +183,7 @@ class _OptionCard extends StatelessWidget {
                   width: 44,
                   height: 44,
                   decoration: BoxDecoration(
-                    color: c.cobaltTint,
+                    color: on ? c.surface : c.cobaltTint,
                     shape: BoxShape.circle,
                   ),
                   child: Icon(icon, size: MuSizes.iconMd, color: c.cobaltText),
@@ -197,11 +209,26 @@ class _OptionCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: MuSpacing.space2),
-              Icon(
-                LucideIcons.chevronRight,
-                size: MuSizes.iconSm,
-                color: c.ink3,
-              ),
+              if (selected == null)
+                Icon(
+                  LucideIcons.chevronRight,
+                  size: MuSizes.iconSm,
+                  color: c.ink3,
+                )
+              else
+                AnimatedOpacity(
+                  duration: const Duration(milliseconds: 160),
+                  opacity: on ? 1 : 0,
+                  child: Container(
+                    width: 24,
+                    height: 24,
+                    decoration: BoxDecoration(
+                      color: c.cobalt,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(LucideIcons.check, size: 14, color: c.onCobalt),
+                  ),
+                ),
             ],
           ),
         ),
@@ -210,6 +237,14 @@ class _OptionCard extends StatelessWidget {
   }
 }
 
+const _pathwayIcons = {
+  Pathway.coder: LucideIcons.code2,
+  Pathway.maker: LucideIcons.wrench,
+  Pathway.manager: LucideIcons.barChart3,
+  Pathway.creative: LucideIcons.palette,
+};
+
+/// The dashboard's `PathwayQuiz`.
 class _QuizView extends ConsumerStatefulWidget {
   const _QuizView({required this.onBack, required this.onComplete});
 
@@ -221,25 +256,54 @@ class _QuizView extends ConsumerStatefulWidget {
 }
 
 class _QuizViewState extends ConsumerState<_QuizView> {
+  // Shuffled once per visit, like the dashboard's useMemo.
   late final List<QuizQuestion> _questions = List.of(kPathfinderQuizQuestions)
     ..shuffle();
   int _index = 0;
-  final Map<Pathway, int> _tally = {};
+  final List<Pathway> _answers = [];
+  Pathway? _picked;
+  bool _results = false;
 
-  Future<void> _answer(Pathway pathway) async {
+  bool get _last => _index == _questions.length - 1;
+
+  void _next() {
+    final picked = _picked;
+    if (picked == null) return;
     unawaited(HapticFeedback.selectionClick());
-    _tally[pathway] = (_tally[pathway] ?? 0) + 1;
-    if (_index < _questions.length - 1) {
-      setState(() => _index += 1);
-      return;
+    setState(() {
+      _answers.add(picked);
+      _picked = null;
+      if (_last) {
+        _results = true;
+      } else {
+        _index += 1;
+      }
+    });
+  }
+
+  /// Back takes the last answer back and shows it picked (the dashboard's
+  /// handleBack), so it's never counted twice.
+  void _back() {
+    if (_results) {
+      setState(() {
+        _results = false;
+        _picked = _answers.removeLast();
+      });
+    } else if (_index > 0) {
+      setState(() {
+        _index -= 1;
+        _picked = _answers.removeLast();
+      });
+    } else {
+      widget.onBack();
     }
-    final ranked = _tally.entries.toList()
-      ..sort((a, b) => b.value.compareTo(a.value));
-    final topPathways = ranked.take(2).map((e) => e.key.name).toList();
+  }
+
+  Future<void> _begin(List<Pathway> recommended) async {
     try {
       await ref
           .read(interestsControllerProvider.notifier)
-          .submitPathwaysOnly(topPathways);
+          .submitPathwaysOnly(recommended.map((p) => p.name).toList());
       widget.onComplete();
     } on Object catch (_) {
       // Surfaced via the ref.listen toast in the parent screen.
@@ -248,37 +312,103 @@ class _QuizViewState extends ConsumerState<_QuizView> {
 
   @override
   Widget build(BuildContext context) {
+    if (_results) return _results_(context);
     final question = _questions[_index];
-    final loading = ref.watch(interestsControllerProvider).isLoading;
-
     return AuthPage(
       step: _index + 1,
       steps: _questions.length,
-      eyebrow: 'Question ${_index + 1} of ${_questions.length}',
+      eyebrow: _eyebrow,
       light: '',
       bold: question.question,
-      onBack: () {
-        if (_index == 0) {
-          widget.onBack();
-        } else {
-          setState(() => _index -= 1);
-        }
-      },
+      onBack: _back,
+      bottom: MuButton(
+        label: _last ? 'See my paths' : 'Next',
+        block: true,
+        knob: true,
+        onPressed: _picked == null ? null : _next,
+      ),
       children: [
         for (final option in question.options) ...[
           _OptionCard(
+            icon: _pathwayIcons[option.pathway],
             title: option.text,
-            onTap: loading ? null : () => _answer(option.pathway),
+            selected: _picked == option.pathway,
+            onTap: () {
+              unawaited(HapticFeedback.selectionClick());
+              setState(() => _picked = option.pathway);
+            },
           ),
           const SizedBox(height: MuSpacing.space3),
         ],
-        if (loading)
-          const Center(child: MuDotsLoader(label: 'Saving your pathways…')),
+      ],
+    );
+  }
+
+  /// The dashboard's results: welcome, the two recommended paths with
+  /// three of what each covers, and "Begin your journey" (which saves).
+  Widget _results_(BuildContext context) {
+    final mu = context.mu;
+    final c = mu.colors;
+    final recommended = recommendPathways(_answers);
+    final loading = ref.watch(interestsControllerProvider).isLoading;
+    return AuthPage(
+      eyebrow: 'You’re officially one of us',
+      light: 'Welcome to the ',
+      bold: 'community!',
+      lead: 'Let’s build something amazing together.',
+      onBack: loading ? null : _back,
+      bottom: MuButton(
+        label: 'Begin your journey',
+        block: true,
+        knob: true,
+        loading: loading,
+        loadingLabel: 'Saving your paths…',
+        onPressed: loading ? null : () => _begin(recommended),
+      ),
+      children: [
+        Text('Your recommended paths', style: mu.text.label),
+        const SizedBox(height: MuSpacing.space3),
+        for (final p in recommended) ...[
+          Container(
+            padding: const EdgeInsets.all(MuSpacing.space4),
+            decoration: BoxDecoration(
+              color: c.surface,
+              borderRadius: BorderRadius.circular(MuRadii.card),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Icon(
+                      _pathwayIcons[p],
+                      size: MuSizes.iconMd,
+                      color: c.cobaltText,
+                    ),
+                    const SizedBox(width: MuSpacing.space2),
+                    Text(kPathwayInfo[p]!.title, style: mu.text.title3),
+                  ],
+                ),
+                const SizedBox(height: MuSpacing.space3),
+                Wrap(
+                  spacing: MuSpacing.space2,
+                  runSpacing: MuSpacing.space2,
+                  children: [
+                    for (final skill in kPathwayInfo[p]!.includes.take(3))
+                      MuPill(skill, tone: MuPillTone.cobalt),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: MuSpacing.space3),
+        ],
       ],
     );
   }
 }
 
+/// The dashboard's `InterestSelector`.
 class _DirectView extends ConsumerStatefulWidget {
   const _DirectView({required this.onBack, required this.onComplete});
 
@@ -299,8 +429,14 @@ class _DirectViewState extends ConsumerState<_DirectView> {
       await ref
           .read(interestsControllerProvider.notifier)
           .submitPathwaysAndEndgoals(
-            _pathways.map((p) => p.name).toList(),
-            _endgoals.map((e) => e.apiValue).toList(),
+            [
+              for (final p in Pathway.values)
+                if (_pathways.contains(p)) p.name,
+            ],
+            [
+              for (final e in Endgoal.values)
+                if (_endgoals.contains(e)) e.apiValue,
+            ],
           );
       widget.onComplete();
     } on Object catch (_) {
@@ -309,7 +445,7 @@ class _DirectViewState extends ConsumerState<_DirectView> {
   }
 
   void _toggle<T>(Set<T> set, T value) {
-    HapticFeedback.selectionClick();
+    unawaited(HapticFeedback.selectionClick());
     setState(() => set.contains(value) ? set.remove(value) : set.add(value));
   }
 
@@ -319,16 +455,15 @@ class _DirectViewState extends ConsumerState<_DirectView> {
 
     if (!_onEndgoals) {
       return AuthPage(
-        step: 4,
-        steps: 4,
-        eyebrow: 'Your pathways',
-        light: 'What do you ',
-        bold: 'like to do?',
-        lead:
-            'Pick one or more. Your Interest Groups and first tasks follow from this.',
+        step: 1,
+        steps: 2,
+        eyebrow: _eyebrow,
+        light: 'Which one feels ',
+        bold: 'like you?',
+        lead: 'Pick one or more.',
         onBack: widget.onBack,
         bottom: MuButton(
-          label: 'Continue',
+          label: 'Next',
           block: true,
           knob: true,
           onPressed: _pathways.isEmpty
@@ -336,180 +471,47 @@ class _DirectViewState extends ConsumerState<_DirectView> {
               : () => setState(() => _onEndgoals = true),
         ),
         children: [
-          GridView.count(
-            crossAxisCount: 2,
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            mainAxisSpacing: MuSpacing.space3,
-            crossAxisSpacing: MuSpacing.space3,
-            childAspectRatio: 1.05,
-            children: [
-              for (final p in Pathway.values)
-                _PathwayTile(
-                  pathway: p,
-                  selected: _pathways.contains(p),
-                  onTap: () => _toggle(_pathways, p),
-                ),
-            ],
-          ),
+          for (final p in Pathway.values) ...[
+            _OptionCard(
+              icon: _pathwayIcons[p],
+              title: kPathwayInfo[p]!.title,
+              subtitle: kPathwayInfo[p]!.includes.take(3).join(', '),
+              selected: _pathways.contains(p),
+              onTap: () => _toggle(_pathways, p),
+            ),
+            const SizedBox(height: MuSpacing.space3),
+          ],
         ],
       );
     }
 
     return AuthPage(
-      step: 4,
-      steps: 4,
-      eyebrow: 'Your goals',
-      light: 'Where do you ',
-      bold: 'want it to lead?',
-      lead: 'Pick one or more. You can change these later.',
-      onBack: () => setState(() => _onEndgoals = false),
+      step: 2,
+      steps: 2,
+      eyebrow: _eyebrow,
+      light: 'What’s your long-term ',
+      bold: 'tech goal?',
+      lead: 'Pick one or more.',
+      onBack: loading ? null : () => setState(() => _onEndgoals = false),
       bottom: MuButton(
-        label: "Let's go",
+        label: 'Begin your journey',
         block: true,
         knob: true,
         loading: loading,
         loadingLabel: 'Saving…',
-        onPressed: _endgoals.isEmpty ? null : _submit,
+        onPressed: _endgoals.isEmpty || loading ? null : _submit,
       ),
       children: [
-        Wrap(
-          spacing: MuSpacing.space2,
-          runSpacing: MuSpacing.space2,
-          children: [
-            for (final e in Endgoal.values)
-              MuFilterChip(
-                label: _endgoalLabel(e),
-                selected: _endgoals.contains(e),
-                onTap: () => _toggle(_endgoals, e),
-              ),
-          ],
-        ),
+        for (final e in Endgoal.values) ...[
+          _OptionCard(
+            icon: LucideIcons.target,
+            title: endgoalTitle(e),
+            selected: _endgoals.contains(e),
+            onTap: () => _toggle(_endgoals, e),
+          ),
+          const SizedBox(height: MuSpacing.space3),
+        ],
       ],
-    );
-  }
-
-  static String _endgoalLabel(Endgoal endgoal) => switch (endgoal) {
-    Endgoal.job => 'A job',
-    Endgoal.researchAndDevelopment => 'Research & development',
-    Endgoal.entrepreneurship => 'My own venture',
-    Endgoal.gigWork => 'Gig work',
-    Endgoal.higherEducation => 'Higher education',
-    Endgoal.socialImpact => 'Social impact',
-  };
-}
-
-/// A pathway as a sticker tile in its own Interest Group colour; selected
-/// gets a night ring and a check.
-class _PathwayTile extends StatelessWidget {
-  const _PathwayTile({
-    required this.pathway,
-    required this.selected,
-    required this.onTap,
-  });
-
-  final Pathway pathway;
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final mu = context.mu;
-    final c = mu.colors;
-    final (
-      String name,
-      String line,
-      IgCategory tone,
-      IconData icon,
-    ) = switch (pathway) {
-      Pathway.coder => (
-        'Coder',
-        'Build software',
-        IgCategory.coder,
-        LucideIcons.code2,
-      ),
-      Pathway.maker => (
-        'Maker',
-        'Build things you can hold',
-        IgCategory.maker,
-        LucideIcons.cpu,
-      ),
-      Pathway.manager => (
-        'Manager',
-        'Lead people and projects',
-        IgCategory.manager,
-        LucideIcons.briefcase,
-      ),
-      Pathway.creative => (
-        'Creative',
-        'Design, film and art',
-        IgCategory.creative,
-        LucideIcons.palette,
-      ),
-    };
-    return Semantics(
-      button: true,
-      checked: selected,
-      label: '$name, $line',
-      excludeSemantics: true,
-      child: MuPressable(
-        onTap: onTap,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 160),
-          padding: const EdgeInsets.all(MuSpacing.space4),
-          decoration: BoxDecoration(
-            color: MuTones.forIgCategory(c, tone),
-            borderRadius: BorderRadius.circular(MuRadii.card),
-            border: Border.all(
-              color: selected ? c.inkPrint : MuTones.forIgCategory(c, tone),
-              width: 3,
-            ),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Icon(icon, size: 26, color: c.inkPrint),
-                  const Spacer(),
-                  AnimatedOpacity(
-                    duration: const Duration(milliseconds: 160),
-                    opacity: selected ? 1 : 0,
-                    child: Container(
-                      width: 26,
-                      height: 26,
-                      decoration: BoxDecoration(
-                        color: c.inkPrint,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        LucideIcons.check,
-                        size: 16,
-                        color: MuTones.forIgCategory(c, tone),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const Spacer(),
-              Text(
-                name,
-                style: mu.text.title2.copyWith(
-                  color: c.inkPrint,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-              const SizedBox(height: 2),
-              Text(
-                line,
-                style: mu.text.caption.copyWith(
-                  color: c.inkPrint.withValues(alpha: 0.75),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }
