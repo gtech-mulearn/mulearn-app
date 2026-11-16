@@ -40,6 +40,8 @@ import 'package:mulearn_app/features/learning_circles/presentation/screens/learn
 import 'package:mulearn_app/features/learning_circles/presentation/screens/meeting_detail_screen.dart';
 import 'package:mulearn_app/features/mentor/presentation/screens/availability_screen.dart';
 import 'package:mulearn_app/features/mentor/presentation/screens/learner_sessions_screen.dart';
+import 'package:mulearn_app/features/mentor/presentation/screens/mentor_application_form_screen.dart';
+import 'package:mulearn_app/features/mentor/presentation/screens/mentor_applications_screen.dart';
 import 'package:mulearn_app/features/mentor/presentation/screens/mentor_hub_screen.dart';
 import 'package:mulearn_app/features/mentor/presentation/screens/mentor_session_detail_screen.dart';
 import 'package:mulearn_app/features/mentor/presentation/screens/mentor_sessions_screen.dart';
@@ -360,6 +362,18 @@ GoRouter goRouter(Ref ref) {
           select: (a) => a.mentor,
           role: 'Mentor',
           builder: (_) => const StudentRequestsScreen(),
+        ),
+      ),
+      // No WorkspaceGate: applying is how a mentor gets the workspace.
+      GoRoute(
+        path: RoutePaths.mentorApplications,
+        builder: (_, __) => const MentorApplicationsScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.mentorApply,
+        builder: (_, state) => MentorApplicationFormScreen(
+          editId: state.uri.queryParameters['edit'],
+          fromId: state.uri.queryParameters['from'],
         ),
       ),
       GoRoute(
