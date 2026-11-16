@@ -5,6 +5,7 @@ import 'package:mulearn_app/app/widgets/main_shell.dart';
 import 'package:mulearn_app/app/widgets/not_found_screen.dart';
 import 'package:mulearn_app/core/auth/app_auth_controller.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
+import 'package:mulearn_app/core/session/session_providers.dart';
 import 'package:mulearn_app/core/widgets/workspace_gate.dart';
 import 'package:mulearn_app/features/auth/presentation/providers/welcome_providers.dart';
 import 'package:mulearn_app/features/auth/presentation/screens/arrival_screen.dart';
@@ -98,6 +99,8 @@ GoRouter goRouter(Ref ref) {
       auth: ref.read(appAuthControllerProvider),
       arrivalSeen: ref.read(arrivalSeenProvider),
       uri: state.uri,
+      needsInterests:
+          ref.read(currentUserProvider).value?.needsInterests ?? false,
     ),
     // A path the app doesn't know (e.g. an old link): the dashboard's 404.
     errorBuilder: (_, __) => const NotFoundScreen(),
@@ -457,6 +460,12 @@ class _AuthRefreshListenable extends ChangeNotifier {
   _AuthRefreshListenable(Ref ref) {
     ref
       ..listen(appAuthControllerProvider, (_, __) => notifyListeners())
-      ..listen(arrivalSeenProvider, (_, __) => notifyListeners());
+      ..listen(arrivalSeenProvider, (_, __) => notifyListeners())
+      // Re-run the guard once the user loads (the interests step).
+      ..listen(currentUserProvider, (previous, next) {
+        if (previous?.value?.needsInterests != next.value?.needsInterests) {
+          notifyListeners();
+        }
+      });
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:mulearn_app/core/session/session_providers.dart';
 import 'package:mulearn_app/features/auth/domain/repositories/register_repository.dart';
 import 'package:mulearn_app/features/auth/presentation/providers/interests_controller.dart';
 import 'package:mulearn_app/features/auth/presentation/providers/register_providers.dart';
@@ -9,14 +10,22 @@ class MockRegisterRepository extends Mock implements RegisterRepository {}
 
 void main() {
   late MockRegisterRepository repository;
+  late int userLoads;
 
   setUp(() {
     repository = MockRegisterRepository();
+    userLoads = 0;
   });
 
   ProviderContainer makeContainer() {
     final container = ProviderContainer(
-      overrides: [registerRepositoryProvider.overrideWithValue(repository)],
+      overrides: [
+        registerRepositoryProvider.overrideWithValue(repository),
+        currentUserProvider.overrideWith((ref) async {
+          userLoads++;
+          return null;
+        }),
+      ],
     );
     addTearDown(container.dispose);
     return container;
@@ -59,6 +68,18 @@ void main() {
       expect(calls, ['domains', 'endgoals']);
     },
   );
+
+  test('the user is reloaded after saving, so the router stops sending them '
+      'back to the interests step', () async {
+    when(() => repository.selectDomains(any())).thenAnswer((_) async {});
+
+    final container = makeContainer();
+    await container
+        .read(interestsControllerProvider.notifier)
+        .submitPathwaysOnly(['coder']);
+
+    expect(userLoads, 1);
+  });
 
   test('surfaces repository errors as AsyncError', () async {
     when(() => repository.selectDomains(any())).thenThrow(Exception('down'));

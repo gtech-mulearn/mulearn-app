@@ -8,6 +8,7 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
+import 'package:mulearn_app/core/session/session_actions.dart';
 import 'package:mulearn_app/features/auth/data/interests_quiz_data.dart';
 import 'package:mulearn_app/features/auth/domain/entities/endgoal.dart';
 import 'package:mulearn_app/features/auth/domain/entities/pathway.dart';
@@ -65,6 +66,9 @@ class _OnboardingInterestsScreenState
         _Mode.choice => _ChoiceView(
           onQuiz: () => _to(_Mode.quiz),
           onDirect: () => _to(_Mode.direct),
+          // The router keeps a user without a pathway on this step, so it
+          // needs its own way out (the wrong account, say).
+          onSignOut: () => ref.read(sessionActionsProvider.notifier).signOut(),
         ),
         _Mode.quiz => _QuizView(
           onBack: () => _to(_Mode.choice),
@@ -80,10 +84,15 @@ class _OnboardingInterestsScreenState
 }
 
 class _ChoiceView extends StatelessWidget {
-  const _ChoiceView({required this.onQuiz, required this.onDirect});
+  const _ChoiceView({
+    required this.onQuiz,
+    required this.onDirect,
+    required this.onSignOut,
+  });
 
   final VoidCallback onQuiz;
   final VoidCallback onDirect;
+  final VoidCallback onSignOut;
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +103,7 @@ class _ChoiceView extends StatelessWidget {
       light: 'Where do you ',
       bold: 'want to start?',
       lead:
-          'We shape your first tasks around this. Nothing is locked in: change direction whenever you like.',
+          'We shape your first tasks around this. Your interest groups can change any time.',
       children: [
         _OptionCard(
           icon: LucideIcons.sparkles,
@@ -108,6 +117,15 @@ class _ChoiceView extends StatelessWidget {
           title: 'I know what I want',
           subtitle: 'Pick your pathways and end goals yourself.',
           onTap: onDirect,
+        ),
+        const SizedBox(height: MuSpacing.space6),
+        Center(
+          child: MuButton(
+            label: 'Not you? Sign out',
+            variant: MuButtonVariant.ghost,
+            size: MuButtonSize.small,
+            onPressed: onSignOut,
+          ),
         ),
       ],
     );
