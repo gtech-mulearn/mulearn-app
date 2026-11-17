@@ -67,6 +67,9 @@ import 'package:mulearn_app/features/tasks/presentation/screens/tasks_screen.dar
 import 'package:mulearn_app/features/team/presentation/screens/announcement_detail_screen.dart';
 import 'package:mulearn_app/features/team/presentation/screens/announcement_form_screen.dart';
 import 'package:mulearn_app/features/team/presentation/screens/announcements_screen.dart';
+import 'package:mulearn_app/features/team/presentation/screens/campaign_detail_screen.dart';
+import 'package:mulearn_app/features/team/presentation/screens/campaign_form_screen.dart';
+import 'package:mulearn_app/features/team/presentation/screens/campaigns_screen.dart';
 import 'package:mulearn_app/features/team/presentation/screens/team_home_screen.dart';
 import 'package:mulearn_app/features/weekly_twitches/domain/entities/twitch.dart';
 import 'package:mulearn_app/features/weekly_twitches/presentation/screens/twitch_detail_screen.dart';
@@ -316,6 +319,31 @@ GoRouter goRouter(Ref ref) {
           builder: (_) => AnnouncementFormScreen(
             announcementId: state.pathParameters['id'],
           ),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.teamCampaigns,
+        builder: (_, state) => WorkspaceGate(
+          select: (a) => a.team,
+          role: 'Team',
+          builder: (_) => const CampaignsScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.teamCampaignNew,
+        builder: (_, state) => WorkspaceGate(
+          select: (a) => a.team,
+          role: 'Team',
+          builder: (_) => const CampaignFormScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.teamCampaign,
+        builder: (_, state) => WorkspaceGate(
+          select: (a) => a.team,
+          role: 'Team',
+          builder: (_) =>
+              CampaignDetailScreen(campaignId: state.pathParameters['id']!),
         ),
       ),
       GoRoute(

@@ -11,6 +11,9 @@ import 'package:mulearn_app/core/utils/clock.dart';
 import 'package:mulearn_app/features/team/presentation/screens/announcement_detail_screen.dart';
 import 'package:mulearn_app/features/team/presentation/screens/announcement_form_screen.dart';
 import 'package:mulearn_app/features/team/presentation/screens/announcements_screen.dart';
+import 'package:mulearn_app/features/team/presentation/screens/campaign_detail_screen.dart';
+import 'package:mulearn_app/features/team/presentation/screens/campaign_form_screen.dart';
+import 'package:mulearn_app/features/team/presentation/screens/campaigns_screen.dart';
 import 'package:mulearn_app/features/team/presentation/screens/team_home_screen.dart';
 
 import '../../support/fake_http_adapter.dart';
@@ -56,7 +59,7 @@ List<RequestOptions> callsTo(
 ];
 
 /// Pumps the team routes at [location] over the team providers and returns
-/// the router. Later team screens (Tasks 18-19) register their routes here.
+/// the router. Later team screens (Task 19) register their routes here.
 Future<GoRouter> pumpTeam(
   WidgetTester tester,
   FakeHttpAdapter adapter,
@@ -100,6 +103,19 @@ Future<GoRouter> pumpTeam(
         path: RoutePaths.teamAnnouncementEdit,
         builder: (_, state) =>
             AnnouncementFormScreen(announcementId: state.pathParameters['id']),
+      ),
+      GoRoute(
+        path: RoutePaths.teamCampaigns,
+        builder: (_, __) => const CampaignsScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.teamCampaignNew,
+        builder: (_, __) => const CampaignFormScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.teamCampaign,
+        builder: (_, state) =>
+            CampaignDetailScreen(campaignId: state.pathParameters['id']!),
       ),
     ],
   );
