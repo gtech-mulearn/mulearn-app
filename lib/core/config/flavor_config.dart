@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:mulearn_app/core/config/env.dart';
 
 /// Build flavors. Wired to the Dart entrypoints (`main_dev.dart`/`main_prod.dart`)
@@ -16,6 +17,7 @@ class FlavorConfig {
     required this.googleServerClientId,
     required this.dashboardUrl,
     required this.discordAuthUrl,
+    this.firebaseOptions,
   });
 
   final Flavor flavor;
@@ -29,6 +31,10 @@ class FlavorConfig {
 
   /// Discord OAuth authorize URL; empty when Connect Discord is unavailable.
   final String discordAuthUrl;
+
+  /// Firebase client config for push notifications; null when this build has
+  /// none (push is then off and the rest of the app works as before).
+  final FirebaseOptions? firebaseOptions;
 
   static FlavorConfig? _instance;
 
@@ -64,10 +70,42 @@ class FlavorConfig {
         Flavor.dev => EnvDev.discordAuthUrl,
         Flavor.prod => EnvProd.discordAuthUrl,
       },
+      firebaseOptions: switch (flavor) {
+        Flavor.dev => firebaseOptionsFrom(
+          apiKey: EnvDev.firebaseApiKey,
+          appId: EnvDev.firebaseAppId,
+          senderId: EnvDev.firebaseSenderId,
+          projectId: EnvDev.firebaseProjectId,
+        ),
+        Flavor.prod => firebaseOptionsFrom(
+          apiKey: EnvProd.firebaseApiKey,
+          appId: EnvProd.firebaseAppId,
+          senderId: EnvProd.firebaseSenderId,
+          projectId: EnvProd.firebaseProjectId,
+        ),
+      },
     );
     return _instance = config;
   }
 
   bool get isDev => flavor == Flavor.dev;
   bool get isProd => flavor == Flavor.prod;
+}
+
+/// [FirebaseOptions] when every value is present, else null.
+FirebaseOptions? firebaseOptionsFrom({
+  required String apiKey,
+  required String appId,
+  required String senderId,
+  required String projectId,
+}) {
+  if ([apiKey, appId, senderId, projectId].any((v) => v.trim().isEmpty)) {
+    return null;
+  }
+  return FirebaseOptions(
+    apiKey: apiKey,
+    appId: appId,
+    messagingSenderId: senderId,
+    projectId: projectId,
+  );
 }
