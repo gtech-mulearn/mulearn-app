@@ -454,6 +454,55 @@ abstract final class NotificationPaths {
   static String archive(String id) => '/api/v1/notification/$id/archive/';
 }
 
+// --- Team workspace — `api/notification/urls.py`, `api/push/urls.py` ---
+
+/// Team (verified Admins, Fellows, Associates) announcement, push-campaign and
+/// activity-log endpoints, plus the public pickers the audience form uses.
+abstract final class TeamPaths {
+  const TeamPaths._();
+
+  /// `GET ?page&page_size` -> `{count, page, page_size, results}`.
+  static const String broadcasts = '/api/v1/notification/broadcast/list/all/';
+
+  /// `PATCH {title?, description?, url?, expires_at?}` -> the updated row.
+  static String broadcastUpdate(String id) =>
+      '/api/v1/notification/broadcast/update/id/$id/';
+
+  /// `DELETE` one announcement.
+  static String broadcastDelete(String id) =>
+      '/api/v1/notification/broadcast/delete/id/$id/';
+
+  /// `DELETE` every announcement.
+  static const String broadcastDeleteAll =
+      '/api/v1/notification/broadcast/delete/all/';
+
+  /// `POST {title, description, redirect_url?, expires_in_days?}`.
+  static const String sendToEveryone = '/api/v1/notification/admin/broadcast/';
+
+  /// `GET` -> `{campaigns: [...]}`; `POST` a draft or scheduled campaign.
+  static const String campaigns = '/api/v1/push/admin/campaigns/';
+
+  /// `POST` `send` or `cancel` on one campaign.
+  static String campaignAction(String id, String action) =>
+      '/api/v1/push/admin/campaigns/$id/$action/';
+
+  /// `POST {}`: a test push to the caller's own devices.
+  static const String testPush = '/api/v1/push/admin/test/';
+
+  /// `GET ?pageIndex&perPage&action` -> `{data, pagination}`.
+  static const String activityLog = '/api/v1/notification/activity-log/';
+
+  /// `GET` (public) -> `response.roles`: `[{id, title}]`.
+  static const String roles = '/api/v1/register/role/list/';
+
+  /// `GET` (public) -> `response.interestGroup`: `[{id, name, ...}]`.
+  static const String interestGroups = '/api/v1/dashboard/ig/list/';
+
+  /// `GET ?search=&perPage=20` (public) -> `response.data`: `[{id, title}]`.
+  static const String colleges =
+      '/api/v1/dashboard/organisation/institutes/college/';
+}
+
 // --- Mentor workspace — `api/dashboard/mentor/urls.py` (Plan 4) ---
 
 /// Mentor endpoints. Sessions, participants, availability and requests are

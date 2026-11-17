@@ -1,0 +1,44 @@
+{
+  "_meta": {
+    "source": "serializer",
+    "endpoint": "GET /api/v1/notification/activity-log/?pageIndex=1&perPage=20",
+    "backend_ref": "feat/team-notifications api/notification/activity_log_view.py _item, ActivityLogAPI; CustomResponse.paginated_response",
+    "note": "Hand-built from _item: a campaign send and a delete-all."
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {"general": []},
+    "response": {
+      "data": [
+        {
+          "id": "l1000000-0000-4000-8000-000000000001",
+          "action": "PUSH_CAMPAIGN_SEND",
+          "label": "Sent a push campaign",
+          "actor": {"full_name": "Asha Nair", "muid": "asha@mulearn"},
+          "roles": ["Admins"],
+          "title": null,
+          "audience_size": 1200,
+          "audience_label": null,
+          "created_at": "2026-11-17T10:05:00+00:00",
+          "old_data": null,
+          "new_data": null
+        },
+        {
+          "id": "l1000000-0000-4000-8000-000000000002",
+          "action": "NOTIF_BROADCAST_DEL_ALL",
+          "label": "Deleted all announcements",
+          "actor": {"full_name": "Ravi Menon", "muid": "ravi@mulearn"},
+          "roles": ["Fellow", "Associate"],
+          "title": "600 announcements",
+          "audience_size": null,
+          "audience_label": null,
+          "created_at": "2026-11-16T12:00:00+00:00",
+          "old_data": {"count": 600, "truncated": true},
+          "new_data": null
+        }
+      ],
+      "pagination": {"count": 41, "totalPages": 3, "isNext": true, "isPrev": false, "nextPage": 2}
+    }
+  }
+}
