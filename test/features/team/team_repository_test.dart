@@ -163,6 +163,59 @@ void main() {
     );
   });
 
+  test('an unknown campaign status or audience type is not trusted', () async {
+    Map<String, dynamic> campaign(String status, String type) => {
+      'id': 'c1',
+      'title': 'T',
+      'body': 'B',
+      'audience': {'type': type, 'ids': <String>[]},
+      'status': status,
+      'created_at': '2026-11-18T08:00:00Z',
+    };
+    final adapter = teamAdapter({
+      'GET $_campaigns': (_) => FakeResponse(
+        200,
+        okEnvelope({
+          'campaigns': [campaign('paused', 'everyone-else')],
+        }),
+      ),
+    });
+    final list = await repoFor(adapter).campaigns();
+    // Never Send or Cancel, and never "Everyone".
+    expect(list.single.status, CampaignStatus.failed);
+    expect(list.single.audienceType, AudienceType.custom);
+  });
+
+  test('an unknown status in the activity log reads as failed, and missing '
+      'counts as 0', () async {
+    final adapter = teamAdapter({
+      'GET $_activity': (_) => FakeResponse(
+        200,
+        okEnvelope({
+          'data': [
+            {
+              'id': 'l1',
+              'action': 'PUSH_CAMPAIGN_SEND',
+              'label': 'Sent push campaign',
+              'created_at': '2026-11-17T10:05:00+00:00',
+              'entity_name': 'push_campaign',
+              'entity_id': 'c1',
+              'campaign': {'status': 'paused', 'target_count': 7},
+            },
+          ],
+          'pagination': {'count': 1, 'totalPages': 1, 'isNext': false},
+        }),
+      ),
+    });
+    final page = await repoFor(adapter).activity(1);
+    final campaign = page.items.single.campaign!;
+    expect(campaign.status, CampaignStatus.failed);
+    expect(campaign.targetCount, 7);
+    expect(campaign.sentCount, 0);
+    expect(campaign.skippedCount, 0);
+    expect(campaign.failedCount, 0);
+  });
+
   test('activity sends pageIndex, perPage and action', () async {
     final adapter = teamAdapter({
       'GET $_activity': (_) =>
@@ -178,14 +231,26 @@ void main() {
       'action': 'PUSH_CAMPAIGN_SEND',
     });
     expect(page.hasNext, isTrue);
-    expect(page.items, hasLength(2));
+    expect(page.items, hasLength(3));
     expect(page.items[0].actorName, 'Asha Nair');
     expect(page.items[0].actorMuid, 'asha@mulearn');
     expect(page.items[0].roles, ['Admins']);
     expect(page.items[0].audienceSize, 1200);
     expect(page.items[0].createdAt, DateTime.utc(2026, 11, 17, 10, 5));
+    expect(page.items[0].title, 'Streak week');
+    expect(page.items[0].entityName, 'push_campaign');
+    expect(page.items[0].entityId, 'c1000000-0000-4000-8000-000000000001');
+    expect(page.items[0].campaign?.status, CampaignStatus.sent);
+    expect(page.items[0].campaign?.targetCount, 1200);
+    expect(page.items[0].campaign?.sentCount, 1100);
+    expect(page.items[0].campaign?.skippedCount, 60);
+    expect(page.items[0].campaign?.failedCount, 40);
+    expect(page.items[0].newData, isEmpty);
     expect(page.items[1].title, '600 announcements');
-    expect(page.items[1].oldData, {'count': 600, 'truncated': true});
+    expect(page.items[1].oldData?['count'], 600);
+    expect(page.items[1].campaign, isNull);
+    expect(page.items[2].entityName, 'push_campaign');
+    expect(page.items[2].campaign, isNull);
   });
 
   test('activity without an action omits the filter', () async {

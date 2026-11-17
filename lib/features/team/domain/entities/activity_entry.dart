@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:mulearn_app/features/team/domain/entities/activity_campaign.dart';
 
 part 'activity_entry.freezed.dart';
 
@@ -14,6 +15,9 @@ abstract class ActivityEntry with _$ActivityEntry {
     required List<String> roles,
     required DateTime createdAt,
     String? title,
+    String? entityName,
+    String? entityId,
+    ActivityCampaign? campaign,
     int? audienceSize,
     String? audienceLabel,
     Map<String, Object?>? oldData,
