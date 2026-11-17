@@ -64,6 +64,7 @@ import 'package:mulearn_app/features/search/presentation/screens/search_screen.d
 import 'package:mulearn_app/features/splash/presentation/screens/splash_screen.dart';
 import 'package:mulearn_app/features/tasks/presentation/screens/task_detail_screen.dart';
 import 'package:mulearn_app/features/tasks/presentation/screens/tasks_screen.dart';
+import 'package:mulearn_app/features/team/presentation/screens/team_home_screen.dart';
 import 'package:mulearn_app/features/weekly_twitches/domain/entities/twitch.dart';
 import 'package:mulearn_app/features/weekly_twitches/presentation/screens/twitch_detail_screen.dart';
 import 'package:mulearn_app/features/weekly_twitches/presentation/screens/weekly_twitches_screen.dart';
@@ -268,6 +269,14 @@ GoRouter goRouter(Ref ref) {
           select: (a) => a.campus,
           role: 'Campus',
           builder: (_) => const CampusOverviewScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.team,
+        builder: (_, __) => WorkspaceGate(
+          select: (a) => a.team,
+          role: 'Team',
+          builder: (_) => const TeamHomeScreen(),
         ),
       ),
       GoRoute(

@@ -7,6 +7,7 @@ import 'package:mulearn_app/core/config/flavor_config.dart';
 import 'package:mulearn_app/core/network/dio_provider.dart';
 import 'package:mulearn_app/core/storage/secure_storage_provider.dart';
 import 'package:mulearn_app/core/utils/clock.dart';
+import 'package:mulearn_app/features/team/presentation/screens/team_home_screen.dart';
 
 import '../../support/fake_http_adapter.dart';
 import '../../support/fake_secure_storage.dart';
@@ -50,8 +51,8 @@ List<RequestOptions> callsTo(
     if (r.method.toUpperCase() == method.toUpperCase() && r.uri.path == path) r,
 ];
 
-/// Pumps an empty router at [location] over the team providers and returns
-/// it. The team screens (Tasks 16-19) register their routes here.
+/// Pumps the team routes at [location] over the team providers and returns
+/// the router. Later team screens (Tasks 17-19) register their routes here.
 Future<GoRouter> pumpTeam(
   WidgetTester tester,
   FakeHttpAdapter adapter,
@@ -72,7 +73,9 @@ Future<GoRouter> pumpTeam(
   addTearDown(container.dispose);
   final router = GoRouter(
     initialLocation: location,
-    routes: [GoRoute(path: '/team', builder: (_, __) => const SizedBox())],
+    routes: [
+      GoRoute(path: '/team', builder: (_, __) => const TeamHomeScreen()),
+    ],
   );
   addTearDown(router.dispose);
   tester.view.physicalSize = const Size(1080, 4200);
