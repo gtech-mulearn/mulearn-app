@@ -76,7 +76,7 @@ void main() {
 
     expect(find.text('Announcements'), findsOneWidget);
     expect(_rich('Hack night on Friday'), findsOneWidget);
-    expect(_rich('Team · Asha Nair · Global (All Users)'), findsOneWidget);
+    expect(_rich('Team · Asha Nair · Everyone'), findsOneWidget);
     // An unknown source reads as System.
     expect(
       _rich('System · Asha Nair · College of Engineering Trivandrum'),
@@ -352,6 +352,117 @@ void main() {
       callsTo(adapter, 'DELETE', TeamPaths.broadcastDelete(_firstId)),
       hasLength(1),
     );
+    // Back on the list, never on "Not found", and the row went locally
+    // without a refetch.
+    expect(find.text('Looks like you wandered off the path.'), findsNothing);
+    expect(_rich('Hack night on Friday'), findsNothing);
+    expect(
+      callsTo(
+        adapter,
+        'GET',
+        TeamPaths.broadcasts,
+      ).where((r) => r.queryParameters['page'] == 1),
+      hasLength(1),
+    );
+  });
+
+  testWidgets('editing a row from page 2 keeps it and shows the new title', (
+    tester,
+  ) async {
+    const rowId = 'p2-5';
+    final adapter = teamAdapter({
+      'GET ${TeamPaths.broadcasts}': (o) {
+        final page = o.queryParameters['page'] as int;
+        return FakeResponse(
+          200,
+          _page(
+            count: 40,
+            results: [
+              for (var i = 1; i <= 20; i++)
+                _row('p$page-$i', 'Page $page row $i'),
+            ],
+          ),
+        );
+      },
+      'PATCH ${TeamPaths.broadcastUpdate(rowId)}': (_) =>
+          FakeResponse(200, okEnvelope(_row(rowId, 'Renamed row'))),
+    });
+    final router = await pumpTeam(
+      tester,
+      adapter,
+      RoutePaths.teamAnnouncements,
+    );
+    await tester.drag(find.byType(Scrollable).last, const Offset(0, -20000));
+    await _settle(tester, 12);
+    expect(
+      callsTo(
+        adapter,
+        'GET',
+        TeamPaths.broadcasts,
+      ).where((r) => r.queryParameters['page'] == 2),
+      hasLength(1),
+    );
+
+    unawaited(router.push(RoutePaths.teamAnnouncementPath(rowId)));
+    await _settle(tester, 14);
+    expect(find.text('Page 2 row 5'), findsOneWidget);
+
+    await tester.tap(find.text('Edit'));
+    await _settle(tester);
+    await tester.enterText(find.byType(TextField).at(0), 'Renamed row');
+    await tester.tap(find.text('Save'));
+    await _settle(tester, 14);
+
+    expect(find.text('Announcement updated'), findsOneWidget);
+    expect(find.text('Renamed row'), findsOneWidget);
+    expect(find.text('Looks like you wandered off the path.'), findsNothing);
+    // No refetch of page 1: the saved row replaced the loaded one.
+    expect(
+      callsTo(
+        adapter,
+        'GET',
+        TeamPaths.broadcasts,
+      ).where((r) => r.queryParameters['page'] == 1),
+      hasLength(1),
+    );
+  });
+
+  testWidgets('delete all says 1 announcement, not 1 announcements', (
+    tester,
+  ) async {
+    final adapter = teamAdapter({
+      'GET ${TeamPaths.broadcasts}': (_) =>
+          FakeResponse(200, _page(results: [_row('b1', 'Only one')])),
+    });
+    await pumpTeam(tester, adapter, RoutePaths.teamAnnouncements);
+
+    await tester.tap(find.text('Delete all'));
+    await _settle(tester);
+
+    expect(find.text('Delete all 1 announcement?'), findsOneWidget);
+  });
+
+  testWidgets('a path starting with // is not a valid link', (tester) async {
+    final adapter = _listAdapter();
+    final router = await pumpTeam(
+      tester,
+      adapter,
+      RoutePaths.teamAnnouncements,
+    );
+    unawaited(router.push(RoutePaths.teamAnnouncementNew));
+    await _settle(tester);
+
+    await tester.enterText(find.byType(TextField).at(0), 'Hello');
+    await tester.enterText(find.byType(TextField).at(1), 'A message.');
+    await tester.enterText(find.byType(TextField).at(2), '//evil.example');
+    await tester.tap(find.text('Send to everyone'));
+    await _settle(tester);
+
+    expect(
+      find.text('Use a path like /events, or a link starting with https://.'),
+      findsOneWidget,
+    );
+    expect(find.text('Send to everyone?'), findsNothing);
   });
 
   testWidgets('an announcement that is not loaded shows not found', (

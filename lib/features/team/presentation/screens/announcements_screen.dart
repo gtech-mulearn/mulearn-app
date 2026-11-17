@@ -8,6 +8,7 @@ import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/utils/clock.dart';
+import 'package:mulearn_app/core/utils/count_format.dart';
 import 'package:mulearn_app/core/utils/date_format.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/core/widgets/mu_paged_list.dart';
@@ -29,7 +30,7 @@ class AnnouncementsScreen extends ConsumerWidget {
     final confirmed = await showMuConfirm(
       context,
       destructive: true,
-      title: 'Delete all $total announcements?',
+      title: 'Delete all ${countOf(total, 'announcement')}?',
       body:
           'This includes ones the system created for learning circles, '
           "projects and events. This can't be undone.",
@@ -106,7 +107,7 @@ class AnnouncementsScreen extends ConsumerWidget {
             body:
                 '${announcementSourceLabel(a.source)} · '
                 "${a.createdByName ?? 'System'} · "
-                "${a.targetName ?? 'Everyone'}",
+                '${announcementAudienceLabel(a)}',
             time: formatAgo(a.createdAt.toLocal(), now),
             divider: i < data.page.items.length - 1,
             onTap: () =>

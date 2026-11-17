@@ -9,21 +9,24 @@ part of 'announcements_controller.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 /// Announcements, page by page. Loads on open, on pull-to-refresh and on
-/// scroll-to-end; nothing polls. Every change (send, edit, delete) is
-/// followed by a refresh of the first page so the list shows the result.
+/// scroll-to-end; nothing polls. An edit or a delete changes the loaded rows
+/// in place, so later pages stay loaded; a send or a delete-all is followed
+/// by a refresh of the first page.
 
 @ProviderFor(AnnouncementsController)
 final announcementsControllerProvider = AnnouncementsControllerProvider._();
 
 /// Announcements, page by page. Loads on open, on pull-to-refresh and on
-/// scroll-to-end; nothing polls. Every change (send, edit, delete) is
-/// followed by a refresh of the first page so the list shows the result.
+/// scroll-to-end; nothing polls. An edit or a delete changes the loaded rows
+/// in place, so later pages stay loaded; a send or a delete-all is followed
+/// by a refresh of the first page.
 final class AnnouncementsControllerProvider
     extends
         $AsyncNotifierProvider<AnnouncementsController, AnnouncementsState> {
   /// Announcements, page by page. Loads on open, on pull-to-refresh and on
-  /// scroll-to-end; nothing polls. Every change (send, edit, delete) is
-  /// followed by a refresh of the first page so the list shows the result.
+  /// scroll-to-end; nothing polls. An edit or a delete changes the loaded rows
+  /// in place, so later pages stay loaded; a send or a delete-all is followed
+  /// by a refresh of the first page.
   AnnouncementsControllerProvider._()
     : super(
         from: null,
@@ -44,11 +47,12 @@ final class AnnouncementsControllerProvider
 }
 
 String _$announcementsControllerHash() =>
-    r'12a37f5fe49c0405f6f4378aec19d892d9e3f293';
+    r'347c13190145aae9a0da51e49500ea4c7e45f5e7';
 
 /// Announcements, page by page. Loads on open, on pull-to-refresh and on
-/// scroll-to-end; nothing polls. Every change (send, edit, delete) is
-/// followed by a refresh of the first page so the list shows the result.
+/// scroll-to-end; nothing polls. An edit or a delete changes the loaded rows
+/// in place, so later pages stay loaded; a send or a delete-all is followed
+/// by a refresh of the first page.
 
 abstract class _$AnnouncementsController
     extends $AsyncNotifier<AnnouncementsState> {

@@ -13,8 +13,9 @@ part 'announcements_controller.g.dart';
 typedef AnnouncementsState = ({PagedState<Announcement> page, int total});
 
 /// Announcements, page by page. Loads on open, on pull-to-refresh and on
-/// scroll-to-end; nothing polls. Every change (send, edit, delete) is
-/// followed by a refresh of the first page so the list shows the result.
+/// scroll-to-end; nothing polls. An edit or a delete changes the loaded rows
+/// in place, so later pages stay loaded; a send or a delete-all is followed
+/// by a refresh of the first page.
 @Riverpod(retry: noRetry)
 class AnnouncementsController extends _$AnnouncementsController {
   int _page = 1;
@@ -95,30 +96,73 @@ class AnnouncementsController extends _$AnnouncementsController {
     ),
   );
 
-  /// Sends only the fields that are not null (the screen passes what changed).
-  /// Named `edit` because a Notifier already has an `update`.
+  /// Sends only the fields that are not null (the screen passes what changed)
+  /// and puts the saved announcement in place of the loaded row, so a row
+  /// on a later page stays loaded. Named `edit` because a Notifier already
+  /// has an `update`.
   Future<void> edit(
     String id, {
     String? title,
     String? description,
     String? url,
     DateTime? expiresAt,
-  }) => _mutate(
-    (repository) => repository.updateAnnouncement(
-      id,
-      title: title,
-      description: description,
-      url: url,
-      expiresAt: expiresAt,
-    ),
-  );
+  }) async {
+    final link = ref.keepAlive();
+    try {
+      final saved = await ref
+          .read(teamRepositoryProvider)
+          .updateAnnouncement(
+            id,
+            title: title,
+            description: description,
+            url: url,
+            expiresAt: expiresAt,
+          );
+      _replaceLocally(
+        (items) => [
+          for (final a in items)
+            if (a.id == id) saved else a,
+        ],
+      );
+    } finally {
+      link.close();
+    }
+  }
 
-  Future<void> delete(String id) =>
-      _mutate((repository) => repository.deleteAnnouncement(id));
+  /// Deletes one announcement and drops its row and one from the total
+  /// locally; the loaded pages stay as they are.
+  Future<void> delete(String id) async {
+    final link = ref.keepAlive();
+    try {
+      await ref.read(teamRepositoryProvider).deleteAnnouncement(id);
+      final had = state.value?.page.items.any((a) => a.id == id) ?? false;
+      _replaceLocally(
+        (items) => [
+          for (final a in items)
+            if (a.id != id) a,
+        ],
+        totalDelta: had ? -1 : 0,
+      );
+    } finally {
+      link.close();
+    }
+  }
 
   /// Deletes every announcement, including the ones the system created.
   Future<void> deleteAll() =>
       _mutate((repository) => repository.deleteAllAnnouncements());
+
+  void _replaceLocally(
+    List<Announcement> Function(List<Announcement> items) change, {
+    int totalDelta = 0,
+  }) {
+    final current = state.value;
+    if (current == null || !ref.mounted) return;
+    state = AsyncData((
+      page: current.page.copyWith(items: change(current.page.items)),
+      total: current.total + totalDelta < 0 ? 0 : current.total + totalDelta,
+    ));
+  }
 
   /// Runs a write, then refreshes. Holds the provider open so closing the
   /// screen mid-request cannot drop the refresh. A failed refresh after a

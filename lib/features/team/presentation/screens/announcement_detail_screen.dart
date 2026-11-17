@@ -13,19 +13,27 @@ import 'package:mulearn_app/core/widgets/mu_state_display.dart';
 import 'package:mulearn_app/features/team/domain/entities/announcement.dart';
 import 'package:mulearn_app/features/team/presentation/announcement_labels.dart';
 import 'package:mulearn_app/features/team/presentation/providers/announcements_controller.dart';
+import 'package:mulearn_app/features/team/presentation/widgets/fact_row.dart';
 
 /// One announcement in full, with Edit and Delete. It reads the announcement
 /// from the loaded list; one that isn't there reads as not found.
-class AnnouncementDetailScreen extends ConsumerWidget {
+class AnnouncementDetailScreen extends ConsumerStatefulWidget {
   const AnnouncementDetailScreen({required this.announcementId, super.key});
 
   final String announcementId;
 
-  Future<void> _delete(
-    BuildContext context,
-    WidgetRef ref,
-    Announcement a,
-  ) async {
+  @override
+  ConsumerState<AnnouncementDetailScreen> createState() =>
+      _AnnouncementDetailScreenState();
+}
+
+class _AnnouncementDetailScreenState
+    extends ConsumerState<AnnouncementDetailScreen> {
+  /// A delete is in flight. It blocks a second tap, and keeps the page from
+  /// reading "Not found" in the moment between the row going and the pop.
+  bool _busy = false;
+
+  Future<void> _delete(Announcement a) async {
     final confirmed = await showMuConfirm(
       context,
       destructive: true,
@@ -33,10 +41,11 @@ class AnnouncementDetailScreen extends ConsumerWidget {
       body: 'Members will no longer see "${a.title}".',
       confirmLabel: 'Delete',
     );
-    if (!confirmed || !context.mounted) return;
+    if (!confirmed || !mounted || _busy) return;
+    setState(() => _busy = true);
     try {
       await ref.read(announcementsControllerProvider.notifier).delete(a.id);
-      if (!context.mounted) return;
+      if (!mounted) return;
       MuToast.show(
         context,
         message: 'Announcement deleted',
@@ -48,7 +57,8 @@ class AnnouncementDetailScreen extends ConsumerWidget {
         context.go(RoutePaths.teamAnnouncements);
       }
     } on Object catch (e) {
-      if (context.mounted) {
+      if (mounted) {
+        setState(() => _busy = false);
         MuToast.show(
           context,
           message: ApiException.messageFor(e),
@@ -59,7 +69,8 @@ class AnnouncementDetailScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
+    final announcementId = widget.announcementId;
     final async = ref.watch(announcementsControllerProvider);
     return async.when(
       skipError: true,
@@ -76,6 +87,12 @@ class AnnouncementDetailScreen extends ConsumerWidget {
       ),
       data: (data) {
         final matches = data.page.items.where((a) => a.id == announcementId);
+        if (matches.isEmpty && _busy) {
+          return const MuWorkspacePage(
+            title: 'Announcement',
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
         if (matches.isEmpty) {
           return const MuWorkspacePage(
             title: 'Announcement',
@@ -97,7 +114,7 @@ class AnnouncementDetailScreen extends ConsumerWidget {
                 child: MuButton(
                   label: 'Delete',
                   variant: MuButtonVariant.outline,
-                  onPressed: () => unawaited(_delete(context, ref, a)),
+                  onPressed: _busy ? null : () => unawaited(_delete(a)),
                 ),
               ),
               const SizedBox(width: MuSpacing.space3),
@@ -147,53 +164,21 @@ class _Body extends StatelessWidget {
           ),
           child: Column(
             children: [
-              _Fact('Source', announcementSourceLabel(a.source)),
-              _Fact('Shown to', a.targetName ?? 'Everyone'),
-              _Fact('Created by', a.createdByName ?? 'System'),
-              _Fact('Created', formatAgo(a.createdAt.toLocal(), now)),
-              _Fact(
+              FactRow('Source', announcementSourceLabel(a.source)),
+              FactRow('Shown to', announcementAudienceLabel(a)),
+              FactRow('Created by', a.createdByName ?? 'System'),
+              FactRow('Created', formatAgo(a.createdAt.toLocal(), now)),
+              FactRow(
                 now.isAfter(expires) ? 'Expired' : 'Expires',
                 formatDayTime(expires),
                 last: a.url == null || a.url!.isEmpty,
               ),
               if (a.url != null && a.url!.isNotEmpty)
-                _Fact('Opens', a.url!, last: true),
+                FactRow('Opens', a.url!, last: true),
             ],
           ),
         ),
       ],
-    );
-  }
-}
-
-class _Fact extends StatelessWidget {
-  const _Fact(this.label, this.value, {this.last = false});
-
-  final String label;
-  final String value;
-  final bool last;
-
-  @override
-  Widget build(BuildContext context) {
-    final mu = context.mu;
-    final c = mu.colors;
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: MuSpacing.space3),
-      decoration: BoxDecoration(
-        border: last ? null : Border(bottom: BorderSide(color: c.line)),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 104,
-            child: Text(label, style: mu.text.label.copyWith(color: c.ink3)),
-          ),
-          Expanded(
-            child: Text(value, style: mu.text.body.copyWith(color: c.ink)),
-          ),
-        ],
-      ),
     );
   }
 }
