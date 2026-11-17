@@ -35,6 +35,10 @@ abstract class WorkspaceAccess with _$WorkspaceAccess {
     /// gets its own banner, even when another held role opens the campus
     /// (the dashboard checks Enabler verification on its own).
     @Default(<String>[]) List<String> pendingCampusRoles,
+
+    /// Admins, Fellow or Associate held **and** verified: announcements, push
+    /// campaigns and the activity log. Never `pending`: there is no banner.
+    @Default(WorkspaceState.hidden) WorkspaceState team,
   }) = _WorkspaceAccess;
 }
 
@@ -46,6 +50,7 @@ const _campusRoles = [
   RoleTitles.leadEnabler,
   RoleTitles.enabler,
 ];
+const _teamRoles = [RoleTitles.admin, RoleTitles.fellow, RoleTitles.associate];
 const _enablerRoles = [RoleTitles.leadEnabler, RoleTitles.enabler];
 
 /// Mentor: open with an APPROVED application, pending while one is PENDING
@@ -89,6 +94,9 @@ WorkspaceAccess deriveWorkspaceAccess({
       RoleTitles.campusLead,
       RoleTitles.leadEnabler,
     ].any((r) => roles.contains(r) && verified(r)),
+    team: _teamRoles.any((r) => roles.contains(r) && verified(r))
+        ? WorkspaceState.open
+        : WorkspaceState.hidden,
     pendingCampusRoles: [
       for (final role in _campusRoles)
         if (roles.contains(role) && !verified(role)) role,
@@ -131,7 +139,10 @@ Future<WorkspaceAccess?> workspaceAccess(Ref ref) async {
   final user = await ref.watch(currentUserProvider.future);
   if (user == null) return null;
   final applications = await ref.watch(mentorApplicationsProvider.future);
-  final needsVerification = _campusRoles.any(user.roles.contains);
+  final needsVerification = [
+    ..._campusRoles,
+    ..._teamRoles,
+  ].any(user.roles.contains);
   final verified = needsVerification
       ? await ref.watch(roleVerificationProvider.future)
       : const <String, bool>{};
