@@ -64,6 +64,9 @@ import 'package:mulearn_app/features/search/presentation/screens/search_screen.d
 import 'package:mulearn_app/features/splash/presentation/screens/splash_screen.dart';
 import 'package:mulearn_app/features/tasks/presentation/screens/task_detail_screen.dart';
 import 'package:mulearn_app/features/tasks/presentation/screens/tasks_screen.dart';
+import 'package:mulearn_app/features/team/presentation/screens/announcement_detail_screen.dart';
+import 'package:mulearn_app/features/team/presentation/screens/announcement_form_screen.dart';
+import 'package:mulearn_app/features/team/presentation/screens/announcements_screen.dart';
 import 'package:mulearn_app/features/team/presentation/screens/team_home_screen.dart';
 import 'package:mulearn_app/features/weekly_twitches/domain/entities/twitch.dart';
 import 'package:mulearn_app/features/weekly_twitches/presentation/screens/twitch_detail_screen.dart';
@@ -277,6 +280,42 @@ GoRouter goRouter(Ref ref) {
           select: (a) => a.team,
           role: 'Team',
           builder: (_) => const TeamHomeScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.teamAnnouncements,
+        builder: (_, state) => WorkspaceGate(
+          select: (a) => a.team,
+          role: 'Team',
+          builder: (_) => const AnnouncementsScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.teamAnnouncementNew,
+        builder: (_, state) => WorkspaceGate(
+          select: (a) => a.team,
+          role: 'Team',
+          builder: (_) => const AnnouncementFormScreen(),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.teamAnnouncement,
+        builder: (_, state) => WorkspaceGate(
+          select: (a) => a.team,
+          role: 'Team',
+          builder: (_) => AnnouncementDetailScreen(
+            announcementId: state.pathParameters['id']!,
+          ),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.teamAnnouncementEdit,
+        builder: (_, state) => WorkspaceGate(
+          select: (a) => a.team,
+          role: 'Team',
+          builder: (_) => AnnouncementFormScreen(
+            announcementId: state.pathParameters['id'],
+          ),
         ),
       ),
       GoRoute(

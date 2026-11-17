@@ -5,8 +5,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mulearn_app/core/config/flavor_config.dart';
 import 'package:mulearn_app/core/network/dio_provider.dart';
+import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/storage/secure_storage_provider.dart';
 import 'package:mulearn_app/core/utils/clock.dart';
+import 'package:mulearn_app/features/team/presentation/screens/announcement_detail_screen.dart';
+import 'package:mulearn_app/features/team/presentation/screens/announcement_form_screen.dart';
+import 'package:mulearn_app/features/team/presentation/screens/announcements_screen.dart';
 import 'package:mulearn_app/features/team/presentation/screens/team_home_screen.dart';
 
 import '../../support/fake_http_adapter.dart';
@@ -52,7 +56,7 @@ List<RequestOptions> callsTo(
 ];
 
 /// Pumps the team routes at [location] over the team providers and returns
-/// the router. Later team screens (Tasks 17-19) register their routes here.
+/// the router. Later team screens (Tasks 18-19) register their routes here.
 Future<GoRouter> pumpTeam(
   WidgetTester tester,
   FakeHttpAdapter adapter,
@@ -74,7 +78,29 @@ Future<GoRouter> pumpTeam(
   final router = GoRouter(
     initialLocation: location,
     routes: [
-      GoRoute(path: '/team', builder: (_, __) => const TeamHomeScreen()),
+      GoRoute(
+        path: RoutePaths.team,
+        builder: (_, __) => const TeamHomeScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.teamAnnouncements,
+        builder: (_, __) => const AnnouncementsScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.teamAnnouncementNew,
+        builder: (_, __) => const AnnouncementFormScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.teamAnnouncement,
+        builder: (_, state) => AnnouncementDetailScreen(
+          announcementId: state.pathParameters['id']!,
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.teamAnnouncementEdit,
+        builder: (_, state) =>
+            AnnouncementFormScreen(announcementId: state.pathParameters['id']),
+      ),
     ],
   );
   addTearDown(router.dispose);
