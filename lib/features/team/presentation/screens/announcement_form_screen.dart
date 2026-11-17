@@ -99,7 +99,10 @@ class _AnnouncementFormState extends ConsumerState<_AnnouncementForm> {
   String? _linkError(String? value) {
     final link = (value ?? '').trim();
     if (link.isEmpty) return null;
-    if (link.startsWith('/') || link.startsWith('https://')) return null;
+    if ((link.startsWith('/') && !link.startsWith('//')) ||
+        link.startsWith('https://')) {
+      return null;
+    }
     return 'Use a path like /events, or a link starting with https://.';
   }
 

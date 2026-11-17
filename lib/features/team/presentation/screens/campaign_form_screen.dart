@@ -48,13 +48,31 @@ class _CampaignFormScreenState extends ConsumerState<CampaignFormScreen> {
   AudienceType _type = AudienceType.all;
   List<ReferenceOption> _selected = const [];
   String? _audienceError;
+  String _lastMuids = '';
   bool _schedule = false;
   DateTime? _when;
   bool _quietHours = true;
   bool _busy = false;
 
   @override
+  void initState() {
+    super.initState();
+    _muids.addListener(_clearMuidsError);
+  }
+
+  /// Typing in the μID box clears the error that was about its content.
+  void _clearMuidsError() {
+    final text = _muids.text;
+    final changed = text != _lastMuids;
+    _lastMuids = text;
+    if (changed && _audienceError != null && _type == AudienceType.muids) {
+      setState(() => _audienceError = null);
+    }
+  }
+
+  @override
   void dispose() {
+    _muids.removeListener(_clearMuidsError);
     _title.dispose();
     _message.dispose();
     _path.dispose();
@@ -68,7 +86,9 @@ class _CampaignFormScreenState extends ConsumerState<CampaignFormScreen> {
   String? _pathError(String? value) {
     final path = (value ?? '').trim();
     if (path.isEmpty) return 'Add the app path, like /events.';
-    if (!path.startsWith('/')) return 'Start the path with /, like /events.';
+    if (!path.startsWith('/') || path.startsWith('//')) {
+      return 'Start the path with a single /, like /events.';
+    }
     return null;
   }
 
@@ -146,6 +166,8 @@ class _CampaignFormScreenState extends ConsumerState<CampaignFormScreen> {
     switch (_type) {
       case AudienceType.all:
         ids = const [];
+      case AudienceType.custom:
+        error = 'Pick who gets it.';
       case AudienceType.roles:
         ids = [for (final o in _selected) o.title];
         error = ids.isEmpty ? 'Pick at least one role.' : null;

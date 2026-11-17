@@ -6,7 +6,8 @@ enum CampaignStatus { draft, scheduled, sending, sent, cancelled, failed }
 
 /// Who a campaign goes to. `roles` ids are role titles, `igs` and `colleges`
 /// ids are record ids, `muids` ids are μIDs (`api/push/audience.py`).
-enum AudienceType { all, roles, igs, colleges, muids }
+/// `custom` is a type this app doesn't know; it is shown, never created.
+enum AudienceType { all, roles, igs, colleges, muids, custom }
 
 /// What can be done to a saved campaign.
 enum CampaignAction { send, cancel }

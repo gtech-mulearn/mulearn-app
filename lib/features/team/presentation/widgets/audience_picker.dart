@@ -47,7 +47,7 @@ class AudiencePicker extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => switch (type) {
-    AudienceType.all => const SizedBox.shrink(),
+    AudienceType.all || AudienceType.custom => const SizedBox.shrink(),
     AudienceType.roles => _Options(
       options: ref.watch(teamRoleOptionsProvider),
       selected: selected,
@@ -173,7 +173,7 @@ class _Colleges extends StatelessWidget {
             children: [
               for (final o in selected)
                 Container(
-                  padding: const EdgeInsets.only(left: 12),
+                  padding: const EdgeInsets.only(left: MuSpacing.space3),
                   decoration: BoxDecoration(
                     color: c.cobaltTint,
                     borderRadius: BorderRadius.circular(MuRadii.round),
@@ -193,13 +193,13 @@ class _Colleges extends StatelessWidget {
                         tooltip: 'Remove ${o.title}',
                         icon: Icon(
                           LucideIcons.x,
-                          size: 16,
+                          size: MuSizes.iconSm,
                           color: c.cobaltText,
                         ),
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints.tightFor(
-                          width: 36,
-                          height: 36,
+                          width: MuSizes.touchMin,
+                          height: MuSizes.touchMin,
                         ),
                         onPressed: () => onRemove(o),
                       ),

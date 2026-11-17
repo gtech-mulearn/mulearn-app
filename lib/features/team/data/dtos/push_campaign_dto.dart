@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:mulearn_app/features/team/data/dtos/campaign_status_parser.dart';
 import 'package:mulearn_app/features/team/domain/entities/push_campaign.dart';
 
 part 'push_campaign_dto.freezed.dart';
@@ -44,7 +45,7 @@ abstract class PushCampaignDto with _$PushCampaignDto {
       audienceIds: [
         for (final id in audience?['ids'] as List<dynamic>? ?? const []) '$id',
       ],
-      status: _status(status),
+      status: parseCampaignStatus(status),
       scheduledAt: scheduled == null ? null : DateTime.parse(scheduled).toUtc(),
       respectQuietHours: respectQuietHours,
       targetCount: targetCount,
@@ -57,10 +58,7 @@ abstract class PushCampaignDto with _$PushCampaignDto {
     );
   }
 
+  /// An unknown type is [AudienceType.custom], never "Everyone".
   static AudienceType _audienceType(String? value) => AudienceType.values
-      .firstWhere((t) => t.name == value, orElse: () => AudienceType.all);
-
-  /// An unknown status reads as `failed`, which never offers Send or Cancel.
-  static CampaignStatus _status(String value) => CampaignStatus.values
-      .firstWhere((s) => s.name == value, orElse: () => CampaignStatus.failed);
+      .firstWhere((t) => t.name == value, orElse: () => AudienceType.custom);
 }

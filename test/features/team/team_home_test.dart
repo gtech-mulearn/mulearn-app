@@ -7,6 +7,8 @@ import 'team_test_support.dart';
 const _failureMessage =
     'No push was sent: register this account on a phone first, then try again.';
 
+Finder _rich(String text) => find.textContaining(text, findRichText: true);
+
 void main() {
   testWidgets('the team home shows the three rows and the test push button', (
     tester,
@@ -14,12 +16,16 @@ void main() {
     await pumpTeam(tester, teamAdapter(), '/team');
 
     expect(find.text('Team'), findsOneWidget);
-    expect(find.text('Announcements'), findsOneWidget);
-    expect(find.text("In-app messages in everyone's bell"), findsOneWidget);
-    expect(find.text('Push campaigns'), findsOneWidget);
-    expect(find.text("Pushes to learners' phones"), findsOneWidget);
-    expect(find.text('Activity log'), findsOneWidget);
-    expect(find.text('Who sent, edited or deleted what'), findsOneWidget);
+    // The description is the row's body, set after the subject.
+    expect(
+      _rich("Announcements In-app messages in everyone's bell"),
+      findsOneWidget,
+    );
+    expect(_rich("Push campaigns Pushes to learners' phones"), findsOneWidget);
+    expect(
+      _rich('Activity log Who sent, edited or deleted what'),
+      findsOneWidget,
+    );
     expect(find.text('Send me a test push'), findsOneWidget);
   });
 
