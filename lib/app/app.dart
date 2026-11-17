@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mulearn_app/app/app_router.dart';
+import 'package:mulearn_app/app/widgets/push_open_listener.dart';
 import 'package:mulearn_app/core/config/flavor_config.dart';
 import 'package:mulearn_app/core/design_system/theme/mu_theme.dart';
 import 'package:mulearn_app/core/theme/appearance.dart';
@@ -33,6 +34,9 @@ class MulearnApp extends ConsumerWidget {
       // System by default; Settings → Appearance can pin Light or Dark.
       themeMode: ref.watch(appearanceProvider),
       routerConfig: router,
+      // Push notifications: registration and tap routing for the whole app.
+      builder: (context, child) =>
+          PushOpenListener(child: child ?? const SizedBox.shrink()),
     );
   }
 }
