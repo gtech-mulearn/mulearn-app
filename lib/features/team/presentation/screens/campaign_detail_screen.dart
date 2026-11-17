@@ -7,6 +7,7 @@ import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/utils/clock.dart';
 import 'package:mulearn_app/core/utils/date_format.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
+import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/core/widgets/mu_state_display.dart';
 import 'package:mulearn_app/features/team/domain/entities/push_campaign.dart';
 import 'package:mulearn_app/features/team/presentation/campaign_labels.dart';
@@ -112,7 +113,10 @@ class _CampaignDetailScreenState extends ConsumerState<CampaignDetailScreen> {
         final canCancel = canSend || c.status == CampaignStatus.sending;
         return MuWorkspacePage(
           title: 'Push campaign',
-          body: _Body(campaign: c, now: now),
+          body: MuRefresh(
+            onRefresh: ref.read(campaignsControllerProvider.notifier).refresh,
+            child: _Body(campaign: c, now: now),
+          ),
           bottom: canCancel
               ? Row(
                   children: [
@@ -171,6 +175,7 @@ class _Body extends StatelessWidget {
     final c = mu.colors;
     final k = campaign;
     return ListView(
+      physics: const AlwaysScrollableScrollPhysics(),
       padding: muListPadding,
       children: [
         Semantics(header: true, child: Text(k.title, style: mu.text.title2)),
@@ -208,6 +213,13 @@ class _Body extends StatelessWidget {
             ],
           ),
         ),
+        if (k.status == CampaignStatus.sending) ...[
+          const SizedBox(height: MuSpacing.space4),
+          Text(
+            'Sending now. Pull down for the latest numbers.',
+            style: mu.text.body.copyWith(color: c.ink2),
+          ),
+        ],
       ],
     );
   }

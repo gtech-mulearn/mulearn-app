@@ -8,24 +8,18 @@ part of 'campaigns_controller.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Push campaigns, newest first. Loads on open and on pull-to-refresh. While
-/// any campaign is `sending` it refreshes every 5 s, because the backend
-/// sends in the background; it stops as soon as none is sending, and when
-/// the last screen closes.
+/// Push campaigns, newest first. Loads on open and on pull-to-refresh, and
+/// after the user's own create, send or cancel. Nothing polls.
 
 @ProviderFor(CampaignsController)
 final campaignsControllerProvider = CampaignsControllerProvider._();
 
-/// Push campaigns, newest first. Loads on open and on pull-to-refresh. While
-/// any campaign is `sending` it refreshes every 5 s, because the backend
-/// sends in the background; it stops as soon as none is sending, and when
-/// the last screen closes.
+/// Push campaigns, newest first. Loads on open and on pull-to-refresh, and
+/// after the user's own create, send or cancel. Nothing polls.
 final class CampaignsControllerProvider
     extends $AsyncNotifierProvider<CampaignsController, List<PushCampaign>> {
-  /// Push campaigns, newest first. Loads on open and on pull-to-refresh. While
-  /// any campaign is `sending` it refreshes every 5 s, because the backend
-  /// sends in the background; it stops as soon as none is sending, and when
-  /// the last screen closes.
+  /// Push campaigns, newest first. Loads on open and on pull-to-refresh, and
+  /// after the user's own create, send or cancel. Nothing polls.
   CampaignsControllerProvider._()
     : super(
         from: null,
@@ -46,12 +40,10 @@ final class CampaignsControllerProvider
 }
 
 String _$campaignsControllerHash() =>
-    r'97e0fac8617283afa69f96b4a3d529477db8823e';
+    r'2efbe5909ab6d54f4658db5807a50df0458a545c';
 
-/// Push campaigns, newest first. Loads on open and on pull-to-refresh. While
-/// any campaign is `sending` it refreshes every 5 s, because the backend
-/// sends in the background; it stops as soon as none is sending, and when
-/// the last screen closes.
+/// Push campaigns, newest first. Loads on open and on pull-to-refresh, and
+/// after the user's own create, send or cancel. Nothing polls.
 
 abstract class _$CampaignsController
     extends $AsyncNotifier<List<PushCampaign>> {

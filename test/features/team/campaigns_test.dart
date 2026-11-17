@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -284,33 +286,64 @@ void main() {
     expect(find.text('Send now'), findsNothing);
   });
 
-  testWidgets('it polls every 5 s while a campaign is sending, then stops', (
+  testWidgets('a sending campaign shows the pull hint and no timer', (
+    tester,
+  ) async {
+    final adapter = teamAdapter({
+      'GET ${TeamPaths.campaigns}': (_) =>
+          _list([_campaign(status: 'sending')]),
+    });
+    await pumpTeam(tester, adapter, RoutePaths.teamCampaignPath('c-new'));
+
+    expect(
+      find.text('Sending now. Pull down for the latest numbers.'),
+      findsOneWidget,
+    );
+    expect(callsTo(adapter, 'GET', TeamPaths.campaigns), hasLength(1));
+    await tester.pump(const Duration(seconds: 30));
+    expect(callsTo(adapter, 'GET', TeamPaths.campaigns), hasLength(1));
+  });
+
+  testWidgets('pull to refresh on the detail reloads', (tester) async {
+    final adapter = teamAdapter({
+      'GET ${TeamPaths.campaigns}': (_) =>
+          _list([_campaign(status: 'sending')]),
+    });
+    await pumpTeam(tester, adapter, RoutePaths.teamCampaignPath('c-new'));
+    expect(callsTo(adapter, 'GET', TeamPaths.campaigns), hasLength(1));
+
+    await tester.fling(find.byType(ListView), const Offset(0, 400), 1000);
+    await _settle(tester, 30);
+
+    expect(callsTo(adapter, 'GET', TeamPaths.campaigns), hasLength(2));
+  });
+
+  testWidgets('the detail shows a new campaign when the refresh fails', (
     tester,
   ) async {
     var gets = 0;
     final adapter = teamAdapter({
-      // Sending for the first two loads, then finished.
+      ..._options(),
+      'POST ${TeamPaths.campaigns}': (_) =>
+          FakeResponse(200, okEnvelope(_campaign())),
       'GET ${TeamPaths.campaigns}': (_) {
         gets++;
-        return _list([_campaign(status: gets < 3 ? 'sending' : 'sent')]);
+        return gets == 1
+            ? _list(const [])
+            : FakeResponse(500, failure('Down.'));
       },
     });
     final router = await pumpTeam(tester, adapter, RoutePaths.teamCampaigns);
-    expect(gets, 1);
+    unawaited(router.push(RoutePaths.teamCampaignNew));
+    await _settle(tester, 12);
 
-    await tester.pump(const Duration(seconds: 5));
-    await _settle(tester, 2);
+    await _fillBasics(tester);
+    await tester.tap(find.text('Save'));
+    await _settle(tester, 14);
+
     expect(gets, 2);
-    await tester.pump(const Duration(seconds: 5));
-    await _settle(tester, 2);
-    expect(gets, 3);
-
-    // Nothing is sending now: the clock moves on and no request follows.
-    await tester.pump(const Duration(seconds: 30));
-    await _settle(tester, 2);
-    expect(gets, 3);
-    router.go(RoutePaths.team);
-    await _settle(tester);
+    expect(find.text('Send now'), findsOneWidget);
+    expect(find.text('Hello'), findsOneWidget);
   });
 
   testWidgets('it does not poll when nothing is sending', (tester) async {
@@ -325,24 +358,5 @@ void main() {
     await tester.pump(const Duration(seconds: 30));
     await _settle(tester, 2);
     expect(gets, 1);
-  });
-
-  testWidgets('closing the screen stops the polling', (tester) async {
-    var gets = 0;
-    final adapter = teamAdapter({
-      'GET ${TeamPaths.campaigns}': (_) {
-        gets++;
-        return _list([_campaign(status: 'sending')]);
-      },
-    });
-    final router = await pumpTeam(tester, adapter, RoutePaths.teamCampaigns);
-    await tester.pump(const Duration(seconds: 5));
-    await _settle(tester, 2);
-    expect(gets, 2);
-
-    router.go(RoutePaths.team);
-    await _settle(tester);
-    await tester.pump(const Duration(seconds: 30));
-    expect(gets, 2);
   });
 }
