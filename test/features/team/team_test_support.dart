@@ -8,6 +8,7 @@ import 'package:mulearn_app/core/network/dio_provider.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/storage/secure_storage_provider.dart';
 import 'package:mulearn_app/core/utils/clock.dart';
+import 'package:mulearn_app/features/team/presentation/screens/activity_log_screen.dart';
 import 'package:mulearn_app/features/team/presentation/screens/announcement_detail_screen.dart';
 import 'package:mulearn_app/features/team/presentation/screens/announcement_form_screen.dart';
 import 'package:mulearn_app/features/team/presentation/screens/announcements_screen.dart';
@@ -103,6 +104,10 @@ Future<GoRouter> pumpTeam(
         path: RoutePaths.teamAnnouncementEdit,
         builder: (_, state) =>
             AnnouncementFormScreen(announcementId: state.pathParameters['id']),
+      ),
+      GoRoute(
+        path: RoutePaths.teamLog,
+        builder: (_, __) => const ActivityLogScreen(),
       ),
       GoRoute(
         path: RoutePaths.teamCampaigns,

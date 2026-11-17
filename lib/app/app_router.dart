@@ -64,6 +64,7 @@ import 'package:mulearn_app/features/search/presentation/screens/search_screen.d
 import 'package:mulearn_app/features/splash/presentation/screens/splash_screen.dart';
 import 'package:mulearn_app/features/tasks/presentation/screens/task_detail_screen.dart';
 import 'package:mulearn_app/features/tasks/presentation/screens/tasks_screen.dart';
+import 'package:mulearn_app/features/team/presentation/screens/activity_log_screen.dart';
 import 'package:mulearn_app/features/team/presentation/screens/announcement_detail_screen.dart';
 import 'package:mulearn_app/features/team/presentation/screens/announcement_form_screen.dart';
 import 'package:mulearn_app/features/team/presentation/screens/announcements_screen.dart';
@@ -319,6 +320,14 @@ GoRouter goRouter(Ref ref) {
           builder: (_) => AnnouncementFormScreen(
             announcementId: state.pathParameters['id'],
           ),
+        ),
+      ),
+      GoRoute(
+        path: RoutePaths.teamLog,
+        builder: (_, state) => WorkspaceGate(
+          select: (a) => a.team,
+          role: 'Team',
+          builder: (_) => const ActivityLogScreen(),
         ),
       ),
       GoRoute(
