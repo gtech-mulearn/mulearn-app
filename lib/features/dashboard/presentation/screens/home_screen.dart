@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/leaderboard/leaderboard_providers.dart';
+import 'package:mulearn_app/core/notifications/push/push_controller.dart';
 import 'package:mulearn_app/core/notifications/unread_notifications.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/router/tab_navigation.dart';
@@ -379,6 +380,15 @@ class _UpNext extends ConsumerWidget {
           onTap: () =>
               unawaited(ref.read(discordConnectFlowProvider.notifier).start()),
         ),
+      // Push: asked only when the learner chooses to, never on launch.
+      if (ref.watch(pushControllerProvider).value == PushStatus.notDetermined)
+        MuTile(
+          title: 'Turn on notifications',
+          category: IgCategory.coder,
+          size: MuTileSize.short,
+          meta: 'Circle meetings, karma and replies, as they happen',
+          onTap: () => unawaited(_turnOnNotifications(context, ref)),
+        ),
       if (needsGroups)
         MuTile(
           title: 'Join interest groups',
@@ -549,4 +559,19 @@ class _Ticket extends StatelessWidget {
       onTap: open,
     );
   }
+}
+
+/// Shows the system prompt and says what happened.
+Future<void> _turnOnNotifications(BuildContext context, WidgetRef ref) async {
+  final status = await ref
+      .read(pushControllerProvider.notifier)
+      .requestPermission();
+  if (!context.mounted) return;
+  MuToast.show(
+    context,
+    message: status == PushStatus.granted
+        ? 'Notifications are on'
+        : 'Notifications stay off. You can turn them on in phone settings.',
+    type: status == PushStatus.granted ? MuToastType.success : MuToastType.info,
+  );
 }
