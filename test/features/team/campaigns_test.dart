@@ -25,14 +25,16 @@ Map<String, dynamic> _campaign({
   String title = 'Hello',
   String status = 'draft',
   int targetCount = 4120,
+  String? scheduledAt,
+  Map<String, dynamic> audience = const {'type': 'all', 'ids': <String>[]},
 }) => {
   'id': id,
   'title': title,
   'body': 'A short message.',
   'route': null,
-  'audience': {'type': 'all', 'ids': <String>[]},
+  'audience': audience,
   'status': status,
-  'scheduled_at': null,
+  'scheduled_at': scheduledAt,
   'respect_quiet_hours': true,
   'target_count': targetCount,
   'sent_count': 0,
@@ -85,10 +87,55 @@ void main() {
 
     expect(find.text('Push campaigns'), findsOneWidget);
     expect(_rich('Streak week'), findsOneWidget);
-    expect(_rich('Mentor, Student · ~1200 phones · Asha Nair'), findsOneWidget);
-    expect(_rich('Everyone · ~5000 phones · —'), findsOneWidget);
+    expect(
+      _rich('Mentor, Student · ~1,200 phones · Asha Nair'),
+      findsOneWidget,
+    );
+    expect(_rich('Everyone · ~5,000 phones · —'), findsOneWidget);
     expect(find.widgetWithText(MuPill, 'Scheduled'), findsOneWidget);
     expect(find.widgetWithText(MuPill, 'Sent'), findsOneWidget);
+  });
+
+  testWidgets('a scheduled campaign shows when it goes out, not Just now', (
+    tester,
+  ) async {
+    final now = teamTestNow.toLocal();
+    final tomorrow6pm = DateTime(now.year, now.month, now.day + 1, 18);
+    final adapter = teamAdapter({
+      'GET ${TeamPaths.campaigns}': (_) => _list([
+        _campaign(
+          status: 'scheduled',
+          scheduledAt: tomorrow6pm.toUtc().toIso8601String(),
+        ),
+      ]),
+    });
+    final router = await pumpTeam(tester, adapter, RoutePaths.teamCampaigns);
+
+    expect(find.text('Tomorrow · 6:00 PM'), findsOneWidget);
+    expect(find.text('Just now'), findsNothing);
+
+    unawaited(router.push(RoutePaths.teamCampaignPath('c-new')));
+    await _settle(tester, 12);
+    expect(find.text('Tomorrow · 6:00 PM'), findsWidgets);
+  });
+
+  testWidgets('a type the app does not know reads as a custom audience', (
+    tester,
+  ) async {
+    final adapter = teamAdapter({
+      'GET ${TeamPaths.campaigns}': (_) => _list([
+        _campaign(
+          audience: {
+            'type': 'cohort',
+            'ids': <String>['x'],
+          },
+        ),
+      ]),
+    });
+    await pumpTeam(tester, adapter, RoutePaths.teamCampaigns);
+
+    expect(_rich('Custom audience · ~4,120 phones'), findsOneWidget);
+    expect(_rich('Everyone'), findsNothing);
   });
 
   testWidgets('a row opens the campaign', (tester) async {
@@ -179,6 +226,10 @@ void main() {
     // The pick is a removable chip.
     expect(find.text('Amrita School'), findsOneWidget);
     expect(find.byTooltip('Remove Amrita School'), findsOneWidget);
+    // The remove button is a full touch target.
+    final size = tester.getSize(find.byTooltip('Remove Amrita School'));
+    expect(size.width, greaterThanOrEqualTo(MuSizes.touchMin));
+    expect(size.height, greaterThanOrEqualTo(MuSizes.touchMin));
   });
 
   testWidgets('Send now confirms with the phone count, then posts', (
@@ -198,7 +249,7 @@ void main() {
     await tester.tap(find.text('Send now'));
     await _settle(tester, 12);
 
-    expect(find.text('This goes to 4120 phones.'), findsOneWidget);
+    expect(find.text('This goes to 4,120 phones.'), findsOneWidget);
     expect(
       callsTo(adapter, 'POST', TeamPaths.campaignAction('c-new', 'send')),
       isEmpty,
@@ -213,6 +264,38 @@ void main() {
     );
     router.go(RoutePaths.team);
     await _settle(tester);
+  });
+
+  testWidgets(
+    'Send now on a scheduled campaign says it replaces the schedule',
+    (tester) async {
+      final adapter = teamAdapter({
+        'GET ${TeamPaths.campaigns}': (_) => _list([
+          _campaign(status: 'scheduled', scheduledAt: '2026-11-25T10:00:00Z'),
+        ]),
+      });
+      await pumpTeam(tester, adapter, RoutePaths.teamCampaignPath('c-new'));
+
+      await tester.tap(find.text('Send now'));
+      await _settle(tester, 12);
+
+      expect(
+        find.text('This goes to 4,120 phones. It replaces the schedule.'),
+        findsOneWidget,
+      );
+    },
+  );
+
+  testWidgets('Send now says 1 phone, not 1 phones', (tester) async {
+    final adapter = teamAdapter({
+      'GET ${TeamPaths.campaigns}': (_) => _list([_campaign(targetCount: 1)]),
+    });
+    await pumpTeam(tester, adapter, RoutePaths.teamCampaignPath('c-new'));
+
+    await tester.tap(find.text('Send now'));
+    await _settle(tester, 12);
+
+    expect(find.text('This goes to 1 phone.'), findsOneWidget);
   });
 
   testWidgets('Cancel campaign confirms, then posts', (tester) async {
@@ -244,6 +327,43 @@ void main() {
     );
     router.go(RoutePaths.team);
     await _settle(tester);
+  });
+
+  testWidgets('a path starting with // is not an app path', (tester) async {
+    final adapter = teamAdapter({..._options()});
+    await pumpTeam(tester, adapter, RoutePaths.teamCampaignNew);
+
+    await _fillBasics(tester);
+    await tester.tap(find.text('Just open the app'));
+    await _settle(tester);
+    await tester.tap(find.text('Another app path…').last);
+    await _settle(tester, 12);
+    await tester.enterText(find.byType(TextField).at(2), '//evil.example');
+    await tester.tap(find.text('Save'));
+    await _settle(tester);
+
+    expect(
+      find.text('Start the path with a single /, like /events.'),
+      findsOneWidget,
+    );
+    expect(callsTo(adapter, 'POST', TeamPaths.campaigns), isEmpty);
+  });
+
+  testWidgets('typing in the μID box clears its error', (tester) async {
+    final adapter = teamAdapter({..._options()});
+    await pumpTeam(tester, adapter, RoutePaths.teamCampaignNew);
+
+    await _fillBasics(tester);
+    await tester.tap(find.text('μIDs'));
+    await _settle(tester);
+    await tester.tap(find.text('Save'));
+    await _settle(tester);
+    expect(find.text('Add at least one μID.'), findsOneWidget);
+
+    await tester.enterText(find.byType(TextField).at(2), 'asha@mulearn');
+    await _settle(tester, 2);
+
+    expect(find.text('Add at least one μID.'), findsNothing);
   });
 
   testWidgets('Schedule sends a UTC time an hour from now by default', (

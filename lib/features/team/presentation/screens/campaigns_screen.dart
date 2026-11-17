@@ -8,7 +8,7 @@ import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/network/paging.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/utils/clock.dart';
-import 'package:mulearn_app/core/utils/date_format.dart';
+import 'package:mulearn_app/core/utils/count_format.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/core/widgets/mu_paged_list.dart';
 import 'package:mulearn_app/core/widgets/mu_state_display.dart';
@@ -18,7 +18,7 @@ import 'package:mulearn_app/features/team/presentation/providers/campaigns_contr
 import 'package:mulearn_app/features/team/presentation/widgets/campaign_status_pill.dart';
 
 /// Every push campaign, newest first, with a way to start a new one. A row
-/// opens the campaign. While one is sending the list refreshes itself.
+/// opens the campaign. Numbers update on pull-to-refresh; nothing polls.
 class CampaignsScreen extends ConsumerWidget {
   const CampaignsScreen({super.key});
 
@@ -56,12 +56,10 @@ class CampaignsScreen extends ConsumerWidget {
             leading: const MuFeedIcon(LucideIcons.bell, tone: MuFeedTone.event),
             subject: c.title,
             body:
-                '${campaignAudienceLabel(c)} · ~${c.targetCount} phones · '
+                '${campaignAudienceLabel(c)} · '
+                '~${countOf(c.targetCount, 'phone')} · '
                 "${c.createdBy ?? '—'}",
-            time: formatAgo(
-              (c.sentAt ?? c.scheduledAt ?? c.createdAt).toLocal(),
-              now,
-            ),
+            time: campaignRowTime(c, now),
             trailing: CampaignStatusPill(c.status),
             divider: i < campaigns.length - 1,
             onTap: () =>

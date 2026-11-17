@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/utils/clock.dart';
+import 'package:mulearn_app/core/utils/count_format.dart';
 import 'package:mulearn_app/core/utils/date_format.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/core/widgets/mu_refresh.dart';
@@ -14,10 +15,12 @@ import 'package:mulearn_app/features/team/presentation/campaign_labels.dart';
 import 'package:mulearn_app/features/team/presentation/campaign_links.dart';
 import 'package:mulearn_app/features/team/presentation/providers/campaigns_controller.dart';
 import 'package:mulearn_app/features/team/presentation/widgets/campaign_status_pill.dart';
+import 'package:mulearn_app/features/team/presentation/widgets/fact_row.dart';
 
 /// One push campaign in full, with Send now and Cancel where they apply. It
-/// reads the campaign from the loaded list, which refreshes while a send is
-/// going; one that isn't there reads as not found.
+/// reads the campaign from the loaded list, which updates on pull-to-refresh
+/// and after the user's own send or cancel; one that isn't there reads as
+/// not found.
 class CampaignDetailScreen extends ConsumerStatefulWidget {
   const CampaignDetailScreen({required this.campaignId, super.key});
 
@@ -52,10 +55,13 @@ class _CampaignDetailScreenState extends ConsumerState<CampaignDetailScreen> {
   }
 
   Future<void> _send(PushCampaign c) async {
+    final replaces = c.status == CampaignStatus.scheduled
+        ? ' It replaces the schedule.'
+        : '';
     final confirmed = await showMuConfirm(
       context,
       title: 'Send now?',
-      body: 'This goes to ${c.targetCount} phones.',
+      body: 'This goes to ${countOf(c.targetCount, 'phone')}.$replaces',
       confirmLabel: 'Send',
     );
     if (!confirmed || !mounted) return;
@@ -155,7 +161,7 @@ class _Body extends StatelessWidget {
   String _audience() {
     final c = campaign;
     return switch (c.audienceType) {
-      AudienceType.roles => c.audienceIds.join(', '),
+      AudienceType.roles => rolesLabel(c.audienceIds),
       _ => campaignAudienceLabel(c),
     };
   }
@@ -165,7 +171,12 @@ class _Body extends StatelessWidget {
     final sent = c.sentAt;
     final scheduled = c.scheduledAt;
     if (sent != null) return 'Sent ${formatAgo(sent.toLocal(), now)}';
-    if (scheduled != null) return formatDayTime(scheduled.toLocal());
+    if (scheduled != null) {
+      final local = scheduled.toLocal();
+      return local.isAfter(now)
+          ? campaignScheduledLabel(local, now)
+          : formatDayTime(local);
+    }
     return 'Not scheduled';
   }
 
@@ -198,18 +209,18 @@ class _Body extends StatelessWidget {
           ),
           child: Column(
             children: [
-              _Fact('Audience', _audience()),
-              _Fact('Opens', campaignLinkLabel(k.route)),
-              _Fact('When', _when()),
-              _Fact(
+              FactRow('Audience', _audience()),
+              FactRow('Opens', campaignLinkLabel(k.route)),
+              FactRow('When', _when()),
+              FactRow(
                 'Quiet hours',
                 k.respectQuietHours ? 'Respected' : 'Ignored',
               ),
-              _Fact('Phones', '${k.targetCount}'),
-              _Fact('Delivered', '${k.sentCount}'),
-              _Fact('Skipped', '${k.skippedCount}'),
-              _Fact('Failed', '${k.failedCount}'),
-              _Fact('Created by', k.createdBy ?? '—', last: true),
+              FactRow('Phones', formatCount(k.targetCount)),
+              FactRow('Delivered', formatCount(k.sentCount)),
+              FactRow('Skipped', formatCount(k.skippedCount)),
+              FactRow('Failed', formatCount(k.failedCount)),
+              FactRow('Created by', k.createdBy ?? '—', last: true),
             ],
           ),
         ),
@@ -221,38 +232,6 @@ class _Body extends StatelessWidget {
           ),
         ],
       ],
-    );
-  }
-}
-
-class _Fact extends StatelessWidget {
-  const _Fact(this.label, this.value, {this.last = false});
-
-  final String label;
-  final String value;
-  final bool last;
-
-  @override
-  Widget build(BuildContext context) {
-    final mu = context.mu;
-    final c = mu.colors;
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: MuSpacing.space3),
-      decoration: BoxDecoration(
-        border: last ? null : Border(bottom: BorderSide(color: c.line)),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 104,
-            child: Text(label, style: mu.text.label.copyWith(color: c.ink3)),
-          ),
-          Expanded(
-            child: Text(value, style: mu.text.body.copyWith(color: c.ink)),
-          ),
-        ],
-      ),
     );
   }
 }
