@@ -1,0 +1,51 @@
+{
+  "_meta": {
+    "source": "serializer",
+    "endpoint": "GET /api/v1/push/admin/campaigns/",
+    "backend_ref": "feat/team-notifications api/push/views.py AdminCampaignAPI.get, _campaign_dict",
+    "note": "Hand-built from _campaign_dict: a scheduled role campaign and a sent everyone campaign."
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {"general": []},
+    "response": {
+      "campaigns": [
+        {
+          "id": "c1000000-0000-4000-8000-000000000001",
+          "title": "Streak week",
+          "body": "Seven days in a row earns a badge.",
+          "route": "/tasks",
+          "audience": {"type": "roles", "ids": ["Mentor", "Student"]},
+          "status": "scheduled",
+          "scheduled_at": "2026-11-20T04:30:00Z",
+          "respect_quiet_hours": true,
+          "target_count": 1200,
+          "sent_count": 0,
+          "skipped_count": 0,
+          "failed_count": 0,
+          "created_at": "2026-11-17T10:00:00Z",
+          "sent_at": null,
+          "created_by": "Asha Nair"
+        },
+        {
+          "id": "c1000000-0000-4000-8000-000000000002",
+          "title": "Welcome back",
+          "body": "New tasks landed this week.",
+          "route": null,
+          "audience": {"type": "all", "ids": []},
+          "status": "sent",
+          "scheduled_at": null,
+          "respect_quiet_hours": false,
+          "target_count": 5000,
+          "sent_count": 4800,
+          "skipped_count": 150,
+          "failed_count": 50,
+          "created_at": "2026-11-10T08:00:00Z",
+          "sent_at": "2026-11-10T08:05:00Z",
+          "created_by": null
+        }
+      ]
+    }
+  }
+}

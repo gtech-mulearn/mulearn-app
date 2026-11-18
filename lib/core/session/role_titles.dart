@@ -9,4 +9,7 @@ abstract final class RoleTitles {
   static const zonalCampusLead = 'Zonal Campus Lead';
   static const districtCampusLead = 'District Campus Lead';
   static const company = 'Company';
+  static const admin = 'Admins';
+  static const fellow = 'Fellow';
+  static const associate = 'Associate';
 }

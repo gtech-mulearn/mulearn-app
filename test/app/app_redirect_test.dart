@@ -49,6 +49,10 @@ void main() {
         '/campus/students/someone%40mulearn',
         '/enabler/campuses',
         '/enabler/campuses/c1',
+        '/team',
+        '/team/log',
+        '/team/announcements/new',
+        '/team/campaigns/c1',
       ]) {
         expect(
           appRedirect(auth: signedIn, uri: u(path)),
@@ -67,6 +71,7 @@ void main() {
     test('look-alike prefixes are not workspace routes', () {
       expect(appRedirect(auth: signedIn, uri: u('/mentors')), isNotNull);
       expect(appRedirect(auth: signedIn, uri: u('/campusx')), isNotNull);
+      expect(appRedirect(auth: signedIn, uri: u('/teams')), isNotNull);
     });
   });
 

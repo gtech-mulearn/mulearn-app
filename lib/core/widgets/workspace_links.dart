@@ -22,6 +22,8 @@ class WorkspaceLinks extends ConsumerWidget {
         (LucideIcons.graduationCap, 'Mentor workspace', RoutePaths.mentor),
       if (access.campus == WorkspaceState.open)
         (LucideIcons.school, 'Campus workspace', RoutePaths.campus),
+      if (access.team == WorkspaceState.open)
+        (LucideIcons.megaphone, 'Team workspace', RoutePaths.team),
       if (access.enablerCampuses == WorkspaceState.open)
         (LucideIcons.building2, 'My campuses', RoutePaths.enablerCampuses),
     ];

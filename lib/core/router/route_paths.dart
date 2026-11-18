@@ -51,6 +51,20 @@ abstract final class RoutePaths {
   static const String campusStudent = '/campus/students/:muid';
   static String campusStudentPath(String muid) =>
       '/campus/students/${Uri.encodeComponent(muid)}';
+  // Team workspace: announcements, push campaigns and the activity log.
+  static const String team = '/team';
+  static const String teamAnnouncements = '/team/announcements';
+  static const String teamAnnouncementNew = '/team/announcements/new';
+  static const String teamAnnouncement = '/team/announcements/:id';
+  static String teamAnnouncementPath(String id) => '/team/announcements/$id';
+  static const String teamAnnouncementEdit = '/team/announcements/:id/edit';
+  static String teamAnnouncementEditPath(String id) =>
+      '/team/announcements/$id/edit';
+  static const String teamCampaigns = '/team/campaigns';
+  static const String teamCampaignNew = '/team/campaigns/new';
+  static const String teamCampaign = '/team/campaigns/:id';
+  static String teamCampaignPath(String id) => '/team/campaigns/$id';
+  static const String teamLog = '/team/log';
   static const String mentorSessions = '/mentor/sessions';
   static const String mentorSessionNew = '/mentor/sessions/new';
   static const String mentorSessionEdit = '/mentor/sessions/:id/edit';

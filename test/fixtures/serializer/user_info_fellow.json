@@ -1,0 +1,34 @@
+{
+  "_meta": {
+    "source": "serializer",
+    "note": "Built from the dev enabler recording; roles replaced with Student + Fellow (backend UserInfoSerializer roles)"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "muid": "qafellowone@mulearn",
+      "full_name": "Fixture User",
+      "email": "user@example.com",
+      "mobile": null,
+      "gender": null,
+      "dob": null,
+      "exist_in_guild": false,
+      "joined": "2026-11-12 10:48:41+00:00",
+      "roles": [
+        "Student",
+        "Fellow"
+      ],
+      "profile_pic": null,
+      "dynamic_type": [],
+      "user_domains": [],
+      "user_endgoals": [],
+      "interested_in_work": false,
+      "interested_in_gig_work": false,
+      "company": null
+    }
+  }
+}

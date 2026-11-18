@@ -67,6 +67,7 @@ void main() {
       routes: [
         GoRoute(path: '/s', builder: (_, __) => screen),
         GoRoute(path: '/mentor', builder: (_, __) => const Text('mentor hub')),
+        GoRoute(path: '/team', builder: (_, __) => const Text('team home')),
         GoRoute(
           path: '/campus',
           builder: (_, __) => const Text('campus overview'),
@@ -198,6 +199,52 @@ void main() {
       expect(find.text('campus overview'), findsOneWidget);
     },
   );
+
+  group('team workspace', () {
+    testWidgets('Home shows a verified Fellow the Team card and opens /team', (
+      tester,
+    ) async {
+      adapter = adapterFor(
+        userInfo: 'serializer/user_info_fellow',
+        profile: 'serializer/user_profile_fellow',
+      );
+      await pump(tester, const HomeScreen());
+
+      expect(find.text('Team workspace'), findsOneWidget);
+      expect(find.text('Announcements, pushes and the log'), findsOneWidget);
+      expect(find.text('Mentor workspace'), findsNothing);
+
+      await tester.tap(find.text('Team workspace'));
+      for (var i = 0; i < 4; i++) {
+        await tester.pump(const Duration(milliseconds: 50));
+      }
+      expect(find.text('team home'), findsOneWidget);
+    });
+
+    testWidgets('a Student without team roles has no Team card', (
+      tester,
+    ) async {
+      adapter = adapterFor(
+        userInfo: 'dev/user_info',
+        profile: 'dev/user_profile',
+      );
+      await pump(tester, const HomeScreen());
+
+      expect(find.text('Team workspace'), findsNothing);
+    });
+
+    testWidgets('Profile lists the Team workspace for a Fellow', (
+      tester,
+    ) async {
+      adapter = adapterFor(
+        userInfo: 'serializer/user_info_fellow',
+        profile: 'serializer/user_profile_fellow',
+      );
+      await pump(tester, const Scaffold(body: WorkspaceLinks()));
+
+      expect(find.text('Team workspace'), findsOneWidget);
+    });
+  });
 
   testWidgets('Profile lists the campus workspace for an enabler', (
     tester,
