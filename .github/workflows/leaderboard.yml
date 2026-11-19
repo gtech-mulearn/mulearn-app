@@ -1,0 +1,60 @@
+# Contributor leaderboard for the README (unrelated to builds).
+#
+# .github/scripts/leaderboard.py draws two SVGs (light and dark): people
+# ranked by pull requests merged into dev, then commits. This workflow
+# force-pushes them as a single commit to the `leaderboard` branch, which the
+# README embeds. That branch holds only these generated files and never grows
+# history; nothing lands on dev, so no PR or review is involved. Pushes made
+# with GITHUB_TOKEN don't start other workflows, and ci.yml ignores the
+# branch anyway.
+#
+# Runs daily, on every push to dev (a merged PR) and on demand. Scheduled
+# runs come from the default branch (dev), so this file must be on dev.
+# Docs: docs/CI-CD.md
+name: Contributor leaderboard
+
+on:
+  schedule:
+    - cron: '15 0 * * *'
+  push:
+    branches:
+      - dev
+  workflow_dispatch:
+
+concurrency:
+  group: leaderboard
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  update:
+    name: Update leaderboard
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write # push the generated `leaderboard` branch
+    steps:
+      - name: Check out
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Draw the leaderboard
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 .github/scripts/leaderboard.py "$GITHUB_REPOSITORY" "$RUNNER_TEMP/leaderboard"
+
+      - name: Publish to the leaderboard branch
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        working-directory: ${{ runner.temp }}/leaderboard
+        run: |
+          git init -q -b leaderboard
+          git add .
+          git -c user.name='github-actions[bot]' \
+              -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+              commit -q -m "Update contributor leaderboard"
+          git push -q --force \
+            "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" leaderboard
