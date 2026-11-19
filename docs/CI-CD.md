@@ -45,11 +45,13 @@ release.yml      ───► └───────────────�
 | [`workflows/build-stable.yml`](../.github/workflows/build-stable.yml) | Push to `master`, or manual. |
 | [`workflows/release.yml`](../.github/workflows/release.yml) | Push of a `vX.Y.Z` tag on `master`. |
 | [`workflows/triage.yml`](../.github/workflows/triage.yml) | Adds new issues/PRs to the Delivery board (unrelated to builds). |
+| [`workflows/leaderboard.yml`](../.github/workflows/leaderboard.yml) | Daily, on every push to `dev`, or manual: redraws the README's contributor leaderboard and force-pushes it to the generated `leaderboard` branch (unrelated to builds). |
 | [`scripts/version.sh`](../.github/scripts/version.sh) | versionName, versionCode and artifact name per channel. |
 | [`scripts/format_check.sh`](../.github/scripts/format_check.sh) | `dart format` gate (changed files) / report (whole repo). |
 | [`scripts/setup_signing.sh`](../.github/scripts/setup_signing.sh) | Writes `android/key.properties` + keystore from the environment. |
 | [`scripts/check_release_tag.sh`](../.github/scripts/check_release_tag.sh) | Refuses bad release tags before anything is built. |
 | [`scripts/release_notes.sh`](../.github/scripts/release_notes.sh) | Categorised notes from commits since the previous tag. |
+| [`scripts/leaderboard.py`](../.github/scripts/leaderboard.py) | Contributor leaderboard SVGs (light and dark): merged PRs into `dev`, then commits. |
 | [`dependabot.yml`](../.github/dependabot.yml) | Monthly PR into `dev` bumping the SHA-pinned actions. |
 
 Security baseline: every third-party action is pinned to a full commit SHA;
