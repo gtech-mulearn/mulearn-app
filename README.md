@@ -116,3 +116,12 @@ The version lives only in `pubspec.yaml` as `MAJOR.MINOR.PATCH+BUILD`. It starts
 ## Contributing
 
 See [`CONTRIBUTING.md`](CONTRIBUTING.md): setup, the branch flow, what CI checks and how to open a pull request. [`docs/rules.md`](docs/rules.md) is the binding reference for stack choices, architecture, naming and testing.
+
+## Contributors
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/gtech-mulearn/mulearn-app/leaderboard/leaderboard-dark.svg">
+  <img alt="Contributor leaderboard: contributors ranked by pull requests merged into dev, then commits" src="https://raw.githubusercontent.com/gtech-mulearn/mulearn-app/leaderboard/leaderboard-light.svg">
+</picture>
+
+Ranked by pull requests merged into `dev`, then commits. [`leaderboard.yml`](.github/workflows/leaderboard.yml) redraws it every day and after every merge into `dev`.
