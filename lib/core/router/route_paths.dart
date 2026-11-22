@@ -34,6 +34,7 @@ abstract final class RoutePaths {
   static const String notifications = '/notifications';
   static const String settings = '/settings';
   static const String settingsPassword = '/settings/password';
+  static const String settingsBlocked = '/settings/blocked';
 
   /// Discord's OAuth redirect, opened as an App Link (same path as the
   /// dashboard's page). Query: `code`.

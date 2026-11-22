@@ -95,7 +95,7 @@ jobs:
             echo "|---|---|"
             echo "| Version | \`${VERSION}\` |"
             echo "| Build number (versionCode) | \`${BUILD_NUMBER}\` |"
-            echo "| Application ID | \`org.mulearn.muapp\` |"
+            echo "| Application ID | \`org.mulearn.app\` |"
             echo "| Commit | ${SHA} |"
             echo "| Built (UTC) | ${BUILT_AT} |"
             echo "| Workflow run | ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} |"

@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mulearn_app/core/design_system/design_system.dart';
+import 'package:mulearn_app/core/moderation/blocked_user.dart';
+import 'package:mulearn_app/core/moderation/blocked_users_storage.dart';
 import 'package:mulearn_app/core/network/dio_provider.dart';
 import 'package:mulearn_app/core/session/my_profile_payload.dart';
 import 'package:mulearn_app/core/storage/secure_storage_provider.dart';
@@ -84,6 +86,19 @@ Map<String, dynamic> _project({
   'created_at': '2026-11-10T10:00:00Z',
   'updated_at': '2026-11-10T10:00:00Z',
 };
+
+/// A blocked list that starts with [saved] and keeps nothing.
+class _Stored implements BlockedUsersStorage {
+  const _Stored(this.saved);
+
+  final List<BlockedUser> saved;
+
+  @override
+  Future<List<BlockedUser>> read() async => saved;
+
+  @override
+  Future<void> write(List<BlockedUser> users) async {}
+}
 
 Map<String, dynamic> _env(Object? response) => {
   'hasError': false,
@@ -194,7 +209,11 @@ void main() {
     }
   }
 
-  Future<void> pump(WidgetTester tester, String start) async {
+  Future<void> pump(
+    WidgetTester tester,
+    String start, {
+    List<BlockedUser> blocked = const [],
+  }) async {
     final tokens = TokenStorage(FakeSecureStorage());
     await tokens.saveTokens(accessToken: 'a', refreshToken: 'r');
     final container = ProviderContainer(
@@ -202,6 +221,7 @@ void main() {
       overrides: [
         dioProvider.overrideWithValue(fakeDio(adapter)),
         tokenStorageProvider.overrideWithValue(tokens),
+        blockedUsersStorageProvider.overrideWithValue(_Stored(blocked)),
         myProfilePayloadProvider.overrideWith(
           (ref) async =>
               loadFixtureResponse('dev/user_profile')! as Map<String, dynamic>,
@@ -237,6 +257,36 @@ void main() {
     );
     await settle(tester);
   }
+
+  testWidgets("other people's comments offer report or block", (tester) async {
+    await pump(tester, '/projects/p1');
+
+    expect(find.text('Love the map view!'), findsOneWidget);
+    expect(find.byTooltip('Report or block'), findsWidgets);
+  });
+
+  testWidgets("a blocked person's comment is hidden", (tester) async {
+    await pump(
+      tester,
+      '/projects/p1',
+      blocked: const [BlockedUser(id: 'someone-else', name: 'Dev Admin')],
+    );
+
+    expect(find.text('Love the map view!'), findsNothing);
+    expect(find.text('COMMENTS · 0'), findsOneWidget);
+  });
+
+  testWidgets("a blocked owner's project is hidden from explore", (
+    tester,
+  ) async {
+    await pump(
+      tester,
+      '/projects',
+      blocked: const [BlockedUser(id: _me, name: 'QA Student One')],
+    );
+
+    expect(find.text('Campus Bus Tracker'), findsNothing);
+  });
 
   testWidgets('explore shows the card; upvote and take it back', (
     tester,

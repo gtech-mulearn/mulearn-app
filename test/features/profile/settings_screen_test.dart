@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mulearn_app/core/config/app_links.dart';
 import 'package:mulearn_app/features/profile/presentation/screens/settings_screen.dart';
@@ -7,8 +8,9 @@ import 'package:package_info_plus/package_info_plus.dart';
 import '../../support/fake_http_adapter.dart';
 import 'settings_test_support.dart';
 
-/// Settings (UX-03, SEC-14, L19). Account deletion is a request to support
-/// (spec §11): no call to DELETE /dashboard/profile/.
+/// Settings (UX-03, SEC-14, L19). Account deletion is confirmed in the app
+/// and then requested from support (spec §11, guideline 5.1.1(v)): no call to
+/// DELETE /dashboard/profile/.
 void main() {
   Future<void> openSettings(
     WidgetTester tester,
@@ -25,13 +27,16 @@ void main() {
   testWidgets('shows every section', (tester) async {
     await openSettings(tester, settingsAdapter());
 
+    for (final label in ['Change password', 'Discord', 'Public profile']) {
+      expect(find.text(label), findsOneWidget, reason: label);
+    }
     for (final label in [
-      'Change password',
-      'Discord',
-      'Public profile',
+      'Blocked users',
+      'Contact support',
       'Privacy policy',
       'Terms and conditions',
     ]) {
+      await tester.scrollUntilVisible(find.text(label), 200);
       expect(find.text(label), findsOneWidget, reason: label);
     }
     await tester.scrollUntilVisible(find.text('Delete account'), 200);
@@ -44,7 +49,7 @@ void main() {
   ) async {
     PackageInfo.setMockInitialValues(
       appName: 'μLearn',
-      packageName: 'org.mulearn.muapp.dev',
+      packageName: 'org.mulearn.app.dev',
       version: '1.0.0-dev.84',
       buildNumber: '84',
       buildSignature: '',
@@ -77,6 +82,8 @@ void main() {
     final opened = <Uri>[];
     await openSettings(tester, settingsAdapter(), opened: opened);
 
+    await tester.scrollUntilVisible(find.text('Terms and conditions'), 200);
+    await tester.pumpAndSettle();
     await tester.tap(find.text('Privacy policy'));
     await tester.tap(find.text('Terms and conditions'));
     await tester.pump();
@@ -84,32 +91,55 @@ void main() {
     expect(opened, [AppLinks.privacyPolicy, AppLinks.terms]);
   });
 
-  testWidgets('delete account asks support by email and never deletes', (
+  testWidgets(
+    'delete account needs DELETE typed, then emails support and never deletes',
+    (tester) async {
+      final opened = <Uri>[];
+      final adapter = settingsAdapter();
+      await openSettings(tester, adapter, opened: opened);
+
+      await tester.scrollUntilVisible(find.text('Delete account'), 200);
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Delete account'));
+      await settle(tester);
+      expect(find.text('Type DELETE to confirm'), findsOneWidget);
+
+      // The button is off until DELETE is typed.
+      await tester.tap(find.text('Request deletion'));
+      await tester.pump();
+      expect(opened, isEmpty);
+
+      await tester.enterText(find.byType(EditableText), 'DELETE');
+      await tester.pump();
+      await tester.tap(find.text('Request deletion'));
+      await tester.pump();
+
+      final mail = opened.single;
+      expect(mail.scheme, 'mailto');
+      expect(mail.path, 'info@mulearn.org');
+      expect(Uri.decodeComponent(mail.query), contains('qastudentone@mulearn'));
+      expect(find.textContaining('Your request is ready'), findsOneWidget);
+      expect(
+        adapter.requests.where((RequestOptions r) => r.method == 'DELETE'),
+        isEmpty,
+      );
+    },
+  );
+
+  testWidgets('safety and help: blocked users and a way to reach support', (
     tester,
   ) async {
     final opened = <Uri>[];
-    final adapter = settingsAdapter();
-    await openSettings(tester, adapter, opened: opened);
+    await openSettings(tester, settingsAdapter(), opened: opened);
 
-    await tester.scrollUntilVisible(find.text('Delete account'), 200);
+    await tester.scrollUntilVisible(find.text('Contact support'), 200);
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Delete account'));
-    await settle(tester);
-    expect(
-      find.textContaining('Contact support to delete your account'),
-      findsOneWidget,
-    );
-    await tester.tap(find.text('Email support'));
+    expect(find.text('Blocked users'), findsOneWidget);
+    await tester.tap(find.text('Contact support'));
     await tester.pump();
 
-    final mail = opened.single;
-    expect(mail.scheme, 'mailto');
-    expect(mail.path, 'info@mulearn.org');
-    expect(Uri.decodeComponent(mail.query), contains('qastudentone@mulearn'));
-    expect(
-      adapter.requests.where((RequestOptions r) => r.method == 'DELETE'),
-      isEmpty,
-    );
+    expect(opened.single.scheme, 'mailto');
+    expect(opened.single.path, AppLinks.supportEmail);
   });
 
   testWidgets(

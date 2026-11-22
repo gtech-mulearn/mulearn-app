@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/design_system/design_system.dart';
+import 'package:mulearn_app/core/moderation/blocked_user.dart';
+import 'package:mulearn_app/core/moderation/blocked_users.dart';
 import 'package:mulearn_app/core/network/paging.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/utils/search_debouncer.dart';
@@ -60,6 +62,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     final c = context.mu.colors;
     final query = _searched;
     final role = _who == _Who.mentors ? 'mentor' : null;
+    final blocked = ref.watch(blockedUsersProvider);
 
     return Scaffold(
       backgroundColor: c.chalk,
@@ -145,6 +148,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                       grouped: true,
                       row: (result, i, count) =>
                           _ResultRow(result: result, last: i == count - 1),
+                      keep: (u) => !blocked.blocks(id: u.id, muid: u.muid),
                     ),
             ),
           ],
@@ -166,6 +170,7 @@ class _Results<T> extends StatelessWidget {
     required this.empty,
     required this.row,
     this.grouped = false,
+    this.keep,
     super.key,
   });
 
@@ -181,12 +186,24 @@ class _Results<T> extends StatelessWidget {
   /// Rows on one card.
   final bool grouped;
 
+  /// Whether to show a result; people this member blocked are left out.
+  final bool Function(T item)? keep;
+
   @override
   Widget build(BuildContext context) => state.when(
     skipError: true,
     loading: () => const Center(child: MuDotsLoader(label: 'Searching…')),
     error: (e, _) => ErrorRetryView(error: e, onRetry: onRetry),
-    data: (paged) {
+    data: (all) {
+      final keep = this.keep;
+      final paged = keep == null
+          ? all
+          : all.copyWith(
+              items: [
+                for (final item in all.items)
+                  if (keep(item)) item,
+              ],
+            );
       if (paged.items.isEmpty) {
         return MuRefresh(
           onRefresh: onRefresh,

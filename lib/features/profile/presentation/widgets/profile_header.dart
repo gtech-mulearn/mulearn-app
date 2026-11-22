@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 import 'dart:ui' as ui;
 
@@ -9,6 +10,8 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/design_system/design_system.dart';
+import 'package:mulearn_app/core/moderation/blocked_user.dart';
+import 'package:mulearn_app/core/moderation/moderation_sheet.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/widgets/mu_image_cropper.dart';
@@ -351,6 +354,24 @@ class ProfileHeader extends ConsumerWidget {
                         () => Navigator.of(context).maybePop(),
                       ),
                     const Spacer(),
+                    if (!isOwn)
+                      glass(
+                        LucideIcons.flag,
+                        'Report or block',
+                        () => unawaited(
+                          showModerationSheet(
+                            context,
+                            kind: ModerationKind.profile,
+                            contentId: profile.muid,
+                            contentTitle: name,
+                            author: BlockedUser(
+                              id: profile.id,
+                              muid: profile.muid,
+                              name: name,
+                            ),
+                          ),
+                        ),
+                      ),
                     if (isOwn) ...[
                       if (coverPending)
                         Padding(

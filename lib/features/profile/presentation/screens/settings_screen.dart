@@ -22,9 +22,11 @@ import 'package:mulearn_app/features/profile/presentation/providers/push_prefere
 
 /// Settings (artifact Screen patterns → Settings): grouped lists on cards.
 /// Account (password, Discord), Privacy (public profile), Appearance
-/// (System / Light / Dark), Legal, then Sign out (confirmed) and Delete
-/// account through support (the backend's delete is a hard cascade; spec
-/// §11). Rows are 56 tall with trailing values in `ink-3` and chevrons.
+/// (System / Light / Dark), Safety and help (blocked users, contact
+/// support), Legal, then Sign out (confirmed) and Delete account: confirmed
+/// in the app, then support deletes it (the backend's delete is a hard
+/// cascade; spec §11). Rows are 56 tall with trailing values in `ink-3` and
+/// chevrons.
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
@@ -60,53 +62,9 @@ class SettingsScreen extends ConsumerWidget {
     if (confirmed) await ref.read(sessionActionsProvider.notifier).signOut();
   }
 
-  void _showDeletion(BuildContext context, WidgetRef ref) {
-    final muid = ref.read(currentUserProvider).value?.muid ?? '';
-    final open = ref.read(openExternalProvider);
+  void _showDeletion(BuildContext context) {
     unawaited(
-      showMuSheet<void>(
-        context,
-        builder: (sheetContext) {
-          final mu = sheetContext.mu;
-          final c = mu.colors;
-          return Padding(
-            padding: const EdgeInsets.fromLTRB(
-              MuSpacing.space5,
-              0,
-              MuSpacing.space5,
-              MuSpacing.space5,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text('Delete account', style: mu.text.title2),
-                const SizedBox(height: MuSpacing.space2),
-                Text(
-                  "Contact support to delete your account. We'll confirm the request with you, "
-                  "then permanently delete your account and its data. This can't be undone.",
-                  style: mu.text.body.copyWith(color: c.ink2),
-                ),
-                const SizedBox(height: MuSpacing.space2),
-                Text(
-                  'Your email goes to ${AppLinks.supportEmail}.',
-                  style: mu.text.caption,
-                ),
-                const SizedBox(height: MuSpacing.space5),
-                MuButton(
-                  label: 'Email support',
-                  icon: LucideIcons.mail,
-                  block: true,
-                  onPressed: () {
-                    unawaited(open(AppLinks.deletionRequest(muid)));
-                    Navigator.of(sheetContext).pop();
-                  },
-                ),
-              ],
-            ),
-          );
-        },
-      ),
+      showMuSheet<void>(context, builder: (_) => const _DeletionSheet()),
     );
   }
 
@@ -195,6 +153,27 @@ class SettingsScreen extends ConsumerWidget {
                     onChanged: (m) =>
                         unawaited(ref.read(appearanceProvider.notifier).set(m)),
                   ),
+                  const _SectionLabel('Safety and help'),
+                  _Group(
+                    children: [
+                      _Row(
+                        icon: LucideIcons.userX,
+                        label: 'Blocked users',
+                        onTap: () => context.push(RoutePaths.settingsBlocked),
+                      ),
+                      _Row(
+                        icon: LucideIcons.lifeBuoy,
+                        label: 'Contact support',
+                        external: true,
+                        onTap: () => unawaited(
+                          open(
+                            Uri(scheme: 'mailto', path: AppLinks.supportEmail),
+                          ),
+                        ),
+                        last: true,
+                      ),
+                    ],
+                  ),
                   const _SectionLabel('Legal'),
                   _Group(
                     children: [
@@ -226,7 +205,7 @@ class SettingsScreen extends ConsumerWidget {
                         icon: LucideIcons.trash2,
                         label: 'Delete account',
                         danger: true,
-                        onTap: () => _showDeletion(context, ref),
+                        onTap: () => _showDeletion(context),
                         last: true,
                       ),
                     ],
@@ -238,6 +217,100 @@ class SettingsScreen extends ConsumerWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// Delete account: the person types DELETE, then the request opens in their
+/// mail app addressed to support, who delete the account after confirming.
+class _DeletionSheet extends ConsumerStatefulWidget {
+  const _DeletionSheet();
+
+  @override
+  ConsumerState<_DeletionSheet> createState() => _DeletionSheetState();
+}
+
+class _DeletionSheetState extends ConsumerState<_DeletionSheet> {
+  final _confirm = TextEditingController();
+  bool _requested = false;
+
+  bool get _typed => _confirm.text.trim().toUpperCase() == 'DELETE';
+
+  @override
+  void dispose() {
+    _confirm.dispose();
+    super.dispose();
+  }
+
+  void _request() {
+    final muid = ref.read(currentUserProvider).value?.muid ?? '';
+    unawaited(ref.read(openExternalProvider)(AppLinks.deletionRequest(muid)));
+    setState(() => _requested = true);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final mu = context.mu;
+    final c = mu.colors;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        MuSpacing.space5,
+        0,
+        MuSpacing.space5,
+        MuSpacing.space5,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Semantics(
+            header: true,
+            child: Text('Delete account', style: mu.text.title2),
+          ),
+          const SizedBox(height: MuSpacing.space2),
+          if (!_requested) ...[
+            Text(
+              'This permanently deletes your account, profile, projects, '
+              "comments and karma. It can't be undone.",
+              style: mu.text.body.copyWith(color: c.ink2),
+            ),
+            const SizedBox(height: MuSpacing.space2),
+            Text(
+              'We confirm the request with you by email, then our team '
+              'deletes your account (${AppLinks.supportEmail}).',
+              style: mu.text.caption,
+            ),
+            const SizedBox(height: MuSpacing.space4),
+            MuTextField(
+              label: 'Type DELETE to confirm',
+              controller: _confirm,
+              textCapitalization: TextCapitalization.characters,
+              textInputAction: TextInputAction.done,
+              onChanged: (_) => setState(() {}),
+            ),
+            const SizedBox(height: MuSpacing.space4),
+            MuButton(
+              label: 'Request deletion',
+              icon: LucideIcons.trash2,
+              block: true,
+              onPressed: _typed ? _request : null,
+            ),
+          ] else ...[
+            Text(
+              'Your request is ready in your mail app. Send it to finish. '
+              'We will confirm with you before deleting anything.',
+              style: mu.text.body.copyWith(color: c.ink2),
+            ),
+            const SizedBox(height: MuSpacing.space5),
+            MuButton(
+              label: 'Done',
+              variant: MuButtonVariant.outline,
+              block: true,
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        ],
       ),
     );
   }

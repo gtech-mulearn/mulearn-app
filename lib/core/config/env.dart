@@ -28,7 +28,7 @@ abstract class EnvDev {
   static const String discordAuthUrl = _EnvDev.discordAuthUrl;
 
   /// Firebase client config for push notifications (Firebase console →
-  /// Project settings → the Android app `org.mulearn.muapp.dev`). Not secret.
+  /// Project settings → the Android app `org.mulearn.app.dev`). Not secret.
   /// Any empty value turns push off in this flavor; the app still runs.
   @EnviedField(varName: 'FIREBASE_API_KEY', defaultValue: '')
   static const String firebaseApiKey = _EnvDev.firebaseApiKey;
@@ -60,7 +60,7 @@ abstract class EnvProd {
   @EnviedField(varName: 'DISCORD_AUTH_URL', defaultValue: '')
   static const String discordAuthUrl = _EnvProd.discordAuthUrl;
 
-  /// See [EnvDev.firebaseApiKey] (the Android app `org.mulearn.muapp`).
+  /// See [EnvDev.firebaseApiKey] (the Android app `org.mulearn.app`).
   @EnviedField(varName: 'FIREBASE_API_KEY', defaultValue: '')
   static const String firebaseApiKey = _EnvProd.firebaseApiKey;
   @EnviedField(varName: 'FIREBASE_APP_ID', defaultValue: '')

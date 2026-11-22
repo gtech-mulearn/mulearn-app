@@ -6,6 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/design_system/design_system.dart';
+import 'package:mulearn_app/core/moderation/blocked_user.dart';
+import 'package:mulearn_app/core/moderation/blocked_users.dart';
+import 'package:mulearn_app/core/moderation/moderation_sheet.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/utils/clock.dart';
@@ -44,7 +47,25 @@ class ProjectDetailScreen extends ConsumerWidget {
                       tooltip: 'Project actions',
                       onPressed: () => _OwnerMenu.show(context, project),
                     )
-                  : null,
+                  : project == null
+                  ? null
+                  : MuIconButton(
+                      icon: LucideIcons.flag,
+                      tooltip: 'Report or block',
+                      onPressed: () => unawaited(
+                        showModerationSheet(
+                          context,
+                          kind: ModerationKind.project,
+                          contentId: project.id,
+                          contentTitle: project.title,
+                          author: BlockedUser(
+                            id: project.ownerId,
+                            muid: project.ownerMuid,
+                            name: project.ownerName,
+                          ),
+                        ),
+                      ),
+                    ),
             ),
             Expanded(
               child: state.when(
@@ -57,7 +78,18 @@ class ProjectDetailScreen extends ConsumerWidget {
                   onRetry: () => ref.invalidate(projectProvider(id)),
                 ),
                 data: (p) =>
-                    _Body(project: p, viewerId: viewer?.id, owns: owns),
+                    !owns &&
+                        ref
+                            .watch(blockedUsersProvider)
+                            .blocks(id: p.ownerId, muid: p.ownerMuid)
+                    ? Padding(
+                        padding: const EdgeInsets.all(MuSpacing.space5),
+                        child: MuEmptyLine(
+                          'You blocked ${p.ownerName}. Unblock them in '
+                          'Settings to see this project.',
+                        ),
+                      )
+                    : _Body(project: p, viewerId: viewer?.id, owns: owns),
               ),
             ),
           ],
@@ -101,6 +133,11 @@ class _Body extends ConsumerWidget {
     final c = mu.colors;
     final p = project;
     final busy = ref.watch(projectActionsProvider).isLoading;
+    final blocked = ref.watch(blockedUsersProvider);
+    final comments = [
+      for (final cm in p.comments)
+        if (!blocked.blocks(id: cm.authorId)) cm,
+    ];
     final upvoted = p.upvoteBy(viewerId) != null;
     final pictures = [
       ...p.images,
@@ -332,20 +369,20 @@ class _Body extends ConsumerWidget {
             ],
           ),
           MuSectionEyebrow(
-            'COMMENTS · ${p.comments.length}',
+            'COMMENTS · ${comments.length}',
             top: MuSpacing.space6,
           ),
-          if (p.comments.isEmpty)
+          if (comments.isEmpty)
             const MuEmptyLine('No comments yet. Say what you think.')
           else
             MuFeedGroup(
               children: [
-                for (final (i, cm) in p.comments.indexed)
+                for (final (i, cm) in comments.indexed)
                   _CommentRow(
                     project: p,
                     comment: cm,
                     mine: cm.authorId == viewerId,
-                    last: i == p.comments.length - 1,
+                    last: i == comments.length - 1,
                   ),
               ],
             ),
@@ -403,7 +440,25 @@ class _CommentRow extends ConsumerWidget {
                 }
               },
             )
-          : null,
+          : MuIconButton(
+              icon: LucideIcons.flag,
+              tooltip: 'Report or block',
+              variant: MuIconButtonVariant.sunk,
+              onPressed: () => unawaited(
+                showModerationSheet(
+                  context,
+                  kind: ModerationKind.comment,
+                  contentId: comment.id,
+                  contentTitle: comment.text.length > 80
+                      ? '${comment.text.substring(0, 80)}…'
+                      : comment.text,
+                  author: BlockedUser(
+                    id: comment.authorId,
+                    name: comment.authorName,
+                  ),
+                ),
+              ),
+            ),
       divider: !last,
     );
   }

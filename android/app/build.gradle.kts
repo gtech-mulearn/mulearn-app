@@ -44,7 +44,9 @@ android {
     }
 
     defaultConfig {
-        applicationId = "org.mulearn.muapp"
+        // The store id, the same as the iOS bundle id. The Kotlin namespace above
+        // is only the source package and stays org.mulearn.muapp.
+        applicationId = "org.mulearn.app"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
