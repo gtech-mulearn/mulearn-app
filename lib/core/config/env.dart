@@ -26,6 +26,18 @@ abstract class EnvDev {
   /// Empty hides Connect Discord.
   @EnviedField(varName: 'DISCORD_AUTH_URL', defaultValue: '')
   static const String discordAuthUrl = _EnvDev.discordAuthUrl;
+
+  /// Firebase client config for push notifications (Firebase console →
+  /// Project settings → the Android app `org.mulearn.muapp.dev`). Not secret.
+  /// Any empty value turns push off in this flavor; the app still runs.
+  @EnviedField(varName: 'FIREBASE_API_KEY', defaultValue: '')
+  static const String firebaseApiKey = _EnvDev.firebaseApiKey;
+  @EnviedField(varName: 'FIREBASE_APP_ID', defaultValue: '')
+  static const String firebaseAppId = _EnvDev.firebaseAppId;
+  @EnviedField(varName: 'FIREBASE_MESSAGING_SENDER_ID', defaultValue: '')
+  static const String firebaseSenderId = _EnvDev.firebaseSenderId;
+  @EnviedField(varName: 'FIREBASE_PROJECT_ID', defaultValue: '')
+  static const String firebaseProjectId = _EnvDev.firebaseProjectId;
 }
 
 @Envied(path: '.env.prod', name: 'EnvProd')
@@ -38,10 +50,23 @@ abstract class EnvProd {
   static const String googleServerClientId = _EnvProd.googleServerClientId;
 
   /// See [EnvDev.dashboardUrl]. Defaults to the production dashboard.
-  @EnviedField(varName: 'DASHBOARD_URL', defaultValue: 'https://app.mulearn.org')
+  @EnviedField(
+    varName: 'DASHBOARD_URL',
+    defaultValue: 'https://app.mulearn.org',
+  )
   static const String dashboardUrl = _EnvProd.dashboardUrl;
 
   /// See [EnvDev.discordAuthUrl]. Empty until the production value is set.
   @EnviedField(varName: 'DISCORD_AUTH_URL', defaultValue: '')
   static const String discordAuthUrl = _EnvProd.discordAuthUrl;
+
+  /// See [EnvDev.firebaseApiKey] (the Android app `org.mulearn.muapp`).
+  @EnviedField(varName: 'FIREBASE_API_KEY', defaultValue: '')
+  static const String firebaseApiKey = _EnvProd.firebaseApiKey;
+  @EnviedField(varName: 'FIREBASE_APP_ID', defaultValue: '')
+  static const String firebaseAppId = _EnvProd.firebaseAppId;
+  @EnviedField(varName: 'FIREBASE_MESSAGING_SENDER_ID', defaultValue: '')
+  static const String firebaseSenderId = _EnvProd.firebaseSenderId;
+  @EnviedField(varName: 'FIREBASE_PROJECT_ID', defaultValue: '')
+  static const String firebaseProjectId = _EnvProd.firebaseProjectId;
 }

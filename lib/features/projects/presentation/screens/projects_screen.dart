@@ -11,7 +11,7 @@ import 'package:mulearn_app/core/moderation/blocked_users.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/utils/search_debouncer.dart';
-import 'package:mulearn_app/core/widgets/mu_load_more_footer.dart';
+import 'package:mulearn_app/core/widgets/mu_paged_list.dart';
 import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/features/projects/domain/entities/project.dart';
 import 'package:mulearn_app/features/projects/presentation/providers/projects_providers.dart';
@@ -43,18 +43,6 @@ class _ProjectsScreenState extends ConsumerState<ProjectsScreen> {
     super.dispose();
   }
 
-  bool _onScroll(ScrollNotification n) {
-    if (_tab != _Tab.explore) return false;
-    final feed = ref.read(projectsFeedProvider(_query)).value;
-    if (n.metrics.extentAfter < 600 &&
-        feed != null &&
-        feed.hasMore &&
-        feed.loadMoreError == null) {
-      unawaited(ref.read(projectsFeedProvider(_query).notifier).loadMore());
-    }
-    return false;
-  }
-
   @override
   Widget build(BuildContext context) {
     final mu = context.mu;
@@ -71,81 +59,90 @@ class _ProjectsScreenState extends ConsumerState<ProjectsScreen> {
                   ref.refresh(projectsFeedProvider(_query).future),
                   ref.refresh(myProjectsProvider.future),
                 ]),
-                child: NotificationListener<ScrollNotification>(
-                  onNotification: _onScroll,
-                  child: ListView(
-                    physics: const BouncingScrollPhysics(
-                      parent: AlwaysScrollableScrollPhysics(),
-                    ),
-                    keyboardDismissBehavior:
-                        ScrollViewKeyboardDismissBehavior.onDrag,
-                    padding: const EdgeInsets.fromLTRB(
-                      MuSpacing.space5,
-                      MuSpacing.space2,
-                      MuSpacing.space5,
-                      MuSpacing.space8,
-                    ),
-                    children: [
-                      if (Navigator.of(context).canPop()) ...[
-                        Align(
-                          alignment: AlignmentDirectional.centerStart,
-                          child: MuIconButton(
-                            icon: LucideIcons.arrowLeft,
-                            tooltip: 'Back',
-                            onPressed: () => context.pop(),
-                          ),
-                        ),
-                        const SizedBox(height: MuSpacing.space3),
-                      ],
-                      Semantics(
-                        header: true,
-                        child: Text.rich(
-                          TextSpan(
+                child: CustomScrollView(
+                  physics: const BouncingScrollPhysics(
+                    parent: AlwaysScrollableScrollPhysics(),
+                  ),
+                  keyboardDismissBehavior:
+                      ScrollViewKeyboardDismissBehavior.onDrag,
+                  slivers: [
+                    SliverPadding(
+                      padding: const EdgeInsets.fromLTRB(
+                        MuSpacing.space5,
+                        MuSpacing.space2,
+                        MuSpacing.space5,
+                        MuSpacing.space8,
+                      ),
+                      sliver: SliverMainAxisGroup(
+                        slivers: [
+                          SliverList.list(
                             children: [
-                              TextSpan(
-                                text: 'Built by\n',
-                                style: mu.text.displayLight.copyWith(
-                                  fontSize: 36,
+                              if (Navigator.of(context).canPop()) ...[
+                                Align(
+                                  alignment: AlignmentDirectional.centerStart,
+                                  child: MuIconButton(
+                                    icon: LucideIcons.arrowLeft,
+                                    tooltip: 'Back',
+                                    onPressed: () => context.pop(),
+                                  ),
+                                ),
+                                const SizedBox(height: MuSpacing.space3),
+                              ],
+                              Semantics(
+                                header: true,
+                                child: Text.rich(
+                                  TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: 'Built by\n',
+                                        style: mu.text.displayLight.copyWith(
+                                          fontSize: 36,
+                                        ),
+                                      ),
+                                      TextSpan(
+                                        text: 'learners',
+                                        style: mu.text.display.copyWith(
+                                          fontSize: 36,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
-                              TextSpan(
-                                text: 'learners',
-                                style: mu.text.display.copyWith(fontSize: 36),
+                              const SizedBox(height: MuSpacing.space2),
+                              Text(
+                                'Projects μLearners made. Upvote what you like, say what you think, and show yours.',
+                                style: mu.text.body.copyWith(color: c.ink2),
                               ),
+                              const SizedBox(height: MuSpacing.space5),
+                              MuSegmented<_Tab>(
+                                values: _Tab.values,
+                                selected: _tab,
+                                label: (t) => t == _Tab.explore
+                                    ? 'Explore'
+                                    : ((mine.value?.isEmpty ?? true)
+                                          ? 'Yours'
+                                          : 'Yours · ${mine.value!.length}'),
+                                onChanged: (t) => setState(() => _tab = t),
+                              ),
+                              const SizedBox(height: MuSpacing.space4),
+                              if (_tab == _Tab.explore) ...[
+                                MuSearchField(
+                                  controller: _search,
+                                  hint: 'Search projects',
+                                  onChanged: _debouncer.onChanged,
+                                  onSubmitted: _debouncer.submit,
+                                ),
+                                const SizedBox(height: MuSpacing.space4),
+                              ] else
+                                ..._yours(mine),
                             ],
                           ),
-                        ),
+                          if (_tab == _Tab.explore) _explore(),
+                        ],
                       ),
-                      const SizedBox(height: MuSpacing.space2),
-                      Text(
-                        'Projects μLearners made. Upvote what you like, say what you think, and show yours.',
-                        style: mu.text.body.copyWith(color: c.ink2),
-                      ),
-                      const SizedBox(height: MuSpacing.space5),
-                      MuSegmented<_Tab>(
-                        values: _Tab.values,
-                        selected: _tab,
-                        label: (t) => t == _Tab.explore
-                            ? 'Explore'
-                            : ((mine.value?.isEmpty ?? true)
-                                  ? 'Yours'
-                                  : 'Yours · ${mine.value!.length}'),
-                        onChanged: (t) => setState(() => _tab = t),
-                      ),
-                      const SizedBox(height: MuSpacing.space4),
-                      if (_tab == _Tab.explore) ...[
-                        MuSearchField(
-                          controller: _search,
-                          hint: 'Search projects',
-                          onChanged: _debouncer.onChanged,
-                          onSubmitted: _debouncer.submit,
-                        ),
-                        const SizedBox(height: MuSpacing.space4),
-                        ..._explore(),
-                      ] else
-                        ..._yours(mine),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -175,43 +172,46 @@ class _ProjectsScreenState extends ConsumerState<ProjectsScreen> {
     );
   }
 
-  List<Widget> _explore() {
+  /// The feed as a sliver, built card by card as it scrolls in. Projects by
+  /// people this member blocked are left out.
+  Widget _explore() {
     final blocked = ref.watch(blockedUsersProvider);
-    List<Project> visible(List<Project> items) => [
-      for (final p in items)
-        if (!blocked.blocks(id: p.ownerId, muid: p.ownerMuid)) p,
-    ];
     return ref
         .watch(projectsFeedProvider(_query))
         .when(
           skipError: true,
-          loading: () => const [_Loading()],
-          error: (e, _) => [
-            _Problem(
+          loading: () => const SliverToBoxAdapter(child: _Loading()),
+          error: (e, _) => SliverToBoxAdapter(
+            child: _Problem(
               error: e,
               onRetry: () => ref.invalidate(projectsFeedProvider(_query)),
             ),
-          ],
-          data: (paged) => [
-            if (visible(paged.items).isEmpty)
-              MuEmptyLine(
-                _query.isEmpty
-                    ? 'No projects yet. Yours could be the first.'
-                    : 'No project matches "$_query".',
-              )
-            else
-              for (final p in visible(paged.items)) ...[
-                ProjectCard(project: p),
-                const SizedBox(height: MuSpacing.space4),
+          ),
+          data: (paged) {
+            final shown = paged.copyWith(
+              items: [
+                for (final p in paged.items)
+                  if (!blocked.blocks(id: p.ownerId, muid: p.ownerMuid)) p,
               ],
-            if (paged.hasMore || paged.loadMoreError != null)
-              MuLoadMoreFooter(
-                isLoading: paged.isLoadingMore,
-                error: paged.loadMoreError,
-                onRetry: () =>
-                    ref.read(projectsFeedProvider(_query).notifier).loadMore(),
-              ),
-          ],
+            );
+            return shown.items.isEmpty && !paged.hasMore
+                ? SliverToBoxAdapter(
+                    child: MuEmptyLine(
+                      _query.isEmpty
+                          ? 'No projects yet. Yours could be the first.'
+                          : 'No project matches "$_query".',
+                    ),
+                  )
+                : MuPagedSliverList<Project>(
+                    state: shown,
+                    gap: MuSpacing.space4,
+                    onLoadMore: () => ref
+                        .read(projectsFeedProvider(_query).notifier)
+                        .loadMore(),
+                    itemBuilder: (_, project, _) =>
+                        ProjectCard(project: project),
+                  );
+          },
         );
   }
 

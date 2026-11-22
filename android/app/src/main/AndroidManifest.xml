@@ -6,6 +6,9 @@
     <!-- HapticFeedback (nav taps, error/success toasts, splash) silently
          no-ops on real Android devices without this — confirmed live. -->
     <uses-permission android:name="android.permission.VIBRATE" />
+    <!-- Push notifications (Android 13+ asks the user; the app asks from the
+         "Turn on notifications" tile, never on first launch). -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <application
         android:label="@string/app_name"
         android:name="${applicationName}"
@@ -44,6 +47,15 @@
                     android:pathPrefix="/dashboard/connect-discord"/>
             </intent-filter>
         </activity>
+        <!-- Pushes that arrive while the app is in the background are shown by
+             FCM itself: on this channel (created by the app at startup) with
+             the monochrome mark as the status-bar icon. -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="mulearn_default" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_launcher_monochrome" />
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

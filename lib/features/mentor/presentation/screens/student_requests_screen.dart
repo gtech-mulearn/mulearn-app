@@ -11,7 +11,7 @@ import 'package:mulearn_app/core/utils/clock.dart';
 import 'package:mulearn_app/core/utils/date_format.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/core/widgets/mu_card.dart';
-import 'package:mulearn_app/core/widgets/mu_load_more_footer.dart';
+import 'package:mulearn_app/core/widgets/mu_paged_list.dart';
 import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/core/widgets/mu_state_display.dart';
 import 'package:mulearn_app/features/mentor/domain/entities/student_request.dart';
@@ -59,39 +59,19 @@ class StudentRequestsScreen extends ConsumerWidget {
                     ),
                   ],
                 )
-              : NotificationListener<ScrollNotification>(
-                  onNotification: (n) {
-                    if (n.metrics.extentAfter < 400 &&
-                        paged.hasMore &&
-                        paged.loadMoreError == null) {
-                      unawaited(
-                        ref
-                            .read(studentRequestsControllerProvider.notifier)
-                            .loadMore(),
-                      );
-                    }
-                    return false;
-                  },
-                  child: ListView(
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    padding: const EdgeInsets.fromLTRB(
-                      MuSpace.screenH,
-                      MuSpace.m,
-                      MuSpace.screenH,
-                      MuSpace.xxl,
-                    ),
-                    children: [
-                      for (final r in paged.items) _RequestCard(request: r),
-                      if (paged.hasMore || paged.loadMoreError != null)
-                        MuLoadMoreFooter(
-                          isLoading: paged.isLoadingMore,
-                          error: paged.loadMoreError,
-                          onRetry: () => ref
-                              .read(studentRequestsControllerProvider.notifier)
-                              .loadMore(),
-                        ),
-                    ],
+              : MuPagedListView<StudentSessionRequest>(
+                  state: paged,
+                  gap: 0,
+                  padding: const EdgeInsets.fromLTRB(
+                    MuSpace.screenH,
+                    MuSpace.m,
+                    MuSpace.screenH,
+                    MuSpace.xxl,
                   ),
+                  onLoadMore: () => ref
+                      .read(studentRequestsControllerProvider.notifier)
+                      .loadMore(),
+                  itemBuilder: (_, r, _) => _RequestCard(request: r),
                 ),
         ),
       ),

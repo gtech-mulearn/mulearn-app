@@ -18,6 +18,14 @@ final class _EnvDev {
 
   static const String discordAuthUrl =
       'https://discord.com/oauth2/authorize?client_id=785516660160593940&response_type=code&redirect_uri=https%3A%2F%2Fmulearn-dev.vercel.app%2Fdashboard%2Fconnect-discord&scope=identify+guilds+guilds.join';
+
+  static const String firebaseApiKey = '';
+
+  static const String firebaseAppId = '';
+
+  static const String firebaseSenderId = '';
+
+  static const String firebaseProjectId = '';
 }
 
 // coverage:ignore-file
@@ -31,4 +39,12 @@ final class _EnvProd {
   static const String dashboardUrl = 'https://app.mulearn.org';
 
   static const String discordAuthUrl = '';
+
+  static const String firebaseApiKey = '';
+
+  static const String firebaseAppId = '';
+
+  static const String firebaseSenderId = '';
+
+  static const String firebaseProjectId = '';
 }

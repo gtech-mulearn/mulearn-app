@@ -19,6 +19,7 @@ on:
       - dev
       - staging
       - master
+      - leaderboard # generated SVGs only (leaderboard.yml); no app to check
 
 # Only the newest commit of a PR / branch matters.
 concurrency:

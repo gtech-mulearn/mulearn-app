@@ -8,7 +8,7 @@ import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/utils/date_format.dart';
-import 'package:mulearn_app/core/widgets/mu_load_more_footer.dart';
+import 'package:mulearn_app/core/widgets/mu_paged_list.dart';
 import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/features/weekly_twitches/domain/entities/twitch.dart';
 import 'package:mulearn_app/features/weekly_twitches/presentation/providers/weekly_twitches_providers.dart';
@@ -33,17 +33,6 @@ class WeeklyTwitchesScreen extends ConsumerStatefulWidget {
 class _WeeklyTwitchesScreenState extends ConsumerState<WeeklyTwitchesScreen> {
   late TwitchShow _show = widget.initial;
 
-  bool _onScroll(ScrollNotification n) {
-    final past = ref.read(twitchesPastProvider(_show)).value;
-    if (n.metrics.extentAfter < 400 &&
-        past != null &&
-        past.hasMore &&
-        past.loadMoreError == null) {
-      unawaited(ref.read(twitchesPastProvider(_show).notifier).loadMore());
-    }
-    return false;
-  }
-
   @override
   Widget build(BuildContext context) {
     final mu = context.mu;
@@ -60,118 +49,137 @@ class _WeeklyTwitchesScreenState extends ConsumerState<WeeklyTwitchesScreen> {
             ref.refresh(twitchesComingUpProvider(_show).future),
             ref.refresh(twitchesPastProvider(_show).future),
           ]),
-          child: NotificationListener<ScrollNotification>(
-            onNotification: _onScroll,
-            child: ListView(
-              physics: const BouncingScrollPhysics(
-                parent: AlwaysScrollableScrollPhysics(),
-              ),
-              padding: const EdgeInsets.fromLTRB(
-                MuSpacing.space5,
-                MuSpacing.space2,
-                MuSpacing.space5,
-                MuSpacing.space8,
-              ),
-              children: [
-                if (Navigator.of(context).canPop()) ...[
-                  Align(
-                    alignment: AlignmentDirectional.centerStart,
-                    child: MuIconButton(
-                      icon: LucideIcons.arrowLeft,
-                      tooltip: 'Back',
-                      onPressed: () => context.pop(),
-                    ),
-                  ),
-                  const SizedBox(height: MuSpacing.space3),
-                ],
-                Semantics(
-                  header: true,
-                  child: Text.rich(
-                    TextSpan(
-                      children: [
-                        TextSpan(
-                          text: 'Weekly\n',
-                          style: mu.text.displayLight.copyWith(fontSize: 36),
-                        ),
-                        TextSpan(
-                          text: 'Twitches',
-                          style: mu.text.display.copyWith(fontSize: 36),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: MuSpacing.space2),
-                Text(
-                  'Four shows every week: talks, campus stories and skill sessions. Open to everyone.',
-                  style: mu.text.body.copyWith(color: c.ink2),
-                ),
-                const SizedBox(height: MuSpacing.space4),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  clipBehavior: Clip.none,
-                  child: Row(
-                    children: [
-                      for (final s in TwitchShow.values) ...[
-                        MuFilterChip(
-                          label: s.label,
-                          selected: s == _show,
-                          onTap: () => setState(() => _show = s),
-                        ),
-                        const SizedBox(width: MuSpacing.space2),
-                      ],
-                    ],
-                  ),
-                ),
-                const SizedBox(height: MuSpacing.space2),
-                Text(_show.blurb, style: mu.text.caption),
-                const MuSectionEyebrow('COMING UP', top: MuSpacing.space5),
-                ...comingUp.when(
-                  skipError: true,
-                  loading: () => [const _Loading()],
-                  error: (e, _) => [
-                    _Problem(
-                      error: e,
-                      onRetry: () =>
-                          ref.invalidate(twitchesComingUpProvider(_show)),
-                    ),
-                  ],
-                  data: (items) => items.isEmpty
-                      ? [
-                          MuEmptyLine(
-                            'Nothing announced yet. New ${_show.label} episodes show up here.',
-                          ),
-                        ]
-                      : [_Episodes(items)],
-                ),
-                const MuSectionEyebrow('PAST EPISODES', top: MuSpacing.space6),
-                ...past.when(
-                  skipError: true,
-                  loading: () => [const _Loading()],
-                  error: (e, _) => [
-                    _Problem(
-                      error: e,
-                      onRetry: () =>
-                          ref.invalidate(twitchesPastProvider(_show)),
-                    ),
-                  ],
-                  data: (paged) => [
-                    if (paged.items.isEmpty)
-                      const MuEmptyLine('No past episodes yet.')
-                    else
-                      _Episodes(paged.items),
-                    if (paged.hasMore || paged.loadMoreError != null)
-                      MuLoadMoreFooter(
-                        isLoading: paged.isLoadingMore,
-                        error: paged.loadMoreError,
-                        onRetry: () => ref
-                            .read(twitchesPastProvider(_show).notifier)
-                            .loadMore(),
-                      ),
-                  ],
-                ),
-              ],
+          child: CustomScrollView(
+            physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics(),
             ),
+            slivers: [
+              SliverPadding(
+                padding: const EdgeInsets.fromLTRB(
+                  MuSpacing.space5,
+                  MuSpacing.space2,
+                  MuSpacing.space5,
+                  MuSpacing.space8,
+                ),
+                sliver: SliverMainAxisGroup(
+                  slivers: [
+                    SliverList.list(
+                      children: [
+                        if (Navigator.of(context).canPop()) ...[
+                          Align(
+                            alignment: AlignmentDirectional.centerStart,
+                            child: MuIconButton(
+                              icon: LucideIcons.arrowLeft,
+                              tooltip: 'Back',
+                              onPressed: () => context.pop(),
+                            ),
+                          ),
+                          const SizedBox(height: MuSpacing.space3),
+                        ],
+                        Semantics(
+                          header: true,
+                          child: Text.rich(
+                            TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: 'Weekly\n',
+                                  style: mu.text.displayLight.copyWith(
+                                    fontSize: 36,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: 'Twitches',
+                                  style: mu.text.display.copyWith(fontSize: 36),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: MuSpacing.space2),
+                        Text(
+                          'Four shows every week: talks, campus stories and skill sessions. Open to everyone.',
+                          style: mu.text.body.copyWith(color: c.ink2),
+                        ),
+                        const SizedBox(height: MuSpacing.space4),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          clipBehavior: Clip.none,
+                          child: Row(
+                            children: [
+                              for (final s in TwitchShow.values) ...[
+                                MuFilterChip(
+                                  label: s.label,
+                                  selected: s == _show,
+                                  onTap: () => setState(() => _show = s),
+                                ),
+                                const SizedBox(width: MuSpacing.space2),
+                              ],
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: MuSpacing.space2),
+                        Text(_show.blurb, style: mu.text.caption),
+                        const MuSectionEyebrow(
+                          'COMING UP',
+                          top: MuSpacing.space5,
+                        ),
+                        ...comingUp.when(
+                          skipError: true,
+                          loading: () => [const _Loading()],
+                          error: (e, _) => [
+                            _Problem(
+                              error: e,
+                              onRetry: () => ref.invalidate(
+                                twitchesComingUpProvider(_show),
+                              ),
+                            ),
+                          ],
+                          data: (items) => items.isEmpty
+                              ? [
+                                  MuEmptyLine(
+                                    'Nothing announced yet. New ${_show.label} episodes show up here.',
+                                  ),
+                                ]
+                              : [_Episodes(items)],
+                        ),
+                        const MuSectionEyebrow(
+                          'PAST EPISODES',
+                          top: MuSpacing.space6,
+                        ),
+                      ],
+                    ),
+                    // Years of episodes: built row by row as they scroll in.
+                    past.when(
+                      skipError: true,
+                      loading: () =>
+                          const SliverToBoxAdapter(child: _Loading()),
+                      error: (e, _) => SliverToBoxAdapter(
+                        child: _Problem(
+                          error: e,
+                          onRetry: () =>
+                              ref.invalidate(twitchesPastProvider(_show)),
+                        ),
+                      ),
+                      data: (paged) => paged.items.isEmpty && !paged.hasMore
+                          ? const SliverToBoxAdapter(
+                              child: MuEmptyLine('No past episodes yet.'),
+                            )
+                          : MuPagedSliverList<TwitchEpisode>(
+                              state: paged,
+                              grouped: true,
+                              onLoadMore: () => ref
+                                  .read(twitchesPastProvider(_show).notifier)
+                                  .loadMore(),
+                              itemBuilder: (_, episode, i) => EpisodeRow(
+                                episode: episode,
+                                last: i == paged.items.length - 1,
+                              ),
+                            ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),

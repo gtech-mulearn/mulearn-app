@@ -411,22 +411,34 @@ class _Badges extends StatelessWidget {
   }
 }
 
-/// Every karma change, newest first, as people say the time.
-class _Ledger extends StatelessWidget {
+/// Every karma change, newest first, as people say the time. A long-time
+/// learner has thousands, all in one response (the endpoint isn't paged):
+/// only the newest [_page] are built, and "Show more" adds the next ones.
+class _Ledger extends StatefulWidget {
   const _Ledger({required this.entries});
 
   final List<UserLogEntry> entries;
+
+  @override
+  State<_Ledger> createState() => _LedgerState();
+}
+
+class _LedgerState extends State<_Ledger> {
+  static const _page = 30;
+  int _shown = _page;
 
   @override
   Widget build(BuildContext context) {
     final mu = context.mu;
     final c = mu.colors;
     final now = DateTime.now();
-    final sorted = [...entries]
+    final sorted = [...widget.entries]
       ..sort((a, b) => b.createdDate.compareTo(a.createdDate));
+    final count = sorted.length < _shown ? sorted.length : _shown;
+    final left = sorted.length - count;
     return Column(
       children: [
-        for (var i = 0; i < sorted.length; i++) ...[
+        for (var i = 0; i < count; i++) ...[
           if (i > 0) Divider(color: c.line, height: 1),
           Builder(
             builder: (context) {
@@ -490,6 +502,18 @@ class _Ledger extends StatelessWidget {
                 ),
               );
             },
+          ),
+        ],
+        if (left > 0) ...[
+          Divider(color: c.line, height: 1),
+          const SizedBox(height: MuSpacing.space2),
+          MuButton(
+            label:
+                'Show ${left < _page ? left : _page} more of '
+                '${muGrouped(left)}',
+            variant: MuButtonVariant.ghost,
+            size: MuButtonSize.small,
+            onPressed: () => setState(() => _shown += _page),
           ),
         ],
       ],

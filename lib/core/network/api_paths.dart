@@ -570,3 +570,21 @@ abstract final class RequestFlags {
   /// so a second 401 doesn't loop.
   static const String retried = 'x-retried';
 }
+
+/// Push notifications (backend `/api/v1/push/`, docs/push-notifications.md in
+/// mulearnbackend).
+abstract final class PushPaths {
+  const PushPaths._();
+
+  static const String _base = '/api/v1/push';
+
+  /// `POST {token, platform, app_version, timezone}` register or refresh;
+  /// `DELETE {token}` unregister (sign-out).
+  static const String devices = '$_base/devices/';
+
+  /// `POST {dedupe_key}` a push was opened.
+  static const String opened = '$_base/opened/';
+
+  /// `GET` / `PATCH` the user's push settings.
+  static const String preferences = '$_base/preferences/';
+}

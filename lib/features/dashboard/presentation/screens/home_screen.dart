@@ -6,10 +6,12 @@ import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/leaderboard/leaderboard_providers.dart';
+import 'package:mulearn_app/core/notifications/push/push_controller.dart';
 import 'package:mulearn_app/core/notifications/unread_notifications.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/router/tab_navigation.dart';
 import 'package:mulearn_app/core/session/discord_connect.dart';
+import 'package:mulearn_app/core/session/mentor_application.dart';
 import 'package:mulearn_app/core/session/session_providers.dart';
 import 'package:mulearn_app/core/utils/date_format.dart';
 import 'package:mulearn_app/core/utils/level_label.dart';
@@ -266,6 +268,33 @@ class _UpNext extends ConsumerWidget {
     final canBrowseJobs = caps?.canBrowseJobs ?? false;
     final summary = ref.watch(myProgressSummaryControllerProvider).value;
     final needsGroups = summary != null && summary.interestGroupCount == 0;
+    // A Mentor without an approved application: where they stand, and the
+    // way to their applications (like Connect Discord, until it's done).
+    final mentorStanding = (caps?.isMentor ?? false)
+        ? ref
+              .watch(mentorApplicationsProvider)
+              .whenData(MentorStanding.of)
+              .value
+        : null;
+    final mentorTile = switch (mentorStanding) {
+      MentorStanding.none => (
+        'Apply to mentor',
+        'Tell us how you’ll guide learners',
+      ),
+      MentorStanding.pending => (
+        'Mentor application in review',
+        'See where it stands or edit it',
+      ),
+      MentorStanding.rejected => (
+        'Mentor application not approved',
+        'See why, then apply again',
+      ),
+      MentorStanding.revoked => (
+        'Mentor access revoked',
+        'See your applications',
+      ),
+      MentorStanding.approved || null => null,
+    };
 
     final tiles = <MuTile>[
       if (meeting != null)
@@ -334,6 +363,14 @@ class _UpNext extends ConsumerWidget {
         ),
     ];
     final setup = <MuTile>[
+      if (mentorTile != null)
+        MuTile(
+          title: mentorTile.$1,
+          category: IgCategory.coder,
+          size: MuTileSize.short,
+          meta: mentorTile.$2,
+          onTap: () => context.push(RoutePaths.mentorApplications),
+        ),
       if (needsDiscord)
         MuTile(
           title: 'Connect Discord',
@@ -342,6 +379,15 @@ class _UpNext extends ConsumerWidget {
           meta: 'Post your task proof there to earn karma',
           onTap: () =>
               unawaited(ref.read(discordConnectFlowProvider.notifier).start()),
+        ),
+      // Push: asked only when the learner chooses to, never on launch.
+      if (ref.watch(pushControllerProvider).value == PushStatus.notDetermined)
+        MuTile(
+          title: 'Turn on notifications',
+          category: IgCategory.coder,
+          size: MuTileSize.short,
+          meta: 'Circle meetings, karma and replies, as they happen',
+          onTap: () => unawaited(_turnOnNotifications(context, ref)),
         ),
       if (needsGroups)
         MuTile(
@@ -513,4 +559,19 @@ class _Ticket extends StatelessWidget {
       onTap: open,
     );
   }
+}
+
+/// Shows the system prompt and says what happened.
+Future<void> _turnOnNotifications(BuildContext context, WidgetRef ref) async {
+  final status = await ref
+      .read(pushControllerProvider.notifier)
+      .requestPermission();
+  if (!context.mounted) return;
+  MuToast.show(
+    context,
+    message: status == PushStatus.granted
+        ? 'Notifications are on'
+        : 'Notifications stay off. You can turn them on in phone settings.',
+    type: status == PushStatus.granted ? MuToastType.success : MuToastType.info,
+  );
 }

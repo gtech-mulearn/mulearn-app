@@ -93,11 +93,15 @@ String _with(String path, String? from) =>
 /// (`/splash?from=`), and through sign-in when signed out
 /// (`/sign-in?from=`); it is resumed once signed in. Signed out with no
 /// target, the first launch shows the arrival beats ([arrivalSeen] false)
-/// and later launches open sign-in.
+/// and later launches open sign-in. Signed in without a pathway
+/// ([needsInterests]), every screen leads to the interests step, like the
+/// dashboard's onboarding guard: someone who left signup before it, or who
+/// registered elsewhere, finishes it first.
 String? appRedirect({
   required AsyncValue<bool> auth,
   required Uri uri,
   AsyncValue<bool> arrivalSeen = const AsyncData(true),
+  bool needsInterests = false,
 }) {
   final path = _normalise(uri.path);
   final from = _resumable(uri.queryParameters['from']);
@@ -118,6 +122,11 @@ String? appRedirect({
     final target = path == RoutePaths.splash ? from : here;
     if (target == null && arrivalSeen.value == false) return RoutePaths.welcome;
     return _with(RoutePaths.signIn, target);
+  }
+  if (needsInterests &&
+      path != RoutePaths.onboardingInterests &&
+      path != RoutePaths.registerDetails) {
+    return RoutePaths.onboardingInterests;
   }
   if ((path == RoutePaths.splash || path == RoutePaths.signIn) &&
       from != null) {

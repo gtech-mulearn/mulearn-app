@@ -28,6 +28,10 @@ abstract class UserProfile with _$UserProfile {
     String? coverPicUrl,
     String? collegeCode,
     String? collegeId,
+
+    /// The company a mentor works at (null until the backend sends it).
+    String? companyId,
+    String? companyName,
     String? orgDistrictId,
     int? rank,
     double? percentile,

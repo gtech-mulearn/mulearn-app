@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$UserProfileDto {
 
- String get id; String get fullName; String get muid; String get joined; String? get gender; String? get level; String? get profilePic; String? get coverPic; String? get collegeCode; String? get collegeId; String? get orgDistrictId; bool? get isPublic; num? get karma; num? get rank; num? get percentile; List<String> get roles; List<RoleVerificationDto> get roleVerification; bool? get leadEnablerVerified; List<InterestGroupDto> get interestGroups; List<KarmaDistributionEntryDto> get karmaDistribution;
+ String get id; String get fullName; String get muid; String get joined; String? get gender; String? get level; String? get profilePic; String? get coverPic; String? get collegeCode; String? get collegeId; String? get companyId; String? get companyName; String? get orgDistrictId; bool? get isPublic; num? get karma; num? get rank; num? get percentile; List<String> get roles; List<RoleVerificationDto> get roleVerification; bool? get leadEnablerVerified; List<InterestGroupDto> get interestGroups; List<KarmaDistributionEntryDto> get karmaDistribution;
 /// Create a copy of UserProfileDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,20 +30,20 @@ $UserProfileDtoCopyWith<UserProfileDto> get copyWith => _$UserProfileDtoCopyWith
 @override
 bool operator ==(Object other) {
   final _this = this as UserProfileDto;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserProfileDto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.fullName, _this.fullName) || other.fullName == _this.fullName)&&(identical(other.muid, _this.muid) || other.muid == _this.muid)&&(identical(other.joined, _this.joined) || other.joined == _this.joined)&&(identical(other.gender, _this.gender) || other.gender == _this.gender)&&(identical(other.level, _this.level) || other.level == _this.level)&&(identical(other.profilePic, _this.profilePic) || other.profilePic == _this.profilePic)&&(identical(other.coverPic, _this.coverPic) || other.coverPic == _this.coverPic)&&(identical(other.collegeCode, _this.collegeCode) || other.collegeCode == _this.collegeCode)&&(identical(other.collegeId, _this.collegeId) || other.collegeId == _this.collegeId)&&(identical(other.orgDistrictId, _this.orgDistrictId) || other.orgDistrictId == _this.orgDistrictId)&&(identical(other.isPublic, _this.isPublic) || other.isPublic == _this.isPublic)&&(identical(other.karma, _this.karma) || other.karma == _this.karma)&&(identical(other.rank, _this.rank) || other.rank == _this.rank)&&(identical(other.percentile, _this.percentile) || other.percentile == _this.percentile)&&const DeepCollectionEquality().equals(other.roles, _this.roles)&&const DeepCollectionEquality().equals(other.roleVerification, _this.roleVerification)&&(identical(other.leadEnablerVerified, _this.leadEnablerVerified) || other.leadEnablerVerified == _this.leadEnablerVerified)&&const DeepCollectionEquality().equals(other.interestGroups, _this.interestGroups)&&const DeepCollectionEquality().equals(other.karmaDistribution, _this.karmaDistribution));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserProfileDto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.fullName, _this.fullName) || other.fullName == _this.fullName)&&(identical(other.muid, _this.muid) || other.muid == _this.muid)&&(identical(other.joined, _this.joined) || other.joined == _this.joined)&&(identical(other.gender, _this.gender) || other.gender == _this.gender)&&(identical(other.level, _this.level) || other.level == _this.level)&&(identical(other.profilePic, _this.profilePic) || other.profilePic == _this.profilePic)&&(identical(other.coverPic, _this.coverPic) || other.coverPic == _this.coverPic)&&(identical(other.collegeCode, _this.collegeCode) || other.collegeCode == _this.collegeCode)&&(identical(other.collegeId, _this.collegeId) || other.collegeId == _this.collegeId)&&(identical(other.companyId, _this.companyId) || other.companyId == _this.companyId)&&(identical(other.companyName, _this.companyName) || other.companyName == _this.companyName)&&(identical(other.orgDistrictId, _this.orgDistrictId) || other.orgDistrictId == _this.orgDistrictId)&&(identical(other.isPublic, _this.isPublic) || other.isPublic == _this.isPublic)&&(identical(other.karma, _this.karma) || other.karma == _this.karma)&&(identical(other.rank, _this.rank) || other.rank == _this.rank)&&(identical(other.percentile, _this.percentile) || other.percentile == _this.percentile)&&const DeepCollectionEquality().equals(other.roles, _this.roles)&&const DeepCollectionEquality().equals(other.roleVerification, _this.roleVerification)&&(identical(other.leadEnablerVerified, _this.leadEnablerVerified) || other.leadEnablerVerified == _this.leadEnablerVerified)&&const DeepCollectionEquality().equals(other.interestGroups, _this.interestGroups)&&const DeepCollectionEquality().equals(other.karmaDistribution, _this.karmaDistribution));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as UserProfileDto;
-  return Object.hashAll([runtimeType,_this.id,_this.fullName,_this.muid,_this.joined,_this.gender,_this.level,_this.profilePic,_this.coverPic,_this.collegeCode,_this.collegeId,_this.orgDistrictId,_this.isPublic,_this.karma,_this.rank,_this.percentile,const DeepCollectionEquality().hash(_this.roles),const DeepCollectionEquality().hash(_this.roleVerification),_this.leadEnablerVerified,const DeepCollectionEquality().hash(_this.interestGroups),const DeepCollectionEquality().hash(_this.karmaDistribution)]);
+  return Object.hashAll([runtimeType,_this.id,_this.fullName,_this.muid,_this.joined,_this.gender,_this.level,_this.profilePic,_this.coverPic,_this.collegeCode,_this.collegeId,_this.companyId,_this.companyName,_this.orgDistrictId,_this.isPublic,_this.karma,_this.rank,_this.percentile,const DeepCollectionEquality().hash(_this.roles),const DeepCollectionEquality().hash(_this.roleVerification),_this.leadEnablerVerified,const DeepCollectionEquality().hash(_this.interestGroups),const DeepCollectionEquality().hash(_this.karmaDistribution)]);
 }
 
 @override
 String toString() {
   final _this = this as UserProfileDto;
-  return 'UserProfileDto(id: ${_this.id}, fullName: ${_this.fullName}, muid: ${_this.muid}, joined: ${_this.joined}, gender: ${_this.gender}, level: ${_this.level}, profilePic: ${_this.profilePic}, coverPic: ${_this.coverPic}, collegeCode: ${_this.collegeCode}, collegeId: ${_this.collegeId}, orgDistrictId: ${_this.orgDistrictId}, isPublic: ${_this.isPublic}, karma: ${_this.karma}, rank: ${_this.rank}, percentile: ${_this.percentile}, roles: ${_this.roles}, roleVerification: ${_this.roleVerification}, leadEnablerVerified: ${_this.leadEnablerVerified}, interestGroups: ${_this.interestGroups}, karmaDistribution: ${_this.karmaDistribution})';
+  return 'UserProfileDto(id: ${_this.id}, fullName: ${_this.fullName}, muid: ${_this.muid}, joined: ${_this.joined}, gender: ${_this.gender}, level: ${_this.level}, profilePic: ${_this.profilePic}, coverPic: ${_this.coverPic}, collegeCode: ${_this.collegeCode}, collegeId: ${_this.collegeId}, companyId: ${_this.companyId}, companyName: ${_this.companyName}, orgDistrictId: ${_this.orgDistrictId}, isPublic: ${_this.isPublic}, karma: ${_this.karma}, rank: ${_this.rank}, percentile: ${_this.percentile}, roles: ${_this.roles}, roleVerification: ${_this.roleVerification}, leadEnablerVerified: ${_this.leadEnablerVerified}, interestGroups: ${_this.interestGroups}, karmaDistribution: ${_this.karmaDistribution})';
 }
 
 
@@ -54,7 +54,7 @@ abstract mixin class $UserProfileDtoCopyWith<$Res>  {
   factory $UserProfileDtoCopyWith(UserProfileDto value, $Res Function(UserProfileDto) _then) = _$UserProfileDtoCopyWithImpl;
 @useResult
 $Res call({
- String id, String fullName, String muid, String joined, String? gender, String? level, String? profilePic, String? coverPic, String? collegeCode, String? collegeId, String? orgDistrictId, bool? isPublic, num? karma, num? rank, num? percentile, List<String> roles, List<RoleVerificationDto> roleVerification, bool? leadEnablerVerified, List<InterestGroupDto> interestGroups, List<KarmaDistributionEntryDto> karmaDistribution
+ String id, String fullName, String muid, String joined, String? gender, String? level, String? profilePic, String? coverPic, String? collegeCode, String? collegeId, String? companyId, String? companyName, String? orgDistrictId, bool? isPublic, num? karma, num? rank, num? percentile, List<String> roles, List<RoleVerificationDto> roleVerification, bool? leadEnablerVerified, List<InterestGroupDto> interestGroups, List<KarmaDistributionEntryDto> karmaDistribution
 });
 
 
@@ -71,7 +71,7 @@ class _$UserProfileDtoCopyWithImpl<$Res>
 
 /// Create a copy of UserProfileDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? fullName = null,Object? muid = null,Object? joined = null,Object? gender = freezed,Object? level = freezed,Object? profilePic = freezed,Object? coverPic = freezed,Object? collegeCode = freezed,Object? collegeId = freezed,Object? orgDistrictId = freezed,Object? isPublic = freezed,Object? karma = freezed,Object? rank = freezed,Object? percentile = freezed,Object? roles = null,Object? roleVerification = null,Object? leadEnablerVerified = freezed,Object? interestGroups = null,Object? karmaDistribution = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? fullName = null,Object? muid = null,Object? joined = null,Object? gender = freezed,Object? level = freezed,Object? profilePic = freezed,Object? coverPic = freezed,Object? collegeCode = freezed,Object? collegeId = freezed,Object? companyId = freezed,Object? companyName = freezed,Object? orgDistrictId = freezed,Object? isPublic = freezed,Object? karma = freezed,Object? rank = freezed,Object? percentile = freezed,Object? roles = null,Object? roleVerification = null,Object? leadEnablerVerified = freezed,Object? interestGroups = null,Object? karmaDistribution = null,}) {
   return _then(UserProfileDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,fullName: null == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
@@ -83,6 +83,8 @@ as String?,profilePic: freezed == profilePic ? _self.profilePic : profilePic // 
 as String?,coverPic: freezed == coverPic ? _self.coverPic : coverPic // ignore: cast_nullable_to_non_nullable
 as String?,collegeCode: freezed == collegeCode ? _self.collegeCode : collegeCode // ignore: cast_nullable_to_non_nullable
 as String?,collegeId: freezed == collegeId ? _self.collegeId : collegeId // ignore: cast_nullable_to_non_nullable
+as String?,companyId: freezed == companyId ? _self.companyId : companyId // ignore: cast_nullable_to_non_nullable
+as String?,companyName: freezed == companyName ? _self.companyName : companyName // ignore: cast_nullable_to_non_nullable
 as String?,orgDistrictId: freezed == orgDistrictId ? _self.orgDistrictId : orgDistrictId // ignore: cast_nullable_to_non_nullable
 as String?,isPublic: freezed == isPublic ? _self.isPublic : isPublic // ignore: cast_nullable_to_non_nullable
 as bool?,karma: freezed == karma ? _self.karma : karma // ignore: cast_nullable_to_non_nullable
@@ -178,10 +180,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String fullName,  String muid,  String joined,  String? gender,  String? level,  String? profilePic,  String? coverPic,  String? collegeCode,  String? collegeId,  String? orgDistrictId,  bool? isPublic,  num? karma,  num? rank,  num? percentile,  List<String> roles,  List<RoleVerificationDto> roleVerification,  bool? leadEnablerVerified,  List<InterestGroupDto> interestGroups,  List<KarmaDistributionEntryDto> karmaDistribution)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String fullName,  String muid,  String joined,  String? gender,  String? level,  String? profilePic,  String? coverPic,  String? collegeCode,  String? collegeId,  String? companyId,  String? companyName,  String? orgDistrictId,  bool? isPublic,  num? karma,  num? rank,  num? percentile,  List<String> roles,  List<RoleVerificationDto> roleVerification,  bool? leadEnablerVerified,  List<InterestGroupDto> interestGroups,  List<KarmaDistributionEntryDto> karmaDistribution)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _UserProfileDto() when $default != null:
-return $default(_that.id,_that.fullName,_that.muid,_that.joined,_that.gender,_that.level,_that.profilePic,_that.coverPic,_that.collegeCode,_that.collegeId,_that.orgDistrictId,_that.isPublic,_that.karma,_that.rank,_that.percentile,_that.roles,_that.roleVerification,_that.leadEnablerVerified,_that.interestGroups,_that.karmaDistribution);case _:
+return $default(_that.id,_that.fullName,_that.muid,_that.joined,_that.gender,_that.level,_that.profilePic,_that.coverPic,_that.collegeCode,_that.collegeId,_that.companyId,_that.companyName,_that.orgDistrictId,_that.isPublic,_that.karma,_that.rank,_that.percentile,_that.roles,_that.roleVerification,_that.leadEnablerVerified,_that.interestGroups,_that.karmaDistribution);case _:
   return orElse();
 
 }
@@ -199,10 +201,10 @@ return $default(_that.id,_that.fullName,_that.muid,_that.joined,_that.gender,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String fullName,  String muid,  String joined,  String? gender,  String? level,  String? profilePic,  String? coverPic,  String? collegeCode,  String? collegeId,  String? orgDistrictId,  bool? isPublic,  num? karma,  num? rank,  num? percentile,  List<String> roles,  List<RoleVerificationDto> roleVerification,  bool? leadEnablerVerified,  List<InterestGroupDto> interestGroups,  List<KarmaDistributionEntryDto> karmaDistribution)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String fullName,  String muid,  String joined,  String? gender,  String? level,  String? profilePic,  String? coverPic,  String? collegeCode,  String? collegeId,  String? companyId,  String? companyName,  String? orgDistrictId,  bool? isPublic,  num? karma,  num? rank,  num? percentile,  List<String> roles,  List<RoleVerificationDto> roleVerification,  bool? leadEnablerVerified,  List<InterestGroupDto> interestGroups,  List<KarmaDistributionEntryDto> karmaDistribution)  $default,) {final _that = this;
 switch (_that) {
 case _UserProfileDto():
-return $default(_that.id,_that.fullName,_that.muid,_that.joined,_that.gender,_that.level,_that.profilePic,_that.coverPic,_that.collegeCode,_that.collegeId,_that.orgDistrictId,_that.isPublic,_that.karma,_that.rank,_that.percentile,_that.roles,_that.roleVerification,_that.leadEnablerVerified,_that.interestGroups,_that.karmaDistribution);case _:
+return $default(_that.id,_that.fullName,_that.muid,_that.joined,_that.gender,_that.level,_that.profilePic,_that.coverPic,_that.collegeCode,_that.collegeId,_that.companyId,_that.companyName,_that.orgDistrictId,_that.isPublic,_that.karma,_that.rank,_that.percentile,_that.roles,_that.roleVerification,_that.leadEnablerVerified,_that.interestGroups,_that.karmaDistribution);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -219,10 +221,10 @@ return $default(_that.id,_that.fullName,_that.muid,_that.joined,_that.gender,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String fullName,  String muid,  String joined,  String? gender,  String? level,  String? profilePic,  String? coverPic,  String? collegeCode,  String? collegeId,  String? orgDistrictId,  bool? isPublic,  num? karma,  num? rank,  num? percentile,  List<String> roles,  List<RoleVerificationDto> roleVerification,  bool? leadEnablerVerified,  List<InterestGroupDto> interestGroups,  List<KarmaDistributionEntryDto> karmaDistribution)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String fullName,  String muid,  String joined,  String? gender,  String? level,  String? profilePic,  String? coverPic,  String? collegeCode,  String? collegeId,  String? companyId,  String? companyName,  String? orgDistrictId,  bool? isPublic,  num? karma,  num? rank,  num? percentile,  List<String> roles,  List<RoleVerificationDto> roleVerification,  bool? leadEnablerVerified,  List<InterestGroupDto> interestGroups,  List<KarmaDistributionEntryDto> karmaDistribution)?  $default,) {final _that = this;
 switch (_that) {
 case _UserProfileDto() when $default != null:
-return $default(_that.id,_that.fullName,_that.muid,_that.joined,_that.gender,_that.level,_that.profilePic,_that.coverPic,_that.collegeCode,_that.collegeId,_that.orgDistrictId,_that.isPublic,_that.karma,_that.rank,_that.percentile,_that.roles,_that.roleVerification,_that.leadEnablerVerified,_that.interestGroups,_that.karmaDistribution);case _:
+return $default(_that.id,_that.fullName,_that.muid,_that.joined,_that.gender,_that.level,_that.profilePic,_that.coverPic,_that.collegeCode,_that.collegeId,_that.companyId,_that.companyName,_that.orgDistrictId,_that.isPublic,_that.karma,_that.rank,_that.percentile,_that.roles,_that.roleVerification,_that.leadEnablerVerified,_that.interestGroups,_that.karmaDistribution);case _:
   return null;
 
 }
@@ -234,7 +236,7 @@ return $default(_that.id,_that.fullName,_that.muid,_that.joined,_that.gender,_th
 @JsonSerializable()
 
 class _UserProfileDto extends UserProfileDto {
-  const _UserProfileDto({required this.id, required this.fullName, required this.muid, required this.joined, this.gender, this.level, this.profilePic, this.coverPic, this.collegeCode, this.collegeId, this.orgDistrictId, this.isPublic, this.karma, this.rank, this.percentile,  List<String> roles = const [],  List<RoleVerificationDto> roleVerification = const [], this.leadEnablerVerified,  List<InterestGroupDto> interestGroups = const [],  List<KarmaDistributionEntryDto> karmaDistribution = const []}): _roles = roles,_roleVerification = roleVerification,_interestGroups = interestGroups,_karmaDistribution = karmaDistribution,super._();
+  const _UserProfileDto({required this.id, required this.fullName, required this.muid, required this.joined, this.gender, this.level, this.profilePic, this.coverPic, this.collegeCode, this.collegeId, this.companyId, this.companyName, this.orgDistrictId, this.isPublic, this.karma, this.rank, this.percentile,  List<String> roles = const [],  List<RoleVerificationDto> roleVerification = const [], this.leadEnablerVerified,  List<InterestGroupDto> interestGroups = const [],  List<KarmaDistributionEntryDto> karmaDistribution = const []}): _roles = roles,_roleVerification = roleVerification,_interestGroups = interestGroups,_karmaDistribution = karmaDistribution,super._();
   factory _UserProfileDto.fromJson(Map<String, dynamic> json) => _$UserProfileDtoFromJson(json);
 
 @override final  String id;
@@ -247,6 +249,8 @@ class _UserProfileDto extends UserProfileDto {
 @override final  String? coverPic;
 @override final  String? collegeCode;
 @override final  String? collegeId;
+@override final  String? companyId;
+@override final  String? companyName;
 @override final  String? orgDistrictId;
 @override final  bool? isPublic;
 @override final  num? karma;
@@ -295,18 +299,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserProfileDto&&(identical(other.id, id) || other.id == id)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.joined, joined) || other.joined == joined)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.level, level) || other.level == level)&&(identical(other.profilePic, profilePic) || other.profilePic == profilePic)&&(identical(other.coverPic, coverPic) || other.coverPic == coverPic)&&(identical(other.collegeCode, collegeCode) || other.collegeCode == collegeCode)&&(identical(other.collegeId, collegeId) || other.collegeId == collegeId)&&(identical(other.orgDistrictId, orgDistrictId) || other.orgDistrictId == orgDistrictId)&&(identical(other.isPublic, isPublic) || other.isPublic == isPublic)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.rank, rank) || other.rank == rank)&&(identical(other.percentile, percentile) || other.percentile == percentile)&&const DeepCollectionEquality().equals(other.roles, _roles)&&const DeepCollectionEquality().equals(other.roleVerification, _roleVerification)&&(identical(other.leadEnablerVerified, leadEnablerVerified) || other.leadEnablerVerified == leadEnablerVerified)&&const DeepCollectionEquality().equals(other.interestGroups, _interestGroups)&&const DeepCollectionEquality().equals(other.karmaDistribution, _karmaDistribution));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserProfileDto&&(identical(other.id, id) || other.id == id)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.joined, joined) || other.joined == joined)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.level, level) || other.level == level)&&(identical(other.profilePic, profilePic) || other.profilePic == profilePic)&&(identical(other.coverPic, coverPic) || other.coverPic == coverPic)&&(identical(other.collegeCode, collegeCode) || other.collegeCode == collegeCode)&&(identical(other.collegeId, collegeId) || other.collegeId == collegeId)&&(identical(other.companyId, companyId) || other.companyId == companyId)&&(identical(other.companyName, companyName) || other.companyName == companyName)&&(identical(other.orgDistrictId, orgDistrictId) || other.orgDistrictId == orgDistrictId)&&(identical(other.isPublic, isPublic) || other.isPublic == isPublic)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.rank, rank) || other.rank == rank)&&(identical(other.percentile, percentile) || other.percentile == percentile)&&const DeepCollectionEquality().equals(other.roles, _roles)&&const DeepCollectionEquality().equals(other.roleVerification, _roleVerification)&&(identical(other.leadEnablerVerified, leadEnablerVerified) || other.leadEnablerVerified == leadEnablerVerified)&&const DeepCollectionEquality().equals(other.interestGroups, _interestGroups)&&const DeepCollectionEquality().equals(other.karmaDistribution, _karmaDistribution));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hashAll([runtimeType,id,fullName,muid,joined,gender,level,profilePic,coverPic,collegeCode,collegeId,orgDistrictId,isPublic,karma,rank,percentile,const DeepCollectionEquality().hash(_roles),const DeepCollectionEquality().hash(_roleVerification),leadEnablerVerified,const DeepCollectionEquality().hash(_interestGroups),const DeepCollectionEquality().hash(_karmaDistribution)]);
+    return Object.hashAll([runtimeType,id,fullName,muid,joined,gender,level,profilePic,coverPic,collegeCode,collegeId,companyId,companyName,orgDistrictId,isPublic,karma,rank,percentile,const DeepCollectionEquality().hash(_roles),const DeepCollectionEquality().hash(_roleVerification),leadEnablerVerified,const DeepCollectionEquality().hash(_interestGroups),const DeepCollectionEquality().hash(_karmaDistribution)]);
 }
 
 @override
 String toString() {
-    return 'UserProfileDto(id: $id, fullName: $fullName, muid: $muid, joined: $joined, gender: $gender, level: $level, profilePic: $profilePic, coverPic: $coverPic, collegeCode: $collegeCode, collegeId: $collegeId, orgDistrictId: $orgDistrictId, isPublic: $isPublic, karma: $karma, rank: $rank, percentile: $percentile, roles: $roles, roleVerification: $roleVerification, leadEnablerVerified: $leadEnablerVerified, interestGroups: $interestGroups, karmaDistribution: $karmaDistribution)';
+    return 'UserProfileDto(id: $id, fullName: $fullName, muid: $muid, joined: $joined, gender: $gender, level: $level, profilePic: $profilePic, coverPic: $coverPic, collegeCode: $collegeCode, collegeId: $collegeId, companyId: $companyId, companyName: $companyName, orgDistrictId: $orgDistrictId, isPublic: $isPublic, karma: $karma, rank: $rank, percentile: $percentile, roles: $roles, roleVerification: $roleVerification, leadEnablerVerified: $leadEnablerVerified, interestGroups: $interestGroups, karmaDistribution: $karmaDistribution)';
 }
 
 
@@ -317,7 +321,7 @@ abstract mixin class _$UserProfileDtoCopyWith<$Res> implements $UserProfileDtoCo
   factory _$UserProfileDtoCopyWith(_UserProfileDto value, $Res Function(_UserProfileDto) _then) = __$UserProfileDtoCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String fullName, String muid, String joined, String? gender, String? level, String? profilePic, String? coverPic, String? collegeCode, String? collegeId, String? orgDistrictId, bool? isPublic, num? karma, num? rank, num? percentile, List<String> roles, List<RoleVerificationDto> roleVerification, bool? leadEnablerVerified, List<InterestGroupDto> interestGroups, List<KarmaDistributionEntryDto> karmaDistribution
+ String id, String fullName, String muid, String joined, String? gender, String? level, String? profilePic, String? coverPic, String? collegeCode, String? collegeId, String? companyId, String? companyName, String? orgDistrictId, bool? isPublic, num? karma, num? rank, num? percentile, List<String> roles, List<RoleVerificationDto> roleVerification, bool? leadEnablerVerified, List<InterestGroupDto> interestGroups, List<KarmaDistributionEntryDto> karmaDistribution
 });
 
 
@@ -334,7 +338,7 @@ class __$UserProfileDtoCopyWithImpl<$Res>
 
 /// Create a copy of UserProfileDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? fullName = null,Object? muid = null,Object? joined = null,Object? gender = freezed,Object? level = freezed,Object? profilePic = freezed,Object? coverPic = freezed,Object? collegeCode = freezed,Object? collegeId = freezed,Object? orgDistrictId = freezed,Object? isPublic = freezed,Object? karma = freezed,Object? rank = freezed,Object? percentile = freezed,Object? roles = null,Object? roleVerification = null,Object? leadEnablerVerified = freezed,Object? interestGroups = null,Object? karmaDistribution = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? fullName = null,Object? muid = null,Object? joined = null,Object? gender = freezed,Object? level = freezed,Object? profilePic = freezed,Object? coverPic = freezed,Object? collegeCode = freezed,Object? collegeId = freezed,Object? companyId = freezed,Object? companyName = freezed,Object? orgDistrictId = freezed,Object? isPublic = freezed,Object? karma = freezed,Object? rank = freezed,Object? percentile = freezed,Object? roles = null,Object? roleVerification = null,Object? leadEnablerVerified = freezed,Object? interestGroups = null,Object? karmaDistribution = null,}) {
   return _then(_UserProfileDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,fullName: null == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
@@ -346,6 +350,8 @@ as String?,profilePic: freezed == profilePic ? _self.profilePic : profilePic // 
 as String?,coverPic: freezed == coverPic ? _self.coverPic : coverPic // ignore: cast_nullable_to_non_nullable
 as String?,collegeCode: freezed == collegeCode ? _self.collegeCode : collegeCode // ignore: cast_nullable_to_non_nullable
 as String?,collegeId: freezed == collegeId ? _self.collegeId : collegeId // ignore: cast_nullable_to_non_nullable
+as String?,companyId: freezed == companyId ? _self.companyId : companyId // ignore: cast_nullable_to_non_nullable
+as String?,companyName: freezed == companyName ? _self.companyName : companyName // ignore: cast_nullable_to_non_nullable
 as String?,orgDistrictId: freezed == orgDistrictId ? _self.orgDistrictId : orgDistrictId // ignore: cast_nullable_to_non_nullable
 as String?,isPublic: freezed == isPublic ? _self.isPublic : isPublic // ignore: cast_nullable_to_non_nullable
 as bool?,karma: freezed == karma ? _self.karma : karma // ignore: cast_nullable_to_non_nullable

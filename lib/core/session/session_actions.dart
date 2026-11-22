@@ -1,4 +1,5 @@
 import 'package:mulearn_app/core/auth/app_auth_controller.dart';
+import 'package:mulearn_app/core/notifications/push/push_controller.dart';
 import 'package:mulearn_app/core/session/session_providers.dart';
 import 'package:mulearn_app/core/storage/cache_store_provider.dart';
 import 'package:mulearn_app/core/storage/secure_storage_provider.dart';
@@ -24,7 +25,13 @@ class SessionActions extends _$SessionActions {
   /// The access token stays valid server-side until it expires (15 min),
   /// which is why the local copy is always removed.
   Future<void> signOut() async {
+    // Starts while the session is still valid (the call needs it); the
+    // stored tokens are cleared only after it finishes (3 s at most).
+    final unregisterPush = ref
+        .read(pushControllerProvider.notifier)
+        .unregisterForSignOut();
     ref.read(appAuthControllerProvider.notifier).setSignedOut();
+    await unregisterPush;
     final tokens = ref.read(tokenStorageProvider);
     final datasource = ref.read(sessionRemoteDataSourceProvider);
     final cache = ref.read(cacheStoreProvider);
@@ -34,13 +41,20 @@ class SessionActions extends _$SessionActions {
       await tokens.clear();
       await cache.clean();
     } on Object catch (e, st) {
-      appLogger.e('Failed to clear local session on sign-out', error: e, stackTrace: st);
+      appLogger.e(
+        'Failed to clear local session on sign-out',
+        error: e,
+        stackTrace: st,
+      );
     }
     if (refreshToken == null || refreshToken.isEmpty) return;
     try {
       await datasource.logout(refreshToken);
     } on Object catch (e) {
-      appLogger.w('Server logout failed; the session was already cleared locally', error: e);
+      appLogger.w(
+        'Server logout failed; the session was already cleared locally',
+        error: e,
+      );
     }
   }
 }

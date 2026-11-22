@@ -33,6 +33,8 @@ abstract class UserProfileDto with _$UserProfileDto {
     String? coverPic,
     String? collegeCode,
     String? collegeId,
+    String? companyId,
+    String? companyName,
     String? orgDistrictId,
     bool? isPublic,
     num? karma,
@@ -70,29 +72,32 @@ abstract class UserProfileDto with _$UserProfileDto {
   /// Maps to the domain entity. This mapper is the single place a backend
   /// field rename must be handled (rules.md §2) — the UI never sees this DTO.
   UserProfile toDomain() => UserProfile(
-        id: id,
-        fullName: fullName,
-        muid: muid,
-        joined: joined,
-        gender: gender,
-        karma: karma?.toInt() ?? 0,
-        isPublic: isPublic ?? false,
-        level: level,
-        profilePicUrl: profilePic,
-        coverPicUrl: coverPic,
-        collegeCode: collegeCode,
-        collegeId: collegeId,
-        orgDistrictId: orgDistrictId,
-        rank: rank?.toInt(),
-        percentile: percentile?.toDouble(),
-        roles: roles,
-        roleVerification: roleVerification.map((r) => r.toDomain()).toList(),
-        leadEnablerVerified: leadEnablerVerified,
-        interestGroups: interestGroups
-            .where((g) => g.selected ?? true)
-            .map((g) => g.toDomain())
-            .toList(),
-        karmaDistribution:
-            karmaDistribution.map((k) => k.toDomain()).toList(),
-      );
+    id: id,
+    fullName: fullName,
+    muid: muid,
+    joined: joined,
+    gender: gender,
+    karma: karma?.toInt() ?? 0,
+    isPublic: isPublic ?? false,
+    level: level,
+    profilePicUrl: profilePic,
+    coverPicUrl: coverPic,
+    // Until the backend's college_* stops meaning "the company" for
+    // mentors, an id with no code isn't a campus: keep it out.
+    collegeCode: collegeCode,
+    collegeId: (collegeCode ?? '').isEmpty ? null : collegeId,
+    companyId: companyId,
+    companyName: companyName,
+    orgDistrictId: orgDistrictId,
+    rank: rank?.toInt(),
+    percentile: percentile?.toDouble(),
+    roles: roles,
+    roleVerification: roleVerification.map((r) => r.toDomain()).toList(),
+    leadEnablerVerified: leadEnablerVerified,
+    interestGroups: interestGroups
+        .where((g) => g.selected ?? true)
+        .map((g) => g.toDomain())
+        .toList(),
+    karmaDistribution: karmaDistribution.map((k) => k.toDomain()).toList(),
+  );
 }

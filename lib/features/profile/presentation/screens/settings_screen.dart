@@ -9,6 +9,8 @@ import 'package:mulearn_app/core/config/app_links.dart';
 import 'package:mulearn_app/core/config/app_version.dart';
 import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
+import 'package:mulearn_app/core/notifications/push/push_controller.dart';
+import 'package:mulearn_app/core/notifications/push/push_preferences.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/session/discord_connect.dart';
 import 'package:mulearn_app/core/session/session_actions.dart';
@@ -16,6 +18,7 @@ import 'package:mulearn_app/core/session/session_providers.dart';
 import 'package:mulearn_app/core/theme/appearance.dart';
 import 'package:mulearn_app/core/utils/external_links.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/profile_controller.dart';
+import 'package:mulearn_app/features/profile/presentation/providers/push_preferences_controller.dart';
 
 /// Settings (artifact Screen patterns → Settings): grouped lists on cards.
 /// Account (password, Discord), Privacy (public profile), Appearance
@@ -133,6 +136,7 @@ class SettingsScreen extends ConsumerWidget {
                       ),
                     ],
                   ),
+                  const _NotificationsSection(),
                   const _SectionLabel('Appearance'),
                   MuSegmented<ThemeMode>(
                     values: const [
@@ -459,6 +463,196 @@ class _Row extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// Settings → Notifications. Hidden in builds without push.
+class _NotificationsSection extends ConsumerWidget {
+  const _NotificationsSection();
+
+  static String _hour(int h) {
+    final suffix = h < 12 ? 'AM' : 'PM';
+    final twelve = h % 12 == 0 ? 12 : h % 12;
+    return '$twelve $suffix';
+  }
+
+  Future<void> _save(
+    BuildContext context,
+    WidgetRef ref,
+    PushPreferences next,
+    Map<String, Object?> patch,
+  ) async {
+    try {
+      await ref
+          .read(pushPreferencesControllerProvider.notifier)
+          .save(next, patch);
+    } on Object catch (e) {
+      if (context.mounted) {
+        MuToast.show(
+          context,
+          message: ApiException.messageFor(e),
+          type: MuToastType.error,
+        );
+      }
+    }
+  }
+
+  Future<void> _pickQuietHours(
+    BuildContext context,
+    WidgetRef ref,
+    PushPreferences prefs,
+  ) async {
+    final from = await showTimePicker(
+      context: context,
+      helpText: 'Quiet from',
+      initialTime: TimeOfDay(hour: prefs.quietStart, minute: 0),
+    );
+    if (from == null || !context.mounted) return;
+    final to = await showTimePicker(
+      context: context,
+      helpText: 'Quiet until',
+      initialTime: TimeOfDay(hour: prefs.quietEnd, minute: 0),
+    );
+    if (to == null || !context.mounted) return;
+    await _save(
+      context,
+      ref,
+      prefs.copyWith(quietStart: from.hour, quietEnd: to.hour),
+      {'quiet_start': from.hour, 'quiet_end': to.hour},
+    );
+  }
+
+  Future<void> _pickTopics(BuildContext context, WidgetRef ref) =>
+      showMuSheet<void>(
+        context,
+        builder: (sheetContext) => Consumer(
+          builder: (context, ref, _) {
+            final prefs = ref.watch(pushPreferencesControllerProvider).value;
+            if (prefs == null) return const SizedBox.shrink();
+            return Padding(
+              padding: const EdgeInsets.fromLTRB(
+                MuSpacing.space5,
+                0,
+                MuSpacing.space5,
+                MuSpacing.space6,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text('What to hear about', style: context.mu.text.title2),
+                  const SizedBox(height: MuSpacing.space3),
+                  for (final entry in pushCategoryLabels.entries)
+                    MuSwitchTile(
+                      label: entry.value,
+                      value: !prefs.mutedCategories.contains(entry.key),
+                      onChanged: (on) {
+                        final muted = {...prefs.mutedCategories};
+                        if (on) {
+                          muted.remove(entry.key);
+                        } else {
+                          muted.add(entry.key);
+                        }
+                        final list = muted.toList()..sort();
+                        unawaited(
+                          _save(
+                            context,
+                            ref,
+                            prefs.copyWith(mutedCategories: list),
+                            {'muted_categories': list},
+                          ),
+                        );
+                      },
+                    ),
+                ],
+              ),
+            );
+          },
+        ),
+      );
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final status = ref.watch(pushControllerProvider).value;
+    if (status == null || status == PushStatus.unavailable) {
+      return const SizedBox.shrink();
+    }
+    final prefs = ref.watch(pushPreferencesControllerProvider).value;
+    final muted = prefs?.mutedCategories.length ?? 0;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        const _SectionLabel('Notifications'),
+        _Group(
+          children: [
+            _Row(
+              icon: LucideIcons.smartphone,
+              label: 'On this phone',
+              value: switch (status) {
+                PushStatus.granted => 'On',
+                PushStatus.denied => 'Off in phone settings',
+                _ => 'Off',
+              },
+              onTap: status == PushStatus.notDetermined
+                  ? () => unawaited(
+                      ref
+                          .read(pushControllerProvider.notifier)
+                          .requestPermission(),
+                    )
+                  : null,
+            ),
+            MuSwitchTile(
+              label: 'Push notifications',
+              subtitle: 'Circles, events, karma and announcements',
+              value: prefs?.pushEnabled ?? false,
+              onChanged: prefs == null
+                  ? null
+                  : (v) => unawaited(
+                      _save(context, ref, prefs.copyWith(pushEnabled: v), {
+                        'push_enabled': v,
+                      }),
+                    ),
+            ),
+            MuSwitchTile(
+              label: 'Reminders',
+              subtitle: 'Keep a streak going, or a nudge after a few days away',
+              value:
+                  (prefs?.pushEnabled ?? false) &&
+                  (prefs?.engagementEnabled ?? false),
+              onChanged: prefs == null || !prefs.pushEnabled
+                  ? null
+                  : (v) => unawaited(
+                      _save(
+                        context,
+                        ref,
+                        prefs.copyWith(engagementEnabled: v),
+                        {'engagement_enabled': v},
+                      ),
+                    ),
+            ),
+            _Row(
+              icon: LucideIcons.moon,
+              label: 'Quiet hours',
+              value: prefs == null
+                  ? null
+                  : '${_hour(prefs.quietStart)} – ${_hour(prefs.quietEnd)}',
+              onTap: prefs == null
+                  ? null
+                  : () => unawaited(_pickQuietHours(context, ref, prefs)),
+            ),
+            _Row(
+              icon: LucideIcons.listChecks,
+              label: 'Topics',
+              value: muted == 0 ? 'All' : '$muted muted',
+              onTap: prefs == null
+                  ? null
+                  : () => unawaited(_pickTopics(context, ref)),
+              last: true,
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

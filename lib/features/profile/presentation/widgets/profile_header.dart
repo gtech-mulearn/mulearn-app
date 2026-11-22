@@ -19,13 +19,6 @@ import 'package:mulearn_app/features/profile/domain/entities/user_profile.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/cover_photo_controller.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/profile_image_controller.dart';
 
-/// Level number → the product's stable level names (DESIGN_SPEC.md §2
-/// "06 — Level journey" `LEVELS`) — static display copy, not per-user data.
-const _levelNames = [
-  'Initiate', 'Explorer', 'Builder', 'Specialist', //
-  'Practitioner', 'Mentor', 'Master',
-];
-
 /// The profile hero (artifact: ProfilePoster → Hero): full-bleed cobalt (or
 /// the member's cover photo), the name huge and heavy, level and campus, the
 /// level and muid as pills, and the photo in a ringed circle at the
@@ -166,20 +159,13 @@ class ProfileHeader extends ConsumerWidget {
     final levelN = (profile.level != null && profile.level!.length > 3)
         ? int.tryParse(profile.level!.substring(3)) ?? 1
         : 1;
-    final levelName = (levelN >= 1 && levelN <= _levelNames.length)
-        ? _levelNames[levelN - 1]
-        : null;
     final name = profile.fullName.trim().isEmpty
         ? profile.muid
         : profile.fullName.trim();
     // Artifact ProfilePoster: "Web Development · CET" (top interest, campus);
-    // the level has its own pill below. With no interest yet, the level's
-    // name stands in.
+    // the level has its own pill below.
     final role = [
-      if (profile.interestGroups.isNotEmpty)
-        profile.interestGroups.first.name
-      else
-        ?levelName,
+      if (profile.interestGroups.isNotEmpty) profile.interestGroups.first.name,
       if ((profile.collegeCode ?? '').isNotEmpty) profile.collegeCode!,
     ].join(' · ');
     final top = MediaQuery.paddingOf(context).top;

@@ -61,6 +61,19 @@ abstract final class RoutePaths {
   static const String mentorSessionDetail = '/mentor/sessions/:id';
   static String mentorSessionDetailPath(String id) => '/mentor/sessions/$id';
 
+  /// A mentor's applications, and the form (open to anyone with the Mentor
+  /// role, approved or not: it's how they get approved).
+  static const String mentorApplications = '/mentor/applications';
+  static const String mentorApply = '/mentor/apply';
+  static String mentorApplyEditPath(String id) =>
+      '/mentor/apply?edit=${Uri.encodeQueryComponent(id)}';
+  static String mentorApplyAgainPath(String id) =>
+      '/mentor/apply?from=${Uri.encodeQueryComponent(id)}';
+
+  /// The form with a tier already chosen (its backend value).
+  static String mentorApplyTierPath(String tier) =>
+      '/mentor/apply?tier=${Uri.encodeQueryComponent(tier)}';
+
   /// Read-only view of another user's profile by muid.
   static const String publicProfile = '/u/:muid';
   static String publicProfilePath(String muid) => '/u/$muid';
@@ -76,6 +89,10 @@ abstract final class RoutePaths {
   static String interestGroupDetailPath(String id) => '/interest-groups/$id';
 
   static const String events = '/events';
+
+  /// Events filtered to one interest group.
+  static String eventsInGroup(String igId) =>
+      '/events?ig=${Uri.encodeQueryComponent(igId)}';
   static const String eventDetail = '/events/:id';
   static String eventDetailPath(String id) => '/events/$id';
 
@@ -107,6 +124,10 @@ abstract final class RoutePaths {
       '/weekly-twitches/$show/$id';
 
   static const String learningCircles = '/circles';
+
+  /// The circles catalogue filtered to one interest group.
+  static String learningCirclesInGroup(String igId) =>
+      '/circles?ig=${Uri.encodeQueryComponent(igId)}';
   static const String createLearningCircle = '/circles/create';
   static const String learningCircleDetail = '/circles/:id';
   static String learningCircleDetailPath(String id) => '/circles/$id';

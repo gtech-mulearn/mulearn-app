@@ -11,7 +11,7 @@ import 'package:mulearn_app/core/network/paging.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/utils/search_debouncer.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
-import 'package:mulearn_app/core/widgets/mu_load_more_footer.dart';
+import 'package:mulearn_app/core/widgets/mu_paged_list.dart';
 import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/core/widgets/mu_state_display.dart';
 import 'package:mulearn_app/features/search/domain/entities/campus_search_result.dart';
@@ -62,6 +62,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     final c = context.mu.colors;
     final query = _searched;
     final role = _who == _Who.mentors ? 'mentor' : null;
+    final blocked = ref.watch(blockedUsersProvider);
 
     return Scaffold(
       backgroundColor: c.chalk,
@@ -131,12 +132,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                       empty: query.isEmpty
                           ? 'No campuses yet.'
                           : 'No campus matches "$query". Try its short code, like CET.',
-                      list: (items) => [
-                        for (var i = 0; i < items.length; i++) ...[
-                          if (i > 0) const SizedBox(height: MuSpacing.space3),
-                          _CampusRow(campus: items[i]),
-                        ],
-                      ],
+                      row: (campus, _, _) => _CampusRow(campus: campus),
                     )
                   : _Results<UserSearchResult>(
                       key: ValueKey('$role|$query'),
@@ -149,24 +145,10 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                           .read(userSearchProvider(query, role).notifier)
                           .loadMore(),
                       empty: _emptyPeople(query, role),
-                      list: (all) {
-                        final blocked = ref.watch(blockedUsersProvider);
-                        final items = [
-                          for (final u in all)
-                            if (!blocked.blocks(id: u.id, muid: u.muid)) u,
-                        ];
-                        return [
-                          MuFeedGroup(
-                            children: [
-                              for (var i = 0; i < items.length; i++)
-                                _ResultRow(
-                                  result: items[i],
-                                  last: i == items.length - 1,
-                                ),
-                            ],
-                          ),
-                        ];
-                      },
+                      grouped: true,
+                      row: (result, i, count) =>
+                          _ResultRow(result: result, last: i == count - 1),
+                      keep: (u) => !blocked.blocks(id: u.id, muid: u.muid),
                     ),
             ),
           ],
@@ -178,6 +160,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
 
 /// A search list: loading, an error with retry, the empty copy, or the rows
 /// with pull to refresh and the next page loading as the end comes near.
+/// Rows are built as they scroll in: an empty query lists everyone.
 class _Results<T> extends StatelessWidget {
   const _Results({
     required this.state,
@@ -185,7 +168,9 @@ class _Results<T> extends StatelessWidget {
     required this.onRetry,
     required this.onLoadMore,
     required this.empty,
-    required this.list,
+    required this.row,
+    this.grouped = false,
+    this.keep,
     super.key,
   });
 
@@ -194,14 +179,31 @@ class _Results<T> extends StatelessWidget {
   final VoidCallback onRetry;
   final Future<void> Function() onLoadMore;
   final String empty;
-  final List<Widget> Function(List<T> items) list;
+
+  /// One result: the item, its index and how many are loaded.
+  final Widget Function(T item, int index, int count) row;
+
+  /// Rows on one card.
+  final bool grouped;
+
+  /// Whether to show a result; people this member blocked are left out.
+  final bool Function(T item)? keep;
 
   @override
   Widget build(BuildContext context) => state.when(
     skipError: true,
     loading: () => const Center(child: MuDotsLoader(label: 'Searching…')),
     error: (e, _) => ErrorRetryView(error: e, onRetry: onRetry),
-    data: (paged) {
+    data: (all) {
+      final keep = this.keep;
+      final paged = keep == null
+          ? all
+          : all.copyWith(
+              items: [
+                for (final item in all.items)
+                  if (keep(item)) item,
+              ],
+            );
       if (paged.items.isEmpty) {
         return MuRefresh(
           onRefresh: onRefresh,
@@ -217,39 +219,18 @@ class _Results<T> extends StatelessWidget {
           ),
         );
       }
-      return MuRefresh(
+      return MuPagedListView<T>(
+        state: paged,
         onRefresh: onRefresh,
-        child: NotificationListener<ScrollNotification>(
-          onNotification: (n) {
-            if (n.metrics.extentAfter < 600 &&
-                paged.hasMore &&
-                paged.loadMoreError == null) {
-              unawaited(onLoadMore());
-            }
-            return false;
-          },
-          child: ListView(
-            physics: const BouncingScrollPhysics(
-              parent: AlwaysScrollableScrollPhysics(),
-            ),
-            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-            padding: const EdgeInsets.fromLTRB(
-              MuSpacing.space5,
-              MuSpacing.space4,
-              MuSpacing.space5,
-              MuSpacing.space8,
-            ),
-            children: [
-              ...list(paged.items),
-              if (paged.hasMore || paged.loadMoreError != null)
-                MuLoadMoreFooter(
-                  isLoading: paged.isLoadingMore,
-                  error: paged.loadMoreError,
-                  onRetry: () => unawaited(onLoadMore()),
-                ),
-            ],
-          ),
+        onLoadMore: onLoadMore,
+        grouped: grouped,
+        padding: const EdgeInsets.fromLTRB(
+          MuSpacing.space5,
+          MuSpacing.space4,
+          MuSpacing.space5,
+          MuSpacing.space8,
         ),
+        itemBuilder: (_, item, i) => row(item, i, paged.items.length),
       );
     },
   );

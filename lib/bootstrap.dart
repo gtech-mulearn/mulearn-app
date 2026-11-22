@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:mulearn_app/app/app.dart';
 import 'package:mulearn_app/app/app_scope.dart';
@@ -20,15 +21,28 @@ Future<void> bootstrap(Flavor flavor) async {
 
   installErrorHooks(crashReporter);
 
+  // Push notifications: only in builds that carry Firebase config. A failure
+  // here leaves pushes off and the app running.
+  final firebaseOptions = config.firebaseOptions;
+  if (firebaseOptions != null) {
+    try {
+      await Firebase.initializeApp(options: firebaseOptions);
+    } on Object catch (e, st) {
+      appLogger.w(
+        'Firebase init failed; pushes are off',
+        error: e,
+        stackTrace: st,
+      );
+    }
+  }
+
   // Persistent, user-scoped HTTP response cache (memory if the cache
   // directory can't be opened).
   final cacheStore = await openCacheStore();
 
   runApp(
     appProviderScope(
-      overrides: [
-        cacheStoreProvider.overrideWithValue(cacheStore),
-      ],
+      overrides: [cacheStoreProvider.overrideWithValue(cacheStore)],
       child: const MulearnApp(),
     ),
   );

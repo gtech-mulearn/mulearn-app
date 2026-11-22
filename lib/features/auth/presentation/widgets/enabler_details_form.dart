@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mulearn_app/core/design_system/design_system.dart';
-import 'package:mulearn_app/core/models/reference_option.dart';
 import 'package:mulearn_app/features/auth/domain/entities/registration_role.dart';
 import 'package:mulearn_app/features/auth/presentation/providers/register_providers.dart';
 import 'package:mulearn_app/features/auth/presentation/providers/register_submit_controller.dart';
@@ -20,6 +19,7 @@ class EnablerDetailsForm extends ConsumerStatefulWidget {
 class _EnablerDetailsFormState extends ConsumerState<EnablerDetailsForm> {
   final _formKey = GlobalKey<FormState>();
   String? _college;
+  String? _collegeName;
   final _customCollegeController = TextEditingController();
 
   @override
@@ -48,9 +48,16 @@ class _EnablerDetailsFormState extends ConsumerState<EnablerDetailsForm> {
     }
   }
 
+  /// Colleges matching [query] from the server (up to 20). There are
+  /// thousands, so none is downloaded in full.
+  Future<List<MuOption>> _searchColleges(String query) async => [
+    for (final o
+        in await ref.read(registerRepositoryProvider).searchColleges(query))
+      MuOption(o.id, o.title),
+  ];
+
   @override
   Widget build(BuildContext context) {
-    final colleges = ref.watch(registerCollegesProvider);
     final loading = ref.watch(registerSubmitControllerProvider).isLoading;
 
     return Form(
@@ -61,14 +68,10 @@ class _EnablerDetailsFormState extends ConsumerState<EnablerDetailsForm> {
           MuSelectField(
             label: 'College',
             hint: 'Search your college',
-            options: [
-              for (final o in colleges.value ?? const <ReferenceOption>[])
-                MuOption(o.id, o.title),
-            ],
-            loading: colleges.isLoading,
-            error: colleges.hasError
-                ? "Couldn't load colleges. Go back and try again."
-                : null,
+            options: const [],
+            search: _searchColleges,
+            selectedLabel: _collegeName,
+            onPicked: (o) => setState(() => _collegeName = o.label),
             enabled: !loading,
             allowOther: true,
             otherLabel: 'My college is not listed',

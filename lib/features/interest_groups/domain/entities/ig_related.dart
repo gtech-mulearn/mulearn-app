@@ -5,11 +5,23 @@ part 'ig_related.freezed.dart';
 /// A circle in an interest group (first page of `learningcircle/list/?ig=`).
 @freezed
 abstract class IgCircleRef with _$IgCircleRef {
-  const factory IgCircleRef({required String id, required String title, int? totalMembers}) = _IgCircleRef;
+  const factory IgCircleRef({
+    required String id,
+    required String title,
+    int? totalMembers,
+  }) = _IgCircleRef;
 }
 
 /// An event scoped to an interest group (first page of `events/?ig_id=`).
 @freezed
 abstract class IgEventRef with _$IgEventRef {
-  const factory IgEventRef({required String id, required String title, DateTime? startsAt}) = _IgEventRef;
+  const factory IgEventRef({
+    required String id,
+    required String title,
+    DateTime? startsAt,
+  }) = _IgEventRef;
 }
+
+/// A group page's preview of a long list: the first rows, and how many
+/// there are in all (from the page's pagination).
+typedef IgPreview<T> = ({List<T> items, int total});
