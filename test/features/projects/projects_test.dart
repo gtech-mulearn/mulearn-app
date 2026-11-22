@@ -259,7 +259,7 @@ void main() {
   }
 
   testWidgets(
-    'a blocked person\'s comment is hidden and others offer report or block',
+    "a blocked person's comment is hidden and others offer report or block",
     (tester) async {
       await pump(tester, '/projects/p1');
       expect(find.text('Love the map view!'), findsOneWidget);
@@ -276,7 +276,7 @@ void main() {
     },
   );
 
-  testWidgets('a blocked owner\'s project is hidden from explore', (
+  testWidgets("a blocked owner's project is hidden from explore", (
     tester,
   ) async {
     await pump(
