@@ -9,7 +9,7 @@ import 'package:mulearn_app/core/network/api_exception.dart';
 ///
 /// iOS: the client ID below is from the real iOS OAuth client (GCP project
 /// `muapp-481514`), confirmed to match this app's bundle ID
-/// (`org.mulearn.muapp`) before wiring in — its `REVERSED_CLIENT_ID` is also
+/// (`org.mulearn.app`) before wiring in — its `REVERSED_CLIENT_ID` is also
 /// registered as a URL scheme in `ios/Runner/Info.plist` (required for the
 /// sign-in redirect). Passed explicitly here rather than via a
 /// `GoogleService-Info.plist`, since this app doesn't use Firebase.
@@ -38,7 +38,7 @@ class GoogleNativeSignInDataSource {
   };
 
   static const _iosClientId =
-      '966772588752-tr5qq5cs4d6kfqsv6tivk3v58n26tnes.apps.googleusercontent.com';
+      '966772588752-rcu867c69uj91jf369e6ef3liil6f1k1.apps.googleusercontent.com';
 
   bool _initialized = false;
 
