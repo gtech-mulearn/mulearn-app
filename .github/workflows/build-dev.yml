@@ -1,5 +1,5 @@
 # Development channel — internal QA builds of the dev flavor
-# ("Mulearn Dev", org.mulearn.muapp.dev, dev API host).
+# ("Mulearn Dev", org.mulearn.app.dev, dev API host).
 #
 #   push to staging    validate → build → upload artifact
 #                      → refresh the rolling `dev-latest` GitHub pre-release
@@ -79,7 +79,7 @@ jobs:
           | Branch | \`staging\` |
           | Commit | ${SHA} |
           | Built (UTC) | ${BUILT_AT} |
-          | Flavor | \`dev\` (Mulearn Dev, \`org.mulearn.muapp.dev\`, dev API host) |
+          | Flavor | \`dev\` (Mulearn Dev, \`org.mulearn.app.dev\`, dev API host) |
           | APK SHA-256 | \`${APK_SHA256}\` |
           | Workflow run | ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID} |
 
