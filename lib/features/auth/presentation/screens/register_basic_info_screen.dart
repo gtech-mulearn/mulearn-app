@@ -5,6 +5,7 @@ import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/features/auth/presentation/providers/register_wizard_controller.dart';
 import 'package:mulearn_app/features/auth/presentation/widgets/auth_page.dart';
+import 'package:mulearn_app/features/auth/presentation/widgets/terms_consent_row.dart';
 
 /// Sign-up step 1 of 4: name, email and password (the dashboard's step 1).
 /// From "Continue with Google" the email is the Google account's, read-only,
@@ -24,6 +25,8 @@ class _RegisterBasicInfoScreenState
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  bool _agreed = false;
+  bool _showConsentError = false;
 
   bool get _isGoogleSignUp =>
       ref.read(registerWizardControllerProvider).googleTempToken != null;
@@ -46,7 +49,9 @@ class _RegisterBasicInfoScreenState
   }
 
   void _continue() {
-    if (!(_formKey.currentState?.validate() ?? false)) return;
+    final formOk = _formKey.currentState?.validate() ?? false;
+    if (!_agreed) setState(() => _showConsentError = true);
+    if (!formOk || !_agreed) return;
     FocusScope.of(context).unfocus();
     ref
         .read(registerWizardControllerProvider.notifier)
@@ -148,7 +153,18 @@ class _RegisterBasicInfoScreenState
             ),
           ),
         ),
-        const SizedBox(height: MuSpacing.space4),
+        const SizedBox(height: MuSpacing.space2),
+        TermsConsentRow(
+          value: _agreed,
+          error: _showConsentError && !_agreed
+              ? 'Please agree to the Terms and Privacy Policy to continue.'
+              : null,
+          onChanged: (v) => setState(() {
+            _agreed = v;
+            if (v) _showConsentError = false;
+          }),
+        ),
+        const SizedBox(height: MuSpacing.space2),
         Wrap(
           alignment: WrapAlignment.center,
           crossAxisAlignment: WrapCrossAlignment.center,
