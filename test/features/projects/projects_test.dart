@@ -258,23 +258,23 @@ void main() {
     await settle(tester);
   }
 
-  testWidgets(
-    "a blocked person's comment is hidden and others offer report or block",
-    (tester) async {
-      await pump(tester, '/projects/p1');
-      expect(find.text('Love the map view!'), findsOneWidget);
-      expect(find.byTooltip('Report or block'), findsWidgets);
+  testWidgets("other people's comments offer report or block", (tester) async {
+    await pump(tester, '/projects/p1');
 
-      await pump(
-        tester,
-        '/projects/p1',
-        blocked: const [BlockedUser(id: 'someone-else', name: 'Dev Admin')],
-      );
+    expect(find.text('Love the map view!'), findsOneWidget);
+    expect(find.byTooltip('Report or block'), findsWidgets);
+  });
 
-      expect(find.text('Love the map view!'), findsNothing);
-      expect(find.text('COMMENTS · 0'), findsOneWidget);
-    },
-  );
+  testWidgets("a blocked person's comment is hidden", (tester) async {
+    await pump(
+      tester,
+      '/projects/p1',
+      blocked: const [BlockedUser(id: 'someone-else', name: 'Dev Admin')],
+    );
+
+    expect(find.text('Love the map view!'), findsNothing);
+    expect(find.text('COMMENTS · 0'), findsOneWidget);
+  });
 
   testWidgets("a blocked owner's project is hidden from explore", (
     tester,
