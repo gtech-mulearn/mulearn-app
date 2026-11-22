@@ -10,7 +10,7 @@ Work the app needs but can't do itself: this round changes no backend, authserve
   - Add an FCM delivery adapter to `NotificationService.dispatch()`. `TypeMeta` already lists `PUSH` as eligible, and `templates.py` reserves PUSH copy for "Phase 2".
   - Send a data payload carrying `type`, `entity_type`, `entity_id`, `redirect_url` and the new `unread_count`. The app then updates its badge without calling `unread-count`.
 - **Ask (ops):**
-  - a Firebase project with the dev and prod Android apps (`org.mulearn.muapp.dev`, `org.mulearn.muapp`) → `google-services.json` per flavour;
+  - a Firebase project with the dev and prod Android apps (`org.mulearn.app.dev`, `org.mulearn.app`) → `google-services.json` per flavour;
   - an APNs auth key for iOS;
   - FCM server credentials stored in the backend environment.
 - **Why:** the app refreshes notifications only on user actions, with no polling (Plan 3, Task 1). About 70k members share one backend, and a 60 s poll per foreground user is load for a number that rarely changes. Push gives real-time badges and background alerts with no polling: the OS keeps one shared connection per device.

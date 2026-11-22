@@ -24,10 +24,12 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<!-- Google Sign-In OAuth redirect — reversed iOS client ID from the client
-	     config for org.mulearn.muapp (project muapp-481514). Required for the
+	     config for org.mulearn.app (project muapp-481514). Required for the
 	     native sign-in flow to redirect back into the app. -->
 	<key>CFBundleURLTypes</key>
 	<array>
@@ -36,7 +38,7 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.966772588752-tr5qq5cs4d6kfqsv6tivk3v58n26tnes</string>
+				<string>com.googleusercontent.apps.966772588752-rcu867c69uj91jf369e6ef3liil6f1k1</string>
 			</array>
 		</dict>
 	</array>
@@ -50,7 +52,7 @@
 		<string>_dartVmService._tcp</string>
 	</array>
 	<key>NSLocalNetworkUsageDescription</key>
-	<string>μLearn uses the local network to connect to debugging tools during development.</string>
+	<string>μLearn can use the local network to connect to developer tools in debug builds. It is not used in the App Store version.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
