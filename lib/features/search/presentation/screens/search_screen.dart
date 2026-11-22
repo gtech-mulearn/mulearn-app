@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/design_system/design_system.dart';
+import 'package:mulearn_app/core/moderation/blocked_user.dart';
+import 'package:mulearn_app/core/moderation/blocked_users.dart';
 import 'package:mulearn_app/core/network/paging.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/utils/search_debouncer.dart';
@@ -147,17 +149,24 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                           .read(userSearchProvider(query, role).notifier)
                           .loadMore(),
                       empty: _emptyPeople(query, role),
-                      list: (items) => [
-                        MuFeedGroup(
-                          children: [
-                            for (var i = 0; i < items.length; i++)
-                              _ResultRow(
-                                result: items[i],
-                                last: i == items.length - 1,
-                              ),
-                          ],
-                        ),
-                      ],
+                      list: (all) {
+                        final blocked = ref.watch(blockedUsersProvider);
+                        final items = [
+                          for (final u in all)
+                            if (!blocked.blocks(id: u.id, muid: u.muid)) u,
+                        ];
+                        return [
+                          MuFeedGroup(
+                            children: [
+                              for (var i = 0; i < items.length; i++)
+                                _ResultRow(
+                                  result: items[i],
+                                  last: i == items.length - 1,
+                                ),
+                            ],
+                          ),
+                        ];
+                      },
                     ),
             ),
           ],

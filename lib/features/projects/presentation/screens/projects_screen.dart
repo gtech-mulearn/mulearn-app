@@ -6,6 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/design_system/design_system.dart';
+import 'package:mulearn_app/core/moderation/blocked_user.dart';
+import 'package:mulearn_app/core/moderation/blocked_users.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/utils/search_debouncer.dart';
@@ -173,38 +175,45 @@ class _ProjectsScreenState extends ConsumerState<ProjectsScreen> {
     );
   }
 
-  List<Widget> _explore() => ref
-      .watch(projectsFeedProvider(_query))
-      .when(
-        skipError: true,
-        loading: () => const [_Loading()],
-        error: (e, _) => [
-          _Problem(
-            error: e,
-            onRetry: () => ref.invalidate(projectsFeedProvider(_query)),
-          ),
-        ],
-        data: (paged) => [
-          if (paged.items.isEmpty)
-            MuEmptyLine(
-              _query.isEmpty
-                  ? 'No projects yet. Yours could be the first.'
-                  : 'No project matches "$_query".',
-            )
-          else
-            for (final p in paged.items) ...[
-              ProjectCard(project: p),
-              const SizedBox(height: MuSpacing.space4),
-            ],
-          if (paged.hasMore || paged.loadMoreError != null)
-            MuLoadMoreFooter(
-              isLoading: paged.isLoadingMore,
-              error: paged.loadMoreError,
-              onRetry: () =>
-                  ref.read(projectsFeedProvider(_query).notifier).loadMore(),
+  List<Widget> _explore() {
+    final blocked = ref.watch(blockedUsersProvider);
+    List<Project> visible(List<Project> items) => [
+      for (final p in items)
+        if (!blocked.blocks(id: p.ownerId, muid: p.ownerMuid)) p,
+    ];
+    return ref
+        .watch(projectsFeedProvider(_query))
+        .when(
+          skipError: true,
+          loading: () => const [_Loading()],
+          error: (e, _) => [
+            _Problem(
+              error: e,
+              onRetry: () => ref.invalidate(projectsFeedProvider(_query)),
             ),
-        ],
-      );
+          ],
+          data: (paged) => [
+            if (visible(paged.items).isEmpty)
+              MuEmptyLine(
+                _query.isEmpty
+                    ? 'No projects yet. Yours could be the first.'
+                    : 'No project matches "$_query".',
+              )
+            else
+              for (final p in visible(paged.items)) ...[
+                ProjectCard(project: p),
+                const SizedBox(height: MuSpacing.space4),
+              ],
+            if (paged.hasMore || paged.loadMoreError != null)
+              MuLoadMoreFooter(
+                isLoading: paged.isLoadingMore,
+                error: paged.loadMoreError,
+                onRetry: () =>
+                    ref.read(projectsFeedProvider(_query).notifier).loadMore(),
+              ),
+          ],
+        );
+  }
 
   List<Widget> _yours(AsyncValue<List<Project>> mine) => mine.when(
     skipError: true,
