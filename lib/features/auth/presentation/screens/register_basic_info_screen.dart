@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
-import 'package:mulearn_app/core/theme/mu_space.dart';
-import 'package:mulearn_app/core/theme/mulearn_colors.dart';
-import 'package:mulearn_app/core/theme/mulearn_typography.dart';
-import 'package:mulearn_app/core/widgets/mu_buttons.dart';
 import 'package:mulearn_app/features/auth/presentation/providers/register_wizard_controller.dart';
+import 'package:mulearn_app/features/auth/presentation/widgets/auth_page.dart';
+import 'package:mulearn_app/features/auth/presentation/widgets/terms_consent_row.dart';
 
-/// Registration step 1 — basic info (full name, email, password), matching
-/// the reference dashboard's step 1 of 3.
+/// Sign-up step 1 of 4: name, email and password (the dashboard's step 1).
+/// From "Continue with Google" the email is the Google account's, read-only,
+/// and there is no password.
 class RegisterBasicInfoScreen extends ConsumerStatefulWidget {
   const RegisterBasicInfoScreen({super.key});
 
@@ -26,11 +25,9 @@ class _RegisterBasicInfoScreenState
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-  bool _obscurePassword = true;
-  bool _obscureConfirm = true;
+  bool _agreed = false;
+  bool _showConsentError = false;
 
-  /// Signing up from "Continue with Google": the email comes from the Google
-  /// account (read-only) and there is no password.
   bool get _isGoogleSignUp =>
       ref.read(registerWizardControllerProvider).googleTempToken != null;
 
@@ -52,9 +49,13 @@ class _RegisterBasicInfoScreenState
   }
 
   void _continue() {
-    if (!(_formKey.currentState?.validate() ?? false)) return;
+    final formOk = _formKey.currentState?.validate() ?? false;
+    if (!_agreed) setState(() => _showConsentError = true);
+    if (!formOk || !_agreed) return;
     FocusScope.of(context).unfocus();
-    ref.read(registerWizardControllerProvider.notifier).setBasicInfo(
+    ref
+        .read(registerWizardControllerProvider.notifier)
+        .setBasicInfo(
           fullName: _fullNameController.text.trim(),
           email: _emailController.text.trim(),
           password: _isGoogleSignUp ? null : _passwordController.text,
@@ -65,142 +66,124 @@ class _RegisterBasicInfoScreenState
   @override
   Widget build(BuildContext context) {
     final isGoogle = _isGoogleSignUp;
-    return Scaffold(
-      backgroundColor: MuColors.canvas,
-      appBar: AppBar(),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 26),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SizedBox(height: MuSpace.m),
-              Text('Step into the community', style: MuType.display.copyWith(fontSize: 30)),
-              const SizedBox(height: MuSpace.s),
-              Text(
-                isGoogle
-                    ? 'Finish creating your account with your Google email'
-                    : 'Create your account to get started',
-                style: MuType.body.copyWith(color: MuColors.inkSecondary),
-              ),
-              const SizedBox(height: MuSpace.xxl),
-              Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    TextFormField(
-                      controller: _fullNameController,
-                      textInputAction: TextInputAction.next,
-                      decoration: const InputDecoration(
-                        labelText: 'Full Name',
-                        hintText: 'Enter your full name',
-                      ),
-                      validator: (value) {
-                        final v = value?.trim() ?? '';
-                        if (v.length < 3) {
-                          return 'Full name must be at least 3 characters.';
-                        }
-                        if (v.length > 100) {
-                          return 'Full name must be at most 100 characters.';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: MuSpace.l),
-                    TextFormField(
-                      controller: _emailController,
-                      readOnly: isGoogle,
-                      keyboardType: TextInputType.emailAddress,
-                      textInputAction: TextInputAction.next,
-                      decoration: InputDecoration(
-                        labelText: 'Email Address',
-                        hintText: 'Email address',
-                        helperText: isGoogle ? 'From your Google account' : null,
-                      ),
-                      validator: (value) {
-                        final v = value?.trim() ?? '';
-                        if (v.isEmpty || !v.contains('@')) {
-                          return 'Enter a valid email.';
-                        }
-                        return null;
-                      },
-                    ),
-                    if (!isGoogle) ...[
-                    const SizedBox(height: MuSpace.l),
-                    TextFormField(
-                      controller: _passwordController,
-                      obscureText: _obscurePassword,
-                      textInputAction: TextInputAction.next,
-                      decoration: InputDecoration(
-                        labelText: 'Password',
-                        hintText: 'Create password',
-                        suffixIcon: IconButton(
-                          tooltip: _obscurePassword ? 'Show password' : 'Hide password',
-                          icon: Icon(
-                            _obscurePassword ? LucideIcons.eye : LucideIcons.eyeOff,
-                            color: MuColors.inkSecondary,
-                          ),
-                          onPressed: () => setState(
-                            () => _obscurePassword = !_obscurePassword,
-                          ),
-                        ),
-                      ),
-                      validator: (value) {
-                        final v = value ?? '';
-                        if (v.length < 8) {
-                          return 'Password must be at least 8 characters.';
-                        }
-                        if (v.length > 100) {
-                          return 'Password must be at most 100 characters.';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: MuSpace.l),
-                    TextFormField(
-                      controller: _confirmPasswordController,
-                      obscureText: _obscureConfirm,
-                      textInputAction: TextInputAction.done,
-                      onFieldSubmitted: (_) => _continue(),
-                      decoration: InputDecoration(
-                        labelText: 'Confirm Password',
-                        hintText: 'Re-enter password',
-                        suffixIcon: IconButton(
-                          tooltip: _obscureConfirm ? 'Show password' : 'Hide password',
-                          icon: Icon(
-                            _obscureConfirm ? LucideIcons.eye : LucideIcons.eyeOff,
-                            color: MuColors.inkSecondary,
-                          ),
-                          onPressed: () => setState(
-                            () => _obscureConfirm = !_obscureConfirm,
-                          ),
-                        ),
-                      ),
-                      validator: (value) {
-                        if (value != _passwordController.text) {
-                          return "Passwords don't match.";
-                        }
-                        return null;
-                      },
-                    ),
-                    ],
-                    const SizedBox(height: MuSpace.xl),
-                    MuPrimaryButton(label: 'Continue', onPressed: _continue),
-                  ],
+    return AuthPage(
+      step: 1,
+      steps: 4,
+      eyebrow: 'Create your account',
+      light: 'Step into ',
+      bold: 'the community',
+      lead: isGoogle
+          ? 'Finish setting up with your Google email.'
+          : 'Learn by doing, alongside peers from every campus.',
+      bottom: MuButton(
+        label: 'Continue',
+        block: true,
+        knob: true,
+        onPressed: _continue,
+      ),
+      children: [
+        Form(
+          key: _formKey,
+          child: AutofillGroup(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                MuTextField(
+                  label: 'Full name',
+                  hint: 'As on your college ID',
+                  controller: _fullNameController,
+                  textInputAction: TextInputAction.next,
+                  textCapitalization: TextCapitalization.words,
+                  autofillHints: const [AutofillHints.name],
+                  validator: (value) {
+                    final v = value?.trim() ?? '';
+                    if (v.length < 3) return 'Use at least 3 characters.';
+                    if (v.length > 100) return 'Use at most 100 characters.';
+                    return null;
+                  },
                 ),
-              ),
-              const SizedBox(height: MuSpace.l),
-              Center(
-                child: TextButton(
-                  onPressed: () => context.pop(),
-                  child: const Text('Already have an account? Sign in'),
+                const SizedBox(height: MuSpacing.space4),
+                MuTextField(
+                  label: 'Email',
+                  hint: 'you@college.edu',
+                  controller: _emailController,
+                  readOnly: isGoogle,
+                  help: isGoogle
+                      ? 'From your Google account'
+                      : "We'll use it to sign you in.",
+                  keyboardType: TextInputType.emailAddress,
+                  textInputAction: TextInputAction.next,
+                  autofillHints: const [AutofillHints.email],
+                  validator: (value) {
+                    final v = value?.trim() ?? '';
+                    return (v.isEmpty || !v.contains('@'))
+                        ? 'Enter an email like you@college.edu.'
+                        : null;
+                  },
                 ),
-              ),
-            ],
+                if (!isGoogle) ...[
+                  const SizedBox(height: MuSpacing.space4),
+                  MuTextField(
+                    label: 'Password',
+                    controller: _passwordController,
+                    obscure: true,
+                    help: 'At least 8 characters.',
+                    textInputAction: TextInputAction.next,
+                    autofillHints: const [AutofillHints.newPassword],
+                    validator: (value) {
+                      final v = value ?? '';
+                      if (v.length < 8) return 'Use at least 8 characters.';
+                      if (v.length > 100) return 'Use at most 100 characters.';
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: MuSpacing.space4),
+                  MuTextField(
+                    label: 'Type it again',
+                    controller: _confirmPasswordController,
+                    obscure: true,
+                    textInputAction: TextInputAction.done,
+                    onSubmitted: (_) => _continue(),
+                    validator: (v) => v != _passwordController.text
+                        ? "The two passwords don't match."
+                        : null,
+                  ),
+                ],
+              ],
+            ),
           ),
         ),
-      ),
+        const SizedBox(height: MuSpacing.space2),
+        TermsConsentRow(
+          value: _agreed,
+          error: _showConsentError && !_agreed
+              ? 'Please agree to the Terms and Privacy Policy to continue.'
+              : null,
+          onChanged: (v) => setState(() {
+            _agreed = v;
+            if (v) _showConsentError = false;
+          }),
+        ),
+        const SizedBox(height: MuSpacing.space2),
+        Wrap(
+          alignment: WrapAlignment.center,
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            Text(
+              'Already on μLearn?',
+              style: context.mu.text.body.copyWith(
+                color: context.mu.colors.ink2,
+              ),
+            ),
+            MuButton(
+              label: 'Sign in',
+              variant: MuButtonVariant.ghost,
+              size: MuButtonSize.small,
+              onPressed: () => context.pop(),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

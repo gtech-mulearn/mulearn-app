@@ -14,32 +14,34 @@ class InterestGroupsRepositoryImpl implements InterestGroupsRepository {
 
   @override
   Future<List<InterestGroupSummary>> getCatalog() => _guard(() async {
-        final items = await _remote.fetchCatalog();
-        final results = <InterestGroupSummary>[];
-        for (final item in items) {
-          try {
-            results.add(InterestGroupSummaryDto.fromJson(
-              item as Map<String, dynamic>,
-            ).toDomain());
-          } on Object catch (e, st) {
-            // One malformed catalog row (confirmed live, rules.md §3/§9:
-            // `prerequisites` sent as a bare string on at least one record)
-            // shouldn't take down the whole directory — skip and log it.
-            appLogger.e(
-              'Skipping malformed interest-group catalog row',
-              error: e,
-              stackTrace: st,
-            );
-          }
-        }
-        return results;
-      });
+    final items = await _remote.fetchCatalog();
+    final results = <InterestGroupSummary>[];
+    for (final item in items) {
+      try {
+        results.add(
+          InterestGroupSummaryDto.fromJson(
+            item as Map<String, dynamic>,
+          ).toDomain(),
+        );
+      } on Object catch (e, st) {
+        // One malformed catalog row (confirmed live, rules.md §3/§9:
+        // `prerequisites` sent as a bare string on at least one record)
+        // shouldn't take down the whole directory — skip and log it.
+        appLogger.e(
+          'Skipping malformed interest-group catalog row',
+          error: e,
+          stackTrace: st,
+        );
+      }
+    }
+    return results;
+  });
 
   @override
   Future<InterestGroupSummary> getDetail(String id) => _guard(() async {
-        final json = await _remote.fetchDetail(id);
-        return InterestGroupSummaryDto.fromJson(json).toDomain();
-      });
+    final json = await _remote.fetchDetail(id);
+    return InterestGroupSummaryDto.fromJson(json).toDomain();
+  });
 
   @override
   List<String> groupIdsFromPayload(Map<String, dynamic> payload) =>
@@ -55,27 +57,51 @@ class InterestGroupsRepositoryImpl implements InterestGroupsRepository {
   Future<void> leave(String id) => _guard(() => _remote.leave(id));
 
   @override
-  Future<List<IgCircleRef>> getCirclesInGroup(String igId) => _guard(() async => [
-        for (final c in (await _remote.fetchCirclesInGroup(igId)).whereType<Map<String, dynamic>>())
-          if (c['id'] is String)
-            IgCircleRef(
-              id: c['id'] as String,
-              title: c['title'] as String? ?? '',
-              totalMembers: (c['total_members'] as num?)?.toInt(),
-            ),
-      ]);
+  Future<IgPreview<IgCircleRef>> getCirclesInGroup(String igId) =>
+      _guard(() async {
+        final body = await _remote.fetchCirclesInGroup(igId);
+        final items = [
+          for (final c in _rows(body))
+            if (c['id'] is String)
+              IgCircleRef(
+                id: c['id'] as String,
+                title: c['title'] as String? ?? '',
+                totalMembers: (c['total_members'] as num?)?.toInt(),
+              ),
+        ];
+        return (items: items, total: _total(body, items.length));
+      });
 
   @override
-  Future<List<IgEventRef>> getEventsInGroup(String igId) => _guard(() async => [
-        for (final e in (await _remote.fetchEventsInGroup(igId)).whereType<Map<String, dynamic>>())
-          if (e['id'] is String)
-            IgEventRef(
-              id: e['id'] as String,
-              title: e['title'] as String? ?? '',
-              startsAt: DateTime.tryParse(e['start_datetime'] as String? ?? '')?.toUtc(),
-            ),
-      ]);
+  Future<IgPreview<IgEventRef>> getEventsInGroup(String igId) =>
+      _guard(() async {
+        final body = await _remote.fetchEventsInGroup(igId);
+        final items = [
+          for (final e in _rows(body))
+            if (e['id'] is String)
+              IgEventRef(
+                id: e['id'] as String,
+                title: e['title'] as String? ?? '',
+                startsAt: DateTime.tryParse(
+                  e['start_datetime'] as String? ?? '',
+                )?.toUtc(),
+              ),
+        ];
+        return (items: items, total: _total(body, items.length));
+      });
 
+  static Iterable<Map<String, dynamic>> _rows(Map<String, dynamic> body) {
+    final data = body['data'];
+    return data is List ? data.whereType<Map<String, dynamic>>() : const [];
+  }
+
+  /// `pagination.count`: every row, not just this page's (production groups
+  /// have thousands of circles).
+  static int _total(Map<String, dynamic> body, int shown) {
+    final pagination = body['pagination'];
+    final count = pagination is Map ? pagination['count'] : null;
+    return count is num ? count.toInt() : shown;
+  }
 
   Future<T> _guard<T>(Future<T> Function() action) async {
     try {
@@ -87,7 +113,11 @@ class InterestGroupsRepositoryImpl implements InterestGroupsRepository {
       // into AsyncError without printing them anywhere, so a parsing bug
       // here would otherwise be invisible in the console — log it before
       // rethrowing so it still shows up in `flutter run`'s output.
-      appLogger.e('InterestGroupsRepository action failed', error: e, stackTrace: st);
+      appLogger.e(
+        'InterestGroupsRepository action failed',
+        error: e,
+        stackTrace: st,
+      );
       rethrow;
     }
   }

@@ -16,18 +16,21 @@ abstract class CurrentUserDto with _$CurrentUserDto {
     @Default(false) bool existInGuild,
     String? profilePic,
     String? company,
+    @Default([]) List<String> userDomains,
   }) = _CurrentUserDto;
 
   const CurrentUserDto._();
 
-  factory CurrentUserDto.fromJson(Map<String, dynamic> json) => _$CurrentUserDtoFromJson(json);
+  factory CurrentUserDto.fromJson(Map<String, dynamic> json) =>
+      _$CurrentUserDtoFromJson(json);
 
   CurrentUser toDomain() => CurrentUser(
-        muid: muid,
-        fullName: fullName,
-        roles: roles,
-        existInGuild: existInGuild,
-        profilePic: profilePic,
-        company: company,
-      );
+    muid: muid,
+    fullName: fullName,
+    roles: roles,
+    existInGuild: existInGuild,
+    profilePic: profilePic,
+    company: company,
+    userDomains: userDomains,
+  );
 }

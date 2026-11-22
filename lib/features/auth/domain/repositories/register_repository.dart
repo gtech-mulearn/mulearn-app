@@ -16,7 +16,7 @@ abstract interface class RegisterRepository {
   Future<List<ReferenceOption>> fetchRoles();
 
   /// `GET /api/v1/register/colleges/`.
-  Future<List<ReferenceOption>> fetchColleges();
+  Future<List<ReferenceOption>> searchColleges(String query);
 
   /// `GET /api/v1/register/department/list/`.
   Future<List<ReferenceOption>> fetchDepartments();
@@ -53,7 +53,6 @@ abstract interface class RegisterRepository {
     required String roleId,
     String? referralMuid,
   });
-
 
   /// Links the newly-registered user to an existing college/company.
   /// Authenticated — must be called after [registerUser].

@@ -17,7 +17,9 @@ InterestGroupsRemoteDataSource interestGroupsRemoteDataSource(Ref ref) =>
 /// (rules.md §2/§5).
 @riverpod
 InterestGroupsRepository interestGroupsRepository(Ref ref) =>
-    InterestGroupsRepositoryImpl(ref.watch(interestGroupsRemoteDataSourceProvider));
+    InterestGroupsRepositoryImpl(
+      ref.watch(interestGroupsRemoteDataSourceProvider),
+    );
 
 @riverpod
 Future<List<InterestGroupSummary>> interestGroupsCatalog(Ref ref) =>
@@ -30,25 +32,32 @@ Future<InterestGroupSummary> interestGroupDetail(Ref ref, String id) =>
 @Riverpod(retry: noRetry)
 Future<List<String>> myInterestGroupIds(Ref ref) async {
   final repository = ref.watch(interestGroupsRepositoryProvider);
-  return repository.groupIdsFromPayload(await ref.watch(myProfilePayloadProvider.future));
+  return repository.groupIdsFromPayload(
+    await ref.watch(myProfilePayloadProvider.future),
+  );
 }
 
 /// The most interest groups a learner can be in (dash_ig_view.py:1275).
 const int maxLearnerGroups = 3;
 
-/// The first circles in a group, for its page.
+/// The first circles in a group, and how many it has, for its page.
 @Riverpod(retry: noRetry)
-Future<List<IgCircleRef>> circlesInGroup(Ref ref, String igId) =>
+Future<IgPreview<IgCircleRef>> circlesInGroup(Ref ref, String igId) =>
     ref.watch(interestGroupsRepositoryProvider).getCirclesInGroup(igId);
 
-/// The first events scoped to a group, for its page.
+/// The first events scoped to a group, and how many, for its page.
 @Riverpod(retry: noRetry)
-Future<List<IgEventRef>> eventsInGroup(Ref ref, String igId) =>
+Future<IgPreview<IgEventRef>> eventsInGroup(Ref ref, String igId) =>
     ref.watch(interestGroupsRepositoryProvider).getEventsInGroup(igId);
 
 /// Joins or leaves one group through its own endpoints (FEAT-08) — no
 /// full-list rewrite, so a group joined elsewhere can't be dropped — then
 /// refreshes the shared profile so every card (and Profile) shows it.
+///
+/// Stays loading until the refreshed profile has landed and the member ids
+/// are rebuilt from it. Settling earlier left a window (as long as the slow
+/// `user-profile` request) where the old ids still said "not a member" and
+/// the button read Join again right after joining.
 @riverpod
 class InterestGroupMembershipController
     extends _$InterestGroupMembershipController {
@@ -60,8 +69,20 @@ class InterestGroupMembershipController
     final link = ref.keepAlive(); // finish the refresh even if the page closes
     state = const AsyncLoading();
     try {
-      final result = await AsyncValue.guard(() => join ? repo.join(groupId) : repo.leave(groupId));
-      if (!result.hasError) ref.invalidate(myProfilePayloadProvider);
+      final result = await AsyncValue.guard(
+        () => join ? repo.join(groupId) : repo.leave(groupId),
+      );
+      if (!result.hasError) {
+        ref
+          ..invalidate(myProfilePayloadProvider)
+          ..invalidate(interestGroupDetailProvider(groupId)); // member count
+        try {
+          await ref.read(myInterestGroupIdsProvider.future);
+        } on Object catch (_) {
+          // The change is saved; a failed refresh shows on the screens that
+          // read the profile, with their own Retry.
+        }
+      }
       if (ref.mounted) state = result;
     } finally {
       link.close();

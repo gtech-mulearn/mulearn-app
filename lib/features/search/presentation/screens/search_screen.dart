@@ -1,18 +1,31 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:mulearn_app/core/network/api_exception.dart';
+import 'package:mulearn_app/core/design_system/design_system.dart';
+import 'package:mulearn_app/core/moderation/blocked_user.dart';
+import 'package:mulearn_app/core/moderation/blocked_users.dart';
+import 'package:mulearn_app/core/network/paging.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
-import 'package:mulearn_app/core/theme/mu_space.dart';
-import 'package:mulearn_app/core/theme/mulearn_colors.dart';
-import 'package:mulearn_app/core/widgets/mu_empty_state.dart';
+import 'package:mulearn_app/core/utils/search_debouncer.dart';
+import 'package:mulearn_app/core/widgets/error_retry_view.dart';
+import 'package:mulearn_app/core/widgets/mu_paged_list.dart';
+import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/core/widgets/mu_state_display.dart';
+import 'package:mulearn_app/features/search/domain/entities/campus_search_result.dart';
+import 'package:mulearn_app/features/search/domain/entities/user_search_result.dart';
 import 'package:mulearn_app/features/search/presentation/providers/search_controller.dart';
-import 'package:mulearn_app/features/search/presentation/widgets/user_search_result_tile.dart';
 
-/// Find users or mentors by name/MUID — mirrors the reference dashboard's
-/// search page.
+enum _Who { people, mentors, campuses }
+
+/// Find people, mentors or campuses, like the dashboard's search pages:
+/// each tab lists everyone until you type, then what matches, 30 at a time
+/// as you scroll. Typing settles before it searches ([SearchDebouncer]);
+/// each tab-and-query list is kept for a while ([UserSearch],
+/// [CampusSearch]), so switching back costs no request. People open their
+/// public profile; campuses their public page.
 class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({super.key});
 
@@ -20,133 +33,260 @@ class SearchScreen extends ConsumerStatefulWidget {
   ConsumerState<SearchScreen> createState() => _SearchScreenState();
 }
 
-class _SearchScreenState extends ConsumerState<SearchScreen>
-    with SingleTickerProviderStateMixin {
-  late final _tabController = TabController(length: 2, vsync: this)
-    ..addListener(_onTabChanged);
+class _SearchScreenState extends ConsumerState<SearchScreen> {
   final _queryController = TextEditingController();
-  final _scrollController = ScrollController();
+  _Who _who = _Who.people;
 
-  String get _role => _tabController.index == 1 ? 'mentor' : '';
-
-  @override
-  void initState() {
-    super.initState();
-    _scrollController.addListener(_onScroll);
-  }
-
-  void _onTabChanged() {
-    if (_tabController.indexIsChanging) return;
-    _runSearch();
-  }
-
-  void _onScroll() {
-    if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent - 200) {
-      ref.read(searchControllerProvider.notifier).loadMore();
-    }
-  }
-
-  void _runSearch() {
-    ref
-        .read(searchControllerProvider.notifier)
-        .search(_queryController.text, role: _role.isEmpty ? null : _role);
-  }
+  /// The query last sent (typing settles through [_debouncer]).
+  String _searched = '';
+  late final _debouncer = SearchDebouncer((q) {
+    if (mounted) setState(() => _searched = q);
+  });
 
   @override
   void dispose() {
-    _tabController.dispose();
+    _debouncer.dispose();
     _queryController.dispose();
-    _scrollController.dispose();
     super.dispose();
+  }
+
+  String _emptyPeople(String query, String? role) {
+    final who = role == null ? 'members' : 'mentors';
+    if (query.isEmpty) return 'No $who yet.';
+    // The dashboard's SearchResults copy.
+    return 'No $who match "$query". Try a different path and keep exploring.';
   }
 
   @override
   Widget build(BuildContext context) {
-    final resultsState = ref.watch(searchControllerProvider);
+    final c = context.mu.colors;
+    final query = _searched;
+    final role = _who == _Who.mentors ? 'mentor' : null;
+    final blocked = ref.watch(blockedUsersProvider);
 
     return Scaffold(
-      backgroundColor: MuColors.canvas,
-      appBar: AppBar(
-        title: const Text('Search'),
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(text: 'Users'),
-            Tab(text: 'Mentors'),
+      backgroundColor: c.chalk,
+      body: SafeArea(
+        bottom: false,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                MuSpacing.space3,
+                MuSpacing.space2,
+                MuSpacing.space5,
+                0,
+              ),
+              child: Row(
+                children: [
+                  MuIconButton(
+                    icon: LucideIcons.arrowLeft,
+                    tooltip: 'Back',
+                    onPressed: () => Navigator.of(context).maybePop(),
+                  ),
+                  const SizedBox(width: MuSpacing.space1),
+                  Expanded(
+                    child: MuSearchField(
+                      controller: _queryController,
+                      hint: _who == _Who.campuses
+                          ? 'Campus name or code'
+                          : 'Name or muid',
+                      onChanged: _debouncer.onChanged,
+                      onSubmitted: _debouncer.submit,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(
+                MuSpacing.space5,
+                MuSpacing.space3,
+                MuSpacing.space5,
+                0,
+              ),
+              child: MuSegmented<_Who>(
+                values: _Who.values,
+                selected: _who,
+                label: (w) => switch (w) {
+                  _Who.people => 'People',
+                  _Who.mentors => 'Mentors',
+                  _Who.campuses => 'Campuses',
+                },
+                onChanged: (w) => setState(() => _who = w),
+              ),
+            ),
+            Expanded(
+              child: _who == _Who.campuses
+                  ? _Results<CampusSearchResult>(
+                      key: ValueKey('campuses|$query'),
+                      state: ref.watch(campusSearchProvider(query)),
+                      onRefresh: () =>
+                          ref.refresh(campusSearchProvider(query).future),
+                      onRetry: () =>
+                          ref.invalidate(campusSearchProvider(query)),
+                      onLoadMore: () => ref
+                          .read(campusSearchProvider(query).notifier)
+                          .loadMore(),
+                      empty: query.isEmpty
+                          ? 'No campuses yet.'
+                          : 'No campus matches "$query". Try its short code, like CET.',
+                      row: (campus, _, _) => _CampusRow(campus: campus),
+                    )
+                  : _Results<UserSearchResult>(
+                      key: ValueKey('$role|$query'),
+                      state: ref.watch(userSearchProvider(query, role)),
+                      onRefresh: () =>
+                          ref.refresh(userSearchProvider(query, role).future),
+                      onRetry: () =>
+                          ref.invalidate(userSearchProvider(query, role)),
+                      onLoadMore: () => ref
+                          .read(userSearchProvider(query, role).notifier)
+                          .loadMore(),
+                      empty: _emptyPeople(query, role),
+                      grouped: true,
+                      row: (result, i, count) =>
+                          _ResultRow(result: result, last: i == count - 1),
+                      keep: (u) => !blocked.blocks(id: u.id, muid: u.muid),
+                    ),
+            ),
           ],
         ),
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(MuSpace.screenH),
-            child: TextField(
-              controller: _queryController,
-              autofocus: true,
-              decoration: const InputDecoration(
-                prefixIcon: Icon(LucideIcons.search, size: 20),
-                hintText: 'Search by name or MUID…',
+    );
+  }
+}
+
+/// A search list: loading, an error with retry, the empty copy, or the rows
+/// with pull to refresh and the next page loading as the end comes near.
+/// Rows are built as they scroll in: an empty query lists everyone.
+class _Results<T> extends StatelessWidget {
+  const _Results({
+    required this.state,
+    required this.onRefresh,
+    required this.onRetry,
+    required this.onLoadMore,
+    required this.empty,
+    required this.row,
+    this.grouped = false,
+    this.keep,
+    super.key,
+  });
+
+  final AsyncValue<PagedState<T>> state;
+  final Future<void> Function() onRefresh;
+  final VoidCallback onRetry;
+  final Future<void> Function() onLoadMore;
+  final String empty;
+
+  /// One result: the item, its index and how many are loaded.
+  final Widget Function(T item, int index, int count) row;
+
+  /// Rows on one card.
+  final bool grouped;
+
+  /// Whether to show a result; people this member blocked are left out.
+  final bool Function(T item)? keep;
+
+  @override
+  Widget build(BuildContext context) => state.when(
+    skipError: true,
+    loading: () => const Center(child: MuDotsLoader(label: 'Searching…')),
+    error: (e, _) => ErrorRetryView(error: e, onRetry: onRetry),
+    data: (all) {
+      final keep = this.keep;
+      final paged = keep == null
+          ? all
+          : all.copyWith(
+              items: [
+                for (final item in all.items)
+                  if (keep(item)) item,
+              ],
+            );
+      if (paged.items.isEmpty) {
+        return MuRefresh(
+          onRefresh: onRefresh,
+          child: ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            children: [
+              MuStateDisplay(
+                variant: MuStateVariant.noResults,
+                size: MuStateSize.sm,
+                description: empty,
               ),
-              onSubmitted: (_) => _runSearch(),
-              textInputAction: TextInputAction.search,
-            ),
+            ],
           ),
-          Expanded(
-            child: resultsState.when(
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, _) =>
-                  Center(child: Text(ApiException.messageFor(error))),
-              data: (results) {
-                if (_queryController.text.trim().isEmpty) {
-                  return const MuEmptyState(
-                    icon: LucideIcons.search,
-                    title: 'Search for someone',
-                    message: 'Find users and mentors by name or MUID.',
-                  );
-                }
-                if (results.isEmpty) {
-                  // The dashboard's SearchResults copy.
-                  return SingleChildScrollView(
-                    child: MuStateDisplay(
-                      variant: MuStateVariant.noResults,
-                      size: MuStateSize.sm,
-                      description:
-                          'No members match "${_queryController.text.trim()}". Try a different path and keep exploring.',
-                    ),
-                  );
-                }
-                final hasMore =
-                    ref.read(searchControllerProvider.notifier).hasMore;
-                return ListView.builder(
-                  controller: _scrollController,
-                  padding: const EdgeInsets.fromLTRB(
-                    MuSpace.screenH,
-                    0,
-                    MuSpace.screenH,
-                    MuSpace.l,
-                  ),
-                  itemCount: results.length + (hasMore ? 1 : 0),
-                  itemBuilder: (context, index) {
-                    if (index >= results.length) {
-                      return const Padding(
-                        padding: EdgeInsets.all(MuSpace.l),
-                        child: Center(child: CircularProgressIndicator()),
-                      );
-                    }
-                    final result = results[index];
-                    return UserSearchResultTile(
-                      result: result,
-                      onTap: () => context
-                          .push(RoutePaths.publicProfilePath(result.muid)),
-                    );
-                  },
-                );
-              },
-            ),
-          ),
-        ],
+        );
+      }
+      return MuPagedListView<T>(
+        state: paged,
+        onRefresh: onRefresh,
+        onLoadMore: onLoadMore,
+        grouped: grouped,
+        padding: const EdgeInsets.fromLTRB(
+          MuSpacing.space5,
+          MuSpacing.space4,
+          MuSpacing.space5,
+          MuSpacing.space8,
+        ),
+        itemBuilder: (_, item, i) => row(item, i, paged.items.length),
+      );
+    },
+  );
+}
+
+class _ResultRow extends StatelessWidget {
+  const _ResultRow({required this.result, required this.last});
+
+  final UserSearchResult result;
+  final bool last;
+
+  @override
+  Widget build(BuildContext context) {
+    final org = result.organization;
+    return MuFeedRow(
+      leading: MuAvatar(
+        name: result.fullName,
+        url: result.profilePicUrl,
+        size: MuSizes.avatarMd,
+        ring: false,
       ),
+      subject: result.fullName,
+      time: [result.muid, if (org != null && org.isNotEmpty) org].join(' · '),
+      trailing: MuFeedAmount(muGrouped(result.karma)),
+      divider: !last,
+      onTap: () => context.push(RoutePaths.publicProfilePath(result.muid)),
+    );
+  }
+}
+
+class _CampusRow extends StatelessWidget {
+  const _CampusRow({required this.campus});
+
+  final CampusSearchResult campus;
+
+  @override
+  Widget build(BuildContext context) {
+    final c = campus;
+    final place = [?c.district, ?c.zone].join(' · ');
+    return MuCampusCrest(
+      code: c.code.isEmpty ? null : c.code,
+      name: c.title,
+      caption: [
+        if (c.isSchool) 'School',
+        if (place.isNotEmpty) place,
+        if (c.learners == 1)
+          '1 learner'
+        else
+          '${muGrouped(c.learners)} learners',
+      ].join(' · '),
+      trailing: Icon(
+        LucideIcons.chevronRight,
+        size: MuSizes.iconSm + 2,
+        color: context.mu.colors.ink3,
+      ),
+      onTap: () => context.push(RoutePaths.publicCampusPath(c.id)),
     );
   }
 }

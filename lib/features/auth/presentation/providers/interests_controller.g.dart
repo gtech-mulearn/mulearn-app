@@ -13,7 +13,7 @@ part of 'interests_controller.dart';
 /// loading/error state (rules.md §4).
 
 @ProviderFor(InterestsController)
-const interestsControllerProvider = InterestsControllerProvider._();
+final interestsControllerProvider = InterestsControllerProvider._();
 
 /// Submits the pathway/endgoal selections from the post-registration
 /// interests onboarding step. Exposes `AsyncValue<void>` for automatic
@@ -23,7 +23,7 @@ final class InterestsControllerProvider
   /// Submits the pathway/endgoal selections from the post-registration
   /// interests onboarding step. Exposes `AsyncValue<void>` for automatic
   /// loading/error state (rules.md §4).
-  const InterestsControllerProvider._()
+  InterestsControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -43,7 +43,7 @@ final class InterestsControllerProvider
 }
 
 String _$interestsControllerHash() =>
-    r'ba7c392105a0a56830ef40b64142e79a8707f8c9';
+    r'3ea527fde8fa70bbde7c7e02e896d01ab7fb0528';
 
 /// Submits the pathway/endgoal selections from the post-registration
 /// interests onboarding step. Exposes `AsyncValue<void>` for automatic
@@ -53,8 +53,7 @@ abstract class _$InterestsController extends $AsyncNotifier<void> {
   FutureOr<void> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<void>, void>;
     final element =
         ref.element
@@ -64,6 +63,6 @@ abstract class _$InterestsController extends $AsyncNotifier<void> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, null);
+    return element.handleCreate(ref, build);
   }
 }

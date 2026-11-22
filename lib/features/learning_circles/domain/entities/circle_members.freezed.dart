@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'circle_members.dart';
@@ -9,6 +9,7 @@ part of 'circle_members.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $CircleMembersCopyWith<CircleMembers> get copyWith => _$CircleMembersCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CircleMembers&&const DeepCollectionEquality().equals(other.members, members)&&(identical(other.owner, owner) || other.owner == owner));
+  final _this = this as CircleMembers;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CircleMembers&&const DeepCollectionEquality().equals(other.members, _this.members)&&(identical(other.owner, _this.owner) || other.owner == _this.owner));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(members),owner);
+int get hashCode {
+  final _this = this as CircleMembers;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.members),_this.owner);
+}
 
 @override
 String toString() {
-  return 'CircleMembers(members: $members, owner: $owner)';
+  final _this = this as CircleMembers;
+  return 'CircleMembers(members: ${_this.members}, owner: ${_this.owner})';
 }
 
 
@@ -63,7 +69,7 @@ class _$CircleMembersCopyWithImpl<$Res>
 /// Create a copy of CircleMembers
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? members = null,Object? owner = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(CircleMembers(
 members: null == members ? _self.members : members // ignore: cast_nullable_to_non_nullable
 as List<CircleMember>,owner: freezed == owner ? _self.owner : owner // ignore: cast_nullable_to_non_nullable
 as CircleUserRef?,
@@ -219,7 +225,7 @@ return $default(_that.members,_that.owner);case _:
 
 
 class _CircleMembers implements CircleMembers {
-  const _CircleMembers({required final  List<CircleMember> members, this.owner}): _members = members;
+  const _CircleMembers({required  List<CircleMember> members, this.owner}): _members = members;
   
 
  final  List<CircleMember> _members;
@@ -241,16 +247,18 @@ _$CircleMembersCopyWith<_CircleMembers> get copyWith => __$CircleMembersCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CircleMembers&&const DeepCollectionEquality().equals(other._members, _members)&&(identical(other.owner, owner) || other.owner == owner));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CircleMembers&&const DeepCollectionEquality().equals(other.members, _members)&&(identical(other.owner, owner) || other.owner == owner));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_members),owner);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_members),owner);
+}
 
 @override
 String toString() {
-  return 'CircleMembers(members: $members, owner: $owner)';
+    return 'CircleMembers(members: $members, owner: $owner)';
 }
 
 

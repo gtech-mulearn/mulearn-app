@@ -13,7 +13,7 @@ part of 'vc_issuance_controller.dart';
 /// `issueVC` + `updateVCURL` calls form together.
 
 @ProviderFor(VcIssuanceController)
-const vcIssuanceControllerProvider = VcIssuanceControllerProvider._();
+final vcIssuanceControllerProvider = VcIssuanceControllerProvider._();
 
 /// Issues a Verifiable Credential via QSeverse, then persists the resulting
 /// URL against the achievement — the two-step flow the reference dashboard's
@@ -23,7 +23,7 @@ final class VcIssuanceControllerProvider
   /// Issues a Verifiable Credential via QSeverse, then persists the resulting
   /// URL against the achievement — the two-step flow the reference dashboard's
   /// `issueVC` + `updateVCURL` calls form together.
-  const VcIssuanceControllerProvider._()
+  VcIssuanceControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -53,8 +53,7 @@ abstract class _$VcIssuanceController extends $AsyncNotifier<List<IssuedVc>?> {
   FutureOr<List<IssuedVc>?> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<List<IssuedVc>?>, List<IssuedVc>?>;
     final element =
         ref.element
@@ -64,6 +63,6 @@ abstract class _$VcIssuanceController extends $AsyncNotifier<List<IssuedVc>?> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }

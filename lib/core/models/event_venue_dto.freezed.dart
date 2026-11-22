@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'event_venue_dto.dart';
@@ -9,6 +9,7 @@ part of 'event_venue_dto.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $EventVenueDtoCopyWith<EventVenueDto> get copyWith => _$EventVenueDtoCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EventVenueDto&&(identical(other.venueType, venueType) || other.venueType == venueType)&&(identical(other.venueAddress, venueAddress) || other.venueAddress == venueAddress)&&(identical(other.venueCity, venueCity) || other.venueCity == venueCity)&&(identical(other.venueMapsUrl, venueMapsUrl) || other.venueMapsUrl == venueMapsUrl)&&(identical(other.venueOnlineLink, venueOnlineLink) || other.venueOnlineLink == venueOnlineLink)&&(identical(other.venuePlatform, venuePlatform) || other.venuePlatform == venuePlatform));
+  final _this = this as EventVenueDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EventVenueDto&&(identical(other.venueType, _this.venueType) || other.venueType == _this.venueType)&&(identical(other.venueAddress, _this.venueAddress) || other.venueAddress == _this.venueAddress)&&(identical(other.venueCity, _this.venueCity) || other.venueCity == _this.venueCity)&&(identical(other.venueMapsUrl, _this.venueMapsUrl) || other.venueMapsUrl == _this.venueMapsUrl)&&(identical(other.venueOnlineLink, _this.venueOnlineLink) || other.venueOnlineLink == _this.venueOnlineLink)&&(identical(other.venuePlatform, _this.venuePlatform) || other.venuePlatform == _this.venuePlatform));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,venueType,venueAddress,venueCity,venueMapsUrl,venueOnlineLink,venuePlatform);
+int get hashCode {
+  final _this = this as EventVenueDto;
+  return Object.hash(runtimeType,_this.venueType,_this.venueAddress,_this.venueCity,_this.venueMapsUrl,_this.venueOnlineLink,_this.venuePlatform);
+}
 
 @override
 String toString() {
-  return 'EventVenueDto(venueType: $venueType, venueAddress: $venueAddress, venueCity: $venueCity, venueMapsUrl: $venueMapsUrl, venueOnlineLink: $venueOnlineLink, venuePlatform: $venuePlatform)';
+  final _this = this as EventVenueDto;
+  return 'EventVenueDto(venueType: ${_this.venueType}, venueAddress: ${_this.venueAddress}, venueCity: ${_this.venueCity}, venueMapsUrl: ${_this.venueMapsUrl}, venueOnlineLink: ${_this.venueOnlineLink}, venuePlatform: ${_this.venuePlatform})';
 }
 
 
@@ -66,7 +72,7 @@ class _$EventVenueDtoCopyWithImpl<$Res>
 /// Create a copy of EventVenueDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? venueType = null,Object? venueAddress = freezed,Object? venueCity = freezed,Object? venueMapsUrl = freezed,Object? venueOnlineLink = freezed,Object? venuePlatform = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(EventVenueDto(
 venueType: null == venueType ? _self.venueType : venueType // ignore: cast_nullable_to_non_nullable
 as String,venueAddress: freezed == venueAddress ? _self.venueAddress : venueAddress // ignore: cast_nullable_to_non_nullable
 as String?,venueCity: freezed == venueCity ? _self.venueCity : venueCity // ignore: cast_nullable_to_non_nullable
@@ -237,16 +243,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EventVenueDto&&(identical(other.venueType, venueType) || other.venueType == venueType)&&(identical(other.venueAddress, venueAddress) || other.venueAddress == venueAddress)&&(identical(other.venueCity, venueCity) || other.venueCity == venueCity)&&(identical(other.venueMapsUrl, venueMapsUrl) || other.venueMapsUrl == venueMapsUrl)&&(identical(other.venueOnlineLink, venueOnlineLink) || other.venueOnlineLink == venueOnlineLink)&&(identical(other.venuePlatform, venuePlatform) || other.venuePlatform == venuePlatform));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _EventVenueDto&&(identical(other.venueType, venueType) || other.venueType == venueType)&&(identical(other.venueAddress, venueAddress) || other.venueAddress == venueAddress)&&(identical(other.venueCity, venueCity) || other.venueCity == venueCity)&&(identical(other.venueMapsUrl, venueMapsUrl) || other.venueMapsUrl == venueMapsUrl)&&(identical(other.venueOnlineLink, venueOnlineLink) || other.venueOnlineLink == venueOnlineLink)&&(identical(other.venuePlatform, venuePlatform) || other.venuePlatform == venuePlatform));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,venueType,venueAddress,venueCity,venueMapsUrl,venueOnlineLink,venuePlatform);
+int get hashCode {
+    return Object.hash(runtimeType,venueType,venueAddress,venueCity,venueMapsUrl,venueOnlineLink,venuePlatform);
+}
 
 @override
 String toString() {
-  return 'EventVenueDto(venueType: $venueType, venueAddress: $venueAddress, venueCity: $venueCity, venueMapsUrl: $venueMapsUrl, venueOnlineLink: $venueOnlineLink, venuePlatform: $venuePlatform)';
+    return 'EventVenueDto(venueType: $venueType, venueAddress: $venueAddress, venueCity: $venueCity, venueMapsUrl: $venueMapsUrl, venueOnlineLink: $venueOnlineLink, venuePlatform: $venuePlatform)';
 }
 
 

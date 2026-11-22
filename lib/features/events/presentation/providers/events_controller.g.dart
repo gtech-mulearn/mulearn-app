@@ -10,7 +10,7 @@ part of 'events_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(eventsRemoteDataSource)
-const eventsRemoteDataSourceProvider = EventsRemoteDataSourceProvider._();
+final eventsRemoteDataSourceProvider = EventsRemoteDataSourceProvider._();
 
 final class EventsRemoteDataSourceProvider
     extends
@@ -20,7 +20,7 @@ final class EventsRemoteDataSourceProvider
           EventsRemoteDataSource
         >
     with $Provider<EventsRemoteDataSource> {
-  const EventsRemoteDataSourceProvider._()
+  EventsRemoteDataSourceProvider._()
     : super(
         from: null,
         argument: null,
@@ -60,7 +60,7 @@ String _$eventsRemoteDataSourceHash() =>
 /// Presentation depends on the [EventsRepository] contract (rules.md §2/§5).
 
 @ProviderFor(eventsRepository)
-const eventsRepositoryProvider = EventsRepositoryProvider._();
+final eventsRepositoryProvider = EventsRepositoryProvider._();
 
 /// Presentation depends on the [EventsRepository] contract (rules.md §2/§5).
 
@@ -73,7 +73,7 @@ final class EventsRepositoryProvider
         >
     with $Provider<EventsRepository> {
   /// Presentation depends on the [EventsRepository] contract (rules.md §2/§5).
-  const EventsRepositoryProvider._()
+  EventsRepositoryProvider._()
     : super(
         from: null,
         argument: null,
@@ -109,12 +109,12 @@ final class EventsRepositoryProvider
 String _$eventsRepositoryHash() => r'cf8d4a0f65937e431bab8cf0291df0634b30eb6b';
 
 @ProviderFor(eventDetail)
-const eventDetailProvider = EventDetailFamily._();
+final eventDetailProvider = EventDetailFamily._();
 
 final class EventDetailProvider
     extends $FunctionalProvider<AsyncValue<Event>, Event, FutureOr<Event>>
     with $FutureModifier<Event>, $FutureProvider<Event> {
-  const EventDetailProvider._({
+  EventDetailProvider._({
     required EventDetailFamily super.from,
     required String super.argument,
   }) : super(
@@ -161,7 +161,7 @@ String _$eventDetailHash() => r'ddf0a7cb9385aaf18b04e87d7e9817e195aced34';
 
 final class EventDetailFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<Event>, String> {
-  const EventDetailFamily._()
+  EventDetailFamily._()
     : super(
         retry: null,
         name: r'eventDetailProvider',
@@ -182,7 +182,7 @@ final class EventDetailFamily extends $Family
 /// already shown and records the error for an inline retry.
 
 @ProviderFor(EventsListController)
-const eventsListControllerProvider = EventsListControllerFamily._();
+final eventsListControllerProvider = EventsListControllerFamily._();
 
 /// Accumulates event pages across "load more", one list per [EventFilter]
 /// (a new filter starts again at page 1). A failed page keeps the events
@@ -192,7 +192,7 @@ final class EventsListControllerProvider
   /// Accumulates event pages across "load more", one list per [EventFilter]
   /// (a new filter starts again at page 1). A failed page keeps the events
   /// already shown and records the error for an inline retry.
-  const EventsListControllerProvider._({
+  EventsListControllerProvider._({
     required EventsListControllerFamily super.from,
     required EventFilter super.argument,
   }) : super(
@@ -229,7 +229,7 @@ final class EventsListControllerProvider
 }
 
 String _$eventsListControllerHash() =>
-    r'4a497f5742a9ebcac8069adefd874ceb156d62e0';
+    r'85567c6832cd62237309a3a3bec413e6fd69357d';
 
 /// Accumulates event pages across "load more", one list per [EventFilter]
 /// (a new filter starts again at page 1). A failed page keeps the events
@@ -244,7 +244,7 @@ final class EventsListControllerFamily extends $Family
           FutureOr<PagedState<Event>>,
           EventFilter
         > {
-  const EventsListControllerFamily._()
+  EventsListControllerFamily._()
     : super(
         retry: null,
         name: r'eventsListControllerProvider',
@@ -276,8 +276,7 @@ abstract class _$EventsListController
   FutureOr<PagedState<Event>> build(EventFilter filter);
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build(_$args);
+  WhenComplete runBuild() {
     final ref =
         this.ref as $Ref<AsyncValue<PagedState<Event>>, PagedState<Event>>;
     final element =
@@ -288,7 +287,7 @@ abstract class _$EventsListController
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, () => build(_$args));
   }
 }
 
@@ -296,7 +295,7 @@ abstract class _$EventsListController
 /// list providers so both reflect the new `viewerInterestStatus`.
 
 @ProviderFor(EventInterestController)
-const eventInterestControllerProvider = EventInterestControllerProvider._();
+final eventInterestControllerProvider = EventInterestControllerProvider._();
 
 /// Toggles interest for a single event, then invalidates the detail and
 /// list providers so both reflect the new `viewerInterestStatus`.
@@ -304,7 +303,7 @@ final class EventInterestControllerProvider
     extends $AsyncNotifierProvider<EventInterestController, void> {
   /// Toggles interest for a single event, then invalidates the detail and
   /// list providers so both reflect the new `viewerInterestStatus`.
-  const EventInterestControllerProvider._()
+  EventInterestControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -333,8 +332,7 @@ abstract class _$EventInterestController extends $AsyncNotifier<void> {
   FutureOr<void> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<void>, void>;
     final element =
         ref.element
@@ -344,6 +342,6 @@ abstract class _$EventInterestController extends $AsyncNotifier<void> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, null);
+    return element.handleCreate(ref, build);
   }
 }

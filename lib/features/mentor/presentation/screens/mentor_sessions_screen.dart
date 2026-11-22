@@ -4,16 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:mulearn_app/core/design_system/design_system.dart';
+import 'package:mulearn_app/core/network/paging.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
-import 'package:mulearn_app/core/theme/mu_space.dart';
-import 'package:mulearn_app/core/theme/mulearn_colors.dart';
-import 'package:mulearn_app/core/theme/mulearn_typography.dart';
 import 'package:mulearn_app/core/utils/clock.dart';
 import 'package:mulearn_app/core/utils/date_format.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
-import 'package:mulearn_app/core/widgets/mu_card.dart';
-import 'package:mulearn_app/core/widgets/mu_chip.dart';
-import 'package:mulearn_app/core/widgets/mu_load_more_footer.dart';
+import 'package:mulearn_app/core/widgets/mu_paged_list.dart';
 import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/core/widgets/mu_state_display.dart';
 import 'package:mulearn_app/features/mentor/domain/entities/mentor_session.dart';
@@ -25,12 +22,14 @@ import 'package:mulearn_app/features/mentor/presentation/widgets/meeting_actions
 import 'package:mulearn_app/features/mentor/presentation/widgets/session_labels.dart';
 
 /// The mentor's sessions (M2): Upcoming / Awaiting approval / Completed /
-/// All, grouped by local day, with New session and per-session Edit/Delete.
+/// All as chips, grouped by local day, each a row with its times on the
+/// left and Join when it's time. New session is pinned at the bottom.
 class MentorSessionsScreen extends ConsumerStatefulWidget {
   const MentorSessionsScreen({super.key});
 
   @override
-  ConsumerState<MentorSessionsScreen> createState() => _MentorSessionsScreenState();
+  ConsumerState<MentorSessionsScreen> createState() =>
+      _MentorSessionsScreenState();
 }
 
 class _MentorSessionsScreenState extends ConsumerState<MentorSessionsScreen> {
@@ -38,29 +37,52 @@ class _MentorSessionsScreenState extends ConsumerState<MentorSessionsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final mu = context.mu;
     final state = ref.watch(mentorSessionsControllerProvider(_filter));
-    final canCreate = ref.watch(sessionTargetsProvider).value?.isNotEmpty ?? false;
-    return Scaffold(
-      backgroundColor: MuColors.canvas,
-      appBar: AppBar(backgroundColor: MuColors.canvas, elevation: 0, title: const Text('Sessions')),
-      floatingActionButton: canCreate
-          ? FloatingActionButton.extended(
+    final canCreate =
+        ref.watch(sessionTargetsProvider).value?.isNotEmpty ?? false;
+    return MuWorkspacePage(
+      bottom: canCreate
+          ? MuButton(
+              label: 'New session',
+              icon: LucideIcons.plus,
+              block: true,
               onPressed: () => context.push(RoutePaths.mentorSessionNew),
-              icon: const Icon(LucideIcons.plus),
-              label: const Text('New session'),
             )
           : null,
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          SizedBox(
-            height: 44,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: MuSpace.screenH),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              MuSpacing.space5,
+              MuSpacing.space2,
+              MuSpacing.space5,
+              0,
+            ),
+            child: Semantics(
+              header: true,
+              child: Text(
+                'Sessions',
+                style: mu.text.display.copyWith(fontSize: 32),
+              ),
+            ),
+          ),
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(
+              horizontal: MuSpacing.space5,
+              vertical: MuSpacing.space3,
+            ),
+            child: Row(
               children: [
                 for (final f in SessionFilter.values) ...[
-                  MuFilterChip(label: f.label, selected: f == _filter, onTap: () => setState(() => _filter = f)),
-                  const SizedBox(width: MuSpace.s),
+                  MuFilterChip(
+                    label: f.label,
+                    selected: f == _filter,
+                    onTap: () => setState(() => _filter = f),
+                  ),
+                  const SizedBox(width: MuSpacing.space2),
                 ],
               ],
             ),
@@ -68,56 +90,82 @@ class _MentorSessionsScreenState extends ConsumerState<MentorSessionsScreen> {
           Expanded(
             child: state.when(
               skipError: true,
-              loading: () => const Center(child: CircularProgressIndicator()),
+              loading: () =>
+                  const Center(child: MuDotsLoader(label: 'Loading sessions…')),
               error: (e, _) => ErrorRetryView(
                 error: e,
-                onRetry: () => ref.invalidate(mentorSessionsControllerProvider(_filter)),
+                onRetry: () =>
+                    ref.invalidate(mentorSessionsControllerProvider(_filter)),
               ),
               data: (paged) {
-                Future<void> refresh() => ref.refresh(mentorSessionsControllerProvider(_filter).future);
+                Future<void> refresh() => ref.refresh(
+                  mentorSessionsControllerProvider(_filter).future,
+                );
                 if (paged.items.isEmpty) {
                   // The dashboard's sessions page: StateDisplay "no-results", small.
                   return MuRefresh(
                     onRefresh: refresh,
                     child: ListView(
                       physics: const AlwaysScrollableScrollPhysics(),
-                      children: const [MuStateDisplay(variant: MuStateVariant.noResults, size: MuStateSize.sm)],
+                      children: const [
+                        MuStateDisplay(
+                          variant: MuStateVariant.noResults,
+                          size: MuStateSize.sm,
+                        ),
+                      ],
                     ),
                   );
                 }
-                final groups = groupByLocalDay(paged.items);
-                return MuRefresh(
-                  onRefresh: refresh,
-                  child: NotificationListener<ScrollNotification>(
-                    onNotification: (n) {
-                      if (n.metrics.extentAfter < 400 && paged.hasMore && paged.loadMoreError == null) {
-                        unawaited(ref.read(mentorSessionsControllerProvider(_filter).notifier).loadMore());
-                      }
-                      return false;
-                    },
-                    child: ListView(
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      padding: const EdgeInsets.fromLTRB(MuSpace.screenH, MuSpace.m, MuSpace.screenH, 96),
-                      children: [
-                        for (final g in groups) ...[
-                          Padding(
-                            padding: const EdgeInsets.only(top: MuSpace.m, bottom: MuSpace.s),
-                            child: Text(
-                              formatDayHeading(g.day, ref.watch(clockProvider)().toLocal()).toUpperCase(),
-                              style: MuType.eyebrow,
-                            ),
-                          ),
-                          for (final s in g.sessions) _SessionTile(session: s, showStatus: _filter == SessionFilter.all),
-                        ],
-                        if (paged.hasMore || paged.loadMoreError != null)
-                          MuLoadMoreFooter(
-                            isLoading: paged.isLoadingMore,
-                            error: paged.loadMoreError,
-                            onRetry: () => ref.read(mentorSessionsControllerProvider(_filter).notifier).loadMore(),
-                          ),
-                      ],
-                    ),
+                final today = ref.watch(clockProvider)().toLocal();
+                // Day headings and rows as one flat list, so it's built row
+                // by row; each row is its slice of the day's card.
+                final entries = <_Entry>[
+                  for (final g in groupByLocalDay(paged.items)) ...[
+                    _Entry.heading(g.day),
+                    for (var i = 0; i < g.sessions.length; i++)
+                      _Entry.row(
+                        g.sessions[i],
+                        first: i == 0,
+                        last: i == g.sessions.length - 1,
+                      ),
+                  ],
+                ];
+                return MuPagedListView<_Entry>(
+                  state: PagedState(
+                    items: entries,
+                    hasMore: paged.hasMore,
+                    isLoadingMore: paged.isLoadingMore,
+                    loadMoreError: paged.loadMoreError,
                   ),
+                  onRefresh: refresh,
+                  gap: 0,
+                  padding: const EdgeInsets.fromLTRB(
+                    MuSpacing.space5,
+                    0,
+                    MuSpacing.space5,
+                    MuSpacing.space8,
+                  ),
+                  onLoadMore: () => ref
+                      .read(mentorSessionsControllerProvider(_filter).notifier)
+                      .loadMore(),
+                  itemBuilder: (_, e, _) {
+                    final session = e.session;
+                    if (session == null) {
+                      return MuSectionEyebrow(
+                        formatDayHeading(e.day!, today),
+                        top: MuSpacing.space4,
+                      );
+                    }
+                    return MuFeedGroupSlice(
+                      first: e.first,
+                      last: e.last,
+                      child: _SessionRow(
+                        session: session,
+                        showStatus: _filter == SessionFilter.all,
+                        last: e.last,
+                      ),
+                    );
+                  },
                 );
               },
             ),
@@ -128,82 +176,105 @@ class _MentorSessionsScreenState extends ConsumerState<MentorSessionsScreen> {
   }
 }
 
-String statusLabel(SessionStatus s) => switch (s) {
-      SessionStatus.requested => 'Requested',
-      SessionStatus.scheduled => 'Scheduled',
-      SessionStatus.pendingApproval => 'Awaiting approval',
-      SessionStatus.completed => 'Completed',
-      SessionStatus.cancelled => 'Cancelled',
-      SessionStatus.rejected => 'Rejected',
-      SessionStatus.unknown => 'Unknown',
-    };
+/// A day heading or a session row in the flattened list.
+class _Entry {
+  const _Entry.heading(DateTime this.day)
+    : session = null,
+      first = false,
+      last = false;
+  const _Entry.row(
+    MentorSession this.session, {
+    required this.first,
+    required this.last,
+  }) : day = null;
 
-/// One session: time on the left (like a calendar), title and where in the
-/// middle, Join or a chevron on the right. The whole row opens the session.
-class _SessionTile extends ConsumerWidget {
-  const _SessionTile({required this.session, required this.showStatus});
+  final DateTime? day;
+  final MentorSession? session;
+  final bool first;
+  final bool last;
+}
+
+String statusLabel(SessionStatus s) => switch (s) {
+  SessionStatus.requested => 'Requested',
+  SessionStatus.scheduled => 'Scheduled',
+  SessionStatus.pendingApproval => 'Awaiting approval',
+  SessionStatus.completed => 'Completed',
+  SessionStatus.cancelled => 'Cancelled',
+  SessionStatus.rejected => 'Rejected',
+  SessionStatus.unknown => 'Unknown',
+};
+
+/// One session: start and end on the left (like a calendar), title and
+/// where, a Live now or status pill, Join or a chevron on the right. The
+/// row opens the session.
+class _SessionRow extends ConsumerWidget {
+  const _SessionRow({
+    required this.session,
+    required this.showStatus,
+    required this.last,
+  });
 
   final MentorSession session;
   final bool showStatus;
+  final bool last;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final mu = context.mu;
+    final c = mu.colors;
     final now = ref.watch(clockProvider)();
     final starts = session.startsAt.toLocal();
     final ends = session.endsAt.toLocal();
-    final live = hasStarted(session, now) && now.isBefore(session.endsAt) && session.status == SessionStatus.scheduled;
+    final live =
+        hasStarted(session, now) &&
+        now.isBefore(session.endsAt) &&
+        session.status == SessionStatus.scheduled;
     final joinable = canJoinSession(session, now);
-    return Padding(
-      padding: const EdgeInsets.only(bottom: MuSpace.s),
-      child: MuCard(
-        onTap: () => context.push(RoutePaths.mentorSessionDetailPath(session.id)),
-        padding: const EdgeInsets.fromLTRB(MuSpace.l, MuSpace.m, MuSpace.s, MuSpace.m),
-        child: Row(
+    return MuFeedRow(
+      leading: SizedBox(
+        width: 64,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-              width: 64,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(formatTime(starts), style: MuType.bodyMed),
-                  Text(formatTime(ends), style: MuType.caption),
-                ],
+            Text(
+              formatTime(starts),
+              style: mu.text.bodyStrong.copyWith(
+                fontSize: 14,
+                color: live ? c.success : c.ink,
               ),
             ),
-            const SizedBox(width: MuSpace.s),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(session.title, style: MuType.bodyMed, maxLines: 2, overflow: TextOverflow.ellipsis),
-                  const SizedBox(height: 2),
-                  Text(
-                    [sessionModeLabel(session.mode), if (session.entityName.isNotEmpty) session.entityName].join(' · '),
-                    style: MuType.caption,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  if (live || showStatus) ...[
-                    const SizedBox(height: MuSpace.xs),
-                    MuTagChip(
-                      label: live ? 'Live now' : statusLabel(session.status),
-                      style: live ? MuTagStyle.success : MuTagStyle.neutral,
-                    ),
-                  ],
-                ],
-              ),
-            ),
-            if (joinable)
-              FilledButton(
-                onPressed: () => openLink(context, ref, session.meetingLink!),
-                style: FilledButton.styleFrom(backgroundColor: MuColors.primary, visualDensity: VisualDensity.compact),
-                child: const Text('Join'),
-              )
-            else
-              const Icon(LucideIcons.chevronRight, size: 18, color: MuColors.inkSecondary),
+            Text(formatTime(ends), style: mu.text.caption),
           ],
         ),
       ),
+      subject: session.title,
+      time: [
+        sessionModeLabel(session.mode),
+        if (session.entityName.isNotEmpty) session.entityName,
+      ].join(' · '),
+      trailing: joinable
+          ? MuButton(
+              label: 'Join',
+              size: MuButtonSize.small,
+              onPressed: () => openLink(context, ref, session.meetingLink!),
+            )
+          : Icon(
+              LucideIcons.chevronRight,
+              size: MuSizes.iconSm + 2,
+              color: c.ink3,
+            ),
+      actions: [
+        if (live)
+          const MuPill(
+            'Live now',
+            tone: MuPillTone.volt,
+            icon: LucideIcons.radio,
+          )
+        else if (showStatus)
+          MuPill(statusLabel(session.status)),
+      ],
+      divider: !last,
+      onTap: () => context.push(RoutePaths.mentorSessionDetailPath(session.id)),
     );
   }
 }

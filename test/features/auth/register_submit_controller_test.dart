@@ -57,7 +57,9 @@ void main() {
 
   ProviderContainer containerWithBasicInfo() {
     final container = makeContainer();
-    container.read(registerWizardControllerProvider.notifier).setBasicInfo(
+    container
+        .read(registerWizardControllerProvider.notifier)
+        .setBasicInfo(
           fullName: 'Ada Lovelace',
           email: 'ada@mulearn.org',
           password: 'supersecret',
@@ -85,18 +87,28 @@ void main() {
 
       final container = makeContainer();
       container.read(registerWizardControllerProvider.notifier)
-        ..setGoogleSignUp(tempToken: 't', email: 'ada@gmail.com', fullName: 'Ada')
+        ..setGoogleSignUp(
+          tempToken: 't',
+          email: 'ada@gmail.com',
+          fullName: 'Ada',
+        )
         ..setBasicInfo(fullName: 'Ada Lovelace', email: 'ada@gmail.com');
       await container.read(appAuthControllerProvider.future);
 
-      await container.read(registerSubmitControllerProvider.notifier).submitGeneric(
-            role: RegistrationRole.student,
-            college: 'college-1',
-          );
+      await container
+          .read(registerSubmitControllerProvider.notifier)
+          .submitGeneric(role: RegistrationRole.student, college: 'college-1');
 
-      expect(container.read(registerSubmitControllerProvider).hasError, isFalse);
+      expect(
+        container.read(registerSubmitControllerProvider).hasError,
+        isFalse,
+      );
       verify(
-        () => repository.registerWithGoogle(tempToken: 't', fullName: 'Ada Lovelace', roleId: 'role-student'),
+        () => repository.registerWithGoogle(
+          tempToken: 't',
+          fullName: 'Ada Lovelace',
+          roleId: 'role-student',
+        ),
       ).called(1);
       verifyNever(
         () => repository.registerUser(
@@ -124,7 +136,9 @@ void main() {
       final container = containerWithBasicInfo();
       await container.read(appAuthControllerProvider.future);
 
-      await container.read(registerSubmitControllerProvider.notifier).submitGeneric(
+      await container
+          .read(registerSubmitControllerProvider.notifier)
+          .submitGeneric(
             role: RegistrationRole.student,
             college: 'college-1',
             department: 'dept-1',
@@ -147,40 +161,47 @@ void main() {
           graduationYear: 2027,
         ),
       ).called(1);
-      verifyNever(() => repository.createOrganization(title: any(named: 'title')));
+      verifyNever(
+        () => repository.createOrganization(title: any(named: 'title')),
+      );
       expect(container.read(appAuthControllerProvider).value, isTrue);
     });
 
-    test('College branch with "others" creates a new college for review', () async {
-      when(
-        () => repository.createOrganization(
-          title: any(named: 'title'),
-          orgType: any(named: 'orgType'),
-          department: any(named: 'department'),
-          graduationYear: any(named: 'graduationYear'),
-        ),
-      ).thenAnswer((_) async {});
+    test(
+      'College branch with "others" creates a new college for review',
+      () async {
+        when(
+          () => repository.createOrganization(
+            title: any(named: 'title'),
+            orgType: any(named: 'orgType'),
+            department: any(named: 'department'),
+            graduationYear: any(named: 'graduationYear'),
+          ),
+        ).thenAnswer((_) async {});
 
-      final container = containerWithBasicInfo();
-      await container.read(appAuthControllerProvider.future);
+        final container = containerWithBasicInfo();
+        await container.read(appAuthControllerProvider.future);
 
-      await container.read(registerSubmitControllerProvider.notifier).submitGeneric(
-            role: RegistrationRole.student,
-            college: 'others',
-            customCollege: 'My New College',
+        await container
+            .read(registerSubmitControllerProvider.notifier)
+            .submitGeneric(
+              role: RegistrationRole.student,
+              college: 'others',
+              customCollege: 'My New College',
+              department: 'dept-1',
+              graduationYear: 2027,
+            );
+
+        verify(
+          () => repository.createOrganization(
+            title: 'My New College',
+            orgType: 'College',
             department: 'dept-1',
             graduationYear: 2027,
-          );
-
-      verify(
-        () => repository.createOrganization(
-          title: 'My New College',
-          orgType: 'College',
-          department: 'dept-1',
-          graduationYear: 2027,
-        ),
-      ).called(1);
-    });
+          ),
+        ).called(1);
+      },
+    );
 
     test('Company-employed branch selects an existing company', () async {
       when(
@@ -195,7 +216,9 @@ void main() {
       final container = containerWithBasicInfo();
       await container.read(appAuthControllerProvider.future);
 
-      await container.read(registerSubmitControllerProvider.notifier).submitGeneric(
+      await container
+          .read(registerSubmitControllerProvider.notifier)
+          .submitGeneric(
             role: RegistrationRole.student,
             organization: 'company-1',
             organizationType: OrganizationType.company,
@@ -223,10 +246,9 @@ void main() {
     final container = containerWithBasicInfo();
     await container.read(appAuthControllerProvider.future);
 
-    await container.read(registerSubmitControllerProvider.notifier).submitGeneric(
-          role: RegistrationRole.enabler,
-          college: 'college-1',
-        );
+    await container
+        .read(registerSubmitControllerProvider.notifier)
+        .submitGeneric(role: RegistrationRole.enabler, college: 'college-1');
 
     verify(
       () => repository.registerUser(
@@ -237,7 +259,10 @@ void main() {
       ),
     ).called(1);
     verify(
-      () => repository.selectOrganization(organization: 'college-1', isStudent: false),
+      () => repository.selectOrganization(
+        organization: 'college-1',
+        isStudent: false,
+      ),
     ).called(1);
   });
 
@@ -255,7 +280,9 @@ void main() {
       final container = containerWithBasicInfo();
       await container.read(appAuthControllerProvider.future);
 
-      await container.read(registerSubmitControllerProvider.notifier).submitGeneric(
+      await container
+          .read(registerSubmitControllerProvider.notifier)
+          .submitGeneric(
             role: RegistrationRole.mentor,
             organization: 'college-1',
             department: 'dept-1',
@@ -286,7 +313,9 @@ void main() {
       final container = containerWithBasicInfo();
       await container.read(appAuthControllerProvider.future);
 
-      await container.read(registerSubmitControllerProvider.notifier).submitGeneric(
+      await container
+          .read(registerSubmitControllerProvider.notifier)
+          .submitGeneric(
             role: RegistrationRole.mentor,
             organization: 'company-1',
             organizationType: OrganizationType.company,
@@ -301,30 +330,34 @@ void main() {
     });
   });
 
-  test('submitGeneric throws when the role is not found in the role list', () async {
-    when(() => repository.fetchRoles()).thenAnswer((_) async => const []);
+  test(
+    'submitGeneric throws when the role is not found in the role list',
+    () async {
+      when(() => repository.fetchRoles()).thenAnswer((_) async => const []);
 
-    final container = containerWithBasicInfo();
-    await container.read(appAuthControllerProvider.future);
+      final container = containerWithBasicInfo();
+      await container.read(appAuthControllerProvider.future);
 
-    await expectLater(
-      container.read(registerSubmitControllerProvider.notifier).submitGeneric(
-            role: RegistrationRole.student,
-            college: 'college-1',
-          ),
-      throwsA(anything),
-    );
+      await expectLater(
+        container
+            .read(registerSubmitControllerProvider.notifier)
+            .submitGeneric(
+              role: RegistrationRole.student,
+              college: 'college-1',
+            ),
+        throwsA(anything),
+      );
 
-    verifyNever(
-      () => repository.registerUser(
-        fullName: any(named: 'fullName'),
-        email: any(named: 'email'),
-        password: any(named: 'password'),
-        roleId: any(named: 'roleId'),
-        referralMuid: any(named: 'referralMuid'),
-      ),
-    );
-    expect(container.read(appAuthControllerProvider).value, isFalse);
-  });
-
+      verifyNever(
+        () => repository.registerUser(
+          fullName: any(named: 'fullName'),
+          email: any(named: 'email'),
+          password: any(named: 'password'),
+          roleId: any(named: 'roleId'),
+          referralMuid: any(named: 'referralMuid'),
+        ),
+      );
+      expect(container.read(appAuthControllerProvider).value, isFalse);
+    },
+  );
 }

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'karma_distribution_entry.dart';
@@ -9,6 +9,7 @@ part of 'karma_distribution_entry.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $KarmaDistributionEntryCopyWith<KarmaDistributionEntry> get copyWith => _$KarmaD
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is KarmaDistributionEntry&&(identical(other.taskType, taskType) || other.taskType == taskType)&&(identical(other.karma, karma) || other.karma == karma));
+  final _this = this as KarmaDistributionEntry;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is KarmaDistributionEntry&&(identical(other.taskType, _this.taskType) || other.taskType == _this.taskType)&&(identical(other.karma, _this.karma) || other.karma == _this.karma));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,taskType,karma);
+int get hashCode {
+  final _this = this as KarmaDistributionEntry;
+  return Object.hash(runtimeType,_this.taskType,_this.karma);
+}
 
 @override
 String toString() {
-  return 'KarmaDistributionEntry(taskType: $taskType, karma: $karma)';
+  final _this = this as KarmaDistributionEntry;
+  return 'KarmaDistributionEntry(taskType: ${_this.taskType}, karma: ${_this.karma})';
 }
 
 
@@ -63,7 +69,7 @@ class _$KarmaDistributionEntryCopyWithImpl<$Res>
 /// Create a copy of KarmaDistributionEntry
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? taskType = null,Object? karma = null,}) {
-  return _then(_self.copyWith(
+  return _then(KarmaDistributionEntry(
 taskType: null == taskType ? _self.taskType : taskType // ignore: cast_nullable_to_non_nullable
 as String,karma: null == karma ? _self.karma : karma // ignore: cast_nullable_to_non_nullable
 as num,
@@ -223,16 +229,18 @@ _$KarmaDistributionEntryCopyWith<_KarmaDistributionEntry> get copyWith => __$Kar
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _KarmaDistributionEntry&&(identical(other.taskType, taskType) || other.taskType == taskType)&&(identical(other.karma, karma) || other.karma == karma));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _KarmaDistributionEntry&&(identical(other.taskType, taskType) || other.taskType == taskType)&&(identical(other.karma, karma) || other.karma == karma));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,taskType,karma);
+int get hashCode {
+    return Object.hash(runtimeType,taskType,karma);
+}
 
 @override
 String toString() {
-  return 'KarmaDistributionEntry(taskType: $taskType, karma: $karma)';
+    return 'KarmaDistributionEntry(taskType: $taskType, karma: $karma)';
 }
 
 

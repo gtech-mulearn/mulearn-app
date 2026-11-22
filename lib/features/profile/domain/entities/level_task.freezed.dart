@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'level_task.dart';
@@ -9,6 +9,7 @@ part of 'level_task.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $LevelTaskCopyWith<LevelTask> get copyWith => _$LevelTaskCopyWithImpl<LevelTask>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LevelTask&&(identical(other.taskName, taskName) || other.taskName == taskName)&&(identical(other.active, active) || other.active == active)&&(identical(other.completed, completed) || other.completed == completed)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.discordLink, discordLink) || other.discordLink == discordLink)&&(identical(other.hashtag, hashtag) || other.hashtag == hashtag)&&(identical(other.taskDescription, taskDescription) || other.taskDescription == taskDescription)&&(identical(other.interestGroup, interestGroup) || other.interestGroup == interestGroup)&&(identical(other.submissionChannel, submissionChannel) || other.submissionChannel == submissionChannel));
+  final _this = this as LevelTask;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LevelTask&&(identical(other.taskName, _this.taskName) || other.taskName == _this.taskName)&&(identical(other.active, _this.active) || other.active == _this.active)&&(identical(other.completed, _this.completed) || other.completed == _this.completed)&&(identical(other.karma, _this.karma) || other.karma == _this.karma)&&(identical(other.discordLink, _this.discordLink) || other.discordLink == _this.discordLink)&&(identical(other.hashtag, _this.hashtag) || other.hashtag == _this.hashtag)&&(identical(other.taskDescription, _this.taskDescription) || other.taskDescription == _this.taskDescription)&&(identical(other.interestGroup, _this.interestGroup) || other.interestGroup == _this.interestGroup)&&(identical(other.submissionChannel, _this.submissionChannel) || other.submissionChannel == _this.submissionChannel));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,taskName,active,completed,karma,discordLink,hashtag,taskDescription,interestGroup,submissionChannel);
+int get hashCode {
+  final _this = this as LevelTask;
+  return Object.hash(runtimeType,_this.taskName,_this.active,_this.completed,_this.karma,_this.discordLink,_this.hashtag,_this.taskDescription,_this.interestGroup,_this.submissionChannel);
+}
 
 @override
 String toString() {
-  return 'LevelTask(taskName: $taskName, active: $active, completed: $completed, karma: $karma, discordLink: $discordLink, hashtag: $hashtag, taskDescription: $taskDescription, interestGroup: $interestGroup, submissionChannel: $submissionChannel)';
+  final _this = this as LevelTask;
+  return 'LevelTask(taskName: ${_this.taskName}, active: ${_this.active}, completed: ${_this.completed}, karma: ${_this.karma}, discordLink: ${_this.discordLink}, hashtag: ${_this.hashtag}, taskDescription: ${_this.taskDescription}, interestGroup: ${_this.interestGroup}, submissionChannel: ${_this.submissionChannel})';
 }
 
 
@@ -63,7 +69,7 @@ class _$LevelTaskCopyWithImpl<$Res>
 /// Create a copy of LevelTask
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? taskName = null,Object? active = null,Object? completed = null,Object? karma = null,Object? discordLink = freezed,Object? hashtag = freezed,Object? taskDescription = freezed,Object? interestGroup = freezed,Object? submissionChannel = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(LevelTask(
 taskName: null == taskName ? _self.taskName : taskName // ignore: cast_nullable_to_non_nullable
 as String,active: null == active ? _self.active : active // ignore: cast_nullable_to_non_nullable
 as bool,completed: null == completed ? _self.completed : completed // ignore: cast_nullable_to_non_nullable
@@ -261,16 +267,18 @@ _$LevelTaskCopyWith<_LevelTask> get copyWith => __$LevelTaskCopyWithImpl<_LevelT
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _LevelTask&&(identical(other.taskName, taskName) || other.taskName == taskName)&&(identical(other.active, active) || other.active == active)&&(identical(other.completed, completed) || other.completed == completed)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.discordLink, discordLink) || other.discordLink == discordLink)&&(identical(other.hashtag, hashtag) || other.hashtag == hashtag)&&(identical(other.taskDescription, taskDescription) || other.taskDescription == taskDescription)&&(identical(other.interestGroup, interestGroup) || other.interestGroup == interestGroup)&&(identical(other.submissionChannel, submissionChannel) || other.submissionChannel == submissionChannel));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _LevelTask&&(identical(other.taskName, taskName) || other.taskName == taskName)&&(identical(other.active, active) || other.active == active)&&(identical(other.completed, completed) || other.completed == completed)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.discordLink, discordLink) || other.discordLink == discordLink)&&(identical(other.hashtag, hashtag) || other.hashtag == hashtag)&&(identical(other.taskDescription, taskDescription) || other.taskDescription == taskDescription)&&(identical(other.interestGroup, interestGroup) || other.interestGroup == interestGroup)&&(identical(other.submissionChannel, submissionChannel) || other.submissionChannel == submissionChannel));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,taskName,active,completed,karma,discordLink,hashtag,taskDescription,interestGroup,submissionChannel);
+int get hashCode {
+    return Object.hash(runtimeType,taskName,active,completed,karma,discordLink,hashtag,taskDescription,interestGroup,submissionChannel);
+}
 
 @override
 String toString() {
-  return 'LevelTask(taskName: $taskName, active: $active, completed: $completed, karma: $karma, discordLink: $discordLink, hashtag: $hashtag, taskDescription: $taskDescription, interestGroup: $interestGroup, submissionChannel: $submissionChannel)';
+    return 'LevelTask(taskName: $taskName, active: $active, completed: $completed, karma: $karma, discordLink: $discordLink, hashtag: $hashtag, taskDescription: $taskDescription, interestGroup: $interestGroup, submissionChannel: $submissionChannel)';
 }
 
 

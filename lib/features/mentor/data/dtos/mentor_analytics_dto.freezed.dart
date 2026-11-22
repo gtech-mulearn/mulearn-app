@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'mentor_analytics_dto.dart';
@@ -9,6 +9,7 @@ part of 'mentor_analytics_dto.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $MentorAnalyticsDtoCopyWith<MentorAnalyticsDto> get copyWith => _$MentorAnalytic
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MentorAnalyticsDto&&const DeepCollectionEquality().equals(other.sessions, sessions)&&(identical(other.karmaEarned, karmaEarned) || other.karmaEarned == karmaEarned)&&(identical(other.hoursContributed, hoursContributed) || other.hoursContributed == hoursContributed)&&const DeepCollectionEquality().equals(other.rating, rating));
+  final _this = this as MentorAnalyticsDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MentorAnalyticsDto&&const DeepCollectionEquality().equals(other.sessions, _this.sessions)&&(identical(other.karmaEarned, _this.karmaEarned) || other.karmaEarned == _this.karmaEarned)&&(identical(other.hoursContributed, _this.hoursContributed) || other.hoursContributed == _this.hoursContributed)&&const DeepCollectionEquality().equals(other.rating, _this.rating));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(sessions),karmaEarned,hoursContributed,const DeepCollectionEquality().hash(rating));
+int get hashCode {
+  final _this = this as MentorAnalyticsDto;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.sessions),_this.karmaEarned,_this.hoursContributed,const DeepCollectionEquality().hash(_this.rating));
+}
 
 @override
 String toString() {
-  return 'MentorAnalyticsDto(sessions: $sessions, karmaEarned: $karmaEarned, hoursContributed: $hoursContributed, rating: $rating)';
+  final _this = this as MentorAnalyticsDto;
+  return 'MentorAnalyticsDto(sessions: ${_this.sessions}, karmaEarned: ${_this.karmaEarned}, hoursContributed: ${_this.hoursContributed}, rating: ${_this.rating})';
 }
 
 
@@ -66,7 +72,7 @@ class _$MentorAnalyticsDtoCopyWithImpl<$Res>
 /// Create a copy of MentorAnalyticsDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? sessions = null,Object? karmaEarned = null,Object? hoursContributed = null,Object? rating = null,}) {
-  return _then(_self.copyWith(
+  return _then(MentorAnalyticsDto(
 sessions: null == sessions ? _self.sessions : sessions // ignore: cast_nullable_to_non_nullable
 as Map<String, dynamic>,karmaEarned: null == karmaEarned ? _self.karmaEarned : karmaEarned // ignore: cast_nullable_to_non_nullable
 as num,hoursContributed: null == hoursContributed ? _self.hoursContributed : hoursContributed // ignore: cast_nullable_to_non_nullable
@@ -212,7 +218,7 @@ return $default(_that.sessions,_that.karmaEarned,_that.hoursContributed,_that.ra
 @JsonSerializable()
 
 class _MentorAnalyticsDto extends MentorAnalyticsDto {
-  const _MentorAnalyticsDto({final  Map<String, dynamic> sessions = const <String, dynamic>{}, this.karmaEarned = 0, this.hoursContributed = 0, final  Map<String, dynamic> rating = const <String, dynamic>{}}): _sessions = sessions,_rating = rating,super._();
+  const _MentorAnalyticsDto({ Map<String, dynamic> sessions = const <String, dynamic>{}, this.karmaEarned = 0, this.hoursContributed = 0,  Map<String, dynamic> rating = const <String, dynamic>{}}): _sessions = sessions,_rating = rating,super._();
   factory _MentorAnalyticsDto.fromJson(Map<String, dynamic> json) => _$MentorAnalyticsDtoFromJson(json);
 
  final  Map<String, dynamic> _sessions;
@@ -245,16 +251,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MentorAnalyticsDto&&const DeepCollectionEquality().equals(other._sessions, _sessions)&&(identical(other.karmaEarned, karmaEarned) || other.karmaEarned == karmaEarned)&&(identical(other.hoursContributed, hoursContributed) || other.hoursContributed == hoursContributed)&&const DeepCollectionEquality().equals(other._rating, _rating));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MentorAnalyticsDto&&const DeepCollectionEquality().equals(other.sessions, _sessions)&&(identical(other.karmaEarned, karmaEarned) || other.karmaEarned == karmaEarned)&&(identical(other.hoursContributed, hoursContributed) || other.hoursContributed == hoursContributed)&&const DeepCollectionEquality().equals(other.rating, _rating));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_sessions),karmaEarned,hoursContributed,const DeepCollectionEquality().hash(_rating));
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_sessions),karmaEarned,hoursContributed,const DeepCollectionEquality().hash(_rating));
+}
 
 @override
 String toString() {
-  return 'MentorAnalyticsDto(sessions: $sessions, karmaEarned: $karmaEarned, hoursContributed: $hoursContributed, rating: $rating)';
+    return 'MentorAnalyticsDto(sessions: $sessions, karmaEarned: $karmaEarned, hoursContributed: $hoursContributed, rating: $rating)';
 }
 
 

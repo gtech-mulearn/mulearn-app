@@ -1,0 +1,23 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/problem-statements/030157e3-580b-44ca-bbec-00182289fb41/interaction/",
+    "account": "qa-student",
+    "status": 200,
+    "recorded_at": "2026-11-15T16:19:20.140Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "status": null,
+      "submission_url": null,
+      "submitted_at": null,
+      "created_at": null,
+      "updated_at": null
+    }
+  }
+}

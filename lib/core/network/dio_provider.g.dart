@@ -13,7 +13,7 @@ part of 'dio_provider.dart';
 /// can't recurse (architecture §6b).
 
 @ProviderFor(refreshDio)
-const refreshDioProvider = RefreshDioProvider._();
+final refreshDioProvider = RefreshDioProvider._();
 
 /// Bare Dio used only for the token-refresh call and for retrying a request
 /// after refresh — deliberately WITHOUT the auth interceptor, so refreshing
@@ -24,7 +24,7 @@ final class RefreshDioProvider extends $FunctionalProvider<Dio, Dio, Dio>
   /// Bare Dio used only for the token-refresh call and for retrying a request
   /// after refresh — deliberately WITHOUT the auth interceptor, so refreshing
   /// can't recurse (architecture §6b).
-  const RefreshDioProvider._()
+  RefreshDioProvider._()
     : super(
         from: null,
         argument: null,
@@ -59,6 +59,52 @@ final class RefreshDioProvider extends $FunctionalProvider<Dio, Dio, Dio>
 
 String _$refreshDioHash() => r'c79cc2e3b15c2c16b24a16632f3e92e5349af292';
 
+/// The user the HTTP cache is keyed for ([CacheScope]); one per app.
+
+@ProviderFor(cacheScope)
+final cacheScopeProvider = CacheScopeProvider._();
+
+/// The user the HTTP cache is keyed for ([CacheScope]); one per app.
+
+final class CacheScopeProvider
+    extends $FunctionalProvider<CacheScope, CacheScope, CacheScope>
+    with $Provider<CacheScope> {
+  /// The user the HTTP cache is keyed for ([CacheScope]); one per app.
+  CacheScopeProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'cacheScopeProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$cacheScopeHash();
+
+  @$internal
+  @override
+  $ProviderElement<CacheScope> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  CacheScope create(Ref ref) {
+    return cacheScope(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(CacheScope value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<CacheScope>(value),
+    );
+  }
+}
+
+String _$cacheScopeHash() => r'e95030923de1b7ed1abb56bfd0be6b65b8e34132';
+
 /// The app's main Dio client.
 ///
 /// Interceptor order matters (rules.md §3): the cache scope tags the request
@@ -66,7 +112,7 @@ String _$refreshDioHash() => r'c79cc2e3b15c2c16b24a16632f3e92e5349af292';
 /// before any token attach/refresh runs, and entries never cross users.
 
 @ProviderFor(dio)
-const dioProvider = DioProvider._();
+final dioProvider = DioProvider._();
 
 /// The app's main Dio client.
 ///
@@ -81,7 +127,7 @@ final class DioProvider extends $FunctionalProvider<Dio, Dio, Dio>
   /// Interceptor order matters (rules.md §3): the cache scope tags the request
   /// with the user, then the cache, then auth — a cache hit short-circuits
   /// before any token attach/refresh runs, and entries never cross users.
-  const DioProvider._()
+  DioProvider._()
     : super(
         from: null,
         argument: null,
@@ -114,4 +160,4 @@ final class DioProvider extends $FunctionalProvider<Dio, Dio, Dio>
   }
 }
 
-String _$dioHash() => r'acd407e4f738d8db1cb89904b7dee9cf1d04ef40';
+String _$dioHash() => r'd1a255c19e8d787fd3873d9c63c76dbc08323155';

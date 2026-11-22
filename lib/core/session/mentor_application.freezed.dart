@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'mentor_application.dart';
@@ -9,12 +9,16 @@ part of 'mentor_application.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$MentorApplication {
 
- String get id; String get status; String get mentorTier;
+ String get id; String get status; String get mentorTier;/// The company or college it's for (a name); null for most IG Mentor
+/// applications.
+ String? get organization;/// The reviewer's note, sent only for a rejected application.
+ String? get rejectionReason; DateTime? get createdAt;
 /// Create a copy of MentorApplication
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +29,21 @@ $MentorApplicationCopyWith<MentorApplication> get copyWith => _$MentorApplicatio
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MentorApplication&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.mentorTier, mentorTier) || other.mentorTier == mentorTier));
+  final _this = this as MentorApplication;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MentorApplication&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.status, _this.status) || other.status == _this.status)&&(identical(other.mentorTier, _this.mentorTier) || other.mentorTier == _this.mentorTier)&&(identical(other.organization, _this.organization) || other.organization == _this.organization)&&(identical(other.rejectionReason, _this.rejectionReason) || other.rejectionReason == _this.rejectionReason)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,status,mentorTier);
+int get hashCode {
+  final _this = this as MentorApplication;
+  return Object.hash(runtimeType,_this.id,_this.status,_this.mentorTier,_this.organization,_this.rejectionReason,_this.createdAt);
+}
 
 @override
 String toString() {
-  return 'MentorApplication(id: $id, status: $status, mentorTier: $mentorTier)';
+  final _this = this as MentorApplication;
+  return 'MentorApplication(id: ${_this.id}, status: ${_this.status}, mentorTier: ${_this.mentorTier}, organization: ${_this.organization}, rejectionReason: ${_this.rejectionReason}, createdAt: ${_this.createdAt})';
 }
 
 
@@ -45,7 +54,7 @@ abstract mixin class $MentorApplicationCopyWith<$Res>  {
   factory $MentorApplicationCopyWith(MentorApplication value, $Res Function(MentorApplication) _then) = _$MentorApplicationCopyWithImpl;
 @useResult
 $Res call({
- String id, String status, String mentorTier
+ String id, String status, String mentorTier, String? organization, String? rejectionReason, DateTime? createdAt
 });
 
 
@@ -62,12 +71,15 @@ class _$MentorApplicationCopyWithImpl<$Res>
 
 /// Create a copy of MentorApplication
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? status = null,Object? mentorTier = null,}) {
-  return _then(_self.copyWith(
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? status = null,Object? mentorTier = null,Object? organization = freezed,Object? rejectionReason = freezed,Object? createdAt = freezed,}) {
+  return _then(MentorApplication(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as String,mentorTier: null == mentorTier ? _self.mentorTier : mentorTier // ignore: cast_nullable_to_non_nullable
-as String,
+as String,organization: freezed == organization ? _self.organization : organization // ignore: cast_nullable_to_non_nullable
+as String?,rejectionReason: freezed == rejectionReason ? _self.rejectionReason : rejectionReason // ignore: cast_nullable_to_non_nullable
+as String?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 
@@ -152,10 +164,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String status,  String mentorTier)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String status,  String mentorTier,  String? organization,  String? rejectionReason,  DateTime? createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _MentorApplication() when $default != null:
-return $default(_that.id,_that.status,_that.mentorTier);case _:
+return $default(_that.id,_that.status,_that.mentorTier,_that.organization,_that.rejectionReason,_that.createdAt);case _:
   return orElse();
 
 }
@@ -173,10 +185,10 @@ return $default(_that.id,_that.status,_that.mentorTier);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String status,  String mentorTier)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String status,  String mentorTier,  String? organization,  String? rejectionReason,  DateTime? createdAt)  $default,) {final _that = this;
 switch (_that) {
 case _MentorApplication():
-return $default(_that.id,_that.status,_that.mentorTier);case _:
+return $default(_that.id,_that.status,_that.mentorTier,_that.organization,_that.rejectionReason,_that.createdAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -193,10 +205,10 @@ return $default(_that.id,_that.status,_that.mentorTier);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String status,  String mentorTier)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String status,  String mentorTier,  String? organization,  String? rejectionReason,  DateTime? createdAt)?  $default,) {final _that = this;
 switch (_that) {
 case _MentorApplication() when $default != null:
-return $default(_that.id,_that.status,_that.mentorTier);case _:
+return $default(_that.id,_that.status,_that.mentorTier,_that.organization,_that.rejectionReason,_that.createdAt);case _:
   return null;
 
 }
@@ -207,13 +219,19 @@ return $default(_that.id,_that.status,_that.mentorTier);case _:
 /// @nodoc
 
 
-class _MentorApplication implements MentorApplication {
-  const _MentorApplication({required this.id, required this.status, required this.mentorTier});
+class _MentorApplication extends MentorApplication {
+  const _MentorApplication({required this.id, required this.status, required this.mentorTier, this.organization, this.rejectionReason, this.createdAt}): super._();
   
 
 @override final  String id;
 @override final  String status;
 @override final  String mentorTier;
+/// The company or college it's for (a name); null for most IG Mentor
+/// applications.
+@override final  String? organization;
+/// The reviewer's note, sent only for a rejected application.
+@override final  String? rejectionReason;
+@override final  DateTime? createdAt;
 
 /// Create a copy of MentorApplication
 /// with the given fields replaced by the non-null parameter values.
@@ -225,16 +243,18 @@ _$MentorApplicationCopyWith<_MentorApplication> get copyWith => __$MentorApplica
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MentorApplication&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.mentorTier, mentorTier) || other.mentorTier == mentorTier));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MentorApplication&&(identical(other.id, id) || other.id == id)&&(identical(other.status, status) || other.status == status)&&(identical(other.mentorTier, mentorTier) || other.mentorTier == mentorTier)&&(identical(other.organization, organization) || other.organization == organization)&&(identical(other.rejectionReason, rejectionReason) || other.rejectionReason == rejectionReason)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,status,mentorTier);
+int get hashCode {
+    return Object.hash(runtimeType,id,status,mentorTier,organization,rejectionReason,createdAt);
+}
 
 @override
 String toString() {
-  return 'MentorApplication(id: $id, status: $status, mentorTier: $mentorTier)';
+    return 'MentorApplication(id: $id, status: $status, mentorTier: $mentorTier, organization: $organization, rejectionReason: $rejectionReason, createdAt: $createdAt)';
 }
 
 
@@ -245,7 +265,7 @@ abstract mixin class _$MentorApplicationCopyWith<$Res> implements $MentorApplica
   factory _$MentorApplicationCopyWith(_MentorApplication value, $Res Function(_MentorApplication) _then) = __$MentorApplicationCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String status, String mentorTier
+ String id, String status, String mentorTier, String? organization, String? rejectionReason, DateTime? createdAt
 });
 
 
@@ -262,12 +282,15 @@ class __$MentorApplicationCopyWithImpl<$Res>
 
 /// Create a copy of MentorApplication
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? status = null,Object? mentorTier = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? status = null,Object? mentorTier = null,Object? organization = freezed,Object? rejectionReason = freezed,Object? createdAt = freezed,}) {
   return _then(_MentorApplication(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as String,mentorTier: null == mentorTier ? _self.mentorTier : mentorTier // ignore: cast_nullable_to_non_nullable
-as String,
+as String,organization: freezed == organization ? _self.organization : organization // ignore: cast_nullable_to_non_nullable
+as String?,rejectionReason: freezed == rejectionReason ? _self.rejectionReason : rejectionReason // ignore: cast_nullable_to_non_nullable
+as String?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 

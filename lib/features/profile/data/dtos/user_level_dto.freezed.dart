@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'user_level_dto.dart';
@@ -9,6 +9,7 @@ part of 'user_level_dto.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $UserLevelDtoCopyWith<UserLevelDto> get copyWith => _$UserLevelDtoCopyWithImpl<U
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserLevelDto&&(identical(other.name, name) || other.name == name)&&(identical(other.karma, karma) || other.karma == karma)&&const DeepCollectionEquality().equals(other.tasks, tasks));
+  final _this = this as UserLevelDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserLevelDto&&(identical(other.name, _this.name) || other.name == _this.name)&&(identical(other.karma, _this.karma) || other.karma == _this.karma)&&const DeepCollectionEquality().equals(other.tasks, _this.tasks));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,name,karma,const DeepCollectionEquality().hash(tasks));
+int get hashCode {
+  final _this = this as UserLevelDto;
+  return Object.hash(runtimeType,_this.name,_this.karma,const DeepCollectionEquality().hash(_this.tasks));
+}
 
 @override
 String toString() {
-  return 'UserLevelDto(name: $name, karma: $karma, tasks: $tasks)';
+  final _this = this as UserLevelDto;
+  return 'UserLevelDto(name: ${_this.name}, karma: ${_this.karma}, tasks: ${_this.tasks})';
 }
 
 
@@ -66,7 +72,7 @@ class _$UserLevelDtoCopyWithImpl<$Res>
 /// Create a copy of UserLevelDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? name = null,Object? karma = null,Object? tasks = null,}) {
-  return _then(_self.copyWith(
+  return _then(UserLevelDto(
 name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
 as String,karma: null == karma ? _self.karma : karma // ignore: cast_nullable_to_non_nullable
 as num,tasks: null == tasks ? _self.tasks : tasks // ignore: cast_nullable_to_non_nullable
@@ -211,7 +217,7 @@ return $default(_that.name,_that.karma,_that.tasks);case _:
 @JsonSerializable()
 
 class _UserLevelDto extends UserLevelDto {
-  const _UserLevelDto({required this.name, required this.karma, final  List<LevelTaskDto> tasks = const []}): _tasks = tasks,super._();
+  const _UserLevelDto({required this.name, required this.karma,  List<LevelTaskDto> tasks = const []}): _tasks = tasks,super._();
   factory _UserLevelDto.fromJson(Map<String, dynamic> json) => _$UserLevelDtoFromJson(json);
 
 @override final  String name;
@@ -237,16 +243,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserLevelDto&&(identical(other.name, name) || other.name == name)&&(identical(other.karma, karma) || other.karma == karma)&&const DeepCollectionEquality().equals(other._tasks, _tasks));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserLevelDto&&(identical(other.name, name) || other.name == name)&&(identical(other.karma, karma) || other.karma == karma)&&const DeepCollectionEquality().equals(other.tasks, _tasks));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,name,karma,const DeepCollectionEquality().hash(_tasks));
+int get hashCode {
+    return Object.hash(runtimeType,name,karma,const DeepCollectionEquality().hash(_tasks));
+}
 
 @override
 String toString() {
-  return 'UserLevelDto(name: $name, karma: $karma, tasks: $tasks)';
+    return 'UserLevelDto(name: $name, karma: $karma, tasks: $tasks)';
 }
 
 

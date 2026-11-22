@@ -10,11 +10,11 @@ part of 'cover_photo_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(CoverPhotoController)
-const coverPhotoControllerProvider = CoverPhotoControllerProvider._();
+final coverPhotoControllerProvider = CoverPhotoControllerProvider._();
 
 final class CoverPhotoControllerProvider
     extends $AsyncNotifierProvider<CoverPhotoController, void> {
-  const CoverPhotoControllerProvider._()
+  CoverPhotoControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -34,14 +34,13 @@ final class CoverPhotoControllerProvider
 }
 
 String _$coverPhotoControllerHash() =>
-    r'57100abcc2a7d524b731ada193284d5bf2b45664';
+    r'86e59b816f37603570bad49ab9b44c8e3f03e99e';
 
 abstract class _$CoverPhotoController extends $AsyncNotifier<void> {
   FutureOr<void> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<void>, void>;
     final element =
         ref.element
@@ -51,6 +50,6 @@ abstract class _$CoverPhotoController extends $AsyncNotifier<void> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, null);
+    return element.handleCreate(ref, build);
   }
 }

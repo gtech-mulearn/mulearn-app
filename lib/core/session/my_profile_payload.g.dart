@@ -21,7 +21,7 @@ part of 'my_profile_payload.dart';
 /// invalidates this provider.
 
 @ProviderFor(myProfilePayload)
-const myProfilePayloadProvider = MyProfilePayloadProvider._();
+final myProfilePayloadProvider = MyProfilePayloadProvider._();
 
 /// The signed-in user's own `GET /dashboard/profile/user-profile/` object,
 /// fetched once and shared: Profile, Home's progress summary, interest-group
@@ -56,7 +56,7 @@ final class MyProfilePayloadProvider
   /// Neither this nor its readers is auto-retried ([noRetry]): a failure
   /// surfaces at once so screens show their error state and Retry, which
   /// invalidates this provider.
-  const MyProfilePayloadProvider._()
+  MyProfilePayloadProvider._()
     : super(
         from: null,
         argument: null,

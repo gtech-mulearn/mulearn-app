@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:mulearn_app/core/network/api_envelope.dart';
+import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/network/api_paths.dart';
 
 /// Raw Dio calls for the profile feature's endpoints, returning the
@@ -8,7 +9,6 @@ class ProfileRemoteDataSource {
   const ProfileRemoteDataSource(this._dio);
 
   final Dio _dio;
-
 
   /// `GET /api/v1/dashboard/profile/`.
   Future<Map<String, dynamic>> fetchEditableProfile() async {
@@ -70,8 +70,7 @@ class ProfileRemoteDataSource {
 
   /// `PUT /api/v1/dashboard/profile/socials/edit/`.
   Future<void> updateSocials(Map<String, dynamic> body) async {
-    final response =
-        await _dio.put<dynamic>(ApiPaths.socialsEdit, data: body);
+    final response = await _dio.put<dynamic>(ApiPaths.socialsEdit, data: body);
     ApiEnvelope.unwrapObject(response);
   }
 
@@ -107,7 +106,10 @@ class ProfileRemoteDataSource {
   }
 
   /// `POST /api/v1/dashboard/profile/change-password/`.
-  Future<void> changePassword({required String current, required String next}) async {
+  Future<void> changePassword({
+    required String current,
+    required String next,
+  }) async {
     final response = await _dio.post<dynamic>(
       ApiPaths.changePassword,
       data: {'current_password': current, 'password': next},
@@ -133,11 +135,11 @@ class ProfileRemoteDataSource {
 
   /// `POST /api/v1/dashboard/profile/cover-pic/` (multipart, field `cover`).
   Future<String?> uploadCoverPic(List<int> bytes, String filename) async {
-    final formData = FormData.fromMap({
-      'cover': MultipartFile.fromBytes(bytes, filename: filename),
-    });
-    final response =
-        await _dio.post<dynamic>(ApiPaths.coverPic, data: formData);
+    final formData = FormData.fromMap({'cover': imagePart(bytes, filename)});
+    final response = await _tooLargeAsMessage(
+      'Cover photo',
+      () => _dio.post<dynamic>(ApiPaths.coverPic, data: formData),
+    );
     final payload = ApiEnvelope.unwrapObject(response);
     return payload['cover_pic'] as String?;
   }
@@ -156,12 +158,12 @@ class ProfileRemoteDataSource {
     required String userId,
   }) async {
     final formData = FormData.fromMap({
-      'profile': MultipartFile.fromBytes(bytes, filename: filename),
+      'profile': imagePart(bytes, filename),
       'user_id': userId,
     });
-    final response = await _dio.post<dynamic>(
-      ApiPaths.updateProfileImage,
-      data: formData,
+    final response = await _tooLargeAsMessage(
+      'Profile photo',
+      () => _dio.post<dynamic>(ApiPaths.updateProfileImage, data: formData),
     );
     ApiEnvelope.unwrapObject(response);
   }
@@ -181,34 +183,50 @@ class ProfileRemoteDataSource {
 
   /// `GET` connected QSeverse DIDs for [muid], under `response.dids`.
   Future<List<dynamic>> fetchEligibleAchievements() async =>
-      ApiEnvelope.unwrapList(await _dio.get<dynamic>(ApiPaths.achievementEligible));
+      ApiEnvelope.unwrapList(
+        await _dio.get<dynamic>(ApiPaths.achievementEligible),
+      );
 
   Future<List<dynamic>> fetchAchievementProgress() async =>
-      ApiEnvelope.unwrapList(await _dio.get<dynamic>(ApiPaths.achievementProgress));
+      ApiEnvelope.unwrapList(
+        await _dio.get<dynamic>(ApiPaths.achievementProgress),
+      );
 
   Future<List<dynamic>> fetchAchievementCatalog() async =>
-      ApiEnvelope.unwrapList(await _dio.get<dynamic>(ApiPaths.achievementCatalog));
+      ApiEnvelope.unwrapList(
+        await _dio.get<dynamic>(ApiPaths.achievementCatalog),
+      );
 
   /// The claim's `response` plus the backend's own message under `message`.
   Future<Map<String, dynamic>> claimAchievement(String id) async {
-    final response = await _dio.post<dynamic>(ApiPaths.achievementClaim(id), data: <String, dynamic>{});
+    final response = await _dio.post<dynamic>(
+      ApiPaths.achievementClaim(id),
+      data: <String, dynamic>{},
+    );
     final body = ApiEnvelope.unwrapObject(response);
-    final general = ((response.data as Map<String, dynamic>?)?['message'] as Map<String, dynamic>?)?['general'];
-    final message = general is List && general.isNotEmpty ? '${general.first}' : 'Achievement claimed';
+    final general =
+        ((response.data as Map<String, dynamic>?)?['message']
+            as Map<String, dynamic>?)?['general'];
+    final message = general is List && general.isNotEmpty
+        ? '${general.first}'
+        : 'Achievement claimed';
     return {...body, 'message': message};
   }
 
   Future<List<dynamic>> fetchConnectedDids(String muid) async {
-    final response =
-        await _dio.get<dynamic>(ApiPaths.qseverseConnectedUsers(muid));
+    final response = await _dio.get<dynamic>(
+      ApiPaths.qseverseConnectedUsers(muid),
+    );
     final payload = ApiEnvelope.unwrapObject(response);
     return payload['dids'] as List<dynamic>;
   }
 
   /// `POST` the external QSeverse issuance call — bare array `response`.
   Future<List<dynamic>> issueVc(Map<String, dynamic> body) async {
-    final response =
-        await _dio.post<dynamic>(ApiPaths.qseverseIssueVc, data: body);
+    final response = await _dio.post<dynamic>(
+      ApiPaths.qseverseIssueVc,
+      data: body,
+    );
     return ApiEnvelope.unwrapList(response);
   }
 
@@ -236,5 +254,45 @@ class ProfileRemoteDataSource {
       data: {'org_id': orgId, 'department_id': departmentId},
     );
     ApiEnvelope.unwrapObject(response);
+  }
+
+  /// A photo as a multipart part with an image content type. The backend
+  /// rejects anything whose content type isn't `image/*` ("Expected an
+  /// image"), and `MultipartFile.fromBytes` defaults to
+  /// `application/octet-stream`. The in-app cropper outputs JPEG; a PNG is
+  /// recognised by its signature.
+  static MultipartFile imagePart(List<int> bytes, String filename) {
+    final isPng =
+        bytes.length > 4 &&
+        bytes[0] == 0x89 &&
+        bytes[1] == 0x50 &&
+        bytes[2] == 0x4E &&
+        bytes[3] == 0x47;
+    return MultipartFile.fromBytes(
+      bytes,
+      filename: filename,
+      contentType: isPng
+          ? DioMediaType('image', 'png')
+          : DioMediaType('image', 'jpeg'),
+    );
+  }
+
+  /// A 413 comes from the reverse proxy (its body is HTML, not the API's
+  /// envelope), so it would otherwise surface as a generic failure.
+  static Future<Response<dynamic>> _tooLargeAsMessage(
+    String what,
+    Future<Response<dynamic>> Function() send,
+  ) async {
+    try {
+      return await send();
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 413) {
+        throw ApiException(
+          message: '$what is too large for the server. Use one under 5 MB.',
+          statusCode: 413,
+        );
+      }
+      rethrow;
+    }
   }
 }

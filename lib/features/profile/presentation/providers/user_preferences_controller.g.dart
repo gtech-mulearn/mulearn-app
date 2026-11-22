@@ -10,11 +10,11 @@ part of 'user_preferences_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(UserPreferencesController)
-const userPreferencesControllerProvider = UserPreferencesControllerProvider._();
+final userPreferencesControllerProvider = UserPreferencesControllerProvider._();
 
 final class UserPreferencesControllerProvider
     extends $AsyncNotifierProvider<UserPreferencesController, UserPreferences> {
-  const UserPreferencesControllerProvider._()
+  UserPreferencesControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -41,8 +41,7 @@ abstract class _$UserPreferencesController
   FutureOr<UserPreferences> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<UserPreferences>, UserPreferences>;
     final element =
         ref.element
@@ -52,6 +51,6 @@ abstract class _$UserPreferencesController
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }

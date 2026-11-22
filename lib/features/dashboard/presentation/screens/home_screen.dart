@@ -4,42 +4,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/leaderboard/leaderboard_providers.dart';
 import 'package:mulearn_app/core/notifications/unread_notifications.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/router/tab_navigation.dart';
 import 'package:mulearn_app/core/session/discord_connect.dart';
+import 'package:mulearn_app/core/session/mentor_application.dart';
 import 'package:mulearn_app/core/session/session_providers.dart';
-import 'package:mulearn_app/core/theme/mu_radius.dart';
-import 'package:mulearn_app/core/theme/mu_shadow.dart';
-import 'package:mulearn_app/core/theme/mu_space.dart';
-import 'package:mulearn_app/core/theme/mulearn_colors.dart';
-import 'package:mulearn_app/core/theme/mulearn_typography.dart';
+import 'package:mulearn_app/core/utils/date_format.dart';
 import 'package:mulearn_app/core/utils/level_label.dart';
-import 'package:mulearn_app/core/widgets/error_retry_view.dart';
-import 'package:mulearn_app/core/widgets/mu_card.dart';
-import 'package:mulearn_app/core/widgets/mu_icon_button.dart';
 import 'package:mulearn_app/core/widgets/mu_refresh.dart';
-import 'package:mulearn_app/core/widgets/mu_section_header.dart';
-import 'package:mulearn_app/core/widgets/mu_skeleton.dart';
-import 'package:mulearn_app/core/widgets/profile_avatar.dart';
 import 'package:mulearn_app/core/widgets/role_pending_banner.dart';
+import 'package:mulearn_app/features/dashboard/domain/entities/featured_event.dart';
 import 'package:mulearn_app/features/dashboard/domain/entities/my_progress_summary.dart';
 import 'package:mulearn_app/features/dashboard/presentation/providers/dashboard_controller.dart';
-import 'package:mulearn_app/features/dashboard/presentation/widgets/featured_events_list.dart';
 import 'package:mulearn_app/features/dashboard/presentation/widgets/workspace_cards.dart';
 
-/// Home dashboard — the landing screen after sign-in (DESIGN_SPEC.md §2 "03 —
-/// Home"). Greeting header, a dark karma "hero" card, quick links into Tasks
-/// and Learning circles, a real top-performers preview (reused from
-/// `features/leaderboard`'s presentation layer — this file already reads
-/// that feature directly, an established pattern predating this restyle, so
-/// no new cross-feature import is introduced), and an upcoming-events strip.
+/// Home, built from the design system (artifact: Screen patterns → Home).
 ///
-/// Sections present in the original Claude Design mock but not backed by any
-/// real field on [MyProgressSummary] are deliberately omitted rather than
-/// faked — see the omissions noted inline below (streak widget, karma delta,
-/// "resume a specific task" card, level-progress-to-next-level bar).
+/// Greeting bar → the karma card (the screen's one loud element) → this
+/// week → "Up next" bento → top performers → happening soon. Nothing here
+/// is faked: sections without backing data are left out.
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
@@ -55,133 +41,68 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final c = context.mu.colors;
     final summaryState = ref.watch(myProgressSummaryControllerProvider);
+    final summary = summaryState.value;
 
     return Scaffold(
-      backgroundColor: MuColors.canvas,
+      backgroundColor: c.chalk,
       body: SafeArea(
         bottom: false,
         child: MuRefresh(
           onRefresh: () => _refreshAll(ref),
           child: CustomScrollView(
-            physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+            physics: const BouncingScrollPhysics(
+              parent: AlwaysScrollableScrollPhysics(),
+            ),
             slivers: [
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: MuSpacing.space2),
+                  child: _Greeting(summary: summary),
+                ),
+              ),
               SliverPadding(
                 padding: const EdgeInsets.fromLTRB(
-                  MuSpace.screenH,
-                  MuSpace.l,
-                  MuSpace.screenH,
-                  MuSpace.navClearance,
+                  MuSpacing.space5,
+                  MuSpacing.space3,
+                  MuSpacing.space5,
+                  MuSpacing.navClearance,
                 ),
                 sliver: SliverList.list(
                   children: [
-                    summaryState.when(
-                      skipError: true,
-                      skipLoadingOnReload: true,
-                      loading: () => const _HomeHeader(),
-                      error: (error, _) => const _HomeHeader(),
-                      data: (summary) => _HomeHeader(summary: summary),
-                    ),
                     // A role awaiting verification (ROLE-02).
                     const PendingRoleBanners(),
-                    // Role workspaces open from Home (spec §8.2 item 5).
-                    const WorkspaceCards(),
-                    const SizedBox(height: MuSpace.xxl),
+                    const SizedBox(height: MuSpacing.space2),
                     summaryState.when(
                       skipError: true,
                       skipLoadingOnReload: true,
-                      loading: () => const MuSkeleton(height: 220, radius: MuRadius.hero),
-                      error: (error, _) => ErrorRetryView(
-                        error: error,
+                      loading: () => const _KarmaPlaceholder(),
+                      error: (error, _) => _LoadFailed(
+                        message: "Couldn't load your karma",
                         onRetry: () => ref
                             .read(myProgressSummaryControllerProvider.notifier)
                             .refresh(),
                       ),
-                      data: (summary) => _KarmaHeroCard(summary: summary),
+                      data: (s) => MuKarmaMeter(
+                        total: s.karma,
+                        level: s.level == null ? null : levelLabel(s.level),
+                        rank: s.rank != null && s.percentile != null
+                            ? 'Rank #${s.rank} · Top ${s.percentile!.round()}%'
+                            : null,
+                        onTap: () => context.openTab(RoutePaths.journey),
+                      ),
                     ),
-                    const _LearnerWeek(),
-                    const _SetupChecklist(),
-                    const SizedBox(height: MuSpace.xxl),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: _QuickLinkTile(
-                            icon: LucideIcons.listTodo,
-                            title: 'Find a task',
-                            subtitle: "Browse what's open",
-                            onTap: () => context.openTab(RoutePaths.tasks),
-                          ),
-                        ),
-                        const SizedBox(width: MuSpace.m),
-                        Expanded(
-                          child: _QuickLinkTile(
-                            icon: LucideIcons.users,
-                            title: 'Learning circles',
-                            subtitle: 'Learn with a group',
-                            onTap: () => context.push(RoutePaths.learningCircles),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: MuSpace.xxl),
-                    MuSectionHeader(
-                      title: 'Top performers',
-                      onViewAll: () => context.openTab(RoutePaths.leaderboard),
-                    ),
-                    const SizedBox(height: MuSpace.m),
-                    Consumer(
-                      builder: (context, ref, _) {
-                        final state = ref.watch(studentLeaderboardProvider(monthly: false));
-                        return state.when(
-                          loading: () => const MuSkeleton(height: 168, radius: MuRadius.card),
-                          error: (error, _) => const SizedBox.shrink(),
-                          data: (entries) {
-                            if (entries.isEmpty) return const SizedBox.shrink();
-                            final top = entries.take(3).toList();
-                            return MuCard(
-                              padding: const EdgeInsets.symmetric(horizontal: MuSpace.l),
-                              child: Column(
-                                children: [
-                                  for (var i = 0; i < top.length; i++)
-                                    _MoverRow(
-                                      rank: i + 1,
-                                      name: top[i].fullName,
-                                      meta: top[i].institution,
-                                      onTap: top[i].muid == null
-                                          ? null
-                                          : () => context.push(
-                                                RoutePaths.publicProfilePath(top[i].muid!),
-                                              ),
-                                      karma: top[i].totalKarma.toInt(),
-                                      avatarUrl: top[i].profilePic,
-                                      showDivider: i != top.length - 1,
-                                    ),
-                                ],
-                              ),
-                            );
-                          },
-                        );
-                      },
-                    ),
-                    const SizedBox(height: MuSpace.xxl),
-                    MuSectionHeader(
-                      title: 'Happening soon',
-                      onViewAll: () => context.push(RoutePaths.events),
-                    ),
-                    const SizedBox(height: MuSpace.m),
-                    Consumer(
-                      builder: (context, ref, _) {
-                        final eventsState = ref.watch(featuredEventsControllerProvider);
-                        return eventsState.when(
-                          loading: () => const SizedBox(
-                            height: 196,
-                            child: Center(child: CircularProgressIndicator()),
-                          ),
-                          error: (error, _) => const SizedBox.shrink(),
-                          data: (events) => FeaturedEventsList(events: events.take(2).toList()),
-                        );
-                      },
-                    ),
+                    const _ThisWeek(),
+                    const SizedBox(height: MuSpacing.space10),
+                    const _UpNext(),
+                    const SizedBox(height: MuSpacing.space10),
+                    const _TopPerformers(),
+                    const SizedBox(height: MuSpacing.space10),
+                    const _HappeningSoon(),
+                    // Role workspaces open from Home (spec §8.2 item 5); the
+                    // artifact closes Home with these doors.
+                    const WorkspaceCards(),
                   ],
                 ),
               ),
@@ -193,548 +114,439 @@ class HomeScreen extends ConsumerWidget {
   }
 }
 
-/// Formats an integer karma amount with thousands separators (e.g. `14919`
-/// → `"14,919"`) without pulling in `intl` — not an existing dependency
-/// (rules.md §9), so this stays a small hand-rolled helper.
-String _formatKarma(int value) {
-  final negative = value < 0;
-  final digits = value.abs().toString();
-  final buffer = StringBuffer();
-  for (var i = 0; i < digits.length; i++) {
-    if (i != 0 && (digits.length - i) % 3 == 0) buffer.write(',');
-    buffer.write(digits[i]);
-  }
-  return negative ? '-$buffer' : buffer.toString();
+/// "Friday, 13 Nov · Level 4", or just the date until the summary loads.
+String _subtitle(MyProgressSummary? s, DateTime now) {
+  final date =
+      '${const ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'][now.weekday - 1]}, '
+      '${formatDay(now).split(' ').skip(1).join(' ')}';
+  return s?.level == null ? date : '$date · ${levelLabel(s!.level)}';
 }
 
-/// `"Wednesday, 2 September"` — hand-rolled (no `intl` dependency, see
-/// [_formatKarma]).
-String _dateLine([DateTime? now]) {
-  final date = now ?? DateTime.now();
-  const weekdays = [
-    'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', //
-  ];
-  const months = [
-    'January', 'February', 'March', 'April', 'May', 'June', //
-    'July', 'August', 'September', 'October', 'November', 'December',
-  ];
-  return '${weekdays[date.weekday - 1]}, ${date.day} ${months[date.month - 1]}';
-}
-
-/// Greeting row (DESIGN_SPEC.md §2 Home #1) — date line, "Hey, {name}", a
-/// subtitle grounded in real karma/level (never the mock's fabricated "two
-/// tasks away" copy), a notification bell (→ Notifications) and an avatar
-/// (→ Profile). No unread-dot badge: there's no real unread-notifications
-/// signal available to this screen yet, so it's left off rather than shown
-/// in a fixed/fake state.
-class _HomeHeader extends StatelessWidget {
-  const _HomeHeader({this.summary});
+class _Greeting extends ConsumerWidget {
+  const _Greeting({this.summary});
 
   final MyProgressSummary? summary;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final s = summary;
-    final name =
-        (s != null && s.fullName.trim().isNotEmpty) ? s.fullName.trim().split(' ').first : 'there';
-    final subtitle = s == null
-        ? 'Keep learning, keep building.'
-        : (s.level != null
-            ? '${levelLabel(s.level)} · ${_formatKarma(s.karma)} karma so far.'
-            : '${_formatKarma(s.karma)} karma so far — keep going.');
-
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(_dateLine(), style: MuType.caption.copyWith(color: MuColors.inkTertiary)),
-              const SizedBox(height: 4),
-              Text('Hey, $name', style: MuType.display.copyWith(fontSize: 30)),
-              const SizedBox(height: 4),
-              Text(subtitle, style: MuType.body.copyWith(color: MuColors.inkSecondary)),
-            ],
+    final first = (s != null && s.fullName.trim().isNotEmpty)
+        ? s.fullName.trim().split(' ').first
+        : 'there';
+    final unread = ref.watch(unreadNotificationsProvider).value ?? 0;
+    return MuTopBar.greeting(
+      greeting: 'Hey $first',
+      subtitle: _subtitle(s, DateTime.now()),
+      avatar: Semantics(
+        button: true,
+        label: 'Your profile',
+        excludeSemantics: true,
+        child: MuPressable(
+          onTap: () => context.openTab(RoutePaths.profile),
+          child: MuAvatar(
+            name: s?.fullName ?? '',
+            url: s?.profilePicUrl,
+            size: MuSizes.avatarMd,
+            ring: false,
           ),
         ),
-        const SizedBox(width: MuSpace.m),
-        Consumer(
-          builder: (context, ref, _) {
-            final unread = ref.watch(unreadNotificationsProvider).value ?? 0;
-            return MuIconButton(
-              icon: LucideIcons.bell,
-              badgeCount: unread,
-              tooltip: unread == 0 ? 'Notifications' : 'Notifications, $unread unread',
-              onPressed: () => context.push(RoutePaths.notifications),
-            );
-          },
+      ),
+      actions: [
+        MuIconButton(
+          icon: LucideIcons.search,
+          tooltip: 'Search',
+          onPressed: () => context.push(RoutePaths.search),
         ),
-        const SizedBox(width: MuSpace.s),
-        GestureDetector(
-          onTap: () => context.openTab(RoutePaths.profile),
-          child: ProfileAvatar(url: s?.profilePicUrl, name: s?.fullName ?? '', size: 44),
+        MuIconButton(
+          icon: LucideIcons.bell,
+          badgeCount: unread,
+          tooltip: unread == 0
+              ? 'Notifications'
+              : 'Notifications, $unread unread',
+          onPressed: () => context.push(RoutePaths.notifications),
         ),
       ],
     );
   }
 }
 
-/// Dark "hero" karma card (DESIGN_SPEC.md §2 Home #2 / §1 component styles)
-/// — [MuColors.ink] surface, a soft purple radial glow blob, "TOTAL KARMA"
-/// eyebrow + bolt icon, a real "Rank #X · Top Y%" pill when both fields are
-/// present, the big karma number, and the level label. Tapping opens Journey.
-///
-/// Deliberately omitted vs. the mock, both for lack of backing data:
-/// - The 7-day streak row — [MyProgressSummary] has no streak field.
-/// - The "+250 today" karma delta — no delta field.
-/// - The "{n} to next level" line and its progress bar — computing that
-///   needs the real per-level karma thresholds, which live in the
-///   `profile`/Journey feature's `UserLevel` data, not on this feature's own
-///   minimal read model; reaching into `profile`'s domain layer to get them
-///   would be a new cross-feature import this pass shouldn't introduce.
-class _KarmaHeroCard extends StatelessWidget {
-  const _KarmaHeroCard({required this.summary});
-
-  final MyProgressSummary summary;
+class _KarmaPlaceholder extends StatelessWidget {
+  const _KarmaPlaceholder();
 
   @override
-  Widget build(BuildContext context) {
-    final hasRank = summary.rank != null && summary.percentile != null;
+  Widget build(BuildContext context) => Container(
+    height: 196,
+    decoration: BoxDecoration(
+      color: context.mu.colors.surfaceSunk,
+      borderRadius: BorderRadius.circular(MuRadii.panel),
+    ),
+  );
+}
 
-    return GestureDetector(
-      onTap: () => context.openTab(RoutePaths.journey),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(MuRadius.hero),
-          boxShadow: MuShadow.hero,
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(MuRadius.hero),
-          child: ColoredBox(
-            color: MuColors.ink,
-            child: Stack(
-              children: [
-                Positioned(
-                  top: -70,
-                  right: -50,
-                  child: Container(
-                    height: 240,
-                    width: 240,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: RadialGradient(
-                        colors: [
-                          MuColors.karmaAccent.withValues(alpha: 0.55),
-                          MuColors.karmaAccent.withValues(alpha: 0),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(MuSpace.xl),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          const Icon(LucideIcons.zap, size: 16, color: MuColors.karmaAccent),
-                          const SizedBox(width: 6),
-                          Text(
-                            'TOTAL KARMA',
-                            style: MuType.eyebrow.copyWith(
-                              color: MuColors.onBrand.withValues(alpha: 0.55),
-                            ),
-                          ),
-                          const SizedBox(width: MuSpace.s),
-                          // Shrinks (ellipsis) on narrow phones instead of
-                          // overflowing the row (360 dp: 117 px over).
-                          Expanded(
-                            child: hasRank
-                                ? Align(
-                                    alignment: Alignment.centerRight,
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: MuSpace.s,
-                                        vertical: 4,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: MuColors.onBrand.withValues(alpha: 0.12),
-                                        borderRadius: BorderRadius.circular(MuRadius.chip),
-                                      ),
-                                      child: Text(
-                                        'Rank #${summary.rank} · Top ${summary.percentile!.round()}%',
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: MuType.chip.copyWith(color: MuColors.onBrand, fontSize: 11),
-                                      ),
-                                    ),
-                                  )
-                                : const SizedBox.shrink(),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: MuSpace.l),
-                      Text(
-                        _formatKarma(summary.karma),
-                        style: MuType.stat.copyWith(fontSize: 50, color: MuColors.onBrand, height: 1),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'karma earned',
-                        style: MuType.caption.copyWith(color: MuColors.onBrand.withValues(alpha: 0.5)),
-                      ),
-                      if (summary.level != null) ...[
-                        const SizedBox(height: MuSpace.l),
-                        Text(
-                          levelLabel(summary.level),
-                          style: MuType.bodyMed.copyWith(color: MuColors.onBrand),
-                        ),
-                      ],
-                      const SizedBox(height: MuSpace.l),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            'View your journey',
-                            style: MuType.caption.copyWith(
-                              color: MuColors.onBrand.withValues(alpha: 0.6),
-                            ),
-                          ),
-                          const SizedBox(width: 4),
-                          Icon(
-                            LucideIcons.arrowRight,
-                            size: 12,
-                            color: MuColors.onBrand.withValues(alpha: 0.6),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+class _LoadFailed extends StatelessWidget {
+  const _LoadFailed({required this.message, required this.onRetry});
+
+  final String message;
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) => Row(
+    children: [
+      Expanded(
+        child: Text(
+          message,
+          style: context.mu.text.caption.copyWith(
+            color: context.mu.colors.ink2,
           ),
         ),
       ),
-    );
-  }
+      MuButton(
+        label: 'Retry',
+        variant: MuButtonVariant.ghost,
+        size: MuButtonSize.small,
+        onPressed: onRetry,
+      ),
+    ],
+  );
 }
 
-/// One of Home's two side-by-side quick-link tiles (DESIGN_SPEC.md §2 Home
-/// #4). "Find a task" and "Learning circles" both point at real destinations
-/// — there's no real "in-progress task" to resume (the mock's separate
-/// "PICK UP WHERE YOU LEFT OFF" card), so rather than fabricate one or show
-/// a second tile that duplicates "Find a task", that section is omitted
-/// entirely and folded into this one.
-class _QuickLinkTile extends StatelessWidget {
-  const _QuickLinkTile({
-    required this.icon,
-    required this.title,
-    required this.subtitle,
-    required this.onTap,
-  });
-
-  final IconData icon;
-  final String title;
-  final String subtitle;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return MuCard(
-      padding: const EdgeInsets.all(MuSpace.l),
-      onTap: onTap,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            height: 36,
-            width: 36,
-            decoration: BoxDecoration(
-              color: MuColors.primaryTint,
-              borderRadius: BorderRadius.circular(MuRadius.inner),
-            ),
-            alignment: Alignment.center,
-            child: Icon(icon, size: 18, color: MuColors.primary),
-          ),
-          const SizedBox(height: MuSpace.m),
-          Text(title, style: MuType.bodyMed),
-          const SizedBox(height: 2),
-          Text(subtitle, style: MuType.caption, maxLines: 1, overflow: TextOverflow.ellipsis),
-        ],
-      ),
-    );
-  }
-}
-
-/// One row of the "Top performers" preview list — real data from
-/// `features/leaderboard`'s all-time student leaderboard (top 3), the
-/// nearest real equivalent to the mock's "THIS WEEK'S MOVERS" (there's no
-/// weekly-scoped leaderboard endpoint, so the section is titled and framed
-/// generically rather than claiming a "this week" scope the data can't back).
-class _MoverRow extends StatelessWidget {
-  const _MoverRow({
-    required this.rank,
-    required this.name,
-    required this.karma,
-    required this.showDivider,
-    this.meta,
-    this.avatarUrl,
-    this.onTap,
-  });
-
-  final int rank;
-  final String name;
-  final String? meta;
-  final int karma;
-  final String? avatarUrl;
-  final bool showDivider;
-  final VoidCallback? onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final row = Container(
-      padding: const EdgeInsets.symmetric(vertical: MuSpace.m),
-      decoration: BoxDecoration(
-        border: showDivider
-            ? const Border(bottom: BorderSide(color: MuColors.hairline))
-            : null,
-      ),
-      child: Row(
-        children: [
-          SizedBox(
-            width: 18,
-            child: Text(
-              '$rank',
-              style: MuType.caption.copyWith(color: MuColors.inkFaint),
-            ),
-          ),
-          const SizedBox(width: MuSpace.s),
-          ProfileAvatar(url: avatarUrl, name: name, size: 32),
-          const SizedBox(width: MuSpace.m),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(name, style: MuType.bodyMed, maxLines: 1, overflow: TextOverflow.ellipsis),
-                if (meta != null)
-                  Text(meta!, style: MuType.caption, maxLines: 1, overflow: TextOverflow.ellipsis),
-              ],
-            ),
-          ),
-          const SizedBox(width: MuSpace.s),
-          Row(
-            children: [
-              const Icon(LucideIcons.zap, size: 12, color: MuColors.primary),
-              const SizedBox(width: 4),
-              Text(_formatKarma(karma), style: MuType.statSmall),
-            ],
-          ),
-        ],
-      ),
-    );
-    return onTap == null ? row : InkWell(onTap: onTap, child: row);
-  }
-}
-
-/// The learner's week under the hero (FEAT-05): karma this week, the
-/// streak, and the next meetup in one of their circles. Its own retry when
-/// the summary fails — the rest of Home stays.
-class _LearnerWeek extends ConsumerWidget {
-  const _LearnerWeek();
+/// Karma this week and the streak, as pills under the karma card.
+class _ThisWeek extends ConsumerWidget {
+  const _ThisWeek();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ref.watch(learnerSummaryProvider).when(
+    return ref
+        .watch(learnerSummaryProvider)
+        .when(
           skipError: true,
           loading: () => const SizedBox.shrink(),
-          error: (_, __) => Padding(
-            padding: const EdgeInsets.only(top: MuSpace.m),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    "Couldn't load your week",
-                    style: MuType.caption.copyWith(color: MuColors.inkSecondary),
-                  ),
-                ),
-                TextButton(
-                  onPressed: () => ref.invalidate(learnerSummaryProvider),
-                  child: const Text('Retry'),
-                ),
-              ],
+          error: (_, _) => Padding(
+            padding: const EdgeInsets.only(top: MuSpacing.space2),
+            child: _LoadFailed(
+              message: "Couldn't load your week",
+              onRetry: () => ref.invalidate(learnerSummaryProvider),
             ),
           ),
-          data: (week) => Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const SizedBox(height: MuSpace.m),
-              Wrap(
-                spacing: MuSpace.s,
-                runSpacing: MuSpace.s,
-                children: [
-                  _WeekChip(icon: LucideIcons.trendingUp, label: '+${_formatKarma(week.weeklyKarma)} this week'),
-                  if (week.streakDays > 0)
-                    _WeekChip(icon: LucideIcons.flame, label: '${week.streakDays}-day streak'),
-                ],
-              ),
-              if (week.nextMeeting case final meeting?) ...[
-                const SizedBox(height: MuSpace.xxl),
-                const MuSectionHeader(title: 'Next up'),
-                const SizedBox(height: MuSpace.m),
-                MuCard(
-                  onTap: () => context.push(RoutePaths.meetingDetailPath(meeting.id)),
-                  child: Row(
-                    children: [
-                      Container(
-                        height: 44,
-                        width: 44,
-                        decoration: BoxDecoration(
-                          color: MuColors.primaryTint,
-                          borderRadius: BorderRadius.circular(MuRadius.inner),
-                        ),
-                        alignment: Alignment.center,
-                        child: const Icon(LucideIcons.calendarClock, size: 20, color: MuColors.primary),
-                      ),
-                      const SizedBox(width: MuSpace.m),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(meeting.title, style: MuType.bodyMed, maxLines: 1, overflow: TextOverflow.ellipsis),
-                            const SizedBox(height: 2),
-                            Text(
-                              '${meeting.circleName} · ${_meetingTime(meeting.startsAt.toLocal())}',
-                              style: MuType.caption.copyWith(color: MuColors.inkSecondary),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
-                        ),
-                      ),
-                      const Icon(LucideIcons.chevronRight, size: 18, color: MuColors.inkTertiary),
-                    ],
-                  ),
+          data: (week) => Padding(
+            padding: const EdgeInsets.only(top: MuSpacing.space3),
+            child: Wrap(
+              spacing: MuSpacing.space2,
+              runSpacing: MuSpacing.space2,
+              children: [
+                MuPill(
+                  '+${muGrouped(week.weeklyKarma)} this week',
+                  tone: MuPillTone.volt,
+                  icon: LucideIcons.trendingUp,
                 ),
+                if (week.streakDays > 0)
+                  MuPill(
+                    '${week.streakDays}-day streak',
+                    icon: LucideIcons.flame,
+                  ),
               ],
-            ],
+            ),
           ),
         );
   }
 }
 
-class _WeekChip extends StatelessWidget {
-  const _WeekChip({required this.icon, required this.label});
-
-  final IconData icon;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: MuSpace.m, vertical: MuSpace.xs),
-        decoration: BoxDecoration(
-          color: MuColors.karmaAccentTint,
-          borderRadius: BorderRadius.circular(MuRadius.chip),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, size: 14, color: MuColors.karmaAccent),
-            const SizedBox(width: 6),
-            Text(label, style: MuType.chip.copyWith(color: MuColors.ink)),
-          ],
-        ),
-      );
-}
-
-/// "Get set up" (L1): only what's still to do — connect Discord (task
-/// karma is counted there) and join interest groups. Gone once both are done.
-class _SetupChecklist extends ConsumerWidget {
-  const _SetupChecklist();
+/// The bento: the next circle meeting (tall), the two ways to learn, and
+/// whatever setup is still to do.
+class _UpNext extends ConsumerWidget {
+  const _UpNext();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final needsDiscord = (ref.watch(capabilitiesProvider).value?.needsDiscord ?? false) &&
+    final week = ref.watch(learnerSummaryProvider).value;
+    final meeting = week?.nextMeeting;
+    final caps = ref.watch(capabilitiesProvider).value;
+    final needsDiscord =
+        (caps?.needsDiscord ?? false) &&
         ref.watch(discordAuthUriProvider) != null;
+    final canBrowseJobs = caps?.canBrowseJobs ?? false;
     final summary = ref.watch(myProgressSummaryControllerProvider).value;
     final needsGroups = summary != null && summary.interestGroupCount == 0;
-    if (!needsDiscord && !needsGroups) return const SizedBox.shrink();
+    // A Mentor without an approved application: where they stand, and the
+    // way to their applications (like Connect Discord, until it's done).
+    final mentorStanding = (caps?.isMentor ?? false)
+        ? ref
+              .watch(mentorApplicationsProvider)
+              .whenData(MentorStanding.of)
+              .value
+        : null;
+    final mentorTile = switch (mentorStanding) {
+      MentorStanding.none => (
+        'Apply to mentor',
+        'Tell us how you’ll guide learners',
+      ),
+      MentorStanding.pending => (
+        'Mentor application in review',
+        'See where it stands or edit it',
+      ),
+      MentorStanding.rejected => (
+        'Mentor application not approved',
+        'See why, then apply again',
+      ),
+      MentorStanding.revoked => (
+        'Mentor access revoked',
+        'See your applications',
+      ),
+      MentorStanding.approved || null => null,
+    };
+
+    final tiles = <MuTile>[
+      if (meeting != null)
+        MuTile(
+          title: meeting.title,
+          size: MuTileSize.tall,
+          fill: MuTileFill.cobalt,
+          pill: MuPill(
+            'Circle · ${formatDay(meeting.startsAt.toLocal())}',
+            tone: MuPillTone.paper,
+          ),
+          meta:
+              '${meeting.circleName}\n${formatTime(meeting.startsAt.toLocal())}',
+          onTap: () => context.push(RoutePaths.meetingDetailPath(meeting.id)),
+        ),
+      MuTile(
+        title: 'Find a task',
+        fill: MuTileFill.volt,
+        meta: 'Earn karma with a hashtag',
+        onTap: () => context.openTab(RoutePaths.tasks),
+      ),
+      MuTile(
+        title: 'Learning circles',
+        fill: MuTileFill.night,
+        meta: 'Learn with a group',
+        onTap: () => context.push(RoutePaths.learningCircles),
+      ),
+      // With no group yet, "Join interest groups" under Get set up says it.
+      if (!needsGroups)
+        MuTile(
+          title: 'Interest groups',
+          category: IgCategory.maker,
+          meta: 'Find and join communities',
+          onTap: () => context.push(RoutePaths.interestGroups),
+        ),
+      MuTile(
+        title: 'Weekly Twitches',
+        fill: MuTileFill.cobalt,
+        meta: 'Talks and campus shows',
+        onTap: () => context.push(RoutePaths.weeklyTwitches),
+      ),
+      MuTile(
+        title: 'Mentor sessions',
+        category: IgCategory.creative,
+        meta: 'Join one, or ask for help',
+        onTap: () => context.push(RoutePaths.learnerSessions),
+      ),
+      MuTile(
+        title: 'Projects',
+        fill: MuTileFill.volt,
+        meta: 'See what learners built, show yours',
+        onTap: () => context.push(RoutePaths.projects),
+      ),
+      MuTile(
+        title: 'Problem statements',
+        category: IgCategory.manager,
+        meta: 'Solve real problems, share your fix',
+        onTap: () => context.push(RoutePaths.problemStatements),
+      ),
+      if (canBrowseJobs)
+        MuTile(
+          title: 'Jobs & internships',
+          category: IgCategory.coder,
+          meta: 'Put your karma to work',
+          onTap: () => context.push(RoutePaths.opportunities),
+        ),
+    ];
+    final setup = <MuTile>[
+      if (mentorTile != null)
+        MuTile(
+          title: mentorTile.$1,
+          category: IgCategory.coder,
+          size: MuTileSize.short,
+          meta: mentorTile.$2,
+          onTap: () => context.push(RoutePaths.mentorApplications),
+        ),
+      if (needsDiscord)
+        MuTile(
+          title: 'Connect Discord',
+          category: IgCategory.creative,
+          size: MuTileSize.short,
+          meta: 'Post your task proof there to earn karma',
+          onTap: () =>
+              unawaited(ref.read(discordConnectFlowProvider.notifier).start()),
+        ),
+      if (needsGroups)
+        MuTile(
+          title: 'Join interest groups',
+          category: IgCategory.manager,
+          size: MuTileSize.short,
+          meta: 'Pick up to three to see their tasks',
+          onTap: () => context.push(RoutePaths.interestGroups),
+        ),
+    ];
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const SizedBox(height: MuSpace.xxl),
-        const MuSectionHeader(title: 'Get set up'),
-        const SizedBox(height: MuSpace.m),
-        MuCard(
-          padding: const EdgeInsets.symmetric(vertical: MuSpace.xs),
-          child: Column(
-            children: [
-              if (needsDiscord)
-                _SetupRow(
-                  icon: LucideIcons.messageCircle,
-                  label: 'Connect Discord',
-                  hint: 'Task karma is counted in the μLearn server',
-                  onTap: () => unawaited(ref.read(discordConnectFlowProvider.notifier).start()),
-                ),
-              if (needsGroups)
-                _SetupRow(
-                  icon: LucideIcons.layers,
-                  label: 'Join interest groups',
-                  hint: 'Pick up to three to see their tasks and events',
-                  onTap: () => context.push(RoutePaths.interestGroups),
-                ),
-            ],
-          ),
-        ),
+        if (setup.isNotEmpty) ...[
+          const MuSectionTitle('Get set up'),
+          const SizedBox(height: MuSpacing.space3),
+          MuBento(tiles: setup),
+          const SizedBox(height: MuSpacing.space10),
+        ],
+        MuSectionTitle(meeting != null ? 'Up next' : 'Keep going'),
+        const SizedBox(height: MuSpacing.space3),
+        MuBento(tiles: tiles),
       ],
     );
   }
 }
 
-class _SetupRow extends StatelessWidget {
-  const _SetupRow({required this.icon, required this.label, required this.hint, required this.onTap});
-
-  final IconData icon;
-  final String label;
-  final String hint;
-  final VoidCallback onTap;
+class _TopPerformers extends ConsumerWidget {
+  const _TopPerformers();
 
   @override
-  Widget build(BuildContext context) => InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: MuSpace.l, vertical: MuSpace.m),
-          child: Row(
-            children: [
-              const Icon(LucideIcons.circle, size: 20, color: MuColors.inkTertiary),
-              const SizedBox(width: MuSpace.m),
-              Icon(icon, size: 18, color: MuColors.primary),
-              const SizedBox(width: MuSpace.s),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(label, style: MuType.bodyMed),
-                    Text(hint, style: MuType.caption.copyWith(color: MuColors.inkSecondary)),
-                  ],
+  Widget build(BuildContext context, WidgetRef ref) {
+    final c = context.mu.colors;
+    return ref
+        .watch(studentLeaderboardProvider(monthly: false))
+        .when(
+          loading: () => const SizedBox.shrink(),
+          error: (_, _) => const SizedBox.shrink(),
+          data: (entries) {
+            if (entries.isEmpty) return const SizedBox.shrink();
+            final top = entries.take(3).toList();
+            final max = top.first.totalKarma.toInt();
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                MuSectionTitle(
+                  'Top performers',
+                  onSeeAll: () => context.openTab(RoutePaths.leaderboard),
                 ),
-              ),
-              const Icon(LucideIcons.chevronRight, size: 18, color: MuColors.inkTertiary),
-            ],
-          ),
-        ),
-      );
+                const SizedBox(height: MuSpacing.space3),
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: MuSpacing.space4,
+                    vertical: MuSpacing.space1,
+                  ),
+                  decoration: BoxDecoration(
+                    color: c.surface,
+                    borderRadius: BorderRadius.circular(MuRadii.card),
+                  ),
+                  child: Column(
+                    children: [
+                      for (var i = 0; i < top.length; i++)
+                        MuRankRow(
+                          rank: i + 1,
+                          maxKarma: max,
+                          entry: MuRankEntry(
+                            name: top[i].fullName,
+                            karma: top[i].totalKarma.toInt(),
+                            subtitle: top[i].institution,
+                            photoUrl: top[i].profilePic,
+                          ),
+                          onTap: top[i].muid == null
+                              ? null
+                              : () => context.push(
+                                  RoutePaths.publicProfilePath(top[i].muid!),
+                                ),
+                        ),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+  }
 }
 
-/// "Fri 13 Nov · 6:30 PM" in local time.
-String _meetingTime(DateTime t) {
-  const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  final hour = t.hour % 12 == 0 ? 12 : t.hour % 12;
-  final minute = t.minute.toString().padLeft(2, '0');
-  return '${days[t.weekday - 1]} ${t.day} ${months[t.month - 1]} · $hour:$minute ${t.hour < 12 ? 'AM' : 'PM'}';
+class _HappeningSoon extends ConsumerWidget {
+  const _HappeningSoon();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return ref
+        .watch(featuredEventsControllerProvider)
+        .when(
+          loading: () => const SizedBox.shrink(),
+          error: (_, _) => const SizedBox.shrink(),
+          data: (events) {
+            if (events.isEmpty) return const SizedBox.shrink();
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                MuSectionTitle(
+                  'Happening soon',
+                  onSeeAll: () => context.push(RoutePaths.events),
+                ),
+                const SizedBox(height: MuSpacing.space3),
+                for (final e in events.take(2)) ...[
+                  Center(child: _Ticket(event: e)),
+                  const SizedBox(height: MuSpacing.space5),
+                ],
+              ],
+            );
+          },
+        );
+  }
+}
+
+class _Ticket extends StatelessWidget {
+  const _Ticket({required this.event});
+
+  final FeaturedEvent event;
+
+  String get _place => event.venue.venueType == 'online'
+      ? 'Online'
+      : (event.venue.venueCity ?? 'Venue to be announced');
+
+  @override
+  Widget build(BuildContext context) {
+    final starts = DateTime.tryParse(event.startDatetime)?.toLocal();
+    final ends = DateTime.tryParse(event.endDatetime)?.toLocal();
+    final when = starts == null || ends == null
+        ? _place
+        : '${formatWhen(starts: starts, ends: ends, now: DateTime.now())} · $_place';
+    void open() => context.push(RoutePaths.eventDetailPath(event.id));
+    return MuEventTicket(
+      title: event.title,
+      when: when,
+      posterUrl: event.coverImage,
+      capacity: event.interestCount > 0
+          ? MuPill(
+              '${muGrouped(event.interestCount)} interested',
+              tone: MuPillTone.night,
+              icon: LucideIcons.users,
+            )
+          : null,
+      kind: event.eventScope.isEmpty
+          ? null
+          : MuPill(
+              event.eventScope[0].toUpperCase() + event.eventScope.substring(1),
+              tone: MuPillTone.paper,
+            ),
+      pills: [
+        if ((event.minKarma ?? 0) > 0)
+          MuPill(
+            '${muGrouped(event.minKarma!)}+ karma to join',
+            icon: LucideIcons.zap,
+          ),
+        for (final tag in event.tags.take(2)) MuPill(tag, mono: true),
+      ],
+      stub: MuButton(
+        label: 'View event',
+        variant: MuButtonVariant.ink,
+        knob: true,
+        block: true,
+        onPressed: open,
+      ),
+      onTap: open,
+    );
+  }
 }

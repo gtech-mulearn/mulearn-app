@@ -1,0 +1,102 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/user/search/?search=&pageIndex=2&perPage=30",
+    "account": "qa-student",
+    "status": 200,
+    "recorded_at": "2026-11-15T16:15:17.592Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "data": [
+        {
+          "id": "45e6ec1d-37e0-452a-8a8b-ba7e4ecfc2b5",
+          "full_name": "QA Pending Link",
+          "muid": "qapendinglink@mulearn",
+          "interest_groups": [],
+          "organizations": [
+            {
+              "id": "ad3a3793-d780-4ec1-b03e-fac92e0faa0d",
+              "title": "St. Josephs Colege of Engineering and Technology",
+              "code": "SJC",
+              "org_type": "College"
+            }
+          ],
+          "profile_pic": null,
+          "karma": "0"
+        },
+        {
+          "id": "46126ca1-2923-40a8-8a0c-92a73107eaa7",
+          "full_name": "QA Enabler One",
+          "muid": "qaenablerone@mulearn",
+          "interest_groups": [],
+          "organizations": [
+            {
+              "id": "ad3a3793-d780-4ec1-b03e-fac92e0faa0d",
+              "title": "St. Josephs Colege of Engineering and Technology",
+              "code": "SJC",
+              "org_type": "College"
+            }
+          ],
+          "profile_pic": null,
+          "karma": "0"
+        },
+        {
+          "id": "5696bdb9-077b-47c4-b6e8-0f4df997cf41",
+          "full_name": "Pranav G nath",
+          "muid": "pranavgnath@mulearn",
+          "interest_groups": [],
+          "organizations": [
+            {
+              "id": "ad3a3793-d780-4ec1-b03e-fac92e0faa0d",
+              "title": "St. Josephs Colege of Engineering and Technology",
+              "code": "SJC",
+              "org_type": "College"
+            }
+          ],
+          "profile_pic": null,
+          "karma": "0"
+        },
+        {
+          "id": "2a13692f-cc23-4735-acf0-ea98df725be1",
+          "full_name": "Nandakishore P",
+          "muid": "nandakishorep-1@mulearn",
+          "interest_groups": [],
+          "organizations": [],
+          "profile_pic": null,
+          "karma": null
+        },
+        {
+          "id": "00fd1b20-0ed2-46ce-af21-c190f61abacb",
+          "full_name": "System Admin",
+          "muid": "systemadmin@mulearn",
+          "interest_groups": [],
+          "organizations": [],
+          "profile_pic": "https://dev.mulearn.org/muback-media/user/profile/00fd1b20-0ed2-46ce-af21-c190f61abacb.png",
+          "karma": null
+        },
+        {
+          "id": "fba9cb9d-7764-4953-9970-309d2765ff1f",
+          "full_name": "System Admin",
+          "muid": "system@mulearn",
+          "interest_groups": [],
+          "organizations": [],
+          "profile_pic": "https://dev.mulearn.org/muback-media/user/profile/fba9cb9d-7764-4953-9970-309d2765ff1f.png",
+          "karma": null
+        }
+      ],
+      "pagination": {
+        "count": 36,
+        "totalPages": 2,
+        "isNext": false,
+        "isPrev": true,
+        "nextPage": null
+      }
+    }
+  }
+}

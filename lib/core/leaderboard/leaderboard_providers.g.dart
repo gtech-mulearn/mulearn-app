@@ -10,7 +10,7 @@ part of 'leaderboard_providers.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(leaderboardRemoteDataSource)
-const leaderboardRemoteDataSourceProvider =
+final leaderboardRemoteDataSourceProvider =
     LeaderboardRemoteDataSourceProvider._();
 
 final class LeaderboardRemoteDataSourceProvider
@@ -21,7 +21,7 @@ final class LeaderboardRemoteDataSourceProvider
           LeaderboardRemoteDataSource
         >
     with $Provider<LeaderboardRemoteDataSource> {
-  const LeaderboardRemoteDataSourceProvider._()
+  LeaderboardRemoteDataSourceProvider._()
     : super(
         from: null,
         argument: null,
@@ -56,14 +56,14 @@ final class LeaderboardRemoteDataSourceProvider
 }
 
 String _$leaderboardRemoteDataSourceHash() =>
-    r'1b693a54b0f8f49f74175cdc628119866d759f18';
+    r'03015ce41184ae26aa03a5b644e9f4da39b21d32';
 
 /// Shared read model (rules.md §2): Home's "Top performers" and the
 /// Leaderboard screen both read these. Presentation depends on the
 /// [LeaderboardRepository] contract.
 
 @ProviderFor(leaderboardRepository)
-const leaderboardRepositoryProvider = LeaderboardRepositoryProvider._();
+final leaderboardRepositoryProvider = LeaderboardRepositoryProvider._();
 
 /// Shared read model (rules.md §2): Home's "Top performers" and the
 /// Leaderboard screen both read these. Presentation depends on the
@@ -80,7 +80,7 @@ final class LeaderboardRepositoryProvider
   /// Shared read model (rules.md §2): Home's "Top performers" and the
   /// Leaderboard screen both read these. Presentation depends on the
   /// [LeaderboardRepository] contract.
-  const LeaderboardRepositoryProvider._()
+  LeaderboardRepositoryProvider._()
     : super(
         from: null,
         argument: null,
@@ -118,7 +118,7 @@ String _$leaderboardRepositoryHash() =>
     r'42a645283e1892408b8a1d014c9a9d1d645a0c6f';
 
 @ProviderFor(studentLeaderboard)
-const studentLeaderboardProvider = StudentLeaderboardFamily._();
+final studentLeaderboardProvider = StudentLeaderboardFamily._();
 
 final class StudentLeaderboardProvider
     extends
@@ -130,7 +130,7 @@ final class StudentLeaderboardProvider
     with
         $FutureModifier<List<StudentLeaderboardEntry>>,
         $FutureProvider<List<StudentLeaderboardEntry>> {
-  const StudentLeaderboardProvider._({
+  StudentLeaderboardProvider._({
     required StudentLeaderboardFamily super.from,
     required bool super.argument,
   }) : super(
@@ -183,7 +183,7 @@ final class StudentLeaderboardFamily extends $Family
           FutureOr<List<StudentLeaderboardEntry>>,
           bool
         > {
-  const StudentLeaderboardFamily._()
+  StudentLeaderboardFamily._()
     : super(
         retry: null,
         name: r'studentLeaderboardProvider',
@@ -200,7 +200,7 @@ final class StudentLeaderboardFamily extends $Family
 }
 
 @ProviderFor(collegeLeaderboard)
-const collegeLeaderboardProvider = CollegeLeaderboardFamily._();
+final collegeLeaderboardProvider = CollegeLeaderboardFamily._();
 
 final class CollegeLeaderboardProvider
     extends
@@ -212,7 +212,7 @@ final class CollegeLeaderboardProvider
     with
         $FutureModifier<List<CollegeLeaderboardEntry>>,
         $FutureProvider<List<CollegeLeaderboardEntry>> {
-  const CollegeLeaderboardProvider._({
+  CollegeLeaderboardProvider._({
     required CollegeLeaderboardFamily super.from,
     required bool super.argument,
   }) : super(
@@ -265,7 +265,7 @@ final class CollegeLeaderboardFamily extends $Family
           FutureOr<List<CollegeLeaderboardEntry>>,
           bool
         > {
-  const CollegeLeaderboardFamily._()
+  CollegeLeaderboardFamily._()
     : super(
         retry: null,
         name: r'collegeLeaderboardProvider',

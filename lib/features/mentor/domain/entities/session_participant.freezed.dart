@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'session_participant.dart';
@@ -9,6 +9,7 @@ part of 'session_participant.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $SessionParticipantCopyWith<SessionParticipant> get copyWith => _$SessionPartici
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SessionParticipant&&(identical(other.linkId, linkId) || other.linkId == linkId)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.role, role) || other.role == role)&&(identical(other.attendance, attendance) || other.attendance == attendance)&&(identical(other.progressNote, progressNote) || other.progressNote == progressNote)&&(identical(other.feedback, feedback) || other.feedback == feedback)&&(identical(other.contributedMinutes, contributedMinutes) || other.contributedMinutes == contributedMinutes));
+  final _this = this as SessionParticipant;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SessionParticipant&&(identical(other.linkId, _this.linkId) || other.linkId == _this.linkId)&&(identical(other.userId, _this.userId) || other.userId == _this.userId)&&(identical(other.fullName, _this.fullName) || other.fullName == _this.fullName)&&(identical(other.muid, _this.muid) || other.muid == _this.muid)&&(identical(other.role, _this.role) || other.role == _this.role)&&(identical(other.attendance, _this.attendance) || other.attendance == _this.attendance)&&(identical(other.progressNote, _this.progressNote) || other.progressNote == _this.progressNote)&&(identical(other.feedback, _this.feedback) || other.feedback == _this.feedback)&&(identical(other.contributedMinutes, _this.contributedMinutes) || other.contributedMinutes == _this.contributedMinutes));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,linkId,userId,fullName,muid,role,attendance,progressNote,feedback,contributedMinutes);
+int get hashCode {
+  final _this = this as SessionParticipant;
+  return Object.hash(runtimeType,_this.linkId,_this.userId,_this.fullName,_this.muid,_this.role,_this.attendance,_this.progressNote,_this.feedback,_this.contributedMinutes);
+}
 
 @override
 String toString() {
-  return 'SessionParticipant(linkId: $linkId, userId: $userId, fullName: $fullName, muid: $muid, role: $role, attendance: $attendance, progressNote: $progressNote, feedback: $feedback, contributedMinutes: $contributedMinutes)';
+  final _this = this as SessionParticipant;
+  return 'SessionParticipant(linkId: ${_this.linkId}, userId: ${_this.userId}, fullName: ${_this.fullName}, muid: ${_this.muid}, role: ${_this.role}, attendance: ${_this.attendance}, progressNote: ${_this.progressNote}, feedback: ${_this.feedback}, contributedMinutes: ${_this.contributedMinutes})';
 }
 
 
@@ -63,7 +69,7 @@ class _$SessionParticipantCopyWithImpl<$Res>
 /// Create a copy of SessionParticipant
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? linkId = null,Object? userId = null,Object? fullName = null,Object? muid = null,Object? role = null,Object? attendance = null,Object? progressNote = freezed,Object? feedback = freezed,Object? contributedMinutes = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(SessionParticipant(
 linkId: null == linkId ? _self.linkId : linkId // ignore: cast_nullable_to_non_nullable
 as String,userId: null == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String,fullName: null == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
@@ -237,16 +243,18 @@ _$SessionParticipantCopyWith<_SessionParticipant> get copyWith => __$SessionPart
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SessionParticipant&&(identical(other.linkId, linkId) || other.linkId == linkId)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.role, role) || other.role == role)&&(identical(other.attendance, attendance) || other.attendance == attendance)&&(identical(other.progressNote, progressNote) || other.progressNote == progressNote)&&(identical(other.feedback, feedback) || other.feedback == feedback)&&(identical(other.contributedMinutes, contributedMinutes) || other.contributedMinutes == contributedMinutes));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _SessionParticipant&&(identical(other.linkId, linkId) || other.linkId == linkId)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.role, role) || other.role == role)&&(identical(other.attendance, attendance) || other.attendance == attendance)&&(identical(other.progressNote, progressNote) || other.progressNote == progressNote)&&(identical(other.feedback, feedback) || other.feedback == feedback)&&(identical(other.contributedMinutes, contributedMinutes) || other.contributedMinutes == contributedMinutes));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,linkId,userId,fullName,muid,role,attendance,progressNote,feedback,contributedMinutes);
+int get hashCode {
+    return Object.hash(runtimeType,linkId,userId,fullName,muid,role,attendance,progressNote,feedback,contributedMinutes);
+}
 
 @override
 String toString() {
-  return 'SessionParticipant(linkId: $linkId, userId: $userId, fullName: $fullName, muid: $muid, role: $role, attendance: $attendance, progressNote: $progressNote, feedback: $feedback, contributedMinutes: $contributedMinutes)';
+    return 'SessionParticipant(linkId: $linkId, userId: $userId, fullName: $fullName, muid: $muid, role: $role, attendance: $attendance, progressNote: $progressNote, feedback: $feedback, contributedMinutes: $contributedMinutes)';
 }
 
 

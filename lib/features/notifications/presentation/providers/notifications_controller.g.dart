@@ -18,7 +18,7 @@ part of 'notifications_controller.dart';
 /// request.
 
 @ProviderFor(NotificationsController)
-const notificationsControllerProvider = NotificationsControllerProvider._();
+final notificationsControllerProvider = NotificationsControllerProvider._();
 
 /// The inbox, page by page. Lives only while the Notifications screen is
 /// open: it loads on open, on pull-to-refresh and on scroll-to-end, and never
@@ -42,7 +42,7 @@ final class NotificationsControllerProvider
   /// backend's error for the screen's toast. The badge is adjusted locally
   /// through [UnreadNotifications], so these actions cost no extra count
   /// request.
-  const NotificationsControllerProvider._()
+  NotificationsControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -78,8 +78,7 @@ abstract class _$NotificationsController
   FutureOr<PagedState<AppNotification>> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref =
         this.ref
             as $Ref<
@@ -97,6 +96,6 @@ abstract class _$NotificationsController
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }

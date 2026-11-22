@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'student_request.dart';
@@ -9,6 +9,7 @@ part of 'student_request.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $StudentSessionRequestCopyWith<StudentSessionRequest> get copyWith => _$StudentS
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is StudentSessionRequest&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.mode, mode) || other.mode == mode)&&(identical(other.startsAt, startsAt) || other.startsAt == startsAt)&&(identical(other.endsAt, endsAt) || other.endsAt == endsAt)&&(identical(other.scopeName, scopeName) || other.scopeName == scopeName)&&(identical(other.requesterName, requesterName) || other.requesterName == requesterName)&&(identical(other.requesterMuid, requesterMuid) || other.requesterMuid == requesterMuid)&&(identical(other.meetingLink, meetingLink) || other.meetingLink == meetingLink)&&(identical(other.venue, venue) || other.venue == venue));
+  final _this = this as StudentSessionRequest;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StudentSessionRequest&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.description, _this.description) || other.description == _this.description)&&(identical(other.mode, _this.mode) || other.mode == _this.mode)&&(identical(other.startsAt, _this.startsAt) || other.startsAt == _this.startsAt)&&(identical(other.endsAt, _this.endsAt) || other.endsAt == _this.endsAt)&&(identical(other.scopeName, _this.scopeName) || other.scopeName == _this.scopeName)&&(identical(other.requesterName, _this.requesterName) || other.requesterName == _this.requesterName)&&(identical(other.requesterMuid, _this.requesterMuid) || other.requesterMuid == _this.requesterMuid)&&(identical(other.meetingLink, _this.meetingLink) || other.meetingLink == _this.meetingLink)&&(identical(other.venue, _this.venue) || other.venue == _this.venue));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,title,description,mode,startsAt,endsAt,scopeName,requesterName,requesterMuid,meetingLink,venue);
+int get hashCode {
+  final _this = this as StudentSessionRequest;
+  return Object.hash(runtimeType,_this.id,_this.title,_this.description,_this.mode,_this.startsAt,_this.endsAt,_this.scopeName,_this.requesterName,_this.requesterMuid,_this.meetingLink,_this.venue);
+}
 
 @override
 String toString() {
-  return 'StudentSessionRequest(id: $id, title: $title, description: $description, mode: $mode, startsAt: $startsAt, endsAt: $endsAt, scopeName: $scopeName, requesterName: $requesterName, requesterMuid: $requesterMuid, meetingLink: $meetingLink, venue: $venue)';
+  final _this = this as StudentSessionRequest;
+  return 'StudentSessionRequest(id: ${_this.id}, title: ${_this.title}, description: ${_this.description}, mode: ${_this.mode}, startsAt: ${_this.startsAt}, endsAt: ${_this.endsAt}, scopeName: ${_this.scopeName}, requesterName: ${_this.requesterName}, requesterMuid: ${_this.requesterMuid}, meetingLink: ${_this.meetingLink}, venue: ${_this.venue})';
 }
 
 
@@ -63,7 +69,7 @@ class _$StudentSessionRequestCopyWithImpl<$Res>
 /// Create a copy of StudentSessionRequest
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? description = null,Object? mode = null,Object? startsAt = null,Object? endsAt = null,Object? scopeName = null,Object? requesterName = null,Object? requesterMuid = null,Object? meetingLink = freezed,Object? venue = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(StudentSessionRequest(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
@@ -241,16 +247,18 @@ _$StudentSessionRequestCopyWith<_StudentSessionRequest> get copyWith => __$Stude
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StudentSessionRequest&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.mode, mode) || other.mode == mode)&&(identical(other.startsAt, startsAt) || other.startsAt == startsAt)&&(identical(other.endsAt, endsAt) || other.endsAt == endsAt)&&(identical(other.scopeName, scopeName) || other.scopeName == scopeName)&&(identical(other.requesterName, requesterName) || other.requesterName == requesterName)&&(identical(other.requesterMuid, requesterMuid) || other.requesterMuid == requesterMuid)&&(identical(other.meetingLink, meetingLink) || other.meetingLink == meetingLink)&&(identical(other.venue, venue) || other.venue == venue));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _StudentSessionRequest&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.mode, mode) || other.mode == mode)&&(identical(other.startsAt, startsAt) || other.startsAt == startsAt)&&(identical(other.endsAt, endsAt) || other.endsAt == endsAt)&&(identical(other.scopeName, scopeName) || other.scopeName == scopeName)&&(identical(other.requesterName, requesterName) || other.requesterName == requesterName)&&(identical(other.requesterMuid, requesterMuid) || other.requesterMuid == requesterMuid)&&(identical(other.meetingLink, meetingLink) || other.meetingLink == meetingLink)&&(identical(other.venue, venue) || other.venue == venue));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,title,description,mode,startsAt,endsAt,scopeName,requesterName,requesterMuid,meetingLink,venue);
+int get hashCode {
+    return Object.hash(runtimeType,id,title,description,mode,startsAt,endsAt,scopeName,requesterName,requesterMuid,meetingLink,venue);
+}
 
 @override
 String toString() {
-  return 'StudentSessionRequest(id: $id, title: $title, description: $description, mode: $mode, startsAt: $startsAt, endsAt: $endsAt, scopeName: $scopeName, requesterName: $requesterName, requesterMuid: $requesterMuid, meetingLink: $meetingLink, venue: $venue)';
+    return 'StudentSessionRequest(id: $id, title: $title, description: $description, mode: $mode, startsAt: $startsAt, endsAt: $endsAt, scopeName: $scopeName, requesterName: $requesterName, requesterMuid: $requesterMuid, meetingLink: $meetingLink, venue: $venue)';
 }
 
 

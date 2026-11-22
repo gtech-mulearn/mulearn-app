@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'editable_profile_dto.dart';
@@ -9,6 +9,7 @@ part of 'editable_profile_dto.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $EditableProfileDtoCopyWith<EditableProfileDto> get copyWith => _$EditableProfil
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is EditableProfileDto&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.email, email) || other.email == email)&&(identical(other.mobile, mobile) || other.mobile == mobile)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.dob, dob) || other.dob == dob)&&(identical(other.district, district) || other.district == district)&&const DeepCollectionEquality().equals(other.communities, communities)&&(identical(other.department, department) || other.department == department));
+  final _this = this as EditableProfileDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EditableProfileDto&&(identical(other.fullName, _this.fullName) || other.fullName == _this.fullName)&&(identical(other.email, _this.email) || other.email == _this.email)&&(identical(other.mobile, _this.mobile) || other.mobile == _this.mobile)&&(identical(other.gender, _this.gender) || other.gender == _this.gender)&&(identical(other.dob, _this.dob) || other.dob == _this.dob)&&(identical(other.district, _this.district) || other.district == _this.district)&&const DeepCollectionEquality().equals(other.communities, _this.communities)&&(identical(other.department, _this.department) || other.department == _this.department));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,fullName,email,mobile,gender,dob,district,const DeepCollectionEquality().hash(communities),department);
+int get hashCode {
+  final _this = this as EditableProfileDto;
+  return Object.hash(runtimeType,_this.fullName,_this.email,_this.mobile,_this.gender,_this.dob,_this.district,const DeepCollectionEquality().hash(_this.communities),_this.department);
+}
 
 @override
 String toString() {
-  return 'EditableProfileDto(fullName: $fullName, email: $email, mobile: $mobile, gender: $gender, dob: $dob, district: $district, communities: $communities, department: $department)';
+  final _this = this as EditableProfileDto;
+  return 'EditableProfileDto(fullName: ${_this.fullName}, email: ${_this.email}, mobile: ${_this.mobile}, gender: ${_this.gender}, dob: ${_this.dob}, district: ${_this.district}, communities: ${_this.communities}, department: ${_this.department})';
 }
 
 
@@ -66,7 +72,7 @@ class _$EditableProfileDtoCopyWithImpl<$Res>
 /// Create a copy of EditableProfileDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? fullName = freezed,Object? email = freezed,Object? mobile = freezed,Object? gender = freezed,Object? dob = freezed,Object? district = freezed,Object? communities = null,Object? department = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(EditableProfileDto(
 fullName: freezed == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
 as String?,email: freezed == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String?,mobile: freezed == mobile ? _self.mobile : mobile // ignore: cast_nullable_to_non_nullable
@@ -240,7 +246,7 @@ return $default(_that.fullName,_that.email,_that.mobile,_that.gender,_that.dob,_
 @JsonSerializable()
 
 class _EditableProfileDto extends EditableProfileDto {
-  const _EditableProfileDto({this.fullName, this.email, this.mobile, this.gender, this.dob, this.district, final  List<String> communities = const [], this.department}): _communities = communities,super._();
+  const _EditableProfileDto({this.fullName, this.email, this.mobile, this.gender, this.dob, this.district,  List<String> communities = const [], this.department}): _communities = communities,super._();
   factory _EditableProfileDto.fromJson(Map<String, dynamic> json) => _$EditableProfileDtoFromJson(json);
 
 @override final  String? fullName;
@@ -271,16 +277,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EditableProfileDto&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.email, email) || other.email == email)&&(identical(other.mobile, mobile) || other.mobile == mobile)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.dob, dob) || other.dob == dob)&&(identical(other.district, district) || other.district == district)&&const DeepCollectionEquality().equals(other._communities, _communities)&&(identical(other.department, department) || other.department == department));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _EditableProfileDto&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.email, email) || other.email == email)&&(identical(other.mobile, mobile) || other.mobile == mobile)&&(identical(other.gender, gender) || other.gender == gender)&&(identical(other.dob, dob) || other.dob == dob)&&(identical(other.district, district) || other.district == district)&&const DeepCollectionEquality().equals(other.communities, _communities)&&(identical(other.department, department) || other.department == department));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,fullName,email,mobile,gender,dob,district,const DeepCollectionEquality().hash(_communities),department);
+int get hashCode {
+    return Object.hash(runtimeType,fullName,email,mobile,gender,dob,district,const DeepCollectionEquality().hash(_communities),department);
+}
 
 @override
 String toString() {
-  return 'EditableProfileDto(fullName: $fullName, email: $email, mobile: $mobile, gender: $gender, dob: $dob, district: $district, communities: $communities, department: $department)';
+    return 'EditableProfileDto(fullName: $fullName, email: $email, mobile: $mobile, gender: $gender, dob: $dob, district: $district, communities: $communities, department: $department)';
 }
 
 

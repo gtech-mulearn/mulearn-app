@@ -38,7 +38,10 @@ class AchievementClaimController extends _$AchievementClaimController {
   @override
   Future<void> build() async {}
 
-  Future<ClaimResult> claim(String achievementId, {required String muid}) async {
+  Future<ClaimResult> claim(
+    String achievementId, {
+    required String muid,
+  }) async {
     final repository = ref.read(profileRepositoryProvider);
     final link = ref.keepAlive(); // finish the refresh even if the tab closes
     try {

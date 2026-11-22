@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'user_search_page.dart';
@@ -9,6 +9,7 @@ part of 'user_search_page.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $UserSearchPageCopyWith<UserSearchPage> get copyWith => _$UserSearchPageCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserSearchPage&&const DeepCollectionEquality().equals(other.results, results)&&(identical(other.pageIndex, pageIndex) || other.pageIndex == pageIndex)&&(identical(other.totalPages, totalPages) || other.totalPages == totalPages));
+  final _this = this as UserSearchPage;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserSearchPage&&const DeepCollectionEquality().equals(other.results, _this.results)&&(identical(other.pageIndex, _this.pageIndex) || other.pageIndex == _this.pageIndex)&&(identical(other.totalPages, _this.totalPages) || other.totalPages == _this.totalPages));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(results),pageIndex,totalPages);
+int get hashCode {
+  final _this = this as UserSearchPage;
+  return Object.hash(runtimeType,const DeepCollectionEquality().hash(_this.results),_this.pageIndex,_this.totalPages);
+}
 
 @override
 String toString() {
-  return 'UserSearchPage(results: $results, pageIndex: $pageIndex, totalPages: $totalPages)';
+  final _this = this as UserSearchPage;
+  return 'UserSearchPage(results: ${_this.results}, pageIndex: ${_this.pageIndex}, totalPages: ${_this.totalPages})';
 }
 
 
@@ -63,7 +69,7 @@ class _$UserSearchPageCopyWithImpl<$Res>
 /// Create a copy of UserSearchPage
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? results = null,Object? pageIndex = null,Object? totalPages = null,}) {
-  return _then(_self.copyWith(
+  return _then(UserSearchPage(
 results: null == results ? _self.results : results // ignore: cast_nullable_to_non_nullable
 as List<UserSearchResult>,pageIndex: null == pageIndex ? _self.pageIndex : pageIndex // ignore: cast_nullable_to_non_nullable
 as int,totalPages: null == totalPages ? _self.totalPages : totalPages // ignore: cast_nullable_to_non_nullable
@@ -208,7 +214,7 @@ return $default(_that.results,_that.pageIndex,_that.totalPages);case _:
 
 
 class _UserSearchPage extends UserSearchPage {
-  const _UserSearchPage({required final  List<UserSearchResult> results, required this.pageIndex, required this.totalPages}): _results = results,super._();
+  const _UserSearchPage({required  List<UserSearchResult> results, required this.pageIndex, required this.totalPages}): _results = results,super._();
   
 
  final  List<UserSearchResult> _results;
@@ -231,16 +237,18 @@ _$UserSearchPageCopyWith<_UserSearchPage> get copyWith => __$UserSearchPageCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserSearchPage&&const DeepCollectionEquality().equals(other._results, _results)&&(identical(other.pageIndex, pageIndex) || other.pageIndex == pageIndex)&&(identical(other.totalPages, totalPages) || other.totalPages == totalPages));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserSearchPage&&const DeepCollectionEquality().equals(other.results, _results)&&(identical(other.pageIndex, pageIndex) || other.pageIndex == pageIndex)&&(identical(other.totalPages, totalPages) || other.totalPages == totalPages));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_results),pageIndex,totalPages);
+int get hashCode {
+    return Object.hash(runtimeType,const DeepCollectionEquality().hash(_results),pageIndex,totalPages);
+}
 
 @override
 String toString() {
-  return 'UserSearchPage(results: $results, pageIndex: $pageIndex, totalPages: $totalPages)';
+    return 'UserSearchPage(results: $results, pageIndex: $pageIndex, totalPages: $totalPages)';
 }
 
 

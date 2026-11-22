@@ -10,7 +10,7 @@ part of 'session_providers.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(sessionRemoteDataSource)
-const sessionRemoteDataSourceProvider = SessionRemoteDataSourceProvider._();
+final sessionRemoteDataSourceProvider = SessionRemoteDataSourceProvider._();
 
 final class SessionRemoteDataSourceProvider
     extends
@@ -20,13 +20,13 @@ final class SessionRemoteDataSourceProvider
           SessionRemoteDataSource
         >
     with $Provider<SessionRemoteDataSource> {
-  const SessionRemoteDataSourceProvider._()
+  SessionRemoteDataSourceProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
         name: r'sessionRemoteDataSourceProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -55,12 +55,12 @@ final class SessionRemoteDataSourceProvider
 }
 
 String _$sessionRemoteDataSourceHash() =>
-    r'e5cdf69b352e6e02ee5d6853234357f9bc73b06b';
+    r'd284916388d46761c73a946f2804a45cce02e65d';
 
 /// The signed-in user (`/dashboard/user/info/`); `null` when signed out.
 
 @ProviderFor(currentUser)
-const currentUserProvider = CurrentUserProvider._();
+final currentUserProvider = CurrentUserProvider._();
 
 /// The signed-in user (`/dashboard/user/info/`); `null` when signed out.
 
@@ -73,7 +73,7 @@ final class CurrentUserProvider
         >
     with $FutureModifier<CurrentUser?>, $FutureProvider<CurrentUser?> {
   /// The signed-in user (`/dashboard/user/info/`); `null` when signed out.
-  const CurrentUserProvider._()
+  CurrentUserProvider._()
     : super(
         from: null,
         argument: null,
@@ -105,7 +105,7 @@ String _$currentUserHash() => r'dbbe24ee407aacdcc13d986cbf9c51160f3e7a52';
 /// role (others get `[]` without a request).
 
 @ProviderFor(mentorApplications)
-const mentorApplicationsProvider = MentorApplicationsProvider._();
+final mentorApplicationsProvider = MentorApplicationsProvider._();
 
 /// The user's mentor applications — fetched only for users with the Mentor
 /// role (others get `[]` without a request).
@@ -122,7 +122,7 @@ final class MentorApplicationsProvider
         $FutureProvider<List<MentorApplication>> {
   /// The user's mentor applications — fetched only for users with the Mentor
   /// role (others get `[]` without a request).
-  const MentorApplicationsProvider._()
+  MentorApplicationsProvider._()
     : super(
         from: null,
         argument: null,
@@ -155,7 +155,7 @@ String _$mentorApplicationsHash() =>
 /// load either source is an error, never a silent downgrade.
 
 @ProviderFor(capabilities)
-const capabilitiesProvider = CapabilitiesProvider._();
+final capabilitiesProvider = CapabilitiesProvider._();
 
 /// What the signed-in user can do; `null` when signed out. A failure to
 /// load either source is an error, never a silent downgrade.
@@ -170,7 +170,7 @@ final class CapabilitiesProvider
     with $FutureModifier<Capabilities?>, $FutureProvider<Capabilities?> {
   /// What the signed-in user can do; `null` when signed out. A failure to
   /// load either source is an error, never a silent downgrade.
-  const CapabilitiesProvider._()
+  CapabilitiesProvider._()
     : super(
         from: null,
         argument: null,

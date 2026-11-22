@@ -13,7 +13,7 @@ part of 'editable_profile_controller.dart';
 /// one-shot form, not a cached read.
 
 @ProviderFor(EditableProfileController)
-const editableProfileControllerProvider = EditableProfileControllerProvider._();
+final editableProfileControllerProvider = EditableProfileControllerProvider._();
 
 /// Pre-fill data + save action for the edit-profile form. Loaded fresh each
 /// time the modal opens (`keepAlive: false`, the default) since it's a
@@ -23,7 +23,7 @@ final class EditableProfileControllerProvider
   /// Pre-fill data + save action for the edit-profile form. Loaded fresh each
   /// time the modal opens (`keepAlive: false`, the default) since it's a
   /// one-shot form, not a cached read.
-  const EditableProfileControllerProvider._()
+  EditableProfileControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -54,8 +54,7 @@ abstract class _$EditableProfileController
   FutureOr<EditableProfile> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<EditableProfile>, EditableProfile>;
     final element =
         ref.element
@@ -65,6 +64,6 @@ abstract class _$EditableProfileController
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }

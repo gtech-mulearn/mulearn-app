@@ -10,7 +10,7 @@ part of 'dashboard_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(dashboardRemoteDataSource)
-const dashboardRemoteDataSourceProvider = DashboardRemoteDataSourceProvider._();
+final dashboardRemoteDataSourceProvider = DashboardRemoteDataSourceProvider._();
 
 final class DashboardRemoteDataSourceProvider
     extends
@@ -20,7 +20,7 @@ final class DashboardRemoteDataSourceProvider
           DashboardRemoteDataSource
         >
     with $Provider<DashboardRemoteDataSource> {
-  const DashboardRemoteDataSourceProvider._()
+  DashboardRemoteDataSourceProvider._()
     : super(
         from: null,
         argument: null,
@@ -61,7 +61,7 @@ String _$dashboardRemoteDataSourceHash() =>
 /// §2/§5).
 
 @ProviderFor(dashboardRepository)
-const dashboardRepositoryProvider = DashboardRepositoryProvider._();
+final dashboardRepositoryProvider = DashboardRepositoryProvider._();
 
 /// Presentation depends on the [DashboardRepository] contract (rules.md
 /// §2/§5).
@@ -76,7 +76,7 @@ final class DashboardRepositoryProvider
     with $Provider<DashboardRepository> {
   /// Presentation depends on the [DashboardRepository] contract (rules.md
   /// §2/§5).
-  const DashboardRepositoryProvider._()
+  DashboardRepositoryProvider._()
     : super(
         from: null,
         argument: null,
@@ -117,7 +117,7 @@ String _$dashboardRepositoryHash() =>
 /// when Home is shown and on pull-to-refresh; a failure shows its own retry.
 
 @ProviderFor(learnerSummary)
-const learnerSummaryProvider = LearnerSummaryProvider._();
+final learnerSummaryProvider = LearnerSummaryProvider._();
 
 /// The learner's week for Home (weekly karma, streak, next meetup). Fetched
 /// when Home is shown and on pull-to-refresh; a failure shows its own retry.
@@ -132,7 +132,7 @@ final class LearnerSummaryProvider
     with $FutureModifier<LearnerSummary>, $FutureProvider<LearnerSummary> {
   /// The learner's week for Home (weekly karma, streak, next meetup). Fetched
   /// when Home is shown and on pull-to-refresh; a failure shows its own retry.
-  const LearnerSummaryProvider._()
+  LearnerSummaryProvider._()
     : super(
         from: null,
         argument: null,
@@ -161,12 +161,12 @@ final class LearnerSummaryProvider
 String _$learnerSummaryHash() => r'd06bf252a93faa62a77a14570221ac77d5e8da34';
 
 @ProviderFor(FeaturedEventsController)
-const featuredEventsControllerProvider = FeaturedEventsControllerProvider._();
+final featuredEventsControllerProvider = FeaturedEventsControllerProvider._();
 
 final class FeaturedEventsControllerProvider
     extends
         $AsyncNotifierProvider<FeaturedEventsController, List<FeaturedEvent>> {
-  const FeaturedEventsControllerProvider._()
+  FeaturedEventsControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -193,8 +193,7 @@ abstract class _$FeaturedEventsController
   FutureOr<List<FeaturedEvent>> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref =
         this.ref as $Ref<AsyncValue<List<FeaturedEvent>>, List<FeaturedEvent>>;
     final element =
@@ -205,18 +204,18 @@ abstract class _$FeaturedEventsController
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }
 
 @ProviderFor(MyProgressSummaryController)
-const myProgressSummaryControllerProvider =
+final myProgressSummaryControllerProvider =
     MyProgressSummaryControllerProvider._();
 
 final class MyProgressSummaryControllerProvider
     extends
         $AsyncNotifierProvider<MyProgressSummaryController, MyProgressSummary> {
-  const MyProgressSummaryControllerProvider._()
+  MyProgressSummaryControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -243,8 +242,7 @@ abstract class _$MyProgressSummaryController
   FutureOr<MyProgressSummary> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref =
         this.ref as $Ref<AsyncValue<MyProgressSummary>, MyProgressSummary>;
     final element =
@@ -255,6 +253,6 @@ abstract class _$MyProgressSummaryController
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }

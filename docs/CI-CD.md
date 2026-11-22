@@ -85,7 +85,7 @@ Commit messages follow Conventional Commits (`feat(scope): …`, `fix: …` —
 | | CI | Dev | Nightly | Stable | Release |
 |---|---|---|---|---|---|
 | Trigger | PR (any base); push to other branches | push to `staging`; manual | 20:30 UTC if `staging` moved; manual | push to `master`; manual | push tag `vX.Y.Z` on `master` |
-| Flavor / app ID | dev | dev — `org.mulearn.muapp.dev` | dev — `org.mulearn.muapp.dev` | prod — `org.mulearn.muapp` | prod — `org.mulearn.muapp` |
+| Flavor / app ID | dev | dev — `org.mulearn.app.dev` | dev — `org.mulearn.app.dev` | prod — `org.mulearn.app` | prod — `org.mulearn.app` |
 | Signing | debug (none) | Development test key | Development test key | **Production key (required)** | **Production key (required)** |
 | versionName | `1.0.0-ci.84` | `1.0.0-dev.84` | `1.0.0-nightly.20261115` | `1.0.0-stable.5af882d` | `1.0.0` |
 | versionCode | commit count | commit count | commit count | pubspec `+N` | pubspec `+N` |
@@ -250,6 +250,9 @@ so expect a long *Other changes* section until that improves.
 
 ## Versioning
 
+- **The first release is `1.0.0+1`.** The installed versionName and
+  versionCode show at the bottom of Settings (`core/config/app_version.dart`),
+  so testers can quote the exact build.
 - **versionName / versionCode come from `pubspec.yaml`** (`version: X.Y.Z+N`)
   — no version is hardcoded anywhere else. Rules per channel are in
   [`version.sh`](../.github/scripts/version.sh); run it locally to see exactly
@@ -289,7 +292,7 @@ artifact names and step names — a masked job output is silently dropped.
 
 | Environment | Holds | Used by |
 |---|---|---|
-| `Production` | the production key for `org.mulearn.muapp` | stable, release |
+| `Production` | the production key for `org.mulearn.app` | stable, release |
 | `Development` | a separate test key, never used for production | dev (staging), nightly, manual dev |
 
 Repository secret `ADD_TO_PROJECT_TOKEN` is used only by `triage.yml`.
@@ -433,7 +436,15 @@ replace the `Development` secrets and alias variable, and tell testers to
 uninstall Mulearn Dev once before installing the next build.
 
 **Production key:** treat it as permanent. Every installed copy of
-`org.mulearn.muapp` only accepts updates signed with it.
+`org.mulearn.app` only accepts updates signed with it.
+
+**Application id:** the Android id is `org.mulearn.app` (dev: `org.mulearn.app.dev`),
+the same as the iOS bundle id and the Google Play listing. It was
+`org.mulearn.muapp` until 1.0.0+3; copies of that APK installed from GitHub
+Releases don't update to the new id and have to be installed again. The Kotlin
+namespace (`org.mulearn.muapp`) is only the source package and is unchanged.
+When push is turned on, register the Firebase Android app and the Google
+sign-in Android client for the new id and the signing key's SHA-1.
 
 - *If it leaks or is lost and the app is on Google Play with Play App
   Signing:* it is the upload key; request an upload-key reset in Play Console,

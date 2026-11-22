@@ -11,15 +11,27 @@ import '../../support/fixtures.dart';
 /// The status now follows the user's level from user-profile.
 void main() {
   final recorded = [
-    for (final l in (loadFixtureResponse('dev/get_user_levels')! as List<dynamic>).cast<Map<String, dynamic>>())
+    for (final l
+        in (loadFixtureResponse('dev/get_user_levels')! as List<dynamic>)
+            .cast<Map<String, dynamic>>())
       UserLevel(name: l['name'] as String, karma: l['karma'] as num),
   ];
 
   test('a lvl1 learner is at Level 1; nothing is cleared', () {
-    expect(recorded.map((l) => l.name), ['lvl1', 'lvl2', 'lvl3', 'lvl4', 'lvl5', 'lvl6', 'lvl7']);
+    expect(recorded.map((l) => l.name), [
+      'lvl1',
+      'lvl2',
+      'lvl3',
+      'lvl4',
+      'lvl5',
+      'lvl6',
+      'lvl7',
+    ]);
 
-    expect(levelStatuses(recorded, currentLevel: 'lvl1'),
-        [LevelStatus.current, for (var i = 0; i < 6; i++) LevelStatus.locked]);
+    expect(levelStatuses(recorded, currentLevel: 'lvl1'), [
+      LevelStatus.current,
+      for (var i = 0; i < 6; i++) LevelStatus.ahead,
+    ]);
   });
 
   test('levels below the current one are cleared', () {
@@ -27,14 +39,18 @@ void main() {
       LevelStatus.cleared,
       LevelStatus.cleared,
       LevelStatus.current,
-      for (var i = 0; i < 4; i++) LevelStatus.locked,
+      for (var i = 0; i < 4; i++) LevelStatus.ahead,
     ]);
   });
 
   test('statuses follow the level number, not the list order', () {
     final shuffled = [recorded[2], recorded[0], recorded[1]];
 
-    expect(levelStatuses(shuffled, currentLevel: 'lvl2'), [LevelStatus.locked, LevelStatus.cleared, LevelStatus.current]);
+    expect(levelStatuses(shuffled, currentLevel: 'lvl2'), [
+      LevelStatus.ahead,
+      LevelStatus.cleared,
+      LevelStatus.current,
+    ]);
   });
 
   test("finishing a level's tasks doesn't move the user; their level does", () {
@@ -42,15 +58,23 @@ void main() {
       const UserLevel(
         name: 'lvl1',
         karma: 20,
-        tasks: [LevelTask(taskName: 't', active: true, completed: true, karma: 20)],
+        tasks: [
+          LevelTask(taskName: 't', active: true, completed: true, karma: 20),
+        ],
       ),
       const UserLevel(name: 'lvl2', karma: 200),
     ];
 
-    expect(levelStatuses(done, currentLevel: 'lvl1'), [LevelStatus.current, LevelStatus.locked]);
+    expect(levelStatuses(done, currentLevel: 'lvl1'), [
+      LevelStatus.current,
+      LevelStatus.ahead,
+    ]);
   });
 
   test('an unknown level counts as Level 1', () {
-    expect(levelStatuses(recorded.take(2).toList(), currentLevel: null), [LevelStatus.current, LevelStatus.locked]);
+    expect(levelStatuses(recorded.take(2).toList(), currentLevel: null), [
+      LevelStatus.current,
+      LevelStatus.ahead,
+    ]);
   });
 }

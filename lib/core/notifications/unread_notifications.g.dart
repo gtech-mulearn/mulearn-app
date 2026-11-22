@@ -11,7 +11,7 @@ part of 'unread_notifications.dart';
 /// `GET /api/v1/notification/unread-count/` → `{unread_count}`.
 
 @ProviderFor(fetchUnreadCount)
-const fetchUnreadCountProvider = FetchUnreadCountProvider._();
+final fetchUnreadCountProvider = FetchUnreadCountProvider._();
 
 /// `GET /api/v1/notification/unread-count/` → `{unread_count}`.
 
@@ -24,13 +24,13 @@ final class FetchUnreadCountProvider
         >
     with $Provider<Future<int> Function()> {
   /// `GET /api/v1/notification/unread-count/` → `{unread_count}`.
-  const FetchUnreadCountProvider._()
+  FetchUnreadCountProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
         name: r'fetchUnreadCountProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -58,7 +58,7 @@ final class FetchUnreadCountProvider
   }
 }
 
-String _$fetchUnreadCountHash() => r'6bd81b65f874d84681203f99e007957179c1221a';
+String _$fetchUnreadCountHash() => r'50cab8a5629276fed500d0eb9f3bbee942cf39ed';
 
 /// The unread badge: unread, non-archived personal notifications
 /// (`UnreadCountView`; broadcasts aren't counted). In core because Home and
@@ -75,7 +75,7 @@ String _$fetchUnreadCountHash() => r'6bd81b65f874d84681203f99e007957179c1221a';
 /// push (`docs/backend-and-ops-todo.md`).
 
 @ProviderFor(UnreadNotifications)
-const unreadNotificationsProvider = UnreadNotificationsProvider._();
+final unreadNotificationsProvider = UnreadNotificationsProvider._();
 
 /// The unread badge: unread, non-archived personal notifications
 /// (`UnreadCountView`; broadcasts aren't counted). In core because Home and
@@ -105,7 +105,7 @@ final class UnreadNotificationsProvider
   /// The inbox's own read/archive actions adjust it locally ([onRead],
   /// [onAllRead], [onArchived]) instead of refetching. Real-time updates need
   /// push (`docs/backend-and-ops-todo.md`).
-  const UnreadNotificationsProvider._()
+  UnreadNotificationsProvider._()
     : super(
         from: null,
         argument: null,
@@ -125,7 +125,7 @@ final class UnreadNotificationsProvider
 }
 
 String _$unreadNotificationsHash() =>
-    r'a0ce99d3f60176590045b5cc56158ea682b8a493';
+    r'fdf4f0bc336553f3ff6d666a36428e27eda3c80d';
 
 /// The unread badge: unread, non-archived personal notifications
 /// (`UnreadCountView`; broadcasts aren't counted). In core because Home and
@@ -145,8 +145,7 @@ abstract class _$UnreadNotifications extends $AsyncNotifier<int> {
   FutureOr<int> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<int>, int>;
     final element =
         ref.element
@@ -156,6 +155,6 @@ abstract class _$UnreadNotifications extends $AsyncNotifier<int> {
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, build);
   }
 }

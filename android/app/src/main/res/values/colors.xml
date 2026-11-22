@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Matches MuColors.ink — keeps the native launch screen from flashing
-         white before SplashScreen's own dark cinematic backdrop takes over. -->
-    <color name="splash_background">#FF0B0F1A</color>
+    <!-- Matches MuColors.launchNavy: the native launch window and the
+         Flutter SplashScreen are one continuous navy screen with the μ. -->
+    <color name="splash_background">#FF03021F</color>
 	<color name="ic_launcher_background">#FFFFFF</color>
 </resources>

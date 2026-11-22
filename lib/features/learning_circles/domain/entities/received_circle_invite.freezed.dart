@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'received_circle_invite.dart';
@@ -9,6 +9,7 @@ part of 'received_circle_invite.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $ReceivedCircleInviteCopyWith<ReceivedCircleInvite> get copyWith => _$ReceivedCi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReceivedCircleInvite&&(identical(other.linkId, linkId) || other.linkId == linkId)&&(identical(other.circleId, circleId) || other.circleId == circleId)&&(identical(other.circleTitle, circleTitle) || other.circleTitle == circleTitle)&&(identical(other.igName, igName) || other.igName == igName)&&(identical(other.isLeadInvite, isLeadInvite) || other.isLeadInvite == isLeadInvite)&&(identical(other.invitedByName, invitedByName) || other.invitedByName == invitedByName)&&(identical(other.invitedByProfilePic, invitedByProfilePic) || other.invitedByProfilePic == invitedByProfilePic)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+  final _this = this as ReceivedCircleInvite;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReceivedCircleInvite&&(identical(other.linkId, _this.linkId) || other.linkId == _this.linkId)&&(identical(other.circleId, _this.circleId) || other.circleId == _this.circleId)&&(identical(other.circleTitle, _this.circleTitle) || other.circleTitle == _this.circleTitle)&&(identical(other.igName, _this.igName) || other.igName == _this.igName)&&(identical(other.isLeadInvite, _this.isLeadInvite) || other.isLeadInvite == _this.isLeadInvite)&&(identical(other.invitedByName, _this.invitedByName) || other.invitedByName == _this.invitedByName)&&(identical(other.invitedByProfilePic, _this.invitedByProfilePic) || other.invitedByProfilePic == _this.invitedByProfilePic)&&(identical(other.createdAt, _this.createdAt) || other.createdAt == _this.createdAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,linkId,circleId,circleTitle,igName,isLeadInvite,invitedByName,invitedByProfilePic,createdAt);
+int get hashCode {
+  final _this = this as ReceivedCircleInvite;
+  return Object.hash(runtimeType,_this.linkId,_this.circleId,_this.circleTitle,_this.igName,_this.isLeadInvite,_this.invitedByName,_this.invitedByProfilePic,_this.createdAt);
+}
 
 @override
 String toString() {
-  return 'ReceivedCircleInvite(linkId: $linkId, circleId: $circleId, circleTitle: $circleTitle, igName: $igName, isLeadInvite: $isLeadInvite, invitedByName: $invitedByName, invitedByProfilePic: $invitedByProfilePic, createdAt: $createdAt)';
+  final _this = this as ReceivedCircleInvite;
+  return 'ReceivedCircleInvite(linkId: ${_this.linkId}, circleId: ${_this.circleId}, circleTitle: ${_this.circleTitle}, igName: ${_this.igName}, isLeadInvite: ${_this.isLeadInvite}, invitedByName: ${_this.invitedByName}, invitedByProfilePic: ${_this.invitedByProfilePic}, createdAt: ${_this.createdAt})';
 }
 
 
@@ -63,7 +69,7 @@ class _$ReceivedCircleInviteCopyWithImpl<$Res>
 /// Create a copy of ReceivedCircleInvite
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? linkId = null,Object? circleId = null,Object? circleTitle = null,Object? igName = freezed,Object? isLeadInvite = null,Object? invitedByName = freezed,Object? invitedByProfilePic = freezed,Object? createdAt = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(ReceivedCircleInvite(
 linkId: null == linkId ? _self.linkId : linkId // ignore: cast_nullable_to_non_nullable
 as String,circleId: null == circleId ? _self.circleId : circleId // ignore: cast_nullable_to_non_nullable
 as String,circleTitle: null == circleTitle ? _self.circleTitle : circleTitle // ignore: cast_nullable_to_non_nullable
@@ -235,16 +241,18 @@ _$ReceivedCircleInviteCopyWith<_ReceivedCircleInvite> get copyWith => __$Receive
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReceivedCircleInvite&&(identical(other.linkId, linkId) || other.linkId == linkId)&&(identical(other.circleId, circleId) || other.circleId == circleId)&&(identical(other.circleTitle, circleTitle) || other.circleTitle == circleTitle)&&(identical(other.igName, igName) || other.igName == igName)&&(identical(other.isLeadInvite, isLeadInvite) || other.isLeadInvite == isLeadInvite)&&(identical(other.invitedByName, invitedByName) || other.invitedByName == invitedByName)&&(identical(other.invitedByProfilePic, invitedByProfilePic) || other.invitedByProfilePic == invitedByProfilePic)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReceivedCircleInvite&&(identical(other.linkId, linkId) || other.linkId == linkId)&&(identical(other.circleId, circleId) || other.circleId == circleId)&&(identical(other.circleTitle, circleTitle) || other.circleTitle == circleTitle)&&(identical(other.igName, igName) || other.igName == igName)&&(identical(other.isLeadInvite, isLeadInvite) || other.isLeadInvite == isLeadInvite)&&(identical(other.invitedByName, invitedByName) || other.invitedByName == invitedByName)&&(identical(other.invitedByProfilePic, invitedByProfilePic) || other.invitedByProfilePic == invitedByProfilePic)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,linkId,circleId,circleTitle,igName,isLeadInvite,invitedByName,invitedByProfilePic,createdAt);
+int get hashCode {
+    return Object.hash(runtimeType,linkId,circleId,circleTitle,igName,isLeadInvite,invitedByName,invitedByProfilePic,createdAt);
+}
 
 @override
 String toString() {
-  return 'ReceivedCircleInvite(linkId: $linkId, circleId: $circleId, circleTitle: $circleTitle, igName: $igName, isLeadInvite: $isLeadInvite, invitedByName: $invitedByName, invitedByProfilePic: $invitedByProfilePic, createdAt: $createdAt)';
+    return 'ReceivedCircleInvite(linkId: $linkId, circleId: $circleId, circleTitle: $circleTitle, igName: $igName, isLeadInvite: $isLeadInvite, invitedByName: $invitedByName, invitedByProfilePic: $invitedByProfilePic, createdAt: $createdAt)';
 }
 
 

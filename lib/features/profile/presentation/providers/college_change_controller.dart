@@ -23,13 +23,11 @@ Future<List<LocationOption>> profileDistricts(Ref ref, String stateId) =>
 
 @riverpod
 Future<
-    ({
-      List<ReferenceOption> organizations,
-      List<ReferenceOption> departments,
-    })> organizationsAndDepartments(Ref ref, String districtId) =>
-    ref.watch(profileRepositoryProvider).getOrganizationsAndDepartments(
-          districtId,
-        );
+  ({List<ReferenceOption> organizations, List<ReferenceOption> departments})
+>
+organizationsAndDepartments(Ref ref, String districtId) => ref
+    .watch(profileRepositoryProvider)
+    .getOrganizationsAndDepartments(districtId);
 
 @riverpod
 Future<List<ReferenceOption>> communities(Ref ref) =>
@@ -46,13 +44,13 @@ class ChangeCollegeController extends _$ChangeCollegeController {
     required String orgId,
     required String departmentId,
   }) async {
-    final link = ref.keepAlive(); // finish the follow-up refresh even if the screen closes
+    final link = ref
+        .keepAlive(); // finish the follow-up refresh even if the screen closes
     state = const AsyncLoading();
     final result = await AsyncValue.guard(() async {
-      await ref.read(profileRepositoryProvider).changeCollege(
-            orgId: orgId,
-            departmentId: departmentId,
-          );
+      await ref
+          .read(profileRepositoryProvider)
+          .changeCollege(orgId: orgId, departmentId: departmentId);
       ref.invalidate(myProfilePayloadProvider);
     });
     if (ref.mounted) state = result;

@@ -17,10 +17,10 @@ RegisterRemoteDataSource registerRemoteDataSource(Ref ref) =>
 /// Presentation depends on the [RegisterRepository] contract (rules.md §2/§5).
 @riverpod
 RegisterRepository registerRepository(Ref ref) => RegisterRepositoryImpl(
-      remote: ref.watch(registerRemoteDataSourceProvider),
-      locationRemote: ref.watch(locationRemoteDataSourceProvider),
-      tokenStorage: ref.watch(tokenStorageProvider),
-    );
+  remote: ref.watch(registerRemoteDataSourceProvider),
+  locationRemote: ref.watch(locationRemoteDataSourceProvider),
+  tokenStorage: ref.watch(tokenStorageProvider),
+);
 
 // --- Reference-data lookups. Each is a plain FutureProvider — Riverpod
 // caches the result for the provider's lifetime, matching the reference
@@ -30,10 +30,6 @@ RegisterRepository registerRepository(Ref ref) => RegisterRepositoryImpl(
 @riverpod
 Future<List<ReferenceOption>> registerRoles(Ref ref) =>
     ref.watch(registerRepositoryProvider).fetchRoles();
-
-@riverpod
-Future<List<ReferenceOption>> registerColleges(Ref ref) =>
-    ref.watch(registerRepositoryProvider).fetchColleges();
 
 @riverpod
 Future<List<ReferenceOption>> registerDepartments(Ref ref) =>

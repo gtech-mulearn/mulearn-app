@@ -10,7 +10,7 @@ part of 'notifications_repository_provider.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(notificationsRemoteDataSource)
-const notificationsRemoteDataSourceProvider =
+final notificationsRemoteDataSourceProvider =
     NotificationsRemoteDataSourceProvider._();
 
 final class NotificationsRemoteDataSourceProvider
@@ -21,7 +21,7 @@ final class NotificationsRemoteDataSourceProvider
           NotificationsRemoteDataSource
         >
     with $Provider<NotificationsRemoteDataSource> {
-  const NotificationsRemoteDataSourceProvider._()
+  NotificationsRemoteDataSourceProvider._()
     : super(
         from: null,
         argument: null,
@@ -64,7 +64,7 @@ String _$notificationsRemoteDataSourceHash() =>
 /// (rules.md §2/§5).
 
 @ProviderFor(notificationsRepository)
-const notificationsRepositoryProvider = NotificationsRepositoryProvider._();
+final notificationsRepositoryProvider = NotificationsRepositoryProvider._();
 
 /// Presentation depends on the [NotificationsRepository] contract
 /// (rules.md §2/§5).
@@ -79,7 +79,7 @@ final class NotificationsRepositoryProvider
     with $Provider<NotificationsRepository> {
   /// Presentation depends on the [NotificationsRepository] contract
   /// (rules.md §2/§5).
-  const NotificationsRepositoryProvider._()
+  NotificationsRepositoryProvider._()
     : super(
         from: null,
         argument: null,

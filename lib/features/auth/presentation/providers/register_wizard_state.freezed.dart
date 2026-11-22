@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'register_wizard_state.dart';
@@ -9,6 +9,7 @@ part of 'register_wizard_state.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -28,16 +29,21 @@ $RegisterWizardStateCopyWith<RegisterWizardState> get copyWith => _$RegisterWiza
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RegisterWizardState&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.email, email) || other.email == email)&&(identical(other.password, password) || other.password == password)&&(identical(other.role, role) || other.role == role)&&(identical(other.googleTempToken, googleTempToken) || other.googleTempToken == googleTempToken));
+  final _this = this as RegisterWizardState;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RegisterWizardState&&(identical(other.fullName, _this.fullName) || other.fullName == _this.fullName)&&(identical(other.email, _this.email) || other.email == _this.email)&&(identical(other.password, _this.password) || other.password == _this.password)&&(identical(other.role, _this.role) || other.role == _this.role)&&(identical(other.googleTempToken, _this.googleTempToken) || other.googleTempToken == _this.googleTempToken));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,fullName,email,password,role,googleTempToken);
+int get hashCode {
+  final _this = this as RegisterWizardState;
+  return Object.hash(runtimeType,_this.fullName,_this.email,_this.password,_this.role,_this.googleTempToken);
+}
 
 @override
 String toString() {
-  return 'RegisterWizardState(fullName: $fullName, email: $email, password: $password, role: $role, googleTempToken: $googleTempToken)';
+  final _this = this as RegisterWizardState;
+  return 'RegisterWizardState(fullName: ${_this.fullName}, email: ${_this.email}, password: ${_this.password}, role: ${_this.role}, googleTempToken: ${_this.googleTempToken})';
 }
 
 
@@ -66,7 +72,7 @@ class _$RegisterWizardStateCopyWithImpl<$Res>
 /// Create a copy of RegisterWizardState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? fullName = freezed,Object? email = freezed,Object? password = freezed,Object? role = freezed,Object? googleTempToken = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(RegisterWizardState(
 fullName: freezed == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
 as String?,email: freezed == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
 as String?,password: freezed == password ? _self.password : password // ignore: cast_nullable_to_non_nullable
@@ -235,16 +241,18 @@ _$RegisterWizardStateCopyWith<_RegisterWizardState> get copyWith => __$RegisterW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RegisterWizardState&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.email, email) || other.email == email)&&(identical(other.password, password) || other.password == password)&&(identical(other.role, role) || other.role == role)&&(identical(other.googleTempToken, googleTempToken) || other.googleTempToken == googleTempToken));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _RegisterWizardState&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.email, email) || other.email == email)&&(identical(other.password, password) || other.password == password)&&(identical(other.role, role) || other.role == role)&&(identical(other.googleTempToken, googleTempToken) || other.googleTempToken == googleTempToken));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,fullName,email,password,role,googleTempToken);
+int get hashCode {
+    return Object.hash(runtimeType,fullName,email,password,role,googleTempToken);
+}
 
 @override
 String toString() {
-  return 'RegisterWizardState(fullName: $fullName, email: $email, password: $password, role: $role, googleTempToken: $googleTempToken)';
+    return 'RegisterWizardState(fullName: $fullName, email: $email, password: $password, role: $role, googleTempToken: $googleTempToken)';
 }
 
 

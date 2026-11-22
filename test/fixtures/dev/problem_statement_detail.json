@@ -1,0 +1,42 @@
+{
+  "_meta": {
+    "source": "dev",
+    "endpoint": "/api/v1/dashboard/problem-statements/030157e3-580b-44ca-bbec-00182289fb41/",
+    "account": "qa-student",
+    "status": 200,
+    "recorded_at": "2026-11-15T16:19:20.017Z"
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {
+      "general": []
+    },
+    "response": {
+      "id": "030157e3-580b-44ca-bbec-00182289fb41",
+      "title": "muLearn Platform Challenge",
+      "description": "Build an open-source contribution tracker for campus communities.",
+      "category": "Open Source",
+      "skills": [
+        "python",
+        "django"
+      ],
+      "deadline": "2026-12-31T23:59:00Z",
+      "status": "Published",
+      "company": {
+        "id": null,
+        "name": "muLearn",
+        "logo": null
+      },
+      "is_open": true,
+      "interaction_counts": {
+        "Trying": 0,
+        "Submitted": 0
+      },
+      "my_interaction": null,
+      "created_at": "2026-10-10T06:02:06.751428Z",
+      "updated_at": "2026-10-10T06:02:16.274490Z",
+      "published_at": "2026-10-10T06:02:16.274490Z"
+    }
+  }
+}

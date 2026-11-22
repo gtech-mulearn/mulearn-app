@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:dio_cache_interceptor/dio_cache_interceptor.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_ce/hive.dart';
 import 'package:mulearn_app/core/storage/cache_store_provider.dart';
 import 'package:mulearn_app/core/utils/app_logger.dart';
 import 'package:path_provider/path_provider.dart';
@@ -26,7 +26,11 @@ Future<CacheStore> openCacheStore({
     await Hive.openLazyBox<CacheResponse>(httpCacheBoxName);
     return buildHiveCacheStore(dir.path);
   } on Object catch (e, st) {
-    appLogger.w('Persistent HTTP cache unavailable; using memory', error: e, stackTrace: st);
+    appLogger.w(
+      'Persistent HTTP cache unavailable; using memory',
+      error: e,
+      stackTrace: st,
+    );
     return MemCacheStore();
   }
 }

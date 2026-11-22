@@ -12,9 +12,12 @@ import 'package:mulearn_app/core/utils/no_retry.dart';
 /// spinning and sending the extra requests to a backend that is already
 /// failing; about 70k members share it. A failure shows its error and Retry
 /// at once instead (Plan 3 final review, Important 3).
-ProviderScope appProviderScope({required Widget child, List<Override> overrides = const []}) => ProviderScope(
-      retry: noRetry,
-      observers: [TelemetryProviderObserver(crashReporter)],
-      overrides: overrides,
-      child: child,
-    );
+ProviderScope appProviderScope({
+  required Widget child,
+  List<Override> overrides = const [],
+}) => ProviderScope(
+  retry: noRetry,
+  observers: [TelemetryProviderObserver(crashReporter)],
+  overrides: overrides,
+  child: child,
+);

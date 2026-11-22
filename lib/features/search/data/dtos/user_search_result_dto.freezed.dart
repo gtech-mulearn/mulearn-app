@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'user_search_result_dto.dart';
@@ -9,6 +9,7 @@ part of 'user_search_result_dto.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $UserSearchResultDtoCopyWith<UserSearchResultDto> get copyWith => _$UserSearchRe
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserSearchResultDto&&(identical(other.id, id) || other.id == id)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.profilePic, profilePic) || other.profilePic == profilePic)&&const DeepCollectionEquality().equals(other.interestGroups, interestGroups)&&const DeepCollectionEquality().equals(other.organizations, organizations));
+  final _this = this as UserSearchResultDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UserSearchResultDto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.muid, _this.muid) || other.muid == _this.muid)&&(identical(other.fullName, _this.fullName) || other.fullName == _this.fullName)&&(identical(other.karma, _this.karma) || other.karma == _this.karma)&&(identical(other.profilePic, _this.profilePic) || other.profilePic == _this.profilePic)&&const DeepCollectionEquality().equals(other.interestGroups, _this.interestGroups)&&const DeepCollectionEquality().equals(other.organizations, _this.organizations));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,muid,fullName,karma,profilePic,const DeepCollectionEquality().hash(interestGroups),const DeepCollectionEquality().hash(organizations));
+int get hashCode {
+  final _this = this as UserSearchResultDto;
+  return Object.hash(runtimeType,_this.id,_this.muid,_this.fullName,_this.karma,_this.profilePic,const DeepCollectionEquality().hash(_this.interestGroups),const DeepCollectionEquality().hash(_this.organizations));
+}
 
 @override
 String toString() {
-  return 'UserSearchResultDto(id: $id, muid: $muid, fullName: $fullName, karma: $karma, profilePic: $profilePic, interestGroups: $interestGroups, organizations: $organizations)';
+  final _this = this as UserSearchResultDto;
+  return 'UserSearchResultDto(id: ${_this.id}, muid: ${_this.muid}, fullName: ${_this.fullName}, karma: ${_this.karma}, profilePic: ${_this.profilePic}, interestGroups: ${_this.interestGroups}, organizations: ${_this.organizations})';
 }
 
 
@@ -66,7 +72,7 @@ class _$UserSearchResultDtoCopyWithImpl<$Res>
 /// Create a copy of UserSearchResultDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? muid = null,Object? fullName = null,Object? karma = freezed,Object? profilePic = freezed,Object? interestGroups = null,Object? organizations = null,}) {
-  return _then(_self.copyWith(
+  return _then(UserSearchResultDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,muid: null == muid ? _self.muid : muid // ignore: cast_nullable_to_non_nullable
 as String,fullName: null == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
@@ -215,7 +221,7 @@ return $default(_that.id,_that.muid,_that.fullName,_that.karma,_that.profilePic,
 @JsonSerializable()
 
 class _UserSearchResultDto extends UserSearchResultDto {
-  const _UserSearchResultDto({required this.id, required this.muid, required this.fullName, this.karma, this.profilePic, final  List<UserSearchIgDto> interestGroups = const [], final  List<UserSearchOrgDto> organizations = const []}): _interestGroups = interestGroups,_organizations = organizations,super._();
+  const _UserSearchResultDto({required this.id, required this.muid, required this.fullName, this.karma, this.profilePic,  List<UserSearchIgDto> interestGroups = const [],  List<UserSearchOrgDto> organizations = const []}): _interestGroups = interestGroups,_organizations = organizations,super._();
   factory _UserSearchResultDto.fromJson(Map<String, dynamic> json) => _$UserSearchResultDtoFromJson(json);
 
 @override final  String id;
@@ -251,16 +257,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserSearchResultDto&&(identical(other.id, id) || other.id == id)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.profilePic, profilePic) || other.profilePic == profilePic)&&const DeepCollectionEquality().equals(other._interestGroups, _interestGroups)&&const DeepCollectionEquality().equals(other._organizations, _organizations));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _UserSearchResultDto&&(identical(other.id, id) || other.id == id)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.karma, karma) || other.karma == karma)&&(identical(other.profilePic, profilePic) || other.profilePic == profilePic)&&const DeepCollectionEquality().equals(other.interestGroups, _interestGroups)&&const DeepCollectionEquality().equals(other.organizations, _organizations));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,muid,fullName,karma,profilePic,const DeepCollectionEquality().hash(_interestGroups),const DeepCollectionEquality().hash(_organizations));
+int get hashCode {
+    return Object.hash(runtimeType,id,muid,fullName,karma,profilePic,const DeepCollectionEquality().hash(_interestGroups),const DeepCollectionEquality().hash(_organizations));
+}
 
 @override
 String toString() {
-  return 'UserSearchResultDto(id: $id, muid: $muid, fullName: $fullName, karma: $karma, profilePic: $profilePic, interestGroups: $interestGroups, organizations: $organizations)';
+    return 'UserSearchResultDto(id: $id, muid: $muid, fullName: $fullName, karma: $karma, profilePic: $profilePic, interestGroups: $interestGroups, organizations: $organizations)';
 }
 
 

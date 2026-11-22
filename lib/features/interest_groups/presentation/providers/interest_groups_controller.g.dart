@@ -10,7 +10,7 @@ part of 'interest_groups_controller.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(interestGroupsRemoteDataSource)
-const interestGroupsRemoteDataSourceProvider =
+final interestGroupsRemoteDataSourceProvider =
     InterestGroupsRemoteDataSourceProvider._();
 
 final class InterestGroupsRemoteDataSourceProvider
@@ -21,7 +21,7 @@ final class InterestGroupsRemoteDataSourceProvider
           InterestGroupsRemoteDataSource
         >
     with $Provider<InterestGroupsRemoteDataSource> {
-  const InterestGroupsRemoteDataSourceProvider._()
+  InterestGroupsRemoteDataSourceProvider._()
     : super(
         from: null,
         argument: null,
@@ -64,7 +64,7 @@ String _$interestGroupsRemoteDataSourceHash() =>
 /// (rules.md §2/§5).
 
 @ProviderFor(interestGroupsRepository)
-const interestGroupsRepositoryProvider = InterestGroupsRepositoryProvider._();
+final interestGroupsRepositoryProvider = InterestGroupsRepositoryProvider._();
 
 /// Presentation depends on the [InterestGroupsRepository] contract
 /// (rules.md §2/§5).
@@ -79,7 +79,7 @@ final class InterestGroupsRepositoryProvider
     with $Provider<InterestGroupsRepository> {
   /// Presentation depends on the [InterestGroupsRepository] contract
   /// (rules.md §2/§5).
-  const InterestGroupsRepositoryProvider._()
+  InterestGroupsRepositoryProvider._()
     : super(
         from: null,
         argument: null,
@@ -117,7 +117,7 @@ String _$interestGroupsRepositoryHash() =>
     r'38a50a508b393bfedc8eb5d7d86f5cb86bd3e8b6';
 
 @ProviderFor(interestGroupsCatalog)
-const interestGroupsCatalogProvider = InterestGroupsCatalogProvider._();
+final interestGroupsCatalogProvider = InterestGroupsCatalogProvider._();
 
 final class InterestGroupsCatalogProvider
     extends
@@ -129,7 +129,7 @@ final class InterestGroupsCatalogProvider
     with
         $FutureModifier<List<InterestGroupSummary>>,
         $FutureProvider<List<InterestGroupSummary>> {
-  const InterestGroupsCatalogProvider._()
+  InterestGroupsCatalogProvider._()
     : super(
         from: null,
         argument: null,
@@ -159,7 +159,7 @@ String _$interestGroupsCatalogHash() =>
     r'e3cabc5ddb53c9be19ebad74717481bb47677815';
 
 @ProviderFor(interestGroupDetail)
-const interestGroupDetailProvider = InterestGroupDetailFamily._();
+final interestGroupDetailProvider = InterestGroupDetailFamily._();
 
 final class InterestGroupDetailProvider
     extends
@@ -171,7 +171,7 @@ final class InterestGroupDetailProvider
     with
         $FutureModifier<InterestGroupSummary>,
         $FutureProvider<InterestGroupSummary> {
-  const InterestGroupDetailProvider._({
+  InterestGroupDetailProvider._({
     required InterestGroupDetailFamily super.from,
     required String super.argument,
   }) : super(
@@ -220,7 +220,7 @@ String _$interestGroupDetailHash() =>
 
 final class InterestGroupDetailFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<InterestGroupSummary>, String> {
-  const InterestGroupDetailFamily._()
+  InterestGroupDetailFamily._()
     : super(
         retry: null,
         name: r'interestGroupDetailProvider',
@@ -237,7 +237,7 @@ final class InterestGroupDetailFamily extends $Family
 }
 
 @ProviderFor(myInterestGroupIds)
-const myInterestGroupIdsProvider = MyInterestGroupIdsProvider._();
+final myInterestGroupIdsProvider = MyInterestGroupIdsProvider._();
 
 final class MyInterestGroupIdsProvider
     extends
@@ -247,7 +247,7 @@ final class MyInterestGroupIdsProvider
           FutureOr<List<String>>
         >
     with $FutureModifier<List<String>>, $FutureProvider<List<String>> {
-  const MyInterestGroupIdsProvider._()
+  MyInterestGroupIdsProvider._()
     : super(
         from: null,
         argument: null,
@@ -276,25 +276,25 @@ final class MyInterestGroupIdsProvider
 String _$myInterestGroupIdsHash() =>
     r'3864b731ebe0559b1be8520023d12cc2592a43e5';
 
-/// The first circles in a group, for its page.
+/// The first circles in a group, and how many it has, for its page.
 
 @ProviderFor(circlesInGroup)
-const circlesInGroupProvider = CirclesInGroupFamily._();
+final circlesInGroupProvider = CirclesInGroupFamily._();
 
-/// The first circles in a group, for its page.
+/// The first circles in a group, and how many it has, for its page.
 
 final class CirclesInGroupProvider
     extends
         $FunctionalProvider<
-          AsyncValue<List<IgCircleRef>>,
-          List<IgCircleRef>,
-          FutureOr<List<IgCircleRef>>
+          AsyncValue<IgPreview<IgCircleRef>>,
+          IgPreview<IgCircleRef>,
+          FutureOr<IgPreview<IgCircleRef>>
         >
     with
-        $FutureModifier<List<IgCircleRef>>,
-        $FutureProvider<List<IgCircleRef>> {
-  /// The first circles in a group, for its page.
-  const CirclesInGroupProvider._({
+        $FutureModifier<IgPreview<IgCircleRef>>,
+        $FutureProvider<IgPreview<IgCircleRef>> {
+  /// The first circles in a group, and how many it has, for its page.
+  CirclesInGroupProvider._({
     required CirclesInGroupFamily super.from,
     required String super.argument,
   }) : super(
@@ -317,12 +317,12 @@ final class CirclesInGroupProvider
 
   @$internal
   @override
-  $FutureProviderElement<List<IgCircleRef>> $createElement(
+  $FutureProviderElement<IgPreview<IgCircleRef>> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<List<IgCircleRef>> create(Ref ref) {
+  FutureOr<IgPreview<IgCircleRef>> create(Ref ref) {
     final argument = this.argument as String;
     return circlesInGroup(ref, argument);
   }
@@ -338,13 +338,13 @@ final class CirclesInGroupProvider
   }
 }
 
-String _$circlesInGroupHash() => r'cce060fd5807d54f381a51c10a2f76b058ff3c77';
+String _$circlesInGroupHash() => r'ddd5e657f107a9f65b8b89fe0fd6a0d23a859334';
 
-/// The first circles in a group, for its page.
+/// The first circles in a group, and how many it has, for its page.
 
 final class CirclesInGroupFamily extends $Family
-    with $FunctionalFamilyOverride<FutureOr<List<IgCircleRef>>, String> {
-  const CirclesInGroupFamily._()
+    with $FunctionalFamilyOverride<FutureOr<IgPreview<IgCircleRef>>, String> {
+  CirclesInGroupFamily._()
     : super(
         retry: noRetry,
         name: r'circlesInGroupProvider',
@@ -353,7 +353,7 @@ final class CirclesInGroupFamily extends $Family
         isAutoDispose: true,
       );
 
-  /// The first circles in a group, for its page.
+  /// The first circles in a group, and how many it has, for its page.
 
   CirclesInGroupProvider call(String igId) =>
       CirclesInGroupProvider._(argument: igId, from: this);
@@ -362,23 +362,25 @@ final class CirclesInGroupFamily extends $Family
   String toString() => r'circlesInGroupProvider';
 }
 
-/// The first events scoped to a group, for its page.
+/// The first events scoped to a group, and how many, for its page.
 
 @ProviderFor(eventsInGroup)
-const eventsInGroupProvider = EventsInGroupFamily._();
+final eventsInGroupProvider = EventsInGroupFamily._();
 
-/// The first events scoped to a group, for its page.
+/// The first events scoped to a group, and how many, for its page.
 
 final class EventsInGroupProvider
     extends
         $FunctionalProvider<
-          AsyncValue<List<IgEventRef>>,
-          List<IgEventRef>,
-          FutureOr<List<IgEventRef>>
+          AsyncValue<IgPreview<IgEventRef>>,
+          IgPreview<IgEventRef>,
+          FutureOr<IgPreview<IgEventRef>>
         >
-    with $FutureModifier<List<IgEventRef>>, $FutureProvider<List<IgEventRef>> {
-  /// The first events scoped to a group, for its page.
-  const EventsInGroupProvider._({
+    with
+        $FutureModifier<IgPreview<IgEventRef>>,
+        $FutureProvider<IgPreview<IgEventRef>> {
+  /// The first events scoped to a group, and how many, for its page.
+  EventsInGroupProvider._({
     required EventsInGroupFamily super.from,
     required String super.argument,
   }) : super(
@@ -401,12 +403,12 @@ final class EventsInGroupProvider
 
   @$internal
   @override
-  $FutureProviderElement<List<IgEventRef>> $createElement(
+  $FutureProviderElement<IgPreview<IgEventRef>> $createElement(
     $ProviderPointer pointer,
   ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<List<IgEventRef>> create(Ref ref) {
+  FutureOr<IgPreview<IgEventRef>> create(Ref ref) {
     final argument = this.argument as String;
     return eventsInGroup(ref, argument);
   }
@@ -422,13 +424,13 @@ final class EventsInGroupProvider
   }
 }
 
-String _$eventsInGroupHash() => r'2df1c74a9b9149035d957ff012a6d4d1ed6b775d';
+String _$eventsInGroupHash() => r'7c36224df46bc780c4097f38fd1bd7d59e03a5a9';
 
-/// The first events scoped to a group, for its page.
+/// The first events scoped to a group, and how many, for its page.
 
 final class EventsInGroupFamily extends $Family
-    with $FunctionalFamilyOverride<FutureOr<List<IgEventRef>>, String> {
-  const EventsInGroupFamily._()
+    with $FunctionalFamilyOverride<FutureOr<IgPreview<IgEventRef>>, String> {
+  EventsInGroupFamily._()
     : super(
         retry: noRetry,
         name: r'eventsInGroupProvider',
@@ -437,7 +439,7 @@ final class EventsInGroupFamily extends $Family
         isAutoDispose: true,
       );
 
-  /// The first events scoped to a group, for its page.
+  /// The first events scoped to a group, and how many, for its page.
 
   EventsInGroupProvider call(String igId) =>
       EventsInGroupProvider._(argument: igId, from: this);
@@ -449,20 +451,35 @@ final class EventsInGroupFamily extends $Family
 /// Joins or leaves one group through its own endpoints (FEAT-08) — no
 /// full-list rewrite, so a group joined elsewhere can't be dropped — then
 /// refreshes the shared profile so every card (and Profile) shows it.
+///
+/// Stays loading until the refreshed profile has landed and the member ids
+/// are rebuilt from it. Settling earlier left a window (as long as the slow
+/// `user-profile` request) where the old ids still said "not a member" and
+/// the button read Join again right after joining.
 
 @ProviderFor(InterestGroupMembershipController)
-const interestGroupMembershipControllerProvider =
+final interestGroupMembershipControllerProvider =
     InterestGroupMembershipControllerProvider._();
 
 /// Joins or leaves one group through its own endpoints (FEAT-08) — no
 /// full-list rewrite, so a group joined elsewhere can't be dropped — then
 /// refreshes the shared profile so every card (and Profile) shows it.
+///
+/// Stays loading until the refreshed profile has landed and the member ids
+/// are rebuilt from it. Settling earlier left a window (as long as the slow
+/// `user-profile` request) where the old ids still said "not a member" and
+/// the button read Join again right after joining.
 final class InterestGroupMembershipControllerProvider
     extends $AsyncNotifierProvider<InterestGroupMembershipController, void> {
   /// Joins or leaves one group through its own endpoints (FEAT-08) — no
   /// full-list rewrite, so a group joined elsewhere can't be dropped — then
   /// refreshes the shared profile so every card (and Profile) shows it.
-  const InterestGroupMembershipControllerProvider._()
+  ///
+  /// Stays loading until the refreshed profile has landed and the member ids
+  /// are rebuilt from it. Settling earlier left a window (as long as the slow
+  /// `user-profile` request) where the old ids still said "not a member" and
+  /// the button read Join again right after joining.
+  InterestGroupMembershipControllerProvider._()
     : super(
         from: null,
         argument: null,
@@ -484,19 +501,23 @@ final class InterestGroupMembershipControllerProvider
 }
 
 String _$interestGroupMembershipControllerHash() =>
-    r'2b392660e9a46b3abf3c01af5655408b1e63833c';
+    r'd02c1b5b01bbc595822f204a8254c712bbb3ef30';
 
 /// Joins or leaves one group through its own endpoints (FEAT-08) — no
 /// full-list rewrite, so a group joined elsewhere can't be dropped — then
 /// refreshes the shared profile so every card (and Profile) shows it.
+///
+/// Stays loading until the refreshed profile has landed and the member ids
+/// are rebuilt from it. Settling earlier left a window (as long as the slow
+/// `user-profile` request) where the old ids still said "not a member" and
+/// the button read Join again right after joining.
 
 abstract class _$InterestGroupMembershipController
     extends $AsyncNotifier<void> {
   FutureOr<void> build();
   @$mustCallSuper
   @override
-  void runBuild() {
-    build();
+  WhenComplete runBuild() {
     final ref = this.ref as $Ref<AsyncValue<void>, void>;
     final element =
         ref.element
@@ -506,6 +527,6 @@ abstract class _$InterestGroupMembershipController
               Object?,
               Object?
             >;
-    element.handleValue(ref, null);
+    return element.handleCreate(ref, build);
   }
 }

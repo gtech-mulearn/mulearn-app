@@ -18,20 +18,25 @@ void main() {
 
   // Plan 3 final review, Important 1: Android hands Flutter the App Link's
   // full URI and go_router keeps its scheme and host in `state.uri`.
-  test('a real App Link (full https URI) keeps its target through splash and sign-in', () {
-    final link = u('https://mulearn-dev.vercel.app/dashboard/connect-discord?code=abc');
-    const target = '/dashboard/connect-discord?code=abc';
+  test(
+    'a real App Link (full https URI) keeps its target through splash and sign-in',
+    () {
+      final link = u(
+        'https://mulearn-dev.vercel.app/dashboard/connect-discord?code=abc',
+      );
+      const target = '/dashboard/connect-discord?code=abc';
 
-    final toSplash = appRedirect(auth: loading, uri: link);
-    expect(toSplash, '/splash?from=${fromOf(target)}');
-    expect(appRedirect(auth: signedIn, uri: u(toSplash!)), target);
+      final toSplash = appRedirect(auth: loading, uri: link);
+      expect(toSplash, '/splash?from=${fromOf(target)}');
+      expect(appRedirect(auth: signedIn, uri: u(toSplash!)), target);
 
-    final toSignIn = appRedirect(auth: signedOut, uri: link);
-    expect(toSignIn, '/sign-in?from=${fromOf(target)}');
-    expect(appRedirect(auth: signedIn, uri: u(toSignIn!)), target);
+      final toSignIn = appRedirect(auth: signedOut, uri: link);
+      expect(toSignIn, '/sign-in?from=${fromOf(target)}');
+      expect(appRedirect(auth: signedIn, uri: u(toSignIn!)), target);
 
-    expect(appRedirect(auth: signedIn, uri: link), isNull);
-  });
+      expect(appRedirect(auth: signedIn, uri: link), isNull);
+    },
+  );
 
   group('role workspaces (Plan 4)', () {
     test('workspace routes are signed-in screens', () {
@@ -45,7 +50,11 @@ void main() {
         '/enabler/campuses',
         '/enabler/campuses/c1',
       ]) {
-        expect(appRedirect(auth: signedIn, uri: u(path)), isNull, reason: path);
+        expect(
+          appRedirect(auth: signedIn, uri: u(path)),
+          isNull,
+          reason: path,
+        );
       }
     });
 
@@ -62,43 +71,175 @@ void main() {
   });
 
   test('the Discord link is reachable signed in', () {
-    expect(appRedirect(auth: signedIn, uri: u('/dashboard/connect-discord?code=abc')), isNull);
+    expect(
+      appRedirect(
+        auth: signedIn,
+        uri: u('/dashboard/connect-discord?code=abc'),
+      ),
+      isNull,
+    );
   });
 
   test('a signed-out link resumes after sign-in', () {
-    final toSignIn = appRedirect(auth: signedOut, uri: u('/dashboard/connect-discord?code=abc'));
-    expect(toSignIn, '/sign-in?from=${fromOf('/dashboard/connect-discord?code=abc')}');
+    final toSignIn = appRedirect(
+      auth: signedOut,
+      uri: u('/dashboard/connect-discord?code=abc'),
+    );
+    expect(
+      toSignIn,
+      '/sign-in?from=${fromOf('/dashboard/connect-discord?code=abc')}',
+    );
 
     final back = appRedirect(auth: signedIn, uri: u(toSignIn!));
     expect(back, '/dashboard/connect-discord?code=abc');
   });
 
   test('a link that arrives while the session loads keeps its target', () {
-    final toSplash = appRedirect(auth: loading, uri: u('/dashboard/connect-discord?code=abc'));
-    expect(toSplash, '/splash?from=${fromOf('/dashboard/connect-discord?code=abc')}');
-    expect(appRedirect(auth: loading, uri: u(toSplash!)), isNull, reason: 'stays on splash while loading');
+    final toSplash = appRedirect(
+      auth: loading,
+      uri: u('/dashboard/connect-discord?code=abc'),
+    );
+    expect(
+      toSplash,
+      '/splash?from=${fromOf('/dashboard/connect-discord?code=abc')}',
+    );
+    expect(
+      appRedirect(auth: loading, uri: u(toSplash!)),
+      isNull,
+      reason: 'stays on splash while loading',
+    );
 
-    expect(appRedirect(auth: signedIn, uri: u(toSplash)), '/dashboard/connect-discord?code=abc');
-    expect(appRedirect(auth: signedOut, uri: u(toSplash)),
-        '/sign-in?from=${fromOf('/dashboard/connect-discord?code=abc')}');
+    expect(
+      appRedirect(auth: signedIn, uri: u(toSplash)),
+      '/dashboard/connect-discord?code=abc',
+    );
+    expect(
+      appRedirect(auth: signedOut, uri: u(toSplash)),
+      '/sign-in?from=${fromOf('/dashboard/connect-discord?code=abc')}',
+    );
   });
 
   test('without a target, sign-in and splash still lead home', () {
     expect(appRedirect(auth: signedIn, uri: u('/sign-in')), '/home');
     expect(appRedirect(auth: signedIn, uri: u('/splash')), '/home');
     expect(appRedirect(auth: loading, uri: u('/splash')), isNull);
-    expect(appRedirect(auth: signedOut, uri: u('/home')), '/sign-in?from=${fromOf('/home')}');
+    expect(
+      appRedirect(auth: signedOut, uri: u('/home')),
+      '/sign-in?from=${fromOf('/home')}',
+    );
   });
 
-  test("a 'from' that leaves the app or isn't a signed-in screen is ignored", () {
-    expect(appRedirect(auth: signedIn, uri: u('/sign-in?from=${fromOf('//evil.example/x')}')), '/home');
-    expect(appRedirect(auth: signedIn, uri: u('/sign-in?from=${fromOf('https://evil.example')}')), '/home');
-    expect(appRedirect(auth: signedIn, uri: u('/sign-in?from=${fromOf('/sign-in')}')), '/home');
-  });
+  test(
+    "a 'from' that leaves the app or isn't a signed-in screen is ignored",
+    () {
+      expect(
+        appRedirect(
+          auth: signedIn,
+          uri: u('/sign-in?from=${fromOf('//evil.example/x')}'),
+        ),
+        '/home',
+      );
+      expect(
+        appRedirect(
+          auth: signedIn,
+          uri: u('/sign-in?from=${fromOf('https://evil.example')}'),
+        ),
+        '/home',
+      );
+      expect(
+        appRedirect(
+          auth: signedIn,
+          uri: u('/sign-in?from=${fromOf('/sign-in')}'),
+        ),
+        '/home',
+      );
+    },
+  );
 
   test('existing rules are unchanged', () {
     expect(appRedirect(auth: signedIn, uri: u('/events/e1')), isNull);
     expect(appRedirect(auth: signedIn, uri: u('/register')), '/home');
     expect(appRedirect(auth: signedOut, uri: u('/register')), isNull);
+  });
+
+  group('pre-login', () {
+    const firstLaunch = AsyncData(false);
+
+    test(
+      'the first signed-out launch shows the arrival; later ones open sign-in',
+      () {
+        expect(
+          appRedirect(
+            auth: signedOut,
+            arrivalSeen: firstLaunch,
+            uri: u('/splash'),
+          ),
+          '/welcome',
+        );
+        expect(appRedirect(auth: signedOut, uri: u('/splash')), '/sign-in');
+      },
+    );
+
+    test('waits on the splash until the first-launch flag is read', () {
+      expect(
+        appRedirect(
+          auth: signedOut,
+          arrivalSeen: const AsyncLoading(),
+          uri: u('/splash'),
+        ),
+        isNull,
+      );
+    });
+
+    test(
+      'a deep link still goes through sign-in and resumes, arrival or not',
+      () {
+        final r = appRedirect(
+          auth: signedOut,
+          arrivalSeen: firstLaunch,
+          uri: u('/events/e1'),
+        );
+        expect(r, '/sign-in?from=${fromOf('/events/e1')}');
+      },
+    );
+
+    test('the arrival is reachable signed out; signing in leaves it', () {
+      expect(appRedirect(auth: signedOut, uri: u('/welcome')), isNull);
+      expect(appRedirect(auth: signedIn, uri: u('/welcome')), '/home');
+    });
+  });
+
+  group("a signed-in user without a pathway (the dashboard's guard)", () {
+    test('every screen leads to the interests step', () {
+      for (final path in ['/home', '/profile', '/tasks', '/settings']) {
+        expect(
+          appRedirect(auth: signedIn, uri: u(path), needsInterests: true),
+          '/onboarding/interests',
+        );
+      }
+    });
+
+    test('the interests step itself, and signup mid-submit, stay put', () {
+      expect(
+        appRedirect(
+          auth: signedIn,
+          uri: u('/onboarding/interests'),
+          needsInterests: true,
+        ),
+        isNull,
+      );
+      expect(
+        appRedirect(
+          auth: signedIn,
+          uri: u('/register/details'),
+          needsInterests: true,
+        ),
+        isNull,
+      );
+    });
+
+    test('with a pathway, nothing changes', () {
+      expect(appRedirect(auth: signedIn, uri: u('/home')), isNull);
+    });
   });
 }

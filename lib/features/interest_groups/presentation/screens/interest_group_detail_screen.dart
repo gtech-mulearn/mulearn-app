@@ -1,35 +1,28 @@
+import 'dart:async';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:mulearn_app/core/network/api_exception.dart';
+import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
-import 'package:mulearn_app/core/theme/mu_radius.dart';
-import 'package:mulearn_app/core/theme/mu_shadow.dart';
-import 'package:mulearn_app/core/theme/mu_space.dart';
-import 'package:mulearn_app/core/theme/mulearn_colors.dart';
-import 'package:mulearn_app/core/theme/mulearn_typography.dart';
+import 'package:mulearn_app/core/utils/date_format.dart';
+import 'package:mulearn_app/core/utils/external_links.dart';
 import 'package:mulearn_app/core/utils/unescape_literal_unicode.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
-import 'package:mulearn_app/core/widgets/mu_buttons.dart';
-import 'package:mulearn_app/core/widgets/mu_card.dart';
-import 'package:mulearn_app/core/widgets/mu_section_header.dart';
-import 'package:mulearn_app/core/widgets/mu_toast.dart';
-import 'package:mulearn_app/core/widgets/profile_avatar.dart';
 import 'package:mulearn_app/features/interest_groups/domain/entities/ig_impact_project.dart';
 import 'package:mulearn_app/features/interest_groups/domain/entities/ig_person_ref.dart';
+import 'package:mulearn_app/features/interest_groups/domain/entities/ig_related.dart';
 import 'package:mulearn_app/features/interest_groups/domain/entities/interest_group_summary.dart';
 import 'package:mulearn_app/features/interest_groups/presentation/providers/interest_groups_controller.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:mulearn_app/features/interest_groups/presentation/widgets/ig_membership_action.dart';
 
-/// Full detail for a single interest group — DESIGN_SPEC.md §2 "08 — IG
-/// detail": dark hero card, About / Prerequisites / Career opportunities /
-/// Community leads / Mentors sections (built only for the fields the real
-/// `InterestGroupSummary` entity actually carries — there's no
-/// office-hours/active-task data behind this endpoint, so that section from
-/// the mock is dropped rather than faked), and a sticky join/leave CTA.
+/// One interest group: the group as a big sticker (its category colour,
+/// the peel corner, code, name, members and leads), then what it is, its
+/// circles and events, impact projects, what to know first, where it leads,
+/// and the people who run it. Join or leave is pinned at the bottom.
 class InterestGroupDetailScreen extends ConsumerWidget {
   const InterestGroupDetailScreen({required this.groupId, super.key});
 
@@ -38,238 +31,299 @@ class InterestGroupDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final detailState = ref.watch(interestGroupDetailProvider(groupId));
-    final myIdsState = ref.watch(myInterestGroupIdsProvider);
-    final membershipState = ref.watch(
-      interestGroupMembershipControllerProvider,
-    );
-    final myIds = myIdsState.value ?? const <String>[];
-    final isJoined = myIds.contains(groupId);
-    // The backend caps learners at three groups: say so before any tap.
-    final atCap = !isJoined && myIds.length >= maxLearnerGroups;
-    final isBusy = membershipState.isLoading;
+    final group = detailState.value;
 
     return Scaffold(
-      backgroundColor: MuColors.canvas,
+      backgroundColor: context.mu.colors.chalk,
       body: SafeArea(
-        child: detailState.when(
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, _) => ErrorRetryView(
-            error: error,
-            onRetry: () => ref.invalidate(interestGroupDetailProvider(groupId)),
-          ),
-          data: (group) => Column(
-            children: [
-              Expanded(
-                child: ListView(
-                  padding: const EdgeInsets.fromLTRB(
-                    MuSpace.screenH,
-                    MuSpace.s,
-                    MuSpace.screenH,
-                    MuSpace.xxl,
-                  ),
-                  children: [
-                    _BackLink(onTap: () => context.pop()),
-                    const SizedBox(height: MuSpace.l),
-                    _HeroCard(group: group),
-                    if (group.about != null &&
-                        group.about!.trim().isNotEmpty) ...[
-                      const SizedBox(height: MuSpace.xxl),
-                      const MuSectionHeader(title: 'About'),
-                      const SizedBox(height: MuSpace.m),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: MuSpace.xs,
-                        ),
-                        child: MarkdownBody(
-                          data: unescapeLiteralUnicode(group.about!),
-                          onTapLink: (text, href, title) {
-                            if (href == null) return;
-                            final uri = Uri.tryParse(href);
-                            if (uri != null) {
-                              launchUrl(
-                                uri,
-                                mode: LaunchMode.externalApplication,
-                              );
-                            }
-                          },
-                          styleSheet: MarkdownStyleSheet(
-                            p: MuType.body.copyWith(
-                              color: MuColors.inkSecondary,
-                            ),
-                            h1: MuType.headline,
-                            h2: MuType.title,
-                            h3: MuType.bodyMed,
-                            strong: MuType.bodyMed.copyWith(
-                              color: MuColors.inkSecondary,
-                            ),
-                            em: MuType.body.copyWith(
-                              color: MuColors.inkSecondary,
-                              fontStyle: FontStyle.italic,
-                            ),
-                            a: MuType.body.copyWith(
-                              color: MuColors.primary,
-                              decoration: TextDecoration.underline,
-                            ),
-                            listBullet: MuType.body.copyWith(
-                              color: MuColors.inkSecondary,
-                            ),
-                            blockquote: MuType.body.copyWith(
-                              color: MuColors.inkTertiary,
-                            ),
-                            blockquoteDecoration: BoxDecoration(
-                              color: MuColors.canvas,
-                              border: const Border(
-                                left: BorderSide(
-                                  color: MuColors.primary,
-                                  width: 3,
-                                ),
-                              ),
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            blockquotePadding: const EdgeInsets.all(MuSpace.m),
-                            code: MuType.body.copyWith(
-                              color: MuColors.inkSecondary,
-                              backgroundColor: MuColors.canvas,
-                              fontFamily: 'monospace',
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                    if (group.officeHours != null) ...[
-                      const SizedBox(height: MuSpace.xxl),
-                      const MuSectionHeader(title: 'Office hours'),
-                      const SizedBox(height: MuSpace.m),
-                      MuCard(
-                        child: Row(
-                          children: [
-                            const Icon(
-                              LucideIcons.clock,
-                              size: 18,
-                              color: MuColors.primary,
-                            ),
-                            const SizedBox(width: MuSpace.s),
-                            Expanded(
-                              child: Text(
-                                group.officeHours!,
-                                style: MuType.body,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                    _GroupCircles(groupId: groupId),
-                    _GroupEvents(groupId: groupId),
-                    if (group.impactProjects.isNotEmpty) ...[
-                      const SizedBox(height: MuSpace.xxl),
-                      const MuSectionHeader(title: 'Impact projects'),
-                      const SizedBox(height: MuSpace.m),
-                      for (final project in group.impactProjects) ...[
-                        _ImpactProjectCard(project: project),
-                        const SizedBox(height: MuSpace.s),
-                      ],
-                    ],
-                    if (group.prerequisites.isNotEmpty) ...[
-                      const SizedBox(height: MuSpace.xxl),
-                      const MuSectionHeader(title: 'Prerequisites'),
-                      const SizedBox(height: MuSpace.m),
-                      _PillWrap(items: group.prerequisites),
-                    ],
-                    if (group.careerOpportunities.isNotEmpty) ...[
-                      const SizedBox(height: MuSpace.xxl),
-                      const MuSectionHeader(title: 'Career opportunities'),
-                      const SizedBox(height: MuSpace.m),
-                      _PillWrap(items: group.careerOpportunities, tinted: true),
-                    ],
-                    if (group.leads.isNotEmpty) ...[
-                      const SizedBox(height: MuSpace.xxl),
-                      const MuSectionHeader(title: 'Community leads'),
-                      const SizedBox(height: MuSpace.m),
-                      MuCard(child: _PersonList(people: group.leads)),
-                    ],
-                    if (group.mentors.isNotEmpty) ...[
-                      const SizedBox(height: MuSpace.xxl),
-                      const MuSectionHeader(title: 'Mentors'),
-                      const SizedBox(height: MuSpace.m),
-                      MuCard(child: _PersonList(people: group.mentors)),
-                    ],
-                    if (group.leads.isNotEmpty || group.mentors.isNotEmpty) ...[
-                      const SizedBox(height: MuSpace.xl),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: MuSpace.xs,
-                        ),
-                        child: Text(
-                          'Questions? Reach out to the leads or mentors above — '
-                          "that's what they're here for.",
-                          style: MuType.caption.copyWith(
-                            color: MuColors.inkTertiary,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ],
+        child: Column(
+          children: [
+            const MuTopBar.detail(),
+            Expanded(
+              child: detailState.when(
+                skipLoadingOnRefresh: true,
+                loading: () => const Center(
+                  child: MuDotsLoader(label: 'Loading the group…'),
                 ),
+                error: (error, _) => ErrorRetryView(
+                  error: error,
+                  onRetry: () =>
+                      ref.invalidate(interestGroupDetailProvider(groupId)),
+                ),
+                data: (g) => _Body(group: g),
               ),
-              _BottomCta(
-                group: group,
-                isJoined: isJoined,
-                atCap: atCap,
-                isBusy: isBusy,
-                onToggle: () => _toggle(context, ref, group, join: !isJoined),
+            ),
+            if (group != null) _JoinBar(id: groupId, name: group.name),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _Body extends ConsumerWidget {
+  const _Body({required this.group});
+
+  final InterestGroupSummary group;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final about = group.about?.trim() ?? '';
+    final people = group.leads.isNotEmpty || group.mentors.isNotEmpty;
+    return ListView(
+      physics: const BouncingScrollPhysics(
+        parent: AlwaysScrollableScrollPhysics(),
+      ),
+      padding: const EdgeInsets.fromLTRB(
+        MuSpacing.space5,
+        MuSpacing.space2,
+        MuSpacing.space5,
+        MuSpacing.space8,
+      ),
+      children: [
+        _Hero(group: group),
+        if (group.officeHours != null &&
+            group.officeHours!.trim().isNotEmpty) ...[
+          const SizedBox(height: MuSpacing.space4),
+          MuFeedGroup(
+            children: [
+              MuFeedRow(
+                leading: const MuFeedIcon(
+                  LucideIcons.clock,
+                  tone: MuFeedTone.event,
+                ),
+                subject: group.officeHours!,
+                time: 'Office hours',
+                divider: false,
               ),
             ],
           ),
-        ),
-      ),
+        ],
+        if (about.isNotEmpty) ...[const _Eyebrow('ABOUT'), _About(text: about)],
+        _GroupCircles(groupId: group.id),
+        _GroupEvents(groupId: group.id),
+        if (group.impactProjects.isNotEmpty) ...[
+          const _Eyebrow('IMPACT PROJECTS'),
+          for (var i = 0; i < group.impactProjects.length; i++) ...[
+            if (i > 0) const SizedBox(height: MuSpacing.space3),
+            _ImpactProject(project: group.impactProjects[i]),
+          ],
+        ],
+        if (group.prerequisites.isNotEmpty) ...[
+          const _Eyebrow('BEFORE YOU START'),
+          Wrap(
+            spacing: 6,
+            runSpacing: 6,
+            children: [for (final p in group.prerequisites) MuPill(p)],
+          ),
+        ],
+        if (group.careerOpportunities.isNotEmpty) ...[
+          const _Eyebrow('WHERE IT LEADS'),
+          Wrap(
+            spacing: 6,
+            runSpacing: 6,
+            children: [
+              for (final p in group.careerOpportunities)
+                MuPill(p, tone: MuPillTone.cobalt),
+            ],
+          ),
+        ],
+        if (group.leads.isNotEmpty) ...[
+          const _Eyebrow('COMMUNITY LEADS'),
+          _People(people: group.leads),
+        ],
+        if (group.mentors.isNotEmpty) ...[
+          const _Eyebrow('MENTORS'),
+          _People(people: group.mentors),
+        ],
+        if (people) ...[
+          const SizedBox(height: MuSpacing.space4),
+          Text(
+            "Questions? Reach out to the leads or mentors above. That's what they're here for.",
+            style: context.mu.text.caption,
+          ),
+        ],
+      ],
     );
   }
 }
 
-Future<void> _toggle(
-  BuildContext context,
-  WidgetRef ref,
-  InterestGroupSummary group, {
-  required bool join,
-}) async {
-  if (!join) {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: Text('Leave ${group.name}?'),
-        content: const Text(
-          "You'll stop seeing its tasks and events. You can join again later.",
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: const Text('Leave'),
-          ),
-        ],
-      ),
-    );
-    if (!(confirmed ?? false) || !context.mounted) return;
-  }
-  await ref
-      .read(interestGroupMembershipControllerProvider.notifier)
-      .toggle(group.id, join: join);
-  if (!context.mounted) return;
-  final error = ref.read(interestGroupMembershipControllerProvider).error;
-  MuToast.show(
-    context,
-    message: error != null
-        ? ApiException.messageFor(error)
-        : (join ? 'You joined ${group.name}' : 'You left ${group.name}'),
-    type: error != null ? MuToastType.error : MuToastType.success,
+class _Eyebrow extends StatelessWidget {
+  const _Eyebrow(this.text);
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) => Padding(
+    padding: const EdgeInsets.only(
+      top: MuSpacing.space8,
+      bottom: MuSpacing.space3,
+    ),
+    child: Semantics(
+      header: true,
+      child: Text(text, style: context.mu.text.eyebrow),
+    ),
   );
 }
 
-/// The group's first circles (L11); hidden when it has none.
+/// The group as a big sticker: category fill, one sharp peel corner, code
+/// and category, the name in display type, members and leads at the foot.
+class _Hero extends StatelessWidget {
+  const _Hero({required this.group});
+
+  final InterestGroupSummary group;
+
+  @override
+  Widget build(BuildContext context) {
+    final mu = context.mu;
+    final c = mu.colors;
+    final ink = c.inkPrint;
+    final category = IgCategory.parse(group.category);
+    final code = group.code?.trim();
+    final icon = group.iconImage ?? group.icon;
+    final leads = group.leads;
+    final label = [
+      if (code != null && code.isNotEmpty) code.toUpperCase(),
+      category.name.toUpperCase(),
+    ].join(' · ');
+
+    return Semantics(
+      container: true,
+      label:
+          '${group.name}, ${category.name} Interest Group, ${group.memberCount} members',
+      excludeSemantics: true,
+      child: Container(
+        padding: const EdgeInsets.all(MuSpacing.space5),
+        decoration: BoxDecoration(
+          color: MuTones.forIgCategory(c, category),
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(MuRadii.panel),
+            topRight: Radius.circular(MuRadii.panel),
+            bottomRight: Radius.circular(MuRadii.panel),
+            bottomLeft: Radius.circular(MuRadii.tag),
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    label,
+                    style: mu.text.codeSm.copyWith(
+                      color: ink.withValues(alpha: 0.75),
+                    ),
+                  ),
+                ),
+                if (icon != null && icon.isNotEmpty)
+                  ClipOval(
+                    child: CachedNetworkImage(
+                      imageUrl: icon,
+                      width: 44,
+                      height: 44,
+                      fit: BoxFit.cover,
+                      errorWidget: (_, _, _) => const SizedBox.shrink(),
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(height: MuSpacing.space8),
+            Text(
+              group.name,
+              style: mu.text.display.copyWith(
+                fontSize: 38,
+                height: 1,
+                color: ink,
+              ),
+            ),
+            const SizedBox(height: MuSpacing.space6),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        muGrouped(group.memberCount),
+                        style: mu.text.numeral.copyWith(color: ink),
+                      ),
+                      Text(
+                        group.memberCount == 1 ? 'member' : 'members',
+                        style: mu.text.caption.copyWith(
+                          color: ink.withValues(alpha: 0.75),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                if (leads.isNotEmpty)
+                  MuAvatarStack(
+                    names: [for (final p in leads.take(4)) p.fullName],
+                    urls: [for (final p in leads.take(4)) p.profilePicUrl],
+                    extraCount: leads.length > 4 ? leads.length - 4 : 0,
+                  ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _About extends ConsumerWidget {
+  const _About({required this.text});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final mu = context.mu;
+    final c = mu.colors;
+    final body = mu.text.body.copyWith(color: c.ink2, height: 1.55);
+    return MarkdownBody(
+      data: unescapeLiteralUnicode(text),
+      onTapLink: (_, href, _) {
+        final uri = href == null ? null : Uri.tryParse(href);
+        if (uri != null) unawaited(ref.read(openExternalProvider)(uri));
+      },
+      styleSheet: MarkdownStyleSheet(
+        p: body,
+        h1: mu.text.title1,
+        h2: mu.text.title2,
+        h3: mu.text.title3,
+        strong: body.copyWith(color: c.ink, fontWeight: FontWeight.w700),
+        em: body.copyWith(fontStyle: FontStyle.italic),
+        a: body.copyWith(
+          color: c.cobaltText,
+          decoration: TextDecoration.underline,
+        ),
+        listBullet: body,
+        blockquote: body.copyWith(color: c.ink3),
+        blockquoteDecoration: BoxDecoration(
+          color: c.surfaceSunk,
+          borderRadius: BorderRadius.circular(MuRadii.tag),
+          border: Border(left: BorderSide(color: c.cobalt, width: 3)),
+        ),
+        blockquotePadding: const EdgeInsets.all(MuSpacing.space3),
+        code: mu.text.codeSm.copyWith(
+          color: c.ink,
+          backgroundColor: c.surfaceSunk,
+        ),
+      ),
+    );
+  }
+}
+
+/// "See all 1,240" when the preview shows only some (production groups
+/// have thousands of circles); null when it shows them all.
+String? _seeAll(int shown, int total) =>
+    total > shown ? 'See all ${muGrouped(total)}' : null;
+
+/// The group's first circles, and the way to all of them; hidden when it
+/// has none.
 class _GroupCircles extends ConsumerWidget {
   const _GroupCircles({required this.groupId});
 
@@ -277,52 +331,47 @@ class _GroupCircles extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final circles =
-        ref.watch(circlesInGroupProvider(groupId)).value ?? const [];
+    final preview = ref.watch(circlesInGroupProvider(groupId)).value;
+    final circles = preview?.items ?? const <IgCircleRef>[];
     if (circles.isEmpty) return const SizedBox.shrink();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const SizedBox(height: MuSpace.xxl),
-        const MuSectionHeader(title: 'Circles in this group'),
-        const SizedBox(height: MuSpace.m),
-        MuCard(
-          padding: const EdgeInsets.symmetric(vertical: MuSpace.xs),
-          child: Column(
-            children: [
-              for (final c in circles)
-                Material(
-                  type: MaterialType.transparency,
-                  child: ListTile(
-                    leading: const Icon(
-                      LucideIcons.users,
-                      color: MuColors.primary,
-                    ),
-                    title: Text(c.title, style: MuType.bodyMed),
-                    subtitle: c.totalMembers == null
-                        ? null
-                        : Text(
-                            '${c.totalMembers} members',
-                            style: MuType.caption,
-                          ),
-                    trailing: const Icon(
-                      LucideIcons.chevronRight,
-                      size: 18,
-                      color: MuColors.inkTertiary,
-                    ),
-                    onTap: () =>
-                        context.push(RoutePaths.learningCircleDetailPath(c.id)),
-                  ),
+        MuSectionEyebrow(
+          'Circles in this group',
+          action: _seeAll(circles.length, preview!.total),
+          onAction: () =>
+              context.push(RoutePaths.learningCirclesInGroup(groupId)),
+        ),
+        MuFeedGroup(
+          children: [
+            for (var i = 0; i < circles.length; i++)
+              MuFeedRow(
+                leading: const MuFeedIcon(
+                  LucideIcons.users,
+                  tone: MuFeedTone.done,
                 ),
-            ],
-          ),
+                subject: circles[i].title,
+                time: circles[i].totalMembers == null
+                    ? null
+                    : (circles[i].totalMembers == 1
+                          ? '1 member'
+                          : '${circles[i].totalMembers} members'),
+                trailing: const _Chevron(),
+                divider: i < circles.length - 1,
+                onTap: () => context.push(
+                  RoutePaths.learningCircleDetailPath(circles[i].id),
+                ),
+              ),
+          ],
         ),
       ],
     );
   }
 }
 
-/// Events scoped to the group (L11); hidden when there are none.
+/// Events scoped to the group, and the way to all of them; hidden when
+/// there are none.
 class _GroupEvents extends ConsumerWidget {
   const _GroupEvents({required this.groupId});
 
@@ -330,472 +379,198 @@ class _GroupEvents extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final events = ref.watch(eventsInGroupProvider(groupId)).value ?? const [];
+    final preview = ref.watch(eventsInGroupProvider(groupId)).value;
+    final events = preview?.items ?? const <IgEventRef>[];
     if (events.isEmpty) return const SizedBox.shrink();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        const SizedBox(height: MuSpace.xxl),
-        const MuSectionHeader(title: 'Events in this group'),
-        const SizedBox(height: MuSpace.m),
-        MuCard(
-          padding: const EdgeInsets.symmetric(vertical: MuSpace.xs),
-          child: Column(
-            children: [
-              for (final e in events)
-                Material(
-                  type: MaterialType.transparency,
-                  child: ListTile(
-                    leading: const Icon(
-                      LucideIcons.calendarDays,
-                      color: MuColors.primary,
-                    ),
-                    title: Text(e.title, style: MuType.bodyMed),
-                    subtitle: e.startsAt == null
-                        ? null
-                        : Text(
-                            '${e.startsAt!.toLocal().day}/${e.startsAt!.toLocal().month}/${e.startsAt!.toLocal().year}',
-                            style: MuType.caption,
-                          ),
-                    trailing: const Icon(
-                      LucideIcons.chevronRight,
-                      size: 18,
-                      color: MuColors.inkTertiary,
-                    ),
-                    onTap: () => context.push(RoutePaths.eventDetailPath(e.id)),
-                  ),
+        MuSectionEyebrow(
+          'Events in this group',
+          action: _seeAll(events.length, preview!.total),
+          onAction: () => context.push(RoutePaths.eventsInGroup(groupId)),
+        ),
+        MuFeedGroup(
+          children: [
+            for (var i = 0; i < events.length; i++)
+              MuFeedRow(
+                leading: const MuFeedIcon(
+                  LucideIcons.ticket,
+                  tone: MuFeedTone.event,
                 ),
-            ],
-          ),
+                subject: events[i].title,
+                time: events[i].startsAt == null
+                    ? null
+                    : formatDayTime(events[i].startsAt!.toLocal()),
+                trailing: const _Chevron(),
+                divider: i < events.length - 1,
+                onTap: () =>
+                    context.push(RoutePaths.eventDetailPath(events[i].id)),
+              ),
+          ],
         ),
       ],
     );
   }
 }
 
-class _ImpactProjectCard extends StatelessWidget {
-  const _ImpactProjectCard({required this.project});
+class _Chevron extends StatelessWidget {
+  const _Chevron();
+
+  @override
+  Widget build(BuildContext context) => Icon(
+    LucideIcons.chevronRight,
+    size: MuSizes.iconSm + 2,
+    color: context.mu.colors.ink3,
+  );
+}
+
+class _ImpactProject extends ConsumerWidget {
+  const _ImpactProject({required this.project});
 
   final IgImpactProject project;
 
   @override
-  Widget build(BuildContext context) => MuCard(
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(project.title, style: MuType.bodyMed),
-        if (project.description != null && project.description!.isNotEmpty) ...[
-          const SizedBox(height: MuSpace.xs),
-          Text(
-            project.description!,
-            style: MuType.caption.copyWith(color: MuColors.inkSecondary),
-          ),
-        ],
-        if (project.links.isNotEmpty) ...[
-          const SizedBox(height: MuSpace.s),
-          Wrap(
-            spacing: MuSpace.s,
-            children: [
-              for (final link in project.links)
-                TextButton.icon(
-                  onPressed: () {
-                    final uri = Uri.tryParse(link.url);
-                    if (uri != null) {
-                      launchUrl(uri, mode: LaunchMode.externalApplication);
-                    }
-                  },
-                  icon: const Icon(LucideIcons.externalLink, size: 14),
-                  label: Text(link.label),
-                ),
-            ],
-          ),
-        ],
-      ],
-    ),
-  );
-}
-
-class _BackLink extends StatelessWidget {
-  const _BackLink({required this.onTap});
-
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(
-            LucideIcons.chevronLeft,
-            size: 18,
-            color: MuColors.inkSecondary,
-          ),
-          const SizedBox(width: 2),
-          Flexible(
-            child: Text(
-              'Back to interest groups',
-              overflow: TextOverflow.ellipsis,
-              style: MuType.chip.copyWith(
-                color: MuColors.inkSecondary,
-                fontSize: 13,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _HeroCard extends StatelessWidget {
-  const _HeroCard({required this.group});
-
-  final InterestGroupSummary group;
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final mu = context.mu;
+    final c = mu.colors;
+    final description = project.description?.trim() ?? '';
     return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(MuSpace.xl),
+      padding: const EdgeInsets.all(MuSpacing.space4),
       decoration: BoxDecoration(
-        color: MuColors.ink,
-        borderRadius: BorderRadius.circular(MuRadius.hero),
-        boxShadow: MuShadow.hero,
+        color: c.surface,
+        borderRadius: BorderRadius.circular(MuRadii.card),
       ),
-      clipBehavior: Clip.antiAlias,
-      child: Stack(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Positioned(
-            right: -40,
-            top: -40,
-            child: Container(
-              height: 140,
-              width: 140,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: MuColors.karmaAccent.withValues(alpha: 0.28),
-              ),
-            ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _HeroIcon(group: group),
-                  const Spacer(),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 5,
-                    ),
-                    decoration: BoxDecoration(
-                      color: MuColors.onBrand.withValues(alpha: 0.08),
-                      borderRadius: BorderRadius.circular(MuRadius.chip),
-                      border: Border.all(
-                        color: MuColors.onBrand.withValues(alpha: 0.16),
-                      ),
-                    ),
-                    child: Text(
-                      group.category.toUpperCase(),
-                      style: MuType.tag.copyWith(
-                        color: MuColors.surface.withValues(alpha: 0.85),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: MuSpace.l),
-              Text(
-                group.name,
-                style: MuType.display.copyWith(
-                  color: MuColors.surface,
-                  fontSize: 26,
-                ),
-              ),
-              const SizedBox(height: MuSpace.xl),
-              Container(
-                height: 1,
-                color: MuColors.onBrand.withValues(alpha: 0.12),
-              ),
-              const SizedBox(height: MuSpace.l),
-              Row(
-                children: [
-                  const Icon(
-                    LucideIcons.users,
-                    size: 16,
-                    color: MuColors.onBrandMuted,
-                  ),
-                  const SizedBox(width: MuSpace.s),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        '${group.memberCount}',
-                        style: MuType.stat.copyWith(
-                          color: MuColors.surface,
-                          fontSize: 22,
-                        ),
-                      ),
-                      Text(
-                        'MEMBERS',
-                        style: MuType.label.copyWith(
-                          color: MuColors.onBrandMuted,
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _HeroIcon extends StatelessWidget {
-  const _HeroIcon({required this.group});
-
-  final InterestGroupSummary group;
-
-  @override
-  Widget build(BuildContext context) {
-    final icon = group.iconImage ?? group.icon;
-    final code = group.code;
-    final fallback = Center(
-      child: Text(
-        (code != null && code.isNotEmpty)
-            ? code.toUpperCase()
-            : group.name[0].toUpperCase(),
-        style: MuType.stat.copyWith(color: MuColors.surface, fontSize: 18),
-      ),
-    );
-    return Container(
-      height: 52,
-      width: 52,
-      decoration: BoxDecoration(
-        color: MuColors.onBrand.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(MuRadius.inner),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: (icon != null && icon.isNotEmpty)
-          ? CachedNetworkImage(
-              imageUrl: icon,
-              fit: BoxFit.cover,
-              placeholder: (_, __) => fallback,
-              errorWidget: (_, __, ___) => fallback,
-            )
-          : fallback,
-    );
-  }
-}
-
-class _PillWrap extends StatelessWidget {
-  const _PillWrap({required this.items, this.tinted = false});
-
-  final List<String> items;
-  final bool tinted;
-
-  @override
-  Widget build(BuildContext context) {
-    return Wrap(
-      spacing: MuSpace.s,
-      runSpacing: MuSpace.s,
-      children: [
-        for (final item in items)
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            decoration: BoxDecoration(
-              color: tinted ? MuColors.primaryTint : MuColors.surface,
-              borderRadius: BorderRadius.circular(MuRadius.chip),
-              border: tinted ? null : Border.all(color: MuColors.divider),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
+          Text(project.title, style: mu.text.title3),
+          if (description.isNotEmpty) ...[
+            const SizedBox(height: MuSpacing.space1),
+            Text(description, style: mu.text.body.copyWith(color: c.ink2)),
+          ],
+          if (project.links.isNotEmpty) ...[
+            const SizedBox(height: MuSpacing.space3),
+            Wrap(
+              spacing: MuSpacing.space2,
+              runSpacing: MuSpacing.space2,
               children: [
-                Container(
-                  height: 6,
-                  width: 6,
-                  margin: const EdgeInsets.only(right: 7),
-                  decoration: const BoxDecoration(
-                    color: MuColors.primary,
-                    shape: BoxShape.circle,
+                for (final link in project.links)
+                  MuButton(
+                    label: link.label,
+                    icon: LucideIcons.arrowUpRight,
+                    variant: MuButtonVariant.outline,
+                    size: MuButtonSize.small,
+                    onPressed: () {
+                      final uri = Uri.tryParse(link.url);
+                      if (uri != null) {
+                        unawaited(ref.read(openExternalProvider)(uri));
+                      }
+                    },
                   ),
-                ),
-                Text(
-                  item,
-                  style: MuType.chip.copyWith(
-                    color: tinted ? MuColors.primary : MuColors.ink,
-                    fontSize: 13,
-                  ),
-                ),
               ],
             ),
-          ),
-      ],
+          ],
+        ],
+      ),
     );
   }
 }
 
-class _PersonList extends StatelessWidget {
-  const _PersonList({required this.people});
+class _People extends StatelessWidget {
+  const _People({required this.people});
 
   final List<IgPersonRef> people;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return MuFeedGroup(
       children: [
-        for (var i = 0; i < people.length; i++) ...[
-          if (i > 0) ...[
-            const SizedBox(height: MuSpace.m),
-            Container(height: 1, color: MuColors.hairline),
-            const SizedBox(height: MuSpace.m),
-          ],
-          _PersonTile(person: people[i]),
-        ],
+        for (var i = 0; i < people.length; i++)
+          MuFeedRow(
+            leading: MuAvatar(
+              name: people[i].fullName,
+              url: people[i].profilePicUrl,
+              size: MuSizes.avatarMd,
+            ),
+            subject: people[i].fullName,
+            time: people[i].muid,
+            trailing: const _Chevron(),
+            divider: i < people.length - 1,
+            onTap: () =>
+                context.push(RoutePaths.publicProfilePath(people[i].muid)),
+          ),
       ],
     );
   }
 }
 
-class _PersonTile extends StatelessWidget {
-  const _PersonTile({required this.person});
+/// Join (ink with the knob), or Joined · Leave once in; at the cap, the
+/// reason in place of the button.
+class _JoinBar extends ConsumerWidget {
+  const _JoinBar({required this.id, required this.name});
 
-  final IgPersonRef person;
+  /// The group's id from the route (what membership is keyed by).
+  final String id;
+  final String name;
 
   @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () => context.push(RoutePaths.publicProfilePath(person.muid)),
-      child: Row(
-        children: [
-          ProfileAvatar(
-            url: person.profilePicUrl,
-            name: person.fullName,
-            size: 44,
-          ),
-          const SizedBox(width: MuSpace.m),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(person.fullName, style: MuType.bodyMed),
-                Text(person.muid, style: MuType.caption),
-              ],
-            ),
-          ),
-          const Icon(
-            LucideIcons.chevronRight,
-            size: 18,
-            color: MuColors.inkTertiary,
-          ),
-        ],
-      ),
+  Widget build(BuildContext context, WidgetRef ref) {
+    final mu = context.mu;
+    final c = mu.colors;
+    final myIds =
+        ref.watch(myInterestGroupIdsProvider).value ?? const <String>[];
+    final busy = ref.watch(interestGroupMembershipControllerProvider).isLoading;
+    final joined = myIds.contains(id);
+    final atCap = !joined && myIds.length >= maxLearnerGroups;
+
+    void toggle() => unawaited(
+      toggleIgMembership(context, ref, id: id, name: name, join: !joined),
     );
-  }
-}
 
-class _BottomCta extends StatelessWidget {
-  const _BottomCta({
-    required this.group,
-    required this.isJoined,
-    required this.atCap,
-    required this.isBusy,
-    required this.onToggle,
-  });
+    final Widget child;
+    if (joined) {
+      child = MuButton(
+        label: 'Joined · Leave',
+        icon: LucideIcons.check,
+        variant: MuButtonVariant.outline,
+        block: true,
+        loading: busy,
+        onPressed: busy ? null : toggle,
+      );
+    } else if (atCap) {
+      child = Padding(
+        padding: const EdgeInsets.symmetric(vertical: MuSpacing.space2),
+        child: Text(
+          igCapMessage,
+          textAlign: TextAlign.center,
+          style: mu.text.body.copyWith(color: c.ink2),
+        ),
+      );
+    } else {
+      child = MuButton(
+        label: 'Join $name',
+        variant: MuButtonVariant.ink,
+        knob: true,
+        block: true,
+        loading: busy,
+        onPressed: busy ? null : toggle,
+      );
+    }
 
-  final InterestGroupSummary group;
-  final bool isJoined;
-
-  /// Not a member and already in [maxLearnerGroups] groups.
-  final bool atCap;
-  final bool isBusy;
-  final VoidCallback onToggle;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(
-        MuSpace.screenH,
-        MuSpace.m,
-        MuSpace.screenH,
-        MuSpace.l,
-      ),
+    return DecoratedBox(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [MuColors.canvas.withValues(alpha: 0), MuColors.canvas],
-          stops: const [0, 0.4],
-        ),
+        color: c.chalk,
+        border: Border(top: BorderSide(color: c.line)),
       ),
-      child: isJoined
-          ? _JoinedButton(onTap: isBusy ? () {} : onToggle)
-          : atCap
-          ? Padding(
-              padding: const EdgeInsets.symmetric(vertical: MuSpace.m),
-              child: Text(
-                "You're in $maxLearnerGroups of $maxLearnerGroups groups. Leave one to join another.",
-                textAlign: TextAlign.center,
-                style: MuType.body.copyWith(color: MuColors.inkSecondary),
-              ),
-            )
-          : MuPrimaryButton(
-              label: isBusy ? 'Please wait…' : 'Join ${group.name}',
-              icon: isBusy ? null : LucideIcons.plus,
-              onPressed: isBusy ? null : onToggle,
-            ),
-    );
-  }
-}
-
-/// The joined-state CTA — success-green pill, distinct from [MuPrimaryButton]
-/// since the design calls for a "you're already in" state visually separate
-/// from the blue join action, not just a disabled blue button.
-class _JoinedButton extends StatelessWidget {
-  const _JoinedButton({required this.onTap});
-
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(MuRadius.chip),
-      child: Container(
-        height: 56,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: MuColors.successBg,
-          borderRadius: BorderRadius.circular(MuRadius.chip),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(
+          MuSpacing.space5,
+          MuSpacing.space3,
+          MuSpacing.space5,
+          MuSpacing.space3,
         ),
-        alignment: Alignment.center,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(
-              LucideIcons.checkCircle2,
-              size: 20,
-              color: MuColors.success,
-            ),
-            const SizedBox(width: MuSpace.s),
-            Text(
-              'Joined · Leave',
-              style: MuType.bodyMed.copyWith(
-                color: MuColors.success,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ],
-        ),
+        child: child,
       ),
     );
   }

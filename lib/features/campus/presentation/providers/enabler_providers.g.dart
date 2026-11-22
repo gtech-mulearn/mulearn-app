@@ -10,7 +10,7 @@ part of 'enabler_providers.dart';
 // ignore_for_file: type=lint, type=warning
 
 @ProviderFor(enablerRepository)
-const enablerRepositoryProvider = EnablerRepositoryProvider._();
+final enablerRepositoryProvider = EnablerRepositoryProvider._();
 
 final class EnablerRepositoryProvider
     extends
@@ -20,7 +20,7 @@ final class EnablerRepositoryProvider
           EnablerRepository
         >
     with $Provider<EnablerRepository> {
-  const EnablerRepositoryProvider._()
+  EnablerRepositoryProvider._()
     : super(
         from: null,
         argument: null,
@@ -57,7 +57,7 @@ final class EnablerRepositoryProvider
 String _$enablerRepositoryHash() => r'a854187f755eb90a0b05a81ce09c6f3fd44ea803';
 
 @ProviderFor(enablerSummary)
-const enablerSummaryProvider = EnablerSummaryProvider._();
+final enablerSummaryProvider = EnablerSummaryProvider._();
 
 final class EnablerSummaryProvider
     extends
@@ -67,7 +67,7 @@ final class EnablerSummaryProvider
           FutureOr<EnablerSummary>
         >
     with $FutureModifier<EnablerSummary>, $FutureProvider<EnablerSummary> {
-  const EnablerSummaryProvider._()
+  EnablerSummaryProvider._()
     : super(
         from: null,
         argument: null,
@@ -96,7 +96,7 @@ final class EnablerSummaryProvider
 String _$enablerSummaryHash() => r'a86d706c96eab90a9713b9f57e73d90197fa4af3';
 
 @ProviderFor(enablerCampuses)
-const enablerCampusesProvider = EnablerCampusesProvider._();
+final enablerCampusesProvider = EnablerCampusesProvider._();
 
 final class EnablerCampusesProvider
     extends
@@ -108,7 +108,7 @@ final class EnablerCampusesProvider
     with
         $FutureModifier<List<EnablerCampus>>,
         $FutureProvider<List<EnablerCampus>> {
-  const EnablerCampusesProvider._()
+  EnablerCampusesProvider._()
     : super(
         from: null,
         argument: null,
@@ -137,7 +137,7 @@ final class EnablerCampusesProvider
 String _$enablerCampusesHash() => r'c487d789d29d89ece2fc5f45bc50d44c0c3bd436';
 
 @ProviderFor(enablerCampus)
-const enablerCampusProvider = EnablerCampusFamily._();
+final enablerCampusProvider = EnablerCampusFamily._();
 
 final class EnablerCampusProvider
     extends
@@ -147,7 +147,7 @@ final class EnablerCampusProvider
           FutureOr<EnablerCampus>
         >
     with $FutureModifier<EnablerCampus>, $FutureProvider<EnablerCampus> {
-  const EnablerCampusProvider._({
+  EnablerCampusProvider._({
     required EnablerCampusFamily super.from,
     required String super.argument,
   }) : super(
@@ -195,7 +195,7 @@ String _$enablerCampusHash() => r'acf65c4fe66acae8d78d3019ab629300cf11b587';
 
 final class EnablerCampusFamily extends $Family
     with $FunctionalFamilyOverride<FutureOr<EnablerCampus>, String> {
-  const EnablerCampusFamily._()
+  EnablerCampusFamily._()
     : super(
         retry: noRetry,
         name: r'enablerCampusProvider',
@@ -217,7 +217,7 @@ final class EnablerCampusFamily extends $Family
 /// rejects its own `note_id` ("Unknown field.", dev 2026-11-13).
 
 @ProviderFor(CampusNotesController)
-const campusNotesControllerProvider = CampusNotesControllerFamily._();
+final campusNotesControllerProvider = CampusNotesControllerFamily._();
 
 /// A campus's notes. [add] and [delete] reload the list afterwards (the
 /// backend returns only a message; the usual delete refusal is a note
@@ -229,7 +229,7 @@ final class CampusNotesControllerProvider
   /// backend returns only a message; the usual delete refusal is a note
   /// already gone). Notes can't be closed from the app: the backend's PATCH
   /// rejects its own `note_id` ("Unknown field.", dev 2026-11-13).
-  const CampusNotesControllerProvider._({
+  CampusNotesControllerProvider._({
     required CampusNotesControllerFamily super.from,
     required String super.argument,
   }) : super(
@@ -282,7 +282,7 @@ final class CampusNotesControllerFamily extends $Family
           FutureOr<List<CampusNote>>,
           String
         > {
-  const CampusNotesControllerFamily._()
+  CampusNotesControllerFamily._()
     : super(
         retry: noRetry,
         name: r'campusNotesControllerProvider',
@@ -316,8 +316,7 @@ abstract class _$CampusNotesController
   FutureOr<List<CampusNote>> build(String campusId);
   @$mustCallSuper
   @override
-  void runBuild() {
-    final created = build(_$args);
+  WhenComplete runBuild() {
     final ref =
         this.ref as $Ref<AsyncValue<List<CampusNote>>, List<CampusNote>>;
     final element =
@@ -328,6 +327,6 @@ abstract class _$CampusNotesController
               Object?,
               Object?
             >;
-    element.handleValue(ref, created);
+    return element.handleCreate(ref, () => build(_$args));
   }
 }

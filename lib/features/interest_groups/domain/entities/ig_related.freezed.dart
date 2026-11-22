@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'ig_related.dart';
@@ -9,6 +9,7 @@ part of 'ig_related.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $IgCircleRefCopyWith<IgCircleRef> get copyWith => _$IgCircleRefCopyWithImpl<IgCi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is IgCircleRef&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.totalMembers, totalMembers) || other.totalMembers == totalMembers));
+  final _this = this as IgCircleRef;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is IgCircleRef&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.totalMembers, _this.totalMembers) || other.totalMembers == _this.totalMembers));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,title,totalMembers);
+int get hashCode {
+  final _this = this as IgCircleRef;
+  return Object.hash(runtimeType,_this.id,_this.title,_this.totalMembers);
+}
 
 @override
 String toString() {
-  return 'IgCircleRef(id: $id, title: $title, totalMembers: $totalMembers)';
+  final _this = this as IgCircleRef;
+  return 'IgCircleRef(id: ${_this.id}, title: ${_this.title}, totalMembers: ${_this.totalMembers})';
 }
 
 
@@ -63,7 +69,7 @@ class _$IgCircleRefCopyWithImpl<$Res>
 /// Create a copy of IgCircleRef
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? totalMembers = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(IgCircleRef(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,totalMembers: freezed == totalMembers ? _self.totalMembers : totalMembers // ignore: cast_nullable_to_non_nullable
@@ -225,16 +231,18 @@ _$IgCircleRefCopyWith<_IgCircleRef> get copyWith => __$IgCircleRefCopyWithImpl<_
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _IgCircleRef&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.totalMembers, totalMembers) || other.totalMembers == totalMembers));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _IgCircleRef&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.totalMembers, totalMembers) || other.totalMembers == totalMembers));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,title,totalMembers);
+int get hashCode {
+    return Object.hash(runtimeType,id,title,totalMembers);
+}
 
 @override
 String toString() {
-  return 'IgCircleRef(id: $id, title: $title, totalMembers: $totalMembers)';
+    return 'IgCircleRef(id: $id, title: $title, totalMembers: $totalMembers)';
 }
 
 
@@ -288,16 +296,21 @@ $IgEventRefCopyWith<IgEventRef> get copyWith => _$IgEventRefCopyWithImpl<IgEvent
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is IgEventRef&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.startsAt, startsAt) || other.startsAt == startsAt));
+  final _this = this as IgEventRef;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is IgEventRef&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.startsAt, _this.startsAt) || other.startsAt == _this.startsAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,title,startsAt);
+int get hashCode {
+  final _this = this as IgEventRef;
+  return Object.hash(runtimeType,_this.id,_this.title,_this.startsAt);
+}
 
 @override
 String toString() {
-  return 'IgEventRef(id: $id, title: $title, startsAt: $startsAt)';
+  final _this = this as IgEventRef;
+  return 'IgEventRef(id: ${_this.id}, title: ${_this.title}, startsAt: ${_this.startsAt})';
 }
 
 
@@ -326,7 +339,7 @@ class _$IgEventRefCopyWithImpl<$Res>
 /// Create a copy of IgEventRef
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? startsAt = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(IgEventRef(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,startsAt: freezed == startsAt ? _self.startsAt : startsAt // ignore: cast_nullable_to_non_nullable
@@ -488,16 +501,18 @@ _$IgEventRefCopyWith<_IgEventRef> get copyWith => __$IgEventRefCopyWithImpl<_IgE
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _IgEventRef&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.startsAt, startsAt) || other.startsAt == startsAt));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _IgEventRef&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.startsAt, startsAt) || other.startsAt == startsAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,title,startsAt);
+int get hashCode {
+    return Object.hash(runtimeType,id,title,startsAt);
+}
 
 @override
 String toString() {
-  return 'IgEventRef(id: $id, title: $title, startsAt: $startsAt)';
+    return 'IgEventRef(id: $id, title: $title, startsAt: $startsAt)';
 }
 
 

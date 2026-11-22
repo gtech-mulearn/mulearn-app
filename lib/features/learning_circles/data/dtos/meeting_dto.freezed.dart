@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'meeting_dto.dart';
@@ -9,6 +9,7 @@ part of 'meeting_dto.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 
@@ -28,16 +29,21 @@ $MeetingDtoCopyWith<MeetingDto> get copyWith => _$MeetingDtoCopyWithImpl<Meeting
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is MeetingDto&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.mode, mode) || other.mode == mode)&&(identical(other.meetPlace, meetPlace) || other.meetPlace == meetPlace)&&(identical(other.meetTime, meetTime) || other.meetTime == meetTime)&&(identical(other.circleId, circleId) || other.circleId == circleId)&&(identical(other.igName, igName) || other.igName == igName)&&(identical(other.createdBy, createdBy) || other.createdBy == createdBy)&&(identical(other.isStarted, isStarted) || other.isStarted == isStarted)&&(identical(other.isEnded, isEnded) || other.isEnded == isEnded)&&(identical(other.attendeesCount, attendeesCount) || other.attendeesCount == attendeesCount)&&(identical(other.org, org) || other.org == org)&&(identical(other.meetLink, meetLink) || other.meetLink == meetLink)&&(identical(other.isRecurring, isRecurring) || other.isRecurring == isRecurring)&&(identical(other.isJoined, isJoined) || other.isJoined == isJoined)&&(identical(other.isRsvp, isRsvp) || other.isRsvp == isRsvp));
+  final _this = this as MeetingDto;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MeetingDto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.description, _this.description) || other.description == _this.description)&&(identical(other.mode, _this.mode) || other.mode == _this.mode)&&(identical(other.meetPlace, _this.meetPlace) || other.meetPlace == _this.meetPlace)&&(identical(other.meetTime, _this.meetTime) || other.meetTime == _this.meetTime)&&(identical(other.circleId, _this.circleId) || other.circleId == _this.circleId)&&(identical(other.igName, _this.igName) || other.igName == _this.igName)&&(identical(other.createdBy, _this.createdBy) || other.createdBy == _this.createdBy)&&(identical(other.isStarted, _this.isStarted) || other.isStarted == _this.isStarted)&&(identical(other.isEnded, _this.isEnded) || other.isEnded == _this.isEnded)&&(identical(other.attendeesCount, _this.attendeesCount) || other.attendeesCount == _this.attendeesCount)&&(identical(other.org, _this.org) || other.org == _this.org)&&(identical(other.meetLink, _this.meetLink) || other.meetLink == _this.meetLink)&&(identical(other.isRecurring, _this.isRecurring) || other.isRecurring == _this.isRecurring)&&(identical(other.isJoined, _this.isJoined) || other.isJoined == _this.isJoined)&&(identical(other.isRsvp, _this.isRsvp) || other.isRsvp == _this.isRsvp));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,description,mode,meetPlace,meetTime,circleId,igName,createdBy,isStarted,isEnded,attendeesCount,org,meetLink,isRecurring,isJoined,isRsvp);
+int get hashCode {
+  final _this = this as MeetingDto;
+  return Object.hash(runtimeType,_this.id,_this.title,_this.description,_this.mode,_this.meetPlace,_this.meetTime,_this.circleId,_this.igName,_this.createdBy,_this.isStarted,_this.isEnded,_this.attendeesCount,_this.org,_this.meetLink,_this.isRecurring,_this.isJoined,_this.isRsvp);
+}
 
 @override
 String toString() {
-  return 'MeetingDto(id: $id, title: $title, description: $description, mode: $mode, meetPlace: $meetPlace, meetTime: $meetTime, circleId: $circleId, igName: $igName, createdBy: $createdBy, isStarted: $isStarted, isEnded: $isEnded, attendeesCount: $attendeesCount, org: $org, meetLink: $meetLink, isRecurring: $isRecurring, isJoined: $isJoined, isRsvp: $isRsvp)';
+  final _this = this as MeetingDto;
+  return 'MeetingDto(id: ${_this.id}, title: ${_this.title}, description: ${_this.description}, mode: ${_this.mode}, meetPlace: ${_this.meetPlace}, meetTime: ${_this.meetTime}, circleId: ${_this.circleId}, igName: ${_this.igName}, createdBy: ${_this.createdBy}, isStarted: ${_this.isStarted}, isEnded: ${_this.isEnded}, attendeesCount: ${_this.attendeesCount}, org: ${_this.org}, meetLink: ${_this.meetLink}, isRecurring: ${_this.isRecurring}, isJoined: ${_this.isJoined}, isRsvp: ${_this.isRsvp})';
 }
 
 
@@ -66,7 +72,7 @@ class _$MeetingDtoCopyWithImpl<$Res>
 /// Create a copy of MeetingDto
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? description = null,Object? mode = null,Object? meetPlace = null,Object? meetTime = null,Object? circleId = null,Object? igName = null,Object? createdBy = null,Object? isStarted = null,Object? isEnded = null,Object? attendeesCount = null,Object? org = freezed,Object? meetLink = freezed,Object? isRecurring = null,Object? isJoined = null,Object? isRsvp = null,}) {
-  return _then(_self.copyWith(
+  return _then(MeetingDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
@@ -259,16 +265,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MeetingDto&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.mode, mode) || other.mode == mode)&&(identical(other.meetPlace, meetPlace) || other.meetPlace == meetPlace)&&(identical(other.meetTime, meetTime) || other.meetTime == meetTime)&&(identical(other.circleId, circleId) || other.circleId == circleId)&&(identical(other.igName, igName) || other.igName == igName)&&(identical(other.createdBy, createdBy) || other.createdBy == createdBy)&&(identical(other.isStarted, isStarted) || other.isStarted == isStarted)&&(identical(other.isEnded, isEnded) || other.isEnded == isEnded)&&(identical(other.attendeesCount, attendeesCount) || other.attendeesCount == attendeesCount)&&(identical(other.org, org) || other.org == org)&&(identical(other.meetLink, meetLink) || other.meetLink == meetLink)&&(identical(other.isRecurring, isRecurring) || other.isRecurring == isRecurring)&&(identical(other.isJoined, isJoined) || other.isJoined == isJoined)&&(identical(other.isRsvp, isRsvp) || other.isRsvp == isRsvp));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _MeetingDto&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.description, description) || other.description == description)&&(identical(other.mode, mode) || other.mode == mode)&&(identical(other.meetPlace, meetPlace) || other.meetPlace == meetPlace)&&(identical(other.meetTime, meetTime) || other.meetTime == meetTime)&&(identical(other.circleId, circleId) || other.circleId == circleId)&&(identical(other.igName, igName) || other.igName == igName)&&(identical(other.createdBy, createdBy) || other.createdBy == createdBy)&&(identical(other.isStarted, isStarted) || other.isStarted == isStarted)&&(identical(other.isEnded, isEnded) || other.isEnded == isEnded)&&(identical(other.attendeesCount, attendeesCount) || other.attendeesCount == attendeesCount)&&(identical(other.org, org) || other.org == org)&&(identical(other.meetLink, meetLink) || other.meetLink == meetLink)&&(identical(other.isRecurring, isRecurring) || other.isRecurring == isRecurring)&&(identical(other.isJoined, isJoined) || other.isJoined == isJoined)&&(identical(other.isRsvp, isRsvp) || other.isRsvp == isRsvp));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,description,mode,meetPlace,meetTime,circleId,igName,createdBy,isStarted,isEnded,attendeesCount,org,meetLink,isRecurring,isJoined,isRsvp);
+int get hashCode {
+    return Object.hash(runtimeType,id,title,description,mode,meetPlace,meetTime,circleId,igName,createdBy,isStarted,isEnded,attendeesCount,org,meetLink,isRecurring,isJoined,isRsvp);
+}
 
 @override
 String toString() {
-  return 'MeetingDto(id: $id, title: $title, description: $description, mode: $mode, meetPlace: $meetPlace, meetTime: $meetTime, circleId: $circleId, igName: $igName, createdBy: $createdBy, isStarted: $isStarted, isEnded: $isEnded, attendeesCount: $attendeesCount, org: $org, meetLink: $meetLink, isRecurring: $isRecurring, isJoined: $isJoined, isRsvp: $isRsvp)';
+    return 'MeetingDto(id: $id, title: $title, description: $description, mode: $mode, meetPlace: $meetPlace, meetTime: $meetTime, circleId: $circleId, igName: $igName, createdBy: $createdBy, isStarted: $isStarted, isEnded: $isEnded, attendeesCount: $attendeesCount, org: $org, meetLink: $meetLink, isRecurring: $isRecurring, isJoined: $isJoined, isRsvp: $isRsvp)';
 }
 
 

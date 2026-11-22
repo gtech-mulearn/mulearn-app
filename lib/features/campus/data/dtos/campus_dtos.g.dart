@@ -26,23 +26,6 @@ Map<String, dynamic> _$CampusCircleDtoToJson(_CampusCircleDto instance) =>
       'last_meeting_time': instance.lastMeetingTime,
     };
 
-_CampusIgDto _$CampusIgDtoFromJson(Map<String, dynamic> json) => _CampusIgDto(
-  id: json['id'] as String,
-  name: json['name'] as String? ?? '',
-  code: json['code'] as String? ?? '',
-  campusMemberCount: (json['campus_member_count'] as num?)?.toInt() ?? 0,
-  iconImage: json['icon_image'] as String?,
-);
-
-Map<String, dynamic> _$CampusIgDtoToJson(_CampusIgDto instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'name': instance.name,
-      'code': instance.code,
-      'campus_member_count': instance.campusMemberCount,
-      'icon_image': instance.iconImage,
-    };
-
 _StudentActivityDto _$StudentActivityDtoFromJson(Map<String, dynamic> json) =>
     _StudentActivityDto(
       id: json['id'] as String,

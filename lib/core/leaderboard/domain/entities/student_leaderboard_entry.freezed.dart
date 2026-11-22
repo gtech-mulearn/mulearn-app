@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // coverage:ignore-file
-// ignore_for_file: type=lint
+// ignore_for_file: type=lint, type=warning, deprecated_member_use, deprecated_member_use_from_same_package
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
 part of 'student_leaderboard_entry.dart';
@@ -9,6 +9,7 @@ part of 'student_leaderboard_entry.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
@@ -25,16 +26,21 @@ $StudentLeaderboardEntryCopyWith<StudentLeaderboardEntry> get copyWith => _$Stud
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is StudentLeaderboardEntry&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.totalKarma, totalKarma) || other.totalKarma == totalKarma)&&(identical(other.institution, institution) || other.institution == institution)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.profilePic, profilePic) || other.profilePic == profilePic));
+  final _this = this as StudentLeaderboardEntry;
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is StudentLeaderboardEntry&&(identical(other.fullName, _this.fullName) || other.fullName == _this.fullName)&&(identical(other.totalKarma, _this.totalKarma) || other.totalKarma == _this.totalKarma)&&(identical(other.institution, _this.institution) || other.institution == _this.institution)&&(identical(other.muid, _this.muid) || other.muid == _this.muid)&&(identical(other.profilePic, _this.profilePic) || other.profilePic == _this.profilePic));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,fullName,totalKarma,institution,muid,profilePic);
+int get hashCode {
+  final _this = this as StudentLeaderboardEntry;
+  return Object.hash(runtimeType,_this.fullName,_this.totalKarma,_this.institution,_this.muid,_this.profilePic);
+}
 
 @override
 String toString() {
-  return 'StudentLeaderboardEntry(fullName: $fullName, totalKarma: $totalKarma, institution: $institution, muid: $muid, profilePic: $profilePic)';
+  final _this = this as StudentLeaderboardEntry;
+  return 'StudentLeaderboardEntry(fullName: ${_this.fullName}, totalKarma: ${_this.totalKarma}, institution: ${_this.institution}, muid: ${_this.muid}, profilePic: ${_this.profilePic})';
 }
 
 
@@ -63,7 +69,7 @@ class _$StudentLeaderboardEntryCopyWithImpl<$Res>
 /// Create a copy of StudentLeaderboardEntry
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? fullName = null,Object? totalKarma = null,Object? institution = freezed,Object? muid = freezed,Object? profilePic = freezed,}) {
-  return _then(_self.copyWith(
+  return _then(StudentLeaderboardEntry(
 fullName: null == fullName ? _self.fullName : fullName // ignore: cast_nullable_to_non_nullable
 as String,totalKarma: null == totalKarma ? _self.totalKarma : totalKarma // ignore: cast_nullable_to_non_nullable
 as num,institution: freezed == institution ? _self.institution : institution // ignore: cast_nullable_to_non_nullable
@@ -229,16 +235,18 @@ _$StudentLeaderboardEntryCopyWith<_StudentLeaderboardEntry> get copyWith => __$S
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _StudentLeaderboardEntry&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.totalKarma, totalKarma) || other.totalKarma == totalKarma)&&(identical(other.institution, institution) || other.institution == institution)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.profilePic, profilePic) || other.profilePic == profilePic));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _StudentLeaderboardEntry&&(identical(other.fullName, fullName) || other.fullName == fullName)&&(identical(other.totalKarma, totalKarma) || other.totalKarma == totalKarma)&&(identical(other.institution, institution) || other.institution == institution)&&(identical(other.muid, muid) || other.muid == muid)&&(identical(other.profilePic, profilePic) || other.profilePic == profilePic));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,fullName,totalKarma,institution,muid,profilePic);
+int get hashCode {
+    return Object.hash(runtimeType,fullName,totalKarma,institution,muid,profilePic);
+}
 
 @override
 String toString() {
-  return 'StudentLeaderboardEntry(fullName: $fullName, totalKarma: $totalKarma, institution: $institution, muid: $muid, profilePic: $profilePic)';
+    return 'StudentLeaderboardEntry(fullName: $fullName, totalKarma: $totalKarma, institution: $institution, muid: $muid, profilePic: $profilePic)';
 }
 
 

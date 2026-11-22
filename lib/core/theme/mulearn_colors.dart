@@ -13,6 +13,11 @@ abstract final class MuColors {
   // --- Brand blues ---
 
   /// Core actions, links, active states, primary CTA fill.
+  /// The launch screen's deep navy, behind the gradient μ. Matches
+  /// `splash_background` in android/app/src/main/res/values/colors.xml so the
+  /// native launch window and the Flutter splash are one continuous screen.
+  static const Color launchNavy = Color(0xFF03021F);
+
   static const Color primary = Color(0xFF2E85FE);
 
   /// Hover/pressed state of [primary] buttons and links.
@@ -35,7 +40,9 @@ abstract final class MuColors {
   // --- Karma / energy accent (purple — replaces the retired lime family) ---
 
   /// Karma icon, "NEW" badge, streak marks, energy/reward CTA accents.
-  static const Color karmaAccent = Color(0xFF8F44ED); // dashboard --brand-purple
+  static const Color karmaAccent = Color(
+    0xFF8F44ED,
+  ); // dashboard --brand-purple
 
   /// Light tint of [karmaAccent] for pill/badge backgrounds — same
   /// saturation profile as [primaryTint].

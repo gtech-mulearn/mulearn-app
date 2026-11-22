@@ -10,7 +10,7 @@ Work the app needs but can't do itself: this round changes no backend, authserve
   - Add an FCM delivery adapter to `NotificationService.dispatch()`. `TypeMeta` already lists `PUSH` as eligible, and `templates.py` reserves PUSH copy for "Phase 2".
   - Send a data payload carrying `type`, `entity_type`, `entity_id`, `redirect_url` and the new `unread_count`. The app then updates its badge without calling `unread-count`.
 - **Ask (ops):**
-  - a Firebase project with the dev and prod Android apps (`org.mulearn.muapp.dev`, `org.mulearn.muapp`) → `google-services.json` per flavour;
+  - a Firebase project with the dev and prod Android apps (`org.mulearn.app.dev`, `org.mulearn.app`) → `google-services.json` per flavour;
   - an APNs auth key for iOS;
   - FCM server credentials stored in the backend environment.
 - **Why:** the app refreshes notifications only on user actions, with no polling (Plan 3, Task 1). About 70k members share one backend, and a 60 s poll per foreground user is load for a number that rarely changes. Push gives real-time badges and background alerts with no polling: the OS keeps one shared connection per device.
@@ -71,3 +71,8 @@ Work the app needs but can't do itself: this round changes no backend, authserve
 
 Resolved:
 - (was 6) A password changed through `/dashboard/profile/change-password/` does sign in through the authserver — verified live 2026-11-13 (Plan 3, Task 3).
+
+## Deferred to a later release
+
+- **Nearby events (EventMap).** Offline events on a map with venue pins and a ticket card that rises from the bottom (artifact EventMap). Not in this release. Needs: (1) `venue_lat` / `venue_lng` on events (or geocoding on save); today events carry only `venue_address`, `venue_city` and `venue_maps_url`; (2) approval for a map package, `flutter_map` with an OpenStreetMap-compatible tile provider (suggested) or `google_maps_flutter`. Location permission is asked only when the person taps "Show events near me".
+- **Continue as guest.** A button on sign-in that opens the public parts of the app without an account.
