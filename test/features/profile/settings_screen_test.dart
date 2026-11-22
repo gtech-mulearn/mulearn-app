@@ -49,7 +49,7 @@ void main() {
   ) async {
     PackageInfo.setMockInitialValues(
       appName: 'μLearn',
-      packageName: 'org.mulearn.muapp.dev',
+      packageName: 'org.mulearn.app.dev',
       version: '1.0.0-dev.84',
       buildNumber: '84',
       buildSignature: '',

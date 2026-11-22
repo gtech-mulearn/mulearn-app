@@ -7,8 +7,8 @@ The app receives Firebase Cloud Messaging pushes. The backend decides what to se
 Push is off in any build without Firebase config, and the app works the same either way.
 
 1. **Firebase project.** In the Firebase console, add two Android apps to the same project:
-   - `org.mulearn.muapp.dev` (dev flavor)
-   - `org.mulearn.muapp` (prod)
+   - `org.mulearn.app.dev` (dev flavor)
+   - `org.mulearn.app` (prod)
 2. **Client config, per flavor.** Copy each app's values into its `.env` file:
 
    | Variable | Where to find it |
