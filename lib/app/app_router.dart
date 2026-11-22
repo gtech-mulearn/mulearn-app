@@ -48,6 +48,7 @@ import 'package:mulearn_app/features/notifications/presentation/screens/notifica
 import 'package:mulearn_app/features/opportunities/presentation/screens/opportunities_screen.dart';
 import 'package:mulearn_app/features/problem_statements/presentation/screens/problem_statement_detail_screen.dart';
 import 'package:mulearn_app/features/problem_statements/presentation/screens/problem_statements_screen.dart';
+import 'package:mulearn_app/features/profile/presentation/screens/blocked_users_screen.dart';
 import 'package:mulearn_app/features/profile/presentation/screens/change_password_screen.dart';
 import 'package:mulearn_app/features/profile/presentation/screens/connect_discord_screen.dart';
 import 'package:mulearn_app/features/profile/presentation/screens/journey_screen.dart';
@@ -246,6 +247,10 @@ GoRouter goRouter(Ref ref) {
       GoRoute(
         path: RoutePaths.settingsPassword,
         builder: (_, __) => const ChangePasswordScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.settingsBlocked,
+        builder: (_, __) => const BlockedUsersScreen(),
       ),
       GoRoute(
         path: RoutePaths.mentor,

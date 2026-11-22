@@ -43,6 +43,7 @@ const _allowedSignedInExtra = {
   RoutePaths.notifications,
   RoutePaths.settings,
   RoutePaths.settingsPassword,
+  RoutePaths.settingsBlocked,
   RoutePaths.connectDiscord,
 };
 
