@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mulearn_app/core/design_system/design_system.dart';
+import 'package:mulearn_app/core/moderation/blocked_user.dart';
+import 'package:mulearn_app/core/moderation/blocked_users.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/core/widgets/mu_refresh.dart';
@@ -59,10 +61,51 @@ class PublicProfileScreen extends ConsumerWidget {
                 error: error,
                 onRetry: () => ref.invalidate(publicUserProfileProvider(muid)),
               ),
-        data: (profile) => MuRefresh(
-          onRefresh: () => ref.refresh(publicUserProfileProvider(muid).future),
-          child: ProfileView(profile: profile, isOwn: false),
-        ),
+        data: (profile) =>
+            ref
+                .watch(blockedUsersProvider)
+                .blocks(id: profile.id, muid: profile.muid)
+            ? SafeArea(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    const MuTopBar.detail(title: 'Profile'),
+                    Padding(
+                      padding: const EdgeInsets.all(MuSpacing.space5),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          MuEmptyLine(
+                            'You blocked '
+                            '${profile.fullName.trim().isEmpty ? profile.muid : profile.fullName.trim()}'
+                            ". You won't see their profile or content.",
+                          ),
+                          const SizedBox(height: MuSpacing.space4),
+                          MuButton(
+                            label: 'Unblock',
+                            variant: MuButtonVariant.outline,
+                            block: true,
+                            onPressed: () => ref
+                                .read(blockedUsersProvider.notifier)
+                                .unblock(
+                                  BlockedUser(
+                                    id: profile.id,
+                                    muid: profile.muid,
+                                    name: profile.fullName,
+                                  ),
+                                ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            : MuRefresh(
+                onRefresh: () =>
+                    ref.refresh(publicUserProfileProvider(muid).future),
+                child: ProfileView(profile: profile, isOwn: false),
+              ),
       ),
     );
   }

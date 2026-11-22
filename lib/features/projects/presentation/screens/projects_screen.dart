@@ -6,6 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:mulearn_app/core/design_system/design_system.dart';
+import 'package:mulearn_app/core/moderation/blocked_user.dart';
+import 'package:mulearn_app/core/moderation/blocked_users.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
 import 'package:mulearn_app/core/utils/search_debouncer.dart';
@@ -170,34 +172,48 @@ class _ProjectsScreenState extends ConsumerState<ProjectsScreen> {
     );
   }
 
-  /// The feed as a sliver, built card by card as it scrolls in.
-  Widget _explore() => ref
-      .watch(projectsFeedProvider(_query))
-      .when(
-        skipError: true,
-        loading: () => const SliverToBoxAdapter(child: _Loading()),
-        error: (e, _) => SliverToBoxAdapter(
-          child: _Problem(
-            error: e,
-            onRetry: () => ref.invalidate(projectsFeedProvider(_query)),
+  /// The feed as a sliver, built card by card as it scrolls in. Projects by
+  /// people this member blocked are left out.
+  Widget _explore() {
+    final blocked = ref.watch(blockedUsersProvider);
+    return ref
+        .watch(projectsFeedProvider(_query))
+        .when(
+          skipError: true,
+          loading: () => const SliverToBoxAdapter(child: _Loading()),
+          error: (e, _) => SliverToBoxAdapter(
+            child: _Problem(
+              error: e,
+              onRetry: () => ref.invalidate(projectsFeedProvider(_query)),
+            ),
           ),
-        ),
-        data: (paged) => paged.items.isEmpty && !paged.hasMore
-            ? SliverToBoxAdapter(
-                child: MuEmptyLine(
-                  _query.isEmpty
-                      ? 'No projects yet. Yours could be the first.'
-                      : 'No project matches "$_query".',
-                ),
-              )
-            : MuPagedSliverList<Project>(
-                state: paged,
-                gap: MuSpacing.space4,
-                onLoadMore: () =>
-                    ref.read(projectsFeedProvider(_query).notifier).loadMore(),
-                itemBuilder: (_, project, _) => ProjectCard(project: project),
-              ),
-      );
+          data: (paged) {
+            final shown = paged.copyWith(
+              items: [
+                for (final p in paged.items)
+                  if (!blocked.blocks(id: p.ownerId, muid: p.ownerMuid)) p,
+              ],
+            );
+            return shown.items.isEmpty && !paged.hasMore
+                ? SliverToBoxAdapter(
+                    child: MuEmptyLine(
+                      _query.isEmpty
+                          ? 'No projects yet. Yours could be the first.'
+                          : 'No project matches "$_query".',
+                    ),
+                  )
+                : MuPagedSliverList<Project>(
+                    state: shown,
+                    gap: MuSpacing.space4,
+                    onLoadMore: () => ref
+                        .read(projectsFeedProvider(_query).notifier)
+                        .loadMore(),
+                    itemBuilder: (_, project, _) =>
+                        ProjectCard(project: project),
+                  );
+          },
+        );
+  }
 
   List<Widget> _yours(AsyncValue<List<Project>> mine) => mine.when(
     skipError: true,
