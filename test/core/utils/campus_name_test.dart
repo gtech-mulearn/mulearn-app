@@ -37,6 +37,12 @@ void main() {
       'MESCAS',
       'MES MK Mackar Pillay College For Advanced Studies',
     ),
+    // Short acronyms stay acronyms; short real words don't.
+    ('NIT CALICUT', 'NITC', 'NIT Calicut'),
+    ('IES COLLEGE OF ENGINEERING', 'IESCE', 'IES College of Engineering'),
+    ('APJ ABDUL KALAM SCHOOL OF IT', 'APJ', 'APJ Abdul Kalam School of IT'),
+    ('SRI SAI RAM COLLEGE', 'SSRC', 'Sri Sai Ram College'),
+    ('MAR ATHANASIUS COLLEGE', 'MAC', 'Mar Athanasius College'),
     (null, 'MBT', 'MBT'),
     ('  ', null, 'Unknown college'),
   ];
