@@ -25,6 +25,17 @@ class RegisterRemoteDataSource {
         const [];
   }
 
+  /// `GET /api/v1/register/location/?q=` — districts matching [query], as
+  /// `{id, location}`. Unauthenticated; the backend rejects an empty query.
+  Future<List<dynamic>> searchDistricts(String query) async {
+    final response = await _dio.get<dynamic>(
+      ApiPaths.registerLocationSearch,
+      queryParameters: {'q': query},
+      options: Options(headers: {RequestFlags.skipAuth: true}),
+    );
+    return ApiEnvelope.unwrapList(response);
+  }
+
   Future<List<dynamic>> fetchDepartments() =>
       _fetchList(ApiPaths.registerDepartments, key: 'departments');
 

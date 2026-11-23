@@ -14,8 +14,17 @@ import 'package:mulearn_app/features/auth/presentation/widgets/student_details_f
 
 /// Sign-up step 3 of 4: where you learn or work, one form per role (the
 /// dashboard's step 3). On success the wizard resets and interests follow.
-class RegisterDetailsScreen extends ConsumerWidget {
+class RegisterDetailsScreen extends ConsumerStatefulWidget {
   const RegisterDetailsScreen({super.key});
+
+  @override
+  ConsumerState<RegisterDetailsScreen> createState() =>
+      _RegisterDetailsScreenState();
+}
+
+class _RegisterDetailsScreenState extends ConsumerState<RegisterDetailsScreen> {
+  /// A learner's "I'm not a student" switch, off by default.
+  bool _studying = true;
 
   void _onSubmitted(BuildContext context, WidgetRef ref) {
     ref.read(registerWizardControllerProvider.notifier).reset();
@@ -23,7 +32,7 @@ class RegisterDetailsScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final role = ref.watch(registerWizardControllerProvider).role;
 
     ref.listen(registerSubmitControllerProvider, (_, next) {
@@ -48,7 +57,9 @@ class RegisterDetailsScreen extends ConsumerWidget {
       RegistrationRole.student => (
         'Where do ',
         'you learn?',
-        'Your campus connects you with peers and campus events.',
+        _studying
+            ? 'Your campus connects you with peers and campus events.'
+            : 'Pick the company you work at or the community you learn with.',
       ),
       RegistrationRole.mentor => (
         'Where do ',
@@ -73,6 +84,8 @@ class RegisterDetailsScreen extends ConsumerWidget {
         switch (role) {
           RegistrationRole.student => StudentDetailsForm(
             onSubmitted: () => _onSubmitted(context, ref),
+            onStudyingChanged: (studying) =>
+                setState(() => _studying = studying),
           ),
           RegistrationRole.enabler => EnablerDetailsForm(
             onSubmitted: () => _onSubmitted(context, ref),

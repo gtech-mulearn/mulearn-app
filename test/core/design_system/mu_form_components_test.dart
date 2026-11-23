@@ -144,6 +144,25 @@ void main() {
       expect(picked, muOtherOptionValue);
     });
 
+    testWidgets('an empty list says nothing is listed yet', (tester) async {
+      await tester.pumpWidget(
+        _host(
+          MuSelectField(
+            label: 'Community',
+            options: const [],
+            allowOther: true,
+            onChanged: (_) {},
+          ),
+        ),
+      );
+      await tester.tap(find.bySemanticsLabel('Community, Select'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Nothing listed yet.'), findsOneWidget);
+      expect(find.textContaining('Nothing matches'), findsNothing);
+      expect(find.text('Not listed? Add it'), findsOneWidget);
+    });
+
     testWidgets('validates inside a form', (tester) async {
       final form = GlobalKey<FormState>();
       await tester.pumpWidget(
@@ -252,6 +271,44 @@ void main() {
           find.bySemanticsLabel('Student, Learn and earn karma'),
         ),
         isSemantics(isChecked: false),
+      );
+    });
+
+    testWidgets('choice tile shows its state and reports taps', (tester) async {
+      String? picked;
+      await tester.pumpWidget(
+        _host(
+          Row(
+            children: [
+              for (final t in ['College', 'Community'])
+                Expanded(
+                  child: MuChoiceTile<String>(
+                    value: t,
+                    groupValue: 'College',
+                    title: t,
+                    icon: Icons.school,
+                    onChanged: (v) => picked = v,
+                  ),
+                ),
+            ],
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Community'));
+      await tester.pumpAndSettle();
+      expect(picked, 'Community');
+      expect(
+        tester.getSemantics(find.bySemanticsLabel('College')),
+        isSemantics(isChecked: true, isInMutuallyExclusiveGroup: true),
+      );
+      expect(
+        tester.getSemantics(find.bySemanticsLabel('Community')),
+        isSemantics(isChecked: false),
+      );
+      expect(
+        tester.getSize(find.byType(MuChoiceTile<String>).first).height,
+        greaterThanOrEqualTo(48),
       );
     });
 

@@ -16,7 +16,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CollegeLeaderboardEntryDto {
 
- String? get code; String? get title; int? get totalStudents; num? get totalKarma;
+ String? get id; String? get code; String? get title; int? get totalStudents; num? get totalKarma;
 /// Create a copy of CollegeLeaderboardEntryDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,20 +30,20 @@ $CollegeLeaderboardEntryDtoCopyWith<CollegeLeaderboardEntryDto> get copyWith => 
 @override
 bool operator ==(Object other) {
   final _this = this as CollegeLeaderboardEntryDto;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CollegeLeaderboardEntryDto&&(identical(other.code, _this.code) || other.code == _this.code)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.totalStudents, _this.totalStudents) || other.totalStudents == _this.totalStudents)&&(identical(other.totalKarma, _this.totalKarma) || other.totalKarma == _this.totalKarma));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CollegeLeaderboardEntryDto&&(identical(other.id, _this.id) || other.id == _this.id)&&(identical(other.code, _this.code) || other.code == _this.code)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.totalStudents, _this.totalStudents) || other.totalStudents == _this.totalStudents)&&(identical(other.totalKarma, _this.totalKarma) || other.totalKarma == _this.totalKarma));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
   final _this = this as CollegeLeaderboardEntryDto;
-  return Object.hash(runtimeType,_this.code,_this.title,_this.totalStudents,_this.totalKarma);
+  return Object.hash(runtimeType,_this.id,_this.code,_this.title,_this.totalStudents,_this.totalKarma);
 }
 
 @override
 String toString() {
   final _this = this as CollegeLeaderboardEntryDto;
-  return 'CollegeLeaderboardEntryDto(code: ${_this.code}, title: ${_this.title}, totalStudents: ${_this.totalStudents}, totalKarma: ${_this.totalKarma})';
+  return 'CollegeLeaderboardEntryDto(id: ${_this.id}, code: ${_this.code}, title: ${_this.title}, totalStudents: ${_this.totalStudents}, totalKarma: ${_this.totalKarma})';
 }
 
 
@@ -54,7 +54,7 @@ abstract mixin class $CollegeLeaderboardEntryDtoCopyWith<$Res>  {
   factory $CollegeLeaderboardEntryDtoCopyWith(CollegeLeaderboardEntryDto value, $Res Function(CollegeLeaderboardEntryDto) _then) = _$CollegeLeaderboardEntryDtoCopyWithImpl;
 @useResult
 $Res call({
- String? code, String? title, int? totalStudents, num? totalKarma
+ String? id, String? code, String? title, int? totalStudents, num? totalKarma
 });
 
 
@@ -71,9 +71,10 @@ class _$CollegeLeaderboardEntryDtoCopyWithImpl<$Res>
 
 /// Create a copy of CollegeLeaderboardEntryDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? code = freezed,Object? title = freezed,Object? totalStudents = freezed,Object? totalKarma = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? code = freezed,Object? title = freezed,Object? totalStudents = freezed,Object? totalKarma = freezed,}) {
   return _then(CollegeLeaderboardEntryDto(
-code: freezed == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String?,code: freezed == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String?,title: freezed == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String?,totalStudents: freezed == totalStudents ? _self.totalStudents : totalStudents // ignore: cast_nullable_to_non_nullable
 as int?,totalKarma: freezed == totalKarma ? _self.totalKarma : totalKarma // ignore: cast_nullable_to_non_nullable
@@ -162,10 +163,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? code,  String? title,  int? totalStudents,  num? totalKarma)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? id,  String? code,  String? title,  int? totalStudents,  num? totalKarma)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CollegeLeaderboardEntryDto() when $default != null:
-return $default(_that.code,_that.title,_that.totalStudents,_that.totalKarma);case _:
+return $default(_that.id,_that.code,_that.title,_that.totalStudents,_that.totalKarma);case _:
   return orElse();
 
 }
@@ -183,10 +184,10 @@ return $default(_that.code,_that.title,_that.totalStudents,_that.totalKarma);cas
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? code,  String? title,  int? totalStudents,  num? totalKarma)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? id,  String? code,  String? title,  int? totalStudents,  num? totalKarma)  $default,) {final _that = this;
 switch (_that) {
 case _CollegeLeaderboardEntryDto():
-return $default(_that.code,_that.title,_that.totalStudents,_that.totalKarma);case _:
+return $default(_that.id,_that.code,_that.title,_that.totalStudents,_that.totalKarma);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -203,10 +204,10 @@ return $default(_that.code,_that.title,_that.totalStudents,_that.totalKarma);cas
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? code,  String? title,  int? totalStudents,  num? totalKarma)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? id,  String? code,  String? title,  int? totalStudents,  num? totalKarma)?  $default,) {final _that = this;
 switch (_that) {
 case _CollegeLeaderboardEntryDto() when $default != null:
-return $default(_that.code,_that.title,_that.totalStudents,_that.totalKarma);case _:
+return $default(_that.id,_that.code,_that.title,_that.totalStudents,_that.totalKarma);case _:
   return null;
 
 }
@@ -218,9 +219,10 @@ return $default(_that.code,_that.title,_that.totalStudents,_that.totalKarma);cas
 @JsonSerializable()
 
 class _CollegeLeaderboardEntryDto extends CollegeLeaderboardEntryDto {
-  const _CollegeLeaderboardEntryDto({this.code, this.title, this.totalStudents, this.totalKarma}): super._();
+  const _CollegeLeaderboardEntryDto({this.id, this.code, this.title, this.totalStudents, this.totalKarma}): super._();
   factory _CollegeLeaderboardEntryDto.fromJson(Map<String, dynamic> json) => _$CollegeLeaderboardEntryDtoFromJson(json);
 
+@override final  String? id;
 @override final  String? code;
 @override final  String? title;
 @override final  int? totalStudents;
@@ -239,18 +241,18 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CollegeLeaderboardEntryDto&&(identical(other.code, code) || other.code == code)&&(identical(other.title, title) || other.title == title)&&(identical(other.totalStudents, totalStudents) || other.totalStudents == totalStudents)&&(identical(other.totalKarma, totalKarma) || other.totalKarma == totalKarma));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CollegeLeaderboardEntryDto&&(identical(other.id, id) || other.id == id)&&(identical(other.code, code) || other.code == code)&&(identical(other.title, title) || other.title == title)&&(identical(other.totalStudents, totalStudents) || other.totalStudents == totalStudents)&&(identical(other.totalKarma, totalKarma) || other.totalKarma == totalKarma));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
 int get hashCode {
-    return Object.hash(runtimeType,code,title,totalStudents,totalKarma);
+    return Object.hash(runtimeType,id,code,title,totalStudents,totalKarma);
 }
 
 @override
 String toString() {
-    return 'CollegeLeaderboardEntryDto(code: $code, title: $title, totalStudents: $totalStudents, totalKarma: $totalKarma)';
+    return 'CollegeLeaderboardEntryDto(id: $id, code: $code, title: $title, totalStudents: $totalStudents, totalKarma: $totalKarma)';
 }
 
 
@@ -261,7 +263,7 @@ abstract mixin class _$CollegeLeaderboardEntryDtoCopyWith<$Res> implements $Coll
   factory _$CollegeLeaderboardEntryDtoCopyWith(_CollegeLeaderboardEntryDto value, $Res Function(_CollegeLeaderboardEntryDto) _then) = __$CollegeLeaderboardEntryDtoCopyWithImpl;
 @override @useResult
 $Res call({
- String? code, String? title, int? totalStudents, num? totalKarma
+ String? id, String? code, String? title, int? totalStudents, num? totalKarma
 });
 
 
@@ -278,9 +280,10 @@ class __$CollegeLeaderboardEntryDtoCopyWithImpl<$Res>
 
 /// Create a copy of CollegeLeaderboardEntryDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? code = freezed,Object? title = freezed,Object? totalStudents = freezed,Object? totalKarma = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? code = freezed,Object? title = freezed,Object? totalStudents = freezed,Object? totalKarma = freezed,}) {
   return _then(_CollegeLeaderboardEntryDto(
-code: freezed == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
+id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String?,code: freezed == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String?,title: freezed == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String?,totalStudents: freezed == totalStudents ? _self.totalStudents : totalStudents // ignore: cast_nullable_to_non_nullable
 as int?,totalKarma: freezed == totalKarma ? _self.totalKarma : totalKarma // ignore: cast_nullable_to_non_nullable

@@ -31,6 +31,7 @@ export 'input/mu_text_field.dart';
 export 'motion/mu_pressable.dart';
 export 'motion/mu_spring.dart';
 export 'mulearn/mu_campus_crest.dart';
+export 'mulearn/mu_campus_ranks.dart';
 export 'mulearn/mu_circle_card.dart';
 export 'mulearn/mu_date_strip.dart';
 export 'mulearn/mu_karma_meter.dart';

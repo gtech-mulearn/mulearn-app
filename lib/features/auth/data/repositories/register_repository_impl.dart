@@ -40,6 +40,40 @@ class RegisterRepositoryImpl implements RegisterRepository {
       _fetchReferenceOptions(_remote.fetchCompanies);
 
   @override
+  Future<List<ReferenceOption>> fetchCommunities() async {
+    try {
+      return await _locationRemote.fetchCommunities();
+    } on DioException catch (e) {
+      throw ApiException.fromDioException(e);
+    }
+  }
+
+  @override
+  Future<List<ReferenceOption>> searchDistricts(String query) async {
+    try {
+      final items = await _remote.searchDistricts(query);
+      return [
+        for (final json in items.cast<Map<String, dynamic>>())
+          ReferenceOption(
+            id: json['id'].toString(),
+            title: (json['location'] as String?) ?? '',
+          ),
+      ];
+    } on DioException catch (e) {
+      throw ApiException.fromDioException(e);
+    }
+  }
+
+  @override
+  Future<List<ReferenceOption>> fetchSchools(String districtId) async {
+    try {
+      return await _locationRemote.fetchSchoolsByDistrict(districtId);
+    } on DioException catch (e) {
+      throw ApiException.fromDioException(e);
+    }
+  }
+
+  @override
   Future<List<LocationOption>> fetchCountries() async {
     try {
       return await _locationRemote.fetchCountries();

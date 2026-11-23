@@ -7,13 +7,18 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'register_submit_controller.g.dart';
 
-/// Organization type picked for the Student ("Company" vs "College" employer)
-/// and Mentor role-details forms.
-enum OrganizationType { college, company }
+/// Where a learner learns (School, College, Company or Community, as on the
+/// dashboard's learner step) or a mentor works (College or Company).
+enum OrganizationType { college, company, school, community }
 
 extension OrganizationTypeApi on OrganizationType {
-  String get apiValue =>
-      this == OrganizationType.college ? 'College' : 'Company';
+  /// The backend's `org_type`.
+  String get apiValue => switch (this) {
+    OrganizationType.college => 'College',
+    OrganizationType.company => 'Company',
+    OrganizationType.school => 'School',
+    OrganizationType.community => 'Community',
+  };
 }
 
 /// Performs the actual registration submission — the same multi-call
@@ -31,8 +36,9 @@ class RegisterSubmitController extends _$RegisterSubmitController {
   ///
   /// [college]/[customCollege]/[department]/[graduationYear] apply to the
   /// College branch (student + enabler); [organization]/[customOrganization]
-  /// apply to the Company branch (student) or are always used (mentor).
-  /// [organizationType] is only meaningful for student/mentor.
+  /// apply to a learner's School/Company/Community or are always used
+  /// (mentor). [organizationType] is only meaningful for student/mentor;
+  /// [isStudent] is false for a learner who turned on "I'm not a student".
   Future<void> submitGeneric({
     required RegistrationRole role,
     String? college,
@@ -42,6 +48,7 @@ class RegisterSubmitController extends _$RegisterSubmitController {
     String? organization,
     String? customOrganization,
     OrganizationType? organizationType,
+    bool isStudent = true,
   }) async {
     state = const AsyncLoading();
     final result = await AsyncValue.guard(() async {
@@ -85,18 +92,20 @@ class RegisterSubmitController extends _$RegisterSubmitController {
       }
       ref.read(appAuthControllerProvider.notifier).setSignedIn();
 
-      // Now authenticated — handle org linking.
+      // Now authenticated — handle org linking. A learner at a School,
+      // Company or Community links it with no department or year.
       if (role == RegistrationRole.student &&
-          organizationType == OrganizationType.company) {
+          organizationType != null &&
+          organizationType != OrganizationType.college) {
         if (organization == 'others' && customOrganization != null) {
           await repo.createOrganization(
             title: customOrganization,
-            orgType: 'Company',
+            orgType: organizationType.apiValue,
           );
         } else if (organization != null) {
           await repo.selectOrganization(
             organization: organization,
-            isStudent: true,
+            isStudent: isStudent,
           );
         }
         return;
