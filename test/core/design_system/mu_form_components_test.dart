@@ -255,6 +255,44 @@ void main() {
       );
     });
 
+    testWidgets('choice tile shows its state and reports taps', (tester) async {
+      String? picked;
+      await tester.pumpWidget(
+        _host(
+          Row(
+            children: [
+              for (final t in ['College', 'Community'])
+                Expanded(
+                  child: MuChoiceTile<String>(
+                    value: t,
+                    groupValue: 'College',
+                    title: t,
+                    icon: Icons.school,
+                    onChanged: (v) => picked = v,
+                  ),
+                ),
+            ],
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Community'));
+      await tester.pumpAndSettle();
+      expect(picked, 'Community');
+      expect(
+        tester.getSemantics(find.bySemanticsLabel('College')),
+        isSemantics(isChecked: true, isInMutuallyExclusiveGroup: true),
+      );
+      expect(
+        tester.getSemantics(find.bySemanticsLabel('Community')),
+        isSemantics(isChecked: false),
+      );
+      expect(
+        tester.getSize(find.byType(MuChoiceTile<String>).first).height,
+        greaterThanOrEqualTo(48),
+      );
+    });
+
     testWidgets('a checklist toggles its steps', (tester) async {
       var items = const [
         MuChecklistItem('Build it', done: true),
