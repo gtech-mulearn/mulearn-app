@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mulearn_app/core/auth/current_user_college.dart';
 import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/leaderboard/leaderboard_providers.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
@@ -255,16 +256,73 @@ class _CollegeBoard extends ConsumerWidget {
                 ),
               );
             }
+            final mine = ref.watch(currentUserCollegeProvider).value?.id;
+            String detail(int n) => monthly
+                ? (n == 1
+                      ? '1 active learner'
+                      : '${muGrouped(n)} active learners')
+                : (n == 1 ? '1 learner' : '${muGrouped(n)} learners');
+            final ranks = [
+              for (final e in entries)
+                MuCampusRank(
+                  name: campusDisplayName(title: e.title, code: e.code),
+                  code: e.code,
+                  karma: e.totalKarma.toInt(),
+                  detail: detail(e.totalStudents),
+                  isMine: e.id != null && e.id == mine,
+                ),
+            ];
+            VoidCallback? open(int i) {
+              final id = entries[i].id;
+              return id == null
+                  ? null
+                  : () => context.push(RoutePaths.publicCampusPath(id));
+            }
+
+            final top = ranks.take(3).toList();
             return SliverToBoxAdapter(
-              child: _BoardView(
-                entries: [
-                  for (final e in entries)
-                    MuRankEntry(
-                      name: campusDisplayName(title: e.title, code: e.code),
-                      karma: e.totalKarma.toInt(),
-                      subtitle: '${muGrouped(e.totalStudents)} students',
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  MuSpacing.space5,
+                  0,
+                  MuSpacing.space5,
+                  MuSpacing.navClearance,
+                ),
+                child: Column(
+                  children: [
+                    MuCampusPodium(
+                      top: top,
+                      // Cards open only when every one of them can.
+                      onOpen: entries.take(3).every((e) => e.id != null)
+                          ? (i) => open(i)?.call()
+                          : null,
                     ),
-                ],
+                    if (ranks.length > 3) ...[
+                      const SizedBox(height: MuSpacing.space3),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: MuSpacing.space4,
+                          vertical: MuSpacing.space1,
+                        ),
+                        decoration: BoxDecoration(
+                          color: context.mu.colors.surface,
+                          borderRadius: BorderRadius.circular(MuRadii.card),
+                        ),
+                        child: Column(
+                          children: [
+                            for (var i = 3; i < ranks.length; i++)
+                              MuCampusRankRow(
+                                rank: i + 1,
+                                entry: ranks[i],
+                                maxKarma: ranks.first.karma,
+                                onTap: open(i),
+                              ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
               ),
             );
           },
