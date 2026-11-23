@@ -154,8 +154,9 @@ class MuCampusPodium extends StatelessWidget {
                       TextSpan(text: ' karma · ${e.detail}'),
                     ],
                   ),
+                  // Full strength: a faded line on cobalt drops under 4.5:1.
                   style: mu.text.caption.copyWith(
-                    color: ink.withValues(alpha: 0.78),
+                    color: i == 2 ? c.onNight2 : ink,
                   ),
                 ),
               ],
@@ -170,6 +171,8 @@ class MuCampusPodium extends StatelessWidget {
       button: open != null,
       label: _label(i + 1, e),
       excludeSemantics: true,
+      // excludeSemantics drops the detector's own tap action.
+      onTap: open == null ? null : () => open(i),
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: open == null ? null : () => open(i),
@@ -259,14 +262,20 @@ class MuCampusRankRow extends StatelessWidget {
                       TextSpan(text: ' karma · ${entry.detail}'),
                     ],
                   ),
-                  style: mu.text.caption,
+                  // ink3 on the cobalt tint is under 4.5:1.
+                  style: mine
+                      ? mu.text.caption.copyWith(color: c.ink2)
+                      : mu.text.caption,
                 ),
                 const SizedBox(height: 6),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(4),
                   child: SizedBox(
                     height: 4,
+                    // Expand, so the fill gets the bar's 4 px height (a
+                    // loose stack sizes a childless ColoredBox to 0).
                     child: Stack(
+                      fit: StackFit.expand,
                       children: [
                         Positioned.fill(
                           child: ColoredBox(color: c.surfaceSunk),
@@ -302,6 +311,7 @@ class MuCampusRankRow extends StatelessWidget {
       button: onTap != null,
       label: _label(rank, entry),
       excludeSemantics: true,
+      onTap: onTap,
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: onTap,
