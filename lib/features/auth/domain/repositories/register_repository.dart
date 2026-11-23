@@ -24,6 +24,16 @@ abstract interface class RegisterRepository {
   /// `GET /api/v1/register/company/list/`.
   Future<List<ReferenceOption>> fetchCompanies();
 
+  /// `GET /api/v1/register/community/list/`.
+  Future<List<ReferenceOption>> fetchCommunities();
+
+  /// `GET /api/v1/register/location/?q=` — districts matching [query]; each
+  /// option's title is the backend's "District, State, Country".
+  Future<List<ReferenceOption>> searchDistricts(String query);
+
+  /// `POST /api/v1/register/schools/list/` `{"district": districtId}`.
+  Future<List<ReferenceOption>> fetchSchools(String districtId);
+
   /// `GET /api/v1/register/country/list/`.
   Future<List<LocationOption>> fetchCountries();
 
