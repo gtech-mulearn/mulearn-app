@@ -4,10 +4,12 @@ import 'package:mulearn_app/core/design_system/design_system.dart';
 import 'package:mulearn_app/core/moderation/blocked_user.dart';
 import 'package:mulearn_app/core/moderation/blocked_users.dart';
 import 'package:mulearn_app/core/network/api_exception.dart';
+import 'package:mulearn_app/core/session/session_providers.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/core/widgets/mu_state_display.dart';
 import 'package:mulearn_app/features/profile/presentation/providers/public_profile_controller.dart';
+import 'package:mulearn_app/features/profile/presentation/screens/profile_screen.dart';
 import 'package:mulearn_app/features/profile/presentation/widgets/profile_view.dart';
 
 /// A profile set to private (`is_public: false`, toggled from
@@ -32,6 +34,21 @@ class PublicProfileScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Yourself, from search, a board or a circle: your own profile, private
+    // or not (`user-profile/<muid>/` refuses a private one to everyone,
+    // the owner included).
+    final me = ref.watch(currentUserProvider);
+    if (!me.hasValue && me.isLoading) {
+      return Scaffold(
+        backgroundColor: context.mu.colors.chalk,
+        body: const Center(child: CircularProgressIndicator()),
+      );
+    }
+    final myMuid = me.value?.muid.trim().toLowerCase();
+    if (myMuid != null && myMuid == muid.trim().toLowerCase()) {
+      return const ProfileScreen();
+    }
+
     final profileState = ref.watch(publicUserProfileProvider(muid));
 
     return Scaffold(
