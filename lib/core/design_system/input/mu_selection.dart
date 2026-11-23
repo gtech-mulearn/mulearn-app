@@ -307,6 +307,94 @@ class MuRadioCard<T> extends StatelessWidget {
   }
 }
 
+/// A compact choice card for a 2-column grid (sign-up "I learn at":
+/// School, College, Company, Community): an icon well top-left, the radio
+/// top-right, the title under them. `cobalt` outline when chosen.
+class MuChoiceTile<T> extends StatelessWidget {
+  /// A tile for [value]; chosen when it equals [groupValue].
+  const MuChoiceTile({
+    required this.value,
+    required this.groupValue,
+    required this.title,
+    required this.icon,
+    required this.onChanged,
+    super.key,
+  });
+
+  final T value;
+  final T? groupValue;
+  final String title;
+  final IconData icon;
+  final ValueChanged<T>? onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final mu = context.mu;
+    final c = mu.colors;
+    final on = value == groupValue;
+    void pick() => onChanged?.call(value);
+    return Semantics(
+      inMutuallyExclusiveGroup: true,
+      checked: on,
+      button: true,
+      label: title,
+      excludeSemantics: true,
+      onTap: onChanged == null ? null : pick,
+      child: MuPressable(
+        onTap: onChanged == null ? null : pick,
+        pressedScale: 0.98,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 160),
+          constraints: const BoxConstraints(minHeight: MuSizes.touchMin),
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            color: c.surface,
+            borderRadius: BorderRadius.circular(MuRadii.card),
+            border: Border.all(
+              color: on ? c.cobalt : c.line,
+              width: on ? 2 : 1,
+            ),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 160),
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      color: on ? c.cobaltTint : c.surfaceSunk,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      icon,
+                      size: MuSizes.iconMd,
+                      color: on ? c.cobaltText : c.ink2,
+                    ),
+                  ),
+                  const Spacer(),
+                  MuRadioMark(selected: on),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Text(
+                title,
+                style: mu.text.title3.copyWith(fontSize: 16),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 /// One step of a [MuChecklist].
 class MuChecklistItem {
   /// A step.
