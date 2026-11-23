@@ -278,7 +278,11 @@ class _SelectSheetState extends State<_SelectSheet> {
     final searchable = remote || widget.options.length > 7;
     // In search mode, what to say instead of rows.
     final note = !remote
-        ? (shown.isEmpty ? 'Nothing matches "${_query.trim()}".' : null)
+        ? (shown.isEmpty
+              ? (q.isEmpty
+                    ? 'Nothing listed yet.'
+                    : 'Nothing matches "${_query.trim()}".')
+              : null)
         : _query.trim().length < 2
         ? 'Type at least 2 letters to search.'
         : _searchError != null

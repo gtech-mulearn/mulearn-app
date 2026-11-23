@@ -144,6 +144,25 @@ void main() {
       expect(picked, muOtherOptionValue);
     });
 
+    testWidgets('an empty list says nothing is listed yet', (tester) async {
+      await tester.pumpWidget(
+        _host(
+          MuSelectField(
+            label: 'Community',
+            options: const [],
+            allowOther: true,
+            onChanged: (_) {},
+          ),
+        ),
+      );
+      await tester.tap(find.bySemanticsLabel('Community, Select'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Nothing listed yet.'), findsOneWidget);
+      expect(find.textContaining('Nothing matches'), findsNothing);
+      expect(find.text('Not listed? Add it'), findsOneWidget);
+    });
+
     testWidgets('validates inside a form', (tester) async {
       final form = GlobalKey<FormState>();
       await tester.pumpWidget(
