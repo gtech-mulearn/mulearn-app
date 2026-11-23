@@ -29,7 +29,8 @@ class MuCampusSeal extends StatelessWidget {
   final double size;
 
   /// For a seal on a `cobalt` or `night` ground (the podium cards): a
-  /// translucent white fill with white type, so it doesn't vanish.
+  /// darkened fill with white type and a white dashed ring, so it reads
+  /// at 4.5:1 and doesn't vanish.
   final bool inverse;
 
   @override
@@ -37,7 +38,7 @@ class MuCampusSeal extends StatelessWidget {
     final mu = context.mu;
     final c = mu.colors;
     final fill = inverse
-        ? c.onCobalt.withValues(alpha: 0.14)
+        ? c.night.withValues(alpha: 0.22)
         : tone == null
         ? c.night
         : MuTones.forIgCategory(c, tone!);
