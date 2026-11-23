@@ -279,6 +279,10 @@ abstract final class ApiPaths {
   /// `GET` — list of communities, `{id, title}`, under `response.communities`.
   static const String registerCommunities = '/api/v1/register/community/list/';
 
+  /// `GET ?q=` — districts whose name, state or country matches, as a list of
+  /// `{id, location}` ("Kottayam, Kerala, India"). `q` is required. Public.
+  static const String registerLocationSearch = '/api/v1/register/location/';
+
   /// `POST {"district": id}` — colleges AND departments in a district (used
   /// by the college-change picker), `{id, title}` each, under
   /// `response.colleges`/`response.departments`. Distinct from
