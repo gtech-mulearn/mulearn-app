@@ -234,6 +234,134 @@ final class RegisterCompaniesProvider
 
 String _$registerCompaniesHash() => r'0612c6e5992eb5681abe3fceb2fd68e03bbd265f';
 
+@ProviderFor(registerCommunities)
+final registerCommunitiesProvider = RegisterCommunitiesProvider._();
+
+final class RegisterCommunitiesProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<ReferenceOption>>,
+          List<ReferenceOption>,
+          FutureOr<List<ReferenceOption>>
+        >
+    with
+        $FutureModifier<List<ReferenceOption>>,
+        $FutureProvider<List<ReferenceOption>> {
+  RegisterCommunitiesProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'registerCommunitiesProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$registerCommunitiesHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<ReferenceOption>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<ReferenceOption>> create(Ref ref) {
+    return registerCommunities(ref);
+  }
+}
+
+String _$registerCommunitiesHash() =>
+    r'86a47eb28c116de864481dc6b9a437f5bf01698d';
+
+/// Schools in [districtId] (a learner picks the district first).
+
+@ProviderFor(registerSchools)
+final registerSchoolsProvider = RegisterSchoolsFamily._();
+
+/// Schools in [districtId] (a learner picks the district first).
+
+final class RegisterSchoolsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<ReferenceOption>>,
+          List<ReferenceOption>,
+          FutureOr<List<ReferenceOption>>
+        >
+    with
+        $FutureModifier<List<ReferenceOption>>,
+        $FutureProvider<List<ReferenceOption>> {
+  /// Schools in [districtId] (a learner picks the district first).
+  RegisterSchoolsProvider._({
+    required RegisterSchoolsFamily super.from,
+    required String super.argument,
+  }) : super(
+         retry: null,
+         name: r'registerSchoolsProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$registerSchoolsHash();
+
+  @override
+  String toString() {
+    return r'registerSchoolsProvider'
+        ''
+        '($argument)';
+  }
+
+  @$internal
+  @override
+  $FutureProviderElement<List<ReferenceOption>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<ReferenceOption>> create(Ref ref) {
+    final argument = this.argument as String;
+    return registerSchools(ref, argument);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is RegisterSchoolsProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$registerSchoolsHash() => r'b81bd03e4513f973c68f657d3b1fc480e0e5a9ee';
+
+/// Schools in [districtId] (a learner picks the district first).
+
+final class RegisterSchoolsFamily extends $Family
+    with $FunctionalFamilyOverride<FutureOr<List<ReferenceOption>>, String> {
+  RegisterSchoolsFamily._()
+    : super(
+        retry: null,
+        name: r'registerSchoolsProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// Schools in [districtId] (a learner picks the district first).
+
+  RegisterSchoolsProvider call(String districtId) =>
+      RegisterSchoolsProvider._(argument: districtId, from: this);
+
+  @override
+  String toString() => r'registerSchoolsProvider';
+}
+
 @ProviderFor(registerCountries)
 final registerCountriesProvider = RegisterCountriesProvider._();
 

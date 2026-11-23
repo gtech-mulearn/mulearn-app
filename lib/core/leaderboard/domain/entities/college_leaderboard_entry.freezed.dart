@@ -15,7 +15,9 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CollegeLeaderboardEntry {
 
- int get totalStudents; num get totalKarma; String? get code; String? get title;
+ int get totalStudents; num get totalKarma; String? get code; String? get title;/// The college's organisation id, which opens its public page. Both
+/// boards return it; an older cached payload may not.
+ String? get id;
 /// Create a copy of CollegeLeaderboardEntry
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -27,20 +29,20 @@ $CollegeLeaderboardEntryCopyWith<CollegeLeaderboardEntry> get copyWith => _$Coll
 @override
 bool operator ==(Object other) {
   final _this = this as CollegeLeaderboardEntry;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CollegeLeaderboardEntry&&(identical(other.totalStudents, _this.totalStudents) || other.totalStudents == _this.totalStudents)&&(identical(other.totalKarma, _this.totalKarma) || other.totalKarma == _this.totalKarma)&&(identical(other.code, _this.code) || other.code == _this.code)&&(identical(other.title, _this.title) || other.title == _this.title));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CollegeLeaderboardEntry&&(identical(other.totalStudents, _this.totalStudents) || other.totalStudents == _this.totalStudents)&&(identical(other.totalKarma, _this.totalKarma) || other.totalKarma == _this.totalKarma)&&(identical(other.code, _this.code) || other.code == _this.code)&&(identical(other.title, _this.title) || other.title == _this.title)&&(identical(other.id, _this.id) || other.id == _this.id));
 }
 
 
 @override
 int get hashCode {
   final _this = this as CollegeLeaderboardEntry;
-  return Object.hash(runtimeType,_this.totalStudents,_this.totalKarma,_this.code,_this.title);
+  return Object.hash(runtimeType,_this.totalStudents,_this.totalKarma,_this.code,_this.title,_this.id);
 }
 
 @override
 String toString() {
   final _this = this as CollegeLeaderboardEntry;
-  return 'CollegeLeaderboardEntry(totalStudents: ${_this.totalStudents}, totalKarma: ${_this.totalKarma}, code: ${_this.code}, title: ${_this.title})';
+  return 'CollegeLeaderboardEntry(totalStudents: ${_this.totalStudents}, totalKarma: ${_this.totalKarma}, code: ${_this.code}, title: ${_this.title}, id: ${_this.id})';
 }
 
 
@@ -51,7 +53,7 @@ abstract mixin class $CollegeLeaderboardEntryCopyWith<$Res>  {
   factory $CollegeLeaderboardEntryCopyWith(CollegeLeaderboardEntry value, $Res Function(CollegeLeaderboardEntry) _then) = _$CollegeLeaderboardEntryCopyWithImpl;
 @useResult
 $Res call({
- int totalStudents, num totalKarma, String? code, String? title
+ int totalStudents, num totalKarma, String? code, String? title, String? id
 });
 
 
@@ -68,12 +70,13 @@ class _$CollegeLeaderboardEntryCopyWithImpl<$Res>
 
 /// Create a copy of CollegeLeaderboardEntry
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? totalStudents = null,Object? totalKarma = null,Object? code = freezed,Object? title = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? totalStudents = null,Object? totalKarma = null,Object? code = freezed,Object? title = freezed,Object? id = freezed,}) {
   return _then(CollegeLeaderboardEntry(
 totalStudents: null == totalStudents ? _self.totalStudents : totalStudents // ignore: cast_nullable_to_non_nullable
 as int,totalKarma: null == totalKarma ? _self.totalKarma : totalKarma // ignore: cast_nullable_to_non_nullable
 as num,code: freezed == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String?,title: freezed == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+as String?,id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -159,10 +162,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int totalStudents,  num totalKarma,  String? code,  String? title)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int totalStudents,  num totalKarma,  String? code,  String? title,  String? id)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CollegeLeaderboardEntry() when $default != null:
-return $default(_that.totalStudents,_that.totalKarma,_that.code,_that.title);case _:
+return $default(_that.totalStudents,_that.totalKarma,_that.code,_that.title,_that.id);case _:
   return orElse();
 
 }
@@ -180,10 +183,10 @@ return $default(_that.totalStudents,_that.totalKarma,_that.code,_that.title);cas
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int totalStudents,  num totalKarma,  String? code,  String? title)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int totalStudents,  num totalKarma,  String? code,  String? title,  String? id)  $default,) {final _that = this;
 switch (_that) {
 case _CollegeLeaderboardEntry():
-return $default(_that.totalStudents,_that.totalKarma,_that.code,_that.title);case _:
+return $default(_that.totalStudents,_that.totalKarma,_that.code,_that.title,_that.id);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -200,10 +203,10 @@ return $default(_that.totalStudents,_that.totalKarma,_that.code,_that.title);cas
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int totalStudents,  num totalKarma,  String? code,  String? title)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int totalStudents,  num totalKarma,  String? code,  String? title,  String? id)?  $default,) {final _that = this;
 switch (_that) {
 case _CollegeLeaderboardEntry() when $default != null:
-return $default(_that.totalStudents,_that.totalKarma,_that.code,_that.title);case _:
+return $default(_that.totalStudents,_that.totalKarma,_that.code,_that.title,_that.id);case _:
   return null;
 
 }
@@ -215,13 +218,16 @@ return $default(_that.totalStudents,_that.totalKarma,_that.code,_that.title);cas
 
 
 class _CollegeLeaderboardEntry implements CollegeLeaderboardEntry {
-  const _CollegeLeaderboardEntry({required this.totalStudents, required this.totalKarma, this.code, this.title});
+  const _CollegeLeaderboardEntry({required this.totalStudents, required this.totalKarma, this.code, this.title, this.id});
   
 
 @override final  int totalStudents;
 @override final  num totalKarma;
 @override final  String? code;
 @override final  String? title;
+/// The college's organisation id, which opens its public page. Both
+/// boards return it; an older cached payload may not.
+@override final  String? id;
 
 /// Create a copy of CollegeLeaderboardEntry
 /// with the given fields replaced by the non-null parameter values.
@@ -233,18 +239,18 @@ _$CollegeLeaderboardEntryCopyWith<_CollegeLeaderboardEntry> get copyWith => __$C
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CollegeLeaderboardEntry&&(identical(other.totalStudents, totalStudents) || other.totalStudents == totalStudents)&&(identical(other.totalKarma, totalKarma) || other.totalKarma == totalKarma)&&(identical(other.code, code) || other.code == code)&&(identical(other.title, title) || other.title == title));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _CollegeLeaderboardEntry&&(identical(other.totalStudents, totalStudents) || other.totalStudents == totalStudents)&&(identical(other.totalKarma, totalKarma) || other.totalKarma == totalKarma)&&(identical(other.code, code) || other.code == code)&&(identical(other.title, title) || other.title == title)&&(identical(other.id, id) || other.id == id));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,totalStudents,totalKarma,code,title);
+    return Object.hash(runtimeType,totalStudents,totalKarma,code,title,id);
 }
 
 @override
 String toString() {
-    return 'CollegeLeaderboardEntry(totalStudents: $totalStudents, totalKarma: $totalKarma, code: $code, title: $title)';
+    return 'CollegeLeaderboardEntry(totalStudents: $totalStudents, totalKarma: $totalKarma, code: $code, title: $title, id: $id)';
 }
 
 
@@ -255,7 +261,7 @@ abstract mixin class _$CollegeLeaderboardEntryCopyWith<$Res> implements $College
   factory _$CollegeLeaderboardEntryCopyWith(_CollegeLeaderboardEntry value, $Res Function(_CollegeLeaderboardEntry) _then) = __$CollegeLeaderboardEntryCopyWithImpl;
 @override @useResult
 $Res call({
- int totalStudents, num totalKarma, String? code, String? title
+ int totalStudents, num totalKarma, String? code, String? title, String? id
 });
 
 
@@ -272,12 +278,13 @@ class __$CollegeLeaderboardEntryCopyWithImpl<$Res>
 
 /// Create a copy of CollegeLeaderboardEntry
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? totalStudents = null,Object? totalKarma = null,Object? code = freezed,Object? title = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? totalStudents = null,Object? totalKarma = null,Object? code = freezed,Object? title = freezed,Object? id = freezed,}) {
   return _then(_CollegeLeaderboardEntry(
 totalStudents: null == totalStudents ? _self.totalStudents : totalStudents // ignore: cast_nullable_to_non_nullable
 as int,totalKarma: null == totalKarma ? _self.totalKarma : totalKarma // ignore: cast_nullable_to_non_nullable
 as num,code: freezed == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String?,title: freezed == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
+as String?,id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

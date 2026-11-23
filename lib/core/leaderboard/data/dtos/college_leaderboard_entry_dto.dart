@@ -15,6 +15,7 @@ part 'college_leaderboard_entry_dto.g.dart';
 @freezed
 abstract class CollegeLeaderboardEntryDto with _$CollegeLeaderboardEntryDto {
   const factory CollegeLeaderboardEntryDto({
+    String? id,
     String? code,
     String? title,
     int? totalStudents,
@@ -34,9 +35,10 @@ abstract class CollegeLeaderboardEntryDto with _$CollegeLeaderboardEntryDto {
   }
 
   CollegeLeaderboardEntry toDomain() => CollegeLeaderboardEntry(
-        code: code,
-        title: title,
-        totalStudents: totalStudents ?? 0,
-        totalKarma: totalKarma ?? 0,
-      );
+    id: id,
+    code: code,
+    title: title,
+    totalStudents: totalStudents ?? 0,
+    totalKarma: totalKarma ?? 0,
+  );
 }
