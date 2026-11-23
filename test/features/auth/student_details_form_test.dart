@@ -187,20 +187,67 @@ void main() {
     expect(submitted, 0);
   });
 
-  testWidgets('school not listed needs no district', (tester) async {
+  testWidgets('re-tapping the chosen type keeps the pick', (tester) async {
     await pump(tester);
-    await tapAndSettle(tester, tile('School'));
-    expect(find.text('District'), findsOneWidget);
-
-    await tapAndSettle(tester, find.text('Pick your district first'));
-    await tapAndSettle(tester, find.text('My school is not listed'));
-    expect(find.text('District'), findsNothing);
-
-    await tester.enterText(find.byType(TextField).last, 'Govt HSS Palai');
+    await turnOnNotAStudent(tester);
+    await tapAndSettle(tester, find.text('Search your company'));
+    await tapAndSettle(tester, find.text('Faya'));
+    await tapAndSettle(tester, tile('Company'));
     await finish(tester);
 
     verify(
-      () => repo.createOrganization(title: 'Govt HSS Palai', orgType: 'School'),
+      () => repo.selectOrganization(organization: 'co1', isStudent: false),
+    ).called(1);
+  });
+
+  /// School → pick the district in the search sheet.
+  Future<void> pickDistrict(WidgetTester tester) async {
+    when(() => repo.searchDistricts('kott')).thenAnswer(
+      (_) async => const [
+        ReferenceOption(id: 'd1', title: 'Kottayam, Kerala, India'),
+      ],
+    );
+    when(() => repo.fetchSchools('d1')).thenAnswer(
+      (_) async => const [ReferenceOption(id: 's1', title: 'Govt HSS Palai')],
+    );
+    await tapAndSettle(tester, find.text('Search your district'));
+    await tester.enterText(find.byType(TextField).last, 'kott');
+    await tester.pump(const Duration(milliseconds: 400));
+    await tester.pumpAndSettle();
+    await tapAndSettle(tester, find.text('Kottayam, Kerala, India'));
+  }
+
+  testWidgets('the school list waits for a district', (tester) async {
+    await pump(tester);
+    await tapAndSettle(tester, tile('School'));
+
+    await tapAndSettle(tester, find.text('Pick your district first'));
+    expect(find.text('My school is not listed'), findsNothing);
+    expect(find.textContaining('Nothing matches'), findsNothing);
+
+    await pickDistrict(tester);
+    await tapAndSettle(tester, find.text('Select your school'));
+    await tapAndSettle(tester, find.text('Govt HSS Palai'));
+    await finish(tester);
+
+    verify(
+      () => repo.selectOrganization(organization: 's1', isStudent: true),
+    ).called(1);
+  });
+
+  testWidgets('a school not listed keeps its district', (tester) async {
+    await pump(tester);
+    await tapAndSettle(tester, tile('School'));
+    await pickDistrict(tester);
+    await tapAndSettle(tester, find.text('Select your school'));
+    await tapAndSettle(tester, find.text('My school is not listed'));
+    expect(find.text('District'), findsOneWidget);
+
+    await tester.enterText(find.byType(TextField).last, 'Govt HSS Pala');
+    await finish(tester);
+
+    verify(
+      () => repo.createOrganization(title: 'Govt HSS Pala', orgType: 'School'),
     ).called(1);
     expect(submitted, 1);
   });

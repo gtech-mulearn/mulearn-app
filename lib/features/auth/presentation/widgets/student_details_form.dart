@@ -82,13 +82,17 @@ class _StudentDetailsFormState extends ConsumerState<StudentDetailsForm> {
   }
 
   /// A new type starts empty, so a company id is never sent as a community.
-  void _setType(OrganizationType type) => setState(() {
-    _type = type;
-    _organization = null;
-    _customOrganizationController.clear();
-    _district = null;
-    _districtName = null;
-  });
+  /// Tapping the type already chosen keeps what was picked and typed.
+  void _setType(OrganizationType type) {
+    if (type == _type) return;
+    setState(() {
+      _type = type;
+      _organization = null;
+      _customOrganizationController.clear();
+      _district = null;
+      _districtName = null;
+    });
+  }
 
   void _setNotStudent(bool notStudent) {
     setState(() => _notStudent = notStudent);
@@ -300,7 +304,9 @@ class _StudentDetailsFormState extends ConsumerState<StudentDetailsForm> {
     };
 
     return [
-      if (_type == OrganizationType.school && !notListed) ...[
+      // The district stays, even for a school that isn't listed: the list
+      // only exists per district, so it has to come first.
+      if (_type == OrganizationType.school) ...[
         MuSelectField(
           key: const ValueKey('district'),
           label: 'District',
@@ -311,10 +317,14 @@ class _StudentDetailsFormState extends ConsumerState<StudentDetailsForm> {
           onPicked: (o) => setState(() => _districtName = o.label),
           enabled: !loading,
           value: _district,
-          onChanged: (v) => setState(() {
-            _district = v;
-            _organization = null;
-          }),
+          onChanged: (v) {
+            if (v == _district) return;
+            setState(() {
+              _district = v;
+              _organization = null;
+              _customOrganizationController.clear();
+            });
+          },
           validator: (_) => (_district ?? '').isEmpty
               ? 'Pick your district to continue.'
               : null,
@@ -329,7 +339,9 @@ class _StudentDetailsFormState extends ConsumerState<StudentDetailsForm> {
         options: _opts(list?.value ?? const []),
         loading: list?.isLoading ?? false,
         error: (list?.hasError ?? false) ? error : null,
-        enabled: !loading,
+        // A school list needs its district first.
+        enabled:
+            !loading && (_type != OrganizationType.school || _district != null),
         allowOther: true,
         otherLabel: 'My $lower is not listed',
         value: _organization,
