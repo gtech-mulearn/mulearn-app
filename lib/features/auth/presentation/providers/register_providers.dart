@@ -40,6 +40,15 @@ Future<List<ReferenceOption>> registerCompanies(Ref ref) =>
     ref.watch(registerRepositoryProvider).fetchCompanies();
 
 @riverpod
+Future<List<ReferenceOption>> registerCommunities(Ref ref) =>
+    ref.watch(registerRepositoryProvider).fetchCommunities();
+
+/// Schools in [districtId] (a learner picks the district first).
+@riverpod
+Future<List<ReferenceOption>> registerSchools(Ref ref, String districtId) =>
+    ref.watch(registerRepositoryProvider).fetchSchools(districtId);
+
+@riverpod
 Future<List<LocationOption>> registerCountries(Ref ref) =>
     ref.watch(registerRepositoryProvider).fetchCountries();
 

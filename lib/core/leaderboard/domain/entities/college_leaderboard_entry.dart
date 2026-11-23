@@ -14,5 +14,9 @@ abstract class CollegeLeaderboardEntry with _$CollegeLeaderboardEntry {
     required num totalKarma,
     String? code,
     String? title,
+
+    /// The college's organisation id, which opens its public page. Both
+    /// boards return it; an older cached payload may not.
+    String? id,
   }) = _CollegeLeaderboardEntry;
 }

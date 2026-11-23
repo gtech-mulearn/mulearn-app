@@ -231,6 +231,80 @@ void main() {
         ),
       ).called(1);
     });
+
+    test('Community pick links the community, not as a student', () async {
+      when(
+        () => repository.selectOrganization(
+          organization: any(named: 'organization'),
+          isStudent: any(named: 'isStudent'),
+          department: any(named: 'department'),
+          graduationYear: any(named: 'graduationYear'),
+        ),
+      ).thenAnswer((_) async {});
+
+      final container = containerWithBasicInfo();
+      await container.read(appAuthControllerProvider.future);
+
+      await container
+          .read(registerSubmitControllerProvider.notifier)
+          .submitGeneric(
+            role: RegistrationRole.student,
+            organization: 'community-1',
+            organizationType: OrganizationType.community,
+            isStudent: false,
+          );
+
+      verify(
+        () => repository.selectOrganization(
+          organization: 'community-1',
+          isStudent: false,
+        ),
+      ).called(1);
+      verifyNever(
+        () => repository.createOrganization(
+          title: any(named: 'title'),
+          orgType: any(named: 'orgType'),
+        ),
+      );
+    });
+
+    for (final (type, title, orgType) in [
+      (OrganizationType.school, 'Govt HSS Palai', 'School'),
+      (OrganizationType.community, 'Flutter Thrissur', 'Community'),
+    ]) {
+      test('$orgType not listed submits a $orgType for review', () async {
+        when(
+          () => repository.createOrganization(
+            title: any(named: 'title'),
+            orgType: any(named: 'orgType'),
+            department: any(named: 'department'),
+            graduationYear: any(named: 'graduationYear'),
+          ),
+        ).thenAnswer((_) async {});
+
+        final container = containerWithBasicInfo();
+        await container.read(appAuthControllerProvider.future);
+
+        await container
+            .read(registerSubmitControllerProvider.notifier)
+            .submitGeneric(
+              role: RegistrationRole.student,
+              organization: 'others',
+              customOrganization: title,
+              organizationType: type,
+            );
+
+        verify(
+          () => repository.createOrganization(title: title, orgType: orgType),
+        ).called(1);
+        verifyNever(
+          () => repository.selectOrganization(
+            organization: any(named: 'organization'),
+            isStudent: any(named: 'isStudent'),
+          ),
+        );
+      });
+    }
   });
 
   test('submitGeneric — enabler links a college', () async {

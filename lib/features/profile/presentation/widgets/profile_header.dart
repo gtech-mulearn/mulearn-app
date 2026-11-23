@@ -347,7 +347,9 @@ class ProfileHeader extends ConsumerWidget {
               children: [
                 Row(
                   children: [
-                    if (!isOwn)
+                    // Your own profile pushed from elsewhere needs a way back
+                    // too; the You tab can't pop, so it shows none.
+                    if (!isOwn || (ModalRoute.of(context)?.canPop ?? false))
                       glass(
                         LucideIcons.arrowLeft,
                         'Back',
