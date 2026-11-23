@@ -2,18 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mulearn_app/core/design_system/design_system.dart';
-import 'package:mulearn_app/core/leaderboard/domain/entities/college_leaderboard_entry.dart';
 import 'package:mulearn_app/core/leaderboard/leaderboard_providers.dart';
 import 'package:mulearn_app/core/router/route_paths.dart';
+import 'package:mulearn_app/core/utils/campus_name.dart';
 import 'package:mulearn_app/core/widgets/error_retry_view.dart';
 import 'package:mulearn_app/core/widgets/mu_refresh.dart';
 import 'package:mulearn_app/core/widgets/mu_state_display.dart';
-
-/// The monthly college-leaderboard endpoint doesn't return a `title` at
-/// all (only the all-time one does), so fall back to the college's short
-/// `code` (e.g. "MBT") rather than a blank row.
-String _collegeDisplayName(CollegeLeaderboardEntry entry) =>
-    entry.title ?? entry.code ?? 'Unknown college';
 
 enum _Board { students, colleges }
 
@@ -266,7 +260,7 @@ class _CollegeBoard extends ConsumerWidget {
                 entries: [
                   for (final e in entries)
                     MuRankEntry(
-                      name: _collegeDisplayName(e),
+                      name: campusDisplayName(title: e.title, code: e.code),
                       karma: e.totalKarma.toInt(),
                       subtitle: '${muGrouped(e.totalStudents)} students',
                     ),
