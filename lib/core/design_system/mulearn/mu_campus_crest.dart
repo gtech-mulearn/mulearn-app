@@ -14,6 +14,7 @@ class MuCampusSeal extends StatelessWidget {
     this.tone,
     this.size = 56,
     this.icon = LucideIcons.school,
+    this.inverse = false,
     super.key,
   });
 
@@ -27,12 +28,24 @@ class MuCampusSeal extends StatelessWidget {
   final IgCategory? tone;
   final double size;
 
+  /// For a seal on a `cobalt` or `night` ground (the podium cards): a
+  /// translucent white fill with white type, so it doesn't vanish.
+  final bool inverse;
+
   @override
   Widget build(BuildContext context) {
     final mu = context.mu;
     final c = mu.colors;
-    final fill = tone == null ? c.night : MuTones.forIgCategory(c, tone!);
-    final ink = tone == null ? c.onNight : c.inkPrint;
+    final fill = inverse
+        ? c.onCobalt.withValues(alpha: 0.14)
+        : tone == null
+        ? c.night
+        : MuTones.forIgCategory(c, tone!);
+    final ink = inverse
+        ? c.onCobalt
+        : tone == null
+        ? c.onNight
+        : c.inkPrint;
     final text = (code ?? '').trim();
     return ExcludeSemantics(
       child: SizedBox.square(
@@ -40,7 +53,7 @@ class MuCampusSeal extends StatelessWidget {
         child: CustomPaint(
           painter: _SealPainter(
             fill: fill,
-            ring: ink.withValues(alpha: 0.35),
+            ring: ink.withValues(alpha: inverse ? 0.5 : 0.35),
             radius: size * 16 / 56,
           ),
           child: Center(
