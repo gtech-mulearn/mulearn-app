@@ -1,0 +1,48 @@
+{
+  "_meta": {
+    "source": "serializer",
+    "endpoint": "GET /api/v1/notification/broadcast/list/all/?page=1&page_size=20",
+    "backend_ref": "feat/team-notifications api/notification/notification_view.py BroadcastNotificationListAPI (paginated branch); serializers.py BroadcastNotificationAdminSerializer, broadcast_source",
+    "note": "Hand-built from the serializer; the second row has an unknown source value to prove the app falls back to system."
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {"general": []},
+    "response": {
+      "count": 45,
+      "page": 1,
+      "page_size": 20,
+      "results": [
+        {
+          "id": "b1000000-0000-4000-8000-000000000001",
+          "title": "Hack night on Friday",
+          "description": "Bring a laptop and a teammate to the campus lab at 6 pm.",
+          "url": "/events",
+          "target_type": "global",
+          "target_id": null,
+          "target_details": {"type": "global", "name": "Global (All Users)"},
+          "source": "team",
+          "created_by": "u1000000-0000-4000-8000-000000000001",
+          "created_by_name": "Asha Nair",
+          "created_at": "2026-11-16T09:30:00Z",
+          "expires_at": "2026-11-23T09:30:00Z"
+        },
+        {
+          "id": "b1000000-0000-4000-8000-000000000002",
+          "title": "Circle meetup moved",
+          "description": "Thursday's meetup now starts at 5 pm.",
+          "url": null,
+          "target_type": "campus",
+          "target_id": "o1000000-0000-4000-8000-000000000001",
+          "target_details": {"type": "campus", "name": "College of Engineering Trivandrum"},
+          "source": "something_new",
+          "created_by": "u1000000-0000-4000-8000-000000000001",
+          "created_by_name": "Asha Nair",
+          "created_at": "2026-11-15T07:00:00Z",
+          "expires_at": "2026-11-22T07:00:00Z"
+        }
+      ]
+    }
+  }
+}

@@ -23,7 +23,9 @@ mixin _$WorkspaceAccess {
  bool get campusChapters;/// Every campus role held but not verified yet, in naming order. Each
 /// gets its own banner, even when another held role opens the campus
 /// (the dashboard checks Enabler verification on its own).
- List<String> get pendingCampusRoles;
+ List<String> get pendingCampusRoles;/// Admins, Fellow or Associate held **and** verified: announcements, push
+/// campaigns and the activity log. Never `pending`: there is no banner.
+ WorkspaceState get team;
 /// Create a copy of WorkspaceAccess
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -35,20 +37,20 @@ $WorkspaceAccessCopyWith<WorkspaceAccess> get copyWith => _$WorkspaceAccessCopyW
 @override
 bool operator ==(Object other) {
   final _this = this as WorkspaceAccess;
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is WorkspaceAccess&&(identical(other.mentor, _this.mentor) || other.mentor == _this.mentor)&&(identical(other.campus, _this.campus) || other.campus == _this.campus)&&(identical(other.enablerCampuses, _this.enablerCampuses) || other.enablerCampuses == _this.enablerCampuses)&&(identical(other.campusLead, _this.campusLead) || other.campusLead == _this.campusLead)&&(identical(other.campusChapters, _this.campusChapters) || other.campusChapters == _this.campusChapters)&&const DeepCollectionEquality().equals(other.pendingCampusRoles, _this.pendingCampusRoles));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is WorkspaceAccess&&(identical(other.mentor, _this.mentor) || other.mentor == _this.mentor)&&(identical(other.campus, _this.campus) || other.campus == _this.campus)&&(identical(other.enablerCampuses, _this.enablerCampuses) || other.enablerCampuses == _this.enablerCampuses)&&(identical(other.campusLead, _this.campusLead) || other.campusLead == _this.campusLead)&&(identical(other.campusChapters, _this.campusChapters) || other.campusChapters == _this.campusChapters)&&const DeepCollectionEquality().equals(other.pendingCampusRoles, _this.pendingCampusRoles)&&(identical(other.team, _this.team) || other.team == _this.team));
 }
 
 
 @override
 int get hashCode {
   final _this = this as WorkspaceAccess;
-  return Object.hash(runtimeType,_this.mentor,_this.campus,_this.enablerCampuses,_this.campusLead,_this.campusChapters,const DeepCollectionEquality().hash(_this.pendingCampusRoles));
+  return Object.hash(runtimeType,_this.mentor,_this.campus,_this.enablerCampuses,_this.campusLead,_this.campusChapters,const DeepCollectionEquality().hash(_this.pendingCampusRoles),_this.team);
 }
 
 @override
 String toString() {
   final _this = this as WorkspaceAccess;
-  return 'WorkspaceAccess(mentor: ${_this.mentor}, campus: ${_this.campus}, enablerCampuses: ${_this.enablerCampuses}, campusLead: ${_this.campusLead}, campusChapters: ${_this.campusChapters}, pendingCampusRoles: ${_this.pendingCampusRoles})';
+  return 'WorkspaceAccess(mentor: ${_this.mentor}, campus: ${_this.campus}, enablerCampuses: ${_this.enablerCampuses}, campusLead: ${_this.campusLead}, campusChapters: ${_this.campusChapters}, pendingCampusRoles: ${_this.pendingCampusRoles}, team: ${_this.team})';
 }
 
 
@@ -59,7 +61,7 @@ abstract mixin class $WorkspaceAccessCopyWith<$Res>  {
   factory $WorkspaceAccessCopyWith(WorkspaceAccess value, $Res Function(WorkspaceAccess) _then) = _$WorkspaceAccessCopyWithImpl;
 @useResult
 $Res call({
- WorkspaceState mentor, WorkspaceState campus, WorkspaceState enablerCampuses, bool campusLead, bool campusChapters, List<String> pendingCampusRoles
+ WorkspaceState mentor, WorkspaceState campus, WorkspaceState enablerCampuses, bool campusLead, bool campusChapters, List<String> pendingCampusRoles, WorkspaceState team
 });
 
 
@@ -76,7 +78,7 @@ class _$WorkspaceAccessCopyWithImpl<$Res>
 
 /// Create a copy of WorkspaceAccess
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? mentor = null,Object? campus = null,Object? enablerCampuses = null,Object? campusLead = null,Object? campusChapters = null,Object? pendingCampusRoles = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? mentor = null,Object? campus = null,Object? enablerCampuses = null,Object? campusLead = null,Object? campusChapters = null,Object? pendingCampusRoles = null,Object? team = null,}) {
   return _then(WorkspaceAccess(
 mentor: null == mentor ? _self.mentor : mentor // ignore: cast_nullable_to_non_nullable
 as WorkspaceState,campus: null == campus ? _self.campus : campus // ignore: cast_nullable_to_non_nullable
@@ -84,7 +86,8 @@ as WorkspaceState,enablerCampuses: null == enablerCampuses ? _self.enablerCampus
 as WorkspaceState,campusLead: null == campusLead ? _self.campusLead : campusLead // ignore: cast_nullable_to_non_nullable
 as bool,campusChapters: null == campusChapters ? _self.campusChapters : campusChapters // ignore: cast_nullable_to_non_nullable
 as bool,pendingCampusRoles: null == pendingCampusRoles ? _self.pendingCampusRoles : pendingCampusRoles // ignore: cast_nullable_to_non_nullable
-as List<String>,
+as List<String>,team: null == team ? _self.team : team // ignore: cast_nullable_to_non_nullable
+as WorkspaceState,
   ));
 }
 
@@ -169,10 +172,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( WorkspaceState mentor,  WorkspaceState campus,  WorkspaceState enablerCampuses,  bool campusLead,  bool campusChapters,  List<String> pendingCampusRoles)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( WorkspaceState mentor,  WorkspaceState campus,  WorkspaceState enablerCampuses,  bool campusLead,  bool campusChapters,  List<String> pendingCampusRoles,  WorkspaceState team)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _WorkspaceAccess() when $default != null:
-return $default(_that.mentor,_that.campus,_that.enablerCampuses,_that.campusLead,_that.campusChapters,_that.pendingCampusRoles);case _:
+return $default(_that.mentor,_that.campus,_that.enablerCampuses,_that.campusLead,_that.campusChapters,_that.pendingCampusRoles,_that.team);case _:
   return orElse();
 
 }
@@ -190,10 +193,10 @@ return $default(_that.mentor,_that.campus,_that.enablerCampuses,_that.campusLead
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( WorkspaceState mentor,  WorkspaceState campus,  WorkspaceState enablerCampuses,  bool campusLead,  bool campusChapters,  List<String> pendingCampusRoles)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( WorkspaceState mentor,  WorkspaceState campus,  WorkspaceState enablerCampuses,  bool campusLead,  bool campusChapters,  List<String> pendingCampusRoles,  WorkspaceState team)  $default,) {final _that = this;
 switch (_that) {
 case _WorkspaceAccess():
-return $default(_that.mentor,_that.campus,_that.enablerCampuses,_that.campusLead,_that.campusChapters,_that.pendingCampusRoles);case _:
+return $default(_that.mentor,_that.campus,_that.enablerCampuses,_that.campusLead,_that.campusChapters,_that.pendingCampusRoles,_that.team);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -210,10 +213,10 @@ return $default(_that.mentor,_that.campus,_that.enablerCampuses,_that.campusLead
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( WorkspaceState mentor,  WorkspaceState campus,  WorkspaceState enablerCampuses,  bool campusLead,  bool campusChapters,  List<String> pendingCampusRoles)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( WorkspaceState mentor,  WorkspaceState campus,  WorkspaceState enablerCampuses,  bool campusLead,  bool campusChapters,  List<String> pendingCampusRoles,  WorkspaceState team)?  $default,) {final _that = this;
 switch (_that) {
 case _WorkspaceAccess() when $default != null:
-return $default(_that.mentor,_that.campus,_that.enablerCampuses,_that.campusLead,_that.campusChapters,_that.pendingCampusRoles);case _:
+return $default(_that.mentor,_that.campus,_that.enablerCampuses,_that.campusLead,_that.campusChapters,_that.pendingCampusRoles,_that.team);case _:
   return null;
 
 }
@@ -225,7 +228,7 @@ return $default(_that.mentor,_that.campus,_that.enablerCampuses,_that.campusLead
 
 
 class _WorkspaceAccess implements WorkspaceAccess {
-  const _WorkspaceAccess({required this.mentor, required this.campus, required this.enablerCampuses, required this.campusLead, this.campusChapters = false,  List<String> pendingCampusRoles = const <String>[]}): _pendingCampusRoles = pendingCampusRoles;
+  const _WorkspaceAccess({required this.mentor, required this.campus, required this.enablerCampuses, required this.campusLead, this.campusChapters = false,  List<String> pendingCampusRoles = const <String>[], this.team = WorkspaceState.hidden}): _pendingCampusRoles = pendingCampusRoles;
   
 
 @override final  WorkspaceState mentor;
@@ -251,6 +254,9 @@ class _WorkspaceAccess implements WorkspaceAccess {
   return EqualUnmodifiableListView(_pendingCampusRoles);
 }
 
+/// Admins, Fellow or Associate held **and** verified: announcements, push
+/// campaigns and the activity log. Never `pending`: there is no banner.
+@override@JsonKey() final  WorkspaceState team;
 
 /// Create a copy of WorkspaceAccess
 /// with the given fields replaced by the non-null parameter values.
@@ -262,18 +268,18 @@ _$WorkspaceAccessCopyWith<_WorkspaceAccess> get copyWith => __$WorkspaceAccessCo
 
 @override
 bool operator ==(Object other) {
-    return identical(this, other) || (other.runtimeType == runtimeType&&other is _WorkspaceAccess&&(identical(other.mentor, mentor) || other.mentor == mentor)&&(identical(other.campus, campus) || other.campus == campus)&&(identical(other.enablerCampuses, enablerCampuses) || other.enablerCampuses == enablerCampuses)&&(identical(other.campusLead, campusLead) || other.campusLead == campusLead)&&(identical(other.campusChapters, campusChapters) || other.campusChapters == campusChapters)&&const DeepCollectionEquality().equals(other.pendingCampusRoles, _pendingCampusRoles));
+    return identical(this, other) || (other.runtimeType == runtimeType&&other is _WorkspaceAccess&&(identical(other.mentor, mentor) || other.mentor == mentor)&&(identical(other.campus, campus) || other.campus == campus)&&(identical(other.enablerCampuses, enablerCampuses) || other.enablerCampuses == enablerCampuses)&&(identical(other.campusLead, campusLead) || other.campusLead == campusLead)&&(identical(other.campusChapters, campusChapters) || other.campusChapters == campusChapters)&&const DeepCollectionEquality().equals(other.pendingCampusRoles, _pendingCampusRoles)&&(identical(other.team, team) || other.team == team));
 }
 
 
 @override
 int get hashCode {
-    return Object.hash(runtimeType,mentor,campus,enablerCampuses,campusLead,campusChapters,const DeepCollectionEquality().hash(_pendingCampusRoles));
+    return Object.hash(runtimeType,mentor,campus,enablerCampuses,campusLead,campusChapters,const DeepCollectionEquality().hash(_pendingCampusRoles),team);
 }
 
 @override
 String toString() {
-    return 'WorkspaceAccess(mentor: $mentor, campus: $campus, enablerCampuses: $enablerCampuses, campusLead: $campusLead, campusChapters: $campusChapters, pendingCampusRoles: $pendingCampusRoles)';
+    return 'WorkspaceAccess(mentor: $mentor, campus: $campus, enablerCampuses: $enablerCampuses, campusLead: $campusLead, campusChapters: $campusChapters, pendingCampusRoles: $pendingCampusRoles, team: $team)';
 }
 
 
@@ -284,7 +290,7 @@ abstract mixin class _$WorkspaceAccessCopyWith<$Res> implements $WorkspaceAccess
   factory _$WorkspaceAccessCopyWith(_WorkspaceAccess value, $Res Function(_WorkspaceAccess) _then) = __$WorkspaceAccessCopyWithImpl;
 @override @useResult
 $Res call({
- WorkspaceState mentor, WorkspaceState campus, WorkspaceState enablerCampuses, bool campusLead, bool campusChapters, List<String> pendingCampusRoles
+ WorkspaceState mentor, WorkspaceState campus, WorkspaceState enablerCampuses, bool campusLead, bool campusChapters, List<String> pendingCampusRoles, WorkspaceState team
 });
 
 
@@ -301,7 +307,7 @@ class __$WorkspaceAccessCopyWithImpl<$Res>
 
 /// Create a copy of WorkspaceAccess
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? mentor = null,Object? campus = null,Object? enablerCampuses = null,Object? campusLead = null,Object? campusChapters = null,Object? pendingCampusRoles = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? mentor = null,Object? campus = null,Object? enablerCampuses = null,Object? campusLead = null,Object? campusChapters = null,Object? pendingCampusRoles = null,Object? team = null,}) {
   return _then(_WorkspaceAccess(
 mentor: null == mentor ? _self.mentor : mentor // ignore: cast_nullable_to_non_nullable
 as WorkspaceState,campus: null == campus ? _self.campus : campus // ignore: cast_nullable_to_non_nullable
@@ -309,7 +315,8 @@ as WorkspaceState,enablerCampuses: null == enablerCampuses ? _self.enablerCampus
 as WorkspaceState,campusLead: null == campusLead ? _self.campusLead : campusLead // ignore: cast_nullable_to_non_nullable
 as bool,campusChapters: null == campusChapters ? _self.campusChapters : campusChapters // ignore: cast_nullable_to_non_nullable
 as bool,pendingCampusRoles: null == pendingCampusRoles ? _self._pendingCampusRoles : pendingCampusRoles // ignore: cast_nullable_to_non_nullable
-as List<String>,
+as List<String>,team: null == team ? _self.team : team // ignore: cast_nullable_to_non_nullable
+as WorkspaceState,
   ));
 }
 

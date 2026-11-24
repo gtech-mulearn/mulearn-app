@@ -1,0 +1,79 @@
+{
+  "_meta": {
+    "source": "serializer",
+    "endpoint": "GET /api/v1/notification/activity-log/?pageIndex=1&perPage=20",
+    "backend_ref": "feat/team-notifications api/notification/activity_log_view.py _item, _title, _campaigns, ActivityLogAPI; api/notification/audit.py ACTION_LABELS; CustomResponse.paginated_response",
+    "note": "Hand-built from _item after the entity fields and live campaign counts: a campaign send (new_data has _audit stripped, so {}), a delete-all, and a cancel whose campaign has since been deleted (campaign null)."
+  },
+  "body": {
+    "hasError": false,
+    "statusCode": 200,
+    "message": {"general": []},
+    "response": {
+      "data": [
+        {
+          "id": "l1000000-0000-4000-8000-000000000001",
+          "action": "PUSH_CAMPAIGN_SEND",
+          "label": "Sent push campaign",
+          "actor": {"full_name": "Asha Nair", "muid": "asha@mulearn"},
+          "roles": ["Admins"],
+          "title": "Streak week",
+          "entity_name": "push_campaign",
+          "entity_id": "c1000000-0000-4000-8000-000000000001",
+          "campaign": {
+            "status": "sent",
+            "target_count": 1200,
+            "sent_count": 1100,
+            "skipped_count": 60,
+            "failed_count": 40
+          },
+          "audience_size": 1200,
+          "audience_label": null,
+          "created_at": "2026-11-17T10:05:00+00:00",
+          "old_data": null,
+          "new_data": {}
+        },
+        {
+          "id": "l1000000-0000-4000-8000-000000000002",
+          "action": "NOTIF_BROADCAST_DEL_ALL",
+          "label": "Deleted all announcements",
+          "actor": {"full_name": "Ravi Menon", "muid": "ravi@mulearn"},
+          "roles": ["Fellow", "Associate"],
+          "title": "600 announcements",
+          "entity_name": "broadcast_notification",
+          "entity_id": "all",
+          "campaign": null,
+          "audience_size": null,
+          "audience_label": null,
+          "created_at": "2026-11-16T12:00:00+00:00",
+          "old_data": {
+            "count": 600,
+            "items": [
+              {"id": "b1", "title": "Hack night on Friday", "target_type": "global"},
+              {"id": "b2", "title": "Circle meetup moved", "target_type": "campus"}
+            ],
+            "truncated": true
+          },
+          "new_data": {}
+        },
+        {
+          "id": "l1000000-0000-4000-8000-000000000003",
+          "action": "PUSH_CAMPAIGN_CANCEL",
+          "label": "Cancelled push campaign",
+          "actor": {"full_name": "Asha Nair", "muid": "asha@mulearn"},
+          "roles": ["Admins"],
+          "title": "Old promo",
+          "entity_name": "push_campaign",
+          "entity_id": "c1000000-0000-4000-8000-000000000099",
+          "campaign": null,
+          "audience_size": 300,
+          "audience_label": null,
+          "created_at": "2026-11-15T09:00:00+00:00",
+          "old_data": null,
+          "new_data": {}
+        }
+      ],
+      "pagination": {"count": 41, "totalPages": 3, "isNext": true, "isPrev": false, "nextPage": 2}
+    }
+  }
+}

@@ -99,4 +99,4 @@ final class WorkspaceAccessProvider
   }
 }
 
-String _$workspaceAccessHash() => r'b764c5ab50e82c84ac3a408fdd2389b8569c4d21';
+String _$workspaceAccessHash() => r'9d6bb6f2fdec911f76e356db2b0f6aa4d7d10f2c';

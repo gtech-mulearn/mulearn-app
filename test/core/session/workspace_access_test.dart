@@ -203,6 +203,31 @@ void main() {
       },
     );
 
+    test('a verified Fellow opens the team workspace', () {
+      expect(
+        derive(['Student', 'Fellow'], verified: {'fellow': true}).team,
+        WorkspaceState.open,
+      );
+    });
+
+    test('an unverified Associate gets no team workspace and no banner', () {
+      final a = derive(['Associate'], verified: {'associate': false});
+      expect(a.team, WorkspaceState.hidden);
+      expect(a.pendingCampusRoles, isEmpty);
+    });
+
+    test('team is decided apart from mentor and campus', () {
+      final a = derive(
+        ['Mentor', 'Enabler', 'Admins'],
+        apps: ['APPROVED'],
+        verified: {'enabler': false, 'admins': true},
+      );
+      expect(
+        (a.mentor, a.campus, a.team),
+        (WorkspaceState.open, WorkspaceState.pending, WorkspaceState.open),
+      );
+    });
+
     test('an unverified Campus Lead gets no approvals', () {
       final a = derive(['Campus Lead'], verified: {'campus lead': false});
       expect(a.campus, WorkspaceState.pending);
@@ -227,14 +252,16 @@ void main() {
   group('workspaceAccessProvider on the recorded role accounts', () {
     Future<WorkspaceAccess?> accessFor(
       String who, {
+      String folder = 'dev',
       bool expectProfileCall = true,
     }) async {
       final adapter = FakeHttpAdapter({
-        _userInfo: (_) => FakeResponse(200, loadFixture('dev/user_info_$who')),
+        _userInfo: (_) =>
+            FakeResponse(200, loadFixture('$folder/user_info_$who')),
         _mentorStatus: (_) =>
             FakeResponse(200, loadFixture('dev/mentor_status')),
         _profile: (_) =>
-            FakeResponse(200, loadFixture('dev/user_profile_$who')),
+            FakeResponse(200, loadFixture('$folder/user_profile_$who')),
       });
       final tokens = TokenStorage(FakeSecureStorage());
       await tokens.saveTokens(accessToken: 'a', refreshToken: 'r');
@@ -268,6 +295,13 @@ void main() {
       expect(a.campus, WorkspaceState.open);
       expect(a.enablerCampuses, WorkspaceState.open);
       expect(a.campusLead, isFalse);
+    });
+
+    test('fellow: team workspace open, no campus or mentor', () async {
+      final a = (await accessFor('fellow', folder: 'serializer'))!;
+      expect(a.team, WorkspaceState.open);
+      expect(a.campus, WorkspaceState.hidden);
+      expect(a.mentor, WorkspaceState.hidden);
     });
 
     test('campus lead: campus open with approvals', () async {

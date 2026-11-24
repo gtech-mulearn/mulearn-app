@@ -53,6 +53,7 @@ bool _isWorkspace(String path) => const [
   '/mentor',
   '/campus',
   '/enabler',
+  '/team',
 ].any((root) => path == root || path.startsWith('$root/'));
 
 bool _isSignedInScreen(String path) =>

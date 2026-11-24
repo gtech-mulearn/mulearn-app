@@ -19,7 +19,8 @@ class WorkspaceCards extends ConsumerWidget {
     if (access == null) return const SizedBox.shrink();
     final mentor = access.mentor == WorkspaceState.open;
     final campus = access.campus == WorkspaceState.open;
-    if (!mentor && !campus) return const SizedBox.shrink();
+    final team = access.team == WorkspaceState.open;
+    if (!mentor && !campus && !team) return const SizedBox.shrink();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -28,6 +29,9 @@ class WorkspaceCards extends ConsumerWidget {
         if (mentor) const _MentorCard(),
         if (mentor && campus) const SizedBox(height: MuSpacing.space3),
         if (campus) const _CampusCard(),
+        if ((mentor || campus) && team)
+          const SizedBox(height: MuSpacing.space3),
+        if (team) const _TeamCard(),
       ],
     );
   }
@@ -74,6 +78,19 @@ class _CampusCard extends ConsumerWidget {
       onTap: () => context.push(RoutePaths.campus),
     );
   }
+}
+
+class _TeamCard extends StatelessWidget {
+  const _TeamCard();
+
+  @override
+  Widget build(BuildContext context) => WorkspaceCard(
+    icon: LucideIcons.megaphone,
+    tone: IgCategory.manager,
+    title: 'Team workspace',
+    subtitle: 'Announcements, pushes and the log',
+    onTap: () => context.push(RoutePaths.team),
+  );
 }
 
 /// One workspace door: a printed-colour icon well, the workspace and a
